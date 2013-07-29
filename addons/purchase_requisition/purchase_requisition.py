@@ -22,7 +22,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
-from openerp import netsvc
 
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
@@ -188,7 +187,7 @@ class purchase_requisition(osv.osv):
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
         return {
             'origin': requisition.name,
-            'order_date': requisition.date_end or fields.date.context_today,
+            'date_order': requisition.date_end or fields.date.context_today,
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist.id,
             'location_id': location_id,
@@ -198,6 +197,7 @@ class purchase_requisition(osv.osv):
             'notes':requisition.description,
             'warehouse_id':requisition.warehouse_id.id if requisition.warehouse_id else False,
         }
+
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
         fiscal_position = self.pool.get('account.fiscal.position')
         res_partner = self.pool.get('res.partner')
@@ -244,7 +244,9 @@ class purchase_requisition(osv.osv):
         for requisition in self.browse(cr, uid, ids, context=context):
             if not requisition.multiple_rfq_per_supplier and supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
                  raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
+            context.update({'mail_create_nolog': True})
             purchase_id = purchase_order.create(cr, uid, self._prepare_purchase_order(cr, uid, requisition, supplier, context=context), context=context)
+            purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ created"), context=context)
             res[requisition.id] = purchase_id
             for line in requisition.line_ids:
                 purchase_order_line.create(cr, uid, self._prepare_purchase_order_line(cr, uid, requisition, line, purchase_id, supplier, context=context), context=context)
@@ -378,7 +380,6 @@ class purchase_requisition_line(osv.osv):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
     }
-purchase_requisition_line()
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
@@ -397,8 +398,7 @@ class purchase_order(osv.osv):
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
-                        wf_service = netsvc.LocalService("workflow")
-                        wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
+                        self.signal_purchase_cancel(cr, uid, [order.id])
                     po.requisition_id.tender_done(context=context)
         return res
 
@@ -411,6 +411,7 @@ class purchase_order(osv.osv):
         return super(purchase_order, self).copy(cr, uid, id, default, context)
 
 purchase_order()
+
 
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
@@ -445,7 +446,6 @@ class product_product(osv.osv):
         'purchase_requisition': False
     }
 
-product_product()
 
 class procurement_order(osv.osv):
 
@@ -479,12 +479,7 @@ class procurement_order(osv.osv):
             res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         return res
 
-    def check_product_requisition(self, cr, uid, ids, context=None):
-        procurement = self.browse(cr, uid, ids, context=context)[0]
-        if procurement.product_id.purchase_requisition:
-            return True
-        return False
-
 procurement_order()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

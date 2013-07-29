@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-22 03:31+0000\n"
-"Last-Translator: Antonio Fregoso <antonio.fregoso.mx@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-11-26 08:55+0000\n"
+"Last-Translator: Alejandro Negrin [ Vauxoo ] ..:: http://www.vauxoo.com ::.. "
+"<anegrinm@gmail.com>\n"
 "Language-Team: Spanish (Mexico) <es_MX@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 06:00+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:23+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -235,9 +236,10 @@ msgid "Incorrect Data"
 msgstr "Datos incorrectos"
 
 #. module: sale
-#: view:sale.order.line:0
-msgid "Cancel Line"
-msgstr ""
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "El  importe tiene que ser valor positivo"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -380,11 +382,6 @@ msgstr "Fecha en la que se crea el pedido de venta."
 #. module: sale
 #: view:res.partner:0
 msgid "False"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Terms and conditions..."
 msgstr ""
 
 #. module: sale
@@ -760,14 +757,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:510
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr ""
-"No puede agrupar ventas con diferentes monedas para el mismo cliente."
-
-#. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
 msgstr ""
@@ -833,12 +822,10 @@ msgid "Sales Order done"
 msgstr "Pedidos de Venta confirmados"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: code:addons/sale/sale.py:369
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1514,9 +1501,12 @@ msgid "My Sales Order Lines"
 msgstr "Mis líneas de pedidos de venta"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Cancel Quotation"
-msgstr ""
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1576,10 +1566,12 @@ msgid "Shipping address :"
 msgstr "Dirección de envío :"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:510
 #, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgid ""
+"You cannot group sales having different currencies for the same partner."
 msgstr ""
+"No puede agrupar ventas con diferentes monedas para el mismo cliente."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1605,12 +1597,6 @@ msgstr ""
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:185
-#, python-format
-msgid "There is no default shop for the current user's company!"
 msgstr ""
 
 #. module: sale
@@ -1747,90 +1733,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hola, buen día ${object.partner_id.name}:</p>\n"
-"    \n"
-"    <p>Este es su ${object.state in ('draft', 'sent') and 'cotización' or "
-"'pedido'} de ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
-"       &nbsp;&nbsp;Número: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Monto total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Fecha: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Origen: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Su referencia: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>También es posible pagar directamente con Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>Si tiene alguna pregunta no dude en contactarnos.</p>\n"
-"    <p>¡Gracias por seleccionar a ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Teléfono:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Página web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1872,12 +1774,6 @@ msgstr ""
 #: report:sale.order:0
 msgid "Price"
 msgstr "Precio"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "El  importe tiene que ser valor positivo"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -2263,3 +2159,35 @@ msgstr ""
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
 msgstr "Fecha ordenada de los pedidos de venta"
+
+#~ msgid ""
+#~ "Sale Order Lines that are confirmed, done or in exception state and haven't "
+#~ "yet been invoiced"
+#~ msgstr ""
+#~ "Las lineas del pedido de venta que están confirmadas, realizadas o con el "
+#~ "estado de excepción aún no han sido facturadas"
+
+#~ msgid "My Sale Orders"
+#~ msgstr "Mis pedidos de venta"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Código EAN no válido"
+
+#, python-format
+#~ msgid "You cannot confirm a sale order which has no line."
+#~ msgstr "No puede confirmar un pedido de venta sin líneas."
+
+#~ msgid "Sale Order"
+#~ msgstr "Pedido de venta"
+
+#~ msgid "Confirmed sale order lines, not yet delivered"
+#~ msgstr "Líneas de pedido de venta confirmadas, pero no entregadas aún"
+
+#~ msgid "Sale Order Lines that are in 'done' state"
+#~ msgstr "Pedidos de venta que están en estado 'Realizado'"
+
+#~ msgid "Sale order lines done"
+#~ msgstr "Lineas del pedido de venta realizadas"
+
+#~ msgid "Sale Order Lines ready to be invoiced"
+#~ msgstr "Líneas del pedido de venta para ser facturadas"

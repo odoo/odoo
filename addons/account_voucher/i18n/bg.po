@@ -1,21 +1,20 @@
-# Bulgarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_voucher
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-05-10 18:19+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:31+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:33+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -138,11 +137,6 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
-msgid "Status changed"
-msgstr ""
-
-#. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate"
 msgstr "Потвърждаване"
@@ -242,11 +236,6 @@ msgstr "Сума"
 #: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Опции за плащане"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "e.g. 003/10"
-msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -353,11 +342,6 @@ msgid "Import Invoices"
 msgstr "Импортиране на фактури"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "e.g. Invoice SAJ/0042"
-msgstr ""
-
-#. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
@@ -388,11 +372,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Lines"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Cancel Voucher"
 msgstr ""
 
 #. module: account_voucher
@@ -480,19 +459,8 @@ msgid "Memo"
 msgstr "Бележка"
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:34
-#, python-format
-msgid "Pay Invoice"
-msgstr "Плащане на фактура"
-
-#. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sales Receipt"
 msgstr ""
 
 #. module: account_voucher
@@ -535,9 +503,10 @@ msgid "Avg. Due Delay"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
+#: code:addons/account_voucher/invoice.py:34
+#, python-format
+msgid "Pay Invoice"
+msgstr "Плащане на фактура"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1153
@@ -616,6 +585,11 @@ msgid "Expense Lines"
 msgstr "Разходни редове"
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Sale voucher"
+msgstr ""
+
+#. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
@@ -671,6 +645,11 @@ msgid "Voucher Status"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Are you sure to unreconcile this record?"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,company_id:0
 #: field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:0
@@ -686,11 +665,6 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Cancel Receipt"
 msgstr ""
 
 #. module: account_voucher
@@ -1068,6 +1042,11 @@ msgstr "Май"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Sale Receipt"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,journal_id:0
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,journal_id:0
@@ -1259,6 +1238,11 @@ msgid "Open Balance"
 msgstr ""
 
 #. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status <b>changed</b>"
+msgstr ""
+
+#. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1014
 #: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
@@ -1272,3 +1256,114 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Невалиден XML за преглед на архитектурата"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
+#~ "символи!"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Ред от запис на сметка"
+
+#~ msgid "State"
+#~ msgstr "Състояние"
+
+#~ msgid "Optional Information"
+#~ msgstr "Допълнителна информация"
+
+#~ msgid "General Information"
+#~ msgstr "Обща информация"
+
+#~ msgid "State :"
+#~ msgstr "Държава :"
+
+#~ msgid "Particulars"
+#~ msgstr "Данни"
+
+#~ msgid "Contra Voucher"
+#~ msgstr "Обратен Ваучер"
+
+#~ msgid "Bank Receipts"
+#~ msgstr "Банкови Приходи"
+
+#~ msgid "Voucher Print"
+#~ msgstr "Отпечатва не на Ваучер"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Транзакции за връщане на приравняване"
+
+#~ msgid "Unreconcile entries"
+#~ msgstr "Несъгласувани записи"
+
+#~ msgid "Amount (in words) :"
+#~ msgstr "Сума (словом):"
+
+#~ msgid "Supplier Vouchers"
+#~ msgstr "Ваучери на доставчици"
+
+#~ msgid "Date:"
+#~ msgstr "Дата:"
+
+#~ msgid "Account :"
+#~ msgstr "Сметка:"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Грешка!"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Невалидно действие !"
+
+#~ msgid "Unreconciliation"
+#~ msgstr "Връщане приравняване"
+
+#~ msgid "Salesman"
+#~ msgstr "Търговец"
+
+#~ msgid "PRO-FORMA"
+#~ msgstr "Проформа"
+
+#~ msgid "Currency:"
+#~ msgstr "Валута:"
+
+#~ msgid "Write-Off account"
+#~ msgstr "Сметка за отписвания"
+
+#~ msgid "Number:"
+#~ msgstr "Номер:"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Условия за плащане"
+
+#~ msgid "Compute Tax"
+#~ msgstr "Изчисление на данък"
+
+#~ msgid "Supplier Payment"
+#~ msgstr "Плащане към доставчик"
+
+#~ msgid "Through :"
+#~ msgstr "Чрез :"
+
+#~ msgid "Import Invoices in Statement"
+#~ msgstr "Вмъкване на фактури от отчет"
+
+#~ msgid "Canceled"
+#~ msgstr "Отменени"
+
+#~ msgid "State:"
+#~ msgstr "Състояние:"
+
+#~ msgid ""
+#~ "If you unreconciliate transactions, you must also verify all the actions "
+#~ "that are linked to those transactions because they will not be disable"
+#~ msgstr ""
+#~ "Ако върнете изравняване на транзакции трябва да проверите всички действия "
+#~ "свързани с тази транзакции понеже те няма да бъдат забранени"
+
+#~ msgid "Date payment"
+#~ msgstr "Дата на плащането"

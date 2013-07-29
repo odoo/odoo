@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <group name="account_property" position="after">
+                        <group name="account_stock_property" string="Account Stock Properties" colspan="2">
+                            <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_journal"/>
+                        </group>
+                    </group>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <group name="delay" position="inside">
+                    <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
+                </group>
+                <group name="delay" position="after">
+                    <group name="store" string="Storage Location">
+                        <field name="loc_rack"/>
+                        <field name="loc_row"/>
+                        <field name="loc_case"/>
+                    </group>
+                </group>
+                <page position="after" string="Information">
+                    <page name="properties" position="inside">
+                        <group string="Accounting Entries">
+                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
+                    </page>
+                </page>
+		<xpath expr="//field[@name='standard_price']" position='replace'>
+                    <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                    <field name="cost_method"/>
+		</xpath>
+            </field>
+        </record>
+
+        <record id="view_product_standard_price_form" model="ir.ui.view">
+            <field name="name">product.product.standard.price.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="replace" version="7.0">
+                    <field name="cost_method" groups="product.group_costing_method"/>
+                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                    <div groups="base.group_user">
+                        <field name="standard_price" attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
+                        <button name="%(action_view_change_standard_price)d" string="- update"
+                            type="action" attrs="{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                            class="oe_link" groups="product.group_costing_method"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_normal_property_acc_form" model="ir.ui.view">
+            <field name="name">product.normal.stock.acc.property.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="priority">26</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='properties']" position="before">
+                    <group groups="stock.group_inventory_valuation">
+                        <separator string="Inventory Valuation" colspan="4"/>
+                        <group colspan="2" col="2">
+                            <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
+                    </group>
+                    <newline/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

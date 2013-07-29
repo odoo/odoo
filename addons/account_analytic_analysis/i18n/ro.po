@@ -1,21 +1,20 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_analytic_analysis
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-07 18:08+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2010-10-30 16:17+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:25+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,11 +28,6 @@ msgstr "Grupeaza dupa..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Template"
-msgstr "Sablon"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "To Invoice"
 msgstr "De facturat"
 
@@ -43,14 +37,18 @@ msgid "Remaining"
 msgstr "Ramas(a)"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Rata marjei reale (%)"
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr "Contracte in desfasurare"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date passed or prepaid unit consumed"
-msgstr "Data de sfarsit a trecut sau unitatea preplatita a fost consumata"
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
+msgstr ""
+"Daca se factureaza din costuri, aceasta este data ultimelor lucrari sau "
+"costuri care au fost facturate."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -104,30 +102,15 @@ msgid "Total customer invoiced amount for this account."
 msgstr "Valoarea totala facturata catre clienti pentru acest cont."
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled"
-msgstr "Anulat(a)"
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
 msgstr "Suma liniilor fiselor de pontaj facturate pentru acest contract."
-
-#. module: account_analytic_analysis
-#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
-msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr "Instiintare de expirare a contractului ${user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Liniile Comenzii de Vanzare de %s"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date is in the next month"
-msgstr "Data de sfarsit este luna viitoare"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -208,8 +191,8 @@ msgstr "Estimat"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Closed contracts"
-msgstr "Contracte inchise"
+msgid "Contracts not assigned"
+msgstr "Contracte nealocate"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -239,9 +222,9 @@ msgstr ""
 "[('tip','in',['vizualizare', 'normal','sablon'])]}"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pricelist"
-msgstr "Lista de preturi"
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Rata marjei reale (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -268,15 +251,6 @@ msgid "Mandatory use of templates in contracts"
 msgstr "Utilizare obligatorie a sabloanelor in contracte"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr ""
-"Daca se factureaza din costuri, aceasta este data ultimelor lucrari sau "
-"costuri care au fost facturate."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
 msgstr "Timpul Total Lucrat"
@@ -287,19 +261,9 @@ msgid "Real Margin"
 msgstr "Marja reala"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts assigned to a customer."
-msgstr "Contracte atribuite unui client."
-
-#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
 msgstr "Rezumat ore dupa luna"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts"
-msgstr "Contracte in asteptare"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -322,11 +286,6 @@ msgid "Parent"
 msgstr "Parinte"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Consumed"
-msgstr "Unitati Consumate"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
@@ -340,13 +299,15 @@ msgstr "Timp si Materiale de Facturat"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Start Date"
-msgstr "Data de Inceput"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Contracte"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Expiring soon"
-msgstr "Expira in curand"
+msgid "Start Date"
+msgstr "Data de Inceput"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -354,149 +315,23 @@ msgid "Invoiced"
 msgstr "Facturat"
 
 #. module: account_analytic_analysis
-#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"Hello ${object.name},\n"
-"\n"
-"% macro account_table(values):\n"
-"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
-"    <tr>\n"
-"        <th>Customer</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Dates</th>\n"
-"        <th>Prepaid Units</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % for partner, accounts in values:\n"
-"        % for account in accounts:\n"
-"        <tr>\n"
-"            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
-"            <td>\n"
-"            % if account.quantity_max != 0.0:\n"
-"                ${account.remaining_hours}/${account.quantity_max} units\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% if \"new\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts just expired: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"old\" in ctx[\"data\"]:\n"
-"    <h2>The following expired contracts are still not processed: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"future\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts will expire in less than one month: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    You can check all contracts to be renewed using the menu:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Thanks,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"OpenERP Automatic Email\n"
-"</pre>\n"
-"\n"
-"            "
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
 msgstr ""
-"\n"
-"Buna ziua ${nume.obiect},\n"
-"\n"
-"% macro account_table(valori):\n"
-"<spatiu celula tabel=\"1\" margine=\"1\" spatiu celula=\"4\">\n"
-"    <tr>\n"
-"        <th>Client</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Date</th>\n"
-"        <th>Unitati Preplatite</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % pentru partener, conturi cu valorile:\n"
-"        % pentru cont in conturi:\n"
-"        <tr>\n"
-"            <td>${nume.partner.}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#actiune=${ctx[\"actiune_id\"]}&id=${cont.id}&tip"
-"_vizualizare=formular\">${nume.cont}</a></td>\n"
-"            <td>${data_de_inceput.cont} pana la ${data.cont si data.cont sau "
-"'???'}</td>\n"
-"            <td>\n"
-"            % daca cantitatea_max.cont != 0.0:\n"
-"                ${cont.ore-ramase}/${cont.cantitatea_max} unitati\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${cont.partener_id.telefon sau ''}, ${cont.partener_id.email "
-"sau ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% daca \"nou\" in ctx[\"date\"]:\n"
-"    <h2>Urmatoarele contracte tocmai au expirat: </h2>\n"
-"    ${cont_tabel(ctx[\"date\"][\"nou\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% daca \"vechi\" in ctx[\"date\"]:\n"
-"    <h2>Urmatoarele contracte expirate sunt inca neprocesate: </h2>\n"
-"    ${cont_tabel(ctx[\"date\"][\"vechi\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% daca \"viitoare\" in ctx[\"date\"]:\n"
-"    <h2>Urmatoarele contracte vor expira in mai putin de o luna: </h2>\n"
-"    ${cont_tabel(ctx[\"date\"][\"viitoate\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    Puteti selecta ca toate contractele sa fie reinnoite folosind meniul:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Vanzari / Facturare / Contracte de Reinnoit</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Va multumim,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"Email Automat OpenERP\n"
-"</pre>\n"
-"\n"
-"            "
+"Contractele vor fi reinnoite deoarece termenul limita a fost depasit sau "
+"programul de lucru este mai mare decat orele alocate"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
+msgstr "Contracte in asteptare care vor fi reinnoite cu clientul d-voastra"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
 msgstr "Fise de pontaj"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Closed"
-msgstr "Inchis(a)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -506,6 +341,11 @@ msgid ""
 msgstr ""
 "Timpul (numarul de ore/zile) (din registrul de tip 'general') care poate fi "
 "facturat daca facturati pe baza contului analitic."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending"
+msgstr "In asteptare"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -529,10 +369,10 @@ msgstr "Va fi reinnoit"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
-msgstr "Contracte"
+msgid ""
+"A contract in OpenERP is an analytic account having a partner set on it."
+msgstr ""
+"Un contract in OpenERP este un cont analitic care are setat un partener."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
@@ -560,11 +400,6 @@ msgstr ""
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
 msgstr "Utilizator"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled contracts"
-msgstr "Contracte anulate"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -624,11 +459,6 @@ msgid "Revenue per Time (real)"
 msgstr "Venit pe Ora (real)"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expired or consumed"
-msgstr "Expirat sau consumat"
-
-#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -662,13 +492,13 @@ msgstr "Totalul de Facturat"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr "Contracte nealocate"
+msgid "Sale Orders"
+msgstr "Comenzi de Vanzari"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr "Comenzi de Vanzari"
+msgid "Open"
+msgstr "Deschideti"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -676,20 +506,10 @@ msgid "Total Invoiced"
 msgstr "Total Facturat"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "In Progress"
-msgstr "In desfasurare"
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
 "Calculat folosind formula: Pretul maxim factura - Valoarea facturata."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress (open, draft)"
-msgstr "Contracte in desfasurare (deschise, ciorne)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -808,6 +628,11 @@ msgid "Contract Template"
 msgstr "Sablon de Contract"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Done"
+msgstr "Unitati Efectuate"
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -859,28 +684,191 @@ msgid "Total"
 msgstr "Total"
 
 #~ msgid ""
-#~ "The contracts to be renewed because the deadline is passed or the working "
-#~ "hours are higher than the allocated hours"
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
 #~ msgstr ""
-#~ "Contractele vor fi reinnoite deoarece termenul limita a fost depasit sau "
-#~ "programul de lucru este mai mare decat orele alocate"
+#~ "Numărul de ore ce poate fi facturat plus cele care au fost deja facturate."
 
-#~ msgid "Contracts in progress"
-#~ msgstr "Contracte in desfasurare"
+#~ msgid "My Current Accounts"
+#~ msgstr "Conturile mele curente"
 
-#~ msgid "Pending"
-#~ msgstr "In asteptare"
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Data ultimei facturi create pentru acest cont analitic."
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Toate conturile analitice"
+
+#~ msgid "Analytic accounts"
+#~ msgstr "Conturi analitice"
 
 #~ msgid ""
-#~ "A contract in OpenERP is an analytic account having a partner set on it."
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
 #~ msgstr ""
-#~ "Un contract in OpenERP este un cont analitic care are setat un partener."
+#~ "Numărul de ore (din jurnalul de tip 'general') ce poate fi facturat dacă "
+#~ "facturaţi pe baza contului analitic."
 
-#~ msgid "Open"
-#~ msgstr "Deschideti"
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Aţi încercat să încălcaţi o regulă de acces (Tip document: %s)."
 
-#~ msgid "Pending contracts to renew with your customer"
-#~ msgstr "Contracte in asteptare care vor fi reinnoite cu clientul d-voastra"
+#~ msgid "Hours summary by user"
+#~ msgstr "Situaţie ore per utilizator"
 
-#~ msgid "Units Done"
-#~ msgstr "Unitati Efectuate"
+#~ msgid "Theorical Revenue"
+#~ msgstr "Venit teoretic"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "Calculat folosind formula: Cantitate maximă - Total ore"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
+#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
+#~ msgstr "Calculat folosing formula: Venit teoretic - Costuri totale"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Cont analitic nou"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Conturi analitice curente"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Marja teoretică"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
+#~ "special !"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Înregistrările mele nefacturate"
+
+#~ msgid "My Accounts"
+#~ msgstr "Conturile mele"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Conturile mele în aşteptare"
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Numărul de ore consumate pe acest cont analitic (din pontaj). Este calculat "
+#~ "în toate jurnalele de tip 'general'"
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Ore rămase"
+
+#~ msgid ""
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
+#~ msgstr ""
+#~ "Modificare cont analitic pentru a evidenţia\n"
+#~ "datele importante pentru managerul de proiect sau companiile de servicii.\n"
+#~ "Adăugare meniu pentru a evidenţia informaţii relevante pentru fiecare "
+#~ "manager."
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Gestionarea financiară a proiectului"
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Ore nefacturate"
+
+#~ msgid "Hours Tot"
+#~ msgstr "Total ore"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Conturi analitice în aşteptare"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Conturi analitice"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Ore facturate"
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Venitul pe ore (real)"
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Calculat folosind formula: Valoare facturată / Total ore"
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Conturi omise"
+
+#~ msgid "report_account_analytic"
+#~ msgstr "report_account_analytic"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nume invalid de model în definirea acţiunii"
+
+#~ msgid "Billing"
+#~ msgstr "Facturare"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "EroareAcces"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Acest modul este pentru modificarea vizualizarii contului analitic pentru a "
+#~ "afisa date importante managerului de proiect asupra serviciilor companiilor. "
+#~ "\n"
+#~ "Adauga meniul pentru a afisa informatii relevante fiecarui manager..\n"
+#~ "Puteti de asemenea sa vizualizati raportul rezumatului contului analitic \n"
+#~ "ca utilizator si lunar\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Eroare! Moneda trebuie sa fie aceeasi ca si moneda companiei selectate"
+
+#~ msgid "Analytic Accounts with a past deadline in one month."
+#~ msgstr "Conturile Analitice cu un termen limita depasit intr-o luna."
+
+#~ msgid "Create Invoice"
+#~ msgstr "Creeaza Factura"
+
+#~ msgid " +1 Month"
+#~ msgstr " +1 Luna"
+
+#~ msgid "Computed using the formula: Maximum Time - Total Time"
+#~ msgstr "Calculat folosind formula: Maxim Ore - Total Ore"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Eroare! Nu puteti crea conturi analitice recursive."
+
+#~ msgid "Associated Partner"
+#~ msgstr "Partener Asociat"
+
+#~ msgid "All Uninvoiced Entries"
+#~ msgstr "Toate Inregistrarile Nefacturate"
+
+#~ msgid "Manager"
+#~ msgstr "Director"
+
+#~ msgid ""
+#~ "You will find here the contracts to be renewed because the deadline is "
+#~ "passed or the working hours are higher than the allocated hours. OpenERP "
+#~ "automatically sets these analytic accounts to the pending state, in order to "
+#~ "raise a warning during the timesheets recording. Salesmen should review all "
+#~ "pending accounts and reopen or close the according to the negotiation with "
+#~ "the customer."
+#~ msgstr ""
+#~ "Aici veti gasi contractele care vor fi reinnoite datorita depasirii "
+#~ "termenului limita sau pentru ca programul de lucru este mai mare decat orele "
+#~ "alocate. OpenERP seteaza automat aceste conturi analitice in starea de "
+#~ "asteptare pentru a avertiza asupra inregistrarii fiselor de pontaj. Agentii "
+#~ "de vanzari ar trebui sa verifice toare conturile in asteptare si sa le "
+#~ "redeschida sau sa le inchida in functie de negocierea cu clientul."

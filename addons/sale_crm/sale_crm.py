@@ -19,7 +19,12 @@
 #
 ##############################################################################
 
+from datetime import date
+from dateutil import relativedelta
+
+from openerp import tools
 from openerp.osv import osv, fields
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -34,6 +39,55 @@ class sale_order(osv.osv):
         if order.section_id and order.section_id.id:
             invoice_vals['section_id'] = order.section_id.id
         return invoice_vals
+
+
+class crm_case_section(osv.osv):
+    _inherit = 'crm.case.section'
+
+    def _get_sale_orders_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool.get('sale.order')
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            res[id] = dict()
+            created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', groupby_begin)]
+            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
+            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', groupby_begin)]
+            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm'], 'amount_total', 'date_confirm', context=context)
+        return res
+
+    def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool.get('account.invoice.report')
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', groupby_begin)]
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
+        return res
+
+    _columns = {
+        'invoiced_forecast': fields.integer(string='Invoice Forecast',
+            help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+                    "team should invoice this month. It is used to compute the progression ratio \n"
+                    " of the current and forecast revenue on the kanban view."),
+        'invoiced_target': fields.integer(string='Invoice Target',
+            help="Target of invoice revenue for the current month. This is the amount the sales \n"
+                    "team estimates to be able to invoice this month."),
+        'monthly_quoted': fields.function(_get_sale_orders_data,
+            type='string', readonly=True, multi='_get_sale_orders_data',
+            string='Rate of created quotation per duration'),
+        'monthly_confirmed': fields.function(_get_sale_orders_data,
+            type='string', readonly=True, multi='_get_sale_orders_data',
+            string='Rate of validate sales orders per duration'),
+        'monthly_invoiced': fields.function(_get_invoices_data,
+            type='string', readonly=True,
+            string='Rate of sent invoices per duration'),
+    }
+
+    def action_forecast(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
 
 
 class res_users(osv.Model):
@@ -64,7 +118,7 @@ class account_invoice(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
     _defaults = {
-        'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
+        'section_id': lambda self, cr, uid, c=None: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

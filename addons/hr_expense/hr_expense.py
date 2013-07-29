@@ -21,7 +21,6 @@
 
 import time
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -41,7 +40,7 @@ class hr_expense_expense(osv.osv):
         if context is None:
             context = {}
         if not default: default = {}
-        default.update({'voucher_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
+        default.update({'date_confirm': False, 'date_valid': False, 'user_valid': False})
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
@@ -53,6 +52,9 @@ class hr_expense_expense(osv.osv):
             res[expense.id] = total
         return res
 
+    def _get_expense_from_line(self, cr, uid, ids, context=None):
+        return [line.expense_id.id for line in self.pool.get('hr.expense.line').browse(cr, uid, ids, context=context)]
+
     def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
         return user.company_id.currency_id.id
@@ -63,9 +65,9 @@ class hr_expense_expense(osv.osv):
     _order = "id desc"
     _track = {
         'state': {
-            'hr_expense.mt_expense_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'accepted',
-            'hr_expense.mt_expense_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancelled',
-            'hr_expense.mt_expense_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirm',
+            'hr_expense.mt_expense_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'accepted',
+            'hr_expense.mt_expense_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancelled',
+            'hr_expense.mt_expense_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
         },
     }
 
@@ -82,8 +84,10 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
-        'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), 
+            store={
+                'hr.expense.line': (_get_expense_from_line, ['unit_amount','unit_quantity'], 10)
+            }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -154,7 +158,7 @@ class hr_expense_expense(osv.osv):
         '''
         This method prepare the creation of the account move related to the given expense.
 
-        :param expense_id: Id of voucher for which we are creating account_move.
+        :param expense_id: Id of expense for which we are creating account_move.
         :return: mapping between fieldname and value of account move to create
         :rtype: dict
         '''
@@ -226,9 +230,8 @@ class hr_expense_expense(osv.osv):
             total -= i['price']
             total_currency -= i['amount_currency'] or i['price']
         return total, total_currency, account_move_lines
-
-
-    def action_receipt_create(self, cr, uid, ids, context=None):
+        
+    def action_move_create(self, cr, uid, ids, context=None):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
@@ -363,7 +366,7 @@ class hr_expense_expense(osv.osv):
             'account_analytic_id':line.analytic_account.id,
         }
 
-    def action_view_receipt(self, cr, uid, ids, context=None):
+    def action_view_move(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing account.move of given expense ids.
         '''
@@ -387,7 +390,6 @@ class hr_expense_expense(osv.osv):
         }
         return result
 
-hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -395,7 +397,6 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
-product_product()
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -454,7 +455,6 @@ class hr_expense_line(osv.osv):
             res['value'].update({'uom_id': product.uom_id.id})
         return res
 
-hr_expense_line()
 
 class account_move_line(osv.osv):
     _inherit = "account.move.line"

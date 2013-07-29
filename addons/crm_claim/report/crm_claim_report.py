@@ -114,6 +114,5 @@ class crm_claim_report(osv.osv):
                         c.priority,c.type_action,c.date_deadline,c.date_closed,c.id
             )""")
 
-crm_claim_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime
 from openerp.tools.translate import _
-from openerp.osv import fields, osv
+from openerp.osv import osv
 
 class Invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -43,13 +42,5 @@ class Invoice(osv.osv):
                 raise osv.except_osv(_('Error!'), _("You cannot cancel an invoice which has already been imported in a payment order. Remove it from the following payment order : %s."%(payment_order_name)))
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
-
-    _columns = {
-        'amount_to_pay': fields.related('residual',
-            type='float', string='Amount to be paid',
-            help='The amount which should be paid at the current date. '),
-    }
-
-Invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

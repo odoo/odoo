@@ -83,16 +83,16 @@ class stock_inventory_line_split(osv.osv_memory):
                         new_line.append(current_line)
                     if quantity_rest == 0:
                         current_line = inv_line.id
-                    prodlot_id = False
+                    lot_id = False
                     if data.use_exist:
-                        prodlot_id = line.prodlot_id.id
-                    if not prodlot_id:
-                        prodlot_id = prodlot_obj.create(cr, uid, {
+                        lot_id = line.lot_id.id
+                    if not lot_id:
+                        lot_id = prodlot_obj.create(cr, uid, {
                             'name': line.name,
                             'product_id': inv_line.product_id.id},
                         context=context)
-                    line_obj.write(cr, uid, [current_line], {'prod_lot_id': prodlot_id})
-                    prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
+                    line_obj.write(cr, uid, [current_line], {'prod_lot_id': lot_id})
+                    prodlot = prodlot_obj.browse(cr, uid, lot_id)
 
                     update_val = {}
                     if quantity_rest > 0:

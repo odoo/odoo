@@ -585,7 +585,10 @@
                                     <field name="date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="['|',('parent_id','=',False),('is_company','=',True)]"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[
+                                        '&amp;',
+                                            '|',('parent_id','=',False),('is_company','=',True),
+                                            '|',('customer','=',True),('supplier','=',True)]"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
@@ -1192,7 +1195,12 @@
             sequence="1"
             groups="group_account_user"
         />
-
+        <record id="action_account_moves_all_tree" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+        </record>
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
@@ -1768,23 +1776,6 @@
                 </form>
             </field>
         </record>
-
-        <!-- res.partner links -->
-        <act_window
-            context="{'search_default_unreconciled':True, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
-            id="act_account_partner_account_move_all"
-            name="Receivables &amp; Payables"
-            res_model="account.move.line"
-            src_model="res.partner"/>
-
-        <act_window 
-            context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            id="act_account_partner_account_move"
-            name="Journal Items"
-            res_model="account.move.line"
-            src_model="res.partner"
-            groups="account.group_account_user"/>
 
         <!-- Account Templates -->
         <menuitem

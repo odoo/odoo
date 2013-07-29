@@ -1,21 +1,21 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-13 17:44+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2011-05-29 17:52+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:49+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:41+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -32,11 +32,6 @@ msgstr "Sürüyor"
 #, python-format
 msgid "Contract: "
 msgstr "Sözleşme: "
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract pending"
-msgstr "Sözleşme bekliyor"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -57,6 +52,27 @@ msgstr "Sayılacak miktarı belirtir."
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Borç"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+"Görünüm Türünü seçerseniz, o hesap kullanarak günlük girişleri "
+"oluşturulmasına izin vermeyeceksiniz anlamına gelir.\n"
+"'Analiz Hesabı', yalnızca muhasebede kullanmak istediğiniz olağan hesapların "
+"yerini tutar.\n"
+"Sözleşme ya da Proje seçerseniz, bu hesabın geçerliliğini ve faturalama "
+"seçeneklerini yönetme olanakları size önerilir.\n"
+"Özel tür olan 'Sözleşme Şablonu', varsayılan verileri olan tekrar "
+"kullanabileceğiniz bir şablon tanımlamanızı sağlar."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -144,12 +160,6 @@ msgid "Description"
 msgstr "Açıklama"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:262
-#, python-format
-msgid "Quick account creation disallowed."
-msgstr "Hızlı hesap oluşturma engellendi."
-
-#. module: analytic
 #: field:account.analytic.account,message_unread:0
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
@@ -171,18 +181,14 @@ msgid "Renewal"
 msgstr "Yenileme"
 
 #. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sohbetçi özeti (mesaj sayısı, ...) barındırır. Bu özetdoğrudan html "
-"formatında sipariş kanban görünümlerinde eklenecek."
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Mesaj ve iletişim geçmişi"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Stage <b>opened</b>"
+msgstr "Aşama <b>açıldı</b>"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -213,7 +219,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçi mi"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -221,9 +227,9 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Üst Hesap Analizi"
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract <b>pending</b>"
+msgstr "Sözleşme <b>bekliyor</b>"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -265,14 +271,9 @@ msgid "Messages"
 msgstr "İletiler"
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
-msgstr "Mesaj ve iletişim geçmişi"
-
-#. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr "Hesap görünümünde analiz kalemleri oluşturamazsınız."
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Üst Hesap Analizi"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -306,25 +307,9 @@ msgid "Contract Opened"
 msgstr "Sözleşme Açıldı"
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Görünüm Türünü seçerseniz, o hesap kullanarak günlük girişleri "
-"oluşturulmasına izin vermeyeceksiniz anlamına gelir.\n"
-"'Analiz Hesabı', yalnızca muhasebede kullanmak istediğiniz olağan hesapların "
-"yerini tutar.\n"
-"Sözleşme ya da Proje seçerseniz, bu hesabın geçerliliğini ve faturalama "
-"seçeneklerini yönetme olanakları size önerilir.\n"
-"Özel tür olan 'Sözleşme Şablonu', varsayılan verileri olan tekrar "
-"kullanabileceğiniz bir şablon tanımlamanızı sağlar."
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract <b>closed</b>"
+msgstr "sözleşme<b>kapalı</b>"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -342,9 +327,9 @@ msgid "Balance"
 msgstr "Bakiye"
 
 #. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Name"
-msgstr "Tam Adı"
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -374,11 +359,6 @@ msgid "Error!"
 msgstr "Hata!"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract closed"
-msgstr "Sözleşme kapalı"
-
-#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analiz Muhasebesi"
@@ -387,6 +367,11 @@ msgstr "Analiz Muhasebesi"
 #: field:account.analytic.line,amount:0
 msgid "Amount"
 msgstr "Tutar"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Account Name"
+msgstr "Tam Hesap Adı"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -402,15 +387,13 @@ msgid "Currency"
 msgstr "Para Birimi"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Contract opened"
-msgstr "Sözleşme açık"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:262
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Sohbetçi özeti (mesaj sayısı, ...) barındırır. Bu özetdoğrudan html "
+"formatında sipariş kanban görünümlerinde eklenecek."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -423,18 +406,124 @@ msgid "Start Date"
 msgstr "Başlama Tarihi"
 
 #. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr "Hesap görünümünde analiz kalemleri oluşturamazsınız."
+
+#. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analitik Girişler"
 
-#~ msgid "Full Account Name"
-#~ msgstr "Tam Hesap Adı"
+#~ msgid "Account Name"
+#~ msgstr "Hesap Adı"
 
-#~ msgid "Contract <b>pending</b>"
-#~ msgstr "Sözleşme <b>bekliyor</b>"
+#~ msgid "State"
+#~ msgstr "Durum"
 
-#~ msgid "Stage <b>opened</b>"
-#~ msgstr "Aşama <b>açıldı</b>"
+#~ msgid "Draft"
+#~ msgstr "Taslak"
 
-#~ msgid "Contract <b>closed</b>"
-#~ msgstr "sözleşme<b>kapalı</b>"
+#~ msgid ""
+#~ "* When an account is created its in 'Draft' state.                           "
+#~ "       \n"
+#~ "* If any associated partner is there, it can be in 'Open' state.             "
+#~ "                     \n"
+#~ "* If any pending balance is there it can be in 'Pending'.                    "
+#~ "               \n"
+#~ "* And finally when all the transactions are over, it can be in 'Close' "
+#~ "state.                                   \n"
+#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
+#~ " If it is template then we can make projects based on the template projects. "
+#~ "If its in 'Running' state it is a normal project.                            "
+#~ "     \n"
+#~ " If it is to be reviewed then the state is 'Pending'.\n"
+#~ " When the project is completed the state is set to 'Done'."
+#~ msgstr ""
+#~ "* Bir hesap 'Taslak' durumunda oluşturulduğunda.                             "
+#~ "     \n"
+#~ "* Herhangi bir bağlı ortak varsa, 'Açık' durumda olabilir.                   "
+#~ "               \n"
+#~ "* Beklemede herhangi bir bakiye varsa 'Beklemede' olabilir.                  "
+#~ "                 \n"
+#~ "* Ve son olarak tüm işlemler sona erdiğinde, 'Kapalı' durumunda olabilir.    "
+#~ "                               \n"
+#~ "* Durumlar 'Şablon' ve 'Çalışıyor' ise proje ikisi de olabilir.\n"
+#~ " Şablonsa, o zaman şablon projeler bazında projeler yapabiliriz. 'Çalışıyor' "
+#~ "durumundaysa normal bir projedir.                                 \n"
+#~ " İncelenecekse, durum 'Beklemede'dir.\n"
+#~ " Proje tamamlandığında durum 'Bitti' olarak belirlenir."
+
+#~ msgid "Account Type"
+#~ msgstr "Hesap Tipi"
+
+#~ msgid "Pending"
+#~ msgstr "Beklemede"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Maksimum Miktar"
+
+#~ msgid "Account currency"
+#~ msgstr "Hesap para birimi"
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "Saat miktarının üst limitini belirler."
+
+#~ msgid "Contact"
+#~ msgstr "İletişim"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Hata! Para birimi, seçilen şirketin para birimiyle aynı olmalıdır"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Hata! Geriye dönük analitik hesap oluşturamazsınız."
+
+#~ msgid ""
+#~ "If you select the View Type, it means you won't allow to create journal "
+#~ "entries using that account."
+#~ msgstr ""
+#~ "Görünüm Tipi'ni seçerseniz, bu hesabı kullanarak defter kaydı oluşturmaya "
+#~ "izin vermeyeceğiniz anlamına gelir."
+
+#~ msgid "Account Code"
+#~ msgstr "Hesap Kodu"
+
+#~ msgid "View"
+#~ msgstr "Görüntüle"
+
+#~ msgid "Partner"
+#~ msgstr "Ortak"
+
+#~ msgid "Date Start"
+#~ msgstr "Başlangıç Tarihi"
+
+#~ msgid "Open"
+#~ msgstr "Açık"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Analiz hesabı nesnesini tanımlama modülü.\n"
+#~ "    "
+
+#~ msgid "Code/Reference"
+#~ msgstr "Kod/İlgi"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hata !"
+
+#~ msgid "Maximum Time"
+#~ msgstr "Ençok Süre"
+
+#~ msgid "Sets the higher limit of time to work on the contract."
+#~ msgstr "Sözleşmede çalışılacak en yüksek süre sınırını ayarlar."
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Hesap görünümde analiz satırı oluşturamazsınız."

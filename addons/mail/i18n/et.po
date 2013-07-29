@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-19 20:42+0000\n"
+"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:47+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:48+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -54,13 +54,6 @@ msgid "Comments"
 msgstr "Kommentaarid"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:296
-#, python-format
-msgid "more messages"
-msgstr ""
-
-#. module: mail
 #: view:mail.alias:0
 #: view:mail.mail:0
 msgid "Group By..."
@@ -86,10 +79,10 @@ msgid "Compose Email"
 msgstr "Koosta e-kiri"
 
 #. module: mail
-#: constraint:mail.alias:0
-msgid ""
-"Invalid expression, it must be a literal python dictionary definition e.g. "
-"\"{'field': 'value'}\""
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:132
+#, python-format
+msgid "Add them into recipients and followers"
 msgstr ""
 
 #. module: mail
@@ -101,11 +94,6 @@ msgstr "Grupi nimi"
 #: selection:mail.group,public:0
 msgid "Public"
 msgstr "Avalik"
-
-#. module: mail
-#: view:mail.message:0
-msgid "Unread"
-msgstr ""
 
 #. module: mail
 #: view:mail.mail:0
@@ -151,13 +139,6 @@ msgstr "Lugemata sõnumid"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:267
-#, python-format
-msgid "to"
-msgstr ""
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:296
 #, python-format
 msgid "show"
@@ -186,16 +167,6 @@ msgstr ""
 #. module: mail
 #: view:mail.group:0
 msgid "Search Groups"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:110
-#, python-format
-msgid ""
-"Warning! \n"
-" %s won't be notified of any email or discussion on this document. Do you "
-"really want to remove him from the followers ?"
 msgstr ""
 
 #. module: mail
@@ -248,13 +219,6 @@ msgid "Received"
 msgstr "Vastu võetud"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:73
-#, python-format
-msgid "Attach a File"
-msgstr ""
-
-#. module: mail
 #: view:mail.mail:0
 msgid "Thread"
 msgstr "Teema"
@@ -289,17 +253,16 @@ msgid "References"
 msgstr "Viited"
 
 #. module: mail
-#: view:mail.wizard.invite:0
-msgid "Add Followers"
-msgstr ""
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:206
+#, python-format
+msgid "No messages."
+msgstr "Sõnumeid pole."
 
 #. module: mail
-#: help:mail.compose.message,author_id:0
-#: help:mail.message,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
+#: model:ir.model,name:mail.model_mail_group
+msgid "Discussion group"
+msgstr "Arutelu grupp"
 
 #. module: mail
 #. openerp-web
@@ -349,13 +312,6 @@ msgid "<div>You have been invited to follow %s.</div>"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:54
-#, python-format
-msgid "Send a message"
-msgstr ""
-
-#. module: mail
 #: help:mail.group,message_unread:0
 #: help:mail.thread,message_unread:0
 #: help:res.partner,message_unread:0
@@ -381,13 +337,6 @@ msgstr "Sõnumi tüüp"
 #. module: mail
 #: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:264
-#, python-format
-msgid "logged a note"
 msgstr ""
 
 #. module: mail
@@ -450,11 +399,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: view:base.config.settings:0
-msgid "mycompany.my.openerp.com"
-msgstr ""
-
-#. module: mail
 #: field:mail.message.subtype,relation_field:0
 msgid "Relation field"
 msgstr ""
@@ -500,14 +444,6 @@ msgid "From"
 msgstr ""
 
 #. module: mail
-#: field:mail.compose.message,subtype_id:0
-#: field:mail.followers,subtype_ids:0
-#: field:mail.message,subtype_id:0
-#: view:mail.message.subtype:0
-msgid "Subtype"
-msgstr ""
-
-#. module: mail
 #: view:mail.mail:0
 #: view:mail.message.subtype:0
 msgid "Email message"
@@ -516,13 +452,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:128
-#, python-format
-msgid "this document"
 msgstr ""
 
 #. module: mail
@@ -547,13 +476,6 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:154
-#, python-format
-msgid "Attach a note that will not be send to the followers"
-msgstr ""
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:22
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.ui.menu,name:mail.menu_email_followers
@@ -572,11 +494,6 @@ msgid "Archives"
 msgstr "Arhiivid"
 
 #. module: mail
-#: view:mail.compose.message:0
-msgid "Subject..."
-msgstr ""
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:97
 #: code:addons/mail/static/src/xml/mail.xml:109
@@ -585,9 +502,11 @@ msgid "Delete this attachment"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:112
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:245
+#: view:mail.mail:0
 #, python-format
-msgid "New"
+msgid "Reply"
 msgstr ""
 
 #. module: mail
@@ -653,6 +572,13 @@ msgid "<<<"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:43
+#, python-format
+msgid "Write to the followers of this document..."
+msgstr "Kirjuta selle dokumendi jälgijatele..."
+
+#. module: mail
 #: field:mail.group,group_public_id:0
 msgid "Authorized Group"
 msgstr "Autoriseeritud Grupp"
@@ -688,16 +614,6 @@ msgid "Related Document ID"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:254
-#, python-format
-msgid ""
-"Warning! \n"
-"You won't be notified of any email or discussion on this document. Do you "
-"really want to unfollow this document ?"
-msgstr ""
-
-#. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
 msgid ""
 "<p>\n"
@@ -720,8 +636,10 @@ msgid "R&D"
 msgstr ""
 
 #. module: mail
-#: model:ir.model,name:mail.model_mail_wizard_invite
-msgid "Invite wizard"
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:61
+#, python-format
+msgid "/web/binary/upload_attachment"
 msgstr ""
 
 #. module: mail
@@ -835,11 +753,10 @@ msgid "Message subtypes"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:37
-#: code:addons/mail/static/src/xml/mail.xml:57
-#, python-format
-msgid "Log a note"
+#: help:mail.compose.message,notified_partner_ids:0
+#: help:mail.message,notified_partner_ids:0
+msgid ""
+"Partners that have a notification pushing this message in their mailboxes"
 msgstr ""
 
 #. module: mail
@@ -954,9 +871,8 @@ msgid "Owner"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/res_partner.py:49
-#, python-format
-msgid "Partner Profile"
+#: model:ir.model,name:mail.model_res_users
+msgid "Users"
 msgstr ""
 
 #. module: mail
@@ -1028,9 +944,8 @@ msgid "Please complete partner's informations"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:187
-#, python-format
-msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
+#: view:mail.wizard.invite:0
+msgid "Add Followers"
 msgstr ""
 
 #. module: mail
@@ -1079,12 +994,6 @@ msgid "All feeds"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:111
-#, python-format
-msgid "You have one unread message"
-msgstr ""
-
-#. module: mail
 #: help:mail.compose.message,record_name:0
 #: help:mail.message,record_name:0
 msgid "Name get of the related document."
@@ -1112,13 +1021,6 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:294
-#, python-format
-msgid "show more message"
 msgstr ""
 
 #. module: mail
@@ -1176,15 +1078,15 @@ msgid "Date"
 msgstr ""
 
 #. module: mail
-#: view:mail.mail:0
-msgid "Extended Filters..."
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:34
+#, python-format
+msgid "Post"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:278
-#, python-format
-msgid "more"
+#: view:mail.mail:0
+msgid "Extended Filters..."
 msgstr ""
 
 #. module: mail
@@ -1212,8 +1114,10 @@ msgid "Default"
 msgstr ""
 
 #. module: mail
-#: model:ir.model,name:mail.model_res_users
-msgid "Users"
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:294
+#, python-format
+msgid "show more message"
 msgstr ""
 
 #. module: mail
@@ -1226,6 +1130,11 @@ msgstr "Märgi tegemist vajavaks"
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
 msgid "Parent subtype, used for automatic subscription."
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_wizard_invite
+msgid "Invite wizard"
 msgstr ""
 
 #. module: mail
@@ -1242,9 +1151,11 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: view:mail.compose.message:0
-#: view:mail.wizard.invite:0
-msgid "Add contacts to notify..."
+#: field:mail.compose.message,subtype_id:0
+#: field:mail.followers,subtype_ids:0
+#: field:mail.message,subtype_id:0
+#: view:mail.message.subtype:0
+msgid "Subtype"
 msgstr ""
 
 #. module: mail
@@ -1260,8 +1171,10 @@ msgid "Starred"
 msgstr ""
 
 #. module: mail
-#: field:mail.group,menu_id:0
-msgid "Related Menu"
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:296
+#, python-format
+msgid "more messages"
 msgstr ""
 
 #. module: mail
@@ -1300,12 +1213,6 @@ msgid "And"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:111
-#, python-format
-msgid "You have %d unread messages"
-msgstr ""
-
-#. module: mail
 #: field:mail.compose.message,message_id:0
 #: field:mail.message,message_id:0
 msgid "Message-Id"
@@ -1339,11 +1246,6 @@ msgstr ""
 #. module: mail
 #: help:mail.notification,starred:0
 msgid "Starred message that goes into the todo mailbox"
-msgstr ""
-
-#. module: mail
-#: view:mail.mail:0
-msgid "Cancel Email"
 msgstr ""
 
 #. module: mail
@@ -1384,6 +1286,11 @@ msgid "Follow"
 msgstr ""
 
 #. module: mail
+#: field:mail.group,name:0
+msgid "Name"
+msgstr ""
+
+#. module: mail
 #: model:mail.group,name:mail.group_all_employees
 msgid "Whole Company"
 msgstr "Terve Ettevõte"
@@ -1415,10 +1322,8 @@ msgid "Compose new Message"
 msgstr "Koosta uus sõnum"
 
 #. module: mail
-#: help:mail.compose.message,notified_partner_ids:0
-#: help:mail.message,notified_partner_ids:0
-msgid ""
-"Partners that have a notification pushing this message in their mailboxes"
+#: field:mail.group,menu_id:0
+msgid "Related Menu"
 msgstr ""
 
 #. module: mail
@@ -1429,14 +1334,6 @@ msgstr ""
 #. module: mail
 #: field:mail.mail,email_to:0
 msgid "To"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:245
-#: view:mail.mail:0
-#, python-format
-msgid "Reply"
 msgstr ""
 
 #. module: mail
@@ -1455,6 +1352,13 @@ msgstr ""
 #. module: mail
 #: model:mail.group,name:mail.group_board
 msgid "Board meetings"
+msgstr ""
+
+#. module: mail
+#: constraint:mail.alias:0
+msgid ""
+"Invalid expression, it must be a literal python dictionary definition e.g. "
+"\"{'field': 'value'}\""
 msgstr ""
 
 #. module: mail
@@ -1564,18 +1468,15 @@ msgid "Set back to Todo"
 msgstr ""
 
 #. module: mail
-#: view:mail.group:0
-msgid "Send a message to the group"
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:128
+#, python-format
+msgid "this document"
 msgstr ""
 
 #. module: mail
-#: field:mail.group,name:0
-msgid "Name"
-msgstr ""
-
-#. module: mail
-#: view:mail.group:0
-msgid "Topics discussed in this group..."
+#: field:mail.compose.message,filter_id:0
+msgid "Filters"
 msgstr ""
 
 #. module: mail
@@ -1647,11 +1548,9 @@ msgid "Model"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:206
-#, python-format
-msgid "No messages."
-msgstr "Sõnumeid pole."
+#: view:mail.message:0
+msgid "Unread"
+msgstr ""
 
 #. module: mail
 #: help:mail.followers,subtype_ids:0
@@ -1693,9 +1592,12 @@ msgid "unlike"
 msgstr ""
 
 #. module: mail
-#: model:ir.model,name:mail.model_mail_group
-msgid "Discussion group"
-msgstr "Arutelu grupp"
+#: help:mail.compose.message,author_id:0
+#: help:mail.message,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
 
 #. module: mail
 #: help:mail.mail,email_cc:0
@@ -1765,9 +1667,11 @@ msgid "Inbox"
 msgstr "Saabuvad"
 
 #. module: mail
-#: field:mail.compose.message,filter_id:0
-msgid "Filters"
-msgstr ""
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:58
+#, python-format
+msgid "File"
+msgstr "Fail"
 
 #. module: mail
 #. openerp-web
@@ -1796,11 +1700,3 @@ msgstr ""
 #: help:mail.mail,reply_to:0
 msgid "Preferred response address for the message"
 msgstr "Eelistatud vastamisaadress sellele kirjale"
-
-#, python-format
-#~ msgid "Write to the followers of this document..."
-#~ msgstr "Kirjuta selle dokumendi jälgijatele..."
-
-#, python-format
-#~ msgid "File"
-#~ msgstr "Fail"

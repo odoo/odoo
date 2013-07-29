@@ -1,21 +1,20 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* account_followup
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-13 18:34+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-01-24 20:05+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:49+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:11+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -28,7 +27,7 @@ msgstr "${user.company_id.name} Ödeme Anımsatıcı"
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr "Enyüksek izleme düzeyi"
+msgstr "Enyüksek takip düzeyi"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -39,7 +38,7 @@ msgstr "Gruplandır..."
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr "İzleme"
+msgstr "Takip"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -61,6 +60,11 @@ msgstr "Elle Eylem"
 #: field:account_followup.sending.results,needprinting:0
 msgid "Needs Printing"
 msgstr "Yazdırmak Gerekiyor"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
+msgstr "⇾ Yapıldı İşaretle"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
@@ -100,26 +104,17 @@ msgstr "vadesi geçenler, aşağıdaki işlemleri yapın:"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr "İzleme Adımları"
+msgstr "Takip Adımları"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:262
-#, python-format
-msgid "Due Date"
-msgstr "Vade Tarihi"
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "Eposta Gövdesi"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr "İzlemeleri Gönder"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#: code:addons/account_followup/account_followup.py:319
-#: code:addons/account_followup/report/account_followup_print.py:86
-#, python-format
-msgid "Error!"
-msgstr "Hata!"
+msgstr "Takipleri Gönder"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -134,7 +129,7 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
-"Bu yapılması gereken sonraki eylemdir. İş Ortağının izleme düzeyi elle eylem "
+"Bu yapılması gereken sonraki eylemdir. İş Ortağının takip düzeyi elle eylem "
 "gerektirir duruma geldiğinde otomatik olarak ayarlanır. "
 
 #. module: account_followup
@@ -228,6 +223,7 @@ msgstr ""
 "    Bizim hatamız istisna olmak üzere, aşağıdaki tutar ödenmemiş durumdadır. "
 "Önümüzdeki 8 gün içinde bu ödemeyi gerçekleştirmek için lütfen gerekli "
 "önlemleri alınız.\n"
+"\n"
 "Bu yazımız gönderilmeden önce bu ödemeyi yaptıysanız lütfen bu yazımızı "
 "dikkate almayınız. Muhasebe bölümümüzle iletişime geçmekte lütfen tereddüt "
 "etmeyiniz.  \n"
@@ -249,12 +245,6 @@ msgstr ""
 "\n"
 "</div>\n"
 "            "
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:261
-#, python-format
-msgid "Reference"
-msgstr "Referans"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -286,7 +276,7 @@ msgstr "Bir Sorumlu Ata"
 #: field:account_followup.followup,followup_line:0
 #: view:res.partner:0
 msgid "Follow-up"
-msgstr "İzleme"
+msgstr "Takip"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -300,11 +290,6 @@ msgstr "KDV :"
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "İş Ortağı"
-
-#. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr "Eposta Gövdesi"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -326,9 +311,9 @@ msgstr ""
 "tarihinin \n"
 "                        üzerinden geçecek belirli bir gün sayısı ile "
 "başlatılacak  \n"
-"                        izleme düzeyleri içinde toplanmıştır. Aynı müşteri "
+"                        takip düzeyleri içinde toplanmıştır. Aynı müşteri "
 "için \n"
-"                        vadesi geçen başka faturalar da varsa en çok geciken "
+"                        vadesi geçen başka faturalar da varsa ençok geciken "
 "\n"
 "                        faturaya ait eylemler gerçekleştirilecektir."
 
@@ -345,7 +330,7 @@ msgstr "İş Ortakları"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr "Her firma için yalnız bir izlemeye izin verilir"
+msgstr "Her firma için yalnız bir takipe izin verilir"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -376,7 +361,7 @@ msgstr "Epostalar gönder ve mektuplar oluştur"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr "Elle İzleme"
+msgstr "Elle Takip"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -464,7 +449,7 @@ msgstr "Borç"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr "İzleme İstatistikleri"
+msgstr "Takip İstatistikleri"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -474,12 +459,12 @@ msgstr "Vade Geçmesi Epostası Gönder"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr "İzleme Kriteri"
+msgstr "Takip Kriteri"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "İzleme kalemleri görüntüleme sıralamasını verir."
+msgstr "Takip kalemleri görüntüleme sıralamasını verir."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -501,16 +486,7 @@ msgstr "Bir Mektup Gönder"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr "Ödeme İzlemeleri"
-
-#. module: account_followup
-#: code:addons/account_followup/report/account_followup_print.py:86
-#, python-format
-msgid ""
-"The followup plan defined for the current company does not have any followup "
-"action."
-msgstr ""
-"Geçerli firma için tanımlanan izleme planında hiçbir izleme eylemi yoktur."
+msgstr "Ödeme Takipleri"
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
@@ -521,12 +497,12 @@ msgstr "Vade Tarihleri"
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr "İzleme Düzeyi"
+msgstr "Takip Seviyesi"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr "En son İzleme"
+msgstr "Son İzleme"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
@@ -536,7 +512,7 @@ msgstr "Faturaları ve Ödemeleri Uzlaştır"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr "Elle İzleme Yap"
+msgstr "Elle Takip Yap"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -551,12 +527,12 @@ msgstr "Eposta Onayı Gönder"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr "Geçerli yıl içindeki dönemin İzleme Kayıtları"
+msgstr "Geçerli yıl içindeki dönemin Takip Kayıtları"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr "Enson İzleme"
+msgstr "Enson Takip"
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
@@ -572,17 +548,12 @@ msgstr " eposta(lar) gönderildi"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr "Müşterilere İzleme Yazdır & Posta Gönder"
+msgstr "Müşterilere Takip Yazdır & Posta Gönder"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
 msgstr "Yazılı Mesaj"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Responsible of credit collection"
-msgstr "Kredi toplama sorumlusu"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
@@ -620,7 +591,7 @@ msgstr "Eposta gönderilemedi çünkü iş ortağı eposta adresi yazılmamış"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr "Hesap İzleme"
+msgstr "Hesap Takip"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
@@ -630,11 +601,6 @@ msgid ""
 msgstr ""
 "Seçenek olarak bu alana eylem için sorumlu olacak bir kullanıcı "
 "atayabilirsiniz."
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr "Gecikmiş Borçlu İş Ortakları"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
@@ -669,16 +635,7 @@ msgstr "Mektup ve Eposta Gönder"
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr "İzleme Ara"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid ""
-"He said the problem was temporary and promised to pay 50% before 15th of "
-"May, balance before 1st of July."
-msgstr ""
-"Sorunun geçici olduğunu bildirdi ve 15 Mayıstan önce %50 sini, 1 Hazirandan "
-"önce de bakiyeyi ödemeye söz verdi."
+msgstr "Takip Ara"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -697,14 +654,18 @@ msgid "or"
 msgstr "veya"
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Engellendi"
+#: view:res.partner:0
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
+"Son takip düzeyinde belirlenmediyse varsayılan eposta şablonundan "
+"gönderilecektir"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr "İzleme düzeyi günleri farklı olmalı"
+msgstr "Takip düzeyi günleri farklı olmalı"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -714,14 +675,7 @@ msgstr "Eylemi yapıldı olarak işaretlemek için tıklayın"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr "İzleme Analizi"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
-msgstr ""
-"Yapılması gereken eylem örn. Telefon çağrısı yap, Ödennip ödenmediğini "
-"denetle,..."
+msgstr "Takip Analizi"
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -731,31 +685,31 @@ msgid ""
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
 msgstr ""
-"Bu elle izleme gerektirdiğinde olur . İş ortağı elle eylem gerektirecek "
-"izleme düzeyine geldiğinde tarih geçerli tarihe ayarlanacaktır. Elle "
-"ayarlama kullanışlı olabilir, örn. sözünü tutup tutmadığını görmek için."
+"Bu elle takip gerektiğinde olur . İş ortağı elle eylem gerektirecek izleme "
+"düzeyine geldiğinde tarih geçerli tarihe ayarlanacaktır. Elle ayarlama "
+"kullanışlı olabilir, örn. sözünü tutup tutmadığını görmek için."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print overdue payments report independent of follow-up line"
-msgstr "İzleme kalemlerinden ayrı olarak vadesi geçen ödemeler raporu yazdır"
+msgstr "Takip kalemlerinden ayrı olarak vadesi geçen ödemeler raporu yazdır"
 
 #. module: account_followup
 #: help:account_followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
-msgstr "Bu alan izlemelerinizin öngörü planını yapmanızı sağlar."
+msgstr "Bu alan takiplerinize öngörü planı yapmanızı sağlar."
 
 #. module: account_followup
 #: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr "İzleme Gönderim Tarihi"
+msgstr "Takip Gönderim Tarihi"
 
 #. module: account_followup
 #: view:res.partner:0
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr "İzleme Sorumlusu"
+msgstr "Takip Sorumlusu"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -831,7 +785,7 @@ msgstr "Belge: Müşteri hesap özeti"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr "İzleme Düzeyleri"
+msgstr "Takip Düzeyleri"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -879,7 +833,7 @@ msgstr "Ödenecek Tutar"
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "En son İzleme"
+msgstr "Son Takip"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
@@ -899,13 +853,6 @@ msgid "Printed overdue payments report"
 msgstr "Yazdırılmış vadesi geçmiş ödemeler raporu"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:291
-#, python-format
-msgid ""
-"You became responsible to do the next action for the payment follow-up of"
-msgstr "Bunun ödeme izlemesi için yapılacak sonraki eylemden sorumlu oldunuz"
-
-#. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
 msgid ""
 "When processing, it will set the manual action to be taken for that "
@@ -923,9 +870,9 @@ msgid ""
 "actions."
 msgstr ""
 "Aşağıda bu müşteriye ait işlemler geçmişi\n"
-"                            vardır. Sonraki izleme eylemlerinin dışında "
+"                            vardır. Sonraki takip eylemlerinin dışında "
 "tutmak için\n"
-"                            \"İzleme Yok\"u işaretleyebilirsiniz."
+"                            \"Takip Yok\"u işaretleyebilirsiniz."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -934,15 +881,17 @@ msgid " email(s) should have been sent, but "
 msgstr " eposta(lar) Gönderilmiş olmalı, ancak "
 
 #. module: account_followup
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-ups level."
+msgstr ""
+"Takipleri, takip düzeylerini değiştirmeden yazdırmak istiyorsanız "
+"işaretleyin."
+
+#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
 msgstr "Günlük Öğeleri"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:281
-#, python-format
-msgid "Amount due"
-msgstr "Ödenecek tutar"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -976,23 +925,17 @@ msgid "Amount Overdue"
 msgstr "Vadesi Geçmiş Tutar"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:264
-#, python-format
-msgid "Lit."
-msgstr "Lit."
-
-#. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
 msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
-msgstr "Bir ihtilaf gerektirmeyecek en yüksek izleme düzeyi."
+msgstr "Bir ihtilaf gerektirmeyecek en yüksek takip düzeyi."
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
-msgstr "Enson İzleme Tarihi"
+msgstr "Enson Takip Tarihi"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
@@ -1037,7 +980,7 @@ msgstr ""
 "önlemleri alınız.\n"
 "Bu yazımız gönderilmeden önce bu ödemeyi yaptıysanız lütfen bu yazımızı "
 "dikkate almayınız. Muhasebe bölümümüzle iletişime geçmekte lütfen tereddüt "
-"etmeyiniz. \n"
+"etmeyiniz.\n"
 "    </p>\n"
 "<br/>\n"
 "Saygılarımızla,\n"
@@ -1069,7 +1012,7 @@ msgstr "Ödeme Bildirimi"
 #. module: account_followup
 #: view:res.partner:0
 msgid "My Follow-ups"
-msgstr "İzlemelerim"
+msgstr "Takiplerim"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -1125,7 +1068,7 @@ msgstr "%s iş ortağının hiç borcu yoktur ve eylem gereksizdir"
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Follow-up Report"
-msgstr "İzleme Raporu"
+msgstr "Takip Raporu"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1154,7 +1097,7 @@ msgstr "İhtilaf"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "Enüst İzleme Düzeyi"
+msgstr "Enüst İzleme Seviyesi"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -1163,17 +1106,15 @@ msgid " had unknown email address(es)"
 msgstr " bilinmeyen eposta adresi(leri) vardı"
 
 #. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-up level."
-msgstr ""
-"İzleme düzeyini değiştirmeden izlemeleri yazdırmak istiyorsanız işaretleyin."
+#: view:res.partner:0
+msgid "Responsible"
+msgstr "Sorumlu"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:0
 msgid "Payment Follow-up"
-msgstr "Ödeme İzlemesi"
+msgstr "Ödeme Takibi"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -1187,7 +1128,7 @@ msgid ""
 "                        set the manual actions per customer, according to "
 "the follow-up levels defined."
 msgstr ""
-"Bu eylem, tanımlanan izleme düzeylerine göre izleme epostaları,\n"
+"Bu eylem, tanımlanan takip düzeylerine göre takip epostaları,\n"
 "                        basılı mektuplar gönderecektir ve her müşteri için "
 "elle eylemler \n"
 "                        ayarlayacaktır."
@@ -1195,7 +1136,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr "İzleme Eylemi"
+msgstr "Takip Eylemi"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1233,12 +1174,20 @@ msgstr "Bu Mali Yıl"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr "İhtilafsız Enson İzleme Düzeyi"
+msgstr "İhtilafsız Enson Takip Düzeyi"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr "⇾ Yapıldı İşaretle"
+#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
+msgid ""
+"<p>\n"
+"                    No journal items found.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    Hiç günlük öğesi bulunamadı.\n"
+"                </p>\n"
+"            "
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -1246,14 +1195,9 @@ msgid "Partner entries"
 msgstr "İş Ortağı kayıtları"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr "örn. Müşteriyi ara, ödenip ödenmediğini denetle, ..."
-
-#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up lines"
-msgstr "İzleme kalemleri"
+msgstr "Takip kalemleri"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -1310,7 +1254,7 @@ msgid ""
 "installed\n"
 "                            using to top right icon."
 msgstr ""
-"Buraya izleme düzeyine uygun olarak\n"
+"Buraya takip düzeyine uygun olarak\n"
 "                            bilgilendirme mektubunu yazın. Aşağıdaki\n"
 "                            metindeki anahtar kelimeleri kullanabilirsiniz. "
 "Üst\n"
@@ -1322,7 +1266,7 @@ msgstr ""
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 msgid "Follow-ups Sent"
-msgstr "Gönderilen İzlemeler"
+msgstr "Gönderilen Takipler"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -1332,7 +1276,7 @@ msgstr "Adı"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr "Enson İzleme Düzeyi"
+msgstr "Enson Takip Düzeyi"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
@@ -1343,7 +1287,7 @@ msgstr "İlk Hareket"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr "İş Ortağına göre İzleme İstatistikleri"
+msgstr "İş Ortağına göre Takip İstatistikleri"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
@@ -1352,10 +1296,9 @@ msgid " letter(s) in report"
 msgstr " rapordaki (mektup(lar)"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
-#: model:ir.ui.menu,name:account_followup.menu_sale_followup
-msgid "My Follow-Ups"
-msgstr "İzlemelerim"
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
+msgstr "Gecikmiş Borçlu İş Ortakları"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1377,7 +1320,7 @@ msgid ""
 "          "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                İzleme düzeylerini ve ilişkili eylemlerini tanımlamak için "
+"                Takip düzeylerini ve ilişkili eylemlerini tanımlamak için "
 "tıklayın.\n"
 "              </p><p>\n"
 "                Her adım için yapılması gereken eylemleri ve gecikme "
@@ -1391,7 +1334,7 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid "Follow-up letter of "
-msgstr "Bunun izleme mektubu "
+msgstr "Bunun takip mektubu "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1401,22 +1344,12 @@ msgstr "Bu"
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send follow-ups"
-msgstr "İzleme gönder"
+msgstr "Takip gönder"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Toplam Alacak"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#, python-format
-msgid ""
-"The partner does not have any accounting entries to print in the overdue "
-"report for the current company."
-msgstr ""
-"Bu İş Ortağı için geçerli şirketin gecikmiş ödeme raporunda yazdırılacak "
-"hiçbir muhasebe kaydı yoktur."
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1426,7 +1359,7 @@ msgstr "Sıra No"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Follow-ups To Do"
-msgstr "Yapılacak İzlemeler"
+msgstr "Yapılacak Takipler"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -1451,7 +1384,7 @@ msgstr ""
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
-msgstr "İş Ortağının izleme düzeyinin değiştirildiği enson tarih"
+msgstr "İş Ortağının takip düzeyinin değiştirildiği enson tarih"
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
@@ -1469,41 +1402,677 @@ msgid "Accounting"
 msgstr "Muhasebe"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
-"Son izleme düzeyinde belirlenmediyse varsayılan eposta şablonundan "
-"gönderilecektir"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:319
-#, python-format
-msgid "There is no followup plan defined for the current company."
-msgstr "Geçerli şirket için tanımlanmış izleme planı yok."
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Engellendi"
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
 msgstr "Müşteri Ödeme Sözü"
 
-#~ msgid "Responsible"
-#~ msgstr "Sorumlu"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+
+#~ msgid "All payable entries"
+#~ msgstr "Tüm Ödenecek Kayıtlar"
+
+#~ msgid "Due"
+#~ msgstr "Vade"
+
+#~ msgid "Select partners"
+#~ msgstr "Carileri Seçiniz..."
+
+#~ msgid "Email Settings"
+#~ msgstr "E-mail Ayarları"
+
+#~ msgid "Account Type"
+#~ msgstr "Hesap Tipi"
+
+#~ msgid "Balance:"
+#~ msgstr "Bakiye:"
+
+#~ msgid "Paid"
+#~ msgstr "Ödendi"
+
+#~ msgid "%(line)s: Account Move lines"
+#~ msgstr "%(line)s: Hesap Hareket Kalemleri"
+
+#~ msgid "Follow-Ups Criteria"
+#~ msgstr "İş Takibi Kriteri"
+
+#~ msgid "Follow-up and Date Selection"
+#~ msgstr "İş Takibi ve Tarih Seçimi"
+
+#~ msgid "Select partners to remind"
+#~ msgstr "Hatırlatma Yapılacak Carileri Seçiniz..."
+
+#~ msgid "%(company_name)s: User's Company name"
+#~ msgstr "%(company_name)s: Kullanıcının Firma Adı"
+
+#~ msgid "All receivable entries"
+#~ msgstr "Tüm Alacak Kayıtları"
+
+#~ msgid "Continue"
+#~ msgstr "Devam"
+
+#~ msgid "Follow-Up Lines"
+#~ msgstr "İş Takipçisi Ögeleri"
+
+#~ msgid "Follow-Up lines"
+#~ msgstr "İş Takipçisi Ögeleri"
 
 #~ msgid ""
-#~ "<p>\n"
-#~ "                    No journal items found.\n"
-#~ "                </p>\n"
-#~ "            "
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
 #~ msgstr ""
-#~ "<p>\n"
-#~ "                    Hiç günlük öğesi bulunamadı.\n"
-#~ "                </p>\n"
-#~ "            "
+#~ "\n"
+#~ "Sayın %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+90).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+#~ "\t\t\t"
+
+#~ msgid "Sub-Total:"
+#~ msgstr "Alt Toplam :"
 
 #~ msgid ""
-#~ "Check if you want to print follow-ups without changing follow-ups level."
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
 #~ msgstr ""
-#~ "Takipleri, takip düzeylerini değiştirmeden yazdırmak istiyorsanız "
-#~ "işaretleyin."
+#~ "\n"
+#~ "Sayın %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+90).10.68.94.39.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+#~ "\t\t\t"
+
+#~ msgid "Legend"
+#~ msgstr "Açıklama"
+
+#~ msgid "Send email confirmation"
+#~ msgstr "Email Onayı gönder"
+
+#~ msgid "Days of delay"
+#~ msgstr "Gecikme Günleri"
+
+#~ msgid "Print Follow Ups & Send Mails"
+#~ msgstr "İş Takibini Yazdır ve Mail Gönder"
+
+#~ msgid "Ok"
+#~ msgstr "Tamam"
+
+#~ msgid "End of Month"
+#~ msgstr "Ay sonu"
+
+#~ msgid "Search Followup"
+#~ msgstr "İzleme Ara"
+
+#, python-format
+#~ msgid "Follwoup Summary"
+#~ msgstr "İzleme Özeti"
+
+#~ msgid ""
+#~ "Follow up on the reminders sent over to your partners for unpaid invoices."
+#~ msgstr ""
+#~ "Ödenmemiş faturalar için paydaşlarınıza gönderilen anımsatmaları izleyin."
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "E-posta aşağıdaki Paydaşlara başarıyla gönderildi. !\n"
+#~ "\n"
+
+#~ msgid "Select Partners to Remind"
+#~ msgstr "Anımsatma yapılacak Paydaşı seç"
+
+#~ msgid "Net Days"
+#~ msgstr "Net Gün Sayısı"
+
+#~ msgid "Follow-Ups"
+#~ msgstr "İzlemeler"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Hesap girişindeki alacak ya da Borç değeri hatalı !"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapanmış bir hesap için hareket yaratamazsınız."
+
+#~ msgid "%(heading)s: Move line header"
+#~ msgstr "%(başlık)lar: Hareket kalemi başlığı"
+
+#~ msgid "Account Follow Up"
+#~ msgstr "Hesap İzleme"
+
+#~ msgid "Follow-up Message"
+#~ msgstr "İzleme Mesajı"
+
+#~ msgid "%(user_signature)s: User name"
+#~ msgstr "%(kullanıcı_imzası)ları: Kullanıcı Adı"
+
+#~ msgid ""
+#~ "This feature allows you to send reminders to partners with pending invoices. "
+#~ "You can send them the default message for unpaid invoices or manually enter "
+#~ "a message should you need to remind them of a specific information."
+#~ msgstr ""
+#~ "Bu özellik paydaşlarınızın bekleyen faturaları için anımsatma göndermenizi "
+#~ "sağlar. Ödenmeyen faturalar için varsayılan mesajı gönderebilir ya da özel "
+#~ "bir bilgiyi onlara anımsatmak için elle bir mesaj girebilirsiniz."
+
+#~ msgid "Email body"
+#~ msgstr "Eposta gövdesi"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sayın %(paydaş_adı)ları,\n"
+#~ "\n"
+#~ "Size bir anımsatma göndermemize karşın ödemenizin ciddi olarak geciktiğini "
+#~ "görmekten bizi hayal kırıklığına uğratmıştır.\n"
+#~ "\n"
+#~ "Acil olarak ödeme yapmanız gerekmektedir, aksi takdirde hesabınız kesilecek "
+#~ "olup firmanıza bundan sonra (malzeme/hizmet) satışı yapılmayacaktır.\n"
+#~ "Önümüzdeki 8 gün içerisinde, lütfen bu ödemenin yapılmasını sağlayın. \n"
+#~ "\n"
+#~ "Eğer bilmediğimiz bir sorun yüzünden bu ödeme yapılamıyorsa, lütfen muhasebe "
+#~ "bölümümüzle(+32).10.68.94.39. den ilişkiye geçmekten çekinmeyin ki bu soruna "
+#~ "hızlı bir şekilde çözüm bulalım.\n"
+#~ "\n"
+#~ "Geciken ödemenizle ilgili ayrıntılar aşağıda yazılmıştır.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+
+#~ msgid "Send Mails"
+#~ msgstr "Postaları Gönder"
+
+#~ msgid "Partner Selection"
+#~ msgstr "Paydaş Seçimi"
+
+#~ msgid "Send followups"
+#~ msgstr "İzlemeleri gönder"
+
+#~ msgid "Currency"
+#~ msgstr "Para Birimi"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Modules to automate letters for unpaid invoices, with multi-level "
+#~ "recalls.\n"
+#~ "\n"
+#~ "    You can define your multiple levels of recall through the menu:\n"
+#~ "        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
+#~ "\n"
+#~ "    Once it is defined, you can automatically print recalls every day\n"
+#~ "    through simply clicking on the menu:\n"
+#~ "        Accounting/Periodical Processing/Billing/Send followups\n"
+#~ "\n"
+#~ "    It will generate a PDF with all the letters according to the the\n"
+#~ "    different levels of recall defined. You can define different policies\n"
+#~ "    for different companies. You can also send mail to the customer.\n"
+#~ "\n"
+#~ "    Note that if you want to change the followup level for a given "
+#~ "partner/account entry, you can do from in the menu:\n"
+#~ "        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
+#~ "Sent\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    Çok seviyeli anımsatmalı ödenmemiş faturaları otomatize etmek için "
+#~ "kullanılan modüllerdir.\n"
+#~ "\n"
+#~ "    Bu menüden anımsatmaların çoklu seviyelerini tanımlayabilirsiniz :\n"
+#~ "        Muhasebe/Yapılandırma/Çeşitli/İzlemeler\n"
+#~ "\n"
+#~ "    Bir kez tanımlandıktan sonra menüden basit bir tıklamayla\n"
+#~ "    anımsatmaları hergün otomatik olarak yazdırabilirsiniz:\n"
+#~ "        Muhasebe/Periyodik İşlemler/Faturalama/İzlemeleri Gönder\n"
+#~ "\n"
+#~ "    Tanımlanan çeşitli seviyelere göre bütün mektupların birer PDF\n"
+#~ "    suretlerini oluşturur. Farklı şirketler için farklı politikalar\n"
+#~ "    tanımlayabilirsiniz. Müşteriye posta olarak ta gönderebilirsiniz.\n"
+#~ "\n"
+#~ "   Eğer bir paydaş/hesap kaydı izleme seviyesini değiştirmek isterseniz, "
+#~ "bunu aşağıda belirtilen menüden yapabilirsiniz :\n"
+#~ "        Muhasebe/Raporlama/Genel Raporlama/Paydaş Hesapları/Gönderilen "
+#~ "İzlemeler\n"
+#~ "\n"
+
+#~ msgid "Accounting follow-ups management"
+#~ msgstr "Muhasebe İzleme Yönetimi"
+
+#~ msgid "Followup Statistics by Partner"
+#~ msgstr "Paydaşa göre İzleme İstatistikleri"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sayın %(partner_name)lar,\n"
+#~ "\n"
+#~ "Bir kaç kez anımsatmamıza rağmen hesabınız hala düzeltilmemiştir.\n"
+#~ "\n"
+#~ "Eğer 8 gün içerisinde tam ödeme yapılmazsa, bir daha haber vermeksizin bu "
+#~ "borcun ödenmesi için yasal yollara başvuracağımızı bilmenizi isteriz.\n"
+#~ "\n"
+#~ "Aşağıda belirtilen gecikmiş ödemenize ait bilgiler eminiz ki borcunuz "
+#~ "hakkında size tam bilgi vermektedir.\n"
+#~ "\n"
+#~ "Sorularınız için muhasebe bölümümüzle (+32).10.68.94.39 den iletişime "
+#~ "geçmekte terddüt etmeyiniz.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
+#~ "\n"
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sayın %(partner_name)lar,\n"
+#~ "\n"
+#~ "Aşağıda belirtilen tutar ödenmemiş görünmektedir, eğer bu bizim "
+#~ "yanlışlığımız ise lütfen bu yazımızı dikkate almayın. İleriki 8 gün "
+#~ "içersinde bu ödemenin yapılması için gereken hassasiyeti göstermenizi rica "
+#~ "ederiz.\n"
+#~ "\n"
+#~ "Bu yazımızın gönderilmesinden sonra ödeme yaptıysanız lütfen bu yazımızı "
+#~ "dikkate almayın. Muhasebe bölümüzle (+32).10.68.94.39. den görüşmekte lütfen "
+#~ "tereddüt etmeyin.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+
+#, python-format
+#~ msgid "Select Partners"
+#~ msgstr "Paydaş Seçin"
+
+#~ msgid "Followup Statistics"
+#~ msgstr "İzleme İstatistikleri"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Bütün Epostalar Paydaşlara başarılı olarak gönderilmiştir.\n"
+#~ "\n"
+
+#~ msgid "%(partner_name)s: Partner Name"
+#~ msgstr "%(paydaş_adı)lar: Paydaş Adı"
+
+#~ msgid "Followup Lines"
+#~ msgstr "İzleme Satırları"
+
+#~ msgid "Companies"
+#~ msgstr "Firmalar"
+
+#~ msgid "%(user_signature)s: User Name"
+#~ msgstr "%(kullanıcı_imza)lar: Kullanıcı Adı"
+
+#~ msgid "%(company_currency)s: User's Company Currency"
+#~ msgstr "%(firma_döviz)s: Kullanıcının Firmasının Para Birimi"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Hata! Yinelemeli şirketler oluşturamazsınız."
+
+#~ msgid "Followup Report"
+#~ msgstr "İzleme Raporu"
+
+#~ msgid "Print Followup & Send Mail to Customers"
+#~ msgstr "İzlemeleri Yazdır ve Müşterilere Postala"
+
+#~ msgid "%(followup_amount)s: Total Amount Due"
+#~ msgstr "%(izleme_tutar)lar: Ödenmesi Gereken Toplam Tutar"
+
+#~ msgid "Payable Items"
+#~ msgstr "Ödeme Maddeleri"
+
+#~ msgid "%(date)s: Current Date"
+#~ msgstr "%(tarih)ler: Geçerli Tarih"
+
+#~ msgid "Type of Term"
+#~ msgstr "Koşul Türü"
+
+#~ msgid "Maturity"
+#~ msgstr "Vade"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Aşağıdaki Paydaşa E-Posta gönderilemedi. E-Posta bulunamadı !\n"
+#~ "\n"
+
+#~ msgid "Followup Level"
+#~ msgstr "İzleme Seviyesi"
+
+#~ msgid "Receivable Items"
+#~ msgstr "Alacak Maddeleri"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
+
+#~ msgid "%(partner_name)s: Partner name"
+#~ msgstr "%(paydaş_adı)lar: Paydaş adı"
+
+#~ msgid "Print Follow Ups"
+#~ msgstr "İzlemeleri Yazdır"
+
+#~ msgid "%(line)s: Ledger Posting lines"
+#~ msgstr "%(satır)lar: Büyük Defter İşleme Kalemleri"
+
+#~ msgid "%(company_name)s: User's Company Name"
+#~ msgstr "%(firma_adı)lar: Kullanıcının Firma Adı"
+
+#~ msgid "Latest Followup Date"
+#~ msgstr "Son İzleme Tarihi"
+
+#~ msgid "Follow-Up Criteria"
+#~ msgstr "İzleme Kriteri"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Tüm E-postalar başarılı bir şeklide şu Paydaşlara gönderilmiştir:.\n"
+#~ "\n"
+#~ "%s"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Aşağıdaki Paydaşlara  Eposta başarılı bir şekildegönderilmiştir. !\n"
+#~ "\n"
+#~ "%s"
+
+#, python-format
+#~ msgid "Followup Summary"
+#~ msgstr "İzleme Özeti"
+
+#~ msgid "Message"
+#~ msgstr "Mesaj"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Şirket adı tekil olmalı !"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, E-mail not available !\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Aşağıdaki carilere e-posta gönderilmedi, E-posta bulunmuyor!\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Review Invoicing Follow-Ups"
+#~ msgstr "Faturalama İzlemelerini Gözden geçir"
+
+#~ msgid "Follow-Up Steps"
+#~ msgstr "İzleme Adımları"
+
+#~ msgid "Follow up Entries with period in current year"
+#~ msgstr "Geçerli yılın dönemindeki İzleme Girişleri"
+
+#~ msgid ""
+#~ "Check if you want to print followups without changing followups level."
+#~ msgstr ""
+#~ "İzleme seviyelerini değiştirmeden izlemeleri yazdırmak istiyorsanız "
+#~ "işaretleyin"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
+
+#~ msgid "Only One Followup by Company."
+#~ msgstr "Firmaya göre yalnızca bir İzleme var"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+#~ "sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+#~ "çoklu-para birimli bir günlük seçmelisiniz."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+#~ "değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "İlişkili hesap ve dönem için firma aynı olmalı."
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days.\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sayın %(partner_name)s,\n"
+#~ "\n"
+#~ "Bir anımsatma göndermemize karşın hesabınızın ciddi olarak gecikmesi bizi "
+#~ "üzmüştür.\n"
+#~ "\n"
+#~ "İvedi olarak bir ödeme yapmanız çok önemlidir, aksi durumda hesabınız "
+#~ "durdurulacak olup bundan sonra firmanıza (ürün/hizmet) veremeyeceğimizi "
+#~ "bilmenizi isteriz.\n"
+#~ "Lütfen önümüzdeki 8 gün içinde bu ödemenin yapılması için uygun önlemleri "
+#~ "alın.\n"
+#~ "\n"
+#~ "Bu faturanın ödenmesiyle ilgili bilmediğimiz bir sorun varsa,  bu sorunu "
+#~ "hızlı bir şekilde çözebilmemiz için (+32).10.68.94.39. numaralı telefondan "
+#~ "muhasebe bölümümüzle iletişime geçmekte tereddüt etmeyin.\n"
+#~ "\n"
+#~ "Geciken ödemenizle ilgili ayrıntılar aşağıdadır.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount stays unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
+#~ "\n"
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "ignore this message. Do not hesitate to contact our accounting department at "
+#~ "(+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sayın %(partner_name)s,\n"
+#~ "\n"
+#~ "Bizim bir hatamızın olması istisnası kabul edilmek üzere, aşağıdaki tutar "
+#~ "ödenmemiş durumdadır. Lütfen önümüzdeki 8 gün içinde bu ödemenin yapılması "
+#~ "için uygun önlemleri alın.\n"
+#~ "\n"
+#~ "Eğer ödemeyi bu iletimizin gönderilmesinde sonra yapmışsanız, lütfen bu "
+#~ "mesajımızı dikkate almayın. (+32).10.68.94.39. numaralı telefondan muhasebe "
+#~ "bölümümüzle iletişime geçmekte tereddüt etmeyin.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"
+
+#~ msgid ""
+#~ "Define follow up levels and their related messages and delay. For each step, "
+#~ "specify the message and the day of delay. Use the legend to know the using "
+#~ "code to adapt the email content to the good context (good name, good date) "
+#~ "and you can manage the multi language of messages."
+#~ msgstr ""
+#~ "İzleme seviyelerini ve ilgili mesajlarını ve gecikmeleri tanımlayın. Her "
+#~ "adım için, mesajı ve gecikme gününü belirleyin.  Göstergeyi kullanarak "
+#~ "eposta içeriğini iyi içeriğe uyarlamak için kullanılan kodu öğrenin (iyi ad, "
+#~ "iyi tarih) ve çok-dilli mesajları yönetebilirsiniz"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days, then legal action for the "
+#~ "recovery of the debt will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sayın %(partner_name)s,\n"
+#~ "\n"
+#~ "Birçok anımsatmaya rağmen hesabınız halen düzeltilmemiştir.\n"
+#~ "\n"
+#~ "Önümüzdeki sekiz günde ödemenin tamamının yapılmaması durumunda, yeniden "
+#~ "anımsatma yapmadan, borcun ödenmesi için yasal işlemler başlatılacaktır.\n"
+#~ "\n"
+#~ "Bu işlemin gereksiz olacağından eminiz, geciken ödemelerinizin ayrıntıları "
+#~ "aşağıda yazılıdır.\n"
+#~ "\n"
+#~ "Bu konuyla ilgili herhangi bir sorunuz olması durumunda, (+32).10.68.94.39. "
+#~ "numaralı telefondan muhasebe bölümümüzle iletişime geçmekte tereddüt "
+#~ "etmeyin.\n"
+#~ "\n"
+#~ "Saygılarımızla,\n"

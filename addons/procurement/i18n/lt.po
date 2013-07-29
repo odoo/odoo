@@ -1,42 +1,31 @@
 # Lithuanian translation for openobject-addons
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
-# Giedrius Slavinskas <giedrius@inovera.lt>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-04-30 16:28+0000\n"
-"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2013-04-29 15:26+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-01 05:15+0000\n"
+"X-Launchpad-Export-Date: 2013-04-30 05:29+0000\n"
 "X-Generator: Launchpad (build 16580)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
 msgid "Schedulers"
-msgstr "Planavimai"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
 msgstr ""
-
-#. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
-msgstr ""
-"Tai yra dienų intervalas iki kurio pabaigos bus skaičiuojami būsimieji "
-"planuojamieji užsakymai. Visi planuojami užsakymai, kurie nepatenka į "
-"intervalą tarp šiandienos ir dienų į priekį, bus palikti skaičiuoti ateityje."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -45,13 +34,11 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
-"Sužadins automatizuotą planinį užsakymą produktams, kurių prognozuojamas "
-"kiekis yra mažiau už 0."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Group By..."
-msgstr "Grupuoti pagal..."
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -64,13 +51,6 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
-"reikiamas kiekis yra visada\n"
-"                           užtenkamas"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "External note..."
-msgstr "Išorinės pastabos..."
 
 #. module: procurement
 #: view:product.product:0
@@ -80,53 +60,48 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
-"Jeigu turimo kiekio neužtenka, bus laukiama\n"
-"                           atsargų papildymo. Kad papildytumėte atsargas, "
-"turėtumėte\n"
-"                           sukurti kitas taisykles, kaip pavyzdžiui "
-"„Užsakymo taisyklės“."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr "Užsakymo būdas"
+msgstr ""
 
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr "Gaminimas"
+msgstr ""
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
-msgstr "Paslauga"
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
-msgstr "Vykdyti tik pagal automatinio užsakymo taisykles"
+msgstr ""
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr "Taisyklės"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,company_id:0
 #: field:stock.warehouse.orderpoint,company_id:0
 msgid "Company"
-msgstr "Įmonė"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr "Kiekis pardavimo matais"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Reason"
-msgstr "Priežastis"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -136,22 +111,22 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message:0
 msgid "Latest error"
-msgstr "Naujausia klaida"
+msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr "Minimalus kiekis"
+msgstr ""
 
 #. module: procurement
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr "Nenaudojama skaičiavimuose. Tik dėl informacijos."
+msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr "Paskutinis užsakymas"
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
@@ -163,42 +138,36 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
-"Čia jūs galite apibrėžti automatinio užsakymo taisykles, kad OpenERP "
-"automatiškai sukurtų gamybos ar pirkimo užsakymus pagal atsargų likutį. Kai "
-"tik būsimas produkto kiekis (= turimos atsargos minus visi patvirtinti "
-"užsakymai ir rezervacijos) sumažėja žemiau minimalios leidžiamo kiekio "
-"ribos, OpenERP automatiškai sukurs planinį užsakymą, kad papildytų atsargas "
-"iki maksimalios leidžiamo kiekio ribos."
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Cancel Procurement"
-msgstr "Atšaukti užsakymą"
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr "Produktai"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr "Atšauktas"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Permanent Procurement Exceptions"
-msgstr "Užsakymai, kurie nebus įvykdyti"
+msgstr ""
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -208,18 +177,18 @@ msgstr ""
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_move
 msgid "Stock Move"
-msgstr "Atsargų judėjimas"
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr "Produktai, kurie gali būti sandėliuojami"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
-msgstr "Klaidingas veiksmas!"
+msgstr ""
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -227,18 +196,16 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
-"Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html "
-"formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
-msgstr "Paruošta"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr "Automatinis užsakymas"
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -257,28 +224,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
-"<p>\n"
-"                Planinis užsakymas parodo tam tikrą produkto kiekio poreikį, "
-"tam tikru laiku, tam tikroje atsargų vietoje. Pardavimų užsakymas yra vienas "
-"iš įprastų planinio užsakymo šaltinių (bet šie dokumentai yra atskiri). "
-"Priklausomai nuo planinio užsakymo parametrų ir produkto nustatymų, planinio "
-"užsakymo sistema užtikrins reikiamą produktų kiekį rezervuodama atsargas, "
-"užsakydama produktus iš tiekėjo ar sukurdama gamybos užsakymą. Neįvykdytų "
-"planinių užsakymų sąraše atsidurs tie užsakymai, kurių sistemai nepavyko "
-"atlikti. Dalį tokių užsakymų bus bandoma atlikti automatiškai vėliau, tačiau "
-"dalį teks apdoroti rankiniu būdu (tai galima matyti iš klaidų pranešimų).\n"
-"                </p>\n"
-"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
-msgstr "Patvirtinta"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Retry"
-msgstr "Kartoti"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -289,12 +244,12 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Confirm"
-msgstr "Patvirtinti"
+msgstr ""
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr "Kiekio kartotinis"
+msgstr ""
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -302,13 +257,11 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
 msgstr ""
-"Dokumento numeris, pagal kurį sukurtas šis planinis užsakymas.\n"
-"Šį lauką OpenERP užpildo automatiškai."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr "Vykdomi planiniai užsakymai"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -324,41 +277,41 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
-msgstr "Svarbumas"
+msgstr ""
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr "Automatinio užsakymo taisyklių paieška"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Waiting"
-msgstr "Laukiama"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr "Prenumeratoriai"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,location_id:0
 #: view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
-msgstr "Vieta"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_picking
 msgid "Picking List"
-msgstr "Siunta"
+msgstr ""
 
 #. module: procurement
 #: field:make.procurement,warehouse_id:0
 #: view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
-msgstr "Sandėlis"
+msgstr ""
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -379,28 +332,28 @@ msgstr ""
 #. module: procurement
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range Days"
-msgstr "Planavimas dienų intervalui"
+msgstr ""
 
 #. module: procurement
 #: view:make.procurement:0
 msgid "Ask New Products"
-msgstr "Vykdyti užsakymą"
+msgstr ""
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
 msgid "Planned Date"
-msgstr "Suplanuota data"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Group By"
-msgstr "Grupuoti pagal"
+msgstr ""
 
 #. module: procurement
 #: field:make.procurement,qty:0
 #: field:procurement.order,product_qty:0
 msgid "Quantity"
-msgstr "Kiekis"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:365
@@ -412,13 +365,13 @@ msgstr ""
 #: field:make.procurement,uom_id:0
 #: view:procurement.order:0
 msgid "Unit of Measure"
-msgstr "Matavimo vienetas"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Iš atsargų"
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -447,8 +400,6 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
-"Jeigu planinis užsakymas įvedamas rankiniu būdu, dažniausiai pasirinksite "
-"„Pateikus užsakymą“."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -460,29 +411,29 @@ msgstr ""
 msgid ""
 "use the available\n"
 "                           inventory"
-msgstr "naudos turimas atsargas"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
 #: model:process.process,name:procurement.process_process_procurementprocess0
 #: view:procurement.order:0
 msgid "Procurement"
-msgstr "Planinis užsakymas"
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 msgid "Procurement Orders"
-msgstr "Planiniai užsakymai"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "To Fix"
-msgstr "Reikia taisyti"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Exceptions"
-msgstr "Neįvykdyta"
+msgstr ""
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
@@ -498,17 +449,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr "Planinis užsakymas"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
-msgstr "Vykdyti užsakymą"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "e.g. SO005"
-msgstr "pvz. SO005"
+msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -518,7 +464,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr "Neperžiūrėtos žinutės"
+msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -545,26 +491,26 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"Nebenaudojamos užsakymo taisyklės gali būti paslėptos, vietoj to, kad būtų "
-"ištrintos."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Internal note..."
-msgstr "Vidinės pastabos..."
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr ""
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
 msgstr ""
-"Jeigu produkto atsargų kiekis yra mažiau už 0, tai bus laikoma kaip "
-"automatinio užsakymo taisyklė"
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
-msgstr "Matavimo vienetas"
+msgstr ""
 
 #. module: procurement
 #: constraint:stock.warehouse.orderpoint:0
@@ -576,7 +522,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Lines"
-msgstr "Užsakymo eilutės"
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
@@ -584,13 +530,11 @@ msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
 msgstr ""
-"(kaip pasekmė, turimas kiekis\n"
-"                           gali tapti neigiamu)."
 
 #. module: procurement
 #: field:procurement.order,note:0
 msgid "Note"
-msgstr "Pastaba"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -599,21 +543,18 @@ msgid ""
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
-"Kai prognozuojamas produkto kiekis nukrenta žemiau minimalaus kiekio, "
-"OpenERP sukurs planinį užsakymą, kad atstatytų prognozuojamą kiekį iki "
-"maksimalaus kiekio."
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Draft"
-msgstr "Juodraštis"
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Run Schedulers"
-msgstr "Vykdyti planinius užsakymus"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -624,22 +565,22 @@ msgstr ""
 #: view:procurement.order:0
 #: field:procurement.order,state:0
 msgid "Status"
-msgstr "Būsena"
+msgstr ""
 
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr "Pirkimas"
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
 msgid "for the delivery order."
-msgstr "užsakymo įvykdymui."
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Normal"
-msgstr "Įprasta"
+msgstr ""
 
 #. module: procurement
 #: help:product.template,supply_method:0
@@ -648,19 +589,16 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
-"Gaminimas: atliekant planinį užsakymą, priklausomai nuo produkto tipo, bus "
-"sukurtas gamybos užsakymas arba užduotis. \n"
-"Pirkimas: atliekant planinį užsakymą, bus sukurtas pirkimo užsakymas."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr "Maksimalus kiekis"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Ar prenumeratorius"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:367
@@ -671,12 +609,12 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
-msgstr "Aktyvus"
+msgstr ""
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_procureproducts0
 msgid "Procure Products"
-msgstr "Užsakyti produktus"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:312
@@ -689,12 +627,12 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
-msgstr "Suplanuota data"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Exception"
-msgstr "Neįvykdyta"
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
@@ -702,8 +640,6 @@ msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
 msgstr ""
-"Parduodant šį produktą, bus sukurta išvykstančių produktų siunta.\n"
-"                           OpenERP laikys, kad"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
@@ -722,36 +658,24 @@ msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr ""
-"Parduodant šią paslaugą, joks papildomas veiksmas, susijęs su paslaugos "
-"suteikimu pirkėjui,\n"
-"                           nebus atliktas."
-
-#. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
-msgstr "Užsakomas kiekis bus suapvalintas iki šio kartotinio."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
 msgid "Companies"
-msgstr "Įmonės"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Extra Information"
-msgstr "Papildoma informacija"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,message_summary:0
 msgid "Summary"
-msgstr "Santrauka"
+msgstr ""
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -766,12 +690,12 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,date_close:0
 msgid "Date Closed"
-msgstr "Įvykdymo data"
+msgstr ""
 
 #. module: procurement
 #: view:res.company:0
 msgid "Logistics"
-msgstr "Logistika"
+msgstr ""
 
 #. module: procurement
 #: help:product.template,procure_method:0
@@ -780,14 +704,11 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
-"Iš atsargų: kada reikia, produktas paimamas iš atsargų arba laukiama atsargų "
-"papildymo. \n"
-"Pateikus užsakymą: kada reikia, produktas nuperkamas ar pagaminamas."
 
 #. module: procurement
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "Savybių kompozicija"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:311
@@ -800,27 +721,27 @@ msgstr ""
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr "Savybių grupė"
+msgstr ""
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
-msgstr "Įvairūs"
+msgstr ""
 
 #. module: procurement
 #: field:stock.move,procurements:0
 msgid "Procurements"
-msgstr "Užsakymai"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Run Procurement"
-msgstr "Vykdyti užsakymą"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Atlikta"
+msgstr ""
 
 #. module: procurement
 #: view:make.procurement:0
@@ -828,7 +749,7 @@ msgstr "Atlikta"
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
-msgstr "Atšaukti"
+msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -838,21 +759,18 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,origin:0
 msgid "Source Document"
-msgstr "Susijęs dokumentas"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Not urgent"
-msgstr "Neskubu"
+msgstr ""
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Neįvykdyti planiniai užsakymai"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -861,9 +779,6 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
-"Kai prognozuojamas produkto kiekis nukrenta žemiau minimalaus kiekio, "
-"OpenERP sukurs planinį užsakymą, kad atstatytų prognozuojamą kiekį iki "
-"maksimalaus kiekio."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -873,18 +788,21 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Late"
-msgstr "Pavėluota"
+msgstr ""
 
 #. module: procurement
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr "Neįvykdyti planiniai užsakymai"
+msgstr ""
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr "Užsakymo taisyklės"
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr ""
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -901,18 +819,16 @@ msgid ""
 "order or\n"
 "                        a new task."
 msgstr ""
-"Produkto planinis užsakymas. Priklausomai nuo produkto savybių, gali būti "
-"sukurtas pirkimų užsakymas, gamybos užsakymas arba sukurta nauja užduotis."
 
 #. module: procurement
 #: field:procurement.order,close_move:0
 msgid "Close Move at end"
-msgstr "Pabaigoje įvykdyti perkėlimą"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
-msgstr "Suplanuota data"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_product
@@ -921,46 +837,46 @@ msgstr "Suplanuota data"
 #: field:procurement.order,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
-msgstr "Produktas"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary"
-msgstr "Laikina"
+msgstr ""
 
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
 #: field:procurement.order,name:0
 msgid "Description"
-msgstr "Aprašymas"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
-msgstr "Skubu"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr "Veikiantis"
+msgstr ""
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Pateikus užsakymą"
+msgstr ""
 
 #. module: procurement
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr "Tiekimo būdas"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,move_id:0
 msgid "Reservation"
-msgstr "Rezervacija"
+msgstr ""
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_procureproducts0
@@ -970,18 +886,18 @@ msgstr ""
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr "Parduodant šį produktą, OpenERP"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr "Užsakymai, kurie laikinai negali būti įvykdomi"
+msgstr ""
 
 #. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
-msgstr "Pavadinimas"
+msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -995,7 +911,7 @@ msgstr ""
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr "Automatinio užsakymo taisyklės"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:139
@@ -1006,50 +922,51 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,product_uos:0
 msgid "Product UoS"
-msgstr "Pardavimo matai"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_template
 msgid "Product Template"
-msgstr "Produkto šablonas"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
 msgstr ""
-"Šis vedlys patikrins atsargų kiekius pagal automatinio užsakymo taisykles ir "
-"sukurs planinį užsakymą."
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Search Procurement"
-msgstr "Ieškoti užsakymo"
+msgstr ""
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr "Klaida, įvykusi apdorojant planinį užsakymą."
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Very Urgent"
-msgstr "Labai skubu"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr "Automatinis užsakymas"
+msgstr ""
 
 #. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
-msgstr "Žinučių ir pranešimų istorija"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr "Pavėluotas užsakymas"
+msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -1062,7 +979,7 @@ msgstr ""
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "or"
-msgstr "arba"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:134
@@ -1073,7 +990,7 @@ msgstr ""
 #. module: procurement
 #: view:product.product:0
 msgid "Request Procurement"
-msgstr "Vykdyti planinį užsakymą"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:87

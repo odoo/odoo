@@ -1,21 +1,22 @@
-# Galician translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# translation of account-analytic-analysis-es.po to Galego
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_analytic_analysis
 #
+# Frco. Javier Rial Rodríguez <fjrial@cesga.es>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Galician <gl@li.org>\n"
+"Project-Id-Version: account-analytic-analysis-es\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2011-02-02 10:26+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
+"Language-Team: Galego <g11n@mancomun.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:25+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,11 +30,6 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Template"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "To Invoice"
 msgstr ""
 
@@ -43,14 +39,18 @@ msgid "Remaining"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Taxa de marxe real (%)"
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date passed or prepaid unit consumed"
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
 msgstr ""
+"﻿Se factura a partir dos custes, ésta é a data do último traballo ou custe "
+"facturado."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -98,29 +98,14 @@ msgid "Total customer invoiced amount for this account."
 msgstr "Importe total facturado ao cliente para esta conta."
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
-msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date is in the next month"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -186,7 +171,7 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Closed contracts"
+msgid "Contracts not assigned"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -215,9 +200,9 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pricelist"
-msgstr ""
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Taxa de marxe real (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -242,15 +227,6 @@ msgid "Mandatory use of templates in contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr ""
-"﻿Se factura a partir dos custes, ésta é a data do último traballo ou custe "
-"facturado."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
 msgstr ""
@@ -261,19 +237,9 @@ msgid "Real Margin"
 msgstr "Marxe real"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts assigned to a customer."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
 msgstr "Resumen de horas por mes"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -296,11 +262,6 @@ msgid "Parent"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
@@ -314,12 +275,14 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Start Date"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Expiring soon"
+msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -328,73 +291,15 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"Hello ${object.name},\n"
-"\n"
-"% macro account_table(values):\n"
-"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
-"    <tr>\n"
-"        <th>Customer</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Dates</th>\n"
-"        <th>Prepaid Units</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % for partner, accounts in values:\n"
-"        % for account in accounts:\n"
-"        <tr>\n"
-"            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
-"            <td>\n"
-"            % if account.quantity_max != 0.0:\n"
-"                ${account.remaining_hours}/${account.quantity_max} units\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% if \"new\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts just expired: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"old\" in ctx[\"data\"]:\n"
-"    <h2>The following expired contracts are still not processed: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"future\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts will expire in less than one month: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    You can check all contracts to be renewed using the menu:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Thanks,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"OpenERP Automatic Email\n"
-"</pre>\n"
-"\n"
-"            "
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -403,15 +308,15 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Closed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -436,9 +341,8 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
+msgid ""
+"A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -467,11 +371,6 @@ msgstr ""
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
 msgstr "Usuario"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -517,11 +416,6 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expired or consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -544,12 +438,12 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
+msgid "Sale Orders"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
+msgid "Open"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -558,19 +452,9 @@ msgid "Total Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "In Progress"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr "Calculado usando a fórmula: Prezo máx. factura - Importe facturado."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress (open, draft)"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -677,6 +561,11 @@ msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Done"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -725,3 +614,159 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "Total"
 msgstr ""
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Resumo de horas por usuario"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "Calculado usando a fórmula: Cantidade máxima - Horas totais."
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Todas as contas analíticas"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "As miñas contas actuais"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML non válido para a definición da vista!"
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Data da última factura creada para esta conta analítica."
+
+#~ msgid "Theorical Revenue"
+#~ msgstr "Ingresos teóricos"
+
+#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
+#~ msgstr "Calculado usando a fórmula: Ingresos teóricos - Custes totais"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡O nome do obxecto debe comezar con x_ y e non conter ningún carácter "
+#~ "especial!"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Nova conta analítica"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Marxe teórica"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Contas analíticas actuais"
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Horas restantes"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "As miñas contas pendentes"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "As miñas entradas non facturadas"
+
+#~ msgid "My Accounts"
+#~ msgstr "As miñas contas"
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Horas non facturadas"
+
+#~ msgid "Hours Tot"
+#~ msgstr "Horas totais"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Contas analíticas"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Xestión de proxectos financeiros"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Contas analíticas pendentes"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Horas facturadas"
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "Número de horas (desde diario de tipo 'xeral') que poden ser facturadas se "
+#~ "factura baseado en contabilidade analítica."
+
+#~ msgid "Analytic accounts"
+#~ msgstr "Contas analíticas"
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Calculado usando a fórmula: Importe facturado / Horas totais."
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Ingresos por horas (real)"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Tentou saltarse unha regra de acceso (tipo de documento: %s)."
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Contas caducadas"
+
+#~ msgid "All Uninvoiced Entries"
+#~ msgstr "Todas as entradas sen facturar"
+
+#~ msgid ""
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
+#~ msgstr ""
+#~ "Modifica a vista de conta analítica para mostrar\n"
+#~ "datos importantes para o director de proxectos en empresas de servizos.\n"
+#~ "Angade un menú para mostrar información relevante para cada director."
+
+#~ msgid "report_account_analytic"
+#~ msgstr "Informe contas analíticas"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome do modelo incorrecto na definición da acción."
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Erro de Acceso"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "¡Erro! Non pode crear contas analíticas recorrentes"
+
+#~ msgid "Billing"
+#~ msgstr "Facturación"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "¡Erro! A divisa ten que se-la mesma ca da compañía seleccionada"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Este módulo modifica a vista das contas analíticas para amosar información "
+#~ "importante para os xestores de proxectos das compañías de servicios.\n"
+#~ "Engade un menú para amosala información relevante para cada xerente.\n"
+#~ "\n"
+#~ "Tamen pode velo informe do resumo das contas analíticas\n"
+#~ "filtrando tanto polo usuario como polo mes.\n"
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Cantidade de horas que gastaches na conta analítica (dende horarios). "
+#~ "Calcula en todos os diarios do tipo 'xeral'."
+
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr ""
+#~ "Número de horas que poden ser facturadas mais aquelas que xa foron "
+#~ "facturadas."

@@ -1,21 +1,21 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-29 04:08+0000\n"
-"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2010-12-15 21:56+0000\n"
+"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-30 06:09+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -237,9 +237,10 @@ msgid "Incorrect Data"
 msgstr "올바르지 않은 데이터"
 
 #. module: sale
-#: view:sale.order.line:0
-msgid "Cancel Line"
-msgstr "입력줄 취소"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "선지급액의 금액은 양수여야 합니다."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -385,11 +386,6 @@ msgid "False"
 msgstr "거짓"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Terms and conditions..."
-msgstr "약관..."
-
-#. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
 msgid ""
 "Use All to create the final invoice.\n"
@@ -445,7 +441,7 @@ msgstr "입력줄 개수"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판 화면에 삽입할 수 있도록 html 형식으로 직접 작성됩니다."
+msgstr ""
 
 #. module: sale
 #: help:sale.order.line,sequence:0
@@ -760,13 +756,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:510
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr "동일한 협력업체에 서로 다른 통화의 판매를 함께 분류할 수 없습니다."
-
-#. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
 msgstr "기본 옵션"
@@ -833,12 +822,10 @@ msgid "Sales Order done"
 msgstr "판매 주문 완료"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "취소"
+#: code:addons/sale/sale.py:369
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "해당 업체의 판매 장부를 정의하세요: \"%s\" (id:%d)."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1499,9 +1486,12 @@ msgid "My Sales Order Lines"
 msgstr "내 판매 주문 입력줄"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Cancel Quotation"
-msgstr ""
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "취소"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1561,10 +1551,11 @@ msgid "Shipping address :"
 msgstr "배송 주소 :"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:510
 #, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "해당 업체의 판매 장부를 정의하세요: \"%s\" (id:%d)."
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr "동일한 협력업체에 서로 다른 통화의 판매를 함께 분류할 수 없습니다."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1590,12 +1581,6 @@ msgstr "계약 관리 사용"
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:185
-#, python-format
-msgid "There is no default shop for the current user's company!"
 msgstr ""
 
 #. module: sale
@@ -1775,12 +1760,6 @@ msgstr ""
 #: report:sale.order:0
 msgid "Price"
 msgstr "가격"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "선지급액의 금액은 양수여야 합니다."
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -2164,3 +2143,865 @@ msgstr ""
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
 msgstr "판매 주문의 주문일"
+
+#~ msgid "Steps To Deliver a Sale Order"
+#~ msgstr "판매 주문 전달을 위한 단계들"
+
+#~ msgid "Recreate Procurement"
+#~ msgstr "조달 재생성"
+
+#~ msgid "Partial Delivery"
+#~ msgstr "부분 배송"
+
+#~ msgid "Delivery Order"
+#~ msgstr "배송 주문"
+
+#~ msgid "Delivery, from the warehouse to the customer."
+#~ msgstr "창고에서 고객에게 전달"
+
+#~ msgid "You invoice has been successfully created !"
+#~ msgstr "인보이스가 생성되었습니다 !"
+
+#~ msgid "sale.config.picking_policy"
+#~ msgstr "sale.config.picking_policy"
+
+#~ msgid ""
+#~ "This is the list of picking list that have been generated for this invoice"
+#~ msgstr "이 인보이스를 위해 생성된 피킹 리스트"
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "자동 선언"
+
+#~ msgid "Set to Draft"
+#~ msgstr "초안으로 설정"
+
+#~ msgid "Validate"
+#~ msgstr "검증"
+
+#~ msgid ""
+#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
+#~ "is, quotation is moved to  sale order."
+#~ msgstr "확정 버튼이 클릭될 때 마다, 초안 상태가 매뉴얼로 이동합니다. 즉, 견적이 판매 주문으로 이동합니다."
+
+#~ msgid "Inventory Moves"
+#~ msgstr "재고 이동"
+
+#~ msgid "Manual Designation"
+#~ msgstr "매뉴얼 목적지"
+
+#~ msgid "Invoice after delivery"
+#~ msgstr "배송 뒤 인보이스"
+
+#~ msgid "After confirming order, Create the invoice."
+#~ msgstr "주문을 확정한 뒤, 인보이스 생성"
+
+#~ msgid "Shipping Policy"
+#~ msgstr "선적 정책"
+
+#~ msgid "Reference"
+#~ msgstr "참조"
+
+#~ msgid "Outgoing Products"
+#~ msgstr "출고 상품"
+
+#~ msgid "Origin"
+#~ msgstr "기원"
+
+#~ msgid "VAT"
+#~ msgstr "VAT"
+
+#~ msgid ""
+#~ "The sale order will automatically create the invoice proposition (draft "
+#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
+#~ "choose if you invoice based on ordered or shipped quantities. If the product "
+#~ "is a service, shipped quantities means hours spent on the associated tasks."
+#~ msgstr ""
+#~ "판매 주문은 자동적으로 인보이스 제안서 (초안 인보이스)를 생성합니다. 주문과 배송 수량이 일치하지 않을 수도 있습니다. 귀하는 주문 "
+#~ "또는 선적 수량 중 인보이스의 토대가 될 오브젝트를 선택할 수 있습니다. 서비스 상품의 경우, 선적 수량은 관련 작업에 소요된 시간을 "
+#~ "의미합니다."
+
+#~ msgid "Net Price"
+#~ msgstr "순 가격:"
+
+#~ msgid "Procurement is created after confirmation of sale order."
+#~ msgstr "판매 주문 확정 후에 조달이 생성됩니다."
+
+#~ msgid "All at Once"
+#~ msgstr "일괄처리"
+
+#~ msgid "My sales order in progress"
+#~ msgstr "진행 중인 내 판매 주문"
+
+#~ msgid "Procure Method"
+#~ msgstr "조달 방법"
+
+#~ msgid "All Sales Order"
+#~ msgstr "모든 판매 주문"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+#~ msgstr "'배송 뒤 자동 인보이스'로 정의된 판매 주문에 대해 선급금을 처리할 수 없습니다."
+
+#~ msgid "Warehouse"
+#~ msgstr "창고"
+
+#~ msgid ""
+#~ "Packing list is created when 'Assign' is being clicked after confirming the "
+#~ "sale order. This transaction moves the sale order to packing list."
+#~ msgstr ""
+#~ "판매 주문을 확정한 뒤, '할당'을 클릭하면 포장 리스트가 생성됩니다. 이 트랜젝션은 판매 주문을 포잘 리스트로 이동합니다."
+
+#~ msgid ""
+#~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+#~ "will automatic create after delivery."
+#~ msgstr "선적 정책을 '배송 뒤 자동 인보이스'로 선택하면, 배송 뒤 인보이스를 자동 생성합니다."
+
+#~ msgid "My sales order waiting Invoice"
+#~ msgstr "인보이스를 대기 중인 내 판매 주문"
+
+#~ msgid "Confirm Order"
+#~ msgstr "주문 확정"
+
+#~ msgid "Manual Description"
+#~ msgstr "매뉴얼 설명"
+
+#~ msgid "Sale Order Procurement"
+#~ msgstr "판매 주문 조달"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sale order."
+#~ msgstr "판매 주문에 첨부된 모든 인보이스를 먼저 취소하십시오."
+
+#~ msgid "Packing"
+#~ msgstr "포장"
+
+#~ msgid "Complete Delivery"
+#~ msgstr "배송 완료"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "유효하지 않은 액션 !"
+
+#~ msgid "Total amount"
+#~ msgstr "총 금액"
+
+#~ msgid "Configuration"
+#~ msgstr "구성"
+
+#~ msgid "Invoice on Order After Delivery"
+#~ msgstr "배송 뒤 주문 인보이스"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "에러: UOS는 UOM과 다른 카테고리 상에 위치해야 합니다."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
+
+#~ msgid "Sale Shop"
+#~ msgstr "판매 샵"
+
+#~ msgid "Sales orders"
+#~ msgstr "판매 주문"
+
+#~ msgid "Draft Invoice"
+#~ msgstr "인보이스 초안"
+
+#~ msgid "Procurement"
+#~ msgstr "조달"
+
+#~ msgid "Payment accounts"
+#~ msgstr "결제 계정"
+
+#~ msgid "Sales Order To Be Invoiced"
+#~ msgstr "인보이스가 발행될 판매 주문"
+
+#~ msgid "Packing Default Policy"
+#~ msgstr "포장 디폴트 정잭"
+
+#~ msgid "Shipping Default Policy"
+#~ msgstr "선적 디폴트 정책"
+
+#~ msgid "Manages the delivery and invoicing progress"
+#~ msgstr "배송과 인보이스 진행 관리"
+
+#, python-format
+#~ msgid "Could not cancel sale order !"
+#~ msgstr "판매 주문을 취소하지 못했습니다 !"
+
+#~ msgid "Procurement for each line"
+#~ msgstr "각 라인을 위한 조달"
+
+#~ msgid "Canceled"
+#~ msgstr "취소됨"
+
+#~ msgid ""
+#~ "In sale order , procuerement for each line and it comes into the procurement "
+#~ "order"
+#~ msgstr "판매 주문에서 각 라인을 위한 조달이며, 조달 주문 속에 삽입됩니다."
+
+#~ msgid "Order Ref"
+#~ msgstr "주문 참조"
+
+#~ msgid "Order State"
+#~ msgstr "주문 상태"
+
+#~ msgid "Uninvoiced Lines"
+#~ msgstr "인보이스되지 않은 라인들"
+
+#~ msgid "Packaging"
+#~ msgstr "포장"
+
+#~ msgid "Procurement Corrected"
+#~ msgstr "교정된 조달"
+
+#~ msgid "Sales Configuration"
+#~ msgstr "판매 구성"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "에러: 디폴트 UOM과 구매 UOM은 같은 카테고리 속에 있어야 합니다."
+
+#~ msgid "Sales Process"
+#~ msgstr "판매 프로세스"
+
+#~ msgid "My sales in shipping exception"
+#~ msgstr "내 판매 중 예외적 선적"
+
+#~ msgid ""
+#~ "This Configuration step use to set default picking policy when make sale "
+#~ "order"
+#~ msgstr "판매 주문 작성 시, 디폴트 피킹 정책을 설정하는 구성 과정"
+
+#~ msgid "Configure Sale Order Logistic"
+#~ msgstr "판매 주문 물류 구성"
+
+#~ msgid "Sale Procurement"
+#~ msgstr "판매 조달"
+
+#~ msgid "Sale Order"
+#~ msgstr "판매 주문"
+
+#~ msgid ""
+#~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
+#~ "the sale order. This transaction moves the sale order to invoices."
+#~ msgstr ""
+#~ "판매 주문을 확정한 뒤, '인보이스 생성'을 클릭하면 인보이스가 생성됩니다. 이 트랜젝션은 판매 주문을 인보이스로 이동합니다."
+
+#~ msgid "One procurement for each product."
+#~ msgstr "각 상품 별 하나의 조달"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "판매 가격리스트"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "직접 배송"
+
+#~ msgid "Properties"
+#~ msgstr "속성"
+
+#~ msgid "Make Invoice"
+#~ msgstr "인보이스 만들기"
+
+#~ msgid "Draft customer invoice, to be reviewed by accountant."
+#~ msgstr "회계사무원이 검토할 고객 인보이스 초안"
+
+#~ msgid "Compute"
+#~ msgstr "계산"
+
+#~ msgid "Packing OUT is created for stockable products."
+#~ msgstr "스톡가능한 상품에 대해 포장 OUT이 생성됩니다."
+
+#~ msgid "Delivery Order Only"
+#~ msgstr "배송주문 만"
+
+#~ msgid "Sales order lines"
+#~ msgstr "판매 주문 라인"
+
+#~ msgid "Other data"
+#~ msgstr "기타 데이터"
+
+#~ msgid "Confirm sale order and Create invoice."
+#~ msgstr "판매 주문을 확정하고, 인보이스를 생성"
+
+#~ msgid "Close"
+#~ msgstr "닫기"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안 됩니다 !"
+
+#~ msgid "Advance Payment"
+#~ msgstr "Advance Payment"
+
+#~ msgid "Shipping & Manual Invoice"
+#~ msgstr "선적 & 매뉴얼 인보이스"
+
+#~ msgid ""
+#~ "Confirming the packing list moves them to delivery order. This can be done "
+#~ "by clicking on 'Validate' button."
+#~ msgstr "포장 리스트를 확정하면 배송 주문이 생성됩니다. 이를 위해서는 '검증' 버튼을 클릭하십시오."
+
+#~ msgid "Quotation (A sale order in draft state)"
+#~ msgstr "견적 (초안 상태의 판매 주문)"
+
+#~ msgid "Packing List & Delivery Order"
+#~ msgstr "포장 리스트 & 배송 주문"
+
+#~ msgid "Invoice based on packing lists"
+#~ msgstr "포장 리스트에 기초한 인보이스"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "판매 주문 라인"
+
+#~ msgid "Do you really want to create the invoices ?"
+#~ msgstr "인보이스를 생성하시겠습니까 ?"
+
+#~ msgid "Set Default"
+#~ msgstr "디폴트로 설정"
+
+#~ msgid "Sales order"
+#~ msgstr "판매 주문"
+
+#~ msgid "Sale Invoice"
+#~ msgstr "판매 인보이스"
+
+#~ msgid "Open Advance Invoice"
+#~ msgstr "Advance 인보이스 오픈"
+
+#~ msgid "Incoterm"
+#~ msgstr "인코텀"
+
+#~ msgid "Sales Management"
+#~ msgstr "판매 관리"
+
+#~ msgid "Deliver"
+#~ msgstr "배송"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "판매 주문 라인"
+
+#~ msgid "Cancel Assignation"
+#~ msgstr "할당 취소"
+
+#, python-format
+#~ msgid "Could not cancel this sale order !"
+#~ msgstr "이 판매 주문을 취소하지 못했습니다 !"
+
+#~ msgid "Make invoices"
+#~ msgstr "인보이스 만들기"
+
+#~ msgid ""
+#~ "The name and address of the contact that requested the order or quotation."
+#~ msgstr "주문 또는 견적을 요청한 이의 이름과 주소"
+
+#~ msgid ""
+#~ "By default, Open ERP is able to manage complex routing and paths of products "
+#~ "in your warehouse and partner locations. This will configure the most common "
+#~ "and simple methods to deliver products to the customer in one or two "
+#~ "operations by the worker."
+#~ msgstr ""
+#~ "디폴트로, 시스템은 귀하의 창고와 파트너 위치에 있는 상품들의 복잡한 라우팅과 결오를 관리할 수 있습니다. 이것은 작업자의 한 두 가지 "
+#~ "오퍼레이션을 통해 고객에게 상품을 전달할 가장 일반적이고 간편한 방식을 구성하게 됩니다."
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "구매 가격리스트"
+
+#~ msgid "Name"
+#~ msgstr "이름"
+
+#~ msgid "Configure Picking Policy for Sale Order"
+#~ msgstr "판매 주문을 위한 피킹 정책 구성"
+
+#~ msgid "New Quotation"
+#~ msgstr "새 견적"
+
+#, python-format
+#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
+#~ msgstr "이미 확정된 판매 주문은 삭제할 수 없습니다 !"
+
+#~ msgid "Related invoices"
+#~ msgstr "관련된 인보이스들"
+
+#~ msgid ""
+#~ "This is the list of invoices that have been generated for this sale order. "
+#~ "The same sale order may have been invoiced in several times (by line for "
+#~ "example)."
+#~ msgstr ""
+#~ "이 판매 주문을 위해 생성된 인보이스들의 목록입니다. 동일한 판매 주문이 여러 차례 인보이스들을 생성할 수도 있습니다 (가령, 라인 별)."
+
+#~ msgid "Payment Before Delivery"
+#~ msgstr "배송 전 결제"
+
+#~ msgid "Delivery Delay"
+#~ msgstr "배송 지연"
+
+#~ msgid "Invoice Corrected"
+#~ msgstr "교정된 인보이스"
+
+#~ msgid "Payment Terms"
+#~ msgstr "결제 조건"
+
+#~ msgid "States"
+#~ msgstr "상태"
+
+#~ msgid "My Sales Order"
+#~ msgstr "내 판매 주문"
+
+#~ msgid "Sale Order line"
+#~ msgstr "판매 주문 라인"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "에러: 유효하지 않은 EAN 코드"
+
+#~ msgid "Packing Policy"
+#~ msgstr "포장 정책"
+
+#~ msgid "Product sales"
+#~ msgstr "상품 판매"
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "test_state에 유효하지 않은 모드"
+
+#~ msgid "Create Advance Invoice"
+#~ msgstr "Advance Invoice 생성"
+
+#~ msgid "Our Salesman"
+#~ msgstr "우리 판매사원"
+
+#~ msgid "Sales by Salesman in last 90 days"
+#~ msgstr "최근 90일간 영업사원으로 인한 판매"
+
+#~ msgid "Based on Timesheet"
+#~ msgstr "타임시트 기준"
+
+#~ msgid "Shipping address for current sales order."
+#~ msgstr "현재 판매 주문의 배송 주소"
+
+#, python-format
+#~ msgid "The quotation '%s' has been converted to a sales order."
+#~ msgstr "'%s' 견적이 판매 주문으로 전환되었습니다."
+
+#~ msgid "Print Quotation"
+#~ msgstr "견적 인쇄"
+
+#~ msgid "Invoice based on deliveries"
+#~ msgstr "배송 기준으로 송장 발행"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "경고 !"
+
+#~ msgid "Procurement Order"
+#~ msgstr "조달 주문"
+
+#~ msgid "Order Line"
+#~ msgstr "주문 입력줄"
+
+#~ msgid "Main Working Time Unit"
+#~ msgstr "주요 근무 시간 단위"
+
+#~ msgid "State"
+#~ msgstr "상태"
+
+#~ msgid "Based on Delivery Orders"
+#~ msgstr "배송 주문 기준"
+
+#~ msgid "Based on Tasks' Work"
+#~ msgstr "과제의 업무 기준"
+
+#~ msgid "Dates"
+#~ msgstr "날짜"
+
+#~ msgid "My Sale Orders"
+#~ msgstr "내 판매 주문"
+
+#~ msgid "Sales by Salesman"
+#~ msgstr "영업사원으로 인한 판매"
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr "배송 정책이 '피킹으로부터 송장 발행' 또는 '배송 후 주문에 대한 송장 발행'일 경우, 송장이 자동으로 생성됩니다."
+
+#~ msgid "Sales Manager Dashboard"
+#~ msgstr "판매 관리자 대시보드"
+
+#~ msgid "Conditions"
+#~ msgstr "조건"
+
+#, python-format
+#~ msgid "Configuration Error !"
+#~ msgstr "구성 오류 !"
+
+#, python-format
+#~ msgid "Could not cancel this sales order !"
+#~ msgstr "해당 판매 주문을 취소할 수 없었음 !"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "참조는 업체 당 유일해야 합니다!"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr "주문 확정일과 고객 상품 배송일 간의 일수"
+
+#~ msgid "UoM"
+#~ msgstr "계수 단위"
+
+#, python-format
+#~ msgid "You cannot cancel a sale order line that has already been invoiced!"
+#~ msgstr "이미 송장이 발행된 판매 주문 입력줄을 취소할 수 없습니다!"
+
+#, python-format
+#~ msgid "(n/a)"
+#~ msgstr "(해당 없음)"
+
+#, python-format
+#~ msgid "You must first cancel stock moves attached to this sales order line."
+#~ msgstr "먼저 해당 판매 주문 입력줄에 첨부된 재고 이동을 취소해야 합니다."
+
+#~ msgid "Number Packages"
+#~ msgstr "포장 번호 부여"
+
+#~ msgid ""
+#~ "Select a product of type service which is called 'Advance Product'. You may "
+#~ "have to create it and set it as a default value on this field."
+#~ msgstr ""
+#~ "'고급 상품'이라 불리는 유형 서비스의 상품을 선택하세요. 이를 생성하거나 해당 필드에 기본 값으로 설정해야 할 수도 있습니다."
+
+#~ msgid "Notes"
+#~ msgstr "메모"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "회사명은 유일해야 합니다 !"
+
+#~ msgid "Month-1"
+#~ msgstr "전월"
+
+#~ msgid "Deliver each product when available"
+#~ msgstr "각 제품을 준비되었을 때마다 배송"
+
+#~ msgid ""
+#~ "For every sales order line, a procurement order is created to supply the "
+#~ "sold product."
+#~ msgstr "판매 주문의 각 입력줄마다 판매된 상품을 공급하기 위해 조달 주문이 생성됩니다."
+
+#~ msgid "Based on Sales Orders"
+#~ msgstr "판매 주문 기준"
+
+#~ msgid "Line Sequence"
+#~ msgstr "입력줄 순서"
+
+#~ msgid "Sales Open Invoice"
+#~ msgstr "판매 개시 송장"
+
+#~ msgid "Untaxed amount"
+#~ msgstr "비과세 금액"
+
+#~ msgid "Lines to Invoice"
+#~ msgstr "송장 발행 대상 입력줄"
+
+#~ msgid "Extra Info"
+#~ msgstr "추가 정보"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "기타"
+
+#~ msgid "Quantity (UoM)"
+#~ msgstr "수량 (계수 단위)"
+
+#~ msgid "All Quotations"
+#~ msgstr "모든 견적"
+
+#~ msgid "Options"
+#~ msgstr "옵션"
+
+#, python-format
+#~ msgid "You cannot confirm a sale order which has no line."
+#~ msgstr "입력줄이 존재하지 않는 판매 주문을 확정할 수 없습니다."
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "정말로 송장을 생성을 하시겠습니까 ?"
+
+#~ msgid "Stock Moves"
+#~ msgstr "재고 이동"
+
+#~ msgid "Shipping Address"
+#~ msgstr "배송 주소"
+
+#, python-format
+#~ msgid "Could not cancel sales order line!"
+#~ msgstr "판매 주문 입력줄을 취소할 수 없었음!"
+
+#~ msgid "Sales By Month"
+#~ msgstr "월별 판매"
+
+#~ msgid "Procurement of sold material"
+#~ msgstr "고체 물질의 조달"
+
+#~ msgid "Create Final Invoice"
+#~ msgstr "최종 송장 생성"
+
+#~ msgid "Companies"
+#~ msgstr "업체"
+
+#~ msgid "Invoice on order after delivery"
+#~ msgstr "배송 후 주문에 대한 송장 발행"
+
+#~ msgid "History"
+#~ msgstr "기록"
+
+#~ msgid ""
+#~ "It indicates that the sales order has been delivered. This field is updated "
+#~ "only after the scheduler(s) have been launched."
+#~ msgstr "판매 주문이 배송되었음을 표시합니다. 해당 필드는 스케줄러가 시작된 이후에만 업데이트됩니다."
+
+#~ msgid ""
+#~ "The name and address of the contact who requested the order or quotation."
+#~ msgstr "주문 또는 견적을 요청한 담당자의 성명과 주소"
+
+#~ msgid "References"
+#~ msgstr "참조"
+
+#~ msgid "Total Tax Excluded"
+#~ msgstr "미포함된 총 세액"
+
+#~ msgid "Auto-email confirmed sale orders"
+#~ msgstr "자동 발송 이메일로 확정된 판매 주문"
+
+#, python-format
+#~ msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
+#~ msgstr "해당 업체에 정의된 판매 장부가 존재하지 않습니다: \"%s\" (id:%d)"
+
+#~ msgid "Sales by Partner"
+#~ msgstr "협력업체별 판매"
+
+#~ msgid "Open Invoice"
+#~ msgstr "송장 열기"
+
+#~ msgid "You invoice has been successfully created!"
+#~ msgstr "송장이 성공적으로 생성되었습니다!"
+
+#~ msgid "Ordering Contact"
+#~ msgstr "주문 담당자"
+
+#~ msgid "Based on the shipped or on the ordered quantities."
+#~ msgstr "배송 또는 주문 수량 기준"
+
+#, python-format
+#~ msgid "Cannot delete a sales order line which is in state '%s'!"
+#~ msgstr "'%s' 상태의 판매 주문 입력줄을 삭제할 수 없음!"
+
+#~ msgid "Deliver all products at once"
+#~ msgstr "모든 상품을 한 번에 배송"
+
+#~ msgid "Sales per Customer in last 90 days"
+#~ msgstr "최근 90일간 고객별 판매"
+
+#~ msgid "Related Picking"
+#~ msgstr "관련된 피킹"
+
+#~ msgid "Qty(UoS)"
+#~ msgstr "수량(판매 단위)"
+
+#~ msgid "Create Delivery Order"
+#~ msgstr "배송 주문 생성"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "오류"
+
+#~ msgid "Deliveries to Invoice"
+#~ msgstr "송장 발행 대상 배송"
+
+#~ msgid "Sales by Product Category"
+#~ msgstr "상품 분류별 판매"
+
+#~ msgid "Create Pick List"
+#~ msgstr "픽 리스트 생성"
+
+#~ msgid "Pick List"
+#~ msgstr "픽 리스트"
+
+#~ msgid "Create Procurement Order"
+#~ msgstr "조달 주문 생성"
+
+#~ msgid "Stock Move"
+#~ msgstr "재고 이동"
+
+#~ msgid "Invoice Based on Sales Orders"
+#~ msgstr "판매 주문 기준 송장"
+
+#~ msgid "Do you charge the delivery?"
+#~ msgstr "배송을 과금합니까?"
+
+#~ msgid "Sales order created in current month"
+#~ msgstr "현월에 생성된 판매 주문"
+
+#, python-format
+#~ msgid "Picking Information ! : "
+#~ msgstr "피킹 정보 ! : "
+
+#~ msgid "Qty(UoM)"
+#~ msgstr "수량(계수 단위)"
+
+#~ msgid "Picking List"
+#~ msgstr "피킹 리스트"
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "판매 주문을 취소할 수 없었음 !"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "오류 !"
+
+#~ msgid "Reference UoM"
+#~ msgstr "참조 계수 단위"
+
+#~ msgid "Setup your Invoicing Method"
+#~ msgstr "송장 발행 방식을 설정하세요"
+
+#~ msgid "Invoice Policy"
+#~ msgstr "송장 정책"
+
+#~ msgid "Confirmed sale order lines, not yet delivered"
+#~ msgstr "확정되었으나 배송되지 않은 판매 주문 입력줄"
+
+#~ msgid ""
+#~ "You can generate invoices based on sales orders or based on shippings."
+#~ msgstr "판매 주문 또는 배송 기준으로 송장을 생성할 수 있습니다."
+
+#~ msgid "Recreate Packing"
+#~ msgstr "포장 재생성"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sales form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "판매 양식에 고객을 선택해야 합니다 !\n"
+#~ "상품을 선택하기 전에 고객 한 명을 선택하세요."
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr "먼저 해당 판매 주문에 첨부된 모든 피킹을 취소해야 합니다."
+
+#~ msgid "Document of the move to the customer."
+#~ msgstr "고객으로 이동된 건에 대한 문서"
+
+#~ msgid "Picking Policy"
+#~ msgstr "피킹 정책"
+
+#~ msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+#~ msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+
+#, python-format
+#~ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "해당 제품에 정의된 수익 계정이 없습니다: \"%s\" (id:%d)"
+
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
+#~ msgid "Logistic"
+#~ msgstr "물류"
+
+#~ msgid "Product UoM"
+#~ msgstr "상품 계수 단위"
+
+#~ msgid "Pay before delivery"
+#~ msgstr "배송 전 지불"
+
+#~ msgid "Contract/Analytic Account"
+#~ msgstr "계약/분석 계정"
+
+#~ msgid "Sales by Month"
+#~ msgstr "월별 판매"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "경고"
+
+#~ msgid "Main Method Based On"
+#~ msgstr "주요 방식 기준:"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "오류! 재귀적 업체를 생성할 수 없습니다."
+
+#~ msgid "Sale Order Lines that are in 'done' state"
+#~ msgstr "'완료' 상태의 판매 주문 입력줄"
+
+#~ msgid "Sales by Product's Category in last 90 days"
+#~ msgstr "최근 90일간 제품 분류별 판매"
+
+#~ msgid "Print Order"
+#~ msgstr "주문 인쇄"
+
+#~ msgid "Sale order lines done"
+#~ msgstr "판매 주문 입력줄 완료"
+
+#~ msgid "Sales order created in current year"
+#~ msgstr "올해 생성된 판매 주문"
+
+#~ msgid "Delivery Lead Time"
+#~ msgstr "배송소요시간"
+
+#~ msgid "Image"
+#~ msgstr "이미지"
+
+#~ msgid "Salesman"
+#~ msgstr "영업사원"
+
+#, python-format
+#~ msgid "The sales order '%s' has been cancelled."
+#~ msgstr "'%s' 판매 주문이 취소되었습니다."
+
+#~ msgid "Packings"
+#~ msgstr "포장"
+
+#~ msgid "Sales order created in last month"
+#~ msgstr "전월 생성된 판매 주문"
+
+#~ msgid "Sale Order Lines ready to be invoiced"
+#~ msgstr "송장 발행 준비가 완료된 판매 주문 입력줄"
+
+#~ msgid ""
+#~ "One Procurement order for each sales order line and for each of the "
+#~ "components."
+#~ msgstr "각 판매 주문 입력줄 및 각 부품마다 하나의 조달 주문이 생성됨."
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sales order."
+#~ msgstr "먼저 해당 판매 주문에 첨부된 모든 송장을 취소해야 합니다."
+
+#~ msgid "Deliver & invoice on demand"
+#~ msgstr "주문형 배송 & 송장 발행"
+
+#~ msgid "Delivered"
+#~ msgstr "배송 완료"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "해당 상품에 생산 로트를 지정해야 합니다"
+
+#, python-format
+#~ msgid "The sales order '%s' has been set in draft state."
+#~ msgstr "The sales order '%s' 판매 주문이 초안 상태로 설정되었습니다."
+
+#~ msgid "Assign"
+#~ msgstr "지정"
+
+#~ msgid "Accounting"
+#~ msgstr "회계"
+
+#~ msgid "Invoice Based on Deliveries"
+#~ msgstr "배송 기준 송장"
+
+#, python-format
+#~ msgid "Not enough stock ! : "
+#~ msgstr "재고가 부족함 ! : "
+
+#~ msgid "Sales Order Requisition"
+#~ msgstr "판매 주문 요청"

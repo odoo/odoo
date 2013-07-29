@@ -40,10 +40,10 @@ class one2many_mod2(fields.one2many):
             plan = journal.plan_id
             if plan and len(plan.plan_ids) > pnum:
                 acc_id = plan.plan_ids[pnum].root_analytic_id.id
-                ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids),('analytic_account_id','child_of',[acc_id])], limit=self._limit)
+                ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids),('analytic_account_id','child_of',[acc_id])], limit=self._limit)
         if ids2 is None:
-            ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
+        for r in obj.pool[self._obj]._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append( r['id'] )
         return res
 
@@ -65,7 +65,6 @@ class account_analytic_line(osv.osv):
         'percentage': fields.float('Percentage')
     }
 
-account_analytic_line()
 
 class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
@@ -75,7 +74,6 @@ class account_analytic_plan(osv.osv):
         'plan_ids': fields.one2many('account.analytic.plan.line', 'plan_id', 'Analytic Plans'),
     }
 
-account_analytic_plan()
 
 class account_analytic_plan_line(osv.osv):
     _name = "account.analytic.plan.line"
@@ -94,7 +92,6 @@ class account_analytic_plan_line(osv.osv):
         'max_required': 100.0,
     }
 
-account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
     _name = "account.analytic.plan.instance"
@@ -257,7 +254,6 @@ class account_analytic_plan_instance(osv.osv):
                 vals['code'] = this.code and (str(this.code)+'*') or "*"
         return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context=context)
 
-account_analytic_plan_instance()
 
 class account_analytic_plan_instance_line(osv.osv):
     _name = "account.analytic.plan.instance.line"
@@ -280,7 +276,6 @@ class account_analytic_plan_instance_line(osv.osv):
             res.append((record['id'], record['analytic_account_id']))
         return res
 
-account_analytic_plan_instance_line()
 
 class account_journal(osv.osv):
     _inherit = "account.journal"
@@ -289,7 +284,6 @@ class account_journal(osv.osv):
         'plan_id': fields.many2one('account.analytic.plan', 'Analytic Plans'),
     }
 
-account_journal()
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -315,7 +309,6 @@ class account_invoice_line(osv.osv):
             res_prod['value'].update({'analytics_id': rec.analytics_id.id})
         return res_prod
 
-account_invoice_line()
 
 class account_move_line(osv.osv):
 
@@ -339,7 +332,7 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
            if line.analytics_id:
                if not line.journal_id.analytic_journal_id:
-                   raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal.") % (line.journal_id.name,))
+                   raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (line.journal_id.name,))
 
                toremove = analytic_line_obj.search(cr, uid, [('move_id','=',line.id)], context=context)
                if toremove:
@@ -370,7 +363,6 @@ class account_move_line(osv.osv):
         result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return result
 
-account_move_line()
 
 class account_invoice(osv.osv):
     _name = "account.invoice"
@@ -425,14 +417,12 @@ class account_invoice(osv.osv):
                     il['analytic_lines'].append((0, 0, al_vals))
         return iml
 
-account_invoice()
 
 class account_analytic_plan(osv.osv):
     _inherit = "account.analytic.plan"
     _columns = {
         'default_instance_id': fields.many2one('account.analytic.plan.instance', 'Default Entries'),
     }
-account_analytic_plan()
 
 class analytic_default(osv.osv):
     _inherit = "account.analytic.default"
@@ -440,7 +430,6 @@ class analytic_default(osv.osv):
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
 
-analytic_default()
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -459,7 +448,6 @@ class sale_order_line(osv.osv):
                     inv_line_obj.write(cr, uid, [line.id], {'analytics_id': rec.analytics_id.id}, context=context)
         return create_ids
 
-sale_order_line()
 
 
 class account_bank_statement(osv.osv):
@@ -483,12 +471,11 @@ class account_bank_statement(osv.osv):
             for st_line in st.line_ids:
                 if st_line.analytics_id:
                     if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
+                        raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
         return True
 
-account_bank_statement()
 
 
 class account_bank_statement_line(osv.osv):
@@ -497,6 +484,5 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
-account_bank_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

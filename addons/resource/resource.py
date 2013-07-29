@@ -318,7 +318,6 @@ class resource_calendar(osv.osv):
         # return timedelta converted to hours
         return (hours_timedelta.days * 24.0 + hours_timedelta.seconds / 3600.0)
 
-resource_calendar()
 
 class resource_calendar_attendance(osv.osv):
     _name = "resource.calendar.attendance"
@@ -338,7 +337,6 @@ class resource_calendar_attendance(osv.osv):
     _defaults = {
         'dayofweek' : '0'
     }
-resource_calendar_attendance()
 
 def hours_time_string(hours):
     """ convert a number of hours (float) into a string with format '%H:%M' """
@@ -476,7 +474,6 @@ class resource_resource(osv.osv):
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
 
-resource_resource()
 
 class resource_calendar_leaves(osv.osv):
     _name = "resource.calendar.leaves"
@@ -509,6 +506,5 @@ class resource_calendar_leaves(osv.osv):
             return {'value': result}
         return {'value': {'calendar_id': []}}
 
-resource_calendar_leaves()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-11 15:01+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-03-08 10:54+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:42+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:42+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -93,11 +93,6 @@ msgstr "Очекувана екстра плата"
 #: view:hr.recruitment.report:0
 msgid "Jobs"
 msgstr "Работни Места"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Extra advantages..."
-msgstr "Екстра предности..."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -390,12 +385,6 @@ msgid "Source"
 msgstr "Извор"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
-msgstr "Година"
-
-#. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
 msgid "Followers"
 msgstr "Пратители"
@@ -664,11 +653,6 @@ msgid "Category of applicant"
 msgstr "Категорија на апликант"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "e.g. Call for interview"
-msgstr "на пр. Повик за интервју"
-
-#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,month:0
 msgid "Month"
@@ -680,9 +664,9 @@ msgid "Answer related job question"
 msgstr "Одговори прашање поврзано со работно место"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "Степен на вработување"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Прво интервју"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -998,10 +982,10 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "Името на степенот на вработување мора да биде уникатно!"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:349
-#, python-format
-msgid "Contact Email"
-msgstr "Контакт емаил"
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
+msgid "Year"
+msgstr "Година"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -1191,9 +1175,9 @@ msgid "On Average"
 msgstr "Во просек"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Прво интервју"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Степен на вработување"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -1252,11 +1236,6 @@ msgstr "Овие луѓе ќе добијат емаил"
 #: field:hr.job,alias_id:0
 msgid "Alias"
 msgstr "Алијас"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Feedback of interviews..."
-msgstr "Повратна информација за интервјуата..."
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1351,3 +1330,134 @@ msgstr "Апликации кои треба да бидат обработен�
 #: view:hr.applicant:0
 msgid "Schedule Interview"
 msgstr "Закажи интервју"
+
+#~ msgid "Goals"
+#~ msgstr "Цели"
+
+#~ msgid "Notes"
+#~ msgstr "Забелешки"
+
+#~ msgid "Create Partner"
+#~ msgstr "Креирај партнер"
+
+#~ msgid "Contract Data"
+#~ msgstr "Дата на договорот"
+
+#~ msgid "Partner Contact Name"
+#~ msgstr "Контакт име на партнер"
+
+#, python-format
+#~ msgid "Phone Call"
+#~ msgstr "Телефонски повик"
+
+#~ msgid "Change Color"
+#~ msgstr "Промени боја"
+
+#~ msgid ""
+#~ "Stages of the recruitment process may be different per department. If this "
+#~ "stage is common to all departments, keep tempy this field."
+#~ msgstr ""
+#~ "Етапите од процесот на вработување може да се разликуваат по одделение. "
+#~ "Доколу оваа етапа е заедничка за сите одделенија,"
+
+#~ msgid "Send New Email"
+#~ msgstr "испрати нов емаил"
+
+#~ msgid ""
+#~ "Define here your stages of the recruitment process, for example: "
+#~ "qualification call, first interview, second interview, refused, hired."
+#~ msgstr ""
+#~ "дефинирај ги етапите на процесот на вработување, на пример: повик за "
+#~ "квалификација, прво интервју, второ интервју, одбиен, вработен."
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "грешка!"
+
+#~ msgid "Planned Date"
+#~ msgstr "планирана дата"
+
+#~ msgid "Dates"
+#~ msgstr "Датуми"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Месец - 1    "
+
+#~ msgid ""
+#~ " Check if the following stages are matching your recruitment process. Don't "
+#~ "forget to specify the department if your recruitment process is different "
+#~ "according to the job position."
+#~ msgstr ""
+#~ " Проверете дали следниве етапи се совпаѓаат со процесот на вработување. Не "
+#~ "заборавајте да го назначите одделението доколку процесот на вработување "
+#~ "варира во зависност од работната позиција."
+
+#~ msgid "History Information"
+#~ msgstr "историски информации"
+
+#~ msgid "Qualification"
+#~ msgstr "квалификација"
+
+#~ msgid "Job Info"
+#~ msgstr "Информации за работни места"
+
+#~ msgid "Recruitment performed in current year"
+#~ msgstr "Вработување направено во тековната година"
+
+#~ msgid "Recruitment during last month"
+#~ msgstr "Вработување во текот на минатиот месец"
+
+#~ msgid "# Cases"
+#~ msgstr "Случаи"
+
+#~ msgid "Category"
+#~ msgstr "Категорија"
+
+#~ msgid "Answer"
+#~ msgstr "Одговор"
+
+#~ msgid "Communication & History"
+#~ msgstr "Комуникација и историја"
+
+#~ msgid "Meeting"
+#~ msgstr "Состанок"
+
+#~ msgid "Avg Salary Proposed"
+#~ msgstr "Просечна предложена плата"
+
+#~ msgid ""
+#~ "From this menu you can track applicants in the recruitment process and "
+#~ "manage all operations: meetings, interviews, phone calls, etc. If you setup "
+#~ "the email gateway, applicants and their attached CV are created "
+#~ "automatically when an email is sent to jobs@yourcompany.com. If you install "
+#~ "the document management modules, all documents (CV and motivation letters) "
+#~ "are indexed automatically, so that you can easily search through their "
+#~ "content."
+#~ msgstr ""
+#~ "Од оваа мени можете да ги следите апикантите во процесот на вработување и да "
+#~ "ги менаџирате сите операции: состаноци, интервјуа, телефонски разговори и "
+#~ "др. Доклоку подесите емаил портал, апликантите и нивните прикачени CV се "
+#~ "креираат автоматски кога се испрака емаил на jobs@yourcompany.com. Доклоку "
+#~ "инсталирете модули за менаџирање на документи, сите документи (CV и "
+#~ "мотивациони писма) автоматски ќе бидат означени, така што ќе можете лесно да "
+#~ "пребарувате по нивната содржина."
+
+#~ msgid "Are you sure you want to create a partner based on this job request ?"
+#~ msgstr ""
+#~ "Дали сте сигурни дека сакате да креирате партнер врз основа на барањата на "
+#~ "оваа работно место"
+
+#~ msgid "Schedule Phone Call"
+#~ msgstr "Распоред на телефонски повици"
+
+#~ msgid "History"
+#~ msgstr "Историја"
+
+#~ msgid "Recruitment performed in current month"
+#~ msgstr "Вработување направоено во тековниот месец."
+
+#~ msgid "State"
+#~ msgstr "Земја"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Контакт партнер"

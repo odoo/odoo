@@ -1,21 +1,21 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2010-10-30 11:43+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:41+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:30+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -169,6 +169,12 @@ msgid "Refuse"
 msgstr "Отклонить"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:433
+#, python-format
+msgid "Request <b>approved</b>, waiting second validation."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
@@ -181,9 +187,9 @@ msgid "Messages"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "Отгул"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -284,7 +290,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2013"
+msgid "Legal Leaves 2012"
 msgstr ""
 
 #. module: hr_holidays
@@ -644,8 +650,9 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Add a reason..."
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
 msgstr ""
 
 #. module: hr_holidays
@@ -695,6 +702,11 @@ msgid "My Department Leaves"
 msgstr ""
 
 #. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request confirmed, waiting confirmation"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
 msgstr ""
@@ -737,11 +749,6 @@ msgstr "Анализ отгулов"
 #: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Отмена"
-
-#. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
-msgid "Request created and waiting confirmation"
-msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -828,12 +835,6 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
-msgid "Remaining Legal Leaves"
-msgstr ""
-
-#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
 msgstr ""
@@ -908,12 +909,6 @@ msgid "Both Approved and Confirmed"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:440
-#, python-format
-msgid "Request approved, waiting second validation."
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
 msgstr ""
@@ -932,9 +927,9 @@ msgid "The start date must be anterior to the end date."
 msgstr ""
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr ""
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Отгул"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -1014,3 +1009,112 @@ msgstr ""
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr ""
+
+#~ msgid "Confirm"
+#~ msgstr "Подтвердить"
+
+#~ msgid "Select Holiday Type"
+#~ msgstr "Выбор типа отпуска"
+
+#~ msgid "Holidays"
+#~ msgstr "Отпуска"
+
+#~ msgid "Both Validated and Confirmed"
+#~ msgstr "Оба Утвержденные и Подтвержденные"
+
+#~ msgid "General"
+#~ msgstr "Общие"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Установить в состояние 'Черновик'"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for employee %s: too few remaining days (%s)."
+#~ msgstr ""
+#~ "Невозможно утвердить отгулы для сотрудника %s: осталось очень мало дней (%s)."
+
+#~ msgid "Summary Of Leaves"
+#~ msgstr "Сумма отгулов"
+
+#~ msgid ""
+#~ "When the holiday request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Approval'.            If the admin accepts it, the state is "
+#~ "'Approved'. If it is refused, the state is 'Refused'."
+#~ msgstr ""
+#~ "После создания заявка на отгул имеет статус \"Черновик\".\n"
+#~ "Он утверждается пользователем и заявка отправляется админу со статусом "
+#~ "\"Ожидает утверждения\". Если админ принимает его, то статус изменится на "
+#~ "\"Утвержден\". Если он отклонен, статус будет \"Отклонен\"."
+
+#, python-format
+#~ msgid "You have to select at least 1 Department. And try again"
+#~ msgstr "Вы должны выбрать хотя бы 1 отдел. Затем повторите попытку"
+
+#~ msgid "The start date must be before the end date !"
+#~ msgstr "День начала должен быть до дня завершения!"
+
+#~ msgid "State"
+#~ msgstr "Состояние"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr "Если это истина, то заявка должна быть утверждения второй проверкой"
+
+#~ msgid "You have to select an employee or a category"
+#~ msgstr "Вы должны выбрать сотрудника или категорию"
+
+#~ msgid ""
+#~ "If you set a meeting type, OpenERP will create a meeting in the calendar "
+#~ "once a leave is validated."
+#~ msgstr ""
+#~ "Если вы установите тип встречи, OpenERP создаст встречу в календаре, как "
+#~ "только отгул будет утвержден."
+
+#~ msgid "Error! leave start-date must be lower then leave end-date."
+#~ msgstr "Ошибка! Дата начала отгула должно быть раньше даты завершения."
+
+#~ msgid "Employee's Holidays"
+#~ msgstr "Выходные сотрудника"
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "Отгулы на утверждение"
+
+#~ msgid "Holidays by Department"
+#~ msgstr "Выходные по отделу"
+
+#~ msgid "All Employee Leaves"
+#~ msgstr "Отгулы всех сотрудников"
+
+#~ msgid "The number of days must be greater than 0 !"
+#~ msgstr "Количество дней должно быть больше 0!"
+
+#~ msgid "By Employee Category"
+#~ msgstr "По категории сотрудника"
+
+#~ msgid ""
+#~ "This color will be used in the leaves summary located in Reporting\\Leaves "
+#~ "by Departement"
+#~ msgstr ""
+#~ "Цвет будет использоваться в отчете по отгулам, расположенном в Отчеты\\"
+#~ "Отгулы по отделам."
+
+#, python-format
+#~ msgid "You cannot delete a leave which is not in draft state !"
+#~ msgstr "Невозможно удалить отгул, который не имеет статуса черновика!"
+
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr ""
+#~ "Если выбрать данную галочку, система позволит сотрудникам в данном разделе "
+#~ "создавать больше отгулов, чем доступно."
+
+#~ msgid "This area is automaticly filled by the user who validate the leave"
+#~ msgstr ""
+#~ "Эта область автоматически заполняется утверждающим отгул пользователем."
+
+#~ msgid "Human Resources: Holidays management"
+#~ msgstr "Человеческие ресурсы: Управление выходными"

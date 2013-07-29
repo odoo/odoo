@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-05-08 09:39+0000\n"
+"Last-Translator: Tino Kraft <tino.kraft@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:25+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,11 +29,6 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Template"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "To Invoice"
 msgstr ""
 
@@ -43,14 +38,18 @@ msgid "Remaining"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Toteutunut kate (%)"
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date passed or prepaid unit consumed"
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
 msgstr ""
+"Jos laskutetaan kuluista, tämä on viimeisimpien töiden tai kulujen "
+"laskutuspäivä."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -98,29 +97,14 @@ msgid "Total customer invoiced amount for this account."
 msgstr "Asiakkaiden kokonaislaskutuksen määrä tälle tilille."
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
-msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date is in the next month"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -186,7 +170,7 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Closed contracts"
+msgid "Contracts not assigned"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -215,9 +199,9 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pricelist"
-msgstr ""
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Toteutunut kate (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -242,15 +226,6 @@ msgid "Mandatory use of templates in contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr ""
-"Jos laskutetaan kuluista, tämä on viimeisimpien töiden tai kulujen "
-"laskutuspäivä."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
 msgstr ""
@@ -261,19 +236,9 @@ msgid "Real Margin"
 msgstr "Todellinen kate"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts assigned to a customer."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
 msgstr "Kuukauden tuntiyhteenveto"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -297,11 +262,6 @@ msgid "Parent"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
@@ -315,12 +275,14 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Start Date"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Expiring soon"
+msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -329,74 +291,18 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"Hello ${object.name},\n"
-"\n"
-"% macro account_table(values):\n"
-"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
-"    <tr>\n"
-"        <th>Customer</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Dates</th>\n"
-"        <th>Prepaid Units</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % for partner, accounts in values:\n"
-"        % for account in accounts:\n"
-"        <tr>\n"
-"            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
-"            <td>\n"
-"            % if account.quantity_max != 0.0:\n"
-"                ${account.remaining_hours}/${account.quantity_max} units\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% if \"new\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts just expired: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"old\" in ctx[\"data\"]:\n"
-"    <h2>The following expired contracts are still not processed: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"future\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts will expire in less than one month: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    You can check all contracts to be renewed using the menu:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Thanks,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"OpenERP Automatic Email\n"
-"</pre>\n"
-"\n"
-"            "
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
 msgstr ""
+"Sopimukset on uusittava, koska deadline on mennyt tai työtuntien määrä "
+"ylittää suunnitellun tuntimäärän"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
+msgstr "Asiakkaan kanssa uusittavat odottavat sopimukset"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -404,15 +310,15 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Closed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -437,9 +343,8 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
+msgid ""
+"A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -467,11 +372,6 @@ msgstr ""
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
 msgstr "Käyttäjä"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -517,11 +417,6 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expired or consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -544,12 +439,12 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
+msgid "Sale Orders"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
+msgid "Open"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -558,19 +453,9 @@ msgid "Total Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "In Progress"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr "Laskettu kaavalla: Laskun hinta enintään - Laskutettu"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress (open, draft)"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -677,6 +562,11 @@ msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Done"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -726,12 +616,126 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#~ msgid "Pending contracts to renew with your customer"
-#~ msgstr "Asiakkaan kanssa uusittavat odottavat sopimukset"
+#~ msgid "My Accounts"
+#~ msgstr "Tilit"
 
 #~ msgid ""
-#~ "The contracts to be renewed because the deadline is passed or the working "
-#~ "hours are higher than the allocated hours"
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
 #~ msgstr ""
-#~ "Sopimukset on uusittava, koska deadline on mennyt tai työtuntien määrä "
-#~ "ylittää suunnitellun tuntimäärän"
+#~ "Tuntien lukumäärä jotka voidaan laskuttaa ja jotka ovat jo laskutettu."
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Uusi analyyttinen tili"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Minun laskuttamattomat merkinnät"
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Laskuttamattomat tunnit"
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Jäljellä olevat tunnit"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Laskutetut tunnit"
+
+#~ msgid "Analytic accounts"
+#~ msgstr "Analyyttiset tilit"
+
+#~ msgid "All Uninvoiced Entries"
+#~ msgstr "Kaikki laskuttamattomat määrät"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "Nykyiset omat tilit"
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Käyttäjän tuntiyhteenveto"
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Kaikki analyyttiset tilit"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Tämänhetkiset analyyttiset tilit"
+
+#~ msgid "Hours Tot"
+#~ msgstr "Kokonaistunnit"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Analyyttiset tilit"
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Viimeksi luodun laskun päiväys tällä analyyttiselle tilille"
+
+#~ msgid "Theorical Revenue"
+#~ msgstr "Teoreettinen tulo"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "Laskettu kaavalla: Enimmäismäärä - Tunteja yhteensä"
+
+#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
+#~ msgstr "Laskettu kaavalla: Teoreettinen tulo - Kokonaiskustannukset"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Teoreettinen kate"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Omat avoimet tilit"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Finanssiprojektinhallinta"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Vireillä olevat analyyttiset tilit"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Käyttöoikeusvirhe"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Yrität ohittaa pääsysääntöjä (dokumentin tyyppi: %s)."
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Tuntien määrä jonka käytit analyyttisillä tileillä (tuntilistasta). Laskee "
+#~ "kaikki 'yleinen tyyppiset merkinnät."
+
+#~ msgid "Billing"
+#~ msgstr "Laskutus"
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Liikevaihto per tunti (todellinen)"
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Ylitetyt tilit"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Virhe! Et voi luoda sisäkkäisiä analyyttisiä tilejä."
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Lasketaan käyttäen kaavaa: laskutettu määrä / kokonaistunnit"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Virhe! Valuutan tulee olla sama kun valitun yrityksen valutta."
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "Tuntien määrä (päiväkirjan tyyppi 'yleinen') jotka voidaan laskuttaa jos "
+#~ "lasku perustuu analyyttiseen tiliin."

@@ -6,16 +6,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-24 20:15+0000\n"
-"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-11 11:51+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:32+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:52+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -78,6 +78,11 @@ msgid "Please enter a password and confirm it."
 msgstr "Prego inserire una password e confermarla"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Send an email to the user to (re)set their password."
+msgstr "Invia una mail all'utente per (re)impostare la propria password"
+
+#. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
@@ -89,6 +94,12 @@ msgstr "Registrazione"
 #: selection:res.users,state:0
 msgid "New"
 msgstr "Nuovo"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:258
+#, python-format
+msgid "Mail sent to:"
+msgstr "Mail inviata a:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -135,40 +146,6 @@ msgid "Signup URL"
 msgstr "URL registrazione"
 
 #. module: auth_signup
-#: model:email.template,body_html:auth_signup.set_password_email
-msgid ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        You have been invited to connect to "
-"\"${object.company_id.name}\" in order to get access to your documents in "
-"OpenERP.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        To accept the invitation, click on the following "
-"link:\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept "
-"invitation to \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        Thanks,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
-msgstr ""
-
-#. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
@@ -189,13 +166,6 @@ msgid ""
 msgstr ""
 "Non è possibile inviare email: nessun server d'invio email configurato.\n"
 "E' possibile configurarlo nelle Configurazioni/Configurazioni Generali."
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:174
-#, python-format
-msgid "An email has been sent with credentials to reset your password"
-msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -290,14 +260,14 @@ msgid "No database selected !"
 msgstr "Nessun database selezionato!"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Reset Password"
+msgstr "Reimposta Password"
+
+#. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
 msgstr "Abilita il reset della password dalla pagina di login"
-
-#. module: auth_signup
-#: model:email.template,subject:auth_signup.set_password_email
-msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -307,30 +277,18 @@ msgid "Back to Login"
 msgstr "Ritorno al Login"
 
 #. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#, python-format
+msgid "Sign up"
+msgstr "Registrazione"
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Partner"
 msgstr "Partner"
 
 #. module: auth_signup
-#: view:res.users:0
-msgid "Send reset password instructions by email"
-msgstr ""
-
-#. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
 msgstr "Token di registrazione"
-
-#~ msgid "Reset Password"
-#~ msgstr "Reimposta Password"
-
-#~ msgid "Send an email to the user to (re)set their password."
-#~ msgstr "Invia una mail all'utente per (re)impostare la propria password"
-
-#, python-format
-#~ msgid "Sign up"
-#~ msgstr "Registrazione"
-
-#, python-format
-#~ msgid "Mail sent to:"
-#~ msgstr "Mail inviata a:"

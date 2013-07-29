@@ -1,26 +1,25 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * crm
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:36+0000\n"
-"PO-Revision-Date: 2013-03-14 10:27+0000\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-06-21 07:11+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:35+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-22 05:36+0000\n"
+"X-Generator: Launchpad (build 16677)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "# Leads"
-msgstr "Érdeklődők száma"
+msgstr "# Érdeklődések"
 
 #. module: crm
 #: help:sale.config.settings,fetchmail_lead:0
@@ -32,7 +31,7 @@ msgstr ""
 "létrehozását a bejövő levelekből."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -139,9 +138,11 @@ msgid "Exp. Closing"
 msgstr "Várh. zárás"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Cancel Call"
-msgstr "Hívás visszavonása"
+#: help:crm.case.section,message_unread:0
+#: help:crm.lead,message_unread:0
+#: help:crm.phonecall,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: crm
 #: help:crm.lead.report,creation_day:0
@@ -191,8 +192,8 @@ msgstr ""
 "direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -233,8 +234,9 @@ msgstr "Kilép"
 
 #. module: crm
 #: view:crm.lead:0
-msgid "Opportunities that are assigned to me"
-msgstr "Hozzám iktatott lehetőségek"
+#: field:crm.lead,state_id:0
+msgid "State"
+msgstr "Állapot"
 
 #. module: crm
 #: field:res.partner,meeting_count:0
@@ -250,11 +252,6 @@ msgstr "Emlékeztő a felhasználónak"
 #: field:crm.segmentation,segmentation_line:0
 msgid "Criteria"
 msgstr "Kritériumok"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Assigned to My Team(s)"
-msgstr "A csoportomhoz/csoportjaimhoz csatolt"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -274,16 +271,16 @@ msgid "Leads Analysis"
 msgstr "Érdeklődők elemzése"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1010
+#, python-format
+msgid "<b>%s a call</b> for the <em>%s</em>."
+msgstr "<b>%s egy hívás</b> erre a <em>%s</em>."
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
 #: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
 msgid "Campaigns"
 msgstr "Kampányok"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,state_id:0
-msgid "State"
-msgstr "Állapot"
 
 #. module: crm
 #: view:crm.lead:0
@@ -307,7 +304,7 @@ msgid "Prospect Partner"
 msgstr "Leendő partner"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "Nincs tárgy"
@@ -461,12 +458,6 @@ msgid "Team Leader"
 msgstr "Csoportvezető"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1032
-#, python-format
-msgid "%s a call for %s.%s"
-msgstr "%s egy hívás ide %s.%s"
-
-#. module: crm
 #: help:crm.case.stage,probability:0
 msgid ""
 "This percentage depicts the default/average probability of the Case for this "
@@ -491,13 +482,20 @@ msgid "#Opportunities"
 msgstr "Lehetőségek száma"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
 msgstr ""
 "Kérem válaszon ki több mint egy elemet (érdeklődés vagy lehetőség) a lista "
 "nézetből."
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Leads that are assigned to one of the sale teams I manage, or to me"
+msgstr ""
+"Érdeklődések, melyek az én irányításom alatt lévő csoportnak, vagy nekem "
+"lettek iktatva"
 
 #. module: crm
 #: field:crm.lead,partner_address_email:0
@@ -584,12 +582,6 @@ msgid "Planned Revenue"
 msgstr "Tervezett jövedelem"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:970
-#, python-format
-msgid "Customer Email"
-msgstr "Vevői e-mail"
-
-#. module: crm
 #: field:crm.lead,planned_revenue:0
 msgid "Expected Revenue"
 msgstr "Várható bevételek"
@@ -634,6 +626,11 @@ msgid "Merge"
 msgstr "Egyesít"
 
 #. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_mail
+msgid "Opportunity ${object.name | h})"
+msgstr "Lehetőség ${object.name | h})"
+
+#. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
 msgstr "Eset kategória"
@@ -651,16 +648,6 @@ msgid ""
 msgstr ""
 "Emlékeztető az érdeklődésre: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:745
-#, python-format
-msgid ""
-"No customer name defined. Please fill one of the following fields: Company "
-"Name, Contact Name or Email (\"Name <email@address>\")"
-msgstr ""
-"Nincs vevő név meghatározva. Kérem kitölteni egy mezőt ezek közül: Vállalat "
-"neve, Kapcsolat neve vagy e-mail címe (\"Name <email@address>\")"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -774,9 +761,9 @@ msgid "The name of the segmentation."
 msgstr "A kiosztás neve."
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Érdeklődés USA-ból"
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "Valószínűség (%)"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -795,7 +782,7 @@ msgid "Statistics Dashboard"
 msgstr "Statisztika vezérlőpult"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -847,11 +834,6 @@ msgstr ""
 "rendelve"
 
 #. module: crm
-#: field:crm.segmentation.line,expr_value:0
-msgid "Value"
-msgstr "Érték"
-
-#. module: crm
 #: field:calendar.attendee,categ_id:0
 msgid "Event Type"
 msgstr "Esemény típusa"
@@ -862,7 +844,7 @@ msgid "Exclusive"
 msgstr "Kizárólagos"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "Ettől %s : %s"
@@ -952,18 +934,13 @@ msgstr "Kimenő"
 
 #. module: crm
 #: view:crm.lead:0
-msgid "Leads that are assigned to me"
-msgstr "Érdeklődés ami hozzám lett rendelve"
-
-#. module: crm
-#: view:crm.lead:0
 msgid "Mark Won"
 msgstr "Megnyertnek jelölje"
 
 #. module: crm
-#: field:crm.case.stage,probability:0
-msgid "Probability (%)"
-msgstr "Valószínűség (%)"
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Érdeklődés USA-ból"
 
 #. module: crm
 #: view:crm.lead:0
@@ -994,21 +971,9 @@ msgid "Warning !"
 msgstr "Vigyázat !"
 
 #. module: crm
-#: help:crm.case.section,message_unread:0
-#: help:crm.lead,message_unread:0
-#: help:crm.phonecall,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
 msgstr "Megnyitásig hátralévő napok"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "ZIP"
-msgstr "Irányítószám"
 
 #. module: crm
 #: field:crm.lead,mobile:0
@@ -1020,6 +985,15 @@ msgstr "Mobil"
 #: field:crm.lead,ref:0
 msgid "Reference"
 msgstr "Hivatkozás"
+
+#. module: crm
+#: view:crm.lead:0
+msgid ""
+"Opportunities that are assigned to either me or one of the sale teams I "
+"manage"
+msgstr ""
+"Lejhetőségek, melyek vagy részemre vagy az egyik általam vezetett csoporthoz "
+"lett iktatva"
 
 #. module: crm
 #: help:crm.case.section,resource_calendar_id:0
@@ -1042,7 +1016,7 @@ msgid "Next Action"
 msgstr "Következő művelet"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>Partner</b> beállítva mint <em>%s</em>."
@@ -1068,6 +1042,11 @@ msgstr "Csak a lehetőségek mutatása"
 #: field:crm.lead,name:0
 msgid "Subject"
 msgstr "Tárgy"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "New Leads"
+msgstr "Új érdeklődések"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1130,7 +1109,7 @@ msgid "Creation Date"
 msgstr "Létrehozás dátuma"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Tervezet <b>lehetőséggé átalakítva lehetőséggé</b>"
@@ -1144,11 +1123,6 @@ msgstr "Vásárlási összeg"
 #: view:crm.phonecall.report:0
 msgid "Year of call"
 msgstr "Hívás éve"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Open Leads"
-msgstr "Nyitott érdeklődések"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1168,11 +1142,6 @@ msgstr "Részemre kiosztott telefonhívások"
 #: field:crm.lead,user_login:0
 msgid "User Login"
 msgstr "Felhasználói belépés"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "No salesperson"
-msgstr "Nincs értékesítő"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1212,11 +1181,6 @@ msgstr "Lehetőség létrehozva"
 #: view:crm.lead:0
 msgid "í"
 msgstr "í"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Description..."
-msgstr "Leírás..."
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -1360,7 +1324,9 @@ msgid "Days to Close"
 msgstr "Lezárásig hátralévő napok"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "Ismeretlen"
 
@@ -1419,10 +1385,9 @@ msgid "Sales Marketing Department"
 msgstr "Értékesítési kereskedelmi osztály"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
-#, python-format
-msgid "Merged lead"
-msgstr "Érdeklődés összefésülése"
+#: view:crm.phonecall.report:0
+msgid "Date of call"
+msgstr "Hívás dátuma"
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -1447,7 +1412,12 @@ msgid "Segmentation Description"
 msgstr "Kiosztás leírása"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: view:crm.lead:0
+msgid "Lead Description"
+msgstr "Érdeklődés leírása"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "Lehetőségek összefésülése"
@@ -1496,6 +1466,11 @@ msgstr "Hivatkozások"
 #: view:crm.phonecall2phonecall:0
 msgid "Cancel"
 msgstr "Mégse"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Opportunities Assigned to Me or My Team(s)"
+msgstr "Lehetőség, mely nekem vagy a csoportomnak lett iktatva"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
@@ -1557,11 +1532,9 @@ msgid "Leads/Opportunities which are in open state"
 msgstr "Nyitott állapotú Érdeklődések/Lehetőségek"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Opportunities that are assigned to any sales teams I am member of"
-msgstr ""
-"Lehetőségek, melyek kiosztva bármely értékesítési csoportnak, melynek tagja "
-"vagyok"
+#: model:ir.model,name:crm.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
@@ -1623,6 +1596,12 @@ msgid "Leads/Opportunities that are assigned to me"
 msgstr "Hozzám rendelt Érdeklődések/Lehetőségek"
 
 #. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "Zárás dátuma"
+
+#. module: crm
 #: view:crm.lead.report:0
 msgid "My Case(s)"
 msgstr "Eseteim"
@@ -1638,11 +1617,6 @@ msgstr "Üzenetek és kommunikáció történet"
 #: view:crm.lead:0
 msgid "Show Countries"
 msgstr "Országok mutatása"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Date of call"
-msgstr "Hívás dátuma"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1685,11 +1659,6 @@ msgstr "Késleltetés a zárásig"
 #: view:crm.phonecall.report:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
-
-#. module: crm
-#: model:email.template,subject:crm.email_template_opportunity_mail
-msgid "${object.name}"
-msgstr "${object.name}"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -1740,11 +1709,6 @@ msgid "Month of call"
 msgstr "Hívás hónapja"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Describe the lead..."
-msgstr "Fejtse ki az Érdeklődést..."
-
-#. module: crm
 #: code:addons/crm/crm_phonecall.py:290
 #, python-format
 msgid "Partner has been <b>created</b>."
@@ -1792,9 +1756,9 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: crm
-#: view:crm.opportunity2phonecall:0
-msgid "Call Description"
-msgstr "Hívás leírása"
+#: field:crm.segmentation.line,expr_value:0
+msgid "Value"
+msgstr "Érték"
 
 #. module: crm
 #: field:crm.lead,partner_name:0
@@ -1925,6 +1889,11 @@ msgid "Telesales"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Leads Assigned to Me or My Team(s)"
+msgstr "Érdeklődés, mely részemre vagy a csoportomnak lett iktatva"
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
 msgid "Segmentation line"
 msgstr "Kiosztási sor"
@@ -2022,7 +1991,7 @@ msgid "Leads"
 msgstr "Érdeklődők"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr "Össztefésült érdeklődések"
@@ -2108,11 +2077,6 @@ msgid "Pending"
 msgstr "Függőben lévő"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Assigned to Me"
-msgstr "Nekem iktatott"
-
-#. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
 msgid "Prospect Opportunity"
 msgstr "Várható lehetőség"
@@ -2123,7 +2087,6 @@ msgid "Global CC"
 msgstr "Globális CC /másolat/"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2163,6 +2126,11 @@ msgstr "aktív"
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
 msgstr "Kötelező kifejezés"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Send Mail"
+msgstr "Levél küldése"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -2262,13 +2230,6 @@ msgid "Address"
 msgstr "Cím"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Leads that are assigned to any sales teams I am member of"
-msgstr ""
-"Érdeklődések, melyek bármely értékesítési csoporthoz iktatva vannak, melynek "
-"tagja vagyok"
-
-#. module: crm
 #: help:crm.case.section,alias_id:0
 msgid ""
 "The email address associated with this team. New emails received will "
@@ -2276,6 +2237,11 @@ msgid ""
 msgstr ""
 "Az e-mail cím, mely ehhez a csoporthoz rendelt. Új erre a címre érkezett "
 "levél automatikusan Érdeklődést fog létrehozni ehhez a csoporthoz."
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Unassigned Opportunities"
+msgstr "Nem iktatott lehetőségek"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2432,6 +2398,11 @@ msgid "Lead converted into an opportunity"
 msgstr "Érdeklődés átalakítva egy lehetőséggé"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Unassigned Leads"
+msgstr "Nem iktatott érdeklődések"
+
+#. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "Lehetőség megnyerve"
@@ -2484,15 +2455,9 @@ msgid "Cancelled"
 msgstr "Törölt"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Street..."
-msgstr "Utca..."
-
-#. module: crm
-#: field:crm.lead.report,date_closed:0
-#: field:crm.phonecall.report,date_closed:0
-msgid "Close Date"
-msgstr "Zárás dátuma"
+#: field:crm.lead,color:0
+msgid "Color Index"
+msgstr "Szín meghatározó"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
@@ -2521,11 +2486,6 @@ msgstr "Összefüggés állapot"
 #: field:crm.phonecall,name:0
 msgid "Call Summary"
 msgstr "Hívás összefoglalása"
-
-#. module: crm
-#: field:crm.lead,color:0
-msgid "Color Index"
-msgstr "Szín meghatározó"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
@@ -2717,11 +2677,6 @@ msgid "Calls"
 msgstr "Hívások"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Cancel Case"
-msgstr "Ügy visszavonása"
-
-#. module: crm
 #: field:crm.case.stage,on_change:0
 msgid "Change Probability Automatically"
 msgstr "Valószínűség automatikus változtatása"
@@ -2734,7 +2689,7 @@ msgstr "Telefonhívásaim"
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
 msgid "Qualification"
-msgstr "Végzettség"
+msgstr "Besorolás"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,name:0
@@ -2974,30 +2929,19 @@ msgid "Planned Revenues"
 msgstr "Tervezett bevételek"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Exp.Closing"
+msgstr "Elv. határidő"
+
+#. module: crm
 #: help:crm.lead.report,deadline_year:0
 msgid "Expected closing year"
 msgstr "Várható befejezés éve"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "e.g. Call for proposal"
-msgstr "pl.: Felhívás egy javaslattételre"
-
-#. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
 msgstr "Eset szakasza"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:569
-#, python-format
-msgid "Merged opportunity"
-msgstr "Egyesített lehetőség"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unassigned"
-msgstr "Nem hozzárendelt"
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
@@ -3035,6 +2979,11 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
+msgid "Create date"
+msgstr "Dátumot létrehoz"
+
+#. module: crm
+#: view:crm.lead:0
 msgid "at"
 msgstr "ekkor"
 
@@ -3045,7 +2994,7 @@ msgstr "ekkor"
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 msgid "New"
-msgstr "új"
+msgstr "Új"
 
 #. module: crm
 #: field:crm.lead,function:0
@@ -3152,7 +3101,7 @@ msgid "Working Hours"
 msgstr "Munkaórák"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3299,51 +3248,746 @@ msgstr ""
 "              </p>\n"
 "            "
 
-#~ msgid "Send Mail"
-#~ msgstr "Levél küldése"
+#~ msgid "Case Category Name"
+#~ msgstr "Eset kategóriája"
 
-#~ msgid "Users"
-#~ msgstr "Felhasználók"
+#~ msgid "Partner Events"
+#~ msgstr "Partner események"
 
-#~ msgid "Leads that are assigned to one of the sale teams I manage, or to me"
-#~ msgstr ""
-#~ "Érdeklődések, melyek az én irányításom alatt lévő csoportnak, vagy nekem "
-#~ "lettek iktatva"
+#~ msgid "Your action"
+#~ msgstr "Leírás"
 
-#~ msgid "Lead Description"
-#~ msgstr "Érdeklődés leírása"
+#~ msgid "Case History"
+#~ msgstr "Eset előzmények"
 
-#~ msgid "New Leads"
-#~ msgstr "Új érdeklődések"
+#~ msgid "General Description"
+#~ msgstr "Általános leírás"
 
-#~ msgid "Opportunity ${object.name | h})"
-#~ msgstr "Lehetőség ${object.name | h})"
+#~ msgid "Case Description"
+#~ msgstr "Esetleírás"
 
-#~ msgid "Opportunities Assigned to Me or My Team(s)"
-#~ msgstr "Lehetőség, mely nekem vagy a csoportomnak lett iktatva"
+#~ msgid "Monthly"
+#~ msgstr "Havi"
 
-#~ msgid "Leads Assigned to Me or My Team(s)"
-#~ msgstr "Érdeklődés, mely részemre vagy a csoportomnak lett iktatva"
+#~ msgid "Schedule a PhoneCall"
+#~ msgstr "Telefonhívás ütemezése"
 
-#~ msgid "Unassigned Leads"
-#~ msgstr "Nem iktatott rdeklődések"
+#~ msgid "Visibility"
+#~ msgstr "Láthatóság"
 
-#~ msgid "Unassigned Opportunities"
-#~ msgstr "Nem iktatott lehetőségek"
+#~ msgid "Today"
+#~ msgstr "Ma"
 
-#~ msgid ""
-#~ "Opportunities that are assigned to either me or one of the sale teams I "
-#~ "manage"
-#~ msgstr ""
-#~ "Lejhetőségek, melyek vagy részemre vagy az egyik általam vezetett csoporthoz "
-#~ "lett iktatva"
+#~ msgid "Previous Stage"
+#~ msgstr "Előző szakasz"
 
-#~ msgid "Exp.Closing"
-#~ msgstr "Elv. határidő"
+#~ msgid "No Repeat"
+#~ msgstr "Nincs ismétlés"
 
-#~ msgid "Create date"
-#~ msgstr "Dátumot létrehoz"
+#~ msgid "Yearly"
+#~ msgstr "Éves"
+
+#~ msgid "Organizer"
+#~ msgstr "Szervező"
+
+#~ msgid "Send New Email"
+#~ msgstr "Új e-mail küldése"
+
+#~ msgid "Communication"
+#~ msgstr "Kommunikáció"
+
+#~ msgid "Select Action"
+#~ msgstr "Válasszon műveletet"
+
+#~ msgid "Campaign 1"
+#~ msgstr "Kampány 1"
+
+#~ msgid "Campaign 2"
+#~ msgstr "Kampány 2"
+
+#~ msgid "Privacy"
+#~ msgstr "Adatvédelem"
+
+#~ msgid "Recurrent Rule"
+#~ msgstr "Időszakos szabály"
+
+#~ msgid "Customer & Supplier Relationship Management"
+#~ msgstr "Vevő és szállítói kapcsolatok kezelése"
+
+#~ msgid "Reply to last Mail"
+#~ msgstr "Válasz az utolsó levélre"
+
+#~ msgid "E-Mail"
+#~ msgstr "E-mail"
+
+#~ msgid "Sale FAQ"
+#~ msgstr "Értékesítés GYIK"
+
+#~ msgid "Error: The mail is not well formated"
+#~ msgstr "Hiba: A levél nincs jól megformázva"
+
+#~ msgid "Communication history"
+#~ msgstr "Kommunikációs előzmény"
+
+#~ msgid "Responsible User"
+#~ msgstr "Felelős felhasználó"
+
+#~ msgid "Current Activity"
+#~ msgstr "Jelenlegi tevékenység"
+
+#~ msgid "Details"
+#~ msgstr "Részletek"
+
+#~ msgid "Years"
+#~ msgstr "Évek"
+
+#~ msgid "Calendar Synchronizing"
+#~ msgstr "Naptár szinkronizáció"
+
+#~ msgid "Continue"
+#~ msgstr "Tovább"
+
+#~ msgid "By day"
+#~ msgstr "Nappal"
+
+#~ msgid "Add Note"
+#~ msgstr "Jegyzet hozzáadása"
+
+#~ msgid "Supplier"
+#~ msgstr "Szállító"
+
+#~ msgid "Create Partner"
+#~ msgstr "Partner létrehozása"
+
+#~ msgid "Next Stage"
+#~ msgstr "Következő lépés"
+
+#~ msgid "My Meetings"
+#~ msgstr "Találkozóim"
+
+#~ msgid "Deadline"
+#~ msgstr "Határidő"
+
+#~ msgid "Previous"
+#~ msgstr "Előző"
+
+#~ msgid "Statistics"
+#~ msgstr "Statisztika"
+
+#~ msgid "Next"
+#~ msgstr "Következő"
+
+#~ msgid "Stage:"
+#~ msgstr "Szakasz:"
+
+#~ msgid "HTML formatting?"
+#~ msgstr "HTML formázás?"
+
+#~ msgid "Attachment"
+#~ msgstr "Csatolás"
+
+#~ msgid "Recurrent ID"
+#~ msgstr "Időszakos ID"
+
+#~ msgid "Tue"
+#~ msgstr "K"
+
+#~ msgid "History Information"
+#~ msgstr "Előzmény"
+
+#~ msgid "Mail to Partner"
+#~ msgstr "Levél a partnernek"
+
+#~ msgid "Mark as"
+#~ msgstr "Megjelölés"
+
+#~ msgid "  Year  "
+#~ msgstr "  Év  "
+
+#~ msgid "Fri"
+#~ msgstr "P"
+
+#~ msgid "Write Date"
+#~ msgstr "Dátum írása"
+
+#~ msgid "Reminder"
+#~ msgstr "Emlékeztető"
+
+#~ msgid "Monday"
+#~ msgstr "Hétfő"
+
+#~ msgid "History"
+#~ msgstr "Előzmény"
+
+#~ msgid "Frequency"
+#~ msgstr "Gyakoriság"
+
+#~ msgid "Current"
+#~ msgstr "Jelenleg"
+
+#~ msgid "Exception Rule"
+#~ msgstr "Kivétel szabály"
+
+#~ msgid "Search Meetings"
+#~ msgstr "Találkozó keresés"
+
+#~ msgid "Unconfirmed"
+#~ msgstr "Meg nem erősített"
+
+#~ msgid "Alarm"
+#~ msgstr "Figyelmeztetés"
+
+#~ msgid "Birthdate"
+#~ msgstr "Születésnap"
+
+#~ msgid "Wizard"
+#~ msgstr "Varázsló"
+
+#~ msgid "Saturday"
+#~ msgstr "Szombat"
+
+#~ msgid "Fifth"
+#~ msgstr "Ötödik"
+
+#~ msgid "Wed"
+#~ msgstr "Sze"
+
+#~ msgid "Hours"
+#~ msgstr "Órák"
+
+#~ msgid "title"
+#~ msgstr "Pozíció"
+
+#~ msgid "Free"
+#~ msgstr "Szabad"
+
+#~ msgid "Allow Delete"
+#~ msgstr "Törlés engedélyezése"
+
+#~ msgid "Mon"
+#~ msgstr "H"
+
+#~ msgid "Days"
+#~ msgstr "Napok"
+
+#~ msgid "Reset to Draft"
+#~ msgstr "Visszaállítás Tervezet állapotba"
+
+#~ msgid "Create"
+#~ msgstr "Létrehozás"
+
+#~ msgid "Dates"
+#~ msgstr "Dátumok"
 
 #, python-format
-#~ msgid "<b>%s a call</b> for the <em>%s</em>."
-#~ msgstr "<b>%s egy hívás</b> erre a <em>%s</em>."
+#~ msgid "Send"
+#~ msgstr "Küldés"
+
+#~ msgid "Location"
+#~ msgstr "Hely"
+
+#~ msgid "Reply"
+#~ msgstr "Válasz"
+
+#~ msgid "Weeks"
+#~ msgstr "Hetek"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hiba !"
+
+#~ msgid "Are you sure you want to create a partner based on this Phonecall ?"
+#~ msgstr ""
+#~ "Biztos benne, hogy a telefonhívás alapján szeretne egy partnert létrehozni?"
+
+#~ msgid "Create a new partner"
+#~ msgstr "Új partner létrehozása"
+
+#~ msgid "Start Date"
+#~ msgstr "Kezdő dátum"
+
+#~ msgid "Delegate"
+#~ msgstr "Megbízott"
+
+#~ msgid "Reset to Unconfirmed"
+#~ msgstr "Visszaigazolatlan törlése"
+
+#~ msgid "Internal Meeting"
+#~ msgstr "Belső találkozó"
+
+#~ msgid "Customer Meeting"
+#~ msgstr "Ügyféltalálkozó"
+
+#~ msgid "CC"
+#~ msgstr "Másolat"
+
+#~ msgid "Months"
+#~ msgstr "Hónapok"
+
+#~ msgid "Claims"
+#~ msgstr "Követelés"
+
+#~ msgid "Decrease (0>1)"
+#~ msgstr "Csökkenés (0>1)"
+
+#~ msgid "Attachments"
+#~ msgstr "Mellékletek"
+
+#~ msgid "Weekly"
+#~ msgstr "Heti"
+
+#~ msgid "Done"
+#~ msgstr "Kész"
+
+#~ msgid "Max Interval"
+#~ msgstr "Maximum intervallum"
+
+#~ msgid "Tuesday"
+#~ msgstr "Kedd"
+
+#~ msgid "Busy"
+#~ msgstr "Foglalt"
+
+#~ msgid "Helpdesk"
+#~ msgstr "Ügyfélszolgálat"
+
+#~ msgid "Send new email"
+#~ msgstr "Új e-mail küldése"
+
+#~ msgid "My Open Opportunities"
+#~ msgstr "Nyitott lehetőségeim"
+
+#~ msgid "Maximum Communication History"
+#~ msgstr "Maximális kommunikációs előzmények"
+
+#~ msgid "Are you sure you want to create a partner based on this lead ?"
+#~ msgstr ""
+#~ "Biztos benne, hogy létre szeretné hozni a partnert a potenciális ügyfél "
+#~ "alapján?"
+
+#~ msgid "Meeting Type"
+#~ msgstr "Találkozó típusa"
+
+#~ msgid "End Date"
+#~ msgstr "Befejezés dátuma"
+
+#~ msgid "Third"
+#~ msgstr "Harmadik"
+
+#~ msgid "# of Emails"
+#~ msgstr "E-mailek száma"
+
+#~ msgid "Weekday"
+#~ msgstr "Hétköznap"
+
+#~ msgid "Set New State To"
+#~ msgstr "Új állapot beállítása"
+
+#~ msgid "Reply To"
+#~ msgstr "Válasz"
+
+#~ msgid "Sales Dashboard"
+#~ msgstr "Értékesítési vezérlőpult"
+
+#~ msgid "Sunday"
+#~ msgstr "Vasárnap"
+
+#~ msgid "Fourth"
+#~ msgstr "Negyedik"
+
+#~ msgid "Unchanged"
+#~ msgstr "Változatlan"
+
+#~ msgid "Friday"
+#~ msgstr "Péntek"
+
+#~ msgid "All Day"
+#~ msgstr "Összes nap"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Belső jegyzet hozzáadása"
+
+#~ msgid "Last"
+#~ msgstr "Utolsó"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Hiba!"
+
+#~ msgid "   Month   "
+#~ msgstr "   Hónap   "
+
+#~ msgid "Links"
+#~ msgstr "Linkek"
+
+#~ msgid "# Mails"
+#~ msgstr "E-mailek száma"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Figyelmeztetés"
+
+#~ msgid "Sun"
+#~ msgstr "V"
+
+#~ msgid "Day of month"
+#~ msgstr "A hónap napja"
+
+#~ msgid "Confidential"
+#~ msgstr "Bizalmas"
+
+#~ msgid "Fed. State"
+#~ msgstr "Szövetségi állam"
+
+#~ msgid "Configuration"
+#~ msgstr "Beállítások"
+
+#~ msgid "Thu"
+#~ msgstr "Cs"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Hónap-1    "
+
+#~ msgid "Daily"
+#~ msgstr "Napi"
+
+#~ msgid "Stage Definition"
+#~ msgstr "Szakasz meghatározása"
+
+#~ msgid "First"
+#~ msgstr "Első"
+
+#~ msgid "Image"
+#~ msgstr "Kép"
+
+#~ msgid "Timezone"
+#~ msgstr "Időzóna"
+
+#~ msgid "Message"
+#~ msgstr "Üzenet"
+
+#~ msgid "Sat"
+#~ msgstr "Szo"
+
+#~ msgid "Salesman"
+#~ msgstr "Értékesítő"
+
+#~ msgid "Allows to delete non draft cases"
+#~ msgstr "Lehetővé teszi, hogy törölje a tervezett ügyeket."
+
+#~ msgid "Partner Name"
+#~ msgstr "Partner név"
+
+#~ msgid "Contacts"
+#~ msgstr "Névjegyek"
+
+#~ msgid "Default (0=None)"
+#~ msgstr "Alapértelmezett (0=None)"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
+
+#~ msgid "Success Probability"
+#~ msgstr "A siker valószínűsége"
+
+#~ msgid "Attendees"
+#~ msgstr "Résztvevők"
+
+#~ msgid "7 Days"
+#~ msgstr "Hetente"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Folyamat beállítása"
+
+#~ msgid "Meeting Categories"
+#~ msgstr "Találkozó kategóriák"
+
+#~ msgid "Schedule Phone Call"
+#~ msgstr "Telefonhívás ütemezése"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Hiba"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Partner kapcsolat"
+
+#~ msgid "Recurrent ID date"
+#~ msgstr "Időszakos ID dátuma"
+
+#, python-format
+#~ msgid "Close"
+#~ msgstr "Zárás"
+
+#~ msgid "Action Rules"
+#~ msgstr "Műveleti előírások"
+
+#~ msgid "Recurrency"
+#~ msgstr "Ismétlődés"
+
+#~ msgid "Thursday"
+#~ msgstr "Csütörtök"
+
+#~ msgid "Private"
+#~ msgstr "Privát"
+
+#~ msgid "# Emails"
+#~ msgstr "E-mailek száma"
+
+#~ msgid "Wednesday"
+#~ msgstr "Szerda"
+
+#~ msgid "Option"
+#~ msgstr "Opció"
+
+#~ msgid "Message Body"
+#~ msgstr "Üzenettörzs"
+
+#~ msgid "Accept"
+#~ msgstr "Elfogad"
+
+#~ msgid "Second"
+#~ msgstr "Második"
+
+#~ msgid "Show as"
+#~ msgstr "Megjelenítés másként"
+
+#~ msgid "Date of month"
+#~ msgstr "Hónap napja"
+
+#~ msgid "Need Services"
+#~ msgstr "Szolgáltatásra van szüksége"
+
+#~ msgid " "
+#~ msgstr " "
+
+#~ msgid "Public"
+#~ msgstr "publikus"
+
+#~ msgid "Do not create a partner"
+#~ msgstr "Nem tud létrehozni partnert"
+
+#~ msgid "Link to an existing partner"
+#~ msgstr "Összekapcsolás egy meglévő partnerrel"
+
+#~ msgid "Change Responsible"
+#~ msgstr "Felelős megváltoztatása"
+
+#~ msgid "Opportunity Analysis"
+#~ msgstr "Lehetőségek elemzése"
+
+#~ msgid "Set State To"
+#~ msgstr "Állapot beállítása"
+
+#~ msgid "Location of Event"
+#~ msgstr "Esemény helyszíne"
+
+#~ msgid "End date"
+#~ msgstr "Befejezés dátuma"
+
+#~ msgid "crm.send.mail.attachment"
+#~ msgstr "crm.send.mail.attachment"
+
+#~ msgid "crm.installer"
+#~ msgstr "crm.installer"
+
+#~ msgid "<"
+#~ msgstr "<"
+
+#~ msgid "Repeat"
+#~ msgstr "Ismétlődés"
+
+#~ msgid "Need a Website Design"
+#~ msgstr "Honlaptervezésre van szüksége"
+
+#~ msgid "Edit All"
+#~ msgstr "Összes szerkesztése"
+
+#~ msgid "crm.lead"
+#~ msgstr "crm.lead"
+
+#~ msgid "End of recurrency"
+#~ msgstr "Ismétlődés vége"
+
+#~ msgid "Opportunity Name"
+#~ msgstr "Lehetőség megnevezése"
+
+#~ msgid "Opportunity Summary"
+#~ msgstr "Lehetőség összegzése"
+
+#~ msgid "="
+#~ msgstr "="
+
+#~ msgid "res.users"
+#~ msgstr "res.users"
+
+#~ msgid "Synchronization"
+#~ msgstr "Szinkronizálás"
+
+#~ msgid "Invitation details"
+#~ msgstr "Meghívó részletei"
+
+#~ msgid "Recurrent Meeting"
+#~ msgstr "Ismétlődő megbeszélések"
+
+#~ msgid "crm.phonecall"
+#~ msgstr "crm.phonecall"
+
+#~ msgid "Caldav URL"
+#~ msgstr "CalDAV URL"
+
+#~ msgid "Mail Campaign 2"
+#~ msgstr "E-mail kampány 2"
+
+#~ msgid "Decline"
+#~ msgstr "Visszautasít"
+
+#~ msgid "MS-Outlook"
+#~ msgstr "MS-Outlook"
+
+#, python-format
+#~ msgid "Can not send mail!"
+#~ msgstr "Nem tudja elküldeni az e-mailt!"
+
+#~ msgid "Uncertain"
+#~ msgstr "Bizonytalan"
+
+#~ msgid ">"
+#~ msgstr ">"
+
+#~ msgid "Recurrent"
+#~ msgstr "Időszakos"
+
+#~ msgid "Repeat every (Days/Week/Month/Year)"
+#~ msgstr "Ismétlés (nap/hét/hó/év)"
+
+#~ msgid "Main Job"
+#~ msgstr "Fő munkakör"
+
+#~ msgid "CRM - Statistics Dashboard"
+#~ msgstr "CRM - Statisztika vezérlőpult"
+
+#~ msgid "Repeat every"
+#~ msgstr "Ismétlés"
+
+#~ msgid "Thunderbird"
+#~ msgstr "Thunderbird"
+
+#~ msgid "Set Category to"
+#~ msgstr "Kategória beállítása"
+
+#~ msgid "Need Information"
+#~ msgstr "Információra van szüksége"
+
+#~ msgid "Invitation Detail"
+#~ msgstr "Meghívó részlete"
+
+#~ msgid "CRM Lead Report"
+#~ msgstr "CRM Érdeklődők jelentése"
+
+#, python-format
+#~ msgid "No E-Mail ID Found for your Company address!"
+#~ msgstr "Nem található e-mail ID az Ön válallatának címéhez!"
+
+#~ msgid "Error ! You can not create recursive profiles."
+#~ msgstr "Hiba ! Nem hozhat létre rekurzív profilokat."
+
+#~ msgid "Need Consulting"
+#~ msgstr "Konzultációra van szükség"
+
+#~ msgid "Interest in Accessories"
+#~ msgstr "Érdeklődés kiegészítőkről"
+
+#~ msgid "Fundraising"
+#~ msgstr "Tőkebevonás"
+
+#, python-format
+#~ msgid "A partner is already defined on this phonecall."
+#~ msgstr "Ehhez a telefonszámhoz már meg van határozva partner."
+
+#~ msgid "Choose day where repeat the meeting"
+#~ msgstr "Válassza ki azt a napot, amikor a találkozó ismétlődjön"
+
+#~ msgid "Create a Partner"
+#~ msgstr "Partner létrehozása"
+
+#~ msgid "Merge two Opportunities"
+#~ msgstr "Két lehetőség egyesítése"
+
+#~ msgid "Opportunities by Categories"
+#~ msgstr "Lehetőségek kategóriánként"
+
+#~ msgid "Invite People"
+#~ msgstr "Meghívott emberek"
+
+#~ msgid "Opportunity by Categories"
+#~ msgstr "Lehetőség kategóriánként"
+
+#~ msgid "Potential Reseller"
+#~ msgstr "Lehetséges viszonteladó"
+
+#~ msgid "Plug-In"
+#~ msgstr "Plug-In"
+
+#~ msgid "Recurrency period"
+#~ msgstr "Ismétlődő időszak"
+
+#~ msgid "E-mail address of the contact"
+#~ msgstr "Kapcsolattartó e-mail címe"
+
+#~ msgid "Fetch Emails"
+#~ msgstr "E-mailek letöltése"
+
+#~ msgid ""
+#~ "Deadline Date is automatically                         computed from Start "
+#~ "Date + Duration"
+#~ msgstr ""
+#~ "Határidő időpontja automatikusan számítódik az indulás dátumából + "
+#~ "időtartamból."
+
+#~ msgid "CRM Application Configuration"
+#~ msgstr "CRM alkalmazások beállítása"
+
+#~ msgid "Interest in Computer"
+#~ msgstr "Érdeklődés számítógépen kereszül"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Nem létezhet két felhasználó ugyanazzal a felhasználói névvel !"
+
+#~ msgid "Opportunities by User and Team"
+#~ msgstr "Lehetőségek felhasználónként és csapatonként"
+
+#, python-format
+#~ msgid "Can not add note!"
+#~ msgstr "Nem lehet hozzáadni megjegyzést!"
+
+#~ msgid "_Merge"
+#~ msgstr "Össze_fésülés"
+
+#, python-format
+#~ msgid "Lead '%s' has been converted to an opportunity."
+#~ msgstr "A '%s'"
+
+#~ msgid "Phonecalls during last 7 days"
+#~ msgstr "Telefonhívások az elmúlt 7 napban"
+
+#~ msgid "Todays's Phonecalls"
+#~ msgstr "Mai telefonhívások"
+
+#~ msgid "Schedule a Call"
+#~ msgstr "Hívás ütemezése"
+
+#~ msgid "Scheduled Phonecalls"
+#~ msgstr "Ütemezett telefonhívások"
+
+#~ msgid "Schedule call"
+#~ msgstr "Hívás ütemezése"
+
+#~ msgid "State of Mind"
+#~ msgstr "Hozzáállás"
+
+#~ msgid "Recurrency Option"
+#~ msgstr "Ismétlődés lehetőségei"
+
+#~ msgid "Convert To Opportunity"
+#~ msgstr "Átalakítás lehetőséggé"

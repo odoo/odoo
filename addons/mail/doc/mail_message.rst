@@ -4,7 +4,7 @@ mail.message
 ============
 
 Models
-+++++++
+++++++
 
 ``mail.message`` is a class for holding the main attributes of a message object
 (notification for system message, reciving email message or sent messages). It 

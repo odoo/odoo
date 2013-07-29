@@ -6,7 +6,7 @@
             <field name="model">procurement.order</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
-                <field name="close_move" position="after">
+                <field name="origin" position="after">
                     <field name="task_id"/>
                 </field>
             </field>
@@ -34,7 +34,7 @@
         <record id="product_product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.project_mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='supply_method']" position="attributes">
                     <attribute name="invisible">False</attribute>

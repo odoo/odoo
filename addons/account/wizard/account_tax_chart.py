@@ -38,8 +38,7 @@ class account_tax_chart(osv.osv_memory):
 
     def _get_period(self, cr, uid, context=None):
         """Return default period value"""
-        ctx = dict(context or {}, account_period_prefer_normal=True)
-        period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
+        period_ids = self.pool.get('account.period').find(cr, uid, context=context)
         return period_ids and period_ids[0] or False
 
     def account_tax_chart_open_window(self, cr, uid, ids, context=None):
@@ -74,6 +73,5 @@ class account_tax_chart(osv.osv_memory):
         'target_move': 'posted'
     }
 
-account_tax_chart()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

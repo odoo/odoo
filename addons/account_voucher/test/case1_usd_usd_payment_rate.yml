@@ -168,7 +168,6 @@
   I fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$>
 -
   !python {model: account.voucher}: |
-    import netsvc, time
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case1_payment_rate'))
     data = []
@@ -191,9 +190,8 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.voucher', ref('account_voucher_1_case1_payment_rate'), 'proforma_voucher', cr)
+    voucher = ref('account_voucher_1_case1_payment_rate') 
+    self.signal_proforma_voucher(cr, uid, [voucher])
 -
   I check that the move of my first voucher is valid
 -

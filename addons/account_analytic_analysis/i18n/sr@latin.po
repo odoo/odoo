@@ -1,21 +1,21 @@
-# Serbian Latin translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Serbian latin translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Serbian Latin <sr@latin@li.org>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-03-13 16:49+0000\n"
+"Last-Translator: Milan Milosevic <Unknown>\n"
+"Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:26+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,11 +29,6 @@ msgstr "Grupiši po..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Template"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "To Invoice"
 msgstr ""
 
@@ -43,14 +38,18 @@ msgid "Remaining"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Realna Stopa Marže (%)"
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr "Ugovori u toku"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date passed or prepaid unit consumed"
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
 msgstr ""
+"Ako je faktura izvedena iz troškova, to je datum poslednjeg rada ili već "
+"fakturisani računi."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -98,29 +97,14 @@ msgid "Total customer invoiced amount for this account."
 msgstr "Ukupni iznos korisničkih obračuna za ovaj nalog."
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
-msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date is in the next month"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -186,7 +170,7 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Closed contracts"
+msgid "Contracts not assigned"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -215,9 +199,9 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pricelist"
-msgstr ""
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Realna Stopa Marže (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -244,15 +228,6 @@ msgid "Mandatory use of templates in contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr ""
-"Ako je faktura izvedena iz troškova, to je datum poslednjeg rada ili već "
-"fakturisani računi."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
 msgstr ""
@@ -263,19 +238,9 @@ msgid "Real Margin"
 msgstr "Realna marža"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts assigned to a customer."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
 msgstr "Ukupno sati po mesecu"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -298,11 +263,6 @@ msgid "Parent"
 msgstr "Parent"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
@@ -316,12 +276,14 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Start Date"
-msgstr ""
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Ugovori"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Expiring soon"
+msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -330,83 +292,22 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"Hello ${object.name},\n"
-"\n"
-"% macro account_table(values):\n"
-"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
-"    <tr>\n"
-"        <th>Customer</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Dates</th>\n"
-"        <th>Prepaid Units</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % for partner, accounts in values:\n"
-"        % for account in accounts:\n"
-"        <tr>\n"
-"            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
-"            <td>\n"
-"            % if account.quantity_max != 0.0:\n"
-"                ${account.remaining_hours}/${account.quantity_max} units\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% if \"new\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts just expired: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"old\" in ctx[\"data\"]:\n"
-"    <h2>The following expired contracts are still not processed: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"future\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts will expire in less than one month: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    You can check all contracts to be renewed using the menu:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Thanks,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"OpenERP Automatic Email\n"
-"</pre>\n"
-"\n"
-"            "
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
 msgstr ""
+"Ugovor treba da se obnovi jer je rok pređen, ili ima više radnih sati od "
+"određenih sati"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
+msgstr "Ugovori na čekanju za potvrdu sa Vašom strankom"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Closed"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -417,6 +318,11 @@ msgid ""
 msgstr ""
 "Broj vremena (dana/sati) (iz dnevnika tipa 'opšte') koji se može fakturisati "
 "ako Vam je fakturisanje bazirano na analitičkom kontu."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending"
+msgstr "Na čekanju"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -440,10 +346,10 @@ msgstr "Za obnovu"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
-msgstr "Ugovori"
+msgid ""
+"A contract in OpenERP is an analytic account having a partner set on it."
+msgstr ""
+"Ugovor u OpenERP-u je analitički konto sa partnerom koji mu je pripisan."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
@@ -470,11 +376,6 @@ msgstr ""
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
 msgstr "Korisnik"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -522,11 +423,6 @@ msgid "Revenue per Time (real)"
 msgstr "Prihod po vremenu (realnom)"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expired or consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -549,13 +445,13 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
+msgid "Sale Orders"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr ""
+msgid "Open"
+msgstr "Otvori"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -563,19 +459,9 @@ msgid "Total Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "In Progress"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr "Izračunato pomoću formule: Max cena obračuna - Iznos obračuna."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress (open, draft)"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -682,6 +568,11 @@ msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Done"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -731,26 +622,185 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#~ msgid "Pending contracts to renew with your customer"
-#~ msgstr "Ugovori na čekanju za potvrdu sa Vašom strankom"
+#~ msgid "Theorical Revenue"
+#~ msgstr "Teorijski Prihod"
 
 #~ msgid ""
-#~ "The contracts to be renewed because the deadline is passed or the working "
-#~ "hours are higher than the allocated hours"
+#~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
-#~ "Ugovor treba da se obnovi jer je rok pređen, ili ima više radnih sati od "
-#~ "određenih sati"
+#~ "Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
 
-#~ msgid "Contracts in progress"
-#~ msgstr "Ugovori u toku"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
 
-#~ msgid "Pending"
-#~ msgstr "Na čekanju"
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Greška u pristupu"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Teoretska margina"
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Preostali Sati"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Pokušavate da zaobiđete pravilo za pristup (Dokument tipa: %s)."
+
+#~ msgid "Hours Tot"
+#~ msgstr "Ukupno sati"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "Moji tekući računi"
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Sati sumarno od strane korisnika"
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Svi analitički računi"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Novi analitički račun"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Tekući analitički računi"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Moji računi na čekanju"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Moji nefakturirani Ulazi"
+
+#~ msgid "My Accounts"
+#~ msgstr "Moji računi"
 
 #~ msgid ""
-#~ "A contract in OpenERP is an analytic account having a partner set on it."
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
 #~ msgstr ""
-#~ "Ugovor u OpenERP-u je analitički konto sa partnerom koji mu je pripisan."
+#~ "Promeni prozor analitičkog prikaza računa da bi video\n"
+#~ "važne podatke za projekt menadžer od usluznih kompanija.\n"
+#~ "Dodaj meni da prikaze relevantne informacije za svakog menadžera."
 
-#~ msgid "Open"
-#~ msgstr "Otvori"
+#~ msgid "Financial Project Management"
+#~ msgstr "Finansijski Projekt Menadzment"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Analitički računi na čekanju"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Analitička konta"
+
+#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
+#~ msgstr "Izračunato pomoću formule: Teoretski prihodi - Ukupni troškovi"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "Izračunato pomoću formule: Najveća količina - Ukupno vreme"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ovaj modul je za izmenu pregleda analitičkog naloga da bi se prikazali\n"
+#~ "važni podaci vođi projekta servisnih kompanija.\n"
+#~ "Dodaje meni da pokaže relevantne informacije o svakom vođi.\n"
+
+#~ msgid "Billing"
+#~ msgstr "Obračunavanje"
+
+#~ msgid "report_account_analytic"
+#~ msgstr "izveštaj_analitičkog_naloga"
+
+#~ msgid "Analytic accounts"
+#~ msgstr "Analitički nalozi"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Greška! Valuta mora biti ista kao i valuta izabranog preduzeća"
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Izračunato pomoću formule: Iznos obračuna / Ukupno sati"
+
+#~ msgid "All Uninvoiced Entries"
+#~ msgstr "Sve neobračunate stavke"
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Prekoračeni nalozi"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Greška! Ne možete praviti rekurzivne analitičke naloge."
+
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr ""
+#~ "Broj sati koji mogu biti obračunati zajedno s onima koji su već obračunati."
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Broj sati potrošenih na tom analitičkom nalogu (prema vremenskoj tablici). "
+#~ "Izračunava se u svim dnevnicima za tip 'Opšte'."
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Neobračunati sati"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Obračunati sati"
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "Broj sati (iz dnevnika, tip 'opšte') koji mogu biti obračunati ako vršite "
+#~ "obračun na osnovu analitičkog naloga."
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Prihod po satima (stvarni)"
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Datum poslednjeg obračuna napravljenih za ovaj analitički nalog."
+
+#~ msgid "Analytic Accounts with a past deadline in one month."
+#~ msgstr "Analitička konta sa pređenim rokom u jednom mesecu."
+
+#~ msgid "Create Invoice"
+#~ msgstr "Napravi fakturu"
+
+#~ msgid ""
+#~ "You will find here the contracts to be renewed because the deadline is "
+#~ "passed or the working hours are higher than the allocated hours. OpenERP "
+#~ "automatically sets these analytic accounts to the pending state, in order to "
+#~ "raise a warning during the timesheets recording. Salesmen should review all "
+#~ "pending accounts and reopen or close the according to the negotiation with "
+#~ "the customer."
+#~ msgstr ""
+#~ "Naći ćete ovde ugovore koje treba obnoviti jer je rok istekao, ili su radni "
+#~ "sati veći od određenih. OpenERP automatski postavlja ta analitička konta na "
+#~ "stanje 'na čekanju', da bi se iznelo upozorenje za vreme sačuvavanja u "
+#~ "tabelama vremena. Prodavci bi trebalo da provere sva konta na čekanju i "
+#~ "zatvore ili ih ponovo otvore, u zavisnosti od dogovora sa strankama."
+
+#~ msgid " +1 Month"
+#~ msgstr " +1 mesec"
+
+#~ msgid "Computed using the formula: Maximum Time - Total Time"
+#~ msgstr "Obračunato koristeći formulu: Maksimalno vreme - ukupno vreme"
+
+#~ msgid "Manager"
+#~ msgstr "Rukovodilac"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Povezani partner"

@@ -30,7 +30,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-from base.res.res_partner import format_address
+from openerp.addons.base.res.res_partner import format_address
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -77,14 +77,21 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _track = {
         'state': {
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
         },
         'stage_id': {
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'cancel', 'done'],
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'cancel', 'done'],
         },
     }
+
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        if context.get('default_type') == 'lead':
+            context['empty_list_help_model'] = 'crm.case.section'
+            context['empty_list_help_id'] = context.get('default_section_id')
+        context['empty_list_help_document_name'] = _("leads")
+        return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -96,7 +103,9 @@ class crm_lead(base_stage, format_address, osv.osv):
             if vals.get('type'):
                 ctx['default_type'] = vals['type']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
-        return super(crm_lead, self).create(cr, uid, vals, context=context)
+        # context: no_log, because subtype already handle this
+        create_context = dict(context, mail_create_nolog=True)
+        return super(crm_lead, self).create(cr, uid, vals, context=create_context)
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -268,7 +277,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
-                        domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -360,8 +369,8 @@ class crm_lead(base_stage, format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = False
-        if user_id:
+        section_id = self._get_default_section_id(cr, uid, context=context) or False
+        if user_id and not section_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
                 section_id = section_ids[0]
@@ -671,8 +680,9 @@ class crm_lead(base_stage, format_address, osv.osv):
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities
-        self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
+        # Delete tail opportunities 
+        # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
+        self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
         return highest.id
 
@@ -709,7 +719,6 @@ class crm_lead(base_stage, format_address, osv.osv):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-        self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
 
         if user_ids or section_id:
             self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
@@ -956,6 +965,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_composition_mode': 'comment',
         })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -974,6 +984,16 @@ class crm_lead(base_stage, format_address, osv.osv):
         """ Override to get the reply_to of the parent project. """
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+
+    def _get_formview_action(self, cr, uid, id, context=None):
+        action = super(crm_lead, self)._get_formview_action(cr, uid, id, context=context)
+        obj = self.browse(cr, uid, id, context=context)
+        if obj.type == 'opportunity':
+            model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
+            action.update({
+                'views': [(view_id, 'form')],
+                })
+        return action
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)

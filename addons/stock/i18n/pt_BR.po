@@ -1,21 +1,21 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* stock
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-24 03:18+0000\n"
-"Last-Translator: Thiago Tognoli <Unknown>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-24 12:58+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-25 06:06+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-03-16 04:59+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -168,11 +168,6 @@ msgid "Picking list"
 msgstr "Lista de separação"
 
 #. module: stock
-#: view:stock.inventory:0
-msgid "e.g. Annual inventory"
-msgstr "ex. Inventário Anual"
-
-#. module: stock
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 #: field:report.stock.inventory,product_qty:0
@@ -206,7 +201,7 @@ msgstr "Dia"
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr "Inventários Físicos"
+msgstr "Inventários físicos"
 
 #. module: stock
 #: selection:stock.location.product,type:0
@@ -880,11 +875,6 @@ msgid "Procurement Location"
 msgstr "Local da Aquisição"
 
 #. module: stock
-#: view:stock.picking:0
-msgid "e.g. PO0032"
-msgstr "ex. PO0032"
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
@@ -1158,6 +1148,12 @@ msgstr ""
 #: selection:stock.picking.in,state:0
 msgid "Ready to Receive"
 msgstr "Pronto para receber"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "_Cancel"
+msgstr "_Cancelar"
 
 #. module: stock
 #: field:report.stock.move,day_diff:0
@@ -2438,11 +2434,6 @@ msgid "Supplier Address :"
 msgstr "Endereço do Fornecedor:"
 
 #. module: stock
-#: field:stock.config.settings,group_product_variant:0
-msgid "Support multiple variants per products  "
-msgstr "Suporte a múltiplas variantes por produtos  "
-
-#. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
 msgstr "Linhas de Inventário de Estoque"
@@ -2951,9 +2942,9 @@ msgid "Cancel Inventory"
 msgstr "Cancelar Inventário"
 
 #. module: stock
-#: view:stock.move:0
-msgid "Cancel Move"
-msgstr "Cancelar Movimento"
+#: field:stock.config.settings,group_product_variant:0
+msgid "Support multiple variants per products  "
+msgstr "Suporte a múltiplas variantes por produtos  "
 
 #. module: stock
 #: code:addons/stock/stock.py:2246
@@ -3005,11 +2996,6 @@ msgstr "Na mão"
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by serial number"
 msgstr "Relatório de Estoque por número de série"
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Cancel Transfer"
-msgstr "Cancelar Transferência"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -3570,11 +3556,6 @@ msgstr "Não urgente"
 #: view:stock.move:0
 msgid "Scheduled"
 msgstr "Agendado"
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Add an internal note..."
-msgstr "Adicionar nota interna..."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -5286,5 +5267,1449 @@ msgstr "Pronto para Processar"
 msgid "Warehouse Address :"
 msgstr "Endereço do Armazém:"
 
-#~ msgid "_Cancel"
-#~ msgstr "_Cancelar"
+#~ msgid "Sub Products"
+#~ msgstr "Sub Produtos"
+
+#~ msgid "Return packing"
+#~ msgstr "Retorno de Embalagem"
+
+#~ msgid "Fill Inventory for specific location"
+#~ msgstr "Digite Inventário para o Local Específico"
+
+#~ msgid "Products Received"
+#~ msgstr "Produtos Recebidos"
+
+#~ msgid "Force to use a Production Lot during receptions"
+#~ msgstr "Forçar para usar um lote de produção durante recepções"
+
+#~ msgid "Move History"
+#~ msgstr "Movimentos"
+
+#~ msgid "Production lot"
+#~ msgstr "Lote de Produção"
+
+#~ msgid "STOCK_NEW"
+#~ msgstr "Estoque Novo"
+
+#~ msgid "STOCK_CANCEL"
+#~ msgstr "Estoque Cancelado"
+
+#~ msgid "Packing result"
+#~ msgstr "Resultado da Embalagem"
+
+#~ msgid "STOCK_QUIT"
+#~ msgstr "Saída de Estoque"
+
+#~ msgid "Products Sent"
+#~ msgstr "Produtos Enviados"
+
+#~ msgid "Serial"
+#~ msgstr "Serial"
+
+#~ msgid "Production Lot Revisions"
+#~ msgstr "Revisão de Lotes em Produção"
+
+#~ msgid "Stock location"
+#~ msgstr "Local de Estoque"
+
+#~ msgid "Unreceived Products"
+#~ msgstr "Produtos Devolvidos"
+
+#~ msgid "Move Lines"
+#~ msgstr "Mover Linhas"
+
+#~ msgid "Production Lots"
+#~ msgstr "Lotes de Produção"
+
+#~ msgid "Recipient"
+#~ msgstr "Destinatário"
+
+#~ msgid "Process Now"
+#~ msgstr "Processar Agora"
+
+#~ msgid "Stock Level 1"
+#~ msgstr "Estoque Nível 1"
+
+#~ msgid "Stock Properties"
+#~ msgstr "Propriedades do Estoque"
+
+#~ msgid "Product Id"
+#~ msgstr "Identificação do Produto"
+
+#~ msgid "Force to use a Production Lot during production order"
+#~ msgstr "Forçar o uso de um lote de produção durante a Ordem de Produção"
+
+#~ msgid ""
+#~ "For the current product (template), this stock location will be used, "
+#~ "instead of the default one, as the source location for stock moves generated "
+#~ "when you do an inventory"
+#~ msgstr ""
+#~ "Para o produto atual (modelo), a ação local será utilizado, em vez da "
+#~ "padrão, como o local de origem para o estoque move o gerado quando você faz "
+#~ "um inventário"
+
+#~ msgid "Latest Date of Inventory"
+#~ msgstr "Últimas Datas de Inventário"
+
+#~ msgid "Quantity per lot"
+#~ msgstr "Quantidade por Lote"
+
+#~ msgid "Date Done"
+#~ msgstr "Data de Saída"
+
+#~ msgid "Tracking Number"
+#~ msgstr "Número de Rastreamento"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Workshop"
+#~ msgstr "Oficina"
+
+#~ msgid "Reporting"
+#~ msgstr "Relatórios"
+
+#~ msgid "Production lot is used to put a serial number on the production"
+#~ msgstr "Lote de produção é usado para pôr um número de série na produção"
+
+#~ msgid "Customer Invoice"
+#~ msgstr "Fatura do Cliente"
+
+#~ msgid "Calendar of Deliveries"
+#~ msgstr "Calendário de Entregas"
+
+#~ msgid "Stock report by production lots"
+#~ msgstr "Relatório de estoque por lotes de produção"
+
+#~ msgid "Available Packing"
+#~ msgstr "Embalagem Disponível"
+
+#~ msgid "Production lot revisions"
+#~ msgstr "Revisões do lote de produção"
+
+#~ msgid "All Stock Moves"
+#~ msgstr "Todos os Movimentos de Estoque"
+
+#~ msgid "General Informations"
+#~ msgstr "Informações Gerais"
+
+#~ msgid "Finished products"
+#~ msgstr "Produtos acabados"
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Estado da fatura"
+
+#~ msgid "Stocks"
+#~ msgstr "Estoques"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "Fatura não esta criada"
+
+#~ msgid "Periodical Inventory"
+#~ msgstr "Inventário Periódico"
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "Você não pode remover uma linha do lote"
+
+#~ msgid "Stock Location Analysis"
+#~ msgstr "Localização de Análise do Estoque"
+
+#~ msgid "Tracking a move"
+#~ msgstr "Rastreando um movimento"
+
+#~ msgid "["
+#~ msgstr "["
+
+#~ msgid "]"
+#~ msgstr "]"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "Nenhum produto neste local"
+
+#~ msgid "Track line"
+#~ msgstr "Rastreamento"
+
+#~ msgid "Non Assigned Products:"
+#~ msgstr "Produtos não atribuídos"
+
+#~ msgid "Tracking prefix"
+#~ msgstr "Prefixo de rastreamento"
+
+#~ msgid "terp-account"
+#~ msgstr "terp-account"
+
+#~ msgid "STOCK_SORT_ASCENDING"
+#~ msgstr "STOCK_SORT_ASCENDING"
+
+#~ msgid "STOCK_ZOOM_100"
+#~ msgstr "STOCK_ZOOM_100"
+
+#~ msgid "STOCK_GOTO_TOP"
+#~ msgstr "STOCK_GOTO_TOP"
+
+#~ msgid "terp-hr"
+#~ msgstr "terp-hr"
+
+#~ msgid "terp-purchase"
+#~ msgstr "terp-purchase"
+
+#~ msgid "STOCK_DND"
+#~ msgstr "STOCK_DND"
+
+#~ msgid "STOCK_GOTO_FIRST"
+#~ msgstr "STOCK_GOTO_FIRST"
+
+#~ msgid "terp-graph"
+#~ msgstr "terp-graph"
+
+#~ msgid "STOCK_MEDIA_REWIND"
+#~ msgstr "STOCK_MEDIA_REWIND"
+
+#~ msgid "STOCK_ZOOM_FIT"
+#~ msgstr "STOCK_ZOOM_FIT"
+
+#~ msgid "STOCK_GOTO_BOTTOM"
+#~ msgstr "STOCK_GOTO_BOTTOM"
+
+#~ msgid "STOCK_GO_FORWARD"
+#~ msgstr "STOCK_GO_FORWARD"
+
+#~ msgid "STOCK_UNDELETE"
+#~ msgstr "STOCK_UNDELETE"
+
+#~ msgid "STOCK_PASTE"
+#~ msgstr "STOCK_PASTE"
+
+#~ msgid "terp-stock"
+#~ msgstr "terp-stock"
+
+#~ msgid "STOCK_MEDIA_RECORD"
+#~ msgstr "STOCK_MEDIA_RECORD"
+
+#~ msgid "terp-report"
+#~ msgstr "terp-report"
+
+#~ msgid "STOCK_GO_DOWN"
+#~ msgstr "STOCK_GO_DOWN"
+
+#~ msgid "STOCK_GO_BACK"
+#~ msgstr "STOCK_GO_BACK"
+
+#~ msgid "STOCK_JUSTIFY_FILL"
+#~ msgstr "STOCK_JUSTIFY_FILL"
+
+#~ msgid "terp-administration"
+#~ msgstr "terp-administration"
+
+#~ msgid "terp-crm"
+#~ msgstr "terp-crm"
+
+#~ msgid "STOCK_STRIKETHROUGH"
+#~ msgstr "STOCK_STRIKETHROUGH"
+
+#~ msgid "terp-partner"
+#~ msgstr "terp-partner"
+
+#~ msgid "STOCK_SPELL_CHECK"
+#~ msgstr "STOCK_SPELL_CHECK"
+
+#~ msgid "STOCK_REFRESH"
+#~ msgstr "STOCK_REFRESH"
+
+#~ msgid "STOCK_ZOOM_IN"
+#~ msgstr "STOCK_ZOOM_IN"
+
+#~ msgid "terp-calendar"
+#~ msgstr "terp-calendar"
+
+#~ msgid "STOCK_JUSTIFY_LEFT"
+#~ msgstr "STOCK_JUSTIFY_LEFT"
+
+#~ msgid "STOCK_COLOR_PICKER"
+#~ msgstr "STOCK_COLOR_PICKER"
+
+#~ msgid "STOCK_DELETE"
+#~ msgstr "STOCK_DELETE"
+
+#~ msgid "STOCK_CLEAR"
+#~ msgstr "STOCK_CLEAR"
+
+#~ msgid "terp-mrp"
+#~ msgstr "terp-mrp"
+
+#~ msgid "STOCK_GO_UP"
+#~ msgstr "STOCK_GO_UP"
+
+#~ msgid "STOCK_SORT_DESCENDING"
+#~ msgstr "STOCK_SORT_DESCENDING"
+
+#~ msgid "STOCK_HOME"
+#~ msgstr "STOCK_HOME"
+
+#~ msgid "STOCK_MEDIA_STOP"
+#~ msgstr "STOCK_MEDIA_STOP"
+
+#~ msgid "STOCK_DND_MULTIPLE"
+#~ msgstr "STOCK_DND_MULTIPLE"
+
+#~ msgid "STOCK_REMOVE"
+#~ msgstr "STOCK_REMOVE"
+
+#~ msgid "STOCK_DIALOG_AUTHENTICATION"
+#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#~ msgid "STOCK_ZOOM_OUT"
+#~ msgstr "STOCK_ZOOM_OUT"
+
+#~ msgid "STOCK_SELECT_COLOR"
+#~ msgstr "STOCK_SELECT_COLOR"
+
+#~ msgid "STOCK_PRINT"
+#~ msgstr "STOCK_PRINT"
+
+#~ msgid "STOCK_NO"
+#~ msgstr "STOCK_NO"
+
+#~ msgid "STOCK_REDO"
+#~ msgstr "STOCK_REDO"
+
+#~ msgid "STOCK_CLOSE"
+#~ msgstr "STOCK_CLOSE"
+
+#~ msgid "STOCK_JUMP_TO"
+#~ msgstr "STOCK_JUMP_TO"
+
+#~ msgid "terp-tools"
+#~ msgstr "terp-tools"
+
+#~ msgid "STOCK_DIALOG_INFO"
+#~ msgstr "STOCK_DIALOG_INFO"
+
+#~ msgid "terp-sale"
+#~ msgstr "terp-sale"
+
+#~ msgid "STOCK_ADD"
+#~ msgstr "STOCK_ADD"
+
+#~ msgid "STOCK_MEDIA_PAUSE"
+#~ msgstr "STOCK_MEDIA_PAUSE"
+
+#~ msgid "STOCK_PRINT_PREVIEW"
+#~ msgstr "STOCK_PRINT_PREVIEW"
+
+#~ msgid "STOCK_FIND"
+#~ msgstr "STOCK_FIND"
+
+#~ msgid "STOCK_MEDIA_PLAY"
+#~ msgstr "STOCK_MEDIA_PLAY"
+
+#~ msgid "STOCK_OPEN"
+#~ msgstr "STOCK_OPEN"
+
+#~ msgid "STOCK_MEDIA_PREVIOUS"
+#~ msgstr "STOCK_MEDIA_PREVIOUS"
+
+#~ msgid "STOCK_DISCONNECT"
+#~ msgstr "STOCK_DISCONNECT"
+
+#~ msgid "STOCK_NETWORK"
+#~ msgstr "STOCK_NETWORK"
+
+#~ msgid "terp-project"
+#~ msgstr "terp-project"
+
+#~ msgid "STOCK_UNINDENT"
+#~ msgstr "STOCK_UNINDENT"
+
+#~ msgid "STOCK_GOTO_LAST"
+#~ msgstr "STOCK_GOTO_LAST"
+
+#~ msgid "STOCK_DIRECTORY"
+#~ msgstr "STOCK_DIRECTORY"
+
+#~ msgid "STOCK_JUSTIFY_CENTER"
+#~ msgstr "STOCK_JUSTIFY_CENTER"
+
+#~ msgid "STOCK_REVERT_TO_SAVED"
+#~ msgstr "STOCK_REVERT_TO_SAVED"
+
+#~ msgid "stock.picking.move.wizard"
+#~ msgstr "stock.picking.move.wizard"
+
+#~ msgid "terp-product"
+#~ msgstr "terp-product"
+
+#~ msgid "STOCK_INDENT"
+#~ msgstr "STOCK_INDENT"
+
+#~ msgid "STOCK_JUSTIFY_RIGHT"
+#~ msgstr "STOCK_JUSTIFY_RIGHT"
+
+#~ msgid "STOCK_MEDIA_NEXT"
+#~ msgstr "STOCK_MEDIA_NEXT"
+
+#~ msgid "Revision"
+#~ msgstr "Revisão"
+
+#~ msgid "Tiny sprl"
+#~ msgstr "Tiny sprl"
+
+#~ msgid "Stock Management"
+#~ msgstr "Gerenciamento do Estoque"
+
+#~ msgid "Customer Refund"
+#~ msgstr "Reembolso a Cliente"
+
+#~ msgid "Make Picking"
+#~ msgstr "Fazer Separação"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Compras & Vendas"
+
+#~ msgid "STOCK_SAVE_AS"
+#~ msgstr "ESTOQUE_SALVAR_COMO"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Erro de usuário"
+
+#~ msgid "The packing has been successfully made !"
+#~ msgstr "A embalagem foi realizada com sucesso !"
+
+#~ msgid "STOCK_MEDIA_FORWARD"
+#~ msgstr "STOCK_MEDIA_FORWARD"
+
+#~ msgid "Inventory Management"
+#~ msgstr "Gestão de Materiais"
+
+#~ msgid "LIFO"
+#~ msgstr "LIFO"
+
+#~ msgid "STOCK_SAVE"
+#~ msgstr "STOCK_SAVE"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "Amount"
+#~ msgstr "Valor"
+
+#~ msgid "Total :"
+#~ msgstr "Total :"
+
+#~ msgid "Include all childs for the location"
+#~ msgstr "Incluir todas as dependências para o local"
+
+#~ msgid "Draft Moves"
+#~ msgstr "Movimentações Provisórias"
+
+#~ msgid ""
+#~ "This journal will be used for the accounting move generated by stock move"
+#~ msgstr ""
+#~ "Este diário será usado para os movimentos contábeis gerados pela "
+#~ "movimentação de estoque"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Erro!  Você não pode criar categorias recursivas."
+
+#~ msgid "Split lines"
+#~ msgstr "Dividir linhas"
+
+#~ msgid ""
+#~ "Current quantity of products with this Production Lot Number available in "
+#~ "company warehouses"
+#~ msgstr ""
+#~ "Quantidade atual de produtos com este lote de produção nos armazéns da "
+#~ "empresa"
+
+#~ msgid "Action"
+#~ msgstr "Ação"
+
+#~ msgid "Units of Measure Categories"
+#~ msgstr "Categorias das Unidades de Medida"
+
+#~ msgid "Expected Shipping Date"
+#~ msgstr "Data Prevista de Envio"
+
+#~ msgid "Product UOM"
+#~ msgstr "UdM do Produto"
+
+#~ msgid "Packing"
+#~ msgstr "Empacotamento"
+
+#~ msgid "Split in production lots"
+#~ msgstr "Dividir em lotes de produção"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Erro!"
+
+#~ msgid "Accounting Stock Properties"
+#~ msgstr "Propriedades da Conta de Estoque"
+
+#, python-format
+#~ msgid "Message !"
+#~ msgstr "Mensagem!"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Aviso"
+
+#~ msgid "Do you want to merge theses inventories ?"
+#~ msgstr "Você deseja mesclar estes inventários?"
+
+#~ msgid "Related Picking"
+#~ msgstr "Separações Relacionadas"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Você tentou atribuir um lote que não é do mesmo produto"
+
+#~ msgid "Date of Order"
+#~ msgstr "Data do Pedido"
+
+#, python-format
+#~ msgid "Delivery Information"
+#~ msgstr "Informação de Entrega"
+
+#~ msgid "Month-1"
+#~ msgstr "Mês-1"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erro: Código EAN inválido"
+
+#~ msgid "Not Available"
+#~ msgstr "Não Disponível"
+
+#, python-format
+#~ msgid "Delivery Order"
+#~ msgstr "Ordem de Entrega"
+
+#~ msgid "Shop 1"
+#~ msgstr "Loja 1"
+
+#, python-format
+#~ msgid "Company is not specified in Location"
+#~ msgstr "A empresa não foi especificada no Local"
+
+#~ msgid "Picking List:"
+#~ msgstr "Lista de Separação:"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Ação invalida !"
+
+#, python-format
+#~ msgid "No Invoices were created"
+#~ msgstr "Nenhuma fatura foi criada"
+
+#~ msgid "OpenERP S.A."
+#~ msgstr "OpenERP S.A."
+
+#~ msgid "Production Lot Numbers"
+#~ msgstr "Números de Lotes de Produção"
+
+#~ msgid "Dashboard"
+#~ msgstr "Painel"
+
+#~ msgid "Warehouse Dashboard"
+#~ msgstr "Painel de Armazém"
+
+#~ msgid "Incoming Product"
+#~ msgstr "Produtos Entrando"
+
+#~ msgid "Partial Delivery"
+#~ msgstr "Entrega Parcial"
+
+#, python-format
+#~ msgid "Product "
+#~ msgstr "Produto "
+
+#, python-format
+#~ msgid "Document"
+#~ msgstr "Documento"
+
+#~ msgid "Partial Picking"
+#~ msgstr "Separação Parcial"
+
+#~ msgid "Update"
+#~ msgstr "Atualizar"
+
+#~ msgid "Products "
+#~ msgstr "Produtos "
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "Conta para Variação de Estoque"
+
+#~ msgid "This operation will cancel the shipment. Do you want to continue?"
+#~ msgstr "Esta operação vai cancelar o envio. Continuar?"
+
+#~ msgid "Dates"
+#~ msgstr "Datas"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: A UdM padrão e a UdM de compra precisam estar na mesma categoria."
+
+#, python-format
+#~ msgid "Insufficient Stock in Lot !"
+#~ msgstr "Estoque Insuficiente no Lote !"
+
+#~ msgid "Products Categories"
+#~ msgstr "Categorias de Produtos"
+
+#~ msgid "Address"
+#~ msgstr "Endereço"
+
+#~ msgid "Order"
+#~ msgstr "Pedido"
+
+#~ msgid "New pack"
+#~ msgstr "Nova embalagem"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#, python-format
+#~ msgid ""
+#~ "There is no inventory variation account defined on the product category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Nenhuma conta de variação de invetário foi definida na categoria de produto: "
+#~ "\"%s\" (id: %d)"
+
+#~ msgid "Delivery Order:"
+#~ msgstr "Ordem de Entrega"
+
+#~ msgid "Reason"
+#~ msgstr "Motivo"
+
+#, python-format
+#~ msgid "is done."
+#~ msgstr "está concluído."
+
+#~ msgid "Reception:"
+#~ msgstr "Recebimento:"
+
+#~ msgid "It specifies goods to be delivered all at once or by direct delivery"
+#~ msgstr ""
+#~ "Especifica mercadorias para serem entregues todas de uma vez ou por entrega "
+#~ "direta"
+
+#, python-format
+#~ msgid "is cancelled."
+#~ msgstr "está cancelado."
+
+#~ msgid "Existing Lots"
+#~ msgstr "Lotes Existentes"
+
+#, python-format
+#~ msgid " for the "
+#~ msgstr " para o "
+
+#, python-format
+#~ msgid "INV: "
+#~ msgstr "INV: "
+
+#~ msgid "Additional info"
+#~ msgstr "Informação adicional"
+
+#, python-format
+#~ msgid "Process Document"
+#~ msgstr "Documento do Processo"
+
+#~ msgid "Products Moves"
+#~ msgstr "Movimentações de Produtos"
+
+#~ msgid "Destination Address"
+#~ msgstr "Endereço de Entrega"
+
+#~ msgid "Shop 2"
+#~ msgstr "Loja 2"
+
+#~ msgid "Existing Lot"
+#~ msgstr "Lote Existente"
+
+#, python-format
+#~ msgid "is ready to process."
+#~ msgstr "está pronto para processamento."
+
+#, python-format
+#~ msgid "is scheduled"
+#~ msgstr "está agendado"
+
+#~ msgid "XML File"
+#~ msgstr "Arquivo XML"
+
+#~ msgid "Select Quantity"
+#~ msgstr "Selecione Quantidade"
+
+#~ msgid "Expected"
+#~ msgstr "Esperado"
+
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "quantidade."
+
+#~ msgid "To invoice"
+#~ msgstr "Para faturar"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Você deve atribuir um lote de produção para este produto"
+
+#~ msgid "Split in Production lots"
+#~ msgstr "Dividir em Lotes de Produção"
+
+#~ msgid "Production Lot Identification"
+#~ msgstr "Identificação do Lote de Produção"
+
+#~ msgid "Keep in one lot"
+#~ msgstr "Manter em um lote"
+
+#~ msgid "Cost Price:"
+#~ msgstr "Preço de Custo:"
+
+#~ msgid "Outgoing Product"
+#~ msgstr "Produto Saindo"
+
+#~ msgid "Inventory Properties"
+#~ msgstr "Propriedades do Inventário"
+
+#~ msgid "Address of partner"
+#~ msgstr "Endereço do parceiro"
+
+#~ msgid "Lot number"
+#~ msgstr "Número do lote"
+
+#, python-format
+#~ msgid "Please provide a positive quantity to scrap!"
+#~ msgstr "Por favor, lance uma quantidade positiva para sucata!"
+
+#, python-format
+#~ msgid "Receive Information"
+#~ msgstr "Informação de Recebimento"
+
+#, python-format
+#~ msgid "were scrapped"
+#~ msgstr "foi sucateado"
+
+#~ msgid "Split in lots"
+#~ msgstr "Dividir em lotes"
+
+#~ msgid "Tracking lot"
+#~ msgstr "Rastreamento de lote"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock input account defined for this product or its category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Não há conta de entrada no estoque definida para este produto ou sua "
+#~ "categoria: \"%s\" (id: %d)"
+
+#~ msgid "Input Picking List"
+#~ msgstr "Lista de Separação para Entrada"
+
+#, python-format
+#~ msgid "Could not find any difference between standard price and new price!"
+#~ msgstr ""
+#~ "Nenhuma diferenca pode ser encontrada entre o preço padrão e o novo preço!"
+
+#~ msgid "Internal Picking list"
+#~ msgstr "Lista de Separação Interna"
+
+#~ msgid "Production Lot Number"
+#~ msgstr "Número do Lote de Produção"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock input account defined for this product: \"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Nenhuma conta de entrada no estoque foi definida para o produto: \"%s\" (id: "
+#~ "%d)"
+
+#, python-format
+#~ msgid "Internal picking"
+#~ msgstr "Separação interna"
+
+#, python-format
+#~ msgid ""
+#~ "You are moving %.2f %s products but only %.2f %s available in this lot."
+#~ msgstr ""
+#~ "Você está movimentando %.2f %s produtos mas apenas %.2f %s estão disponíveis "
+#~ "neste lote."
+
+#~ msgid "Lot weight"
+#~ msgstr "Peso do lote"
+
+#, python-format
+#~ msgid "Please provide Proper Quantity !"
+#~ msgstr "Por favor, entre com a Quantidade Adequada !"
+
+#~ msgid "Moves for this production lot"
+#~ msgstr "Movimentações deste lote de produção"
+
+#~ msgid "Quantity to leave in the current pack"
+#~ msgstr "Quantidade para deixar na embalagem atual"
+
+#~ msgid "This quantity is expressed in the Default UoM of the product."
+#~ msgstr "Esta quantidade está expressada na UdM Padrão do produto."
+
+#, python-format
+#~ msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Não há nenhum diário definido para a categoria de produto: \"%s\" (id: %d)"
+
+#, python-format
+#~ msgid "Please specify at least one non-zero quantity!"
+#~ msgstr "Por favor, especifique pelo menos uma quantidade diferente de zero!"
+
+#~ msgid "Reference of the document that produced this picking."
+#~ msgstr "Referência do documento que gerou esta separação."
+
+#, python-format
+#~ msgid ""
+#~ "Total quantity after split exceeds the quantity to split for this product: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr ""
+#~ "A quantidade total após divisão excede a quantidade a dividir para este "
+#~ "produto: \"%s\" (id: %d)"
+
+#~ msgid ""
+#~ "Create and manage your warehouses and assign them a location from here"
+#~ msgstr ""
+#~ "Criar e gerenciar seus armazéns e atribuir a eles um local a partir daqui"
+
+#, python-format
+#~ msgid "Missing partial picking data for move #%s"
+#~ msgstr "Faltando dados de separação parcial para movimentação #%s"
+
+#~ msgid ""
+#~ "Check this option to select existing lots in the list below, otherwise you "
+#~ "should enter new ones line by line."
+#~ msgstr ""
+#~ "Marque esta opção para selecionar lotes existentes na lista abaixo. Caso "
+#~ "contrário, você deve lançar novos linha por linha."
+
+#, python-format
+#~ msgid "You can not process picking without stock moves"
+#~ msgstr "Você não pode processar uma separação sem movimentar estoque"
+
+#~ msgid ""
+#~ "Forces to specify a Production Lot for all moves containing this product and "
+#~ "going to a Customer Location"
+#~ msgstr ""
+#~ "Força especificar um Lote de Produção para todos os movimentos que contém "
+#~ "este produto e for para um Local de Cliente"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock output account defined for this product or its category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Nenhuma conta de saída de estoque definida para este produto ou sua "
+#~ "categoria: \"%s\" (id: %d)"
+
+#~ msgid "Exist Split lines"
+#~ msgstr "Existem Linhas Divididas"
+
+#~ msgid "Incoming Products Delay"
+#~ msgstr "Prazo de Recebimento dos Produtos"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock output account defined for this product: \"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Nenhuma conta de saída de estoque definida para este produto: \"%s\" (id: %d)"
+
+#~ msgid "Import current product inventory from the following location"
+#~ msgstr "Importar inventário de produto atual do seguinte local"
+
+#~ msgid ""
+#~ "For the current product, this stock location will be used, instead of the "
+#~ "default one, as the source location for stock moves generated by production "
+#~ "orders"
+#~ msgstr ""
+#~ "Para o produto atual, este local de estoque deverá ser usado, no lugar do "
+#~ "local padrão, como o local origem para o movimento de estoque gerado pelas "
+#~ "ordens de produção"
+
+#~ msgid "Search Stock Picking"
+#~ msgstr "Procurar Separação de Estoque"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create Journal Entry, Output Account defined on this product and "
+#~ "Variant account on category of this product are same."
+#~ msgstr ""
+#~ "O Lançamento de Diário não pode ser criado. A Conta de Saída definida para "
+#~ "este produto e a Conta Variante da categoria para este produto são as mesmas."
+
+#, python-format
+#~ msgid "Operation forbidden"
+#~ msgstr "Operação proibida"
+
+#~ msgid "Stock Replacement"
+#~ msgstr "Troca de Estoque"
+
+#, python-format
+#~ msgid "Cannot deliver products which are already delivered !"
+#~ msgstr "Não se pode entregar produtos já entregues !"
+
+#~ msgid ""
+#~ "Forces to specify a Production Lot for all moves containing this product and "
+#~ "generated by a Manufacturing Order"
+#~ msgstr ""
+#~ "Força a especificação de um Lote de Produção para todos os movimentos que "
+#~ "contém este produto e é gerado por um Pedido de Fabricação"
+
+#~ msgid ""
+#~ "For the current product, this stock location will be used, instead of the "
+#~ "default one, as the source location for stock moves generated when you do an "
+#~ "inventory"
+#~ msgstr ""
+#~ "Para o produto atual, este local de estoque será usado no lugar do local "
+#~ "padrão como local origem para movimentos de estoque gerados quando você "
+#~ "fizer um inventário"
+
+#~ msgid "Expected date for the picking to be processed"
+#~ msgstr "Data prevista para separação ser processada"
+
+#~ msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
+#~ msgstr "Lote de produção único, será mostrado como: PREFIXO/SERIAL [INT_REF]"
+
+#, python-format
+#~ msgid "Can not consume a move with negative or zero quantity !"
+#~ msgstr "Não se pode consumir um movimento com quantidade zero ou negativa !"
+
+#~ msgid "Stock Replacement result"
+#~ msgstr "Resultado da Troca de Estoque"
+
+#~ msgid ""
+#~ "(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to "
+#~ "filter all resources of the day for the 'From' date and 23:59:59 for the "
+#~ "'To' date)"
+#~ msgstr ""
+#~ "(Mantenha vazio para abrir a situação atual. Ajuste HH:MM:SS para 00:00:00 "
+#~ "para filtrar todos os recursos do dia da data 'A partir de' e 23:59:59 até a "
+#~ "data 'Até')"
+
+#~ msgid ""
+#~ "This menu gives you the full traceability of inventory operations on a "
+#~ "specific product. You can filter on the product to see all the past or "
+#~ "future movements for the product."
+#~ msgstr ""
+#~ "Este menu permite que você faça o rastreamento completo das operações de "
+#~ "inventário em um produto específico. Você pode filtrar o produto para ver "
+#~ "todos os movimentos passados ou futuros."
+
+#, python-format
+#~ msgid ""
+#~ "Quantities, UoMs, Products and Locations cannot be modified on stock moves "
+#~ "that have already been processed (except by the Administrator)"
+#~ msgstr ""
+#~ "Quantidades, UdMs, Produtos e Locais não podem ser modificados nos "
+#~ "movimentos de estoque que já foram processados (exceto pelo Administrador)"
+
+#, python-format
+#~ msgid ""
+#~ "There are no products to return (only lines in Done state and not fully "
+#~ "returned yet can be returned)!"
+#~ msgstr ""
+#~ "Não existem produtos para retornar (somente linhas com status Concluído e "
+#~ "não retornadas completamente podem ser retornadas)!"
+
+#~ msgid ""
+#~ "Forces to specify a Production Lot for all moves containing this product and "
+#~ "coming from a Supplier Location"
+#~ msgstr ""
+#~ "Força a especificação do Lote de Produção para todos os movimentos contendo "
+#~ "este produto e vindo do Local de Fornecedor"
+
+#~ msgid ""
+#~ "For the current product, this stock location will be used, instead of the "
+#~ "default one, as the source location for stock moves generated by procurements"
+#~ msgstr ""
+#~ "Para o produto atual, este local de estoque será usado, no lugar do padrão, "
+#~ "como local origem para os movimentos de estoque gerados pelas aquisições"
+
+#~ msgid ""
+#~ "This is the list of all delivery orders that have to be prepared, according "
+#~ "to your different sales orders and your logistics rules."
+#~ msgstr ""
+#~ "Esta é a lista de todos os pedidos de entrega que devem ser preparadas, de "
+#~ "acordo com seus diferentes pedidos de venda e regras de logística."
+
+#, python-format
+#~ msgid "Variation Account is not specified for Product Category: %s"
+#~ msgstr ""
+#~ "A Conta de Variação não foi especificada para a Categoria de Produto: %s"
+
+#~ msgid ""
+#~ "You will find in this list all products you have to deliver to your "
+#~ "customers. You can process the deliveries directly from this list using the "
+#~ "buttons on the right of each line. You can filter the products to deliver by "
+#~ "customer, products or sale order (using the Origin field)."
+#~ msgstr ""
+#~ "Você encontrará nesta lista todos os produtos que você precisa entregar para "
+#~ "seus clientes. Você pode processar entregas diretamente desta lista usando "
+#~ "os botões à direita de cada linha. Os produtos para entrega podem ser "
+#~ "filtrados por cliente, produtos ou pedido de venda (usando o campo Origem)."
+
+#~ msgid "Track moves"
+#~ msgstr "Rastrear movimentos"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create Journal Entry, Input Account defined on this product and "
+#~ "Variant account on category of this product are same."
+#~ msgstr ""
+#~ "O Lançamento de Diário não pode ser criado. A Conta de Entrada definida "
+#~ "neste produto e a Conta Variante da Categoria deste produto são as mesmas."
+
+#~ msgid ""
+#~ "The stock journal system allows you to assign each stock operation to a "
+#~ "specific journal according to the type of operation to perform or the "
+#~ "worker/team that should perform the operation. Examples of stock journals "
+#~ "may be: quality control, pick lists, packing, etc."
+#~ msgstr ""
+#~ "O sistema de diário de estoque permite que você atribua cada operação de "
+#~ "estoque a um diário específico de acordo com o tipo de operação a realizar "
+#~ "ou equipe/operador que deve executar a operação. Exemplos de diários de "
+#~ "estoque podem ser: controle de qualidade, lista de separação, empacotamento, "
+#~ "etc."
+
+#~ msgid ""
+#~ "When doing real-time inventory valuation, counterpart Journal Items for all "
+#~ "incoming stock moves will be posted in this account. If not set on the "
+#~ "product, the one from the product category is used."
+#~ msgstr ""
+#~ "Quando estiver fazendo a valorização de inventário em tempo real, a contra-"
+#~ "partida de todos os movimentos de entrada no estoque, no diário, serão "
+#~ "postadas nesta conta. Se não estiver atribuída no produto, será usada da "
+#~ "categoria do produto."
+
+#~ msgid ""
+#~ "When doing real-time inventory valuation, counterpart Journal Items for all "
+#~ "outgoing stock moves will be posted in this account. This is the default "
+#~ "value for all products in this category, it can also directly be set on each "
+#~ "product."
+#~ msgstr ""
+#~ "Quando estiver fazendo a valorização de inventário em tempo real, a contra-"
+#~ "partida de todos os movimentos de saída de estoque, no diário, serão "
+#~ "postadas nesta conta. Este é o valor padrão para todos os produtos desta "
+#~ "categoria. Também pode ser atribuída diretamente em cada produto."
+
+#~ msgid ""
+#~ "* Draft: not confirmed yet and will not be scheduled until confirmed\n"
+#~ "* Confirmed: still waiting for the availability of products\n"
+#~ "* Available: products reserved, simply waiting for confirmation.\n"
+#~ "* Waiting: waiting for another move to proceed before it becomes "
+#~ "automatically available (e.g. in Make-To-Order flows)\n"
+#~ "* Done: has been processed, can't be modified or cancelled anymore\n"
+#~ "* Cancelled: has been cancelled, can't be confirmed anymore"
+#~ msgstr ""
+#~ "* Provisório: não confirmado ainda e não será agendado até a confirmação\n"
+#~ "* Confirmado: aguardando a disponibilidade de produtos\n"
+#~ "* Disponível: produtos reservados, apenas aguardando confirmação\n"
+#~ "* Aguardando: aguardando outro movimento antes de se tornar automaticamente "
+#~ "disponível (Ex.: no fluxo 'Adquirir Sempre')\n"
+#~ "* Concluído: foi processado, não pode mais ser modificado ou cancelado\n"
+#~ "* Cancelado: foi cancelado, não pode mais ser confirmado"
+
+#~ msgid ""
+#~ "If this picking was split this field links to the picking that contains the "
+#~ "other part that has been processed already."
+#~ msgstr ""
+#~ "Se esta lista de separação foi dividida, este campo relaciona a lista que "
+#~ "contém a outra parte que já foi processada."
+
+#~ msgid "stock.move.memory.out"
+#~ msgstr "stock.move.memory.out"
+
+#~ msgid "Outgoing Products Delay"
+#~ msgstr "Prazo de Saída dos Produtos"
+
+#~ msgid "Partial Move"
+#~ msgstr "Movimento Parcial"
+
+#~ msgid "stock.move.memory.in"
+#~ msgstr "stock.move.memory.in"
+
+#~ msgid ""
+#~ "Periodical Inventories are used to count the number of products available "
+#~ "per location. You can use it once a year when you do the general inventory "
+#~ "or whenever you need it, to correct the current stock level of a product."
+#~ msgstr ""
+#~ "Os inventários Periódicos são usados para se contar a quantidade de produtos "
+#~ "disponível em cada localização. Você pode usá-lo uma vez por ano ao refazer "
+#~ "seu inventario ou cada vez que precisar corrigir os níveis de estoque de um "
+#~ "produto."
+
+#, python-format
+#~ msgid "is consumed with"
+#~ msgstr "foi consumido em"
+
+#~ msgid "UoM Categories"
+#~ msgstr "Categorias UdM"
+
+#~ msgid "Current month"
+#~ msgstr "Mês atual"
+
+#~ msgid ""
+#~ "Our records indicate that the following payments are still due. If the "
+#~ "amount\n"
+#~ "has already been paid, please disregard this notice. However, if you have "
+#~ "any\n"
+#~ "queries regarding your account, please contact us.\n"
+#~ "Thank you in advance.\n"
+#~ msgstr ""
+#~ "Os nossos registos indicam que os pagamentos seguintes são ainda devidos. \n"
+#~ "Se já foi pago, por favor desconsidere esse aviso. \n"
+#~ "No entanto, se você tiver dúvida  sobre sua conta, entre em contato "
+#~ "conosco.\n"
+#~ "Agradeço antecipadamente.\n"
+
+#~ msgid "UoM"
+#~ msgstr "UdM"
+
+#, python-format
+#~ msgid ""
+#~ "The current move line is already assigned to a pack, please remove it first "
+#~ "if you really want to change it '             #                        'for "
+#~ "this product: \"%s\" (id: %d)"
+#~ msgstr ""
+#~ "A linha de movimento atual já está atribuída a um pacote. Por favor, remova "
+#~ "ela primeiro se você realmente quer mudar ' # ' para este produto: \"%s\" "
+#~ "(id: %d)"
+
+#, python-format
+#~ msgid "You cannot cancel picking because stock move is in done state !"
+#~ msgstr ""
+#~ "Você não pode cancelar a separação porque o movimento de estoque está como "
+#~ "Concluído !"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create Journal Entry, Input Account defined on this product and "
+#~ "Valuation account on category of this product are same."
+#~ msgstr ""
+#~ "Não é possível criar uma Entrada de Diário, a Conta de Entrada definida "
+#~ "neste produto e a conta de Valorização na categoria deste produto são as "
+#~ "mesmas."
+
+#~ msgid "State"
+#~ msgstr "Situação"
+
+#~ msgid "UOM"
+#~ msgstr "UdM"
+
+#, python-format
+#~ msgid ""
+#~ "There is no inventory Valuation account defined on the product category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Não há nenhuma conta de Valorização inventário definido na categoria de "
+#~ "produto: \"% s\" (id:% d)"
+
+#~ msgid ""
+#~ "The Incoming Shipments is the list of all orders you will receive from your "
+#~ "suppliers. An incoming shipment contains a list of products to be received "
+#~ "according to the original purchase order. You can validate the shipment "
+#~ "totally or partially."
+#~ msgstr ""
+#~ "Recebimentos de Entrada é uma lista de todos os pedidos que você vai receber "
+#~ "de seus fornecedores. Uma expedição recebida contém uma lista de produtos a "
+#~ "serem recebidas de acordo com a ordem de compra original. Você pode validar "
+#~ "o envio total ou parcialmente."
+
+#~ msgid "Move Information"
+#~ msgstr "Informação da Movimentação"
+
+#~ msgid "Refrigerator"
+#~ msgstr "Refrigerador"
+
+#, python-format
+#~ msgid "Valuation Account is not specified for Product Category: %s"
+#~ msgstr ""
+#~ "Conta de Valorização não está especificada para a Categoria de Produtos: %s"
+
+#~ msgid "unknown"
+#~ msgstr "desconhecido"
+
+#, python-format
+#~ msgid "is scheduled %s."
+#~ msgstr "está agendado %s."
+
+#~ msgid "Last month"
+#~ msgstr "Mês passado"
+
+#~ msgid "Confirmed Pickings"
+#~ msgstr "Separações Confirmadas"
+
+#, python-format
+#~ msgid "is waiting."
+#~ msgstr "está aguardando."
+
+#, python-format
+#~ msgid ""
+#~ "The uom rounding does not allow you to ship \"%s %s\", only roundings of "
+#~ "\"%s %s\" is accepted by the uom."
+#~ msgstr ""
+#~ "O arredondamento da UdM não permite que você envie \"% s% s\", apenas "
+#~ "arredondamentos de \"% s% s\" são aceitos pela UdM."
+
+#~ msgid "Current year"
+#~ msgstr "Ano Atual"
+
+#~ msgid "Packing List:"
+#~ msgstr "Lista da Embalagem:"
+
+#~ msgid "Expected Stock Variations"
+#~ msgstr "Variação de Estoque Esperada"
+
+#, python-format
+#~ msgid "is in draft state."
+#~ msgstr "está com situação Provisório."
+
+#~ msgid "Stock to be receive"
+#~ msgstr "Estoque a receber"
+
+#~ msgid "Available Pickings"
+#~ msgstr "Separações Disponíveis"
+
+#~ msgid ""
+#~ "When the stock move is created it is in the 'Draft' state.\n"
+#~ " After that, it is set to 'Not Available' state if the scheduler did not "
+#~ "find the products.\n"
+#~ " When products are reserved it is set to 'Available'.\n"
+#~ " When the picking is done the state is 'Done'.              \n"
+#~ "The state is 'Waiting' if the move is waiting for another one."
+#~ msgstr ""
+#~ "Quando o movimento de estoque é criado, estará com situação 'Provisório'.\n"
+#~ "Após isto, sua situação será 'Não Disponível' se o agendamento não encontrar "
+#~ "os produtos.\n"
+#~ "Quando os produtos são reservados, a situação será 'Disponível'.\n"
+#~ "Quando a lista de separação estiver pronta, a situação será 'Concluído'.     "
+#~ "         \n"
+#~ "A situação será 'Aguardando' se o movimento estiver esperando por outro."
+
+#, python-format
+#~ msgid "You cannot remove the picking which is in %s state !"
+#~ msgstr "Você não pode remover separação com situação %s !"
+
+#~ msgid "Shipping Address :"
+#~ msgstr "Endereço de Entrega :"
+
+#~ msgid "Orders planned for today"
+#~ msgstr "Ordens planejadas para hoje"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create Journal Entry, Output Account defined on this product and "
+#~ "Valuation account on category of this product are same."
+#~ msgstr ""
+#~ "Não é possível criar uma entrada no diário, A Conta de Saída definida neste "
+#~ "produto e a Conta de Valorização na categoria deste produto são as mesmas."
+
+#~ msgid "Stock report by tracking lots"
+#~ msgstr "Relatório do Estoque por Lotes rastreados"
+
+#~ msgid ""
+#~ "This field is for internal purpose. It is used to decide if the column "
+#~ "prodlot has to be shown on the move_ids field or not"
+#~ msgstr ""
+#~ "Este campo é para propósitos internos. É usado para decidir se a coluna do "
+#~ "lote de produto mostrará no campo move_ids ou não"
+
+#~ msgid "Stock to be delivered (Available or not)"
+#~ msgstr "Estoque a ser entregue (Disponível ou não)"
+
+#~ msgid ""
+#~ "Here you can receive individual products, no matter what purchase order or "
+#~ "picking order they come from. You will find the list of all products you are "
+#~ "waiting for. Once you receive an order, you can filter based on the name of "
+#~ "the supplier or the purchase order reference. Then you can confirm all "
+#~ "products received using the buttons on the right of each line."
+#~ msgstr ""
+#~ "Aqui você pode receber os produtos individualmente, independentemente da "
+#~ "ordem de compra ou ordem de separação que eles vêm. Você vai encontrar a "
+#~ "lista de todos os produtos que você está esperando. Depois de receber um "
+#~ "pedido, você pode filtrar com base no nome do fornecedor ou a referência da "
+#~ "ordem de compra. Depois, você pode confirmar todos os produtos recebidos, "
+#~ "utilizando os botões do lado direito de cada linha."
+
+#~ msgid "Internal Pickings to invoice"
+#~ msgstr "Separações Interna para faturar"
+
+#~ msgid ""
+#~ "Define your locations to reflect your warehouse structure and organization. "
+#~ "OpenERP is able to manage physical locations (warehouses, shelves, bin, "
+#~ "etc), partner locations (customers, suppliers) and virtual locations which "
+#~ "are the counterpart of the stock operations like the manufacturing orders "
+#~ "consumptions, inventories, etc. Every stock operation in OpenERP moves the "
+#~ "products from one location to another one. For instance, if you receive "
+#~ "products from a supplier, OpenERP will move products from the Supplier "
+#~ "location to the Stock location. Each report can be performed on physical, "
+#~ "partner or virtual locations."
+#~ msgstr ""
+#~ "Definir os locais para refletir a estrutura e organização do armazém. O "
+#~ "OpenERP é capaz de gerenciar os locais físicos (armazéns, prateleiras, "
+#~ "caixa, etc), locais de parceiros (clientes, fornecedores) e locais virtuais "
+#~ "que são a contraparte das operações de ações como os consumos das ordens de "
+#~ "fabricação, estoques, etc Cada operação de ações em OpenERP movimenta os "
+#~ "produtos de um local para outro. Por exemplo, se você receber produtos de um "
+#~ "fornecedor, o OpenERP vai movimentar os produtos a partir do local do "
+#~ "fornecedor para o local de Ações. Cada relatório pode ser executada em "
+#~ "locais do parceiro, locais físicos ou locais virtuais."
+
+#~ msgid ""
+#~ "The combination of serial number and internal reference must be unique !"
+#~ msgstr "A combinação do número de serie e referência interna deve ser única!"
+
+#~ msgid ""
+#~ "Ice cream can be mass-produced and thus is widely available in developed "
+#~ "parts of the world. Ice cream can be purchased in large cartons (vats and "
+#~ "squrounds) from supermarkets and grocery stores, in smaller quantities from "
+#~ "ice cream shops, convenience stores, and milk bars, and in individual "
+#~ "servings from small carts or vans at public events."
+#~ msgstr ""
+#~ "Sorvete pode ser produzido em massa e, assim, está amplamente disponível em "
+#~ "partes desenvolvidas do mundo. Sorvete pode ser comprado em embalagens "
+#~ "grandes de supermercados e mercearias, em menores quantidades de "
+#~ "sorveterias, lojas de conveniência, bares e leite, e em porções individuais "
+#~ "de carros pequenos ou vans em eventos públicos."
+
+#~ msgid "opening"
+#~ msgstr "abertura"
+
+#, python-format
+#~ msgid "Product  '%s' is consumed with '%s' quantity."
+#~ msgstr "Produto '% s' é consumido com '% s' quantidade."
+
+#~ msgid "Maxtor Suppliers"
+#~ msgstr "Fornecedores Maxtor"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr ""
+#~ "Você não pode mover os produtos de/para um Local do tipo Visualização"
+
+#~ msgid "Delivery Counter"
+#~ msgstr "Contra Entrega"
+
+#, python-format
+#~ msgid "Inventory '%s' is done."
+#~ msgstr "Inventário '%s' concluído"
+
+#~ msgid "Back Order"
+#~ msgstr "Devolução"
+
+#~ msgid "Open Product"
+#~ msgstr "Abrir Produto"
+
+#~ msgid ""
+#~ "Internal Moves display all inventory operations you have to perform in your "
+#~ "warehouse. All operations can be categorized into stock journals, so that "
+#~ "each worker has his own list of operations to perform in his own journal. "
+#~ "Most operations are prepared automatically by OpenERP according to your "
+#~ "preconfigured logistics rules, but you can also record manual stock "
+#~ "operations."
+#~ msgstr ""
+#~ "Movimentações internas exibem todas as operações de inventário você tem que "
+#~ "executar no seu armazém. Todas as operações podem ser classificados em "
+#~ "diários de estoque, de modo que cada trabalhador tem a sua própria lista de "
+#~ "operações para realizar em seu próprio diário. A maioria das operações são "
+#~ "preparadas automaticamente pelo OpenERP acordo com as regras pré-"
+#~ "configuradas de logística, mas você também pode gravar operações de ações "
+#~ "manuais."
+
+#~ msgid " Waiting"
+#~ msgstr " Aguardando"
+
+#~ msgid "Cost Price :"
+#~ msgstr "Preço de Custo :"
+
+#~ msgid "Ice Cream"
+#~ msgstr "Sorvete"
+
+#~ msgid ""
+#~ "This is the list of all the production lots (serial numbers) you recorded. "
+#~ "When you select a lot, you can get the upstream or downstream traceability "
+#~ "of the products contained in lot. By default, the list is filtred on the "
+#~ "serial numbers that are available in your warehouse but you can uncheck the "
+#~ "'Available' button to get all the lots you produced, received or delivered "
+#~ "to customers."
+#~ msgstr ""
+#~ "Esta é a lista de todos os lotes de produção (número de série) que você "
+#~ "gravou. Quando você seleciona um lote, você pode obter a rastreabilidade a "
+#~ "anterior ou posterior dos produtos contidos no lote. Por padrão, a lista é "
+#~ "filtrada sobre os números de série que estão disponíveis no seu armazém, mas "
+#~ "você pode desmarcar o botão 'Disponível' para obter todos os lotes que você "
+#~ "produziu, recebeu ou entregou a clientes."
+
+#~ msgid "Stock available to be delivered"
+#~ msgstr "Estoque disponível para ser entregue"
+
+#~ msgid "Packing list"
+#~ msgstr "Romaneio"
+
+#~ msgid "Waiting "
+#~ msgstr "Aguardando "
+
+#, python-format
+#~ msgid "Stock Inventory is already Validated."
+#~ msgstr "O Inventário do Estoque já está validado."
+
+#~ msgid ""
+#~ "This is the structure of your company's warehouses and locations. You can "
+#~ "click on a location to get the list of the products and their stock level in "
+#~ "this particular location and all its children."
+#~ msgstr ""
+#~ "Esta é a estrutura de armazéns da sua empresa e locais. Você pode clicar em "
+#~ "um local para obter a lista dos produtos e seu nível de estoque, neste local "
+#~ "em particular e todos os seus filhos."
+
+#, python-format
+#~ msgid "Processing Error"
+#~ msgstr "Erro de Processamento"
+
+#~ msgid "Small Refrigerator"
+#~ msgstr "Refrigerador Pequeno"
+
+#~ msgid "Convenient Store"
+#~ msgstr "Loja de Conveniência"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Aviso!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Erro! Você não pode criar membros associados recursivamente."
+
+#, python-format
+#~ msgid ""
+#~ "Production lot quantity %d of %s is larger than available quantity (%d) !"
+#~ msgstr ""
+#~ "A quantidade no Lote de Produção %d de %s é maior do que a quantidade "
+#~ "disponível (%d) !"
+
+#~ msgid "Error ! You cannot create recursive categories."
+#~ msgstr "Erro! Você não pode criar categorias recursivas."
+
+#~ msgid ""
+#~ "This is the list of all your packs. When you select a Pack, you can get the "
+#~ "upstream or downstream traceability of the products contained in the pack."
+#~ msgstr ""
+#~ "Esta é a lista com todas as suas embalagens. Quando você selecionar uma "
+#~ "Embalagem, você pode ter uma rastreabilidade anterior ou posterior dos "
+#~ "produtos contidos na embalagem."

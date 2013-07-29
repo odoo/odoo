@@ -1,0 +1,91 @@
+-
+  I create a move of 5 products from stock to customer
+-
+  !record {model: stock.move, id: move_test0}:
+    name: Move Products
+    product_id: product.product_product_3
+    product_uom_qty: 5
+    product_uom: product.product_uom_unit
+    product_uos_qty: 5
+    product_uos: product.product_uom_unit
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+-
+  I confirm the move to be processed in the future
+-
+  !python {model: stock.move}: |
+    self.action_confirm(cr, uid, [ref('move_test0')], context=context)
+-
+  I check that the quantity on hand is 18 and virtual is 13
+-
+  !python {model: product.product}: |
+    context['location'] = False
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==18, 'Expecting 18 products in stock, got %.2f!' % (product.qty_available,)
+    assert product.virtual_available==13.0, 'Expecting 13 products in virtual stock, got %.2f!' % (product.virtual_available,)
+-
+  I validate the move
+-
+  !python {model: stock.move}: |
+    self.action_done(cr, uid, [ref('move_test0')], context=context)
+-
+  I check that the quantity on hand is 13 and 5 products are at customer location
+-
+  !python {model: product.product}: |
+    context['location'] = False
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==13, 'Expecting 13 products in stock, got %.2f!' % (product.qty_available,)
+
+    context['location'] = ref('stock.stock_location_customers')
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==5, 'Expecting 5 products in customer location, got %.2f!' % (product.qty_available,)
+-
+  In order to test negative quants, I will deliver 14 products to the customer
+-
+  !record {model: stock.move, id: move_test1}:
+    name: Move 14 Products
+    product_id: product.product_product_3
+    product_uom_qty: 14
+    product_uom: product.product_uom_unit
+    product_uos_qty: 14
+    product_uos: product.product_uom_unit
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+-
+  I confirm and validate the move
+-
+  !python {model: stock.move}: |
+    self.action_confirm(cr, uid, [ref('move_test1')], context=context)
+    self.action_done(cr, uid, [ref('move_test1')], context=context)
+-
+  I check that the quantity on hand is -2
+-
+  !python {model: product.product}: |
+    context['location'] = False
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available == -1, 'Expecting -1 products in stock, got %.2f!' % (product.qty_available,)
+-
+  To compensate negative quants, I will receive 5 products from the supplier
+-
+  !record {model: stock.move, id: move_test2}:
+    name: Move 15 Products
+    product_id: product.product_product_3
+    product_uom_qty: 5
+    product_uom: product.product_uom_unit
+    product_uos_qty: 5
+    product_uos: product.product_uom_unit
+    location_id: stock.stock_location_suppliers
+    location_dest_id: stock.stock_location_stock
+-
+  I confirm and validate the move
+-
+  !python {model: stock.move}: |
+    self.action_confirm(cr, uid, [ref('move_test2')], context=context)
+    self.action_done(cr, uid, [ref('move_test2')], context=context)
+-
+  I check that the quantity on hand is 4
+-
+  !python {model: product.product}: |
+    context['location'] = False
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available == 4, 'Expecting 4 products in stock, got %.2f!' % (product.qty_available,)

@@ -22,7 +22,6 @@
 import time
 from lxml import etree
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -32,19 +31,13 @@ from openerp.report import report_sxw
 class res_currency(osv.osv):
     _inherit = "res.currency"
 
-    def _current_rate(self, cr, uid, ids, name, arg, context=None):
+    def _get_current_rate(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
-        res = super(res_currency, self)._current_rate(cr, uid, ids, name, arg, context=context)
+        res = super(res_currency, self)._get_current_rate(cr, uid, ids, name, arg, context=context)
         if context.get('voucher_special_currency') in ids and context.get('voucher_special_currency_rate'):
             res[context.get('voucher_special_currency')] = context.get('voucher_special_currency_rate')
         return res
-
-    _columns = {
-        # same definition of rate that in base in order to just overwrite the function
-        'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
-            help='The rate of the currency to the currency of rate 1.'),
-    }
 
 
 class res_company(osv.osv):
@@ -60,7 +53,6 @@ class res_company(osv.osv):
             domain="[('type', '=', 'other')]",),
     }
 
-res_company()
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
@@ -105,8 +97,7 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        ctx = dict(context, account_period_prefer_normal=True)
-        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         return periods and periods[0] or False
 
     def _make_journal_search(self, cr, uid, ttype, context=None):
@@ -924,10 +915,7 @@ class account_voucher(osv.osv):
         return vals
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
-        context = context or {}
-        wf_service = netsvc.LocalService("workflow")
-        for vid in ids:
-            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        self.signal_proforma_voucher(cr, uid, ids)
         return {'type': 'ir.actions.act_window_close'}
 
     def proforma_voucher(self, cr, uid, ids, context=None):
@@ -935,9 +923,7 @@ class account_voucher(osv.osv):
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        for voucher_id in ids:
-            wf_service.trg_create(uid, 'account.voucher', voucher_id, cr)
+        self.create_workflow(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
@@ -1588,7 +1574,6 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-account_voucher_line()
 
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
@@ -1614,7 +1599,6 @@ class account_bank_statement(osv.osv):
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
-        wf_service = netsvc.LocalService("workflow")
         move_line_obj = self.pool.get('account.move.line')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
@@ -1622,7 +1606,7 @@ class account_bank_statement(osv.osv):
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
-            wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
+            voucher_obj.signal_proforma_voucher(cr, uid, [st_line.voucher_id.id])
 
             v = voucher_obj.browse(cr, uid, st_line.voucher_id.id, context=context)
             bank_st_line_obj.write(cr, uid, [st_line_id], {
@@ -1638,10 +1622,9 @@ class account_bank_statement(osv.osv):
         for bk_st in self.browse(cr, uid, ids, context=context):
             if vals.get('journal_id') and bk_st.line_ids:
                 if any([x.voucher_id and True or False for x in bk_st.line_ids]):
-                    raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
+                    raise osv.except_osv(_('Unable to Change Journal!'), _('You can not change the journal as you already reconciled some statement lines!'))
         return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
-account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -1695,7 +1678,6 @@ class account_bank_statement_line(osv.osv):
         voucher_obj.unlink(cr, uid, unlink_ids, context=context)
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
-account_bank_statement_line()
 
 def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     results = []

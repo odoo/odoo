@@ -28,7 +28,7 @@
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     for order_line in order.order_line:
         procurement = order_line.procurement_id
@@ -51,7 +51,7 @@
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     sale_order = self.browse(cr, uid, ref("sale.sale_order_6"))
     assert sale_order.picking_ids, "Delivery order is not created."
     for picking in sale_order.picking_ids:
@@ -63,8 +63,8 @@
       assert picking.note == sale_order.note,"Note is not correspond with sale order."
       assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
       assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
-      location_id = sale_order.shop_id.warehouse_id.lot_stock_id.id
-      output_id = sale_order.shop_id.warehouse_id.lot_output_id.id
+      location_id = sale_order.warehouse_id.lot_stock_id.id
+      output_id = sale_order.warehouse_id.lot_output_id.id
       for move in picking.move_lines:
          order_line = move.sale_line_id
          sale_order_date = self.date_to_datetime(cr, uid, sale_order.date_order, context)
@@ -97,7 +97,6 @@
   !python {model: sale.order}: |
     order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
     assert order.shipped == True, "Sale order is not Delivered."
-    assert order.picked_rate == 100, "Shipment progress is not 100%."
     #assert order.state == 'progress', 'Order should be in inprogress.'
     assert len(order.invoice_ids) == False, "Invoice should not created on dispatch delivery order."
 -
@@ -140,11 +139,10 @@
   I open the Invoice.
 -
   !python {model: sale.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
     so = self.browse(cr, uid, ref("sale.sale_order_6"))
+    account_invoice_obj = self.pool.get('account.invoice')
     for invoice in so.invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+      account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
 -
   I pay the invoice
 -
@@ -170,8 +168,10 @@
   I print a sale order report.
 -
   !python {model: sale.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('sale.sale_order_6')], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('sale.sale_order_6')], 'sale.order', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
 

@@ -28,7 +28,6 @@ class product_product(osv.osv):
         'manufacturer_pref' : fields.char('Manufacturer Product Code', size=64),
         'attribute_ids': fields.one2many('product.manufacturer.attribute', 'product_id', 'Attributes'),
     }
-product_product()
 
 class product_attribute(osv.osv):
     _name = "product.manufacturer.attribute"
@@ -38,6 +37,5 @@ class product_attribute(osv.osv):
         'value' : fields.char('Value', size=64),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
     }
-product_attribute()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

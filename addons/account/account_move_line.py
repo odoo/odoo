@@ -192,7 +192,7 @@ class account_move_line(osv.osv):
         for obj_line in self.browse(cr, uid, ids, context=context):
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
-                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                    raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -513,8 +513,7 @@ class account_move_line(osv.osv):
         if context.get('period_id', False):
             return context['period_id']
         account_period_obj = self.pool.get('account.period')
-        ctx = dict(context, account_period_prefer_normal=True)
-        ids = account_period_obj.find(cr, uid, context=ctx)
+        ids = account_period_obj.find(cr, uid, context=context)
         period_id = False
         if ids:
             period_id = ids[0]
@@ -560,10 +559,11 @@ class account_move_line(osv.osv):
     ]
 
     def _auto_init(self, cr, context=None):
-        super(account_move_line, self)._auto_init(cr, context=context)
+        res = super(account_move_line, self)._auto_init(cr, context=context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
@@ -980,8 +980,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         period_pool = self.pool.get('account.period')
-        ctx = dict(context, account_period_prefer_normal=True)
-        pids = period_pool.find(cr, user, date, context=ctx)
+        pids = period_pool.find(cr, user, date, context=context)
         if pids:
             res.update({
                 'period_id':pids[0]
@@ -1067,12 +1066,12 @@ class account_move_line(osv.osv):
 
         for line in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
-            if ('journal_id' not in ctx):
+            if not ctx.get('journal_id'):
                 if line.move_id:
                    ctx['journal_id'] = line.move_id.journal_id.id
                 else:
                     ctx['journal_id'] = line.journal_id.id
-            if ('period_id' not in ctx):
+            if not ctx.get('period_id'):
                 if line.move_id:
                     ctx['period_id'] = line.move_id.period_id.id
                 else:
@@ -1102,7 +1101,7 @@ class account_move_line(osv.osv):
         period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
+                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
         if not result:
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
@@ -1182,7 +1181,7 @@ class account_move_line(osv.osv):
                     move_id = move_obj.create(cr, uid, v, context)
                     vals['move_id'] = move_id
                 else:
-                    raise osv.except_osv(_('No piece number !'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+                    raise osv.except_osv(_('No Piece Number!'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'], context=context)
@@ -1303,6 +1302,5 @@ class account_move_line(osv.osv):
                 bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

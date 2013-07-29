@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-02-08 02:35+0000\n"
+"Last-Translator: Nhomar - Vauxoo <nhomar@gmail.com>\n"
 "Language-Team: Spanish (Venezuela) <es_VE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 06:03+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 04:59+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -157,11 +157,6 @@ msgstr ""
 #: view:stock.picking.in:0
 msgid "Picking list"
 msgstr "Orden de Despacho"
-
-#. module: stock
-#: view:stock.inventory:0
-msgid "e.g. Annual inventory"
-msgstr ""
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -835,11 +830,6 @@ msgid "Procurement Location"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "e.g. PO0032"
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
@@ -1100,6 +1090,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking.in,state:0
 msgid "Ready to Receive"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "_Cancel"
 msgstr ""
 
 #. module: stock
@@ -2226,11 +2222,6 @@ msgid "Supplier Address :"
 msgstr ""
 
 #. module: stock
-#: field:stock.config.settings,group_product_variant:0
-msgid "Support multiple variants per products  "
-msgstr ""
-
-#. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
 msgstr ""
@@ -2706,8 +2697,8 @@ msgid "Cancel Inventory"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0
-msgid "Cancel Move"
+#: field:stock.config.settings,group_product_variant:0
+msgid "Support multiple variants per products  "
 msgstr ""
 
 #. module: stock
@@ -2755,11 +2746,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by serial number"
-msgstr ""
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Cancel Transfer"
 msgstr ""
 
 #. module: stock
@@ -3244,11 +3230,6 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Scheduled"
-msgstr ""
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Add an internal note..."
 msgstr ""
 
 #. module: stock
@@ -4776,3 +4757,38 @@ msgstr ""
 #: report:stock.picking.list:0
 msgid "Warehouse Address :"
 msgstr ""
+
+#, python-format
+#~ msgid "You cannot cancel picking because stock move is in done state !"
+#~ msgstr ""
+#~ "¡No puede cancelar la Orden de Despacho / Recepción  porqué el movimiento de "
+#~ "producto se encuentra en estado realizado!"
+
+#, python-format
+#~ msgid "You can not process picking without stock moves"
+#~ msgstr ""
+#~ "No puede procesar un documentos de almacenes sin líneas de movimiento de "
+#~ "stock"
+
+#~ msgid "Confirmed Pickings"
+#~ msgstr "Órdenes confirmadas."
+
+#, python-format
+#~ msgid "Missing partial picking data for move #%s"
+#~ msgstr "Faltan datos de la nota de despacho parcial para el movimiento #%s"
+
+#~ msgid ""
+#~ "When the stock move is created it is in the 'Draft' state.\n"
+#~ " After that, it is set to 'Not Available' state if the scheduler did not "
+#~ "find the products.\n"
+#~ " When products are reserved it is set to 'Available'.\n"
+#~ " When the picking is done the state is 'Done'.              \n"
+#~ "The state is 'Waiting' if the move is waiting for another one."
+#~ msgstr ""
+#~ "Cuando se crea un movimiento de stock está en estado 'Borrador'.\n"
+#~ "Después se establece en estado 'No disponible' si el planificador no ha "
+#~ "encontrado los productos.\n"
+#~ "Cuando los productos están reservados se establece como 'Reservado'.\n"
+#~ "Cuando la nota de despacho / recibido se envía el estado es 'Realizado'.     "
+#~ "         \n"
+#~ "El estado es 'En espera' si el movimiento está a la espera de otro."

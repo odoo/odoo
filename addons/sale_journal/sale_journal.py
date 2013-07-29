@@ -34,7 +34,6 @@ class sale_journal_invoice_type(osv.osv):
         'active': True,
         'invoicing_method': 'simple'
     }
-sale_journal_invoice_type()
 
 #==============================================
 # sale journal inherit
@@ -44,11 +43,9 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'property_invoice_type': fields.property(
-            'sale_journal.invoice.type',
             type = 'many2one',
             relation = 'sale_journal.invoice.type',
             string = "Invoicing Type",
-            view_load = True,
             group_name = "Accounting Properties",
             help = "This invoicing type will be used, by default, to invoice the current partner."),
     }
@@ -56,28 +53,12 @@ class res_partner(osv.osv):
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_invoice_type']
 
-res_partner()
 
 class picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
     }
-picking()
-
-class stock_picking_in(osv.osv):
-    _inherit = "stock.picking.in"
-    _columns = {
-        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
-    }
-stock_picking_in()
-
-class stock_picking_out(osv.osv):
-    _inherit = "stock.picking.out"
-    _columns = {
-        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
-    }
-stock_picking_out()
 
 
 class sale(osv.osv):
@@ -99,6 +80,5 @@ class sale(osv.osv):
                 result['value']['invoice_type_id'] = itype.id
         return result
 
-sale()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

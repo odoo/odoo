@@ -65,32 +65,5 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">cancel_requisition</field>
         </record>
-
-    <!-- Procurement -->
-        <record id="act_buy_req" model="workflow.activity">
-            <field name="wkf_id" ref="procurement.wkf_procurement"/>
-            <field name="name">buy_requisition</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','purchase.requisition')]"/>
-            <field name="action">action_po_assign()</field>
-        </record>
-
-        <record id="trans_confirm_mto_purchase_req" model="workflow.transition">
-            <field name="act_from" ref="procurement.act_confirm_mto"/>
-            <field name="act_to" ref="act_buy_req"/>
-            <field name="condition">check_buy() and check_supplier_info() and check_product_requisition()</field>
-        </record>
-
-        <record id="trans_buy_make_done_req" model="workflow.transition">
-            <field name="act_from" ref="act_buy_req"/>
-            <field name="act_to" ref="procurement.act_make_done"/>
-            <field name="signal">subflow.done</field>
-        </record>
-
-        <record id="trans_buy_cancel_req" model="workflow.transition">
-            <field name="act_from" ref="act_buy_req"/>
-            <field name="act_to" ref="procurement.act_cancel"/>
-            <field name="signal">subflow.cancel</field>
-        </record>
     </data>
 </openerp>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 17:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -144,11 +144,6 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.picking.in:0
 msgid "Picking list"
-msgstr ""
-
-#. module: stock
-#: view:stock.inventory:0
-msgid "e.g. Annual inventory"
 msgstr ""
 
 #. module: stock
@@ -343,9 +338,9 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:174
 #: code:addons/stock/wizard/stock_partial_picking.py:181
 #: code:addons/stock/wizard/stock_partial_picking.py:192
-#: code:addons/stock/wizard/stock_return_picking.py:102
-#: code:addons/stock/wizard/stock_return_picking.py:109
-#: code:addons/stock/wizard/stock_return_picking.py:208
+#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_return_picking.py:205
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -798,11 +793,6 @@ msgid "Procurement Location"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "e.g. PO0032"
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
@@ -1055,6 +1045,12 @@ msgid "Ready to Receive"
 msgstr ""
 
 #. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "_Cancel"
+msgstr ""
+
+#. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
 msgstr ""
@@ -1101,7 +1097,7 @@ msgid "Please select multiple physical inventories to merge in the list view."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:106
 #, python-format
 msgid "No products to return (only lines in Done state and not fully returned yet can be returned)!"
 msgstr ""
@@ -1454,7 +1450,7 @@ msgid "Incoming Shipments already processed"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:99
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -2094,11 +2090,6 @@ msgid "Supplier Address :"
 msgstr ""
 
 #. module: stock
-#: field:stock.config.settings,group_product_variant:0
-msgid "Support multiple variants per products  "
-msgstr ""
-
-#. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
 msgstr ""
@@ -2551,8 +2542,8 @@ msgid "Cancel Inventory"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0
-msgid "Cancel Move"
+#: field:stock.config.settings,group_product_variant:0
+msgid "Support multiple variants per products  "
 msgstr ""
 
 #. module: stock
@@ -2596,11 +2587,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by serial number"
-msgstr ""
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Cancel Transfer"
 msgstr ""
 
 #. module: stock
@@ -2660,7 +2646,7 @@ msgid "Stock Journal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:174
+#: code:addons/stock/wizard/stock_return_picking.py:171
 #, python-format
 msgid "%s-%s-return"
 msgstr ""
@@ -2689,7 +2675,7 @@ msgid "Scrap Move"
 msgstr ""
 
 #. module: stock
-#: help:stock.move,prodlot_id:0
+#: help:stock.move,lot_id:0
 msgid "Serial number is used to put a serial number on the production"
 msgstr ""
 
@@ -2804,7 +2790,7 @@ msgstr ""
 
 #. module: stock
 #: view:report.stock.inventory:0
-#: field:report.stock.inventory,prodlot_id:0
+#: field:report.stock.inventory,lot_id:0
 #: report:stock.picking.list:0
 msgid "Lot"
 msgstr ""
@@ -3055,11 +3041,6 @@ msgid "Scheduled"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Add an internal note..."
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
@@ -3099,7 +3080,7 @@ msgid "Stock"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:222
+#: code:addons/stock/wizard/stock_return_picking.py:219
 #, python-format
 msgid "Returned Picking"
 msgstr ""
@@ -3472,22 +3453,21 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_production_lot
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 #: model:res.request.link,name:stock.req_link_tracking
-#: field:stock.change.product.qty,prodlot_id:0
+#: field:stock.change.product.qty,lot_id:0
 #: field:stock.inventory.line,prod_lot_id:0
 #: field:stock.inventory.line.split.lines,name:0
-#: field:stock.inventory.line.split.lines,prodlot_id:0
-#: field:stock.move,prodlot_id:0
+#: field:stock.inventory.line.split.lines,lot_id:0
+#: field:stock.move,lot_id:0
 #: view:stock.move.split:0
 #: field:stock.move.split.lines,name:0
-#: field:stock.move.split.lines,prodlot_id:0
-#: field:stock.partial.move.line,prodlot_id:0
-#: field:stock.partial.picking.line,prodlot_id:0
+#: field:stock.move.split.lines,lot_id:0
+#: field:stock.partial.move.line,lot_id:0
+#: field:stock.partial.picking.line,lot_id:0
 #: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
-#: field:stock.report.prodlots,prodlot_id:0
-#: field:stock.return.picking.memory,prodlot_id:0
+#: field:stock.report.prodlots,lot_id:0
 msgid "Serial Number"
 msgstr ""
 
@@ -4042,7 +4022,7 @@ msgid "Adds a Claim link to the delivery order.\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:208
+#: code:addons/stock/wizard/stock_return_picking.py:205
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr ""

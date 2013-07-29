@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TactileListWidget">
+        <div class='oe_tactlist js_width' t-att-style="'width:' + widget.get_width() + 'px'">
+            <div class='oe_tactlist_header'>
+                <t t-esc='widget.get_title()' />
+            </div>
+
+            <div class='oe_scrolltable js_height' t-att-style="'height:' + widget.get_height() + 'px'">
+                <div class='oe_scrolltable_scroll'>
+                    <div class='oe_scrolltable_header_container js_innerwidth' t-att-style="'width:' + widget.get_innerwidth() + 'px'">
+                        <table class='oe_scrolltable_header js_innerwidth' >
+                            <tbody>
+                                <tr>
+                                    <t t-foreach="widget.get_collumns()" t-as="col">
+                                        <td t-att-class="col.classes">
+                                            <t t-esc="col.header" />
+                                        </td>
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class='oe_scrolltable_body js_innerwidth' t-att-style="'width:' + widget.get_innerwidth() + 'px'">
+                        <colgroup>
+                            <t t-foreach="widget.get_collumns()" t-as="col">
+                                <col t-att-class="col.classes"></col>
+                            </t>
+                        </colgroup>
+                        <tbody>
+                            <t t-foreach="widget.get_rows()" t-as="row">
+                                <tr t-att-class="row.classes">
+                                    <t t-foreach="row.cols" t-as="col">
+                                        <td><t t-esc="col" /></td> 
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='oe_vresizer js_vresizer'>
+                <span class='oe_hresizer js_hresizer'>●</span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name='PickingEditorWidget'>
+        <div class='oe_pick_list'>
+            <div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div>
+            <table class='oe_pick_list_table'>
+
+                <colgroup>
+                    <col class='oe_pick_col_expand'></col>
+                    <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_expand'></col>
+                    <col class='oe_pick_col_expand'></col>
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th>Product</th> 
+                        <th class='oe_centeralign'>Qty</th> 
+                        <th class='oe_centeralign'>Rem</th> 
+                        <th class='oe_centeralign'>UoM</th> 
+                        <th>Location</th> 
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <t t-foreach="widget.get_rows()" t-as="row">
+                        <tr t-att-class="row.classes">
+                            <td> <t t-esc="row.cols.product" /> </td>
+                            <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
+                            <td class='oe_centeralign'> <t t-esc="row.cols.rem" /> </td>
+                            <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
+                            <td> <t t-esc="row.cols.loc" /> </td>
+                            <td> <t t-esc="row.cols.stat" /> </td>
+                        </tr>
+                    </t>
+                </tbody>
+
+            </table>
+        </div>
+    </t>
+
+    <t t-name='PackageEditorWidget'>
+        <div class='oe_pick_list'>
+            <div class='oe_pick_list_header'> <t t-esc="widget.get_header()" /> </div>
+            <table class='oe_pick_list_table'>
+
+                <colgroup>
+                    <col class='oe_pick_col_expand'></col>
+                    <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_small'></col>
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th>Product</th> 
+                        <th class='oe_centeralign'>Qty</th> 
+                        <th class='oe_centeralign'>UoM</th> 
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <t t-foreach="widget.get_rows()" t-as="row">
+                        <tr t-att-class="row.classes">
+                            <td> <t t-esc="row.cols.product" /> </td>
+                            <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
+                            <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
+                        </tr>
+                    </t>
+                </tbody>
+
+            </table>
+        </div>
+    </t>
+
+    <t t-name='PackageSelectorWidget'>
+        <div class='oe_pick_list'>
+            <div class='oe_pick_list_header'> <t t-esc="widget.get_header()" /> </div>
+            <table class='oe_pick_list_table'>
+
+                <colgroup>
+                    <col class='oe_pick_col_expand'></col>
+                    <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_small'></col>
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th>Package</th> <th></th> <th></th> <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <t t-foreach="widget.get_rows()" t-as="row">
+                        <tr t-att-class="'js_pack_row' + row.classes" t-att-pack-id="row.id">
+                            <td class='js_pack_select'> <t t-esc="row.cols.pack" /> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_print'>Print</span> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_plus'>Copy</span> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_minus'>Delete</span> </td>
+                        </tr>
+                    </t>
+                </tbody>
+
+            </table>
+        </div>
+    </t>
+
+    <t t-name="PickingMainWidget">
+        <div class='oe_pick_widget'>
+            <table class='oe_pick_layout'>
+                <tr class='oe_pick_header_row'>
+                    <td class='oe_pick_header'>
+
+                        <div class='oe_pick_right_toolbar'>
+                            <div class='oe_pick_button js_pick_quit'> Quit </div>
+                        </div>
+                        
+                        <div class='oe_pick_toolbar'>
+                            <div class='oe_pick_button js_pick_pack'> Pack </div>
+                            <!-- <div class='oe_pick_button js_pick_reset'> Reset </div> -->
+                            <div class='oe_pick_button js_pick_done'> Done </div>
+                        </div>
+
+
+                    </td>
+                </tr>
+                <tr class='oe_pick_body_row'>
+                    <td class='oe_pick_body_cont'> 
+                        <div class='oe_pick_body'>
+                            <div class='oe_pick_app'>
+
+                                <div class='oe_placeholder_picking_editor'></div>
+                                <div class='oe_placeholder_package_editor'></div>
+                                <div class='oe_placeholder_package_selector'></div>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+
+</templates>

@@ -53,14 +53,6 @@
 
         <!-- Resource: stock.inventory.line -->
 
-        <record id="stock_inventory_line_0" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_3"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_0"/>
-            <field name="product_qty">14.0</field>
-            <field name="location_id" ref="stock_location_14"/>
-        </record>
-
         <record id="stock_inventory_line_1" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_24"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -243,14 +235,12 @@
             <field name="location_id" ref="stock.stock_location_locations"/>
             <field name="company_id" ref="res_company_1"/>
             <field name="usage">internal</field>
-            <field name="chained_location_type">none</field>
             <field eval="1" name="active"/>
             <field name="name">Your Company, Chicago shop</field>
-            <field name="chained_auto_packing">manual</field>
         </record>
         <record id="stock_location_shop1" model="stock.location">
             <field model="res.partner" name="partner_id" search="[('name','=','Eric')]"/>
-            <field name="company_id" ref="res_company_1"/>
+            <field name="company_id" ref="res_company_2"/>
             <field name="location_id" ref="stock.stock_location_locations"/>
             <field name="usage">internal</field>
             <field eval="1" name="active"/>
@@ -259,8 +249,9 @@
         <record id="stock_location_intermediatelocation0" model="stock.location">
             <field name="partner_id" ref="base.main_partner"/>
             <field name="location_id" ref="stock.stock_location_locations_partner"/>
-            <field name="usage">procurement</field>
+            <field name="usage">transit</field>
             <field name="name">Internal Shippings</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">
@@ -278,13 +269,6 @@
             <field name="partner_id" ref="res_partner_address_40"/>
             <field name="company_id" ref="res_company_1"/>
             <field name="lot_input_id" ref="stock_location_shop1"/>
-        </record>
-
-        <record forcecreate="True" id="property_stock_valuation_account_id" model="ir.property">
-            <field name="name">property_stock_valuation_account_id</field>
-            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
-            <field eval="'account.account,'+str(ref('account.stk'))" model="account.account" name="value"/>
-             <field name="company_id" ref="base.main_company"/>
         </record>
 
     </data>

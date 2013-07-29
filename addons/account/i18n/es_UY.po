@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-08-14 15:07+0000\n"
+"Last-Translator: Juan Andres Martinez Chaine <Unknown>\n"
 "Language-Team: Spanish (Uruguay) <es_UY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:27+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:20+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -394,11 +394,6 @@ msgstr ""
 #: field:account.move.reconcile,create_date:0
 msgid "Creation date"
 msgstr "Fecha de creación"
-
-#. module: account
-#: view:account.invoice:0
-msgid "Cancel Invoice"
-msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -798,11 +793,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-msgid "Account code"
-msgstr ""
-
-#. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
 msgstr ""
@@ -1182,8 +1172,9 @@ msgid "Refund "
 msgstr ""
 
 #. module: account
-#: help:account.config.settings,company_footer:0
-msgid "Bank accounts as printed in the footer of each printed document"
+#: code:addons/account/account_analytic_line.py:90
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: account
@@ -1509,13 +1500,6 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
-
-#. module: account
-#: view:account.open.closed.fiscalyear:0
-#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
-#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
-msgid "Cancel Closing Entries"
 msgstr ""
 
 #. module: account
@@ -1873,6 +1857,11 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending Accounts"
+msgstr ""
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+msgid "Cancel Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
@@ -2727,8 +2716,23 @@ msgid "Bank Details"
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Cancel CashBox"
+#: model:ir.actions.act_window,help:account.action_move_journal_line
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a journal entry.\n"
+"              </p><p>\n"
+"                A journal entry consists of several journal items, each of\n"
+"                which is either a debit or a credit transaction.\n"
+"              </p><p>\n"
+"                OpenERP automatically creates one journal entry per "
+"accounting\n"
+"                document: invoice, refund, supplier payment, bank "
+"statements,\n"
+"                etc. So, you should record journal entries manually "
+"only/mainly\n"
+"                for miscellaneous operations.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: account
@@ -4450,19 +4454,8 @@ msgid "Account Type"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_bank_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to setup a new bank account. \n"
-"          </p><p>\n"
-"            Configure your company's bank account and select those that "
-"must\n"
-"            appear on the report footer.\n"
-"          </p><p>\n"
-"            If you use the accounting application of OpenERP, journals and\n"
-"            accounts will be created automatically based on these data.\n"
-"          </p>\n"
-"        "
+#: view:account.bank.statement:0
+msgid "Close CashBox"
 msgstr ""
 
 #. module: account
@@ -4484,8 +4477,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Close CashBox"
+#: model:ir.actions.act_window,help:account.action_bank_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to setup a new bank account. \n"
+"          </p><p>\n"
+"            Configure your company's bank account and select those that "
+"must\n"
+"            appear on the report footer.\n"
+"          </p><p>\n"
+"            If you use the accounting application of OpenERP, journals and\n"
+"            accounts will be created automatically based on these data.\n"
+"          </p>\n"
+"        "
 msgstr ""
 
 #. module: account
@@ -4660,12 +4664,6 @@ msgstr ""
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
-msgstr ""
-
-#. module: account
-#: view:account.move:0
-#: view:account.move.line:0
-msgid "Add an internal note..."
 msgstr ""
 
 #. module: account
@@ -4856,11 +4854,6 @@ msgid "It acts as a default account for credit amount"
 msgstr ""
 
 #. module: account
-#: view:account.move.line:0
-msgid "Number (Move)"
-msgstr ""
-
-#. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
 msgstr ""
@@ -4870,12 +4863,6 @@ msgstr ""
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account.py:1858
-#, python-format
-msgid " (Copy)"
 msgstr ""
 
 #. module: account
@@ -4944,11 +4931,6 @@ msgstr ""
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
-
-#. module: account
-#: view:account.move:0
-msgid "Cancel Entry"
 msgstr ""
 
 #. module: account
@@ -5143,11 +5125,6 @@ msgid "Compute"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0
-msgid "Additional notes..."
-msgstr ""
-
-#. module: account
 #: field:account.tax,type_tax_use:0
 msgid "Tax Application"
 msgstr ""
@@ -5201,8 +5178,9 @@ msgid "Balance by Type of Account"
 msgstr ""
 
 #. module: account
-#: view:account.fiscalyear.close:0
-msgid "Generate Fiscal Year Opening Entries"
+#: code:addons/account/account_cash_statement.py:301
+#, python-format
+msgid "There is no %s Account on the journal %s."
 msgstr ""
 
 #. module: account
@@ -5246,11 +5224,6 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Cancel Statement"
 msgstr ""
 
 #. module: account
@@ -5844,23 +5817,8 @@ msgid "Quantity"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_move_journal_line
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a journal entry.\n"
-"              </p><p>\n"
-"                A journal entry consists of several journal items, each of\n"
-"                which is either a debit or a credit transaction.\n"
-"              </p><p>\n"
-"                OpenERP automatically creates one journal entry per "
-"accounting\n"
-"                document: invoice, refund, supplier payment, bank "
-"statements,\n"
-"                etc. So, you should record journal entries manually "
-"only/mainly\n"
-"                for miscellaneous operations.\n"
-"              </p>\n"
-"            "
+#: view:account.move.line:0
+msgid "Number (Move)"
 msgstr ""
 
 #. module: account
@@ -5878,15 +5836,6 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account_invoice.py:451
-#, python-format
-msgid ""
-"You cannot delete an invoice after it has been validated (and received a "
-"number).  You can set it back to \"Draft\" state and modify its content, "
-"then re-confirm it."
 msgstr ""
 
 #. module: account
@@ -6568,6 +6517,11 @@ msgid "Custom"
 msgstr ""
 
 #. module: account
+#: view:account.analytic.account:0
+msgid "Current"
+msgstr ""
+
+#. module: account
 #: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr ""
@@ -6613,11 +6567,6 @@ msgstr ""
 #: code:addons/account/account.py:3427
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
-
-#. module: account
-#: view:account.invoice:0
-msgid "force period"
 msgstr ""
 
 #. module: account
@@ -7002,11 +6951,6 @@ msgid "Create entry"
 msgstr ""
 
 #. module: account
-#: view:account.open.closed.fiscalyear:0
-msgid "Cancel Fiscal Year Closing Entries"
-msgstr ""
-
-#. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:189
 #, python-format
@@ -7294,11 +7238,6 @@ msgid "Taxes used in Sales"
 msgstr ""
 
 #. module: account
-#: view:account.period:0
-msgid "Re-Open Period"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
@@ -7355,14 +7294,8 @@ msgid "Source Document"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:90
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
-
-#. module: account
-#: view:account.account.template:0
-msgid "Internal notes..."
+#: help:account.config.settings,company_footer:0
+msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
 
 #. module: account
@@ -7386,6 +7319,14 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Taxes:"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_invoice.py:458
+#, python-format
+msgid ""
+"You can not delete an invoice which is not cancelled. You should refund it "
+"instead."
 msgstr ""
 
 #. module: account
@@ -8069,14 +8010,6 @@ msgid "Reconciliation Transactions"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:449
-#, python-format
-msgid ""
-"You cannot delete an invoice which is not draft or cancelled. You should "
-"refund it instead."
-msgstr ""
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
 msgstr ""
@@ -8750,11 +8683,6 @@ msgstr ""
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr ""
-
-#. module: account
-#: view:account.payment.term:0
-msgid "Payment term explanation for the customer..."
 msgstr ""
 
 #. module: account
@@ -9442,11 +9370,6 @@ msgid "Payable"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-msgid "Account name"
-msgstr ""
-
-#. module: account
 #: view:board.board:0
 msgid "Account Board"
 msgstr ""
@@ -9463,9 +9386,8 @@ msgid "Accounting entries are the first input of the reconciliation."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:301
-#, python-format
-msgid "There is no %s Account on the journal %s."
+#: view:account.fiscalyear.close:0
+msgid "Generate Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
@@ -9752,12 +9674,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:783
-#, python-format
-msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr ""
-
-#. module: account
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
@@ -10013,11 +9929,6 @@ msgid "Currency Rate"
 msgstr ""
 
 #. module: account
-#: view:account.config.settings:0
-msgid "e.g. sales@openerp.com"
-msgstr ""
-
-#. module: account
 #: field:account.account,tax_ids:0
 #: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
@@ -10170,6 +10081,13 @@ msgstr ""
 #: field:accounting.report,date_to:0
 #: field:accounting.report,date_to_cmp:0
 msgid "End Date"
+msgstr ""
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
+#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
+msgid "Cancel Opening Entries"
 msgstr ""
 
 #. module: account
@@ -10484,6 +10402,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_move_line.py:783
+#, python-format
+msgid "Already reconciled."
 msgstr ""
 
 #. module: account
@@ -10919,3 +10843,339 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+
+#~ msgid "last month"
+#~ msgstr "el mes pasado"
+
+#~ msgid "Other Configuration"
+#~ msgstr "Otra configuración"
+
+#~ msgid "Error ! The duration of the Period(s) is/are invalid. "
+#~ msgstr "¡Error! La duración de el/los período(s) no es válida. "
+
+#~ msgid "Account currency"
+#~ msgstr "Moneda contable"
+
+#~ msgid ""
+#~ "If you unreconciliate transactions, you must also verify all the actions "
+#~ "that are linked to those transactions because they will not be disabled"
+#~ msgstr ""
+#~ "Si rompe la conciliación de transacciones, también debe verificar todas la "
+#~ "acciones que están relacionadas con esas transacciones porqué no serán "
+#~ "deshabilitadas."
+
+#~ msgid "Children Definition"
+#~ msgstr "Definición hijos"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "¡Error de configuración! La moneda elegida debería ser también la misma en "
+#~ "las cuentas por defecto"
+
+#~ msgid "Origin"
+#~ msgstr "Original"
+
+#~ msgid "All Analytic Entries"
+#~ msgstr "Todos los asientos analíticos"
+
+#~ msgid "Choose Fiscal Year "
+#~ msgstr "Selecciona ejercicio fiscal "
+
+#, python-format
+#~ msgid "Journal: %s"
+#~ msgstr "Diario: %s"
+
+#, python-format
+#~ msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
+#~ msgstr ""
+#~ "La factura '%s' está parcialmente pagada: %s%s de %s%s (%s%s pendiente)"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "No puede añadir/modificar asientos en un diario cerrado."
+
+#~ msgid ""
+#~ "Check this box if you don't want any VAT related to this Tax Code to appear "
+#~ "on invoices"
+#~ msgstr ""
+#~ "Marque esta opción si desea que no aparezca en las facturas ningún IVA "
+#~ "relacionado con este código de impuesto."
+
+#~ msgid "Close Fiscalyear"
+#~ msgstr "Cerrar ejercicio fiscal"
+
+#, python-format
+#~ msgid "Invoice line account company does not match with invoice company."
+#~ msgstr ""
+#~ "La compañía de la cuenta de la línea de factura no concuerda con la compañía "
+#~ "de la factura."
+
+#~ msgid "Field Name"
+#~ msgstr "Nombre del campo"
+
+#, python-format
+#~ msgid ""
+#~ "Can't find any account journal of %s type for this company.\n"
+#~ "\n"
+#~ "You can create one in the menu: \n"
+#~ "Configuration/Financial Accounting/Accounts/Journals."
+#~ msgstr ""
+#~ "No se encuentra ningún diario contable del tipo %s para esta compañía.\n"
+#~ "\n"
+#~ "Puede crear un diario en el menú: \n"
+#~ "Configuración/Contabilidad financiera/Cuentas/Diarios."
+
+#~ msgid "Configure"
+#~ msgstr "Configurar"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "No puede crear asientos en una cuenta de tipo vista"
+
+#~ msgid ""
+#~ "This view is used by accountants in order to record entries massively in "
+#~ "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
+#~ "Cash Registers, or Customer/Supplier payments."
+#~ msgstr ""
+#~ "Los contables utilizan esta vista para introducir asientos masivamente en "
+#~ "OpenERP. Cuando utiliza los extractos bancarios, registros de caja, o pagos "
+#~ "de cliente/proveedor OpenERP crea automáticamente apuntes contables."
+
+#, python-format
+#~ msgid ""
+#~ "Can not %s invoice which is already reconciled, invoice should be "
+#~ "unreconciled first. You can only Refund this invoice"
+#~ msgstr ""
+#~ "No se puede %s una factura que ya está conciliada, primero debería romper la "
+#~ "conciliación de la factura. Sólo puede hacer un reembolso (Nota de Crédito) "
+#~ "de esta factura."
+
+#~ msgid ""
+#~ "A journal entry consists of several journal items, each of which is either a "
+#~ "debit or a credit transaction. OpenERP automatically creates one journal "
+#~ "entry per accounting document: invoice, refund, supplier payment, bank "
+#~ "statements, etc."
+#~ msgstr ""
+#~ "Un asiento de diario se compone de varios elementos del diario, cada uno "
+#~ "puede ser una transacción de crédito o débito. OpenERP crea automáticamente "
+#~ "una entrada en un diario por cada documento contable: factura, reembolso, "
+#~ "pago a proveedor, extractos de cuenta bancaria, etc"
+
+#~ msgid "Cancel: refund invoice and reconcile"
+#~ msgstr "Cancelar: abonar factura y reconciliar"
+
+#~ msgid "Create a draft Refund"
+#~ msgstr "Crear una devolución en borrador"
+
+#~ msgid "Refund Invoice Options"
+#~ msgstr "Opciones de Nota de Crédito"
+
+#~ msgid ""
+#~ "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
+#~ "cancel the current invoice."
+#~ msgstr ""
+#~ "Cancelar factura: Crea la Nota de Crédito, la valida y concilia para "
+#~ "cancelar la factura actual."
+
+#, python-format
+#~ msgid ""
+#~ "You can not delete an invoice which is open or paid. We suggest you to "
+#~ "refund it instead."
+#~ msgstr ""
+#~ "No puede borrar una factura que está abierta o pagada. Le sugerimos que cree "
+#~ "una Nota de Crédito en su lugar."
+
+#~ msgid ""
+#~ "With Supplier Refunds you can manage the credit notes you receive from your "
+#~ "suppliers. A refund is a document that credits an invoice completely or "
+#~ "partially. You can easily generate refunds and reconcile them directly from "
+#~ "the invoice form."
+#~ msgstr ""
+#~ "Con Notas de Crédito de proveedor puede gestionar las facturas de reembolso "
+#~ "que recibe de sus proveedores. Una Nota de Créito es un documento que "
+#~ "reembolsa una factura total o parcialmente. Puede fácilmente generar Notas "
+#~ "de Crédito y conciliarlas directamente desde el formulario de factura."
+
+#~ msgid "Refund Invoice: Creates the refund invoice, ready for editing."
+#~ msgstr ""
+#~ "NotadeCrédito: Crea la factura de reembolso, preparada para editarla."
+
+#~ msgid ""
+#~ "This date will be used as the invoice date for Refund Invoice and Period "
+#~ "will be chosen accordingly!"
+#~ msgstr ""
+#~ "Esta fecha se utilizará como la fecha de facturación de la Nota de Crédito y "
+#~ "el período será elegido en consecuencia."
+
+#~ msgid ""
+#~ "With Customer Refunds you can manage the credit notes for your customers. A "
+#~ "refund is a document that credits an invoice completely or partially. You "
+#~ "can easily generate refunds and reconcile them directly from the invoice "
+#~ "form."
+#~ msgstr ""
+#~ "Con las Notas de crédito a clientes puede gestionar las devoluciones de sus "
+#~ "clientes. Una Nota de Crédito es un documento que reembolsa una factura "
+#~ "completa o parcialmente. Puede generar fácilmente Notas de Crédito y "
+#~ "conciliarlas directamente desde el formulario de factura."
+
+#~ msgid "Modify: refund invoice, reconcile and create a new draft invoice"
+#~ msgstr ""
+#~ "Modificar: Notade Crédito, reconcilia y crea una nueva factura borrador."
+
+#~ msgid ""
+#~ "\n"
+#~ "Hello${object.address_invoice_id.name and ' ' or "
+#~ "''}${object.address_invoice_id.name or ''},\n"
+#~ "\n"
+#~ "A new invoice is available for ${object.partner_id.name}:\n"
+#~ "       | Invoice number: *${object.number}*\n"
+#~ "       | Invoice total: *${object.amount_total} ${object.currency_id.name}*\n"
+#~ "       | Invoice date: ${object.date_invoice}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Order reference: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       | Your contact: ${object.user_id.name} ${object.user_id.user_email "
+#~ "and '<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "\n"
+#~ "You can view the invoice document, download it and pay online using the "
+#~ "following link:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "% if object.company_id.paypal_account and object.type in ('out_invoice', "
+#~ "'in_refund'):\n"
+#~ "<% \n"
+#~ "comp_name = quote(object.company_id.name)\n"
+#~ "inv_number = quote(object.number)\n"
+#~ "paypal_account = quote(object.company_id.paypal_account)\n"
+#~ "inv_amount = quote(str(object.amount_total))\n"
+#~ "cur_name = quote(object.currency_id.name)\n"
+#~ "paypal_url = \"https://www.paypal.com/cgi-"
+#~ "bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Invoice%%20%s\"\\\n"
+#~ "             "
+#~ "\"&invoice=%s&amount=%s&currency_code=%s&button_subtype=services&no_note=1&bn"
+#~ "=OpenERP_Invoice_PayNow_%s\" % \\\n"
+#~ "             "
+#~ "(paypal_account,comp_name,inv_number,inv_number,inv_amount,cur_name,cur_name)"
+#~ "\n"
+#~ "%>\n"
+#~ "It is also possible to directly pay with Paypal:\n"
+#~ "    ${paypal_url}\n"
+#~ "% endif\n"
+#~ "\n"
+#~ "If you have any question, do not hesitate to contact us.\n"
+#~ "\n"
+#~ "\n"
+#~ "Thank you for choosing ${object.company_id.name}!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Phone: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Hola${object.address_invoice_id.name and ' ' or "
+#~ "''}${object.address_invoice_id.name or ''},\n"
+#~ "\n"
+#~ "Está disponible una nueva factura para ${object.partner_id.name}:\n"
+#~ "       | Nº de factura: *${object.number}*\n"
+#~ "       | Importe: *${object.amount_total} ${object.currency_id.name}*\n"
+#~ "       | Fecha: ${object.date_invoice}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Referencia: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       | Su contacto: ${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "\n"
+#~ "Puede ver el documento de la factura, descargarlo y pagarlo online siguiendo "
+#~ "el enlace:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "% if object.company_id.paypal_account and object.type in ('out_invoice', "
+#~ "'in_refund'):\n"
+#~ "<% \n"
+#~ "comp_name = quote(object.company_id.name)\n"
+#~ "inv_number = quote(object.number)\n"
+#~ "paypal_account = quote(object.company_id.paypal_account)\n"
+#~ "inv_amount = quote(str(object.amount_total))\n"
+#~ "cur_name = quote(object.currency_id.name)\n"
+#~ "paypal_url = \"https://www.paypal.com/cgi-"
+#~ "bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Invoice%%20%s\"\\\n"
+#~ "             "
+#~ "\"&invoice=%s&amount=%s&currency_code=%s&button_subtype=services&no_note=1&bn"
+#~ "=OpenERP_Invoice_PayNow_%s\" % \\\n"
+#~ "             "
+#~ "(paypal_account,comp_name,inv_number,inv_number,inv_amount,cur_name,cur_name)"
+#~ "\n"
+#~ "%>\n"
+#~ "También puede pagar directamente mediante Paypal:\n"
+#~ "    ${paypal_url}\n"
+#~ "% endif\n"
+#~ "\n"
+#~ "Si tiene cualquier consulta no dude en contactarnos.\n"
+#~ "\n"
+#~ "\n"
+#~ "¡Gracia por elegir ${object.company_id.name}!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Phone: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+
+#~ msgid ""
+#~ "You can select here the journal to use for the refund invoice that will be "
+#~ "created. If you leave that field empty, it will use the same journal as the "
+#~ "current invoice."
+#~ msgstr ""
+#~ "Puede seleccionar aquí el diario a usar para la Nota de Crédito que se "
+#~ "creará. Si deja este campo vacío, se usará el mismo diario que la factura "
+#~ "actual."
+
+#~ msgid ""
+#~ "Refund invoice base on this type. You can not Modify and Cancel if the "
+#~ "invoice is already reconciled"
+#~ msgstr ""
+#~ "Nota de Crédito basada en este tipo. No puede modificar y cancelar si la "
+#~ "factura ya está conciliada."

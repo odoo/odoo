@@ -25,7 +25,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
-from tools.translate import _
+from openerp.tools.translate import _
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
@@ -70,7 +70,6 @@ class account_asset_category(osv.osv):
            res['value'] = {'account_depreciation_id': account_asset_id}
         return res
 
-account_asset_category()
 
 class account_asset_asset(osv.osv):
     _name = 'account.asset.asset'
@@ -83,8 +82,7 @@ class account_asset_asset(osv.osv):
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
-        ctx = dict(context or {}, account_period_prefer_normal=True)
-        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         else:
@@ -362,7 +360,6 @@ class account_asset_asset(osv.osv):
             'context': context,
         }
 
-account_asset_asset()
 
 class account_asset_depreciation_line(osv.osv):
     _name = 'account.asset.depreciation.line'
@@ -400,8 +397,7 @@ class account_asset_depreciation_line(osv.osv):
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
             depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
-            ctx = dict(context, account_period_prefer_normal=True)
-            period_ids = period_obj.find(cr, uid, depreciation_date, context=ctx)
+            period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
             context.update({'date': depreciation_date})
@@ -458,7 +454,6 @@ class account_asset_depreciation_line(osv.osv):
                 asset.write({'state': 'close'})
         return created_move_ids
 
-account_asset_depreciation_line()
 
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
@@ -467,7 +462,6 @@ class account_move_line(osv.osv):
         'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
 
     }
-account_move_line()
 
 class account_asset_history(osv.osv):
     _name = 'account.asset.history'
@@ -492,6 +486,5 @@ class account_asset_history(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid
     }
 
-account_asset_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

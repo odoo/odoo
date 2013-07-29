@@ -1,21 +1,20 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * event
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-10 21:02+0000\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2013-02-28 23:46+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:38+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:04+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: event
 #: view:event.event:0
@@ -149,11 +148,6 @@ msgid "Confirmed events"
 msgstr "Visszaigazolt események."
 
 #. module: event
-#: view:event.event:0
-msgid "ZIP"
-msgstr "Irányítószám"
-
-#. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
 msgstr "Esemény kezdő dátuma"
@@ -248,11 +242,6 @@ msgstr "Jelentkezés állapota"
 #: view:event.event:0
 msgid "tickets"
 msgstr "jegyek"
-
-#. module: event
-#: view:event.event:0
-msgid "Street..."
-msgstr "Utca..."
 
 #. module: event
 #: view:res.partner:0
@@ -636,10 +625,9 @@ msgstr ""
 "(tegyen 0 értéket ennek a szabálynak a kiiktatásához)"
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
-msgstr "Csak %d férőhely elérhető!"
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Felelős felhasználó"
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -909,11 +897,6 @@ msgstr ""
 "tudja végezni."
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Felelős felhasználó"
-
-#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -935,9 +918,10 @@ msgid "Reply-to Email"
 msgstr "Válaszoljon az e-mailre"
 
 #. module: event
-#: view:event.event:0
-msgid "City"
-msgstr "Város"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr "Csak %d férőhely elérhető!"
 
 #. module: event
 #: model:email.template,subject:event.confirmation_event
@@ -1208,3 +1192,363 @@ msgstr "Év"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Megerősített előadók"
+
+#~ msgid "Invoice Information"
+#~ msgstr "Számlázási információ"
+
+#~ msgid "Title"
+#~ msgstr "Pozíció"
+
+#~ msgid "Registration Email"
+#~ msgstr "Regisztrációs e-mail"
+
+#~ msgid "Make Invoices"
+#~ msgstr "Számlák készítése"
+
+#~ msgid "Confirmation Email"
+#~ msgstr "Megerősítő e-mail"
+
+#~ msgid "Invoice Date"
+#~ msgstr "Számla kelte"
+
+#~ msgid "Last 7 Days"
+#~ msgstr "Utolsó 7 nap"
+
+#~ msgid "Make Invoice"
+#~ msgstr "Számla készítése"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Belső jegyzet hozzáadása"
+
+#~ msgid "Mail Auto Confirm"
+#~ msgstr "Automatikus megerősítő e-mail"
+
+#~ msgid "Reply-To"
+#~ msgstr "Válasz"
+
+#~ msgid "Pricelist"
+#~ msgstr "Árlista"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Partner kapcsolat"
+
+#~ msgid "Reference"
+#~ msgstr "Hivatkozás"
+
+#~ msgid "Emails"
+#~ msgstr "E-mailek"
+
+#~ msgid "Extra Info"
+#~ msgstr "Extra információ"
+
+#, python-format
+#~ msgid "Customer Invoices"
+#~ msgstr "Kimenő számlák"
+
+#~ msgid "Badges"
+#~ msgstr "Névjegytáblák"
+
+#~ msgid "Registration Confirmation"
+#~ msgstr "Regisztráció megerősítése"
+
+#~ msgid "Other Speakers"
+#~ msgstr "Egyéb előadók"
+
+#~ msgid "Send New Email"
+#~ msgstr "Új e-mail küldése"
+
+#~ msgid "Reply"
+#~ msgstr "Válasz"
+
+#~ msgid "Mail Auto Register"
+#~ msgstr "Automatikus regisztrációs e-mail"
+
+#~ msgid "Type"
+#~ msgstr "Típus"
+
+#~ msgid "To be Invoiced"
+#~ msgstr "Számlázandó"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hiba !"
+
+#~ msgid "Quantity"
+#~ msgstr "Mennyiség"
+
+#~ msgid "History Information"
+#~ msgstr "Előzmény"
+
+#~ msgid "Dates"
+#~ msgstr "Dátumok"
+
+#~ msgid "Contact"
+#~ msgstr "Kapcsolat"
+
+#~ msgid "Last 30 Days"
+#~ msgstr "Utolsó 30 nap"
+
+#~ msgid "Mailing"
+#~ msgstr "Levelezés"
+
+#~ msgid "Invoice Name"
+#~ msgstr "Számla neve"
+
+#~ msgid "Message"
+#~ msgstr "Üzenet"
+
+#~ msgid "Reference 2"
+#~ msgstr "Hivatkozás 2"
+
+#, python-format
+#~ msgid "Invoiced"
+#~ msgstr "Számlázott"
+
+#~ msgid "Speakers"
+#~ msgstr "Előadók"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
+
+#~ msgid "Beginning Date"
+#~ msgstr "Kezdés időpontja"
+
+#~ msgid "Number of Registration"
+#~ msgstr "Regisztráció száma"
+
+#~ msgid "Write Date"
+#~ msgstr "Dátum írása"
+
+#~ msgid "Language"
+#~ msgstr "Nyelv"
+
+#~ msgid "CC"
+#~ msgstr "Másolat"
+
+#~ msgid "These people will receive email."
+#~ msgstr "Ezek az emberek fogják megkapni az e-mailt."
+
+#~ msgid "Dashboard"
+#~ msgstr "Vezérlőpult"
+
+#~ msgid "History"
+#~ msgstr "Előzmény"
+
+#~ msgid "Attachments"
+#~ msgstr "Mellékletek"
+
+#~ msgid "Auto Confirmation Email"
+#~ msgstr "Automatikus megerősítő e-mail"
+
+#~ msgid "Last 365 Days"
+#~ msgstr "Utolsó 365 nap"
+
+#~ msgid "Beginning date"
+#~ msgstr "Kezdés időpontja"
+
+#~ msgid "Invoice"
+#~ msgstr "Számla"
+
+#~ msgid "Close"
+#~ msgstr "Zárás"
+
+#, python-format
+#~ msgid "Open"
+#~ msgstr "Nyitott"
+
+#~ msgid "Registration Cost"
+#~ msgstr "Regisztrációs díj"
+
+#~ msgid "Current"
+#~ msgstr "Jelenleg"
+
+#~ msgid "Unit Price"
+#~ msgstr "Egységár"
+
+#~ msgid "Details"
+#~ msgstr "Részletek"
+
+#~ msgid "Sale Team"
+#~ msgstr "Értékesítési csapat"
+
+#~ msgid "Start date"
+#~ msgstr "Kezdő dátum"
+
+#~ msgid "Closing date"
+#~ msgstr "Zárás időpontja"
+
+#~ msgid "Product"
+#~ msgstr "Termék"
+
+#~ msgid "This email will be sent when someone subscribes to the event."
+#~ msgstr "Ezt az emailt küldi ki, ha valaki jelentezik a programra."
+
+#~ msgid "Address"
+#~ msgstr "Cím"
+
+#~ msgid "Auto Registration Email"
+#~ msgstr "Automatikus regisztrációs e-mail"
+
+#~ msgid "Total"
+#~ msgstr "Összesen"
+
+#~ msgid "Provide Maximun Number of Registrations"
+#~ msgstr "Adja meg a maximális regisztrációk számát"
+
+#~ msgid "Ticket for Opera"
+#~ msgstr "Operajegy"
+
+#~ msgid "event.registration.badge"
+#~ msgstr "event.registration.badge"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Vigyázat !"
+
+#~ msgid "Number of Registrations or Tickets"
+#~ msgstr "Regisztrációk vagy jegyek száma"
+
+#~ msgid "Misc"
+#~ msgstr "Vegyes"
+
+#~ msgid "Ticket for Concert"
+#~ msgstr "Koncertjegy"
+
+#~ msgid "Error ! You cannot create recursive event."
+#~ msgstr "Hiba ! Nem hozhat létre rekurzív rendezvényt."
+
+#~ msgid "Event Done"
+#~ msgstr "Rendezvény kész"
+
+#~ msgid "Child Events"
+#~ msgstr "Alrendezvények"
+
+#~ msgid "Confirmation Email Body"
+#~ msgstr "Megerősítő e-mail levéltörzse"
+
+#~ msgid "Event by Registration"
+#~ msgstr "Rendezvény regisztrációk szerint"
+
+#~ msgid "Conference on ERP Buisness"
+#~ msgstr "ERP üzleti konferencia"
+
+#~ msgid "Ticket for Conference"
+#~ msgstr "Konferencia belépő"
+
+#~ msgid "  event Registration "
+#~ msgstr "  rendezvény regisztráció "
+
+#~ msgid ""
+#~ "Check this box if you want ot use the automatic confirmation emailing or the "
+#~ "reminder"
+#~ msgstr ""
+#~ "Jelölje be ezt a négyzetet, ha szeretne automatikus visszaigazoló e-mailt "
+#~ "vagy emlékeztetőt küldeni."
+
+#~ msgid "Beginning Date of Event"
+#~ msgstr "Rendezvény kezdő időpontja"
+
+#, python-format
+#~ msgid "Auto Registration: [%s] %s"
+#~ msgstr "Automatikus regisztráció: [%s] %s"
+
+#~ msgid "Registration Email Body"
+#~ msgstr "Regisztrációs e-mail szövege"
+
+#~ msgid "Event For Registration"
+#~ msgstr "Rendezvény regisztráció"
+
+#~ msgid "Confirmation for Event Registration"
+#~ msgstr "Rendezvény regisztrációjának megerősítése"
+
+#~ msgid "Event Details"
+#~ msgstr "Rendezvény részletei"
+
+#~ msgid "Parent Event"
+#~ msgstr "Forrásrendezvény"
+
+#~ msgid "Current Events"
+#~ msgstr "Aktuális rendezvények"
+
+#~ msgid "Speaker who are giving speech on event."
+#~ msgstr "Előadó, aki beszédet mond a rendezvényen."
+
+#~ msgid "Event type"
+#~ msgstr "Rendezvény típusa"
+
+#~ msgid "Pricelist version for current event."
+#~ msgstr "Árlista verzió az aktuális rendezvényhez"
+
+#~ msgid "Event Dashboard"
+#~ msgstr "Rendezvény vezérlőpult"
+
+#~ msgid "Closing Date of Event"
+#~ msgstr "Rendezvény záró időpontja"
+
+#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
+#~ msgstr "A rendezvény típusa: szeminárium, kiállítás, konferencia, képzés."
+
+#~ msgid "Group the invoices"
+#~ msgstr "Számlák összevonása"
+
+#~ msgid "Partner Invoiced"
+#~ msgstr "Partner, akinek számlázunk"
+
+#~ msgid "Create invoices"
+#~ msgstr "Számlák készítése"
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "Valóban el akarja készíteni a számlá(ka)t?"
+
+#~ msgid "Closed"
+#~ msgstr "Lezárt"
+
+#~ msgid "Active"
+#~ msgstr "Aktív"
+
+#, python-format
+#~ msgid "Invoice cannot be created if the registration is in %s state."
+#~ msgstr ""
+#~ "A számlát nem lehet elkészíteni, ha a regisztráció %s állapotban van."
+
+#~ msgid ""
+#~ "The invoices of this event registration will be created with this Product. "
+#~ "Thus it allows you to set the default label and the accounting info you want "
+#~ "by default on these invoices."
+#~ msgstr ""
+#~ "A rendezvény regisztráció számláiban ez a termék kerül kiszámlázásra. Ez "
+#~ "lehetővé teszi a számlákon megjelenítendő alapértelmezett megnevezések és "
+#~ "könyvelési információk beállítását."
+
+#, python-format
+#~ msgid "Registration doesn't have any partner to invoice."
+#~ msgstr ""
+#~ "A regisztrációhoz nem adott meg partnert, akinek a nevére a számlát "
+#~ "kiállíthatná."
+
+#, python-format
+#~ msgid "Registered partner doesn't have an address to make the invoice."
+#~ msgstr ""
+#~ "A regisztrált partnernek nincs címe, amelyre a számlát ki lehetne állítani."
+
+#, python-format
+#~ msgid "Registration is set as Cannot be invoiced"
+#~ msgstr "A regisztráció nem számlázhatóként került beállításra."
+
+#~ msgid ""
+#~ "This will be the default price used as registration cost when invoicing this "
+#~ "event. Note that you can specify for each registration a specific amount if "
+#~ "you want to"
+#~ msgstr ""
+#~ "Ez lesz az alapértelmezett regisztrációs díj a rendezvény számlázása esetén. "
+#~ "Ha úgy kívánja, minden regisztrációra más összeget határozhat meg."
+
+#, python-format
+#~ msgid "Event related doesn't have any product defined"
+#~ msgstr "A kapcsolódó rendezvényhez nem határoztak meg terméket."
+
+#~ msgid "Subtotal"
+#~ msgstr "Érték"
+
+#~ msgid "Total of Open and Done Registrations"
+#~ msgstr "A nyitott és a kész regisztrációk összege."

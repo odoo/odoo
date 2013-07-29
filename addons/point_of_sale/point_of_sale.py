@@ -27,7 +27,7 @@ import pdb
 import time
 
 import openerp
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -51,7 +51,7 @@ class pos_config(osv.osv):
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
              domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",),
-        'shop_id' : fields.many2one('sale.shop', 'Shop',
+        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
              required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
@@ -70,6 +70,7 @@ class pos_config(osv.osv):
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
+        'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True)
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -112,15 +113,21 @@ class pos_config(osv.osv):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
         return res and res[0] or False
 
-    def _default_shop(self, cr, uid, context=None):
-        res = self.pool.get('sale.shop').search(cr, uid, [])
+    def _default_warehouse(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
+        return res and res[0] or False
+
+    def _default_pricelist(self, cr, uid, context=None):
+        res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
         return res and res[0] or False
 
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
-        'shop_id': _default_shop,
+        'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
         'group_by' : True,
+        'pricelist_id': _default_pricelist
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -306,7 +313,7 @@ class pos_session(osv.osv):
         # the .xml files as the CoA is not yet installed.
         jobj = self.pool.get('pos.config')
         pos_config = jobj.browse(cr, uid, config_id, context=context)
-        context.update({'company_id': pos_config.shop_id.company_id.id})
+        context.update({'company_id': pos_config.warehouse_id.company_id.id})
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
@@ -333,7 +340,7 @@ class pos_session(osv.osv):
             bank_values = {
                 'journal_id' : journal.id,
                 'user_id' : uid,
-                'company_id' : pos_config.shop_id.company_id.id
+                'company_id' : pos_config.warehouse_id.company_id.id
             }
             statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
             bank_statement_ids.append(statement_id)
@@ -364,7 +371,7 @@ class pos_session(osv.osv):
             ids = [ids]
 
         this_record = self.browse(cr, uid, ids[0], context=context)
-        this_record._workflow_signal('open')
+        this_record.signal_workflow('open')
 
         context.update(active_id=this_record.id)
 
@@ -407,7 +414,7 @@ class pos_session(osv.osv):
                     # The pos manager can close statements with maximums.
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
                         raise osv.except_osv( _('Error!'),
-                            _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
+                            _("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise osv.except_osv(_('Error!'), 
                         _("The type of the journal for your payment method should be bank or cash "))
@@ -444,14 +451,14 @@ class pos_session(osv.osv):
         }
 
     def _confirm_orders(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-
+        account_move_obj = self.pool.get('account.move')
+        pos_order_obj = self.pool.get('pos.order')
         for session in self.browse(cr, uid, ids, context=context):
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
-            move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
+            move_id = account_move_obj.create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
 
-            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
+            pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
 
             for order in session.order_ids:
                 if order.state not in ('paid', 'invoiced'):
@@ -459,7 +466,7 @@ class pos_session(osv.osv):
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
-                    wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
+                    pos_order_obj.signal_done(cr, uid, [order.id])
 
         return True
 
@@ -521,8 +528,7 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+            self.signal_paid(cr, uid, [order_id])
         return order_ids
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -546,7 +552,7 @@ class pos_order(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ('draft','cancel'):
-                raise osv.except_osv(_('Unable to Delete !'), _('In order to delete a sale, it must be new or cancelled.'))
+                raise osv.except_osv(_('Unable to Delete!'), _('In order to delete a sale, it must be new or cancelled.'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
@@ -595,7 +601,7 @@ class pos_order(osv.osv):
     _columns = {
         'name': fields.char('Order Ref', size=64, required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
-        'shop_id': fields.related('session_id', 'config_id', 'shop_id', relation='sale.shop', type='many2one', string='Shop', store=True, readonly=True),
+        'warehouse_id': fields.related('session_id', 'config_id', 'warehouse_id', relation='stock.warehouse', type='many2one', string='Warehouse', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
@@ -639,8 +645,7 @@ class pos_order(osv.osv):
         session_ids = self._default_session(cr, uid, context) 
         if session_ids:
             session_record = self.pool.get('pos.session').browse(cr, uid, session_ids, context=context)
-            shop = self.pool.get('sale.shop').browse(cr, uid, session_record.config_id.shop_id.id, context=context)
-            return shop.pricelist_id and shop.pricelist_id.id or False
+            return session_record.config_id.pricelist_id and session_record.config_id.pricelist_id.id or False
         return False
 
     _defaults = {
@@ -688,11 +693,10 @@ class pos_order(osv.osv):
                 'move_type': 'direct',
                 'note': order.note or "",
                 'invoice_state': 'none',
-                'auto_picking': True,
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = order.shop_id.warehouse_id.lot_stock_id.id
-            output_id = order.shop_id.warehouse_id.lot_output_id.id
+            location_id = order.warehouse_id.lot_stock_id.id
+            output_id = order.warehouse_id.lot_output_id.id
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
@@ -715,9 +719,8 @@ class pos_order(osv.osv):
                 }, context=context)
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
-
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+            
+            picking_obj.signal_button_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
@@ -728,7 +731,7 @@ class pos_order(osv.osv):
         stock_picking_obj = self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, ids, context=context):
-            wf_service.trg_validate(uid, 'stock.picking', order.picking_id.id, 'button_cancel', cr)
+            stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
@@ -824,7 +827,6 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
 
     def action_invoice(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -877,7 +879,7 @@ class pos_order(osv.osv):
                 inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.product_id.taxes_id] )]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
-            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
+            self.signal_invoice(cr, uid, [order.id])
 
         if not inv_ids: return {}
 
@@ -911,8 +913,7 @@ class pos_order(osv.osv):
         property_obj = self.pool.get('ir.property')
         cur_obj = self.pool.get('res.currency')
 
-        ctx = dict(context or {}, account_period_prefer_normal=True)
-        period = account_period_obj.find(cr, uid, context=ctx)[0]
+        period = account_period_obj.find(cr, uid, context=context)[0]
 
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
@@ -1135,7 +1136,6 @@ class account_bank_statement(osv.osv):
     _defaults = {
         'user_id': lambda self,cr,uid,c={}: uid
     }
-account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -1143,7 +1143,6 @@ class account_bank_statement_line(osv.osv):
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
 
-account_bank_statement_line()
 
 class pos_order_line(osv.osv):
     _name = "pos.order.line"
@@ -1169,7 +1168,7 @@ class pos_order_line(osv.osv):
        if not product_id:
             return {}
        if not pricelist:
-           raise osv.except_osv(_('No Pricelist !'),
+           raise osv.except_osv(_('No Pricelist!'),
                _('You have to select a pricelist in the sale form !\n' \
                'Please set one before choosing a product.'))
 
@@ -1311,7 +1310,7 @@ class ean_wizard(osv.osv_memory):
             ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
             m = context.get('active_model')
             m_id =  context.get('active_id')
-            self.pool.get(m).write(cr,uid,[m_id],{'ean13':ean13})
+            self.pool[m].write(cr,uid,[m_id],{'ean13':ean13})
         return { 'type' : 'ir.actions.act_window_close' }
 
 class product_product(osv.osv):

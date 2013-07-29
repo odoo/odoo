@@ -1,21 +1,20 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-07 12:30+0000\n"
-"Last-Translator: gobi <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-05-03 09:03+0000\n"
+"Last-Translator: badralb <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-08 06:20+0000\n"
-"X-Generator: Launchpad (build 16550)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:30+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -173,6 +172,12 @@ msgid "Refuse"
 msgstr "Татгалзах"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:433
+#, python-format
+msgid "Request <b>approved</b>, waiting second validation."
+msgstr "Хүсэлт <b>батлагдсан</b>, хоёр дахь шалгалтыг хүлээж байна."
+
+#. module: hr_holidays
 #: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
@@ -185,9 +190,9 @@ msgid "Messages"
 msgstr "Зурвасууд"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "Амралт, чөлөө"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr "Дараахаас шинжлэх"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -294,8 +299,8 @@ msgstr "Уулзалтын чөлөө"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2013"
-msgstr ""
+msgid "Legal Leaves 2012"
+msgstr "Цалинтай чөлөө 2012"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -611,7 +616,7 @@ msgstr "Шинэ болгох"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0."
-msgstr "Хоногийн тоо нь 0-с их байх ёстой."
+msgstr "Өдрийн тоо нь 0-с их байх ёстой."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -695,9 +700,10 @@ msgid "Active"
 msgstr "Идэвхтэй"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Add a reason..."
-msgstr ""
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr "Цалинтай амралт, чөлөөний үлдэгдэл"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -746,6 +752,11 @@ msgid "My Department Leaves"
 msgstr "Миний хэлтсийн амралт, чөлөөнүүд"
 
 #. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request confirmed, waiting confirmation"
+msgstr "Хүсэлт батлагдсан, магадлагааг хүлээж байна"
+
+#. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
 msgstr "Идэвхтэй Амралт, чөлөөний Төлөв"
@@ -790,11 +801,6 @@ msgstr "Амралт, чөлөөний шинжилгээ"
 #: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Цуцлах"
-
-#. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
-msgid "Request created and waiting confirmation"
-msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -883,12 +889,6 @@ msgid "Description"
 msgstr "Тайлбар"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
-msgid "Remaining Legal Leaves"
-msgstr "Цалинтай амралт, чөлөөний үлдэгдэл"
-
-#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
 msgstr "Ажилчны Пайзаар"
@@ -966,12 +966,6 @@ msgid "Both Approved and Confirmed"
 msgstr "Батлагдсан болон Магадлагдсан хоёулаа"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:440
-#, python-format
-msgid "Request approved, waiting second validation."
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
 msgstr "Зөвшөөрөх"
@@ -990,9 +984,9 @@ msgid "The start date must be anterior to the end date."
 msgstr "Төгсгөлийн огнооноос эхлэлийн огноо нь өмнө нь байх ёстой"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr "Дараахаас шинжлэх"
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Амралт, чөлөө"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -1078,12 +1072,268 @@ msgstr "Амралт, чөлөөний шалтгаан"
 msgid "Select Leave Type"
 msgstr "Чөлөөний төрөлийг сонгох"
 
+#~ msgid "Sick Leave"
+#~ msgstr "Өвчний улмаас ирээгүй"
+
+#~ msgid "Allocation Type"
+#~ msgstr "Хуваарилах төрөл"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Ноорог болгох"
+
+#~ msgid "Holidays"
+#~ msgstr "Амралт, чөлөө"
+
+#~ msgid "Summary Of Leaves"
+#~ msgstr "Амралт, чөлөөний товчоо"
+
+#~ msgid "Draft"
+#~ msgstr "Ноорог"
+
+#~ msgid "HR Holidays Summary Report By Employee"
+#~ msgstr "Ажилтнаар ангилсан амралт, чөлөөний товчоо"
+
+#~ msgid "Confirm"
+#~ msgstr "Батлах"
+
+#~ msgid ""
+#~ "Human Resources: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage leaves and leaves' requests.\n"
+#~ "    Implements a dashboard for human resource management that includes.\n"
+#~ "        * My Leaves\n"
+#~ "        * My Expenses\n"
+#~ "    Note that:\n"
+#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
+#~ "possible: in order to automatically create a case when an holiday request is "
+#~ "accepted, you have to link the holidays status to a case section. You can "
+#~ "set up this info and your colour preferences in\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - An employee can make an ask for more off-days by making a new "
+#~ "Allocation It will increase his total of that leave type available (if the "
+#~ "request is accepted).\n"
+#~ "    - There are two ways to print the employee's holidays:\n"
+#~ "        * The first will allow to choose employees by department and is used "
+#~ "by clicking the menu item located in\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * The second will allow you to choose the holidays report for "
+#~ "specific employees. Go on the list\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            then select the ones you want to choose, click on the print icon "
+#~ "and select the option\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR'. You can define these features in "
+#~ "the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'\n"
+#~ "            .\n"
+#~ msgstr ""
+#~ "Хүний нөөц: Амралт, чөлөөний хяналт ба ажлын урсгал\n"
+#~ "          Энэ модуль нь амралт чөлөөний хүсэлтийг зохицуулах болмжийг "
+#~ "олгоно.\n"
+#~ "          ХН-ийн хянах самбарт\n"
+#~ "               Өөрийн амралт,чөлөө\n"
+#~ "               Өөрийн зардал\n"
+#~ "          Тэмдэглэл \n"
+#~ "                CRM модулийн дотоод сануулга ирэхэд амралт, чөлөөг "
+#~ "зөвшөөрдөг байхын тулд амралт, чөлөөний төрөлд тохиолдлын хэсгийг "
+#~ "харгалзуулсан байх хэрэгтэй.\n"
+
+#~ msgid ""
+#~ "When the holiday request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Approval'.            If the admin accepts it, the state is "
+#~ "'Approved'. If it is refused, the state is 'Refused'."
+#~ msgstr ""
+#~ "Амралт, чөлөөний хүсэлтийг 'Ноорог' төлөвтэйгөөр үүсгэсэн үед:\n"
+#~ "Хэрэглэгч хүсэлтийг баталмагц  администратор руу 'Зөвшөөрөхийг хүлээж "
+#~ "байгаа' төлөвтэйгөөр илгээгдэнэ. Администратор зөвшөөрмөгц 'Зөвшөөрсөн' "
+#~ "төлөвтэй болно. Харин татгалзвал 'Татгалзсан'  төлөвт шилжинэ."
+
 #, python-format
-#~ msgid "Request <b>approved</b>, waiting second validation."
-#~ msgstr "Хүсэлт <b>батлагдсан</b>, хоёр дахь шалгалтыг хүлээж байна."
+#~ msgid "You have to select at least 1 Department. And try again"
+#~ msgstr "Та цөөндөө 1 хэлтэс сонгох хэрэгтэй. Дахин оролдоно уу."
 
-#~ msgid "Legal Leaves 2012"
-#~ msgstr "Цалинтай чөлөө 2012"
+#~ msgid "General"
+#~ msgstr "Ерөнхий"
 
-#~ msgid "Request confirmed, waiting confirmation"
-#~ msgstr "Хүсэлт батлагдсан, магадлагааг хүлээж байна"
+#~ msgid "State"
+#~ msgstr "Төлөв"
+
+#~ msgid "Employee's Holidays"
+#~ msgstr "Ажилтны амралт, чөлөө"
+
+#~ msgid "Holidays by Department"
+#~ msgstr "Хэлтсээр ангилсан амралт, чөлөө"
+
+#~ msgid "Holiday"
+#~ msgstr "Амралт, чөлөө"
+
+#~ msgid "All Employee Leaves"
+#~ msgstr "Бүх ажилтны амралт, чөлөө"
+
+#~ msgid "Both Validated and Confirmed"
+#~ msgstr "Баталсан ба батламжилсан"
+
+#~ msgid "Casual Leave"
+#~ msgstr "Тохиолдлын чөлөө"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Алдаа"
+
+#~ msgid ""
+#~ "This color will be used in the leaves summary located in Reporting\\Leaves "
+#~ "by Departement"
+#~ msgstr ""
+#~ "'Тайлан/ Хэлтсээр ангилсан амралт, чөлөө' цэсэнд байрлах амралт, чөлөөний "
+#~ "товчоонд энэ өнгийг ашиглана."
+
+#~ msgid ""
+#~ "By Employee: Allocation/Request for individual Employee, By Employee "
+#~ "Category: Allocation/Request for group of employees in category"
+#~ msgstr ""
+#~ "Ажилтнаар: Амралт, чөлөө хуваарилах хүсэлт нь хувь ажилтанд ,  Ажилтны "
+#~ "зэрэглэлээр: Амралт, чөлөө хуваарилах хүсэлт нь ажилтны зэрэглэл дэх "
+#~ "ажилтнуудад зориулагдсан байна."
+
+#~ msgid "Select Holiday Type"
+#~ msgstr "Амралт, чөлөөний  төрлийг сонгох"
+
+#~ msgid "By Employee Category"
+#~ msgstr "Ажилтны зэрэглэлээр"
+
+#~ msgid "This Month"
+#~ msgstr "Энэ сар"
+
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr ""
+#~ "Энэ талбарыг сонговол ажилтан өөрт хуваарилагдсан боломжит амралт, чөлөөнөөс "
+#~ "хязгаарыг хэтрүүлэн амралт, чөлөө авах боломжтой болно."
+
+#~ msgid "This area is automaticly filled by the user who validate the leave"
+#~ msgstr ""
+#~ "Энэ талбарт амралт, чөлөөг батламжилсан менежерийн нэвтэрсэн хэрэглэгчийн "
+#~ "нэрийг автоматаар бөглөнө."
+
+#~ msgid "HR Holidays Summary Report By Department"
+#~ msgstr "Хэлтсээр ангилсан амралт, чөлөөний товчоо"
+
+#~ msgid "Human Resources: Holidays management"
+#~ msgstr "Хүний нөөц: Амралт, чөлөөний удирдлага"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr ""
+#~ "Энэ нь үнэн утгатай бол амралт, чөлөө хүсэх/ хуваарилахыг хүсэх хүсэлт нь 2 "
+#~ "дах менежерээр батламжлагдсан байна"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Өргөтгөсөн хайлт..."
+
+#~ msgid "Requests Approve"
+#~ msgstr "зөвшөөрөх хүсэлт"
+
+#~ msgid " Month-1"
+#~ msgstr " сар-1"
+
+#~ msgid "Latest Connection"
+#~ msgstr "Сүүлийн холболт"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Анхаар !"
+
+#~ msgid "The start date must be before the end date !"
+#~ msgstr "Эхлэх өдөр нь дууах өдрөөс өмнө байх ёстой."
+
+#~ msgid "You have to select an employee or a category"
+#~ msgstr "Ажилчин эсвэл ангиллаас сонгох хэрэгтэй."
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Алдаа! Ажилтны рекурс мод үүсгэж болохгүй"
+
+#~ msgid "The number of days must be greater than 0 !"
+#~ msgstr "Өдрийн тоо 0-ээс их байх естой."
+
+#~ msgid "Holidays during last month"
+#~ msgstr "Сүүлийн сарын амралтын өдрүүд"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a holiday request is created.            \n"
+#~ "The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+#~ "          \n"
+#~ "The state is 'Refused', when holiday request is refused by manager.          "
+#~ "  \n"
+#~ "The state is 'Approved', when holiday request is approved by manager."
+#~ msgstr ""
+#~ "Амралт, чөлөөний хүсэлт үүссэн дараагаараа 'Ноорог' төлөвтэй байдаг.\n"
+#~ "Хүсэлт нотлогдсон дараагаараа 'Зөвшөөрөл Хүлээж байгаа' төлөвтэй болдог.\n"
+#~ "Харин татгалзсан тохиолдолд 'Татгалзсан' төлөвтэй болдог.\n"
+#~ "Менежер зөвшөөрсний дараагаар 'Зөвшөөрсөн' төлөвтэй болдог."
+
+#~ msgid ""
+#~ "You can assign remaining Legal Leaves for each employee, OpenERP will "
+#~ "automatically create and validate allocation requests."
+#~ msgstr ""
+#~ "Ажилчинд цалинтай амралт чөлөөний үлдэгдлийг оруулж болох бөгөөд ингэснээр "
+#~ "OpenERP автоматаар амралт чөлөө хуваарилах хүсэлтийг үүсгэдэг."
+
+#, python-format
+#~ msgid "You cannot delete a leave which is not in draft state !"
+#~ msgstr "Ноорог биш төлөвтэй амралт, чөлөөг устгах боломжгүй !"
+
+#~ msgid "Legal Leaves"
+#~ msgstr "Цалитай чөлөөнүүд"
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "Шалгах амралт, чөлөөнүүд"
+
+#~ msgid ""
+#~ "If you set a meeting type, OpenERP will create a meeting in the calendar "
+#~ "once a leave is validated."
+#~ msgstr ""
+#~ "Хэрэв та уулзалтын төрөлийг тохируулбал OpenERP нь чөлөө шалгагдмагц "
+#~ "цагалбар дээр уулзалтыг үүсгэдэг."
+
+#~ msgid ""
+#~ "Leave Manager can let this field empty if this leave request/allocation is "
+#~ "for every employee"
+#~ msgstr ""
+#~ "Амралт, чөлөө/амралт, чөлөө хуваарилахыг хүсэх нь ажилтан бүрийн хувьд "
+#~ "байвал амралт, чөлөөг зөвшөөрөгч нь энэ талбарыг хоосон үлдээж болно."
+
+#~ msgid ""
+#~ "Leave requests can be recorded by employees and validated by their managers. "
+#~ "Once a leave request is validated, it appears automatically in the agenda of "
+#~ "the employee. You can define several allowance types (paid holidays, "
+#~ "sickness, etc.) and manage allowances per type."
+#~ msgstr ""
+#~ "Амралт, чөлөөний хүсэлт нь ажилтнаар бичигдэж менежерүүдээрээ хянагдаж "
+#~ "болно. Амралт, чөлөөний хүсэлт хянагдаж батлагдмагц ажилтны цагийн хөтөлбөрт "
+#~ "шууд орж харагдана. Зөвшөөрлийн хэд хэдэн төрлийг тодорхойлж болно (ж: "
+#~ "цалинтай чөлөө, өвчтэй, гм) Төрөл тус бүрт цалинг менеж хийнэ."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for employee %s: too few remaining days (%s)."
+#~ msgstr ""
+#~ "Ажилтан %s-д хэт урт хугацааны амралт, чөлөөг та зөвшөөрч чадахгүй: үлдэж "
+#~ "байгаа хоног хэт цөөн байна (%s)."
+
+#~ msgid ""
+#~ "Total number of legal leaves allocated to this employee, change this value "
+#~ "to create allocation/leave requests."
+#~ msgstr ""
+#~ "Энэ ажилтанд хуваарилагдсан нийт зөвшөөрөгдсөн амралт, чөлөө бөгөөд энэ "
+#~ "утгыг өөрчилснөөр амралт чөлөө хуваарилах хүсэлт болон чөлөөний хүсэлтийг "
+#~ "үүсгэдэг."
+
+#~ msgid "Error! leave start-date must be lower then leave end-date."
+#~ msgstr ""
+#~ "Алдаа! Амралт, чөлөө эхлэх огноо амралт дуусах огноогоос бага байх ёстой."

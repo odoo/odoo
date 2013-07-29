@@ -29,15 +29,15 @@
                     </div>
                 </xpath>
                 <!-- add Reset Password button -->
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="replace">
-                    <div class="oe_right oe_button_box">
-                        <button string="Send reset password link by email"
+                <xpath expr="//div[@class='oe_right oe_button_box']//button" position="replace">
+                        <button string="Send Reset Password Instructions"
+                                class="oe_link"
                                 type="object" name="action_reset_password"
                                 attrs="{'invisible': [('state', '!=', 'active')]}"/>
-                        <button string="Send an invitation email"
+                        <button string="Send an Invitation Email"
+                                class="oe_link"
                                 type="object" name="action_reset_password" context="{'create_user': 1}"
                                 attrs="{'invisible': [('state', '!=', 'new')]}"/>
-                    </div>
                 </xpath>
             </field>
         </record>

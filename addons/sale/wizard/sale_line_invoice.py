@@ -94,6 +94,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             cr.execute('INSERT INTO sale_order_invoice_rel \
                     (order_id,invoice_id) values (%s,%s)', (order.id, res))
             flag = True
+            sales_order_obj.message_post(cr, uid, [order.id], body=_("Invoice created"), context=context)
             data_sale = sales_order_obj.browse(cr, uid, order.id, context=context)
             for line in data_sale.order_line:
                 if not line.invoiced:
@@ -129,6 +130,5 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-sale_order_line_make_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

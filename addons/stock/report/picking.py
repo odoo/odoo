@@ -22,7 +22,6 @@
 import time
 from openerp.report import report_sxw
 from openerp.osv import osv
-from openerp import pooler
 
 class picking(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -38,4 +37,5 @@ class picking(report_sxw.rml_parse):
         return desc
 
 report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking)
+report_sxw.report_sxw('report.stock.picking.list.internal','stock.picking','addons/stock/report/picking_internal.rml',parser=picking, header='internal')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

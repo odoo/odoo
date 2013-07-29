@@ -1,0 +1,18 @@
+- 
+  Create a new stockable product
+- 
+  !record {model: product.product, id: packingtest}:
+    name: nice product
+- 
+  Create an incoming picking for this product of 300 PCE from suppliers to stock
+- 
+  !record{model: stock.picking}: |
+- 
+  Create move linked to picking
+- 
+  !record{model:stock.move, id:}
+- 
+  Confirm picking
+- 
+  !python {model: stock.picking}: |
+    self.action_confirm(cr, uid, ref())

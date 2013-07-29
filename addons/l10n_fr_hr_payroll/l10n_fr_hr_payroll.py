@@ -34,7 +34,6 @@ class res_company(osv.osv):
         'conv_coll': fields.char('Convention collective', size=64),
     }
 
-res_company()
 
 class hr_contract(osv.osv):
     _inherit = 'hr.contract'
@@ -44,7 +43,6 @@ class hr_contract(osv.osv):
         'niveau': fields.char('Niveau', size=64),
         'coef': fields.char('Coefficient', size=64),
     }
-hr_contract()
 
 class hr_payslip(osv.osv):
     _inherit = 'hr.payslip'
@@ -52,6 +50,5 @@ class hr_payslip(osv.osv):
     _columns = {
         'payment_mode': fields.char('Mode de paiement', size=64),
     }
-hr_payslip()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

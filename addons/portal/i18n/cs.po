@@ -1,21 +1,22 @@
 # Czech translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-29 22:16+0000\n"
-"Last-Translator: Radomil Urbánek <radek@sluzebnik.cz>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-05-10 17:33+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
+"Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net >\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-30 06:08+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:50+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
+"X-Poedit-Language: Czech\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -46,7 +47,7 @@ msgstr ""
 #. module: portal
 #: model:mail.group,name:portal.company_jobs
 msgid "Company Jobs"
-msgstr "Pracovní místa"
+msgstr "Zaměstnání společnosti"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -57,12 +58,6 @@ msgstr "částka: celková částka k úhradě, desetinné číslo"
 #: view:portal.wizard.user:0
 msgid "Contacts"
 msgstr "Kontakty"
-
-#. module: portal
-#: view:portal.wizard:0
-msgid "This text is included in the email sent to new portal users."
-msgstr ""
-"Tento text je přidán do emailu, který se odesílá novým uživatelům portálu."
 
 #. module: portal
 #: view:share.wizard:0
@@ -76,22 +71,9 @@ msgid "Portal Groups"
 msgstr "Skupiny portálu"
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:52
-#, python-format
-msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
-msgstr "<p>Zpřístupnění dokumentu <a href=\"%s\">přímo v OpenERP</a></p>"
-
-#. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
 msgstr "Pozvánka"
-
-#. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
-msgid "Portal Access Management"
-msgstr "Správa přístupu k portálu"
 
 #. module: portal
 #: view:res.groups:0
@@ -105,10 +87,9 @@ msgid "Please select at least one group to share with"
 msgstr "Prosíme vyberte nejméně jednu skupinu, s kterou chcete sdílet"
 
 #. module: portal
-#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
-msgid "Archives"
-msgstr "Archivy"
+#: view:share.wizard:0
+msgid "Details"
+msgstr "Podrobnosti"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
@@ -135,13 +116,9 @@ msgid "Share Wizard"
 msgstr "Průvodce sdílením"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
-msgstr ""
-", takže může používat výrazy Mako.\n"
-"                                Vyhodnocovací kontext Mako nabízí:"
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "Email"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -152,25 +129,9 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                   Máte všechny firemní novinky přečteny.\n"
+"                   Nemáte žádné nepřečtené novinky společnosti.\n"
 "                </p>\n"
 "            "
-
-#. module: portal
-#: field:portal.wizard.user,email:0
-msgid "Email"
-msgstr "Email"
-
-#. module: portal
-#: view:portal.wizard:0
-msgid "or"
-msgstr "nebo"
-
-#. module: portal
-#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
-msgid "To-do"
-msgstr "Úkoly"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -178,14 +139,14 @@ msgstr "Úkoly"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Pro zasílání e-mailů musíte mít nastavenu e-mailovou adresu ve vašich "
-"uživatelských předvolbách."
+"Musíte mít emailovou adresu ve vašich uživatelských předvolbách pro zasílání "
+"emailů."
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_jobs
 #: model:ir.ui.menu,name:portal.portal_jobs
 msgid "Jobs"
-msgstr "Pracovní místa"
+msgstr "Místa"
 
 #. module: portal
 #: field:portal.wizard,user_ids:0
@@ -233,32 +194,18 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    Máte všechny nabídky pracovních míst přečteny.\n"
+"                    Nemáte nepřečtené nabídky pracovních míst.\n"
 "                </p>\n"
 "            "
 
 #. module: portal
-#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
+#: view:portal.payment.acquirer:0
 msgid ""
-"<p>\n"
-"                    No message found and no message sent yet.\n"
-"                </p><p>\n"
-"                    Click on the top-right icon to compose a message. This\n"
-"                    message will be sent by email if it's an internal "
-"contact.\n"
-"                </p>\n"
-"            "
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
 msgstr ""
-"<p>\n"
-"                    Žádné zprávy nebyly dosud ani přijaty ani odeslány.\n"
-"                </p><p>\n"
-"                    Klepnutím na ikonu s obálkou v pravém horním rohu "
-"obrazovky\n"
-"                    můžete vytvořit novou zprávu. Půjde-li o interní "
-"kontakt,\n"
-"                    zpráva bude odeslána e-mailem.\n"
-"                </p>\n"
-"            "
+", takže může používat výrazy Mako.\n"
+"                                Vyhodnocovací kontext Mako nabízí:"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -321,7 +268,7 @@ msgstr "Projekty"
 #: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_inbox
 msgid "Inbox"
-msgstr "Příchozí zprávy"
+msgstr "Doručené zprávy"
 
 #. module: portal
 #: view:share.wizard:0
@@ -358,14 +305,9 @@ msgstr ""
 "quote(): metoda pro upravení zvláštních znaků na podobu použitelnou v URL"
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:44
-#, python-format
-msgid ""
-"<p>Access your messages and personal documents through <a href=\"%s\">our "
-"Customer Portal</a></p>"
-msgstr ""
-"<p>Zpřístupnění zpráv a osobních dokumentů prostřednictvím <a "
-"href=\"%s\">našeho zákaznického portálu</a></p>"
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
+msgstr "Pokud je zaškrnuto, je tato skupina použitelná jako portál."
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -412,7 +354,7 @@ msgstr "Online příjemce plateb"
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
 msgid "Company News"
-msgstr "Firemní novinky"
+msgstr "Novinky společnosti"
 
 #. module: portal
 #: code:addons/portal/acquirer.py:76
@@ -442,14 +384,13 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    <b>Výborně!</b> Nemáte žádnou nezpracovanou zprávu v "
-"příchozí schránce.\n"
+"                    <b>Dobrá práce!</b> Vaše složka příchozí pošty je "
+"prázdná.\n"
 "                </p><p>\n"
-"                    Vaše příchozí schránka obsahuje Vám adresované zprávy a "
-"e-maily\n"
-"                    a také informace týkající se dokumentů, které "
-"odebíráte,\n"
-"                    nebo osob, jejichž zprávy odebíráte.\n"
+"                    Vaše příchozí pošta obsahuje  vaše soukromé zprávy nebo\n"
+"                    emaily a informace spojené s dokumenty nebo lidmi, "
+"které\n"
+"                    sledujete.\n"
 "                </p>\n"
 "            "
 
@@ -473,9 +414,13 @@ msgid "About Us"
 msgstr "O nás"
 
 #. module: portal
-#: help:res.groups,is_portal:0
-msgid "If checked, this group is usable as a portal."
-msgstr "Pokud je zaškrnuto, je tato skupina použitelná jako portál."
+#: view:portal.payment.acquirer:0
+msgid ""
+"currency: the currency record in which the document is issued (e.g. "
+"currency.name could be EUR)"
+msgstr ""
+"currency: záznam měny, ve které je dokument vytvořen (např. currency.name "
+"může být EUR)"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -521,13 +466,9 @@ msgstr ""
 "http://www.openerp.com\n"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"currency: the currency record in which the document is issued (e.g. "
-"currency.name could be EUR)"
-msgstr ""
-"currency: záznam měny, ve které je dokument vytvořen (např. currency.name "
-"může být EUR)"
+#: view:portal.wizard:0
+msgid "or"
+msgstr "nebo"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
@@ -619,27 +560,13 @@ msgstr ""
 "                                Šablona bude vykreslena prostřednictvím"
 
 #. module: portal
-#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
+#: code:addons/portal/mail_mail.py:42
+#, python-format
 msgid ""
-"<p>\n"
-"                    <b>No todo.</b>\n"
-"                </p><p>\n"
-"                    When you process messages in your inbox, you can mark "
-"some\n"
-"                    as <i>todo</i>. From this menu, you can process all your "
-"todo.\n"
-"                </p>\n"
-"            "
+"Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
 msgstr ""
-"<p>\n"
-"                    <b>Žádné úkoly.</b>\n"
-"                </p><p>\n"
-"                    Když procházíte příchozí poštu, můžete některé zprávy "
-"označit\n"
-"                    jako <i>úkol</i>. Z tohoto menu pak můžete zpracovávat "
-"vaše úkoly.\n"
-"                </p>\n"
-"            "
+"Přistupujte k vašim osobním dokumentům prostřednictvím <a href=\"%s\">našeho "
+"zákaznického portálu</a>"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -647,13 +574,217 @@ msgid "Form Template"
 msgstr "Šablona formuláře"
 
 #. module: portal
-#: view:share.wizard:0
-msgid "Details"
-msgstr "Podrobnosti"
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:0
+msgid "Portal Access Management"
+msgstr "Správa přístupu k portálu"
+
+#~ msgid "Group"
+#~ msgstr "Skupina"
+
+#~ msgid "Portal User"
+#~ msgstr "Uživatel portálu"
+
+#~ msgid "Enable this option to override the Menu Action of portal users"
+#~ msgstr "Povolte tuto volbu k přepsání Akcí nabídky uživatelů portálu"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "Vybraná společnost není v povolených společnostech pro tohoto uživatele"
+
+#~ msgid "Widgets"
+#~ msgstr "Udělátka"
+
+#~ msgid "Send Invitations"
+#~ msgstr "Poslat pozvání"
+
+#~ msgid "The url where portal users can connect to the server"
+#~ msgstr "URL, kde uživatelé portálu se mohou připojit k serveru"
+
+#~ msgid "Widget"
+#~ msgstr "Udělátko"
+
+#~ msgid "This text is included in the welcome email sent to the users"
+#~ msgstr "Tento text je zahrnut v uvítacím emailu zaslatném uživatelům"
+
+#~ msgid "If set, replaces the standard menu for the portal's users"
+#~ msgstr ""
+#~ "Pokud je nastaveno, nahrazuje standardní nabídku pro uživatele portálu"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Nadřazené menu"
+
+#~ msgid "Portal Name"
+#~ msgstr "Jméno portálu"
+
+#~ msgid "Portal Users"
+#~ msgstr "Uživatelé portálu"
+
+#~ msgid "Override Menu Action of Users"
+#~ msgstr "Přepsat Akce nabídky pro uživatele"
+
+#~ msgid "Menu Action"
+#~ msgstr "Akce nabídky"
+
+#~ msgid "User Name"
+#~ msgstr "Uživatelské jméno"
+
+#~ msgid "Portal Widgets"
+#~ msgstr "Pomůcky portálu"
+
+#, python-format
+#~ msgid "%s Menu"
+#~ msgstr "%s Nabídka"
+
+#~ msgid "The portal in which new users must be added"
+#~ msgstr "Portál, ve kterém musí být přidání noví uživatelé"
+
+#~ msgid "Widgets assigned to portal users"
+#~ msgstr "Pomůcky přiřazené k těmto uživatelům portálu"
+
+#, python-format
+#~ msgid "(missing url)"
+#~ msgstr "(chybějící url)"
+
+#~ msgid ""
+#~ "Will be used as user login.  Also necessary to send the account information "
+#~ "to new users"
+#~ msgstr ""
+#~ "Bude použito jako přihlašovací jméno uživatele. Také je zapotřebí zaslat "
+#~ "informace účtu novým uživatelům"
+
+#~ msgid "Language"
+#~ msgstr "Jazyk"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Widgets assigned to Users"
+#~ msgstr "Pomůcky přiřazené uživatelům"
+
+#~ msgid "The language for the user's user interface"
+#~ msgstr "Jazyk pro uživatelské rozhraní uživatelů"
+
+#~ msgid "Website"
+#~ msgstr "Webová stránka"
+
+#~ msgid "Create Parent Menu"
+#~ msgstr "Vytvořit nadřazenou nabídku"
+
+#~ msgid ""
+#~ "The following text will be included in the welcome email sent to users."
+#~ msgstr ""
+#~ "Následující text bude zahrnut v uvítacím emailu zalsatném uživatelům."
+
+#~ msgid "res.users"
+#~ msgstr "res.users"
+
+#~ msgid "Invalid email address"
+#~ msgstr "Neplatná emailová adresa"
+
+#~ msgid "ir.ui.menu"
+#~ msgstr "ir.ui.menu"
+
+#~ msgid "Portals"
+#~ msgstr "Portály"
+
+#~ msgid "The menu action opens the submenus of this menu item"
+#~ msgstr "Akce nabídky otevírající podnabídku této položky nabídky"
+
+#~ msgid "Sequence"
+#~ msgstr "Posloupnost"
+
+#~ msgid "Related Partner"
+#~ msgstr "Vztažený partner"
+
+#~ msgid "Portal Menu"
+#~ msgstr "Nabídka portálu"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Nemůžete mít dva uživatele se stejným přihlašovacím jménem !"
+
+#~ msgid "Invitation message"
+#~ msgstr "Zpráva pozvánky"
 
 #, python-format
 #~ msgid ""
-#~ "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+#~ "Dear %(name)s,\n"
+#~ "\n"
+#~ "You have been created an OpenERP account at %(url)s.\n"
+#~ "\n"
+#~ "Your login account data is:\n"
+#~ "Database: %(db)s\n"
+#~ "User:     %(login)s\n"
+#~ "Password: %(password)s\n"
+#~ "\n"
+#~ "%(message)s\n"
+#~ "\n"
+#~ "--\n"
+#~ "OpenERP - Open Source Business Applications\n"
+#~ "http://www.openerp.com\n"
 #~ msgstr ""
-#~ "Přistupujte k vašim osobním dokumentům prostřednictvím <a href=\"%s\">našeho "
-#~ "zákaznického portálu</a>"
+#~ "Vážený %(name)s,\n"
+#~ "\n"
+#~ "Byl vám vytvořen OpenERP účet na %(url)s.\n"
+#~ "\n"
+#~ "Váše přihlašovací údaje účtu jsou:\n"
+#~ "Databáze: %(db)s\n"
+#~ "Uživatel:     %(login)s\n"
+#~ "Heslo: %(password)s\n"
+#~ "\n"
+#~ "%(message)s\n"
+#~ "\n"
+#~ "--\n"
+#~ "OpenERP - Open Source Business Applications\n"
+#~ "http://www.openerp.com\n"
+
+#~ msgid "Portal Wizard"
+#~ msgstr "Průvodce portálu"
+
+#~ msgid "The user's real name"
+#~ msgstr "Skutečné jméno uživatele"
+
+#~ msgid "Add Portal Access"
+#~ msgstr "Přidat přístup portálu"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid ""
+#~ "\n"
+#~ "A portal helps defining specific views and rules for a group of users (the\n"
+#~ "portal group).  A portal menu, widgets and specific groups may be assigned "
+#~ "to\n"
+#~ "the portal's users.\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Portál pomáhá stanovit určité pohledy a pravidla pro skupiny uživatelů\n"
+#~ "(skupinu protálu).  Nabídka portálu, pomůcky a určité skupiny mohou být "
+#~ "přiřazeny k\n"
+#~ "uživatelům portálu.\n"
+#~ "            "
+
+#~ msgid "Manager"
+#~ msgstr "Vedoucí"
+
+#~ msgid "The group corresponding to this portal"
+#~ msgstr "Skupina odpovídající tomuto portálu"
+
+#~ msgid ""
+#~ "Portal managers have access to the portal definitions, and can easily "
+#~ "configure the users, access rights and menus of portal users."
+#~ msgstr ""
+#~ "Vedoucí portálu mají přístup k definici portálu a mohou snadno nastavit "
+#~ "uživatel, přístupová práva a nabídky uživatelů portálu."
+
+#~ msgid "Portal officers can create new portal users with the portal wizard."
+#~ msgstr ""
+#~ "Úředníci portálu mohou vytvářet uživatele portálu pomocí průvodce portálu."
+
+#~ msgid "Officer"
+#~ msgstr "Úředník"

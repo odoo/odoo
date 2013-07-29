@@ -34,7 +34,6 @@ import zipfile
 import base64
 from openerp import addons
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _

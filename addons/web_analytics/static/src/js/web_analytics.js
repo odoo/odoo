@@ -238,7 +238,7 @@ openerp.web_analytics = function(instance) {
                     var url = instance.web_analytics.generateUrl(options);
                     t._push_event({
                         'category': options.model || "ir.actions.client",
-                        'action': "error " + (error.code ? error.message + error.data.fault_code : error.type + error.data.debug),
+                        'action': "error " + (error.code ? error.message + error.data.message : error.type + error.data.debug),
                         'label': url,
                         'noninteraction': true,
                     });

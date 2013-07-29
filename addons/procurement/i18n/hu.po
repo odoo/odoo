@@ -1,21 +1,20 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * procurement
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-10 20:27+0000\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2013-02-05 19:13+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:43+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -26,17 +25,6 @@ msgstr "Ütemezések"
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
 msgstr "Beszerzések létrehozása"
-
-#. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
-msgstr ""
-"Ez az az időkeret amit az időzítő elemez a beszerezés számításánál. Azok a "
-"beszerzések melyek nincsenek a mai nap és a mai nap + tartomány között, azok "
-"át lesznek lépve és ki lesznek számolva a jövőben."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -68,11 +56,6 @@ msgid ""
 msgstr ""
 "igényelt mennyiség mindig\n"
 "                           elérhető"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "External note..."
-msgstr "Külső megjegyzés"
 
 #. module: procurement
 #: view:product.product:0
@@ -178,9 +161,9 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Cancel Procurement"
-msgstr "Beszerzés visszavonása"
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
+msgstr "Kizárás történt a beszerzés számítása közben."
 
 #. module: procurement
 #: view:product.product:0
@@ -530,11 +513,6 @@ msgid "Compute Stock"
 msgstr "Készlet számítás"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "e.g. SO005"
-msgstr "pl. SO005"
-
-#. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
 msgstr "Kapcsolódó beszerzési megrendelések"
@@ -582,9 +560,18 @@ msgstr ""
 "pontot eltüntetni, annak törlése nélkül."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Internal note..."
-msgstr "Belső jegyzet..."
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr ""
+"Ha értékesíti ezt a szolgáltatást, nem lesz különösebb kapcsolás "
+"végrehajtva\n"
+"                           szállítva lesz a vevőnek, a beszerzési módban "
+"beállítottak szerint mint\n"
+"                           'Beszerzés készletből'."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -759,20 +746,6 @@ msgid "Qty Multiple"
 msgstr "Rendelési egység"
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr ""
-"Ha értékesíti ezt a szolgáltatást, nem lesz különösebb kapcsolás "
-"végrehajtva\n"
-"                           szállítva lesz a vevőnek, a beszerzési módban "
-"beállítottak szerint mint\n"
-"                           'Beszerzés készletből'."
-
-#. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
 msgstr "A beszerzési mennyiség kerekítve lesz eddig a sokszorosig."
@@ -886,13 +859,10 @@ msgid "Not urgent"
 msgstr "Nem sürgős"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Beszerzési kifogások"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr "Megrendelési pont"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -921,10 +891,13 @@ msgid "Procurements in Exception"
 msgstr "Beszerzések kifogásolásban"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr "Megrendelési pont"
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Beszerzési kifogások"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -1073,9 +1046,15 @@ msgid "Search Procurement"
 msgstr "Beszerzés keresése"
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr "Kizárás történt a beszerzés számítása közben."
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr ""
+"Ez az az időkeret amit az időzítő elemez a beszerezés számításánál. Azok a "
+"beszerzések melyek nincsenek a mai nap és a mai nap + tartomány között, azok "
+"át lesznek lépve és ki lesznek számolva a jövőben."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -1132,3 +1111,75 @@ msgstr "PROC %d: megrendelésen - %3.2f %-5s - %s"
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Termék a raktárkészletről foglalva."
+
+#~ msgid "Configuration"
+#~ msgstr "Beállítások"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Nincs szállító meghatározva ehhez a termékhez !"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Nincs cím megadva a szállítóhoz"
+
+#~ msgid "Notes"
+#~ msgstr "Megjegyzések"
+
+#~ msgid "on order"
+#~ msgstr "rendelésre"
+
+#~ msgid "Minimum Stock Rules Search"
+#~ msgstr "Minimum készlet szabályok keresése"
+
+#~ msgid "Product & Location"
+#~ msgstr "Termék &Helyszín"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Érvénytelen művelet !"
+
+#~ msgid "References"
+#~ msgstr "Hivatkozások"
+
+#~ msgid "Procurement name."
+#~ msgstr "Beszerzés megnevezése"
+
+#~ msgid "Locations"
+#~ msgstr "Helyek"
+
+#~ msgid "from stock"
+#~ msgstr "készletből"
+
+#~ msgid "General Information"
+#~ msgstr "Általános információ"
+
+#~ msgid "Current"
+#~ msgstr "Jelenleg"
+
+#~ msgid "Details"
+#~ msgstr "Részletek"
+
+#~ msgid "UOM"
+#~ msgstr "ME"
+
+#~ msgid "Product UOM"
+#~ msgstr "Termék ME"
+
+#~ msgid "Product UoM"
+#~ msgstr "Termék ME"
+
+#~ msgid "State"
+#~ msgstr "Állapot"
+
+#~ msgid "Max Quantity"
+#~ msgstr "Max szint"
+
+#~ msgid "Min Quantity"
+#~ msgstr "Min. mennyiség"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Hiba! Nem hozhat létre rekurzív vállalatokat."
+
+#~ msgid "Quantity Rules"
+#~ msgstr "Mennyiségi szabályok"

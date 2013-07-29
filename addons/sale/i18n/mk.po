@@ -1,23 +1,21 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
-"macedonian@lists.launchpad.net >\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-28 23:28+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-03-08 15:34+0000\n"
+"Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
+"Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-30 06:09+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
-"Language: mk\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -38,7 +36,7 @@ msgstr "Контролна табла за продажби"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr "Нема дефинирано сметка за приходи како општо својство."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -86,7 +84,7 @@ msgid ""
 "            It installs the account_analytic_analysis module."
 msgstr ""
 "Дозволува да ги дефинирате условите на договорот со вашиот клиент: метод на "
-"фактурирање (фиксна цена, по временска таблица, авансна фактура), точна цена "
+"фактурирање (фиксна цена, по распоред, авансна фактура), точна цена "
 "(650eur/дневно за програмер), времетраење (едногодишен договор за поддршка). "
 "Ќе може да го следите напредокот на договорот и фактурата автоматски. Тоа го "
 "инсталира модулот account_analytic_analysis."
@@ -193,7 +191,7 @@ msgstr "Адреса на испорака"
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Аналитичка сметка"
+msgstr "Аналитичко конто"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -244,9 +242,10 @@ msgid "Incorrect Data"
 msgstr "Неточни податоци"
 
 #. module: sale
-#: view:sale.order.line:0
-msgid "Cancel Line"
-msgstr "Откажи ставка"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "Вредноста на авансен изност мора да биде позитивна."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -282,7 +281,7 @@ msgstr "Даноци"
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Даночна основа"
+msgstr "Неоданочен износ"
 
 #. module: sale
 #: field:sale.config.settings,module_project:0
@@ -328,10 +327,10 @@ msgid ""
 "                This installs the module analytic_user_function."
 msgstr ""
 "Дозволува да се дефинира што е стандардна функција на конкретен корисник на "
-"дадено конто. Ова најчесто се користи кога корисникот ја кодира својата "
-"временска таблица. Овие вредности се превземени и полињата се пополнети "
-"автоматски. Но можноста за промена на овие вредности е сеуште достапна. Ова "
-"го инсталира модулот функција на аналитички корисник."
+"дадено конто. Ова најчесто се користи кога корисникот го кодира својот "
+"распоред. Овие вредности се превземени и полињата се пополнети автоматски. "
+"Но можноста за промена на овие вредности е сеуште достапна. Ова го инсталира "
+"модулот функција на аналитички корисник."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -400,11 +399,6 @@ msgid "False"
 msgstr "Неточно"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Terms and conditions..."
-msgstr "Рокови и услови..."
-
-#. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
 msgid ""
 "Use All to create the final invoice.\n"
@@ -462,7 +456,7 @@ msgstr "Датум на потврдување"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr "# од ставки"
+msgstr "# од линии"
 
 #. module: sale
 #: help:sale.order,message_summary:0
@@ -556,7 +550,7 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
-"Ви дозволува да управувате со различните цени врз основа на правилата по "
+"Ви дозволува да ги менаџирате различните цени врз основа на правилата по "
 "категорија на клиенти. На пример: 10% за трговци на мало, промоција од 5 EUR "
 "за овој производ и др."
 
@@ -678,8 +672,8 @@ msgid ""
 "                This installs the module sale_journal."
 msgstr ""
 "Ви дозволува да ги категоризирате вашите продажби и испораки (требувања) "
-"помеѓу различни дневници, и да изведете групни операции врз дневниците. Ова "
-"го инсталира модулот sale_journal."
+"помеѓу различни картици, и да изведете групни операции на картиците. Ова го "
+"инсталира модулот картица за продажба."
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
@@ -802,19 +796,9 @@ msgstr ""
 "*Статусот 'Нацрт' е поставен кога поврзаниот налог за продажба е во состојба "
 "нацрт. *Статусот 'Потврдено' е поставен кога поврзаниот налог за продажба е "
 "потврден. *Статусот 'Исклучок' е поставен кога поврзаниот налог за продажба "
-"е поставек како исклучок. \n"
-"*Статусот 'Завршено' е поставен кога ставката од налогот за продажба е "
-"одбрана. *Статусот 'Откажано' е поставен кога корисникот го откажува "
-"поврзаниот налог за продажба."
-
-#. module: sale
-#: code:addons/sale/sale.py:510
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Не можете да ги групирате продажбите доколку имате различни валути за ист "
-"партнер."
+"е поставек како исклучок. *Статусот 'Завршено' е поставен кога ставката од "
+"налогот за продажба е одбрана. *Статусот 'Откажано' е поставен кога "
+"корисникот го откажува поврзаниот налог за продажба."
 
 #. module: sale
 #: view:sale.config.settings:0
@@ -884,12 +868,10 @@ msgid "Sales Order done"
 msgstr "Налогот за продажба е завршен"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "Откажи"
+#: code:addons/sale/sale.py:369
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "Дефинирајте картица за продажби за оваа компанија: \"%s\" (id:%d)."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -990,7 +972,7 @@ msgstr "Декември"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contracts Management"
-msgstr "Управување со договори"
+msgstr "Менаџирање со договори"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1319,8 +1301,8 @@ msgid ""
 "                    This installs the module sale_stock."
 msgstr ""
 "Ви дозволува да направите барање за понуда, налог за продажба со користење "
-"на различна политика за нарачки и управување со поврзаната залиха. Ова го "
-"инсталира модулот sale_stock."
+"на различна политика за нарачки и менаџирање на поврзана залиха. Ова го "
+"инсталира модулот продажба_залиха."
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -1593,9 +1575,12 @@ msgid "My Sales Order Lines"
 msgstr "Ставки на мојот налог за продажба"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Cancel Quotation"
-msgstr "Откажи понуда"
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "Откажи"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1649,7 +1634,7 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                Ова е листа на секоја ставка од налогот за продажба која "
+"                Ова е листа на секоја ставка од налогот за предажба која "
 "треба да биде фактурирана. \n"
 "                Може да ги фактурирате налозите за продажба парцијално, по "
 "ставки од налогот за продажба. \n"
@@ -1664,10 +1649,13 @@ msgid "Shipping address :"
 msgstr "Адреса на испорака :"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:510
 #, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "Дефинирајте дневник за продажба за оваа компанија: \"%s\" (id:%d)."
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr ""
+"Не можете да ги групирате продажбите доколку имате различни валути за ист "
+"партнер."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1698,12 +1686,6 @@ msgid ""
 msgstr ""
 "Не може да пронајде ставка од ценовникот која одговара на овој производ и "
 "количина. Треба да да го промените производот, количината или ценовникот."
-
-#. module: sale
-#: code:addons/sale/sale.py:185
-#, python-format
-msgid "There is no default shop for the current user's company!"
-msgstr "Нема стандардна продавница за компанијата на тековниот корисник!"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1967,12 +1949,6 @@ msgstr ""
 #: report:sale.order:0
 msgid "Price"
 msgstr "Цена"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "Вредноста на авансен изност мора да биде позитивна."
 
 #. module: sale
 #: help:sale.order,order_policy:0

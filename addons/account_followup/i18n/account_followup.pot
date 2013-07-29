@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,6 +61,11 @@ msgid "Needs Printing"
 msgstr ""
 
 #. module: account_followup
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
 msgstr ""
@@ -75,8 +80,6 @@ msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:259
-#, python-format
 msgid "Invoice Date"
 msgstr ""
 
@@ -101,9 +104,8 @@ msgid "Follow-up Steps"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:262
-#, python-format
-msgid "Due Date"
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
 msgstr ""
 
 #. module: account_followup
@@ -112,17 +114,7 @@ msgid "Send Follow-Ups"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#: code:addons/account_followup/account_followup.py:319
-#: code:addons/account_followup/report/account_followup_print.py:86
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:263
-#, python-format
 msgid "Amount"
 msgstr ""
 
@@ -187,12 +179,6 @@ msgid "\n"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:261
-#, python-format
-msgid "Reference"
-msgstr ""
-
-#. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
 msgstr ""
@@ -235,11 +221,6 @@ msgstr ""
 #: field:account_followup.stat.by.partner,partner_id:0
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
-msgstr ""
-
-#. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
 msgstr ""
 
 #. module: account_followup
@@ -386,12 +367,6 @@ msgid "Payment Follow-ups"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/report/account_followup_print.py:86
-#, python-format
-msgid "The followup plan defined for the current company does not have any followup action."
-msgstr ""
-
-#. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
 msgstr ""
@@ -408,6 +383,7 @@ msgid "Latest followup"
 msgstr ""
 
 #. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_manual_reconcile_receivable
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
 msgstr ""
@@ -459,11 +435,6 @@ msgid "Printed Message"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Responsible of credit collection"
-msgstr ""
-
-#. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
@@ -507,11 +478,6 @@ msgid "Optionally you can assign a user to this field, which will make him respo
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr ""
-
-#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
 msgstr ""
@@ -544,11 +510,6 @@ msgstr ""
 
 #. module: account_followup
 #: view:res.partner:0
-msgid "He said the problem was temporary and promised to pay 50% before 15th of May, balance before 1st of July."
-msgstr ""
-
-#. module: account_followup
-#: view:res.partner:0
 msgid "Account Move line"
 msgstr ""
 
@@ -564,8 +525,8 @@ msgid "or"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
+#: view:res.partner:0
+msgid "If not specified by the latest follow-up level, it will send from the default email template"
 msgstr ""
 
 #. module: account_followup
@@ -581,11 +542,6 @@ msgstr ""
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr ""
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
 msgstr ""
 
 #. module: account_followup
@@ -609,7 +565,6 @@ msgid "Follow-up Sending Date"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
 msgstr ""
@@ -694,15 +649,9 @@ msgid "unknown"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:314
+#: code:addons/account_followup/account_followup.py:283
 #, python-format
 msgid "Printed overdue payments report"
-msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:291
-#, python-format
-msgid "You became responsible to do the next action for the payment follow-up of"
 msgstr ""
 
 #. module: account_followup
@@ -724,14 +673,13 @@ msgid " email(s) should have been sent, but "
 msgstr ""
 
 #. module: account_followup
-#: model:ir.model,name:account_followup.model_account_move_line
-msgid "Journal Items"
+#: help:account_followup.print,test_print:0
+msgid "Check if you want to print follow-ups without changing follow-ups level."
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:281
-#, python-format
-msgid "Amount due"
+#: model:ir.model,name:account_followup.model_account_move_line
+msgid "Journal Items"
 msgstr ""
 
 #. module: account_followup
@@ -763,12 +711,6 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:264
-#, python-format
-msgid "Lit."
 msgstr ""
 
 #. module: account_followup
@@ -900,8 +842,8 @@ msgid " had unknown email address(es)"
 msgstr ""
 
 #. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid "Check if you want to print follow-ups without changing follow-up level."
+#: view:res.partner:0
+msgid "Responsible"
 msgstr ""
 
 #. module: account_followup
@@ -934,8 +876,6 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
-#: code:addons/account_followup/account_followup.py:260
-#, python-format
 msgid "Description"
 msgstr ""
 
@@ -965,18 +905,16 @@ msgid "Latest Follow-up Level without litigation"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
+#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
+msgid "<p>\n"
+"                    No journal items found.\n"
+"                </p>\n"
+"            "
 msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr ""
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "e.g. Call the customer, check if it's paid, ..."
 msgstr ""
 
 #. module: account_followup
@@ -1049,9 +987,8 @@ msgid " letter(s) in report"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
-#: model:ir.ui.menu,name:account_followup.menu_sale_followup
-msgid "My Follow-Ups"
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
 msgstr ""
 
 #. module: account_followup
@@ -1090,12 +1027,6 @@ msgstr ""
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#, python-format
-msgid "The partner does not have any accounting entries to print in the overdue report for the current company."
 msgstr ""
 
 #. module: account_followup
@@ -1144,14 +1075,8 @@ msgid "Accounting"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "If not specified by the latest follow-up level, it will send from the default email template"
-msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:319
-#, python-format
-msgid "There is no followup plan defined for the current company."
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
 msgstr ""
 
 #. module: account_followup

@@ -1,101 +1,194 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+	<data>
 
-       <record id="stock_location_path_tree" model="ir.ui.view">
-            <field name="name">stock.location.path.tree</field>
-            <field name="model">stock.location.path</field>
+
+        <record id="view_location_form_inherit" model="ir.ui.view">
+            <field name="name">stock.location.form</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
             <field name="arch" type="xml">
-                <tree string="Location Paths">
-                    <field name="location_from_id"/>
-                    <field name="location_dest_id"/>
-                    <field name="name"/>
-                </tree>
+                <separator string="Additional Information" position="before">
+                        <separator string="Removal Strategies"/>
+                        <div class="oe_inline">
+                        <p class="oe_grey">
+                            Removal strategies define the method used for suggesting the 
+                            location to take the products from
+                        </p>
+                        <field name="removal_strategy_ids" class ="oe_inline">
+                            <tree editable="bottom" string="removal">
+                                <field name="product_categ_id"/>
+                                <field name="method"/>
+                            </tree>
+                        </field>
+
+                        </div>
+                        <newline/>
+                        <separator string="Putaway Strategies"/>
+                        <newline/>
+                        <div class="oe_inline">
+                        <p class="oe_grey">
+                            Putaway strategies define the method used for suggesting the 
+                            location to put the products
+                        </p>
+                        <field name="putaway_strategy_ids" class="oe_inline">
+                            <tree string="Put Away" editable="bottom">
+                                <field name="product_categ_id"/>
+                                <field name="method"/>
+                                <field name="location_spec_id"/>
+                            </tree>
+                        </field>
+                        </div>
+                </separator>
             </field>
         </record>
 
-       <record id="stock_location_path_form" model="ir.ui.view">
-            <field name="name">stock.location.path.form</field>
-            <field name="model">stock.location.path</field>
+        <record id="view_putaway" model="ir.ui.view">
+            <field name="name">product.putaway.form</field>
+            <field name="model">product.putaway</field>
             <field name="arch" type="xml">
-                <form string="Location Paths" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <newline/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <newline/>
-                        <field name="location_from_id"/>
-                        <field name="location_dest_id"/>
-                        <field name="auto"/>
-                        <field name="delay"/>
-                    </group>
-                </form>
+                <form string="Putaway">
+                   <field name="product_categ_id"/>
+                   <field name="location_id"/>
+                   <field name="method"/>
+                   <field name="location_spec_id"/>
+               </form>
             </field>
         </record>
 
-       <record id="product_normal_form_inherit_location" model="ir.ui.view">
-            <field name="name">product.product.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <record id="view_removal" model="ir.ui.view">
+            <field name="name">product.removal.form</field>
+            <field name="model">product.removal</field>
             <field name="arch" type="xml">
-                <group name="inventory" position="after">
-                    <group string="Pull Flow">
-                        <field name="flow_pull_ids" colspan="4" nolabel="1">
-                            <tree string="Pulled flows">
-                                <field name="name"/>
-                                <field name="location_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
-                                <field name="type_proc"/>
-                                <field name="journal_id"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </tree>
-                            <form string="Pulled Paths">
-                                <group>
-                                    <group string="Conditions">
-                                        <field name="name" placeholder="Fulfill needs on location X from location Y "/>
-                                        <field name="location_id"/>
-                                    </group>
-                                    <group string="Action Type">
-                                        <field name="type_proc"/>
-                                        <field name="company_id"/>
-                                    </group>
-                                </group>
-                                <group attrs="{'invisible':[('type_proc','!=','move')]}">
-                                    <field name="location_src_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
-                                    <field name="picking_type"/>
-                                    <field name="partner_address_id"/>
-                                    <field name="procure_method"/>
-                                    <field name="cancel_cascade"/>
-                                    <field name="invoice_state"/>
-                                    <field name="journal_id"/>
-                                </group>
-                            </form>
-                        </field>
-                    </group>
-                    <group string="Push Flow">
-                        <field name="path_ids" nolabel="1">
-                            <tree string="Pushed flows">
-                                <field name="location_from_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="auto"/>
-                                <field name="name"/>
-                                <field name="invoice_state"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </tree>
-                            <form string="Pushed flows">
-                                <field name="name" placeholder="When receiving at location X, move to location Y"/>
-                                <field name="location_from_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="auto"/>
-                                <field name="delay"/>
-                                <field name="journal_id"/>
-                                <field name="picking_type"/>
-                                <field name="invoice_state"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </form>
-                        </field>
-                    </group>
-                </group>
+                <form string="Removal">
+                   <field name="product_categ_id"/>
+                   <field name="location_id"/>
+                   <field name="method"/>
+               </form>
             </field>
-       </record>
-    </data>
+        </record>
+
+
+		<record id="stock_location_path_tree" model="ir.ui.view">
+			<field name="name">stock.location.path.tree</field>
+			<field name="model">stock.location.path</field>
+			<field name="arch" type="xml">
+				<tree string="Location Paths">
+					<field name="location_from_id" />
+					<field name="location_dest_id" />
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="stock_location_path_form" model="ir.ui.view">
+			<field name="name">stock.location.path.form</field>
+			<field name="model">stock.location.path</field>
+			<field name="arch" type="xml">
+				<form string="Location Paths" version="7.0">
+					<group col="4">
+						<field name="name" />
+						<newline />
+						<field name="company_id" groups="base.group_multi_company" />
+						<newline />
+						<field name="location_from_id" />
+						<field name="location_dest_id" />
+						<field name="auto" />
+						<field name="delay" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="product_normal_form_inherit_location" model="ir.ui.view">
+			<field name="name">product.product.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view" />
+			<field name="arch" type="xml">
+				<group name="inventory" position="after">
+					<group string="Routes">
+						<field name="route_ids" colspan="4" nolabel="1" />
+					</group>
+				</group>
+			</field>
+		</record>
+
+
+
+		<record id="product_category_form_view_inherit" model="ir.ui.view">
+			<field name="name">product.category.form</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="product.product_category_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//sheet" position="inside">
+					<group string="Strategy" colspan="4">
+						<field name="route_ids" colspan="4" nolabel="1" />
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+        <record id="view_warehouse_inherit" model="ir.ui.view">
+            <field name="name">stock.warehouse</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="route_id"/>
+                </xpath>
+            </field>
+        </record>
+
+		<record id="stock_location_route_tree" model="ir.ui.view">
+			<field name="name">stock.location.route.tree</field>
+			<field name="model">stock.location.route</field>
+			<field name="arch" type="xml">
+				<tree string="Routes">
+                    <field name="sequence" widget="handle" />
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="stock_location_route_form_view" model="ir.ui.view">
+			<field name="name">stock.location.route.form</field>
+			<field name="model">stock.location.route</field>
+			<field eval="7" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Route">
+					<field name="name" />
+					<field name="sequence" groups="base.group_no_one"/>
+					<group string="Push Rules" colspan="4" >
+						<field name="push_ids" colspan="4" nolabel="1"/>
+                    </group>
+                    <group string="Pull Rules" colspan="4" >
+						<field name="pull_ids" colspan="4" nolabel="1"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_routes_form" model="ir.actions.act_window">
+			<field name="name">Logistic Routes</field>
+			<field name="res_model">stock.location.route</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="stock_location_route_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to add a logistic route.
+              </p>
+				<p>You can define here the main logistic routes that run through
+					your warehouses and that define the flows of your products. These
+					routes can be assigned to a product, a product category or on a
+					location.</p>
+			</field>
+		</record>
+		
+		
+		
+		<menuitem action="action_routes_form" id="menu_stock_routes"
+			parent="stock.menu_stock_configuration" sequence="11" />
+	</data>
 </openerp>

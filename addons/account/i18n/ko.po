@@ -1,21 +1,21 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-05-14 01:08+0000\n"
-"Last-Translator: AhnJD <zion64@msn.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-05-10 17:23+0000\n"
+"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-15 06:07+0000\n"
-"X-Generator: Launchpad (build 16617)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:15+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -92,7 +92,7 @@ msgstr "총 차변"
 msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
-msgstr "순환구조를 가진 계정과목은 생성할 수 없습니다."
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -379,11 +379,6 @@ msgstr "account.bank.accounts.wizard"
 #: field:account.move.reconcile,create_date:0
 msgid "Creation date"
 msgstr "생성일"
-
-#. module: account
-#: view:account.invoice:0
-msgid "Cancel Invoice"
-msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -783,11 +778,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-msgid "Account code"
-msgstr ""
-
-#. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
 msgstr ""
@@ -1169,8 +1159,9 @@ msgid "Refund "
 msgstr ""
 
 #. module: account
-#: help:account.config.settings,company_footer:0
-msgid "Bank accounts as printed in the footer of each printed document"
+#: code:addons/account/account_analytic_line.py:90
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: account
@@ -1299,7 +1290,7 @@ msgstr "세금 코드"
 #. module: account
 #: field:account.account,currency_mode:0
 msgid "Outgoing Currencies Rate"
-msgstr "외화매각 환율"
+msgstr ""
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1496,13 +1487,6 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
-
-#. module: account
-#: view:account.open.closed.fiscalyear:0
-#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
-#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
-msgid "Cancel Closing Entries"
 msgstr ""
 
 #. module: account
@@ -1861,6 +1845,11 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "Pending Accounts"
 msgstr "미결 계정"
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+msgid "Cancel Fiscal Year Opening Entries"
+msgstr ""
 
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
@@ -2425,7 +2414,7 @@ msgstr "설명"
 #: field:account.tax,price_include:0
 #: field:account.tax.template,price_include:0
 msgid "Tax Included in Price"
-msgstr "세금포함된 가격"
+msgstr ""
 
 #. module: account
 #: view:account.subscription:0
@@ -2714,8 +2703,23 @@ msgid "Bank Details"
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Cancel CashBox"
+#: model:ir.actions.act_window,help:account.action_move_journal_line
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a journal entry.\n"
+"              </p><p>\n"
+"                A journal entry consists of several journal items, each of\n"
+"                which is either a debit or a credit transaction.\n"
+"              </p><p>\n"
+"                OpenERP automatically creates one journal entry per "
+"accounting\n"
+"                document: invoice, refund, supplier payment, bank "
+"statements,\n"
+"                etc. So, you should record journal entries manually "
+"only/mainly\n"
+"                for miscellaneous operations.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: account
@@ -4433,19 +4437,8 @@ msgid "Account Type"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_bank_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to setup a new bank account. \n"
-"          </p><p>\n"
-"            Configure your company's bank account and select those that "
-"must\n"
-"            appear on the report footer.\n"
-"          </p><p>\n"
-"            If you use the accounting application of OpenERP, journals and\n"
-"            accounts will be created automatically based on these data.\n"
-"          </p>\n"
-"        "
+#: view:account.bank.statement:0
+msgid "Close CashBox"
 msgstr ""
 
 #. module: account
@@ -4467,8 +4460,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Close CashBox"
+#: model:ir.actions.act_window,help:account.action_bank_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to setup a new bank account. \n"
+"          </p><p>\n"
+"            Configure your company's bank account and select those that "
+"must\n"
+"            appear on the report footer.\n"
+"          </p><p>\n"
+"            If you use the accounting application of OpenERP, journals and\n"
+"            accounts will be created automatically based on these data.\n"
+"          </p>\n"
+"        "
 msgstr ""
 
 #. module: account
@@ -4643,12 +4647,6 @@ msgstr ""
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
-msgstr ""
-
-#. module: account
-#: view:account.move:0
-#: view:account.move.line:0
-msgid "Add an internal note..."
 msgstr ""
 
 #. module: account
@@ -4839,11 +4837,6 @@ msgid "It acts as a default account for credit amount"
 msgstr ""
 
 #. module: account
-#: view:account.move.line:0
-msgid "Number (Move)"
-msgstr ""
-
-#. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
 msgstr ""
@@ -4853,12 +4846,6 @@ msgstr ""
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account.py:1858
-#, python-format
-msgid " (Copy)"
 msgstr ""
 
 #. module: account
@@ -4927,11 +4914,6 @@ msgstr ""
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
-
-#. module: account
-#: view:account.move:0
-msgid "Cancel Entry"
 msgstr ""
 
 #. module: account
@@ -5123,11 +5105,6 @@ msgid "Compute"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0
-msgid "Additional notes..."
-msgstr ""
-
-#. module: account
 #: field:account.tax,type_tax_use:0
 msgid "Tax Application"
 msgstr ""
@@ -5181,8 +5158,9 @@ msgid "Balance by Type of Account"
 msgstr "계정 타입 별 밸런스"
 
 #. module: account
-#: view:account.fiscalyear.close:0
-msgid "Generate Fiscal Year Opening Entries"
+#: code:addons/account/account_cash_statement.py:301
+#, python-format
+msgid "There is no %s Account on the journal %s."
 msgstr ""
 
 #. module: account
@@ -5226,11 +5204,6 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Cancel Statement"
 msgstr ""
 
 #. module: account
@@ -5824,23 +5797,8 @@ msgid "Quantity"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_move_journal_line
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a journal entry.\n"
-"              </p><p>\n"
-"                A journal entry consists of several journal items, each of\n"
-"                which is either a debit or a credit transaction.\n"
-"              </p><p>\n"
-"                OpenERP automatically creates one journal entry per "
-"accounting\n"
-"                document: invoice, refund, supplier payment, bank "
-"statements,\n"
-"                etc. So, you should record journal entries manually "
-"only/mainly\n"
-"                for miscellaneous operations.\n"
-"              </p>\n"
-"            "
+#: view:account.move.line:0
+msgid "Number (Move)"
 msgstr ""
 
 #. module: account
@@ -5858,15 +5816,6 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account_invoice.py:451
-#, python-format
-msgid ""
-"You cannot delete an invoice after it has been validated (and received a "
-"number).  You can set it back to \"Draft\" state and modify its content, "
-"then re-confirm it."
 msgstr ""
 
 #. module: account
@@ -6548,6 +6497,11 @@ msgid "Custom"
 msgstr ""
 
 #. module: account
+#: view:account.analytic.account:0
+msgid "Current"
+msgstr ""
+
+#. module: account
 #: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr ""
@@ -6593,11 +6547,6 @@ msgstr ""
 #: code:addons/account/account.py:3427
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
-
-#. module: account
-#: view:account.invoice:0
-msgid "force period"
 msgstr ""
 
 #. module: account
@@ -6982,11 +6931,6 @@ msgid "Create entry"
 msgstr ""
 
 #. module: account
-#: view:account.open.closed.fiscalyear:0
-msgid "Cancel Fiscal Year Closing Entries"
-msgstr ""
-
-#. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:189
 #, python-format
@@ -7274,11 +7218,6 @@ msgid "Taxes used in Sales"
 msgstr ""
 
 #. module: account
-#: view:account.period:0
-msgid "Re-Open Period"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
@@ -7335,14 +7274,8 @@ msgid "Source Document"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:90
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
-
-#. module: account
-#: view:account.account.template:0
-msgid "Internal notes..."
+#: help:account.config.settings,company_footer:0
+msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
 
 #. module: account
@@ -7366,6 +7299,14 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Taxes:"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_invoice.py:458
+#, python-format
+msgid ""
+"You can not delete an invoice which is not cancelled. You should refund it "
+"instead."
 msgstr ""
 
 #. module: account
@@ -8049,14 +7990,6 @@ msgid "Reconciliation Transactions"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:449
-#, python-format
-msgid ""
-"You cannot delete an invoice which is not draft or cancelled. You should "
-"refund it instead."
-msgstr ""
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
 msgstr ""
@@ -8730,11 +8663,6 @@ msgstr ""
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr ""
-
-#. module: account
-#: view:account.payment.term:0
-msgid "Payment term explanation for the customer..."
 msgstr ""
 
 #. module: account
@@ -9422,11 +9350,6 @@ msgid "Payable"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-msgid "Account name"
-msgstr ""
-
-#. module: account
 #: view:board.board:0
 msgid "Account Board"
 msgstr "계정 위원회"
@@ -9443,9 +9366,8 @@ msgid "Accounting entries are the first input of the reconciliation."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:301
-#, python-format
-msgid "There is no %s Account on the journal %s."
+#: view:account.fiscalyear.close:0
+msgid "Generate Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
@@ -9732,12 +9654,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:783
-#, python-format
-msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr ""
-
-#. module: account
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
@@ -9993,11 +9909,6 @@ msgid "Currency Rate"
 msgstr ""
 
 #. module: account
-#: view:account.config.settings:0
-msgid "e.g. sales@openerp.com"
-msgstr ""
-
-#. module: account
 #: field:account.account,tax_ids:0
 #: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
@@ -10150,6 +10061,13 @@ msgstr ""
 #: field:accounting.report,date_to:0
 #: field:accounting.report,date_to_cmp:0
 msgid "End Date"
+msgstr ""
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
+#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
+msgid "Cancel Opening Entries"
 msgstr ""
 
 #. module: account
@@ -10465,6 +10383,12 @@ msgstr "조정된 거래"
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
 msgstr "채권 계정"
+
+#. module: account
+#: code:addons/account/account_move_line.py:783
+#, python-format
+msgid "Already reconciled."
+msgstr ""
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -10899,3 +10823,246 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "액션 정의에서 유효하지 않은 모델 이름"
+
+#~ msgid "Origin"
+#~ msgstr "원천"
+
+#, python-format
+#~ msgid "No Period found on Invoice!"
+#~ msgstr "인보이스에 기간이 없습니다."
+
+#~ msgid ""
+#~ "This account will be used to value incoming stock for the current product "
+#~ "category"
+#~ msgstr "이 계정은 현재 상품 카테고리의 입고품 평가에 이용됩니다"
+
+#~ msgid "All periods if empty"
+#~ msgstr "비워두면 모든 기간이 적용됩니다."
+
+#, python-format
+#~ msgid ""
+#~ "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+#~ "defined !"
+#~ msgstr "공급자의 결제 조건에 정의된 결제 조건 라인 (결제)이 없습니다 !"
+
+#~ msgid "Bank Information"
+#~ msgstr "은행 정보"
+
+#~ msgid "Compute Taxes"
+#~ msgstr "세금 계산"
+
+#~ msgid "Columns"
+#~ msgstr "열"
+
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "데이터 부족!"
+
+#~ msgid "Accounting Properties"
+#~ msgstr "회계 속성"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "통합성 오류!"
+
+#~ msgid "Unpaid Supplier Invoices"
+#~ msgstr "미결제 공급자 인보이스"
+
+#, python-format
+#~ msgid "No journal for ending writing has been defined for the fiscal year"
+#~ msgstr "당기에 정의된 마감 저널이 없음"
+
+#~ msgid "Entries Encoding"
+#~ msgstr "엔트리 인코딩"
+
+#~ msgid "Confirm statement from draft"
+#~ msgstr "초안을 확정함"
+
+#, python-format
+#~ msgid ""
+#~ "Specified Journal does not have any account move entries in draft state for "
+#~ "this period"
+#~ msgstr "이 기간에는 지정된 저널의 초안 상태 계정 이동 엔트리가 없습니다"
+
+#~ msgid "Select Message"
+#~ msgstr "메시지를 선택하세요"
+
+#~ msgid "Reconciliation result"
+#~ msgstr "재조정 결과"
+
+#~ msgid "Print Taxes Report"
+#~ msgstr "세금 리포트 출력"
+
+#, python-format
+#~ msgid "Account move line \"%s\" is not valid"
+#~ msgstr "계정이동 라인 \"%s\"은 유효하지 않습니다"
+
+#~ msgid "Income Accounts"
+#~ msgstr "소득 계정"
+
+#~ msgid "Account balance"
+#~ msgstr "계정 밸런스"
+
+#~ msgid "Accounts by type"
+#~ msgstr "타입 별 계정"
+
+#~ msgid "Account currency"
+#~ msgstr "계정 통화"
+
+#~ msgid "last month"
+#~ msgstr "전월"
+
+#~ msgid "Error ! The duration of the Period(s) is/are invalid. "
+#~ msgstr "오류 ! 주기의 기간이 유효하지 않습니다. "
+
+#~ msgid "Children Definition"
+#~ msgstr "하위 정의"
+
+#~ msgid "Other Configuration"
+#~ msgstr "기타 구성"
+
+#~ msgid "Choose Fiscal Year "
+#~ msgstr "회계년도 선택 "
+
+#~ msgid "All Analytic Entries"
+#~ msgstr "모든 분석 기입"
+
+#~ msgid "account.tax"
+#~ msgstr "account.tax"
+
+#, python-format
+#~ msgid "Journal: %s"
+#~ msgstr "장부: %s"
+
+#, python-format
+#~ msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
+#~ msgstr "Invoice '%s' 송장은 일부 결제되었습니다: %s%s 의 %s%s (%s%s 잔액)"
+
+#~ msgid "Close Fiscalyear"
+#~ msgstr "회계년도 마감"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "마감된 장부에 기입을 추가/수정할 수 없습니다."
+
+#, python-format
+#~ msgid "Invoice line account company does not match with invoice company."
+#~ msgstr "송장 입력줄 계정 업체가 송장 업체와 일치하지 않습니다."
+
+#~ msgid "Field Name"
+#~ msgstr "필드명"
+
+#~ msgid "Configure"
+#~ msgstr "구성"
+
+#~ msgid "account.tax.template"
+#~ msgstr "account.tax.template"
+
+#~ msgid "Open For Unreconciliation"
+#~ msgstr "조정 취소를 위해 개시"
+
+#~ msgid "Fiscal Year to Open"
+#~ msgstr "개시할 회계년도"
+
+#~ msgid "Aged Trial Balance"
+#~ msgstr "오래된 시산표"
+
+#~ msgid ""
+#~ "Check this box if you don't want any VAT related to this Tax Code to appear "
+#~ "on invoices"
+#~ msgstr "해당 세금 코드에 관련된 VAT가 송장 상에 나타나지 않도록 하려면 이 상자를 체크하세요"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "회사명은 유일해야 합니다 !"
+
+#~ msgid "   30 Days   "
+#~ msgstr "   30일   "
+
+#~ msgid "Invoice Address Name"
+#~ msgstr "송장 주소명"
+
+#~ msgid "Sale journal in this year"
+#~ msgstr "올해 판매 장부"
+
+#, python-format
+#~ msgid "You can only change currency for Draft Invoice !"
+#~ msgstr "송장 초안의 통화만 변경할 수 있습니다 !"
+
+#~ msgid "Avg. Delay To Pay"
+#~ msgstr "Avg. Delay To Pay"
+
+#~ msgid "Cancel: refund invoice and reconcile"
+#~ msgstr "취소: 송장 환불 및 조정"
+
+#~ msgid "Reserve and Profit/Loss Account"
+#~ msgstr "보유 및 손익 계정"
+
+#~ msgid "Manager"
+#~ msgstr "관리자"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "All Months Sales by type"
+#~ msgstr "유형별 모든 달 판매"
+
+#, python-format
+#~ msgid "You can not modify/delete a journal with entries for this period !"
+#~ msgstr "이 기간 내 기입된 장부를 수정/삭제할 수 없습니다 !"
+
+#~ msgid "Go to next partner"
+#~ msgstr "다음 협력업체로 가기"
+
+#~ msgid "and Journals"
+#~ msgstr "및 장부"
+
+#~ msgid "."
+#~ msgstr "."
+
+#~ msgid "Separated Journal Sequences"
+#~ msgstr "분리된 장부 순서"
+
+#~ msgid "Supplier Debit"
+#~ msgstr "공급업체 차변"
+
+#~ msgid "Tax Declaration: Credit Notes"
+#~ msgstr "세금 신고: 외상 전표"
+
+#~ msgid "Configure Fiscal Year"
+#~ msgstr "회계 연도 구성"
+
+#, python-format
+#~ msgid "User %s does not have rights to access %s journal !"
+#~ msgstr "%s 사용자는 %s 장부를 접근할 권한이 없습니다 !"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "오류! 재귀적 업체를 생성할 수 없습니다."
+
+#~ msgid "Sub Total"
+#~ msgstr "소계"
+
+#~ msgid "Tax Declaration: Invoices"
+#~ msgstr "세금 신고: 송장"
+
+#~ msgid "/"
+#~ msgstr "/"
+
+#~ msgid "Image"
+#~ msgstr "이미지"
+
+#~ msgid "Validations"
+#~ msgstr "검증"
+
+#~ msgid "VAT Declaration"
+#~ msgstr "VAT 신고"
+
+#~ msgid ""
+#~ "Invalid period ! Some periods overlap or the date period is not in the scope "
+#~ "of the fiscal year. "
+#~ msgstr "유효하지 않은 기간 ! 일부 기간이 중첩되거나, 날짜 기간이 회계 연도 범위를 벗어남. "
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "오류 ! 재귀적 계정을 생성할 수 없습니다."

@@ -38,7 +38,7 @@ class account_fiscalyear_close(osv.osv_memory):
        'report_name': fields.char('Name of new entries',size=64, required=True, help="Give name of the new entries"),
     }
     _defaults = {
-        'report_name': _('End of Fiscal Year Entry'),
+        'report_name': lambda self, cr, uid, context: _('End of Fiscal Year Entry'),
     }
 
     def data_save(self, cr, uid, ids, context=None):
@@ -278,6 +278,5 @@ class account_fiscalyear_close(osv.osv_memory):
 
         return {'type': 'ir.actions.act_window_close'}
 
-account_fiscalyear_close()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

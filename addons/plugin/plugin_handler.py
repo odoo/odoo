@@ -58,7 +58,7 @@ class plugin_handler(osv.osv_memory):
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
-            name = self.pool.get(model).name_get(cr, uid, [res_id])[0][1]
+            name =  self.pool[model].name_get(cr, uid, [res_id])[0][1]
         return (model, res_id, url, name)
 
     def document_type(self, cr, uid, context=None):
@@ -82,7 +82,7 @@ class plugin_handler(osv.osv_memory):
             @return : the result of name_search a list of tuple
             [(id, 'name')]
         """
-        return self.pool.get(model).name_search(cr, uid, name)
+        return self.pool[model].name_search(cr, uid, name)
 
     def push_message(self, cr, uid, model, email, res_id=0):
         """
@@ -92,7 +92,7 @@ class plugin_handler(osv.osv_memory):
             @return Dictionary which contain model , url and resource id.
         """
         mail_message = self.pool.get('mail.message')
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
         message_id = msg.get('message-id')
         mail_ids = mail_message.search(cr, uid, [('message_id', '=', message_id), ('res_id', '=', res_id), ('model', '=', model)])

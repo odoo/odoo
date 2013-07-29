@@ -63,7 +63,7 @@
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">invoice</field>
             <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','account.invoice')]" type="int"/>
+            <field name="subflow_id" search="[('osv','=','account.invoice')]"/>
             <field name="action">action_invoice_create()</field>
         </record>
         <record id="act_invoice_done" model="workflow.activity">
@@ -79,16 +79,17 @@
         <record id="act_picking" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','stock.picking')]"/>
+            <field name="kind">function</field>
             <field name="action">action_picking_create()</field>
         </record>
+        
+        
+        
         <record id="act_picking_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking_done</field>
             <field name="action">picking_done()</field>
             <field name="kind">function</field>
-            <field name="signal_send">subflow.delivery_done</field>
         </record>
         <record id="act_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
@@ -185,11 +186,13 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">purchase_cancel</field>
         </record>
-        <record id="trans_picking_except_picking" model="workflow.transition">
+        <!--<record id="trans_picking_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_except_picking"/>
-            <field name="signal">subflow.cancel</field>
-        </record>
+            <field name="trigger_model">stock.move</field>
+            <field name="trigger_expr_id">move_lines_get()</field>
+            <field name="condition">test_moves_except()</field>
+        </record>-->
         <record id="trans_invoice_except_invoice" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_except_invoice"/>
@@ -198,7 +201,10 @@
         <record id="trans_picking_picking_done" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_picking_done"/>
-            <field name="signal">subflow.done</field>
+            <field name="trigger_model">stock.move</field>
+            <field name="trigger_expr_id">move_lines_get()</field>
+            <field name="condition">test_moves_done()</field>
+            
         </record>
         <record id="trans_invoice_invoice_done" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
@@ -219,7 +225,8 @@
         </record>
 
     <!-- Procurement -->
-        <record id="act_buy" model="workflow.activity">
+    <!-- TODO csn : check if fix is needed since no more workflow in procurement -->
+    <!--    <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
             <field name="name">buy</field>
             <field name="kind">subflow</field>
@@ -244,6 +251,6 @@
             <field name="act_to" ref="procurement.act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
-
+    -->
     </data>
 </openerp>

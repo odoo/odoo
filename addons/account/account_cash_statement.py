@@ -66,7 +66,6 @@ class account_cashbox_line(osv.osv):
         'bank_statement_id' : fields.many2one('account.bank.statement', ondelete='cascade'),
      }
 
-account_cashbox_line()
 
 class account_cash_statement(osv.osv):
 
@@ -253,7 +252,7 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal !') % (statement.journal_id.name, )))
+                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
                 c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
@@ -316,7 +315,6 @@ class account_cash_statement(osv.osv):
 
         return self.write(cr, uid, ids, {'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
 
-account_cash_statement()
 
 class account_journal(osv.osv):
     _inherit = 'account.journal'
@@ -336,7 +334,6 @@ class account_journal(osv.osv):
         'cashbox_line_ids' : _default_cashbox_line_ids,
     }
 
-account_journal()
 
 class account_journal_cashbox_line(osv.osv):
     _name = 'account.journal.cashbox.line'
@@ -348,6 +345,5 @@ class account_journal_cashbox_line(osv.osv):
 
     _order = 'pieces asc'
 
-account_journal_cashbox_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

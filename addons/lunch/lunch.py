@@ -159,7 +159,7 @@ class lunch_order(osv.Model):
             def specific_function(cr, uid, ids, context=None):
                 return self.add_preference(cr, uid, ids, pref_id, context=context)
             return specific_function
-        return super(lunch_order,self).__getattr__(self,attr)
+        return super(lunch_order, self).__getattr__(attr)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         """ 

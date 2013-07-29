@@ -27,8 +27,35 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from openerp.tools import float_compare
 from openerp.tools.translate import _
-from openerp import netsvc
 from openerp import tools
+
+class mrp_property_group(osv.osv):
+    """
+    Group of mrp properties.
+    """
+    _name = 'mrp.property.group'
+    _description = 'Property Group'
+    _columns = {
+        'name': fields.char('Property Group', size=64, required=True),
+        'description': fields.text('Description'),
+    }
+
+class mrp_property(osv.osv):
+    """
+    Properties of mrp.
+    """
+    _name = 'mrp.property'
+    _description = 'Property'
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'composition': fields.selection([('min','min'),('max','max'),('plus','plus')], 'Properties composition', required=True, help="Not used in computations, for information purpose only."),
+        'group_id': fields.many2one('mrp.property.group', 'Property Group', required=True),
+        'description': fields.text('Description'),
+    }
+    _defaults = {
+        'composition': lambda *a: 'min',
+    }
+
 
 #----------------------------------------------------------
 # Work Centers
@@ -71,7 +98,6 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
-mrp_workcenter()
 
 
 class mrp_routing(osv.osv):
@@ -99,7 +125,6 @@ class mrp_routing(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.routing', context=context)
     }
-mrp_routing()
 
 class mrp_routing_workcenter(osv.osv):
     """
@@ -125,7 +150,6 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': lambda *a: 1.0,
         'hour_nbr': lambda *a: 0.0,
     }
-mrp_routing_workcenter()
 
 class mrp_bom(osv.osv):
     """
@@ -416,6 +440,18 @@ class mrp_production(osv.osv):
         dest_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
         return dest_location_id.id
 
+    def _get_progress(self, cr, uid, ids, name, arg, context=None):
+        """ Return product quantity percentage """
+        result = dict.fromkeys(ids, 100)
+        for mrp_production in self.browse(cr, uid, ids, context=context):
+            if mrp_production.product_qty:
+                done = 0.0
+                for move in mrp_production.move_created_ids2:
+                    if not move.scrapped and move.product_id == mrp_production.product_id:
+                        done += move.product_qty
+                result[mrp_production.id] = done / mrp_production.product_qty * 100
+        return result
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
@@ -428,6 +464,8 @@ class mrp_production(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos_qty': fields.float('Product UoS Quantity', readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS', readonly=True, states={'draft': [('readonly', False)]}),
+        'progress': fields.function(_get_progress, type='float',
+            string='Production progress'),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             readonly=True, states={'draft':[('readonly',False)]},
@@ -774,9 +812,8 @@ class mrp_production(osv.osv):
                     new_parent_ids.append(final_product.id)
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
-
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
+        self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
+        self.signal_button_produce_done(cr, uid, [production_id])
         return True
 
     def _costs_generate(self, cr, uid, production):
@@ -840,90 +877,6 @@ class mrp_production(osv.osv):
                     res = False
         return res
 
-    def _get_auto_picking(self, cr, uid, production):
-        return True
-
-    def _make_production_line_procurement(self, cr, uid, production_line, shipment_move_id, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        procurement_order = self.pool.get('procurement.order')
-        production = production_line.production_id
-        location_id = production.location_src_id.id
-        date_planned = production.date_planned
-        procurement_name = (production.origin or '').split(':')[0] + ':' + production.name
-        procurement_id = procurement_order.create(cr, uid, {
-                    'name': procurement_name,
-                    'origin': procurement_name,
-                    'date_planned': date_planned,
-                    'product_id': production_line.product_id.id,
-                    'product_qty': production_line.product_qty,
-                    'product_uom': production_line.product_uom.id,
-                    'product_uos_qty': production_line.product_uos and production_line.product_qty or False,
-                    'product_uos': production_line.product_uos and production_line.product_uos.id or False,
-                    'location_id': location_id,
-                    'procure_method': production_line.product_id.procure_method,
-                    'move_id': shipment_move_id,
-                    'company_id': production.company_id.id,
-                })
-        wf_service.trg_validate(uid, procurement_order._name, procurement_id, 'button_confirm', cr)
-        return procurement_id
-
-    def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
-        stock_move = self.pool.get('stock.move')
-        production = production_line.production_id
-        date_planned = production.date_planned
-        # Internal shipment is created for Stockable and Consumer Products
-        if production_line.product_id.type not in ('product', 'consu'):
-            return False
-        source_location_id = production.location_src_id.id
-        if not destination_location_id:
-            destination_location_id = source_location_id
-        return stock_move.create(cr, uid, {
-                        'name': production.name,
-                        'picking_id': shipment_id,
-                        'product_id': production_line.product_id.id,
-                        'product_qty': production_line.product_qty,
-                        'product_uom': production_line.product_uom.id,
-                        'product_uos_qty': production_line.product_uos and production_line.product_uos_qty or False,
-                        'product_uos': production_line.product_uos and production_line.product_uos.id or False,
-                        'date': date_planned,
-                        'move_dest_id': parent_move_id,
-                        'location_id': source_location_id,
-                        'location_dest_id': destination_location_id,
-                        'state': 'waiting',
-                        'company_id': production.company_id.id,
-                })
-
-    def _make_production_internal_shipment(self, cr, uid, production, context=None):
-        ir_sequence = self.pool.get('ir.sequence')
-        stock_picking = self.pool.get('stock.picking')
-        routing_loc = None
-        pick_type = 'internal'
-        partner_id = False
-
-        # Take routing address as a Shipment Address.
-        # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
-        if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-            routing_loc = production.bom_id.routing_id.location_id
-            if routing_loc.usage != 'internal':
-                pick_type = 'out'
-            partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
-
-        # Take next Sequence number of shipment base on type
-        pick_name = ir_sequence.get(cr, uid, 'stock.picking.' + pick_type)
-
-        picking_id = stock_picking.create(cr, uid, {
-            'name': pick_name,
-            'origin': (production.origin or '').split(':')[0] + ':' + production.name,
-            'type': pick_type,
-            'move_type': 'one',
-            'state': 'auto',
-            'partner_id': partner_id,
-            'auto_picking': self._get_auto_picking(cr, uid, production),
-            'company_id': production.company_id.id,
-        })
-        production.write({'picking_id': picking_id}, context=context)
-        return picking_id
-
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.property_stock_production.id
@@ -934,6 +887,7 @@ class mrp_production(osv.osv):
             'product_id': production.product_id.id,
             'product_qty': production.product_qty,
             'product_uom': production.product_uom.id,
+            'product_uom_qty': production.product_qty, 
             'product_uos_qty': production.product_uos and production.product_uos_qty or False,
             'product_uos': production.product_uos and production.product_uos.id or False,
             'location_id': source_location_id,
@@ -960,6 +914,7 @@ class mrp_production(osv.osv):
             'date': production.date_planned,
             'product_id': production_line.product_id.id,
             'product_qty': production_line.product_qty,
+            'product_uom_qty': production.product_qty, 
             'product_uom': production_line.product_uom.id,
             'product_uos_qty': production_line.product_uos and production_line.product_uos_qty or False,
             'product_uos': production_line.product_uos and production_line.product_uos.id or False,
@@ -968,6 +923,7 @@ class mrp_production(osv.osv):
             'move_dest_id': parent_move_id,
             'state': 'waiting',
             'company_id': production.company_id.id,
+            'procure_method': 'make_to_order',
         })
         production.write({'move_lines': [(4, move_id)]}, context=context)
         return move_id
@@ -976,28 +932,20 @@ class mrp_production(osv.osv):
         """ Confirms production order.
         @return: Newly generated Shipment Id.
         """
-        shipment_id = False
-        wf_service = netsvc.LocalService("workflow")
         uncompute_ids = filter(lambda x:x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
-            shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
 
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
                 source_location_id = production.bom_id.routing_id.location_id.id
-
+            
             for line in production.product_lines:
-                consume_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
-                shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
-                                 destination_location_id=source_location_id, context=context)
-                self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
-
-            wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
+                self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
             production.write({'state':'confirmed'}, context=context)
-        return shipment_id
+        return 0
 
     def force_production(self, cr, uid, ids, *args):
         """ Assigns products.

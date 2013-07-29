@@ -2,21 +2,20 @@
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-28 21:32+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
-"Language-Team: ESKON-INZENERING\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2013-03-01 14:41+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-29 05:07+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
-"Language: mk\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:11+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -64,6 +63,11 @@ msgid "Needs Printing"
 msgstr "Потребно е печатење"
 
 #. module: account_followup
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
+msgstr "⇾ Маркирај како завршено"
+
+#. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
 msgstr "Постапка за преземање"
@@ -101,26 +105,17 @@ msgstr "задоцнети денови, превземи ги следните 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr "Чекори за проследување"
+msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:262
-#, python-format
-msgid "Due Date"
-msgstr "Краен датум"
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "Тело на Емаил"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
 msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#: code:addons/account_followup/account_followup.py:319
-#: code:addons/account_followup/report/account_followup_print.py:86
-#, python-format
-msgid "Error!"
-msgstr "Грешка!"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -135,8 +130,6 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
-"Ова е следна акција која треба да биде превземена. Таа автоматски ќе биде "
-"подесена кога партнерот добива ниво на проследување кое бара рачна акција. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -205,12 +198,6 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:261
-#, python-format
-msgid "Reference"
-msgstr "Референца"
-
-#. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
 msgstr "Салдо > 0"
@@ -256,11 +243,6 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr "Тело на Емаил"
-
-#. module: account_followup
 #: view:account_followup.followup:0
 msgid ""
 "To remind customers of paying their invoices, you can\n"
@@ -288,7 +270,7 @@ msgstr "Партнери"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr "Дозволено е е само едно проследување по компанија"
+msgstr "Дозволеное е само едно проследување по компанија"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -299,7 +281,7 @@ msgstr "Потсетник за фактури"
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr "Кога се процесира, ќе испечати писмо"
+msgstr ""
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
@@ -314,7 +296,7 @@ msgstr "Не е судска постапка"
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send emails and generate letters"
-msgstr "Прати е-пошти и генерирај писма"
+msgstr "Прати пораки и генерирај писма"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
@@ -391,8 +373,6 @@ msgstr "Критериум за проследување"
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
-"Дава секвенциски редослед кога ја прикажува листата на ставки за "
-"проследување."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -417,35 +397,25 @@ msgid "Payment Follow-ups"
 msgstr "Следења на плаќање"
 
 #. module: account_followup
-#: code:addons/account_followup/report/account_followup_print.py:86
-#, python-format
-msgid ""
-"The followup plan defined for the current company does not have any followup "
-"action."
-msgstr ""
-"Планот за проследување дефиниран за тековната компанија нема никаква акција "
-"за проследување."
-
-#. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr "Денови на задоцнување"
+msgstr "денови на задоцнување"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr "Ниво на проследување"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr "Последно проследување"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr "Порамни Фактури & Плаќања"
+msgstr "Порамни Фактири & Плаќања"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
@@ -465,17 +435,17 @@ msgstr "Испрати емаил потврда"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr "Внесови за проследување со период во тековната година"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr "Последно проследување"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr "Испрати е-пошта на јазикот на партнерот"
+msgstr "Испрати емаил на јазикот на партнерот"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:169
@@ -486,17 +456,12 @@ msgstr " испратена е-пошта(и)"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr "Испечати проследување & Испрати маил до купувачите"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
 msgstr "Испечатени пораки"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Responsible of credit collection"
-msgstr "Одговорен за собирање на побарување"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
@@ -523,7 +488,7 @@ msgstr "Испечати задоцнети плаќања"
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "Проследувања"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:219
@@ -536,7 +501,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr "Следење на сметка"
+msgstr ""
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
@@ -546,11 +511,6 @@ msgid ""
 msgstr ""
 "Опционо можете да назначите корисник на ова поле, што ќе го направи "
 "одговорен за оваа акција."
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr "Партнери со задоцнети побарувања"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
@@ -570,7 +530,7 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr " доделени рачни акции:"
+msgstr " доделени рачни постапки:"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -585,27 +545,18 @@ msgstr "Испрати писма и е-пошти"
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr "Барај проследување"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid ""
-"He said the problem was temporary and promised to pay 50% before 15th of "
-"May, balance before 1st of July."
 msgstr ""
-"Рекоа дека проблемот е привремен и ветија дека ќе платат 50% пред 15-ти Мај, "
-"а остатокот до 1-ви Јули."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Account Move line"
-msgstr "Ставка за движење на сметка"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:237
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr "Испрати Писма и Е-пошти: Резиме на акција"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -613,14 +564,16 @@ msgid "or"
 msgstr "или"
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Блокирано"
+#: view:res.partner:0
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr "Деновите на нивоата за проследување мора да бидат различни"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:0
@@ -630,13 +583,7 @@ msgstr "Кликнете за да ја означите акцијата как
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr "Анализи на проследувања"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
 msgstr ""
-"Постапка за преземање на пр., Телефонски повик, проверка дали е платено, ..."
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -765,13 +712,6 @@ msgid "Printed overdue payments report"
 msgstr "Печатен извештај за платени задоцнувања"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:291
-#, python-format
-msgid ""
-"You became responsible to do the next action for the payment follow-up of"
-msgstr ""
-
-#. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
 msgid ""
 "When processing, it will set the manual action to be taken for that "
@@ -794,15 +734,15 @@ msgid " email(s) should have been sent, but "
 msgstr " е-пошта(и) кои треба да бидат испратени, но "
 
 #. module: account_followup
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-ups level."
+msgstr ""
+
+#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
 msgstr "Ставки на дневник"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:281
-#, python-format
-msgid "Amount due"
-msgstr "Износот што го должи"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -834,12 +774,6 @@ msgstr "Побарување"
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
 msgstr "Задоцнет износ"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:264
-#, python-format
-msgid "Lit."
-msgstr ""
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
@@ -982,10 +916,9 @@ msgid " had unknown email address(es)"
 msgstr " има непозната адреса(и) на е-пошта"
 
 #. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-up level."
-msgstr ""
+#: view:res.partner:0
+msgid "Responsible"
+msgstr "Одговорен"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
@@ -1050,19 +983,22 @@ msgid "Latest Follow-up Level without litigation"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr "⇾ Маркирај како завршено"
+#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
+msgid ""
+"<p>\n"
+"                    No journal items found.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"Не се пронајдени ставки на дневникот.\n"
+"</p>\n"
+"            "
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr "Записи на партнер"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr "на пр., ПОбарај го клиентот, провери дали е платено, ..."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1142,10 +1078,9 @@ msgid " letter(s) in report"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
-#: model:ir.ui.menu,name:account_followup.menu_sale_followup
-msgid "My Follow-Ups"
-msgstr ""
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
+msgstr "Партнери со задоцнети побарувања"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1187,14 +1122,6 @@ msgstr ""
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Вкупно побарува"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#, python-format
-msgid ""
-"The partner does not have any accounting entries to print in the overdue "
-"report for the current company."
-msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1245,33 +1172,11 @@ msgid "Accounting"
 msgstr "Сметководство"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:319
-#, python-format
-msgid "There is no followup plan defined for the current company."
-msgstr ""
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Блокирано"
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
 msgstr "Ветување за плаќање на клиент"
-
-#~ msgid "Responsible"
-#~ msgstr "Одговорен"
-
-#~ msgid ""
-#~ "<p>\n"
-#~ "                    No journal items found.\n"
-#~ "                </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p>\n"
-#~ "Не се пронајдени ставки на дневникот.\n"
-#~ "</p>\n"
-#~ "            "

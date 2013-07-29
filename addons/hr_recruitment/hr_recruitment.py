@@ -94,11 +94,11 @@ class hr_applicant(base_stage, osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
         'state': {
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
         },
         'stage_id': {
-            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'cancel'],
+            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.state not in ['done', 'cancel'],
         },
     }
 
@@ -196,7 +196,7 @@ class hr_applicant(base_stage, osv.Model):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                        domain="['&', ('fold', '=', False), '|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="Status", readonly=True,
                 help='The status is set to \'Draft\', when a case is created.\
@@ -355,10 +355,12 @@ class hr_applicant(base_stage, osv.Model):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+        val = msg.get('from').split('<')[0]
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'description': desc,
+            'partner_name':val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -429,12 +431,13 @@ class hr_applicant(base_stage, osv.Model):
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
         for applicant in self.browse(cr, uid, ids, context=context):
-            address_id = False
+            address_id = contact_name = False
             if applicant.partner_id:
                 address_id = self.pool.get('res.partner').address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
-            if applicant.job_id:
+                contact_name = self.pool.get('res.partner').name_get(cr,uid,[applicant.partner_id.id])[0][1]
+            if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
@@ -442,7 +445,7 @@ class hr_applicant(base_stage, osv.Model):
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
             else:
-                raise osv.except_osv(_('Warning!'), _('You must define Applied Job for this applicant.'))
+                raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
@@ -486,6 +489,12 @@ class hr_applicant(base_stage, osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'hr.job'
+        context['empty_list_help_id'] = context.get('default_job_id', None)
+        context['empty_list_help_document_name'] = _("job applicants")
+        return super(hr_applicant, self).get_empty_list_help(cr, uid, help, context=context)
+
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -497,32 +506,18 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }
-    _defaults = {
-        'alias_domain': False, # always hide alias during creation
-    }
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        if context is None:
-            context = {}
-        alias_context = dict(context, alias_model_name='hr.applicant')
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
-            self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=alias_context)
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
+            'hr.applicant', self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
-            vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                          # Using '+' allows using subaddressing for those who don't
-                          # have a catchall domain setup.
-                          {'alias_name': 'jobs+'+vals['name']},
-                          model_name="hr.applicant",
-                          context=context)
-            vals['alias_id'] = alias_id
-        res = super(hr_job, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
-        return res
+        alias_context = dict(context, alias_model_name='hr.applicant', alias_parent_model_name=self._name)
+        job_id = super(hr_job, self).create(cr, uid, vals, context=alias_context)
+        job = self.browse(cr, uid, job_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [job.alias_id.id], {'alias_parent_thread_id': job_id, "alias_defaults": {'job_id': job_id}}, context)
+        return job_id
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the job position.
@@ -540,14 +535,15 @@ class hr_job(osv.osv):
         if record.survey_id:
             datas['ids'] = [record.survey_id.id]
         datas['model'] = 'survey.print'
-        context.update({'response_id': [0], 'response_no': 0,})
+        context.update({'response_id': [0], 'response_no': 0})
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'survey.form',
             'datas': datas,
-            'context' : context,
-            'nodestroy':True,
+            'context': context,
+            'nodestroy': True,
         }
+
 
 class applicant_category(osv.osv):
     """ Category of applicant """

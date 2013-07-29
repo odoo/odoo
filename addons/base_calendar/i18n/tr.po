@@ -1,27 +1,27 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-13 17:45+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2013-02-06 17:09+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:49+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:45+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event starts"
-msgstr "Etkinlik başlar"
+msgstr "Etkinlik Başlar"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -100,6 +100,11 @@ msgstr "Davet Detayları"
 #: selection:crm.meeting,byday:0
 msgid "Fourth"
 msgstr "Dördüncü"
+
+#. module: base_calendar
+#: model:ir.model,name:base_calendar.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: base_calendar
 #: field:calendar.event,day:0
@@ -479,7 +484,7 @@ msgstr "Ayın günü"
 #. module: base_calendar
 #: field:crm.meeting,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: base_calendar
 #: field:calendar.event,location:0
@@ -526,7 +531,7 @@ msgstr "Etkinlik alarm bilgisi"
 #: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Count cannot be negative or 0."
-msgstr "Sayım negatif veya 0 olamaz."
+msgstr "Sayım negatif ya da 0 olamaz."
 
 #. module: base_calendar
 #: field:crm.meeting,create_date:0
@@ -602,7 +607,7 @@ msgstr "Yetkilendirilen"
 #: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr "Aşağıdaki kişilerin eposta adresi yok :"
+msgstr "Aşağıdaki kişilerin eposta adresini Yok :"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -635,11 +640,6 @@ msgstr "Çalışanlara Açık"
 #: view:crm.meeting:0
 msgid "hours"
 msgstr "saat"
-
-#. module: base_calendar
-#: view:calendar.event:0
-msgid "Cancel Event"
-msgstr "Etkinlik İptal et"
 
 #. module: base_calendar
 #: field:calendar.attendee,partner_id:0
@@ -951,7 +951,7 @@ msgstr "Yetkilendiren"
 #. module: base_calendar
 #: field:crm.meeting,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Takipçi"
 
 #. module: base_calendar
 #: field:calendar.attendee,user_id:0
@@ -980,7 +980,7 @@ msgstr "Kasım"
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr "Katılımcının bağlı olduğu grubu belirtir"
+msgstr "Katılanın bağlı olduğu grubu belirt"
 
 #. module: base_calendar
 #: field:calendar.event,mo:0
@@ -1010,7 +1010,7 @@ msgstr "Belirsiz"
 #: constraint:calendar.todo:0
 #: constraint:crm.meeting:0
 msgid "Error ! End date cannot be set before start date."
-msgstr "Hata! Bitiş tarihi başlangıç ​​tarihinden önceye ayarlanamaz."
+msgstr "Hata! Bitiş tarihi başlangıç ​​tarihinden önce ayarlanamaz."
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_occurs:0
@@ -1165,12 +1165,17 @@ msgstr "Yapıldı"
 #: help:calendar.todo,interval:0
 #: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Her (Gün/Hafta/Ay/Yıl) yinele"
+msgstr "Her (Gün/Hafta/Ay/Yıl) Tekrarla"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "All Day?"
 msgstr "Tüm Gün mü?"
+
+#. module: base_calendar
+#: view:calendar.event:0
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_crm_meeting
@@ -1190,7 +1195,7 @@ msgstr ""
 "            Yeni bir toplantı planlamak için tıklayın.\n"
 "          </p><p>\n"
 "            Takvim çalışanlar arasında paylaşılır ve çalışan tatilleri \n"
-"            veya iş fırsatları gibi diğer uygulamalarla \n"
+"            ya da iş fırsatları gibi diğer uygulamalarla \n"
 "            tam entegredir.\n"
 "          </p>\n"
 "        "
@@ -1202,9 +1207,8 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
-"Takvim bileşeninin tanımını                             \"ÖZET\" "
-"özelliğinden elde edilenden                             daha eksiksiz "
-"belirtir."
+"Takvim bileşeninin tanımını \"ÖZET\" özelliğinden eldeedilenden daha tam "
+"olarak belirtir."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1264,7 +1268,7 @@ msgstr "İstisnai Kural"
 msgid ""
 "To specify the language for text values in aproperty or property parameter."
 msgstr ""
-"Bir özellikteki veya özellik değiştirgelerine ait metin değerlerinin dilini "
+"Bir özellikteki ya da özellik parametresine ait metin değerlerinin dilini "
 "belirler."
 
 #. module: base_calendar
@@ -1280,7 +1284,7 @@ msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
 msgstr ""
-"Yineleme kuralı dışında tutulacak bir kural ya da yineleme modeli tanımlar."
+"Yineleme kuralı dışında tutulan bir zaman tekrarlama modelini tanımlar."
 
 #. module: base_calendar
 #: field:calendar.event,month_list:0
@@ -1299,7 +1303,7 @@ msgstr "Gün(ler)"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirmed Events"
-msgstr "Onaylı Etkinlikler"
+msgstr "Onaylanmış Etkinlikler"
 
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
@@ -1437,8 +1441,8 @@ msgid ""
 "Contains the text to be                      used as the message subject for "
 "email                      or contains the text to be used for display"
 msgstr ""
-"Eposta konusu olarak                      kullanılacak metni içerir ya da    "
-"                  görüntülenecek metni içerir."
+"Eposta konusu olarak kullanılacak ya da görüntülenecek metin olarak "
+"kullanılacak metni içerir."
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_mail_message
@@ -1562,7 +1566,7 @@ msgstr "Sıra"
 #: help:calendar.todo,alarm_id:0
 #: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr "Bu sefer etkinlik başlamadan önce alarmı ayarla"
+msgstr "Bu sefer etkinlik başlamadan önce alarm ayarla"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1623,12 +1627,12 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
-"* Alarmın ses çalması için,                     tetiklendiği durumuna "
-"benzeterek, bir ses kaynağını işaret eder.\n"
-"                    * Bir epostaya mesaj eki olarak gönderilmek istenen "
+"* Alarmın ses çalması için tetiklendiği durumuna benzeterek, Bir ses "
+"kaynağını işaret eder.\n"
+"                    * Bir epostaya mesal eki olarak gönderilmek istenen "
 "dosya,\n"
-"                    * Alarm işlem için tetiklendiğinde işlem kaynağını       "
-"               işaret eder."
+"                    * Alarm işlem için tetiklendiğinde işlem kaynağını "
+"işaret eder."
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -1637,8 +1641,312 @@ msgstr ""
 msgid "Fifth"
 msgstr "Beşinci"
 
-#~ msgid "Users"
-#~ msgstr "Kullanıcılar"
+#~ msgid "Title"
+#~ msgstr "Unvan"
 
-#~ msgid "Cancel"
-#~ msgstr "İptal"
+#~ msgid "Invited User"
+#~ msgstr "Davetli Kullanıcı"
+
+#~ msgid " "
+#~ msgstr " "
+
+#~ msgid "Hourly"
+#~ msgstr "Saatlik"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Seçilen firma bu kullanıcı için izin verilen şirketler arasında yok"
+
+#~ msgid "Monthly"
+#~ msgstr "Aylık"
+
+#~ msgid "Required to Join"
+#~ msgstr "Katılım Gerekir"
+
+#~ msgid "Invitation"
+#~ msgstr "Davet"
+
+#~ msgid "Show as"
+#~ msgstr "Göster"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Uyarı !"
+
+#~ msgid "Yearly"
+#~ msgstr "Yıllık"
+
+#~ msgid "Show time as"
+#~ msgstr "Saati şöyle göster"
+
+#~ msgid "Edit all Occurrences"
+#~ msgstr "Bütün olayları düzenle"
+
+#~ msgid "Secondly"
+#~ msgstr "İkinci olarak"
+
+#~ msgid "Invitation type"
+#~ msgstr "Davet türü"
+
+#~ msgid ""
+#~ "Full featured calendar system that supports:\n"
+#~ "    - Calendar of events\n"
+#~ "    - Alerts (create requests)\n"
+#~ "    - Recurring events\n"
+#~ "    - Invitations to people"
+#~ msgstr ""
+#~ "Çok özellikli takvim sistemi şunları destekler:\n"
+#~ "    - Takvim etkinlikleri\n"
+#~ "    - Uyarılar (istekler oluşturun)\n"
+#~ "    - Yinelenen etkinlikler\n"
+#~ "    - Kişilerin davet edilmesi"
+
+#~ msgid "Deadline"
+#~ msgstr "Bitiş tarihi"
+
+#~ msgid "Basic Calendar Functionality"
+#~ msgstr "Temel Takvim İşlevselliği"
+
+#~ msgid "Provide external email address who will receive this invitation."
+#~ msgstr "Bu daveti alacak olanın dış eposta adresini verin."
+
+#~ msgid "Years"
+#~ msgstr "Yıl"
+
+#~ msgid "Edit all Occurrences  of recurrent Meeting."
+#~ msgstr "Yinelenen Toplantıya ait bütün Olayları Düzenle."
+
+#~ msgid "Edit all events"
+#~ msgstr "Bütün etkinlikleri düzenle"
+
+#~ msgid "Send mail?"
+#~ msgstr "Posta gönderilsin mi?"
+
+#~ msgid "Event Detail"
+#~ msgstr "Etkinlik Ayrıntısı"
+
+#~ msgid "Partner related to contact"
+#~ msgstr "İlgiliye ait paydaş"
+
+#~ msgid "Confidential"
+#~ msgstr "Gizli"
+
+#~ msgid "Select range to Exclude"
+#~ msgstr "Hariç tutulacak alanı seç"
+
+#~ msgid ""
+#~ "Create specific calendar alarms that may be assigned to calendar events or "
+#~ "meetings."
+#~ msgstr ""
+#~ "Takvim etkinliklerine ve toplantılarına atanabilecek özel takvim alarmları "
+#~ "oluştur."
+
+#~ msgid "Forever"
+#~ msgstr "Sonsuz"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Vazgeç"
+
+#~ msgid "Set Exclude range"
+#~ msgstr "Hariç tutulacak alanı ayarla"
+
+#~ msgid "Required Reply"
+#~ msgstr "Yanıt İsteniyor"
+
+#~ msgid "Partner Contacts"
+#~ msgstr "Paydaş İlgilileri"
+
+#~ msgid "_Ok"
+#~ msgstr "_Tamam"
+
+#~ msgid "Delegate"
+#~ msgstr "Yetkili"
+
+#~ msgid "Mark as"
+#~ msgstr "olarak İşaretle"
+
+#~ msgid "Partner"
+#~ msgstr "Paydaş"
+
+#~ msgid "Daily"
+#~ msgstr "Günlük"
+
+#~ msgid "Check this if you want to send an Email to Invited Person"
+#~ msgstr "Davet edile kişiye Eposta göndermek isterseniz bunu işaretleyin"
+
+#, python-format
+#~ msgid "Can not Duplicate"
+#~ msgstr "Çoğaltılamaz"
+
+#~ msgid "Delegation Info"
+#~ msgstr "Temsilci Bilgisi"
+
+#~ msgid "_Save"
+#~ msgstr "_Sakla"
+
+#~ msgid "My Role"
+#~ msgstr "Rolüm"
+
+#~ msgid "Edit All"
+#~ msgstr "Hepsini Düzenle"
+
+#~ msgid "Contacts"
+#~ msgstr "İlgililer"
+
+#~ msgid "Weeks"
+#~ msgstr "Haftalar"
+
+#, python-format
+#~ msgid "Count can not be Negative"
+#~ msgstr "Olumsuz olamayacakları say"
+
+#~ msgid "Set Exrule"
+#~ msgstr "İstisna Kuralını Ayarla"
+
+#~ msgid "End of recurrency"
+#~ msgstr "Yineleme sonu"
+
+#~ msgid "Invitation From"
+#~ msgstr "Davet Eden"
+
+#~ msgid "Invite Attendees"
+#~ msgstr "Katılımcıları Davet"
+
+#~ msgid "Data"
+#~ msgstr "Veri"
+
+#~ msgid "Count"
+#~ msgstr "Say"
+
+#~ msgid "No Repeat"
+#~ msgstr "Yineleme Yok"
+
+#, python-format
+#~ msgid "Interval can not be Negative"
+#~ msgstr "Aralık Eksi olamaz"
+
+#~ msgid "Select whom you want to Invite"
+#~ msgstr "Davet edeceğinizi kimseyi seçin"
+
+#~ msgid "Calendar Edit all event"
+#~ msgstr "Bütün etkinlikleri Takvimini Düzenle"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
+
+#~ msgid "Frequency"
+#~ msgstr "Sıklık"
+
+#~ msgid "Weekly"
+#~ msgstr "Haftalık"
+
+#~ msgid "State"
+#~ msgstr "Durum"
+
+#~ msgid "To Review"
+#~ msgstr "İncelenecek"
+
+#~ msgid "of"
+#~ msgstr "ın"
+
+#~ msgid "Repeat every"
+#~ msgstr "Yineler"
+
+#~ msgid "Event Invitations"
+#~ msgstr "Etkinlik Davetleri"
+
+#~ msgid "Fix amout of times"
+#~ msgstr "Süre Miktarını Düzelt"
+
+#~ msgid "Tentative"
+#~ msgstr "Belirsiz"
+
+#~ msgid "Search Invitations"
+#~ msgstr "Davetiye Ara"
+
+#~ msgid "Invite People"
+#~ msgstr "Kişi Davet Et"
+
+#~ msgid "Type"
+#~ msgstr "Tür"
+
+#~ msgid "Minutely"
+#~ msgstr "Dakikalık"
+
+#~ msgid "Objects"
+#~ msgstr "Nesneler"
+
+#, python-format
+#~ msgid "Please Apply Recurrency before applying Exception Rule."
+#~ msgstr "İstisna Kuralını uygulamadan önce lütfen Yineleme Uygulayın."
+
+#~ msgid "Months"
+#~ msgstr "Aylar"
+
+#~ msgid "Invite"
+#~ msgstr "Davet et"
+
+#, python-format
+#~ msgid "Couldn't Invite because date is not specified!"
+#~ msgstr "Davet edilemez, çünkü tarih belirtilmemiş!"
+
+#~ msgid "Invitation To"
+#~ msgstr "Davetiye Gönder"
+
+#~ msgid "Internal User"
+#~ msgstr "İç Kullanıcı"
+
+#~ msgid "Way to end reccurency"
+#~ msgstr "Yineleme sonlandırma yolu"
+
+#~ msgid "res.users"
+#~ msgstr "res.users"
+
+#~ msgid "External Email"
+#~ msgstr "Dış Eposta"
+
+#~ msgid ""
+#~ "Defines a rule or repeating pattern for recurring events\n"
+#~ "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
+#~ "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
+#~ msgstr ""
+#~ "Yinelenen olaylar için tekrarlama modeli kuralı tanımlar\n"
+#~ "Örneğin: İki ayda bir ayın pazar günü için 10 oluşum: "
+#~ "SIKLIK=AYLIK;ARALIK=2;SAYI=10;GÜNLÜK=-1PAZ"
+
+#~ msgid "Invitation Type"
+#~ msgstr "Davetiye Tipi"
+
+#, python-format
+#~ msgid "Group by date not supported, use the calendar view instead"
+#~ msgstr ""
+#~ "Tarihe göre gruplama desteklenmiyor, Bunun yerine takvim görünümü kullanın"
+
+#, python-format
+#~ msgid "%s must have an email  address to send mail"
+#~ msgstr "%s nin e-posta gönderebilmesi için e-posta adresi olmalı"
+
+#, python-format
+#~ msgid "Interval cannot be negative"
+#~ msgstr "Aralık negatif olamaz"
+
+#~ msgid "Accepted Invitations"
+#~ msgstr "Kabul edilmiş davetler"
+
+#, python-format
+#~ msgid "Count cannot be negative"
+#~ msgstr "Sayı negatif olamaz"
+
+#~ msgid "Declined Invitations"
+#~ msgstr "Reddedilmiş Davetler"
+
+#~ msgid "Recurrence termination"
+#~ msgstr "Tekrarları sonlandırma"
+
+#~ msgid "Each model must be unique!"
+#~ msgstr "Her model eşşiz olmalı!"
+
+#~ msgid "Invitations To Review"
+#~ msgstr "İncelenecek Davetler"
+
+#~ msgid "Delegated Invitations"
+#~ msgstr "Yetkilendirilmiş Davetiyeler"

@@ -1,21 +1,21 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2010-10-30 15:09+0000\n"
+"Last-Translator: sunygu <sunygyu@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:25+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,11 +29,6 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Template"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "To Invoice"
 msgstr ""
 
@@ -43,14 +38,16 @@ msgid "Remaining"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "실 마진율 (%)"
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date passed or prepaid unit consumed"
-msgstr ""
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
+msgstr "원가에 따른 송장이라면, 이것은 송장 처리된 마지막 작업이나 원가입니다."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -98,29 +95,14 @@ msgid "Total customer invoiced amount for this account."
 msgstr "이 계정의 총 고객 송장 금액"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
-msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End date is in the next month"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -186,7 +168,7 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Closed contracts"
+msgid "Contracts not assigned"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -215,9 +197,9 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pricelist"
-msgstr ""
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "실 마진율 (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -242,13 +224,6 @@ msgid "Mandatory use of templates in contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr "원가에 따른 송장이라면, 이것은 송장 처리된 마지막 작업이나 원가입니다."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
 msgstr ""
@@ -259,19 +234,9 @@ msgid "Real Margin"
 msgstr "실 마진"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts assigned to a customer."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
 msgstr "월별 시간 요약"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -294,11 +259,6 @@ msgid "Parent"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
@@ -312,12 +272,14 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Start Date"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Expiring soon"
+msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -326,73 +288,15 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"Hello ${object.name},\n"
-"\n"
-"% macro account_table(values):\n"
-"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
-"    <tr>\n"
-"        <th>Customer</th>\n"
-"        <th>Contract</th>\n"
-"        <th>Dates</th>\n"
-"        <th>Prepaid Units</th>\n"
-"        <th>Contact</th>\n"
-"    </tr>\n"
-"    % for partner, accounts in values:\n"
-"        % for account in accounts:\n"
-"        <tr>\n"
-"            <td>${partner.name}</td>\n"
-"            <td><a "
-"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
-"ew_type=form\">${account.name}</a></td>\n"
-"            <td>${account.date_start} to ${account.date and account.date or "
-"'???'}</td>\n"
-"            <td>\n"
-"            % if account.quantity_max != 0.0:\n"
-"                ${account.remaining_hours}/${account.quantity_max} units\n"
-"            % endif\n"
-"            </td>\n"
-"            <td>${account.partner_id.phone or ''}, "
-"${account.partner_id.email or ''}</td>\n"
-"        </tr>\n"
-"        % endfor\n"
-"    % endfor\n"
-"</table>\n"
-"% endmacro \n"
-"\n"
-"% if \"new\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts just expired: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"old\" in ctx[\"data\"]:\n"
-"    <h2>The following expired contracts are still not processed: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"% if \"future\" in ctx[\"data\"]:\n"
-"    <h2>The following contracts will expire in less than one month: </h2>\n"
-"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
-"% endif\n"
-"\n"
-"<p>\n"
-"    You can check all contracts to be renewed using the menu:\n"
-"</p>\n"
-"<ul>\n"
-"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
-"</ul>\n"
-"<p>\n"
-"    Thanks,\n"
-"</p>\n"
-"\n"
-"<pre>\n"
-"-- \n"
-"OpenERP Automatic Email\n"
-"</pre>\n"
-"\n"
-"            "
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -401,15 +305,15 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Closed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -434,9 +338,8 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
+msgid ""
+"A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -462,11 +365,6 @@ msgstr ""
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
 msgstr "사용자"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Cancelled contracts"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -512,11 +410,6 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expired or consumed"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -539,12 +432,12 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
+msgid "Sale Orders"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
+msgid "Open"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -553,19 +446,9 @@ msgid "Total Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "In Progress"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr "다음 공식을 사용하여 계산함: 최고 송장 가격 - 송장 금액"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress (open, draft)"
-msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -672,6 +555,11 @@ msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Done"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -716,3 +604,116 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "Total"
 msgstr ""
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "전체 분석적인  설명"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "현재 설명"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "물건이름은 X_가 같이 사용되어야 하고 특별한 이름을 사용하면 안됩니다."
+
+#~ msgid "Theorical Revenue"
+#~ msgstr "이론적 수입"
+
+#~ msgid "Hours summary by user"
+#~ msgstr "사용자 별 시간 요약"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "새 분석 계정"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "현재 분석 계정"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "이론적 마진"
+
+#~ msgid "My Accounts"
+#~ msgstr "내 계정"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "내 보류 중인 계정들"
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr "분석 계정에 소요된 총 시간 (타임시트로 부터). 모든 '일반' 저널로부터 계산됩니다."
+
+#~ msgid "Remaining Hours"
+#~ msgstr "남은 시간"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "재무 프로젝트 관리"
+
+#~ msgid "Hours Tot"
+#~ msgstr "총 시간"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "보류 중인 분석 계정들"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "분석 계정"
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "시간 당 수입 (실제)"
+
+#~ msgid "Analytic accounts"
+#~ msgstr "분석 계정"
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "이 분석 계정에서 처리한 마지막 송장 일자"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "다음 공식을 사용하여 계산함: 최고 수량 - 총 시간"
+
+#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
+#~ msgstr "다음 공식으로 계산함: 이론적 수입 - 총 원가"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "내 송장 처리하지 않은 목록"
+
+#~ msgid ""
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
+#~ msgstr ""
+#~ "표시를 위해서 계정 분석 보기를 변경하십시오.\n"
+#~ "서비스 회사의 프로젝트 관리자를 위한 중요한 자료\n"
+#~ "각각의 관리자를 위한 연관된 정보를 보기 위해서 메뉴를 추가하십시오."
+
+#~ msgid "report_account_analytic"
+#~ msgstr "report_account_analytic"
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr "분석 계정에 기초하여 송장 발행을 한다면, 송장 발행이 가능한 '일반' 형태 저널의 시간"
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "다음 공식으로 계산함: 송장 금액 / 총 시간"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "액션 정의에서 유효하지 않은 모델 이름"
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "송장처리하지 않은 시간"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "송장처리한 시간"
+
+#~ msgid "All Uninvoiced Entries"
+#~ msgstr "송장 발행 안한 모든 목록"
+
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr "송장 발행을 할 수 있는 시간들은 이전 송장 발행한 시간과 합쳐집니다."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "접근 규칙의 우회를 시도합니다 (문서 형식: %s)"

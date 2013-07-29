@@ -1,21 +1,20 @@
-# Estonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-28 09:09+0000\n"
-"Last-Translator: Illimar Saatväli <is@hot.ee>\n"
-"Language-Team: Estonian <et@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 20:57+0000\n"
+"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-29 06:04+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:13+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -79,7 +78,7 @@ msgstr "Impordi arvetest või maksetest"
 #: code:addons/account/account_move_line.py:1213
 #, python-format
 msgid "Bad Account!"
-msgstr "Vigane konto!"
+msgstr ""
 
 #. module: account
 #: view:account.move:0
@@ -103,7 +102,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "Võrdle"
+msgstr "Võrdlus"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -123,8 +122,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
-"Kui aktiivne ala on väär, siis see võimaldab teil peita maksetähtaega seda "
-"kustutamata."
+"Kui aktiivne ala on väärne ( False ), siis see võimaldab teil peita/varjata "
+"maksetähtaeg seda kustutamata."
 
 #. module: account
 #: code:addons/account/account.py:641
@@ -381,11 +380,6 @@ msgstr ""
 #: field:account.move.reconcile,create_date:0
 msgid "Creation date"
 msgstr "Loomiskuupäev"
-
-#. module: account
-#: view:account.invoice:0
-msgid "Cancel Invoice"
-msgstr "Tühista arve"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -785,11 +779,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-msgid "Account code"
-msgstr ""
-
-#. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
 msgstr ""
@@ -1169,8 +1158,9 @@ msgid "Refund "
 msgstr ""
 
 #. module: account
-#: help:account.config.settings,company_footer:0
-msgid "Bank accounts as printed in the footer of each printed document"
+#: code:addons/account/account_analytic_line.py:90
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: account
@@ -1496,13 +1486,6 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
-
-#. module: account
-#: view:account.open.closed.fiscalyear:0
-#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
-#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
-msgid "Cancel Closing Entries"
 msgstr ""
 
 #. module: account
@@ -1862,6 +1845,11 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending Accounts"
+msgstr ""
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+msgid "Cancel Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
@@ -2716,8 +2704,23 @@ msgid "Bank Details"
 msgstr "Pangadetailid"
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Cancel CashBox"
+#: model:ir.actions.act_window,help:account.action_move_journal_line
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a journal entry.\n"
+"              </p><p>\n"
+"                A journal entry consists of several journal items, each of\n"
+"                which is either a debit or a credit transaction.\n"
+"              </p><p>\n"
+"                OpenERP automatically creates one journal entry per "
+"accounting\n"
+"                document: invoice, refund, supplier payment, bank "
+"statements,\n"
+"                etc. So, you should record journal entries manually "
+"only/mainly\n"
+"                for miscellaneous operations.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: account
@@ -4433,19 +4436,8 @@ msgid "Account Type"
 msgstr "Konto tüüp"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_bank_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to setup a new bank account. \n"
-"          </p><p>\n"
-"            Configure your company's bank account and select those that "
-"must\n"
-"            appear on the report footer.\n"
-"          </p><p>\n"
-"            If you use the accounting application of OpenERP, journals and\n"
-"            accounts will be created automatically based on these data.\n"
-"          </p>\n"
-"        "
+#: view:account.bank.statement:0
+msgid "Close CashBox"
 msgstr ""
 
 #. module: account
@@ -4467,8 +4459,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Close CashBox"
+#: model:ir.actions.act_window,help:account.action_bank_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to setup a new bank account. \n"
+"          </p><p>\n"
+"            Configure your company's bank account and select those that "
+"must\n"
+"            appear on the report footer.\n"
+"          </p><p>\n"
+"            If you use the accounting application of OpenERP, journals and\n"
+"            accounts will be created automatically based on these data.\n"
+"          </p>\n"
+"        "
 msgstr ""
 
 #. module: account
@@ -4643,12 +4646,6 @@ msgstr ""
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
-msgstr ""
-
-#. module: account
-#: view:account.move:0
-#: view:account.move.line:0
-msgid "Add an internal note..."
 msgstr ""
 
 #. module: account
@@ -4839,11 +4836,6 @@ msgid "It acts as a default account for credit amount"
 msgstr ""
 
 #. module: account
-#: view:account.move.line:0
-msgid "Number (Move)"
-msgstr ""
-
-#. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
 msgstr ""
@@ -4854,12 +4846,6 @@ msgstr ""
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
 msgstr "Tühistatud"
-
-#. module: account
-#: code:addons/account/account.py:1858
-#, python-format
-msgid " (Copy)"
-msgstr ""
 
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
@@ -4928,11 +4914,6 @@ msgstr ""
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
 msgstr "Müügi maks"
-
-#. module: account
-#: view:account.move:0
-msgid "Cancel Entry"
-msgstr ""
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -5123,11 +5104,6 @@ msgid "Compute"
 msgstr "Arvuta"
 
 #. module: account
-#: view:account.invoice:0
-msgid "Additional notes..."
-msgstr ""
-
-#. module: account
 #: field:account.tax,type_tax_use:0
 msgid "Tax Application"
 msgstr ""
@@ -5181,9 +5157,10 @@ msgid "Balance by Type of Account"
 msgstr "Bilanss kontotüübi järgi"
 
 #. module: account
-#: view:account.fiscalyear.close:0
-msgid "Generate Fiscal Year Opening Entries"
-msgstr "Genereeri majandusaasta avatud kirjetega"
+#: code:addons/account/account_cash_statement.py:301
+#, python-format
+msgid "There is no %s Account on the journal %s."
+msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -5226,11 +5203,6 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Cancel Statement"
 msgstr ""
 
 #. module: account
@@ -5825,23 +5797,8 @@ msgid "Quantity"
 msgstr "Kogus"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_move_journal_line
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a journal entry.\n"
-"              </p><p>\n"
-"                A journal entry consists of several journal items, each of\n"
-"                which is either a debit or a credit transaction.\n"
-"              </p><p>\n"
-"                OpenERP automatically creates one journal entry per "
-"accounting\n"
-"                document: invoice, refund, supplier payment, bank "
-"statements,\n"
-"                etc. So, you should record journal entries manually "
-"only/mainly\n"
-"                for miscellaneous operations.\n"
-"              </p>\n"
-"            "
+#: view:account.move.line:0
+msgid "Number (Move)"
 msgstr ""
 
 #. module: account
@@ -5859,15 +5816,6 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account_invoice.py:451
-#, python-format
-msgid ""
-"You cannot delete an invoice after it has been validated (and received a "
-"number).  You can set it back to \"Draft\" state and modify its content, "
-"then re-confirm it."
 msgstr ""
 
 #. module: account
@@ -6549,6 +6497,11 @@ msgid "Custom"
 msgstr "Kohandatud"
 
 #. module: account
+#: view:account.analytic.account:0
+msgid "Current"
+msgstr ""
+
+#. module: account
 #: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr ""
@@ -6594,11 +6547,6 @@ msgstr "Aste"
 #: code:addons/account/account.py:3427
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
-
-#. module: account
-#: view:account.invoice:0
-msgid "force period"
 msgstr ""
 
 #. module: account
@@ -6983,11 +6931,6 @@ msgid "Create entry"
 msgstr "Loo lausend"
 
 #. module: account
-#: view:account.open.closed.fiscalyear:0
-msgid "Cancel Fiscal Year Closing Entries"
-msgstr ""
-
-#. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:189
 #, python-format
@@ -7275,11 +7218,6 @@ msgid "Taxes used in Sales"
 msgstr ""
 
 #. module: account
-#: view:account.period:0
-msgid "Re-Open Period"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
@@ -7336,14 +7274,8 @@ msgid "Source Document"
 msgstr "Alusdokument"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:90
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
-
-#. module: account
-#: view:account.account.template:0
-msgid "Internal notes..."
+#: help:account.config.settings,company_footer:0
+msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
 
 #. module: account
@@ -7368,6 +7300,14 @@ msgstr ""
 #: report:account.invoice:0
 msgid "Taxes:"
 msgstr "Maksud:"
+
+#. module: account
+#: code:addons/account/account_invoice.py:458
+#, python-format
+msgid ""
+"You can not delete an invoice which is not cancelled. You should refund it "
+"instead."
+msgstr ""
 
 #. module: account
 #: help:account.tax,amount:0
@@ -8053,14 +7993,6 @@ msgid "Reconciliation Transactions"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:449
-#, python-format
-msgid ""
-"You cannot delete an invoice which is not draft or cancelled. You should "
-"refund it instead."
-msgstr ""
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
 msgstr ""
@@ -8734,11 +8666,6 @@ msgstr "Tarnijad"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr ""
-
-#. module: account
-#: view:account.payment.term:0
-msgid "Payment term explanation for the customer..."
 msgstr ""
 
 #. module: account
@@ -9426,11 +9353,6 @@ msgid "Payable"
 msgstr "Võlad"
 
 #. module: account
-#: view:account.account:0
-msgid "Account name"
-msgstr ""
-
-#. module: account
 #: view:board.board:0
 msgid "Account Board"
 msgstr ""
@@ -9447,10 +9369,9 @@ msgid "Accounting entries are the first input of the reconciliation."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:301
-#, python-format
-msgid "There is no %s Account on the journal %s."
-msgstr ""
+#: view:account.fiscalyear.close:0
+msgid "Generate Fiscal Year Opening Entries"
+msgstr "Genereeri majandusaasta avatud kirjetega"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -9736,12 +9657,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:783
-#, python-format
-msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr ""
-
-#. module: account
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
@@ -9997,11 +9912,6 @@ msgid "Currency Rate"
 msgstr ""
 
 #. module: account
-#: view:account.config.settings:0
-msgid "e.g. sales@openerp.com"
-msgstr ""
-
-#. module: account
 #: field:account.account,tax_ids:0
 #: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
@@ -10155,6 +10065,13 @@ msgstr ""
 #: field:accounting.report,date_to_cmp:0
 msgid "End Date"
 msgstr "Lõppkuupäev"
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
+#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
+msgid "Cancel Opening Entries"
+msgstr ""
 
 #. module: account
 #: field:account.payment.term.line,days2:0
@@ -10469,6 +10386,12 @@ msgstr ""
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
 msgstr "Laekumiskontod"
+
+#. module: account
+#: code:addons/account/account_move_line.py:783
+#, python-format
+msgid "Already reconciled."
+msgstr ""
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -10903,3 +10826,1079 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+
+#, python-format
+#~ msgid "Supplier invoice"
+#~ msgstr "Ostuarve"
+
+#~ msgid "Subscription Periods"
+#~ msgstr "Tellimusperioodid"
+
+#~ msgid "Separated Journal Sequences"
+#~ msgstr "Eraldatud päeviku järjekorrad"
+
+#~ msgid "Generate entries before:"
+#~ msgstr "Genereerida kirjed enne:"
+
+#~ msgid "Fiscal Year to Open"
+#~ msgstr "Finantsaasta avada"
+
+#~ msgid "Third party"
+#~ msgstr "Kolmas pool"
+
+#~ msgid "Analytic Journal Report"
+#~ msgstr "Analüütilise päeviku raport"
+
+#, python-format
+#~ msgid "Your journal must have a default credit and debit account."
+#~ msgstr "Teie päevik peab sisaldama vaikimisi kreedit ja deebet kontosid."
+
+#~ msgid "x Checks Journal"
+#~ msgstr "x Tšekkide päevik"
+
+#~ msgid "Reference Type"
+#~ msgstr "Viite tüüp"
+
+#~ msgid "2"
+#~ msgstr "2"
+
+#, python-format
+#~ msgid "The journal must have default credit and debit account"
+#~ msgstr "Päevik peab sisaldama vaikimisi kreedit ja deebet kontosid"
+
+#~ msgid "Select Period and Journal for Validation"
+#~ msgstr "Valige periood ja päevik valideerimiseks"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Dear Sir/Madam,"
+#~ msgstr "Lugupeetud Härra/Proua,"
+
+#~ msgid "Best regards."
+#~ msgstr "Parimate soovidega."
+
+#~ msgid "1cm 27.7cm 20cm 27.7cm"
+#~ msgstr "1cm 27,7cm 20cm 27,7cm"
+
+#~ msgid "Analytic Journal -"
+#~ msgstr "Analüütiline päevik -"
+
+#~ msgid "Readonly"
+#~ msgstr "Ainult loetav"
+
+#~ msgid "("
+#~ msgstr "("
+
+#~ msgid "8"
+#~ msgstr "8"
+
+#~ msgid "Reconcile Paid"
+#~ msgstr "Kooskõlasta makstud"
+
+#~ msgid "Open for bank reconciliation"
+#~ msgstr "Avatud panga võrdlevaks kooskõlastamiseks"
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a confirmed entry ! Please note that you "
+#~ "can just change some non important fields !"
+#~ msgstr ""
+#~ "Teie ei saa teha see muudatus kinnitatud kirjel ! Teie saate muuta ainult "
+#~ "mõned vähetähtsad väljad !"
+
+#~ msgid "Close states"
+#~ msgstr "Suletud seisud"
+
+#~ msgid "Account to reconcile"
+#~ msgstr "Konto kooskõlastavaks võrdlemiseks"
+
+#~ msgid "Open for reconciliation"
+#~ msgstr "Avatud kooskõlastavaks võrdlemiseks"
+
+#~ msgid "Entries Encoding"
+#~ msgstr "Kirjete kodeering"
+
+#~ msgid "Select Message"
+#~ msgstr "Vali teade"
+
+#~ msgid "Unreconcile entries"
+#~ msgstr "Kooskõlastamatta kirjed"
+
+#~ msgid "Confirm draft invoices"
+#~ msgstr "Kinnita eskiisarved"
+
+#~ msgid "Charts of Account"
+#~ msgstr "Kontoplaanid"
+
+#~ msgid "Move line select"
+#~ msgstr "Liiguta valitud rida"
+
+#~ msgid "Entry label"
+#~ msgstr "Kirje silt"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Raamatupidamiskande rida"
+
+#~ msgid "Aged Trial Balance"
+#~ msgstr "Vana proovibilanss"
+
+#~ msgid "Recurrent Entries"
+#~ msgstr "Perioodilised kirjed"
+
+#~ msgid "Accounting Entries-"
+#~ msgstr "Raamatupidamise kirjed-"
+
+#~ msgid "Description on invoices"
+#~ msgstr "Arvete kirjeldused"
+
+#~ msgid "Total entries"
+#~ msgstr "Kokku kirjeid"
+
+#~ msgid "Negative"
+#~ msgstr "Negatiivne"
+
+#~ msgid "State"
+#~ msgstr "Olek"
+
+#~ msgid "Line"
+#~ msgstr "Rida"
+
+#~ msgid "account.tax"
+#~ msgstr "konto.maks"
+
+#~ msgid "Printing Date"
+#~ msgstr "Printimise kuupäev"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Keep empty if the fiscal year belongs to several companies."
+#~ msgstr "Jäta tühjaks kui majandusaasta kuulub mitmele firmale."
+
+#~ msgid "Field Name"
+#~ msgstr "Välja nimi"
+
+#~ msgid "Partial Payment"
+#~ msgstr "Osaline makse"
+
+#~ msgid "(Keep empty for all open fiscal years)"
+#~ msgstr "(Jäta tühjaks kõigi avatud majandusaastate jaoks)"
+
+#~ msgid "Move Lines"
+#~ msgstr "Liiguta read"
+
+#~ msgid "6"
+#~ msgstr "6"
+
+#~ msgid "Cancel Invoice"
+#~ msgstr "Tühista arve"
+
+#~ msgid "Select Chart of Accounts"
+#~ msgstr "Vali kontoplaan"
+
+#~ msgid "Printing Date :"
+#~ msgstr "Printimise kuupäev :"
+
+#~ msgid "UoM"
+#~ msgstr "Mõõtühik"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Uus analüütiline konto"
+
+#~ msgid "Standard entry"
+#~ msgstr "Standartne kirje"
+
+#~ msgid "Tax Report"
+#~ msgstr "Maksuaruanne"
+
+#~ msgid "Are you sure you want to close the fiscal year ?"
+#~ msgstr "Oled kindel, et soovid sulgeda majandusaastat ?"
+
+#~ msgid "Bank Receipt"
+#~ msgstr "Pangakviitung"
+
+#~ msgid "Bank account"
+#~ msgstr "Pangakonto"
+
+#~ msgid "Invoice import"
+#~ msgstr "Arve import"
+
+#~ msgid "Purchase Taxes"
+#~ msgstr "Ostumaksud"
+
+#~ msgid "Line Name"
+#~ msgstr "Reanimi"
+
+#~ msgid "Value"
+#~ msgstr "Väärtus"
+
+#~ msgid "Compute Entry Dates"
+#~ msgstr "Arvuta kirje kuupäevad"
+
+#~ msgid "        Start date"
+#~ msgstr "        Alguskuupäev"
+
+#~ msgid "Positive"
+#~ msgstr "Postiivne"
+
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Tekita kontoplaan kasutades plaani malli"
+
+#~ msgid "Gives the sequence order when displaying a list of account types."
+#~ msgstr "Annab järjekorra kui näidatakse konto nimelirja tüüpe."
+
+#~ msgid "Sort by:"
+#~ msgstr "Sorteeri:"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
+
+#~ msgid "          Start date"
+#~ msgstr "          Alguskuupäev"
+
+#~ msgid "Validate Account Moves"
+#~ msgstr "Kinnita kontoliikumised"
+
+#~ msgid "Validated accounting entries."
+#~ msgstr "Kinnitatud raamatupidamise kirjed"
+
+#~ msgid "Create a Fiscal Year"
+#~ msgstr "Loo majandusaasta"
+
+#~ msgid "Import Invoice"
+#~ msgstr "Impordi arve"
+
+#~ msgid "Taxes Reports"
+#~ msgstr "Maksude Aruanded"
+
+#~ msgid "Cancel selected invoices"
+#~ msgstr "Tühista valitud arved"
+
+#~ msgid "Proposed invoice to be checked, validated and printed"
+#~ msgstr "Pakutud arve on kontrollitud, kinnitatud ja prinditud"
+
+#~ msgid "Close Fiscal Year with new entries"
+#~ msgstr "Sule majandusaada koos uute kirjetega"
+
+#~ msgid "Bank Information"
+#~ msgstr "Panga informatsioon"
+
+#~ msgid "Bank account owner"
+#~ msgstr "Pangakonto omanik"
+
+#~ msgid "Entry Name"
+#~ msgstr "Kirje Nimi"
+
+#~ msgid "Define Fiscal Years and Select Charts of Account"
+#~ msgstr "Defineeri Majandusaastad ja vali Kontoplaan"
+
+#~ msgid "3 Months"
+#~ msgstr "3 kuud"
+
+#~ msgid "Payment Entries"
+#~ msgstr "Makse kirjed"
+
+#~ msgid "Other"
+#~ msgstr "Muu"
+
+#~ msgid "Select entries"
+#~ msgstr "Vali kirjed"
+
+#~ msgid "Cash Payment"
+#~ msgstr "Kassamakse"
+
+#~ msgid "Search Entries"
+#~ msgstr "Otsi kirjeid"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#~ msgid "Name of the fiscal year as displayed in reports."
+#~ msgstr "Majandusaasta nimi nagu kuvatakse aruannetes."
+
+#~ msgid "Payment date"
+#~ msgstr "Makse kuupäev"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Tühistatud Arve"
+
+#~ msgid "Bank Payment"
+#~ msgstr "Pangamakse"
+
+#~ msgid "Date Start"
+#~ msgstr "Alguskuupäev"
+
+#~ msgid "By Date"
+#~ msgstr "Kuupäeva järgi"
+
+#~ msgid "The date of the generated entries"
+#~ msgstr "Genereeritud kirjete kuupäev"
+
+#~ msgid "Date payment"
+#~ msgstr "Makse kuupäev"
+
+#~ msgid "Sale Taxes"
+#~ msgstr "Müügi Maksud"
+
+#~ msgid "Select parent account"
+#~ msgstr "Vali ülemkonto"
+
+#~ msgid "Payment amount"
+#~ msgstr "Makse suurus"
+
+#~ msgid "All Months"
+#~ msgstr "Kõik kuud"
+
+#~ msgid "Operation date"
+#~ msgstr "Tehingu kuupäev"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Tühista"
+
+#~ msgid "Select Date-Period"
+#~ msgstr "Vali Kuupäev-Periood"
+
+#~ msgid "Tax Group"
+#~ msgstr "Maksu Grupp"
+
+#~ msgid "Import invoices"
+#~ msgstr "Impordi arved"
+
+#~ msgid "Full Payment"
+#~ msgstr "Täielik makse"
+
+#~ msgid "Cash Receipt"
+#~ msgstr "Kassakviitung"
+
+#~ msgid "This Month"
+#~ msgstr "Käesolev kuu"
+
+#, python-format
+#~ msgid "This period is already closed !"
+#~ msgstr "See periood on juba suletud !"
+
+#~ msgid "Date Filter"
+#~ msgstr "Kuupäeva filter"
+
+#, python-format
+#~ msgid "Closing of fiscal year cancelled, please check the box !"
+#~ msgstr "Majandusaasta sulgemine tühistatud, palun märgi kastike !"
+
+#, python-format
+#~ msgid "Taxes missing !"
+#~ msgstr "Maks puudub !"
+
+#~ msgid "account.tax.template"
+#~ msgstr "konto.maksu.mall"
+
+#~ msgid "Current Date"
+#~ msgstr "Tänane kuupäev"
+
+#~ msgid "Accounting Properties"
+#~ msgstr "Raamatupidamise omadused"
+
+#~ msgid "Name of the fiscal year as displayed on screens."
+#~ msgstr "Majandusaasta nimi nagu kuvatakse ekraanil."
+
+#~ msgid "Column Name"
+#~ msgstr "Veeru nimi"
+
+#~ msgid "VAT"
+#~ msgstr "KM"
+
+#~ msgid "Unpaid invoices"
+#~ msgstr "Maksmata arved"
+
+#~ msgid "Unpaid Supplier Refunds"
+#~ msgstr "Maksmata tarnija hüvitised"
+
+#~ msgid "Are you sure you want to refund this invoice ?"
+#~ msgstr "Oled sa kindel, et soovid hüvitada seda arvet?"
+
+#~ msgid "Compute Taxes"
+#~ msgstr "Arvuta maksud"
+
+#~ msgid "Draft Supplier Invoices"
+#~ msgstr "Tarnija mustandarved"
+
+#~ msgid "Draft Customer Invoices"
+#~ msgstr "Kliendi mustandarved"
+
+#~ msgid "Date Invoiced"
+#~ msgstr "Arveldamise kuupäev"
+
+#~ msgid "Account Num."
+#~ msgstr "Konto nr."
+
+#~ msgid "Partner account"
+#~ msgstr "Partneri konto"
+
+#~ msgid "Account Number"
+#~ msgstr "Konto number"
+
+#~ msgid "Account No."
+#~ msgstr "Konto nr."
+
+#~ msgid "Full Account Name"
+#~ msgstr "Täielik konto nimi"
+
+#~ msgid "Parent Analytic Account"
+#~ msgstr "Ülem analüütiline konto"
+
+#~ msgid "Date or Code"
+#~ msgstr "Kuupäev või kood"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "Viga! Sa ei saa luua rekursiivseid kontosid."
+
+#~ msgid "Financial Accounts"
+#~ msgstr "Finantskontod"
+
+#~ msgid "List of Accounts"
+#~ msgstr "Kontode nimekiri"
+
+#~ msgid "Financial Management"
+#~ msgstr "Finantshaldus"
+
+#~ msgid "Financial Journals"
+#~ msgstr "Finantspäevikud"
+
+#~ msgid "Invoice Address"
+#~ msgstr "Arve aadress"
+
+#~ msgid "Pay invoice"
+#~ msgstr "Maksa arve"
+
+#~ msgid "Partner Ref."
+#~ msgstr "Partneri viide"
+
+#~ msgid "Amount paid"
+#~ msgstr "Makstud summa"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Terviklikkuse viga !"
+
+#~ msgid "Reconciliation result"
+#~ msgstr "Võrdluse tulemus"
+
+#~ msgid "Payment Reconcilation"
+#~ msgstr "Makse võrdlemine"
+
+#~ msgid "Receivable and Payable"
+#~ msgstr "Nõuded ja võlad"
+
+#~ msgid "Additionnal Information"
+#~ msgstr "Lisainfo"
+
+#~ msgid "PRO-FORMA Customer Invoices"
+#~ msgstr "PRO-FORMA kliendi arved"
+
+#~ msgid "Customer Credit"
+#~ msgstr "Kliendi krediit"
+
+#~ msgid "New Customer Invoice"
+#~ msgstr "Uus kliendi arve"
+
+#~ msgid "Customer Invoice Process"
+#~ msgstr "Kliendi arve protsess"
+
+#~ msgid "Draft Customer Refunds"
+#~ msgstr "Kliendi hüvitiste mustandid"
+
+#~ msgid "Unpaid Customer Invoices"
+#~ msgstr "Maksmata kliendi arved"
+
+#~ msgid "Unpaid Customer Refunds"
+#~ msgstr "Maksmata kliendi hüvitised"
+
+#~ msgid "New Customer Refund"
+#~ msgstr "Uus kliendi hüvitis"
+
+#~ msgid "Draft Supplier Refunds"
+#~ msgstr "Tarnija hüvitiste mustandid"
+
+#~ msgid "Unpaid Supplier Invoices"
+#~ msgstr "Maksmata tarnija arved"
+
+#~ msgid "New Supplier Invoice"
+#~ msgstr "Uus tarnija arve"
+
+#~ msgid "Supplier Invoice Process"
+#~ msgstr "Tarnija arve protsess"
+
+#~ msgid "Supplier Debit"
+#~ msgstr "Tarnija deebet"
+
+#~ msgid "New Supplier Refund"
+#~ msgstr "Uus tarnija hüvitis"
+
+#~ msgid "Legal Statements"
+#~ msgstr "Õiguslikud aruanded"
+
+#~ msgid "Account Balance"
+#~ msgstr "Konto bilanss"
+
+#~ msgid "Account Balance -"
+#~ msgstr "Konto bilanss -"
+
+#~ msgid "General Ledger -"
+#~ msgstr "Üldine pearaamat -"
+
+#~ msgid "Print Journal -"
+#~ msgstr "Prindi päevik -"
+
+#~ msgid "Print General Journal"
+#~ msgstr "Prindi üldine päevik"
+
+#~ msgid "Print Central Journal"
+#~ msgstr "Prindi keskne päevik"
+
+#~ msgid "Partner Accounts"
+#~ msgstr "Partneri kontod"
+
+#~ msgid "Analytic Chart of Accounts"
+#~ msgstr "Analüütiline kontoplaan"
+
+#~ msgid "Select Chart"
+#~ msgstr "Vali plaan"
+
+#~ msgid "Periodical Processing"
+#~ msgstr "Perioodiline töötlemine"
+
+#~ msgid "By Date and Period"
+#~ msgstr "Kuupäeva ja perioodi järgi"
+
+#~ msgid "Date End"
+#~ msgstr "Lõppkuupäev"
+
+#~ msgid "Value Amount"
+#~ msgstr "Väärtuse summa"
+
+#, python-format
+#~ msgid "You can not use an inactive account!"
+#~ msgstr "Sa ei saa kasutada mitteaktiivset kontot!"
+
+#~ msgid "Acc. Type Name"
+#~ msgstr "Konto tüübi nimi"
+
+#~ msgid "Display History"
+#~ msgstr "Kuva ajalugu"
+
+#~ msgid "Display accounts "
+#~ msgstr "Kontod kuvada "
+
+#~ msgid "By Period"
+#~ msgstr "Perioodi järgi"
+
+#, python-format
+#~ msgid "No Filter"
+#~ msgstr "Filter puudub"
+
+#~ msgid "Movement"
+#~ msgstr "Liikumine"
+
+#~ msgid "Invoice Movement"
+#~ msgstr "Arve liikumine"
+
+#~ msgid "Print Analytic Journals"
+#~ msgstr "Prindi analüütilised päevikud"
+
+#~ msgid "Print VAT Decl."
+#~ msgstr "Prindi käibemaksudeklaratsioon"
+
+#~ msgid "Use this code for the VAT declaration."
+#~ msgstr "Kasuta seda koodi käibemaksudeklaratsiooni jaoks."
+
+#~ msgid "Journal code"
+#~ msgstr "Päeviku kood"
+
+#~ msgid "General Debit"
+#~ msgstr "Üldine deebet"
+
+#~ msgid "General Credit"
+#~ msgstr "Üldine kreedit"
+
+#~ msgid "Analytic Credit"
+#~ msgstr "Analüütiline kreedit"
+
+#~ msgid "Analytic Debit"
+#~ msgstr "Analüütiline deebet"
+
+#~ msgid "Delta Debit"
+#~ msgstr "Delta deebet"
+
+#~ msgid "Delta Credit"
+#~ msgstr "Delta kreedit"
+
+#~ msgid "Generic Reports"
+#~ msgstr "Üldised aruanded"
+
+#, python-format
+#~ msgid "Bank Journal "
+#~ msgstr "Panga päevik "
+
+#~ msgid "Account Code"
+#~ msgstr "Konto kood"
+
+#~ msgid "5"
+#~ msgstr "5"
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Viga"
+
+#~ msgid "Choose Journal and Payment Date"
+#~ msgstr "Vali päevik ja makse kuupäev"
+
+#~ msgid "No"
+#~ msgstr "Ei"
+
+#~ msgid "Group invoice lines"
+#~ msgstr "Grupeeri arve read"
+
+#~ msgid "Total amount"
+#~ msgstr "Kogusumma"
+
+#~ msgid "/"
+#~ msgstr "/"
+
+#~ msgid "OK"
+#~ msgstr "Olgu"
+
+#~ msgid "Journal - Period"
+#~ msgstr "Päevik - Periood"
+
+#~ msgid "4"
+#~ msgstr "4"
+
+#~ msgid "Journal name"
+#~ msgstr "Päeviku nimi"
+
+#~ msgid "Modify Invoice"
+#~ msgstr "Muuda arvet"
+
+#~ msgid "Quantities"
+#~ msgstr "Kogused"
+
+#~ msgid "9"
+#~ msgstr "9"
+
+#~ msgid "Include initial balances"
+#~ msgstr "Kaasa algsed"
+
+#~ msgid "Journal/Payment Mode"
+#~ msgstr "Päevik/makseviis"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "The currency of the journal"
+#~ msgstr "Päeviku valuuta"
+
+#~ msgid "All Analytic Entries"
+#~ msgstr "Kõik analüütilised kirjed"
+
+#~ msgid "Voucher Nb"
+#~ msgstr "Vautšeri nr"
+
+#~ msgid "Can be draft or validated"
+#~ msgstr "Saab olla mustand või valideeritud"
+
+#~ msgid "Required"
+#~ msgstr "Nõutud"
+
+#~ msgid "analytic Invoice"
+#~ msgstr "Analüütiline arve"
+
+#~ msgid "Confirm statement from draft"
+#~ msgstr "Kinnita teatist mustandilt"
+
+#, python-format
+#~ msgid "Account move line \"%s\" is not valid"
+#~ msgstr "Konto liigutuskirje \"%s\" ei ole õige"
+
+#, python-format
+#~ msgid ""
+#~ "Please verify the price of the invoice !\n"
+#~ "The real total does not match the computed total."
+#~ msgstr ""
+#~ "Palun kontrollige hind arvel !\n"
+#~ "Tegelik summa ei ole võrdne arvutatud summaga."
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Viga! Sa ei saa luua rekursiivseid analüütilisi kontosid."
+
+#~ msgid "Analytic Entries Stats"
+#~ msgstr "Analüütiliste kirjete statistika"
+
+#~ msgid "Fiscal Position Accounts Mapping"
+#~ msgstr "Finantspositsioonide kontode kaardistamine"
+
+#~ msgid "Account Entry Reconcile"
+#~ msgstr "Kooskõlasta konto kirjet"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "Teie ei saa lisada/muuta suletud päeviku kirjeid."
+
+#~ msgid "Analytic Invoice"
+#~ msgstr "Analüütiline arve"
+
+#~ msgid "Account cost and revenue by journal"
+#~ msgstr "Konto kulu ja tulu päeviku kohta"
+
+#~ msgid "Bank Reconciliation"
+#~ msgstr "Panga kooskõlastavad võrdlemised"
+
+#~ msgid "Move Lines Created."
+#~ msgstr "Liiguta loodud read."
+
+#~ msgid "Grand total"
+#~ msgstr "Kogusumma"
+
+#~ msgid "Total write-off"
+#~ msgstr "Kogu mahakandmine"
+
+#~ msgid "Compute Code for Taxes included prices"
+#~ msgstr "Arvuta kood maksuga hindadele"
+
+#~ msgid "Debit Trans."
+#~ msgstr "Deebet tehing"
+
+#~ msgid "Journal Voucher"
+#~ msgstr "Tähiku päevik"
+
+#~ msgid "Costs & Revenues"
+#~ msgstr "Kulud ja tulud"
+
+#~ msgid "Skip"
+#~ msgstr "Jäta vahele"
+
+#~ msgid "Total quantity"
+#~ msgstr "Üldkogus"
+
+#~ msgid "Valid Entries"
+#~ msgstr "Kehtivad kirjed"
+
+#~ msgid "Cost Legder for period"
+#~ msgstr "Kulupäevik perioodiks"
+
+#~ msgid "Include in base amount"
+#~ msgstr "Kaasa baasosasse"
+
+#~ msgid "Account Manager"
+#~ msgstr "Kontopidaja"
+
+#~ msgid "Next"
+#~ msgstr "Järgmine"
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Viga: Vigane BVR number (vale kontrollsumma)."
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Maksuvaba summa"
+
+#, python-format
+#~ msgid "Cannot delete invoice(s) that are already opened or paid !"
+#~ msgstr "Ei saa kustutada arvet/arveid, mis on juba avatud või makstud !"
+
+#~ msgid "7"
+#~ msgstr "7"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Vigane toiming!"
+
+#, python-format
+#~ msgid "You must enter a period length that cannot be 0 or below !"
+#~ msgstr "Sa pea sisestama perioodi pikkuse, mis ei või olla 0 või väiksem."
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category"
+#~ msgstr ""
+#~ "Seda kontot kasutatakse käesoleva kategooria lao väljundväärtuse hindamiseks"
+
+#~ msgid "Subtotal w/o tax"
+#~ msgstr "Vahesumma maksuta"
+
+#~ msgid "Print Taxes Report"
+#~ msgstr "Prindi maksuaruanne"
+
+#~ msgid "Are you sure ?"
+#~ msgstr "Oled sa kindel?"
+
+#~ msgid "_Go"
+#~ msgstr "_Mine"
+
+#~ msgid "Entries by Statements"
+#~ msgstr "Kirjed teatiste järgi"
+
+#~ msgid "New Statement"
+#~ msgstr "Uus teatis"
+
+#~ msgid "Import invoice from statement"
+#~ msgstr "Impordi arve teatisest"
+
+#~ msgid "Import file from your bank statement"
+#~ msgstr "Impordi fail oma pangateatisest"
+
+#~ msgid "Import from your bank statements"
+#~ msgstr "Impordi oma pangateatistest"
+
+#~ msgid "By date"
+#~ msgstr "Kuupäeva järgi"
+
+#~ msgid "Date/Period Filter"
+#~ msgstr "Kuupäeva/Perioodi filter"
+
+#~ msgid "Validate Account Entries"
+#~ msgstr "Kinnita kontokirjed"
+
+#~ msgid ""
+#~ "This account will be used to value incoming stock for the current product "
+#~ "category"
+#~ msgstr ""
+#~ "Seda kontot kasutatakse sissetuleva kauba hindamiseks käesoleva "
+#~ "tootekategooria jaoks"
+
+#, python-format
+#~ msgid ""
+#~ "Specified Journal does not have any account move entries in draft state for "
+#~ "this period"
+#~ msgstr ""
+#~ "Valitud päevik ei sisalda konto liigutuskirjeid mustandolekus sellel "
+#~ "perioodil"
+
+#, python-format
+#~ msgid "You have to provide an account for the write off entry !"
+#~ msgstr "Te peate valima konto mahakandmise kirje jaoks !"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Puudub analüütiline päevik !"
+
+#, python-format
+#~ msgid "You can not use this general account in this journal !"
+#~ msgstr "Te ei saa kasutada üldist kontot selles päevikus !"
+
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr "Avatav päevik ei tohi sisaldama kirjeid uues finantsaastas !"
+
+#~ msgid "Error ! The duration of the Period(s) is/are invalid. "
+#~ msgstr "Viga! Perioodi(de) kestvus(ed) on vale(d). "
+
+#~ msgid "St."
+#~ msgstr "Tk."
+
+#~ msgid "Print Journal"
+#~ msgstr "Prindi päevik"
+
+#~ msgid "Period length (days)"
+#~ msgstr "Perioodi pikkus (päeva)"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Viga: BVR viide on vajalik."
+
+#~ msgid "Contra"
+#~ msgstr "Vastu"
+
+#~ msgid "Confirm statement with/without reconciliation from draft statement"
+#~ msgstr "Kinnita avaldus koos/ilma alates leppimise avalduse esitamisest"
+
+#~ msgid "Message"
+#~ msgstr "Sõnum"
+
+#~ msgid "Contact Address"
+#~ msgstr "Kontaktaadress"
+
+#~ msgid "Create subscription entries"
+#~ msgstr "Koosta tellimus sissekanded"
+
+#~ msgid "(keep empty to use the current period)"
+#~ msgstr "(jätke tühjaks, et kasutada käesolevat perioodi)"
+
+#~ msgid "Accounts by type"
+#~ msgstr "Kontod tüübi järgi"
+
+#~ msgid "Year :"
+#~ msgstr "Aasta :"
+
+#~ msgid "Total :"
+#~ msgstr "Kokku :"
+
+#~ msgid "Display accounts"
+#~ msgstr "Kontod kuvada"
+
+#~ msgid "Sign for parent"
+#~ msgstr "Märk ülema suhtes"
+
+#~ msgid ""
+#~ "Check this box if you don't want any VAT related to this Tax Code to appear "
+#~ "on invoices"
+#~ msgstr ""
+#~ "Märgista see kast, kui soovid arvel ei kuvataks ühtegi selle koodiga seotud "
+#~ "KM."
+
+#, python-format
+#~ msgid "No Period found on Invoice!"
+#~ msgstr "Arvel ei leitud perioodi!"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Teatise bilanss on vale!\n"
+
+#~ msgid "Voucher No"
+#~ msgstr "Kviitungi nr."
+
+#, python-format
+#~ msgid ""
+#~ "No period defined for this date !\n"
+#~ "Please create a fiscal year."
+#~ msgstr ""
+#~ "Selle kuupäeva jaoks pole perioodi määratletud !\n"
+#~ "Palun loo majandusaasta."
+
+#~ msgid "Open State"
+#~ msgstr "Lahtine olek"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Kasutaja Viga"
+
+#, python-format
+#~ msgid ""
+#~ "No fiscal year defined for this date !\n"
+#~ "Please create one."
+#~ msgstr ""
+#~ "Selle kuupäeva jaoks pole majandusaastat määratletud !\n"
+#~ "Palun loo uus."
+
+#~ msgid "Voucher Management"
+#~ msgstr "Voucheri juhtimine"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot remove/deactivate an account which is set as a property to any "
+#~ "Partner."
+#~ msgstr ""
+#~ "Sa ei saa kustutada / desaktiveerida kontot, mis on määratud mis tahes "
+#~ "\"Partner\" varaks."
+
+#~ msgid "Other Configuration"
+#~ msgstr "Muud konfiguratsioonid"
+
+#~ msgid "Account currency"
+#~ msgstr "Konto valuuta"
+
+#, python-format
+#~ msgid "You can not delete posted movement: \"%s\"!"
+#~ msgstr "Sa ei saa kustutada postitatud liikumist: \"%s\"!"
+
+#~ msgid "Choose Fiscal Year "
+#~ msgstr "Vali eelarveaasta "
+
+#~ msgid "Origin"
+#~ msgstr "Allikas"
+
+#, python-format
+#~ msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
+#~ msgstr "Arve '%s' on makstud osaliselt: %s%s on tasutud %s%s (%s%s maksmata)"
+
+#, python-format
+#~ msgid "Journal: %s"
+#~ msgstr "Päevik: %s"
+
+#, python-format
+#~ msgid ""
+#~ "No period defined for this date: %s !\n"
+#~ "Please create a fiscal year."
+#~ msgstr "Periood ei ole defineeritud sellele kuupäevale: %s"
+
+#~ msgid "Calculated Balance"
+#~ msgstr "Välja arvutatud tasakaal (Calculated Balance)"
+
+#~ msgid "Configure"
+#~ msgstr "Seadista"
+
+#~ msgid "   30 Days   "
+#~ msgstr "   30 päeva   "
+
+#~ msgid "Invoice Address Name"
+#~ msgstr "Arveraamatu Aadressi Nimi"
+
+#~ msgid "Next Partner to reconcile"
+#~ msgstr "Kooskõlastama järgmise \"Partner\"-iga"
+
+#~ msgid "Avg. Delay To Pay"
+#~ msgstr "Keskmine viivitus maksete tegemisel"
+
+#~ msgid "Total With Tax"
+#~ msgstr "Kokku koos maksudega"
+
+#~ msgid "Customer Invoices to Approve"
+#~ msgstr "Kliendi arved kinnitamiseks"
+
+#~ msgid "Manager"
+#~ msgstr "Juhataja"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Mittesobivad tehingud"
+
+#~ msgid "Your Reference"
+#~ msgstr "Teie viide"
+
+#~ msgid "Columns"
+#~ msgstr "Veerud"
+
+#~ msgid "Tax Code Test"
+#~ msgstr "Maksu koodi test"
+
+#~ msgid "."
+#~ msgstr "."
+
+#~ msgid "and Journals"
+#~ msgstr "ja arveraamatud"
+
+#~ msgid "Go to next partner"
+#~ msgstr "Mine järgmise \"Partner\"-ile"
+
+#~ msgid ""
+#~ "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
+#~ msgstr ""
+#~ "Vale krediidi või deebeti arv mudelis ( Krediit + Deebet Peab olema suurem "
+#~ "kui \"0\" ) !"
+
+#, python-format
+#~ msgid "You cannot deactivate an account that contains account moves."
+#~ msgstr "Sa ei saa deaktiveerida kontot mis sisaldab konto liikumisi."
+
+#, python-format
+#~ msgid "User %s does not have rights to access %s journal !"
+#~ msgstr "Kasutajal %s ei ole õigusi et siseneda %s arveraamatusse !"
+
+#~ msgid "A/c Code"
+#~ msgstr "A/c kood"
+
+#~ msgid "Reserve & Profit/Loss Account"
+#~ msgstr "Reservi & kasumi/kahjumi konto"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Viga! Sa ei saa luua rekursiivseid ettevõtteid."
+
+#~ msgid "Sub Total"
+#~ msgstr "Vahesumma"
+
+#~ msgid "Image"
+#~ msgstr "Pilt"

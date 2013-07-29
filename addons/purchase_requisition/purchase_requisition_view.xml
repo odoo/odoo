@@ -195,7 +195,7 @@
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
         <field name="name">product.form.inherit</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+        <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
         <field name="arch" type="xml">
             <field name="supply_method" position="after">
                 <field name="purchase_requisition"/>
@@ -208,7 +208,7 @@
         <field name="model">procurement.order</field>
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='close_move']" position="after">
+            <xpath expr="//field[@name='origin']" position="after">
                 <field name="requisition_id"/>
             </xpath>
         </field>
@@ -236,7 +236,6 @@
                     <field name="quantity_bid"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="price_subtotal"/>
-                    <field name="lead_time" />
                     <field name="state" invisible="1"/>
                     <field name="invoiced" invisible="1"/>
                     <button name="action_draft" states="confirmed" type="object" string="Cancel Choice" icon="gtk-cancel"/>

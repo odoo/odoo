@@ -1,22 +1,22 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-16 06:31+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-24 15:47+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:41+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:30+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -174,6 +174,12 @@ msgid "Refuse"
 msgstr "Recusar"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:433
+#, python-format
+msgid "Request <b>approved</b>, waiting second validation."
+msgstr "Solicitação <b>aprovada</b>. aguardando segunda validação."
+
+#. module: hr_holidays
 #: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
@@ -186,9 +192,9 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "Folga"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr "Análise"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -296,8 +302,8 @@ msgstr "Deixar Reuniões"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2013"
-msgstr "Folgas Legais 2013"
+msgid "Legal Leaves 2012"
+msgstr "Folgas Legais 2012"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -703,9 +709,10 @@ msgid "Active"
 msgstr "Ativo"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Add a reason..."
-msgstr "Escreva o motivo..."
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr "Folgas Restantes"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -754,6 +761,11 @@ msgid "My Department Leaves"
 msgstr "Folgas em meu Departamento"
 
 #. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request confirmed, waiting confirmation"
+msgstr "Solicitação confirmada, aguardando validação"
+
+#. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
 msgstr "Situação Atual das Folgas"
@@ -798,11 +810,6 @@ msgstr "Análise de Folgas"
 #: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Cancelar"
-
-#. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
-msgid "Request created and waiting confirmation"
-msgstr "Pedido criado e aguardando confirmação"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -891,12 +898,6 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
-msgid "Remaining Legal Leaves"
-msgstr "Folgas Restantes"
-
-#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
 msgstr "Por marcador de funcionário"
@@ -973,12 +974,6 @@ msgid "Both Approved and Confirmed"
 msgstr "Ambos Aprovado e Confirmado"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:440
-#, python-format
-msgid "Request approved, waiting second validation."
-msgstr "Pedido aprovado, aguardando segunda validação."
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
 msgstr "Aprovar"
@@ -997,9 +992,9 @@ msgid "The start date must be anterior to the end date."
 msgstr "A data inicial deve ser anterior a data final."
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr "Análise"
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Folga"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -1085,12 +1080,197 @@ msgstr "Motivos"
 msgid "Select Leave Type"
 msgstr "Escolha o Tipo de Folga"
 
+#~ msgid "Holidays"
+#~ msgstr "Feriados"
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmar"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Definir como Provisório"
+
+#~ msgid "Allocation Type"
+#~ msgstr "Tipo de Alocação"
+
+#~ msgid "Draft"
+#~ msgstr "Provisório"
+
 #, python-format
-#~ msgid "Request <b>approved</b>, waiting second validation."
-#~ msgstr "Solicitação <b>aprovada</b>. aguardando segunda validação."
+#~ msgid "You have to select at least 1 Department. And try again"
+#~ msgstr "Você deve selecionar pelo menos 1 Departamento."
 
-#~ msgid "Legal Leaves 2012"
-#~ msgstr "Folgas Legais 2012"
+#~ msgid "The start date must be before the end date !"
+#~ msgstr "A data inicial deve ser antes da data final!"
 
-#~ msgid "Request confirmed, waiting confirmation"
-#~ msgstr "Solicitação confirmada, aguardando validação"
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "You have to select an employee or a category"
+#~ msgstr "Você deve selecionar um funcionário ou uma categoria"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Filtros Extendidos..."
+
+#~ msgid "Both Validated and Confirmed"
+#~ msgstr "Ambos Validados e Confirmados"
+
+#~ msgid "The number of days must be greater than 0 !"
+#~ msgstr "O número de dias deve ser maior que 0!"
+
+#~ msgid "General"
+#~ msgstr "Geral"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#~ msgid "By Employee Category"
+#~ msgstr "Por Categoria de Funcionário"
+
+#~ msgid "This Month"
+#~ msgstr "Este Mês"
+
+#~ msgid ""
+#~ "Leave Manager can let this field empty if this leave request/allocation is "
+#~ "for every employee"
+#~ msgstr ""
+#~ "O Controle de Licenças pode deixar este campo em branco, se essa "
+#~ "solicitação/alocação for para todos os funcionários"
+
+#~ msgid "Requests Approve"
+#~ msgstr "Aprovar Solicitações"
+
+#~ msgid " Month-1"
+#~ msgstr " Mês-1"
+
+#~ msgid "Latest Connection"
+#~ msgstr "Conexão mais recente"
+
+#~ msgid ""
+#~ "Leave requests can be recorded by employees and validated by their managers. "
+#~ "Once a leave request is validated, it appears automatically in the agenda of "
+#~ "the employee. You can define several allowance types (paid holidays, "
+#~ "sickness, etc.) and manage allowances per type."
+#~ msgstr ""
+#~ "Pedidos de licença podem ser registrados por funcionários e validado por "
+#~ "seus gerentes. Uma vez que um pedido de licença é validada, ele aparece "
+#~ "automaticamente na agenda do empregado. Você pode definir os vários tipos de "
+#~ "subsídio (férias pagas, doença, etc) e gerenciar as licenças por tipo."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for employee %s: too few remaining days (%s)."
+#~ msgstr ""
+#~ "Você não pode validar licenças para o funcionário %s: poucos dias restantes "
+#~ "(%s)."
+
+#~ msgid ""
+#~ "Total number of legal leaves allocated to this employee, change this value "
+#~ "to create allocation/leave requests."
+#~ msgstr ""
+#~ "Número total de folgas legais atribuídos a este empregado, altere este valor "
+#~ "para criar alocação / pedidos de folgas."
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Atenção !"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a holiday request is created.            \n"
+#~ "The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+#~ "          \n"
+#~ "The state is 'Refused', when holiday request is refused by manager.          "
+#~ "  \n"
+#~ "The state is 'Approved', when holiday request is approved by manager."
+#~ msgstr ""
+#~ "O estado é definido como 'Provisório', quando um pedido de férias é criado.\n"
+#~ "O estado é \"Aguardando Aprovação ', quando o pedido de férias é confirmado "
+#~ "pelo usuário.\n"
+#~ "O estado é 'Recusado', quando o pedido de férias é recusada pelo gerente.\n"
+#~ "O estado é 'Aprovado', quando o pedido de férias é aprovado pelo gerente."
+
+#~ msgid "HR Holidays Summary Report By Employee"
+#~ msgstr "RH Relatório de Férias por Funcionário"
+
+#~ msgid "Error! leave start-date must be lower then leave end-date."
+#~ msgstr "Erro! A data de início da folga precisa vir antes da data final"
+
+#~ msgid "Employee's Holidays"
+#~ msgstr "Férias de Funcionários"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr ""
+#~ "Se for verdadeiro, então a Alocação/Solicitação precisa ser validado por um "
+#~ "segundo supervisor"
+
+#~ msgid ""
+#~ "If you set a meeting type, OpenERP will create a meeting in the calendar "
+#~ "once a leave is validated."
+#~ msgstr ""
+#~ "Se você definir um tipo de reunião, o OpenErp irá criar um tipo de reunião "
+#~ "assim que a folga for validada."
+
+#~ msgid "All Employee Leaves"
+#~ msgstr "Todas as Folgas do Funcionário"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Erro! Você não pode criar uma Hierarquia de Funcionários recursiva."
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "Folgas para Validar"
+
+#~ msgid "Holidays by Department"
+#~ msgstr "Férias por Departamento"
+
+#~ msgid "Holiday"
+#~ msgstr "Feriado"
+
+#~ msgid ""
+#~ "This color will be used in the leaves summary located in Reporting\\Leaves "
+#~ "by Departement"
+#~ msgstr ""
+#~ "Esta cor será usada no resumo de folgas alocadas no relatório de folgas por "
+#~ "departamento"
+
+#~ msgid "Holidays during last month"
+#~ msgstr "Feriados mês passado"
+
+#~ msgid "Select Holiday Type"
+#~ msgstr "Escolha o tipo de Feriado"
+
+#, python-format
+#~ msgid "You cannot delete a leave which is not in draft state !"
+#~ msgstr ""
+#~ "Você não pode excluir uma folga que não está na situação de provisória"
+
+#~ msgid ""
+#~ "By Employee: Allocation/Request for individual Employee, By Employee "
+#~ "Category: Allocation/Request for group of employees in category"
+#~ msgstr ""
+#~ "Por Funcionário: Alocações/Solicitações para um funcionário, Por Categoria: "
+#~ "Alocações/Solicitações para um grupo de funcionários na categoria"
+
+#~ msgid "Legal Leaves"
+#~ msgstr "Folgas Legais"
+
+#~ msgid "HR Holidays Summary Report By Department"
+#~ msgstr "RH Relatórios de Férias por Departamento"
+
+#~ msgid ""
+#~ "You can assign remaining Legal Leaves for each employee, OpenERP will "
+#~ "automatically create and validate allocation requests."
+#~ msgstr ""
+#~ "Você pode atribuir as folgas restantes de cada funcionário, o OpenERP vai "
+#~ "automaticamente criar e validar as solicitações de alocação."
+
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr ""
+#~ "Se você marcar esta caixa, o sistema permitirá, para esta seção, que os "
+#~ "funcionários tenham mais folgas do que as disponíveis."
+
+#~ msgid "Summary Of Leaves"
+#~ msgstr "Resumo das Folgas"

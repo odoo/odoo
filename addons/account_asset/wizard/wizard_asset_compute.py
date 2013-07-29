@@ -30,8 +30,7 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
     }
    
     def _get_period(self, cr, uid, context=None):
-        ctx = dict(context or {}, account_period_prefer_normal=True)
-        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         return False
@@ -56,6 +55,5 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-asset_depreciation_confirmation_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

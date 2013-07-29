@@ -23,7 +23,6 @@ import logging
 from ldap.filter import filter_format
 
 import openerp.exceptions
-from openerp import pooler
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
@@ -188,7 +187,7 @@ class CompanyLDAP(osv.osv):
                 user_id = res[0]
         elif conf['create_user']:
             _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
-            user_obj = self.pool.get('res.users')
+            user_obj = self.pool['res.users']
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:
                 user_id = user_obj.copy(cr, SUPERUSER_ID, conf['user'],
@@ -228,7 +227,6 @@ class CompanyLDAP(osv.osv):
         'create_user': True,
     }
 
-CompanyLDAP()
 
 
 class res_company(osv.osv):
@@ -237,7 +235,6 @@ class res_company(osv.osv):
         'ldaps': fields.one2many(
             'res.company.ldap', 'company', 'LDAP Parameters'),
     }
-res_company()
 
 
 class users(osv.osv):
@@ -246,8 +243,8 @@ class users(osv.osv):
         user_id = super(users, self).login(db, login, password)
         if user_id:
             return user_id
-        cr = pooler.get_db(db).cursor()
-        ldap_obj = pooler.get_pool(db).get('res.company.ldap')
+        cr = self.pool.db.cursor()
+        ldap_obj = self.pool['res.company.ldap']
         for conf in ldap_obj.get_ldap_dicts(cr):
             entry = ldap_obj.authenticate(conf, login, password)
             if entry:
@@ -269,12 +266,12 @@ class users(osv.osv):
         except openerp.exceptions.AccessDenied:
             pass
 
-        cr = pooler.get_db(db).cursor()
+        cr = self.pool.db.cursor()
         cr.execute('SELECT login FROM res_users WHERE id=%s AND active=TRUE',
                    (int(uid),))
         res = cr.fetchone()
         if res:
-            ldap_obj = pooler.get_pool(db).get('res.company.ldap')
+            ldap_obj = self.pool['res.company.ldap']
             for conf in ldap_obj.get_ldap_dicts(cr):
                 if ldap_obj.authenticate(conf, res[0], passwd):
                     self._uid_cache.setdefault(db, {})[uid] = passwd
@@ -283,5 +280,4 @@ class users(osv.osv):
         cr.close()
         raise openerp.exceptions.AccessDenied()
         
-users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
