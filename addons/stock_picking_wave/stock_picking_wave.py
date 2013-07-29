@@ -24,6 +24,27 @@ class stock_picking_wave(osv.osv):
         self.pool.get('stock.picking').action_cancel(cr, uid, picking_todo, context=context)
         return True
 
+    def print_picking(self, cr, uid, ids, context=None):
+        '''
+        This function print the report for all picking_ids associated to the picking wave
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single wave picking at a time.'
+        browse_picking_ids = self.browse(cr, uid, ids, context)[0].picking_ids
+        picking_ids = []
+        for picking in browse_picking_ids:
+            picking_ids.append(picking.id)
+        datas = {
+             'ids': picking_ids,
+             'model': 'stock.picking',
+             'form': self.read(cr, uid, picking_ids[0], context=context)
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'stock.picking.list',
+            'datas': datas,
+            'nodestroy' : True
+        }
+
 
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
