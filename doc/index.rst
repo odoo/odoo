@@ -19,6 +19,7 @@ OpenERP Server
    deployment-gunicorn
    deployment-mod-wsgi
    form-view-guidelines
+   ir_actions
 
 OpenERP Command
 '''''''''''''''
