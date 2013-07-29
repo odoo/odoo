@@ -213,6 +213,8 @@ instance.website.RTE = instance.web.Widget.extend({
         [Command, "\uf0cc", 'strike'],
         [Command, "\uf12b", 'superscript'],
         [Command, "\uf12c", 'subscript'],
+        [Command, "\uf0c1", 'link'],
+        [Command, "\uf127", 'unlink'],
         [Group, "\uf0ca", [
             [Command, "\uf0ca", 'bulletedlist'],
             [Command, "\uf0cb", 'numberedlist']
