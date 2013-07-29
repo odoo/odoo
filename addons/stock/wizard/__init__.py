@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import stock_traceability
 import stock_move
 import stock_inventory_merge
 import stock_fill_inventory

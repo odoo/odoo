@@ -581,15 +581,13 @@
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Internal Picking List" version="7.0">
-                <field name='pack_operation_exist' invisible="1"/>
                 <header>
-                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="draft_validate" states="draft" string="Confirm &amp; Total Transfer" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
                     <!-- <button name="check_assign" states="confirmed" string="Check Availability" type="object"/> -->
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_done" states="assigned" string="Total Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_prepare_partial" states="assigned" string="(prepare) Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': [('pack_operation_exist','=',True)]}"/>
-                    <button name="do_partial" states="assigned" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': [('pack_operation_exist','=',False)]}"/>
+                    <button name="do_prepare_partial" states="assigned" string="(prepare) Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': [('pack_operation_ids','&lt;&gt;',False)]}"/>
+                    <button name="do_partial" states="assigned" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': [('pack_operation_ids','=',False)]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -611,7 +609,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Partial/Packing Operations" attrs="{'invisible': [('pack_operation_exist','=',False)]}">
+                        <page string="Partial/Packing Operations" attrs="{'invisible': [('pack_operation_ids','=',False)]}">
                             <field name="pack_operation_ids">
                                 <tree editable="top">
                                     <field name="product_id"/>
