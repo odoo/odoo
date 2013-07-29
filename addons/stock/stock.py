@@ -25,7 +25,7 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
@@ -1694,13 +1694,19 @@ class stock_move(osv.osv):
             property_out = self.pool.get('res.partner').browse(cr, uid, context['address_out_id'], context).property_stock_customer
             location_id = property_out and property_out.id or False
         else:
-            location_xml_id = False
             if picking_type in ('in', 'internal'):
-                location_xml_id = 'stock_location_stock'
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+                    self.check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
             elif picking_type == 'out':
-                location_xml_id = 'stock_location_customers'
-            if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
+                    self.check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
+
         return location_id
 
     def _default_location_source(self, cr, uid, context=None):
@@ -1947,8 +1953,16 @@ class stock_move(osv.osv):
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
-        source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-        dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+        try:
+            source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+            self.check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            source_location = False
+        try:
+            dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+            self.check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
