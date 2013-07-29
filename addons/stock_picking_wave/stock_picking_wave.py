@@ -40,7 +40,7 @@ class stock_picking_wave(osv.osv):
         }
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'stock.picking.list',
+            'report_name': context.get('report', 'stock.picking.list'),
             'datas': datas,
             'nodestroy' : True
         }

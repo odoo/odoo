@@ -9,7 +9,8 @@
                         <div class="oe_right oe_button_box">
                         <button name="confirm_picking" string="Confirm all pickings" type="object"/>
                         <button name="cancel_picking" string="Cancel all pickings" type="object"/>
-                        <button name="print_picking" string="Print all pickings" type="object"/>
+                        <button name="print_picking" string="Print all internal pickings" type="object" context="{'report':'stock.picking.list.internal'}"/>
+                        <button name="print_picking" string="Print all in/out pickings" type="object" context="{'report':'stock.picking.list'}"/>
                     </div>
                         <group>
                     <group>
