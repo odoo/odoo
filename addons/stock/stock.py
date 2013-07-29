@@ -572,7 +572,7 @@ class stock_picking(osv.osv):
             move_obj.unlink(cr, uid, ids2, ctx)
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
-    # FP Note: review all methods above this line for stock.picking
+    # FP Note: review all methods bellow this line for stock.picking
 
     def _create_backorder(self, cr, uid, picking, context=None):
         sequence_obj = self.pool.get('ir.sequence')
