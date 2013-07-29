@@ -7,7 +7,7 @@ function declare($, _, QWeb2) {
 var openerp = {};
 openerp.web = {};
 
-    /**
+/**
  * Improved John Resig's inheritance, based on:
  *
  * Simple JavaScript Inheritance
