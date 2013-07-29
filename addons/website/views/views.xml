@@ -37,7 +37,7 @@
                             </ul>
                         </div>
                         <div class="span4" name="about_us">
-                            <h5 t-esc="res_company.name">Company name</h5>
+                            <h5 t-record="res_company" t-field="name">Company name</h5>
                             <ul>
                                 <li><a href="/page/website.contactus">Contact us</a></li>
                                 <li><a href="/page/website.news">News</a></li>
@@ -63,6 +63,11 @@
                         <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'/>
 
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery-1.8.3.js"></script>
+                        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
+                        <script type="text/javascript">
+                            CKEDITOR.disableAutoInline = true;
+                            CKEDITOR.dtd.$editable.li = 1;
+                        </script>
 
                         <t t-if="editable">
                             <t t-raw="css"/>

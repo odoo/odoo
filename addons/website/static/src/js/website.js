@@ -1,5 +1,5 @@
 openerp.website = function(instance) {
-
+var _lt = instance.web._lt;
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
     events: {
@@ -9,31 +9,47 @@ instance.website.EditorBar = instance.web.Widget.extend({
         'click button[data-action=snippet]': 'snippet',
     },
     container: 'body',
+    init: function () {
+        this._super.apply(this, arguments);
+        this.saving_mutex = new $.Mutex();
+    },
     start: function() {
         var self = this;
-        this.saving_mutex = new $.Mutex();
-        self.$('button[data-action]').prop('disabled', true);
-        self.$('button[data-action=edit],button[data-action=snippet]').prop('disabled', false);
+
+        this.$('button[data-action]').prop('disabled', true)
+            .parent().hide();
+        this.$buttons = {
+            edit: this.$('button[data-action=edit]'),
+            save: this.$('button[data-action=save]'),
+            cancel: this.$('button[data-action=cancel]'),
+            snippet: this.$('button[data-action=snippet]'),
+        };
+        this.$buttons.edit.prop('disabled', false).parent().show();
+
         self.snippet_start();
 
-        $('body').on("keypress", ".oe_editable", function(e) {
-            var $e = $(e.currentTarget);
-            if (!$e.is('.oe_dirty')) {
-                $e.addClass('oe_dirty');
-                self.$('button[data-action=save],button[data-action=cancel]').prop('disabled', false);
-                // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
-            }
-            if (e.which == 13) {
-                $e.blur();
-                e.preventDefault();
-            }
-        });
+        this.rte = new instance.website.RTE(this);
+        this.rte.on('change', this, this.proxy('rte_changed'));
 
-        return this._super.apply(this, arguments);
+        return $.when(
+            this._super.apply(this, arguments),
+            this.rte.insertBefore(this.$buttons.snippet.parent())
+        );
     },
     edit: function () {
-        this.$('button[data-action=edit]').prop('disabled', true);
-        $('[data-oe-model]').prop('contentEditable', true).addClass('oe_editable');
+        this.$buttons.edit.prop('disabled', true).parent().hide();
+        this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
+            .add(this.$buttons.save)
+            .parent().show();
+        // TODO: span edition changing edition state (save button)
+        this.rte.start_edition(
+                $('[data-oe-model]')
+                    .not('link, script')
+                    .prop('contentEditable', true)
+                    .addClass('oe_editable'));
+    },
+    rte_changed: function () {
+        this.$buttons.save.prop('disabled', false);
     },
     save: function () {
         var self = this;
@@ -62,9 +78,11 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var xpath = data.oeXpath;
         if (xpath) {
             var $w = $el.clone();
-            $w.removeClass('aloha-editable aloha-editable-highlight oe_dirty');
+            $w.removeClass('oe_dirty');
             _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
-            $w.prop('contentEditable', false).removeClass('oe_editable');
+            $w
+                .removeClass('oe_editable')
+                .prop('contentEditable', false);
             html = $w.wrap('<div>').parent().html();
         }
         return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
@@ -98,6 +116,195 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     snippet: function (ev) {
         $('.oe_snippet_editor').toggle();
+    },
+});
+
+instance.website.Action = instance.web.Widget.extend({
+    tagName: 'button',
+    attributes: {
+        type: 'button',
+    },
+    events: { click: 'perform' },
+    init: function (parent, name) {
+        this._super(parent);
+        this.name = name;
+    },
+    start: function () {
+        this.$el.text(this.name);
+        return this._super();
+    },
+    /**
+     * Executes action
+     */
+    perform: null,
+    toggle: function (to) {
+        this.$el.prop('disabled', !to);
+    },
+});
+var Style = instance.website.Style = instance.website.Action.extend({
+    init: function (parent, name, style) {
+        this._super(parent, name);
+        this.style = style;
+    },
+    perform: function () {
+        this.getParent().with_editor(function (editor) {
+            editor.applyStyle(new CKEDITOR.style(this.style))
+        }.bind(this));
+    },
+});
+var Command = instance.website.Command = instance.website.Action.extend({
+    init: function (parent, name, command) {
+        this._super(parent, name);
+        this.command = command;
+    },
+    perform: function () {
+        this.getParent().with_editor(function (editor) {
+            switch (typeof this.command) {
+            case 'string': editor.execCommand(this.command); break;
+            case 'function': this.command(editor); break;
+            }
+        }.bind(this));
+    },
+});
+var Group = instance.website.ActionGroup = instance.website.Action.extend({
+    template: 'Website.ActionGroup',
+    events: { 'click > button': 'perform' },
+    instances: [],
+    init: function (parent, name, actions) {
+        this._super(parent, name);
+        this.actions = _(actions).map(this.getParent().proxy('init_command'));
+    },
+    start: function () {
+        this.instances.push(this);
+        var $ul = this.$('ul');
+        return $.when.apply(null, _(this.actions).map(function (action) {
+            var $li = $('<li>').appendTo($ul);
+            return action.appendTo($li);
+        }));
+    },
+    destroy: function () {
+        this.instances = _(this.instances).without(this);
+        return this._super();
+    },
+    perform: function () {
+        this.getParent().with_editor(function () {
+            _(this.instances).chain()
+                .without(this)
+                .pluck('$el')
+                .invoke('removeClass', 'open');
+            // JS part of bootstrap dropdown does really weird stuff which
+            // interacts quite badly with the RTE thing, so bypass it
+            this.$el.toggleClass('open');
+        }.bind(this), false);
+        return false;
+    },
+    toggle: function (to) {
+        this.$('> button').prop('disabled', !to);
+    },
+});
+
+instance.website.RTE = instance.web.Widget.extend({
+    tagName: 'li',
+    className: 'oe_right oe_rte_toolbar',
+    commands: [
+        [Command, "\uf032", 'bold'],
+        [Command, "\uf033", 'italic'],
+        [Command, "\uf0cd", 'underline'],
+        [Command, "\uf0cc", 'strike'],
+        [Command, "\uf12b", 'superscript'],
+        [Command, "\uf12c", 'subscript'],
+        [Group, "\uf0ca", [
+            [Command, "\uf0ca", 'bulletedlist'],
+            [Command, "\uf0cb", 'numberedlist']
+        ]],
+        [Group, _lt("Heading"), [
+            [Style, _lt('H1'), { element: 'h1' }],
+            [Style, _lt('H2'), { element: 'h2', }],
+            [Style, _lt('H3'), { element: 'h3', }],
+            [Style, _lt('H4'), { element: 'h4', }],
+            [Style, _lt('H5'), { element: 'h5', }],
+            [Style, _lt('H6'), { element: 'h6', }]
+        ]]
+    ],
+    // editor.ui.items -> possible commands &al
+    // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
+    start: function () {
+        this.$el.hide();
+
+        return $.when.apply(
+            null, _(this.commands).map(this.proxy('start_command')));
+    },
+    init_command: function (command) {
+        var type = command[0], args = command.slice(1);
+        args.unshift(this);
+        var F = function (args) {
+            return type.apply(this, args);
+        };
+        F.prototype = type.prototype;
+
+        return new F(args);
+    },
+    start_command: function (command) {
+        return this.init_command(command).appendTo(this.$el);
+    },
+    start_edition: function ($elements) {
+        var self = this;
+        this.$el.show();
+        this.disable();
+        CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
+        $elements
+            .not('span, [data-oe-type]')
+            .each(function () {
+                var $this = $(this);
+                CKEDITOR.inline(this, self._config()).on('change', function () {
+                    $this.addClass('oe_dirty');
+                    self.trigger('change', this, null);
+                });
+            });
+    },
+
+    /**
+     * @param {Function} fn
+     * @param {Boolean} [snapshot=true]
+     * @returns {$.Deferred}
+     */
+    with_editor: function (fn, snapshot) {
+        var editor = this._current_editor();
+        if (snapshot !== false) { editor.fire('saveSnapshot'); }
+        return $.when(fn(editor)).then(function () {
+            if (snapshot !== false) { editor.fire('saveSnapshot'); }
+            editor.focus();
+        });
+    },
+
+
+    toggle: function (to) {
+        _(this.getChildren()).chain()
+            .filter(function (child) { return child instanceof instance.website.Action })
+            .invoke('toggle', to);
+    },
+    disable: function () {
+        this.toggle(false);
+    },
+
+    _current_editor: function () {
+        return CKEDITOR.currentInstance;
+    },
+    _change_focused_editor: function () {
+        this.toggle(!!CKEDITOR.currentInstance);
+    },
+    _config: function () {
+        return {
+            // Don't load ckeditor's style rules
+            stylesSet: [],
+            // Remove toolbar entirely
+            removePlugins: 'toolbar,elementspath,resize',
+            uiColor: '',
+            // Ensure no config file is loaded
+            customConfig: '',
+            // Disable ACF
+            allowedContent: true,
+        };
     },
 });
 
