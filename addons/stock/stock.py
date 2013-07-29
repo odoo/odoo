@@ -1697,13 +1697,13 @@ class stock_move(osv.osv):
             if picking_type in ('in', 'internal'):
                 try:
                     location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-                    self.check_access_rule(cr, uid, [location_id], 'read', context=context)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
             elif picking_type == 'out':
                 try:
                     location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
-                    self.check_access_rule(cr, uid, [location_id], 'read', context=context)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
 
@@ -1955,12 +1955,12 @@ class stock_move(osv.osv):
             location_dest_id = 'stock_location_customers'
         try:
             source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-            self.check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
+            self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
         except (orm.except_orm, ValueError):
             source_location = False
         try:
             dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
-            self.check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
+            self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
         except (orm.except_orm, ValueError):
             dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
