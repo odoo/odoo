@@ -116,29 +116,127 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
 });
 
+instance.website.Action = instance.web.Widget.extend({
+    tagName: 'button',
+    attributes: {
+        type: 'button',
+    },
+    events: { click: 'perform' },
+    init: function (parent, name) {
+        this._super(parent);
+        this.name = name;
+    },
+    start: function () {
+        this.$el.text(this.name);
+        return this._super();
+    },
+    /**
+     * Executes action
+     */
+    perform: null
+});
+var Style = instance.website.Style = instance.website.Action.extend({
+    init: function (parent, name, style) {
+        this._super(parent, name);
+        this.style = style;
+    },
+    perform: function () {
+        this.getParent().with_editor(function (editor) {
+            editor.applyStyle(new CKEDITOR.style(this.style))
+        }.bind(this));
+    },
+});
+var Command = instance.website.Command = instance.website.Action.extend({
+    init: function (parent, name, command) {
+        this._super(parent, name);
+        this.command = command;
+    },
+    perform: function () {
+        this.getParent().with_editor(function (editor) {
+            switch (typeof this.command) {
+            case 'string': editor.execCommand(this.command); break;
+            case 'function': this.command(editor); break;
+            }
+        }.bind(this));
+    },
+});
+var Group = instance.website.ActionGroup = instance.website.Action.extend({
+    template: 'Website.ActionGroup',
+    events: { 'click > button': 'perform' },
+    instances: [],
+    init: function (parent, name, actions) {
+        this._super(parent, name);
+        this.actions = _(actions).map(this.getParent().proxy('init_command'));
+    },
+    start: function () {
+        this.instances.push(this);
+        var $ul = this.$('ul');
+        return $.when.apply(null, _(this.actions).map(function (action) {
+            var $li = $('<li>').appendTo($ul);
+            return action.appendTo($li);
+        }));
+    },
+    destroy: function () {
+        this.instances = _(this.instances).without(this);
+        return this._super();
+    },
+    perform: function () {
+        this.getParent().with_editor(function () {
+            _(this.instances).chain()
+                .without(this)
+                .pluck('$el')
+                .invoke('removeClass', 'open');
+            // JS part of bootstrap dropdown does really weird stuff which
+            // interacts quite badly with the RTE thing, so bypass it
+            this.$el.toggleClass('open');
+        }.bind(this), false);
+        return false;
+    },
+});
+
 instance.website.RTE = instance.web.Widget.extend({
     tagName: 'li',
-    className: 'oe_right',
+    className: 'oe_right oe_rte_toolbar',
     commands: [
-        {name: _lt('Bold'), command: 'bold'},
-        {name: _lt('Italic'), command: 'italic'},
-        {name: _lt('Underline'), command: 'underline'},
-        {name: _lt('Strikethrough'), command: 'strike'},
-        {name: _lt('H1'), style: { element: 'h1' }},
-        {name: _lt('H2'), style: { element: 'h2', }},
-        {name: _lt('H3'), style: { element: 'h3', }},
-        {name: _lt('H4'), style: { element: 'h4', }},
-        {name: _lt("Red"), style: { element: 'span', styles: { color: 'red' } }}
+        [Command, "\uf032", 'bold'],
+        [Command, "\uf033", 'italic'],
+        [Command, "\uf0cd", 'underline'],
+        [Command, "\uf0cc", 'strike'],
+        [Command, "\uf12b", 'superscript'],
+        [Command, "\uf12c", 'subscript'],
+        [Group, "\uf0ca", [
+            [Command, "\uf0ca", 'bulletedlist'],
+            [Command, "\uf0cb", 'numberedlist']
+        ]],
+        [Group, _lt("Heading"), [
+            [Style, _lt('H1'), { element: 'h1' }],
+            [Style, _lt('H2'), { element: 'h2', }],
+            [Style, _lt('H3'), { element: 'h3', }],
+            [Style, _lt('H4'), { element: 'h4', }],
+            [Style, _lt('H5'), { element: 'h5', }],
+            [Style, _lt('H6'), { element: 'h6', }]
+        ]]
     ],
     // editor.ui.items -> possible commands &al
     // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
     start: function () {
-        var self = this;
         this.$el.hide();
 
-        _(this.commands).foldl(function (jq, command) {
-            return jq.add(self.button_for(command));
-        }, $()).appendTo(this.$el);
+        return $.when.apply(
+            null, _(this.commands).map(this.proxy('start_command')));
+    },
+    init_command: function (command) {
+        var type = command[0], args = command.slice(1);
+        args.unshift(this);
+        var F = function (args) {
+            return type.apply(this, args);
+        };
+        F.prototype = type.prototype;
+
+        return new F(args);
+    },
+    start_command: function (command) {
+        return this.init_command(command).appendTo(this.$el);
     },
     start_edition: function ($elements) {
         var self = this;
@@ -154,20 +252,18 @@ instance.website.RTE = instance.web.Widget.extend({
             });
     },
 
-    button_for: function (command) {
-        var self = this;
-        return $('<button type="button">').click(function () {
-            var editor = self._current_editor();
-            editor.fire('saveSnapshot');
-
-            if (command.style) {
-                editor.applyStyle(new CKEDITOR.style(command.style));
-            } else if (typeof command.command === 'string') {
-                editor.execCommand(command.command);
-            } else {
-                command.command(editor);
-            }
-        }).text(command.name);
+    /**
+     * @param {Function} fn
+     * @param {Boolean} [snapshot=true]
+     * @returns {$.Deferred}
+     */
+    with_editor: function (fn, snapshot) {
+        var editor = this._current_editor();
+        if (snapshot !== false) { editor.fire('saveSnapshot'); }
+        return $.when(fn(editor)).then(function () {
+            if (snapshot !== false) { editor.fire('saveSnapshot'); }
+            editor.focus();
+        });
     },
 
     _current_editor: function () {

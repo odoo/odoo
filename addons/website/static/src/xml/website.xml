@@ -11,4 +11,12 @@
         <li class="oe_right"><button data-action="edit">Edit</button></li>
     </ul>
 </t>
+<t t-name="Website.ActionGroup">
+    <div class="dropdown">
+        <button type="button" class="oe_button_list dropdown-toggle">
+            <t t-esc="widget.name"/>
+        </button>
+        <ul class="dropdown-menu" role="menu"/>
+    </div>
+</t>
 </templates>
