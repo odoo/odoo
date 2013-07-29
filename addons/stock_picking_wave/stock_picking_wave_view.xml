@@ -13,7 +13,7 @@
                         <group>
                     <group>
                         <field name="name"/>
-                        <field name="resp_id"/>
+                        <field name="partner_id"/>
                     </group>
                     <group>
                         <label for="capacity"/>
@@ -35,8 +35,8 @@
                             <field name="invoice_state"/>
                             <field name="stock_journal_id" widget="selection"/>
                             <field name="state"/>
-                            <button name="wave_confirm_picking" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
-                            <button name="wave_cancel_picking" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                            <button name="action_done" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                            <button name="action_cancel" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
                         </tree>
                     </field>
                     </sheet>
@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
                 <tree string="Stock Picking Waves">
                     <field name="name"/>
-                    <field name="resp_id"/>
+                    <field name="partner_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
                     <field name="time" widget="float_time"/>
