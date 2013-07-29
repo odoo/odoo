@@ -24,6 +24,7 @@ class website_mail(website):
             'nav_list': dict(),
             'prev_date': None,
             'next_date': None,
+            'mail_group_id': mail_group_id,
         }
         domain = mail_group_id and [("res_id", "=", mail_group_id)] or []
 
@@ -83,6 +84,8 @@ class website_mail(website):
                     body=request.session.body,
                     parent_id=blog_id,
                     website_published=blog_id and True or False,
+                    type='comment',
+                    subtype='mt_comment',
                     context={'mail_create_nosubscribe': True},
                 )
             request.session.body = False
@@ -91,3 +94,24 @@ class website_mail(website):
             return '%s/blog/%s/%s' % (url, mail_group_id, blog_id)
         else:
             return werkzeug.utils.redirect("/blog/%s/%s" % (mail_group_id, blog_id))
+
+    @website.route(['/blog/<int:mail_group_id>/new'], type='http', auth="admin")
+    def new_blog(self, cr, uid, mail_group_id=None, **post):
+        values = {
+            'res_company': request.registry['res.company'].browse(cr, uid, 1),
+            'mail_group_id': mail_group_id,
+        }
+        html = self.render(cr, uid, "website_mail.new_blog", values)
+        return html
+
+    @website.route(['/blog/<int:mail_group_id>/new/post'], type='http', auth="admin")
+    def new_blog_post(self, cr, uid, mail_group_id=None, **post):
+        blog_id = request.registry['mail.group'].message_post(cr, uid, mail_group_id,
+                body=post['body'],
+                subject=post['subject'],
+                website_published=False,
+                type='comment',
+                subtype='mt_comment',
+                context={'mail_create_nosubscribe': True},
+            )
+        return werkzeug.utils.redirect("/blog/%s/%s" % (mail_group_id, blog_id))
