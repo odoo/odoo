@@ -19,9 +19,10 @@ from . import scaffold
 from . import uninstall
 from . import update
 from . import web
+from . import grunt_tests
 
 command_list_server = (conf, cron, drop, initialize, model, module, read, run_tests,
-                       scaffold, uninstall, update, web, )
+                       scaffold, uninstall, update, web, grunt_tests, )
 
 command_list_client = (Call, Open, Show, ConsumeNothing, ConsumeMemory,
                        LeakMemory, ConsumeCPU, Bench, BenchRead,
