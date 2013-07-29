@@ -2,10 +2,6 @@
 <openerp>
 <data>
 
-    <record id="website_sale.shipping_address" model="res.partner.category">
-        <field name="name">Shipping Address</field>
-    </record>
-
     <!-- Layout add nav and footer -->
 
     <record id="header_ecommerce" model="ir.ui.view">
@@ -208,7 +204,7 @@
                     </div>
                     <div class="span8 oe_checkout">
                         <div class="js_inputs row">
-                            <a t-if="not partner" href="/admin#action=goback" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-att-href="'/admin#action=redirect&amp;url=%%s/shop/checkout' %% host_url" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="span8">Billing Information</h3>
                             <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="name" placeholder="Name and firstname" t-att-value="partner.name or ''"/></label>
                             <label class="span4 css_required">Telephone<input type="tel" name="phone" placeholder="Telephone" t-att-value="partner.phone or ''"/></label>

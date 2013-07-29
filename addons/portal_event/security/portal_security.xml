@@ -2,22 +2,22 @@
 <openerp>
     <data noupdate="1">
 
-        <record model="ir.rule" id="event_event_portal_anonymous_rule">
-            <field name="name">Event: portal and anonymous users: public only</field>
+        <record model="ir.rule" id="event_event_website_rule">
+            <field name="name">Event: portal and public users: public only</field>
             <field name="model_id" ref="event.model_event_event"/>
             <field name="domain_force">['|',
                                             ('visibility', '=', 'public'),
                                             ('message_follower_ids', 'in', [user.partner_id.id])
                                         ]
             </field>
-            <field name="groups" eval="[(4, ref('portal.group_portal')), (4, ref('portal.group_anonymous'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal')), (4, ref('base.group_public'))]"/>
         </record>
 
-        <record model="ir.rule" id="event_registration_portal_anonymous_rule">
-            <field name="name">Event/Registration: portal and anonymous users: personal only</field>
+        <record model="ir.rule" id="event_registration_website_rule">
+            <field name="name">Event/Registration: portal and public users: personal only</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="domain_force">[('user_id', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('portal.group_portal')), (4, ref('portal.group_anonymous'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal')), (4, ref('base.group_public'))]"/>
         </record>
 
     </data>

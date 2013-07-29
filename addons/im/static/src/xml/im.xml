@@ -31,12 +31,12 @@
         <div class="oe_im_chatview">
             <div class="oe_im_chatview_header">
                 <img t-att-src="_s +'/im/static/src/img/green.png'" class="oe_im_chatview_online"/>
-                <t t-esc="widget.user.get('name') || 'Anonymous'"/>
+                <t t-esc="widget.user.get('name') || 'Public'"/>
                 <scan class="oe_im_chatview_nbr_messages" />
                 <button class="oe_im_chatview_close">×</button>
             </div>
             <div class="oe_im_chatview_disconnected">
-                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user.get("name") || "Anonymous")'/>
+                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user.get("name") || "Public")'/>
             </div>
             <div class="oe_im_chatview_content">
                 <div></div>
@@ -51,7 +51,7 @@
             <div class="oe_im_chatview_clip">
                 <img class="oe_im_chatview_avatar" t-att-src='user.get("image_url")'/>
             </div>
-            <div class="oe_im_chatview_from"><t t-esc="user.get('name') || 'Anonymous'"/></div>
+            <div class="oe_im_chatview_from"><t t-esc="user.get('name') || 'Public'"/></div>
             <div class="oe_im_chatview_bubble_list">
                 <t t-foreach="items" t-as="item">
                     <div class="oe_im_chatview_bubble_item"><t t-esc="item"/></div>

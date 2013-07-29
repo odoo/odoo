@@ -18,7 +18,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             inputPlaceholder: "How may I help you?",
             defaultMessage: null,
             auto: false,
-            userName: "Anonymous",
+            userName: "Public",
         });
         defaultInputPlaceholder = options.inputPlaceholder;
         userName = options.userName;

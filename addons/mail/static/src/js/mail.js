@@ -2,7 +2,7 @@ openerp.mail = function (session) {
     var _t = session.web._t,
        _lt = session.web._lt;
 
-    var mail = session.mail = {};
+    var mail = session.mail;
 
     openerp_mail_followers(session, mail);          // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
@@ -723,7 +723,6 @@ openerp.mail = function (session) {
             var values = {
                 'body': this.$('textarea').val(),
                 'subject': false,
-                'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'partner_ids': partner_ids,
                 'context': _.extend(this.parent_thread.context, {
@@ -967,6 +966,24 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
+        },
+
+        on_record_clicked: function  (event) {
+            event.stopPropagation();
+            var state = {
+                'model': this.model,
+                'id': this.res_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
+            this.do_action({
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'form']]
+            });
+            return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */

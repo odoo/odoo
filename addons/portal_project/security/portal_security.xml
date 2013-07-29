@@ -25,11 +25,11 @@
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
 
-        <record model="ir.rule" id="project_anonymous_rule">
-            <field name="name">Project: anonymous users: public only</field>
+        <record model="ir.rule" id="project_public_rule">
+            <field name="name">Project: public users: public only</field>
             <field name="model_id" ref="project.model_project_project"/>
             <field name="domain_force">[('privacy_visibility', '=', 'public')]</field>
-            <field name="groups" eval="[(4, ref('portal.group_anonymous'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         </record>
 
         <record model="ir.rule" id="project.task_visibility_rule">
@@ -57,11 +57,11 @@
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
 
-        <record model="ir.rule" id="task_anonymous_rule">
-            <field name="name">Project/Task: anonymous users: public only</field>
+        <record model="ir.rule" id="task_public_rule">
+            <field name="name">Project/Task: public users: public only</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="domain_force">[('project_id.privacy_visibility', '=', 'public')]</field>
-            <field name="groups" eval="[(4, ref('portal.group_anonymous'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         </record>
 
     </data>

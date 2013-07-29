@@ -42,15 +42,15 @@ class crm_contact_us(osv.TransientModel):
 
     def _get_user_name(self, cr, uid, context=None):
         """
-        If the user is logged in (i.e. not anonymous), get the user's name to
+        If the user is logged in (i.e. not public), get the user's name to
         pre-fill the partner_name field.
         Same goes for the other _get_user_attr methods.
 
-        @return current user's name if the user isn't "anonymous", None otherwise
+        @return current user's name if the user isn't "public", None otherwise
         """
         user = self.pool.get('res.users').read(cr, uid, uid, ['login'], context)
 
-        if (user['login'] != 'anonymous'):
+        if (user['login'] != 'public'):
             return self.pool.get('res.users').name_get(cr, uid, uid, context)[0][1]
         else:
             return None
@@ -58,7 +58,7 @@ class crm_contact_us(osv.TransientModel):
     def _get_user_email(self, cr, uid, context=None):
         user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'email'], context)
 
-        if (user['login'] != 'anonymous' and user['email']):
+        if (user['login'] != 'public' and user['email']):
             return user['email']
         else:
             return None
@@ -66,7 +66,7 @@ class crm_contact_us(osv.TransientModel):
     def _get_user_phone(self, cr, uid, context=None):
         user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'phone'], context)
 
-        if (user['login'] != 'anonymous' and user['phone']):
+        if (user['login'] != 'public' and user['phone']):
             return user['phone']
         else:
             return None

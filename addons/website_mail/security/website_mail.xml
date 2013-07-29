@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="group_website_mail_reply" model="res.groups">
+        <field name="name">Visitors can reply on blogs</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="website_mail_public" model="ir.rule">
+        <field name="name">website_mail: Public message</field>
+        <field name="model_id" ref="model_mail_message"/>
+        <field name="domain_force">[('website_published', '=', True), ("model", "=", 'mail.group')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</data>
+</openerp>

@@ -16,14 +16,15 @@ instance.website.EditorBar = instance.web.Widget.extend({
     start: function() {
         var self = this;
 
-        this.$('button[data-action]').prop('disabled', true);
+        this.$('button[data-action]').prop('disabled', true)
+            .parent().hide();
         this.$buttons = {
             edit: this.$('button[data-action=edit]'),
             save: this.$('button[data-action=save]'),
             cancel: this.$('button[data-action=cancel]'),
             snippet: this.$('button[data-action=snippet]'),
         };
-        this.$buttons.edit.add(this.$buttons.snippet).prop('disabled', false);
+        this.$buttons.edit.prop('disabled', false).parent().show();
 
         self.snippet_start();
 
@@ -32,12 +33,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
 
         return $.when(
             this._super.apply(this, arguments),
-            this.rte.appendTo(this.$el)
+            this.rte.insertBefore(this.$buttons.snippet.parent())
         );
     },
     edit: function () {
-        this.$buttons.edit.prop('disabled', true);
-        this.$buttons.cancel.prop('disabled', false);
+        this.$buttons.edit.prop('disabled', true).parent().hide();
+        this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
+            .add(this.$buttons.save)
+            .parent().show();
         // TODO: span edition changing edition state (save button)
         this.rte.start_edition(
                 $('[data-oe-model]')
@@ -133,7 +136,10 @@ instance.website.Action = instance.web.Widget.extend({
     /**
      * Executes action
      */
-    perform: null
+    perform: null,
+    toggle: function (to) {
+        this.$el.prop('disabled', !to);
+    },
 });
 var Style = instance.website.Style = instance.website.Action.extend({
     init: function (parent, name, style) {
@@ -192,6 +198,9 @@ var Group = instance.website.ActionGroup = instance.website.Action.extend({
         }.bind(this), false);
         return false;
     },
+    toggle: function (to) {
+        this.$('> button').prop('disabled', !to);
+    },
 });
 
 instance.website.RTE = instance.web.Widget.extend({
@@ -240,6 +249,8 @@ instance.website.RTE = instance.web.Widget.extend({
     },
     start_edition: function ($elements) {
         var self = this;
+        this.$el.show();
+        this.disable();
         CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
             .not('span, [data-oe-type]')
@@ -266,11 +277,21 @@ instance.website.RTE = instance.web.Widget.extend({
         });
     },
 
+
+    toggle: function (to) {
+        _(this.getChildren()).chain()
+            .filter(function (child) { return child instanceof instance.website.Action })
+            .invoke('toggle', to);
+    },
+    disable: function () {
+        this.toggle(false);
+    },
+
     _current_editor: function () {
         return CKEDITOR.currentInstance;
     },
     _change_focused_editor: function () {
-        this.$el.toggle(!!CKEDITOR.currentInstance);
+        this.toggle(!!CKEDITOR.currentInstance);
     },
     _config: function () {
         return {
@@ -370,13 +391,12 @@ $(function(){
 });
 
 
-/**
- * Client action to go back in global history.
- * If can't go back in history stack, will go back to home.
- */
-instance.web.ActionGoBack = function(parent, action) {
-    window.location.href = document.referrer;
+instance.web.ActionRedirect = function(parent, action) {
+    var url = $.deparam(window.location.href).url;
+    if (url) {
+        window.location.href = url;
+    }
 };
-instance.web.client_actions.add("goback", "instance.web.ActionGoBack");
+instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
 
 };

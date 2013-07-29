@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_website_mail_config_settings" model="ir.ui.view">
+            <field name="name">website_mail settings</field>
+            <field name="model">website.config.settings</field>
+            <field name="inherit_id" ref="website.view_website_config_settings"/>
+            <field name="arch" type="xml">
+                <form position="inside">
+                    <separator string="Blog"/>
+                    <group>
+                        <field name="group_website_mail_reply"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
