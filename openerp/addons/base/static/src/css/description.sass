@@ -3,9 +3,8 @@
 @import "compass/css3/user-interface"
 
 /**
- *  This CSS contains the website layout framework
- *  which is common to both the website and the 
- *  OpenERP application.
+ *  This CSS is for the html description of modules
+ * TODO clean
  */
 
 /* --------------------------------- * 
@@ -14,7 +13,6 @@
 
 /* --- Styling for the V8/Lato/White/Purple design --- */
 
-$v8_footer_color: #e9e9e9
 $v8_title_font_color: rgb(51,51,51)
 $v8_text_font_color:  rgb(100,100,100)
 $v8_font_paragraph_color:   rgb(51,51,51)
@@ -25,17 +23,22 @@ $v8_title_font_family:  'Lato','Open Sans','Helvetica',Sans
 $v8_anchor_color: #6D57E0
 $v8_anchor_visited_color: rgb(91, 40, 79)
 
-body.oe_styling_v8
-  background: $v8_footer_color
+
+.openerp .oe_form_sheet_width
+  max-width: 960px
+
+.openerp .oe_form .oe_styling_v8
+  width: 100%
   padding: 0
   margin: 0
-
-.oe_styling_v8
   font-family: $v8_text_font_family
   font-weight: 300
   color: $v8_text_font_color
   background: $v8_bg_color
   font-size: 16px
+
+  .oe_websiteonly
+    display: none
 
   .oe_website_contents
     background: $v8_body_color
@@ -79,8 +82,6 @@ body.oe_styling_v8
   margin: 0px auto 64px auto
   max-width: 992px
 
-
-.oe_container
 
 .oe_row
   width: 928px
@@ -393,9 +394,6 @@ $oe_span2_width:  154px
   h5.oe_slogan
     font-weight: 300
     //TODO
-
-  h2.oe_slogan+h3.oe_slogan
-    margin-top: -28px
 
 /* ------ QUOTES ----- */
 

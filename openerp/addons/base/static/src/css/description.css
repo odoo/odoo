@@ -1,47 +1,50 @@
 @charset "utf-8";
 /*
- *  This CSS contains the website layout framework
- *  which is common to both the website and the 
- *  OpenERP application.
+ *  This CSS is for the html description of modules
+ * TODO clean
  */
 /* --------------------------------- *
  *          STYLING CONTEXT          *
  * --------------------------------- */
 /* --- Styling for the V8/Lato/White/Purple design --- */
-body.oe_styling_v8 {
-  background: #e9e9e9;
-  padding: 0;
-  margin: 0;
+.openerp .oe_form_sheet_width {
+  max-width: 960px;
 }
 
-.oe_styling_v8 {
+.openerp .oe_form .oe_styling_v8 {
+  width: 100%;
+  padding: 0;
+  margin: 0;
   font-family: "Open Sans", "Helvetica", Sans;
   font-weight: 300;
   color: #646464;
   background: white;
   font-size: 16px;
 }
-.oe_styling_v8 .oe_website_contents {
+.openerp .oe_form .oe_styling_v8 .oe_websiteonly {
+  display: none;
+}
+.openerp .oe_form .oe_styling_v8 .oe_website_contents {
   background: whitesmoke;
   padding-bottom: 1px;
 }
-.oe_styling_v8 b {
+.openerp .oe_form .oe_styling_v8 b {
   font-weight: 600;
 }
-.oe_styling_v8 a {
+.openerp .oe_form .oe_styling_v8 a {
   color: #6d57e0;
   text-decoration: none;
 }
-.oe_styling_v8 a:visited {
+.openerp .oe_form .oe_styling_v8 a:visited {
   color: #5b284f;
 }
-.oe_styling_v8 a:hover {
+.openerp .oe_form .oe_styling_v8 a:hover {
   color: #0096eb;
 }
-.oe_styling_v8 .oe_title_font {
+.openerp .oe_form .oe_styling_v8 .oe_title_font {
   font-family: "Lato", "Open Sans", "Helvetica", Sans;
 }
-.oe_styling_v8 .oe_page {
+.openerp .oe_form .oe_styling_v8 .oe_page {
   background: white;
   overflow: hidden;
   -webkit-border-radius: 1px;
@@ -53,10 +56,10 @@ body.oe_styling_v8 {
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
-.oe_styling_v8 .oe_emph {
+.openerp .oe_form .oe_styling_v8 .oe_emph {
   font-weight: 400;
 }
-.oe_styling_v8 .oe_dark {
+.openerp .oe_form .oe_styling_v8 .oe_dark {
   overflow: hidden;
   background: #fcfcfc;
   -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
@@ -517,9 +520,6 @@ body.oe_styling_v8 {
 }
 .oe_styling_v8 h5.oe_slogan {
   font-weight: 300;
-}
-.oe_styling_v8 h2.oe_slogan + h3.oe_slogan {
-  margin-top: -28px;
 }
 
 /* ------ QUOTES ----- */
