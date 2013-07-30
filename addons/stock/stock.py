@@ -394,7 +394,8 @@ class stock_picking(osv.osv):
     def create(self, cr, user, vals, context=None):
         context = context or {}
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
-            ptype_id = vals.get('picking_type_id', context['default_picking_type_id'])
+            print 'Picking Vals', vals, context
+            ptype_id = vals.get('picking_type_id', context.get('picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
             vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
         return super(stock_picking, self).create(cr, user, vals, context)
