@@ -438,7 +438,9 @@ class stock_picking(osv.osv):
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
-        'state': fields.function(_state_get, type="selection", store = {'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type', 'move_lines'], 20), 'stock.move': (_get_pickings, ['state'], 20)}, selection = [
+        'state': fields.function(_state_get, type="selection", store = {
+            'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type', 'move_lines'], 20),
+            'stock.move': (_get_pickings, ['state', 'picking_id'], 20)}, selection = [
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
             ('auto', 'Waiting Another Operation'),
@@ -571,22 +573,21 @@ class stock_picking(osv.osv):
 
     # Methods for partial pickings
 
-    def _create_backorder(self, cr, uid, picking, context=None):
-        sequence_obj = self.pool.get('ir.sequence')
-        new_picking_name = picking.name
-        seq_id = picking.picking_type_id.sequence_id.id
-        back_order_name = sequence_obj.get_id(cr, uid, seq_id, 'id', context=context)
-        self.write(cr, uid, [picking.id], {'name': back_order_name})
-        backorder_id = self.copy(cr, uid, picking.id, {
-            'name': new_picking_name,
-            'move_lines': [],
-        })
-        self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
-        unlink_operation_order = [(2, op.id) for op in picking.pack_operation_ids]
-        self.write(cr, uid, [picking.id], {'backorder_id': backorder_id, 'pack_operation_ids': unlink_operation_order}, context=context)
 
-        done_move_ids = [x.id for x in picking.move_lines if x.state == 'done']
-        self.pool.get('stock.move').write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
+    def _create_backorder(self, cr, uid, picking, context=None):
+        """
+            Move all non-done lines into a new backorder picking
+        """
+        backorder_id = self.copy(cr, uid, picking.id, {
+            'name': '/',
+            'move_lines': [],
+            'pack_operation_ids': [],
+            'backorder_id': picking.id,
+        })
+        back_order_name = self.browse(cr, uid, backorder_id, context=context).name
+        self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
+        notdone_move_ids = [x.id for x in picking.move_lines if x.state not in ('done','cancel')]
+        self.pool.get('stock.move').write(cr, uid, notdone_move_ids, {'picking_id': backorder_id}, context=context)
         return backorder_id
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
@@ -677,7 +678,7 @@ class stock_picking(osv.osv):
                     quants = []
                     for m in moves:
                         for quant in m.quant_ids:
-                            quants.append(quand.id)
+                            quants.append(quant.id)
                     quant_obj.write(cr, uid, quants, {
                         'package_id': op.result_package_id.id
                     }, context=context)
