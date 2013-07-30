@@ -215,9 +215,12 @@ instance.website.RTE = instance.web.Widget.extend({
         [Command, "\uf12c", 'subscript'],
         [Command, "\uf0c1", 'link'],
         [Command, "\uf127", 'unlink'],
+        [Command, "\uf10d", 'blockquote'],
         [Group, "\uf0ca", [
             [Command, "\uf0ca", 'bulletedlist'],
-            [Command, "\uf0cb", 'numberedlist']
+            [Command, "\uf0cb", 'numberedlist'],
+            [Command, "\uf03b", 'outdent'],
+            [Command, "\uf03c", 'indent']
         ]],
         [Group, _lt("Heading"), [
             [Style, _lt('H1'), { element: 'h1' }],
@@ -226,6 +229,12 @@ instance.website.RTE = instance.web.Widget.extend({
             [Style, _lt('H4'), { element: 'h4', }],
             [Style, _lt('H5'), { element: 'h5', }],
             [Style, _lt('H6'), { element: 'h6', }]
+        ]],
+        [Group, "\uf039", [
+            [Command, "\uf039", 'justifyblock'],
+            [Command, "\uf036", 'justifyleft'],
+            [Command, "\uf038", 'justifyright'],
+            [Command, "\uf037", 'justifycenter']
         ]]
     ],
     // editor.ui.items -> possible commands &al
