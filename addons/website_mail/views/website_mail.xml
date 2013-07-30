@@ -2,6 +2,14 @@
 <openerp>
 <data>
 
+    <!-- Mail group for the company's news -->
+
+    <record id="website_mail_blog" model="mail.group">
+        <field name="name">News</field>
+        <field name="public">public</field>
+        <field name="description">News displayed on your website</field>
+    </record>
+
     <!-- Layout add nav and footer -->
 
     <record id="header_website_mail" model="ir.ui.view">
@@ -9,8 +17,19 @@
         <field name="inherit_id" ref="website.header"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/blog">Blog</a></li>
+                <xpath expr="//li[last()]" position="after">
+                    <li class="pull-right"><a href="/blog/%(website_mail.website_mail_blog)d">News</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+    <record id="footer_website_mail" model="ir.ui.view">
+        <field name="name">footer_website_mail</field>
+        <field name="inherit_id" ref="website.footer"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//a[@href='/page/website.news']" position="replace">
+                    <a href="/blog/%(website_mail.website_mail_blog)d">News</a>
                 </xpath>
            </data>
         </field>
@@ -30,7 +49,7 @@
                 <div class="row">
                     <div class="span4">
                         <ul class="nav nav-list">
-                            <a t-if="mail_group_id" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn" groups="group_website_mail_manager">Post new Blog</a>
+                            <a t-if="mail_group_id" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn" groups="group_website_mail_manager">Add a new Blog</a>
                             <li class="nav-header">BLOG ARCHIVE</li>
                             <!-- TODO: check qweb iteration -->
                             <t t-foreach="nav_list" t-as="year">
@@ -111,25 +130,6 @@
                         </ul>
                         <a t-if="prev_date" t-att-href="'?date=%%s' %% (prev_date)" class="css_newer">Newer</a>
                         <a t-if="next_date" t-att-href="'?date=%%s' %% (next_date)" class="css_older">Older</a>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-
-    <template id="new_blog">
-        <t t-call="website.layout">
-            <t t-set="title">Blog</t>
-            <div class="container">
-                <div class="row">
-                    <div class="span4"> </div>
-                    <div class="span8">
-                        <form id="post" t-att-action="'/blog/%%s/new/post' %% mail_group_id" method="POST" class="form-horizontal text-center">
-                            <h4>Create your new Blog post</h4>
-                            <input type="text" name="subject" placeholder="Title" class="span8"/>
-                            <textarea rows="14" name="body" placeholder="Content" class="span8"> </textarea>
-                            <button type="submit" class="btn">Post your Blog</button>
-                        </form>
                     </div>
                 </div>
             </div>

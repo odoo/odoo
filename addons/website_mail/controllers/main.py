@@ -96,19 +96,10 @@ class website_mail(website):
             return werkzeug.utils.redirect("/blog/%s/%s" % (mail_group_id, blog_id))
 
     @website.route(['/blog/<int:mail_group_id>/new'], type='http', auth="admin")
-    def new_blog(self, cr, uid, mail_group_id=None, **post):
-        values = {
-            'res_company': request.registry['res.company'].browse(cr, uid, 1),
-            'mail_group_id': mail_group_id,
-        }
-        html = self.render(cr, uid, "website_mail.new_blog", values)
-        return html
-
-    @website.route(['/blog/<int:mail_group_id>/new/post'], type='http', auth="admin")
     def new_blog_post(self, cr, uid, mail_group_id=None, **post):
         blog_id = request.registry['mail.group'].message_post(cr, uid, mail_group_id,
-                body=post['body'],
-                subject=post['subject'],
+                body=_("Blog content.<br/>Please edit this content then you can publish this blog."),
+                subject=_("Blog title"),
                 website_published=False,
                 type='comment',
                 subtype='mt_comment',
