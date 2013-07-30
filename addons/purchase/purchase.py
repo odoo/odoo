@@ -1219,8 +1219,8 @@ class procurement_order(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
-            #TODO: so if the seller does not exist, it will just crash...
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
+            assert partner, ('There is no supplier associated to product %s', (procurements.product_id.name))
             seller_qty = procurement.product_id.seller_qty
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']

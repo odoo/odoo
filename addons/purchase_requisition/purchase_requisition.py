@@ -98,13 +98,11 @@ class purchase_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def tender_reset(self, cr, uid, ids, context=None):
-        #TODO doesn't work as netsvc is not defined + it's very weird
         self.write(cr, uid, ids, {'state': 'draft'})
-        wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
-            wf_service.trg_delete(uid, 'purchase.requisition', p_id, cr)
-            wf_service.trg_create(uid, 'purchase.requisition', p_id, cr)
+            self.delete_workflow(cr, uid, [p_id])
+            self.create_workflow(cr, uid, [p_id])
         return True
 
     def tender_done(self, cr, uid, ids, context=None):
@@ -287,9 +285,7 @@ class purchase_requisition(osv.osv):
                 raise osv.except_osv(_('Warning!'), _('You have no line selected for buying.'))
         else:
             #set tender to state done because no line exists
-            #TODO netsvc is not defined
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'purchase.requisition', tender.id, 'done', cr)
+            self.signal_done(cr, uid, [tender.id])
             return True
 
         #check for complete RFQ
@@ -327,25 +323,19 @@ class purchase_requisition(osv.osv):
         self.cancel_quotation(cr, uid, tender, context=context)
 
         #set tender to state done
-        #TODO netsvc is not defined
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'purchase.requisition', tender.id, 'done', cr)
+        self.signal_done(cr, uid, [tender.id])
         #self.tender_done(cr, uid, id, context=context)
         return True
 
     def trigger_validate_po(self, cr, uid, po_id, context=None):
-        #TODO netsvc is not defined
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'purchase.order', po_id, 'purchase_confirm', cr)
+        self.pool.get('purchase.order').signal_purchase_confirm(cr, uid, [po_id])
 
     def cancel_quotation(self, cr, uid, tender, context=None):
         #cancel other orders
         po = self.pool.get('purchase.order')
-        #TODO netsvc is not defined
-        wf_service = netsvc.LocalService("workflow")
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
-                wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
+                self.pool.get('purchase.order').signal_purchase_cancel(cr, uid, [quotation.id])
                 po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the call for bids associated to this request for quotation.'), context=context)
         return True
 
@@ -461,8 +451,7 @@ class procurement_order(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
         procurement = self.browse(cr, uid, ids, context=context)[0]
         if procurement.product_id.purchase_requisition:
-            #TODO: company is not defined
-            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
+            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
             res[procurement.id] = requisition_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'date_end': procurement.date_planned,
