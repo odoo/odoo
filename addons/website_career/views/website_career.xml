@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="header_career" model="ir.ui.view">
+            <field name="name">header_career</field>
+            <field name="type">qweb</field>
+            <field name="inherit_id" ref="website.header"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@class='container']" position="attributes">
+                        <!-- <attribute name="class">jumbotron subhead</attribute>
+                        <attribute name="id">overview</attribute> -->
+                        <attribute name="class"></attribute>
+                    </xpath>
+                    <!-- <xpath expr="//div[@id='overview']/div[@class='row']/div" position="attributes"> --> 
+                    <xpath expr="//div/div[@class='row']/div" position="attributes">
+                        <attribute name="class">span6</attribute>
+                    </xpath>
+                    <!-- <xpath expr="//div[@id='overview']/div[@class='row']/div[@class='span6']/a" position="replace"> -->
+                    <xpath expr="//div/div[@class='row']/div[@class='span6']/a" position="replace">
+                        <h1>OpenERP</h1>
+                        <p class="lead">Opensource Product.</p>
+                    </xpath>
+                     <!-- <xpath expr="//div[@id='overview']/div[@class='row']/div[@class='span6']" position="after"> --> 
+                    <xpath expr="//div/div[@class='row']/div[@class='span6']" position="after">
+                        <div class="span6">
+                            <!-- <div class="bsa well">
+                                 <div id="bsap_1277971" class="bsarocks bsap_c466df00a3cd5ee8568b5c4983b6bb19"></div> 
+                            </div> -->
+                        </div>
+                    </xpath>
+                    <xpath expr="(//li)[last()]" position="after">
+                        <li class="pull-right"><a href="/career">Career</a></li>
+                    </xpath>
+                    <!-- <xpath expr="//li[@*]" position="attributes">
+                         <li class="pull-right"><a href="/career">Career</a></li> 
+                        <attribute name="class"></attribute>
+                    </xpath> -->
+                    <!-- <xpath expr="(//li)[last()]" position="after">
+                        <li class="pull-right"><a href="/career">Career</a></li>
+                    </xpath>
+                    <xpath expr="(//ul)" position="attributes">
+                        <attribute name="class">nav nav-pills</attribute>
+                    </xpath>
+                    <xpath expr="(//ul)" position="before">
+                        <div class="subnav"></div>
+                    </xpath> -->
+                     <!-- <xpath expr="//div[@id='overview']/div[@class='row']/ul" position="replace">  
+                    <xpath expr="//div/div[@class='row']/ul" position="replace">
+                    </xpath>-->
+                    <!-- <xpath expr="//div[@id='overview']" position="after"> --> 
+                    <!--<xpath expr="//div" position="after">
+                        <div class="subnav">
+                            <ul class="nav nav-pills">
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/page/website.contactus">Contact Us</a></li>
+                                <li><a href="/career">Career</a></li>
+                                <li><a href="/blog">Blog</a></li>
+                            </ul>
+                        </div>
+                    </xpath>
+                -->
+                </data>
+            </field>
+        </record>
+        <record id="footer_career" model="ir.ui.view">
+            <field name="name">footer_career</field>
+            <field name="type">qweb</field>
+            <field name="inherit_id" ref="website.footer"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div" position="attributes">
+                        <attribute name="class">links</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="body_career" model="ir.ui.view">
+            <field name="name">body_career</field>
+            <field name="type">qweb</field>
+            <field name="inherit_id" ref="website.layout"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//html/body" position="attributes">
+                        <attribute name="class">preview</attribute>
+                        <attribute name="id">top</attribute>
+                        <attribute name="data-spy">scroll</attribute>
+                        <attribute name="data-target">.subnav</attribute>
+                        <attribute name="data-offset">80</attribute>
+                    </xpath>
+                    <xpath expr="//header" position="before">
+                        <div class="container"></div>
+                    </xpath>
+                    <xpath expr="//header" position="attributes">
+                        <!-- <attribute name="class"></attribute> -->
+                        <attribute name="class">jumbotron subhead</attribute>
+                        <attribute name="id">overview</attribute>
+                    </xpath>
+                    <xpath expr="//footer" position="attributes">
+                        <attribute name="class"></attribute>
+                        <attribute name="id">footer</attribute>
+                    </xpath>
+                    <xpath expr="//footer" position="before">
+                        <br/><br/><br/><br/>
+                    </xpath>
+                    <xpath expr="//div[@class='oe_website_body']" position="attributes">
+                        <attribute name="class"></attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <template id="career">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <link rel='stylesheet' href='/website_career/static/lib/bootstrap/css/bootstrap.min.css'/>
+                    <link rel='stylesheet' href='/website_career/static/lib/bootstrap/css/bootstrap.css'/>
+                    <link rel='stylesheet' href='/website_career/static/lib/bootstrap/css/bootswatch.css'/>
+                    <link rel='stylesheet' href='/website_career/static/lib/bootstrap/css/font-awesome.min.css'/>
+                </t>
+                <t t-set="title">Career</t>
+                <div class="container">
+                    <section id="tables">
+                        <div class="page-header">
+                            <h1>Job Position</h1>
+                        </div>
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Post Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="res_job" t-as="job">
+                                    <tr>
+                                        <td>
+                                            <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-record="job" t-field="name"><t t-esc="job.name"/></span></a><br/>
+                                            <span t-if="job.department_id"><t t-esc="job.department_id.name"/></span>
+                                            <span><t t-esc="job.post_date"/></span>
+                                        </td>
+                                        <td>
+                                            <a t-att-href="'/job/detail/%%s' %% job.id">Apply</a>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </section>
+                    <!--<div class="oe_row">
+                        <h2 class="oe_slogan">Job Position</h2>
+                        <table cellspacing="1" cellpadding="1">
+                            <t t-foreach="res_job" t-as="job">
+                               <tr>
+                                   <td><span t-record="job" t-field="name"><t t-esc="job.name"/></span></td>
+                                   <td><span t-record="job" t-field="no_of_recruitment"><t t-esc="job.no_of_recruitment"/></span></td>
+                                   <td t-if="job.description"><span t-record="job" t-field="description"><t t-esc="job.description"/></span></td>
+                               </tr>
+                            </t>
+                        </table>
+                </div>-->
+                </div>
+            </t>
+        </template>
+        <template id="detail">
+            <t t-call="website.layout">
+                <t t-set="title">Job Detail</t>
+                <div class="span4 pull-right">
+                    <ul class="pager">
+                        <li><a t-att-href="'/career'">Back</a></li>
+                    </ul>
+                </div>
+                <section id="typography">
+                    <div class="page-header">
+                        <h1><t t-esc="job.name"/></h1>
+                    </div>
+                    <div class="row">
+                        <div class="span12">
+                            <h3>Description</h3>
+                            <p t-if="job.description"><t t-esc="job.description"/></p>
+                            <h3>Requirements</h3>
+                            <p t-if="job.requirements"><t t-esc="job.requirements"/></p>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="website_career.applyjobpost">
+                </t>
+            </t>
+        </template>
+        <template id="applyjobpost">
+            <t t-set="title">Apply Job</t>
+            <section id="forms">
+                <div class="page-header">
+                    <h1>Apply</h1>
+                </div>
+                <div class="row">
+                    <form class="form-horizontal well" action="/job/success" method="post" enctype="multipart/form-data">
+                        <fieldset>
+                            <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
+                            <input type="hidden" t-att-value="job.id" name="job_id"/>
+                            <input type="hidden" t-att-value="job.name" name="name"/>
+                            <div class="control-group">
+                                <label class="control-label" for="nametxt">Full Name</label>
+                                <div class="controls">
+                                    <input type="text" class="input-xlarge" id="nametxt" name="partner_name"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="emailtxt">Email</label>
+                                <div class="controls">
+                                    <input type="text" class="input-xlarge" id="emailtxt" name="email_from"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="descriptiontxtarea">Description</label>
+                                <div class="controls">
+                                    <textarea rows="4" cols="50" class="input-xlarge" id="descriptiontxtarea" name="description">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="fileInput">Upload resume / cv</label>
+                                <div class="controls">
+                                    <input class="input-file" id="fileInput" type="file" name="ufile"/>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="reset" class="btn"><a t-att-href="'/career'">Cancel</a></button>
+                          </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+        </template>
+        <template id="thankyou">
+            <t t-call="website.layout">
+                <t t-set="title">Thank You!</t>
+                <div class="span4 pull-right">
+                    <ul class="pager">
+                        <li><a t-att-href="'/job/detail/%%s' %% jobid">Back</a></li>
+                    </ul>
+                </div>
+                <section id="typography">
+                    <div class="container">
+                        <div class="row">
+                            <h2 class="oe_slogan">You have successfully applied for job.</h2>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+     </data>
+</openerp>
