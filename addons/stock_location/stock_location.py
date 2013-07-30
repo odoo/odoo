@@ -90,8 +90,6 @@ class stock_location_path(osv.osv):
                 'date': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
-            vals = {}
-            vals['type'] = rule.picking_type
             if rule.location_dest_id.id<>move.location_dest_id.id:
                 move_obj._push_apply(self, cr, uid, move.id, context)
             return move.id
@@ -103,6 +101,7 @@ class stock_location_path(osv.osv):
                 'company_id': rule.company_id and rule.company_id.id or False,
                 'date_expected': newdate,
                 'picking_id': False,
+                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
                 'type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context),
                 'rule_id': rule.id,
                 'propagate': rule.propagate, 
@@ -309,7 +308,6 @@ class stock_location(osv.osv):
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
     }
-
 
     def get_putaway_strategy(self, cr, uid, location, product, context=None):
         pa = self.pool.get('product.putaway')
