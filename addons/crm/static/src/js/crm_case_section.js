@@ -1,4 +1,5 @@
 openerp.crm = function(openerp) {
+var _t = openerp.web._t;
     openerp.web_kanban.KanbanRecord.include({
         on_card_clicked: function() {
             if (this.view.dataset.model === 'crm.case.section') {
@@ -19,7 +20,7 @@ openerp.crm = function(openerp) {
                 self.$el.sparkline(value, {
                     type: 'bar',
                     barWidth: 5,
-                    tooltipFormat: _.str.sprintf("{{offset:offset}}: {{value}} %s",self.$el.closest("div[class='oe_salesteams_leads']").attr('class') ? 'Leads' : self.getParent().record.currency_symbol.raw_value),
+                    tooltipFormat: _.str.sprintf("{{offset:offset}}: {{value}} %s",self.$el.closest("div[class='oe_salesteams_leads']").attr('class') ? _t('Lead(s)') : self.getParent().record.currency_symbol.raw_value),
                     tooltipValueLookups: {
                         'offset': tooltips
                     },
