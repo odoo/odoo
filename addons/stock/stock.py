@@ -586,7 +586,7 @@ class stock_picking(osv.osv):
         self.write(cr, uid, [picking.id], {'backorder_id': backorder_id, 'pack_operation_ids': unlink_operation_order}, context=context)
 
         done_move_ids = [x.id for x in picking.move_lines if x.state == 'done']
-        self.write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
+        self.pool.get('stock.move').write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
         return backorder_id
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
