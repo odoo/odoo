@@ -394,7 +394,6 @@ class stock_picking(osv.osv):
     def create(self, cr, user, vals, context=None):
         context = context or {}
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
-            print 'Picking Vals', vals, context
             ptype_id = vals.get('picking_type_id', context.get('picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
             vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
@@ -2082,8 +2081,7 @@ class stock_picking_type(osv.osv):
             data = obj.read_group(cr, uid, domains[field] +
                 [('state', 'not in',('done','cancel','draft')), ('picking_type_id', 'in', ids)],
                 ['picking_type_id'], ['picking_type_id'], context=context)
-            print data
-            count = dict(map(lambda x: (x['picking_type_id'], x['picking_type_id_count']), data))
+            count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
             for tid in ids:
                 result.setdefault(tid, {})[field] = count.get(tid, 0)
         for tid in ids:
