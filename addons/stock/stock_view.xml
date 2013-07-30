@@ -655,6 +655,10 @@
                     <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
+                    <separator/>
+                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Pickings that are late on scheduled time"/>
+                    <separator/>
+                    <filter name="backorder" string="Backorders" domain="[('backorder_id','&lt;&gt;', False)]" help="Remaining parts of picking partially processed"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="product_id"/>
                     <field name="picking_type_id"/>
@@ -669,14 +673,77 @@
             </field>
         </record>
 
-        <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Moves</field>
+        <record id="action_picking_tree_waiting" model="ir.actions.act_window">
+            <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_confirmed': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
+
+        <record id="action_picking_tree_late" model="ir.actions.act_window">
+            <field name="name">Late Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_late': 1,
+                    'search_default_assigned': 1,
+                    'search_default_confirmed': 1,
+                    'search_default_available': 1
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
+
+        <record id="action_picking_tree_backorder" model="ir.actions.act_window">
+            <field name="name">Backorders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_backorder': 1,
+                    'search_default_assigned': 1,
+                    'search_default_confirmed': 1,
+                    'search_default_available': 1
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
+
+        <record id="action_picking_tree" model="ir.actions.act_window">
+            <field name="name">Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_available': 1
+            }
+            </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -1188,7 +1255,7 @@
                                     </div>
                                     <div class="oe_items_list">
                                         <div>
-                                            <a name="%(action_picking_tree)d" type="action" domain="[('picking_type_id', '=', record.id)]" context="{'toto': 1}">
+                                            <a name="%(action_picking_tree)d" type="action">
                                                 <field name="count_picking"/>
                                                 <t t-esc="record.name.raw_value"/>
                                             </a>
@@ -1197,26 +1264,26 @@
                                             </a>
                                         </div>
                                         <div t-if="record.count_picking_waiting.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree)d" type="action">
+                                            <a name="%(action_picking_tree_waiting)d" type="action">
                                                 <field name="count_picking_waiting"/>
                                                 Waiting
                                             </a>
                                         </div>
                                         <div t-if="record.count_picking_late.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree)d" type="action">
+                                            <a name="%(action_picking_tree_late)d" type="action">
                                                 <field name="count_picking_late"/>
                                                 Late
                                             </a>
-                                            <a name="%(action_picking_tree)d" type="action" class="oe_sparkline_bar_link">
+                                            <a name="%(action_picking_tree_late)d" type="action" class="oe_sparkline_bar_link">
                                                 <field name="latest_picking_late" widget="stock_sparkline" options="{'type': 'tristate'}"/>
                                             </a>
                                         </div>
                                         <div t-if="record.count_picking_backorders.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree)d" type="action">
+                                            <a name="%(action_picking_tree_backorder)d" type="action">
                                                 <field name="count_picking_backorders"/>
                                                 Backorders
                                             </a>
-                                            <a name="%(action_picking_tree)d" type="action" class="oe_sparkline_bar_link">
+                                            <a name="%(action_picking_tree_backorder)d" type="action" class="oe_sparkline_bar_link">
                                                 <field name="latest_picking_backorders" widget="stock_sparkline" options="{'type': 'tristate'}"/>
                                             </a>
                                         </div>
