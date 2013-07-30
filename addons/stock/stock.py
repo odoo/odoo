@@ -590,8 +590,33 @@ class stock_picking(osv.osv):
         self.write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
         return backorder_id
 
-    # FP Note: review all methods bellow this line for stock.picking
+    def do_prepare_partial(self, cr, uid, picking_ids, context=None):
+        context = context or {}
+        pack_operation_obj = self.pool.get('stock.pack.operation')
+        for picking in self.browse(cr, uid, picking_ids, context=context):
+            for move in picking.move_lines:
+                remaining_qty = move.product_qty
+                for quant in move.reserved_quant_ids:
+                    qty = min(quant.qty, move.product_qty)
+                    remaining_qty -= qty
+                    pack_operation_obj.create(cr, uid, {
+                        'picking_id': picking.id,
+                        'product_qty': qty,
+                        'quant_id': quant.id,
+                        'product_id': quant.product_id.id,
+                        'product_uom_id': quant.product_id.uom_id.id,
+                        'cost': quant.cost,
+                    }, context=context)
+                if remaining_qty > 0:
+                    pack_operation_obj.create(cr, uid, {
+                        'picking_id': picking.id,
+                        'product_qty': remaining_qty,
+                        'product_id': move.product_id.id,
+                        'product_uom_id': move.product_id.uom_id.id,
+                        'cost': move.product_id.standard_price,
+                    }, context=context)
 
+    # FP Note: review all methods bellow this line for stock.picking
 
     def make_packaging(self, cr, uid, picking_id, todo_move_ids, context=None):
         quant_obj = self.pool.get('stock.quant')
@@ -650,32 +675,6 @@ class stock_picking(osv.osv):
                                                #TODO fix me
                                                'picking_type_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_internal')[1],
                                                'price_unit': cost}, context=context)
-
-    def do_prepare_partial(self, cr, uid, picking_ids, context=None):
-        context = context or {}
-        pack_operation_obj = self.pool.get('stock.pack.operation')
-        for picking in self.browse(cr, uid, picking_ids, context=context):
-            for move in picking.move_lines:
-                remaining_qty = move.product_qty
-                for quant in move.reserved_quant_ids:
-                    qty = min(quant.qty, move.product_qty)
-                    remaining_qty -= qty
-                    pack_operation_obj.create(cr, uid, {
-                        'picking_id': picking.id,
-                        'product_qty': qty,
-                        'quant_id': quant.id,
-                        'product_id': quant.product_id.id,
-                        'product_uom_id': quant.product_id.uom_id.id,
-                        'cost': quant.cost,
-                    }, context=context)
-                if remaining_qty > 0:
-                    pack_operation_obj.create(cr, uid, {
-                        'picking_id': picking.id,
-                        'product_qty': remaining_qty,
-                        'product_id': move.product_id.id,
-                        'product_uom_id': move.product_id.uom_id.id,
-                        'cost': move.product_id.standard_price,
-                    }, context=context)
 
     def do_partial(self, cr, uid, picking_ids, context=None):
         """ Makes partial picking based on pack_operation_ids field.
@@ -743,18 +742,14 @@ class stock_picking(osv.osv):
         return self._get_picking_for_packing_ui(cr, uid, context=context)
 
     def action_pack(self, cr, uid, picking_ids, context=None):
-        assert len(picking_ids) == 1, 'Packing operation should be done for one picking at a time'
-        picking_id = picking_ids[0]
-        #put all the operations of the picking that aren't yet assigned to a package to a new one
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
-        #create a new empty stock.quant.package
-        package_id = package_obj.create(cr, uid, {}, context=context)
-        #put all the operations of the picking that aren't yet assigned to a package to this new one
-        operation_ids = stock_operation_obj.search(cr, uid, [('picking_id', '=', picking_id), ('result_package_id', '=', False)], context=context)
-        stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
-        pass
-        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+        for picking_id in picking_ids:
+            operation_ids = stock_operation_obj.search(cr, uid, [('picking_id', '=', picking_id), ('result_package_id', '=', False)], context=context)
+            if operation_ids:
+                package_id = package_obj.create(cr, uid, {}, context=context)
+                stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
+        return True
 
     def _deal_with_quants(self, cr, uid, picking_id, quant_ids, context=None):
         stock_operation_obj = self.pool.get('stock.pack.operation')
