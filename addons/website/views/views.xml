@@ -180,9 +180,48 @@
 
         <template id="homepage">
             <t t-call="website.layout">
+                <t t-set="head">
+                    <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
+                    <t t-raw="head"/>
+                </t>
                 <div>
                     <section class="oe_container">
-                        <div class="oe_row oe_spaced oe_dark">
+                        <div class="oe_row" style="margin:0 auto;">
+                            <div class="oe_span12">
+                                <div id="myCarousel" class="carousel slide">
+                                    <!-- Carousel items -->
+                                    <div class="carousel-inner">
+                                        <div class="item">
+                                            <div style="width: 992px; height: 210px; overflow: hidden;">
+                                                <img src="//www.openerp.com/saas_master/static/site_new/img/homepage/events_openedays.jpg"/>
+                                            </div>
+                                            <div class="css_titlebox" style="position: absolute; top: 50%%; right: 80px;">
+                                                <div style="margin-top: -25%%; text-align: right; background: #f6f6f6; padding: 7px 20px; border-radius: 5px;">
+                                                    <h1>OpenDays</h1>
+                                                    <h4>1000+ participants.<br/>A success thanks to you !</h4>
+
+                                                    <a class="btn btn-info" href="https://www.openerp.com/news/post/133-OpenERP-Open-Days-2013-wrap-up-">More Info</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item active">
+                                            <div style="width: 992px; height: 210px; overflow: hidden;">
+                                                <img src="//www.openerp.com/saas_master/static/site_new/img/homepage/bg_valencia.png"/>
+                                            </div>
+                                            <div class="css_titlebox" style="position: absolute; top: 50%%; right: 80px;">
+                                                <div style="margin-top: -25%%; text-align: right;">
+                                                    <h1>OpenERP</h1>
+                                                    <h4>Beautiful Business Applications<br/>Powerful, Integrated, Open Source</h4>
+                                                    <a class="btn btn-primary" href="https://www.openerp.com/start">Start your free trial</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Carousel nav -->
+                                    <a class="carousel-control left" href="#myCarousel" data-slide="prev">&amp;lsaquo;</a>
+                                    <a class="carousel-control right" href="#myCarousel" data-slide="next">&amp;rsaquo;</a>
+                                </div>
+                            </div>
                             <div class="oe_span12">
                                 <h2 class="oe_slogan">I'm your home page, please edit me...</h2>
                                 <h3 class="oe_slogan">I'm a motto please edit me...</h3>
