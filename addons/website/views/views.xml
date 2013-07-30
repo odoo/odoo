@@ -311,38 +311,38 @@
         </template>
 
         <template id="contactus">
-                <t t-call="website.layout">
-                    <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
-                    <div class="container">
-                        <div class="oe_row">
-                            <h2 class="oe_slogan">Contact us</h2>
+            <t t-call="website.layout">
+                <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                <div class="container">
+                    <div class="oe_row">
+                        <h2 class="oe_slogan">Contact us</h2>
+                    </div>
+                    <div class="row">
+                        <div class="span8">
+                            <p>
+                                Contact us about anything related to our company or services.
+                            </p><p>
+                                We'll do our best to get back to you as soon as possible.
+                            </p>
+                            <div class="oe_centeralign oe_mt32" name="mail_button">
+                                <a t-att-href="'mailto:'+res_company.email" class="oe_button oe_big oe_tacky">Send us an email</a>
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="span8">
-                                <p>
-                                    Contact us about anything related to our company or services.
-                                </p><p>
-                                    We'll do our best to get back to you as soon as possible.
-                                </p>
-                                <div class="oe_centeralign oe_mt32" name="mail_button">
-                                    <a t-att-href="'mailto:'+res_company.email" class="oe_button oe_big oe_tacky">Send us an email</a>
-                                </div>
-                            </div>
-                            <div class="span4">
-                                <address>
-                                    <strong t-record="res_company" t-field="name">Name</strong><br/>
-                                    <span t-record="res_company" t-field="street"/><br/>
-                                    <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
-                                    <span t-record="res_company" t-field="country_id"/><br/>
-                                    <br/>
-                                    &amp;#x2706; <t t-esc="res_company.phone"/><br/>
-                                    <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
-                                </address>
-                                <img class="oe_screenshot" t-att-src="google_map_url"/>
-                            </div>
+                        <div class="span4">
+                            <address>
+                                <strong t-record="res_company" t-field="name">Name</strong><br/>
+                                <span t-record="res_company" t-field="street"/><br/>
+                                <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
+                                <span t-record="res_company" t-field="country_id"/><br/>
+                                <br/>
+                                <span>&amp;#x2706; <t t-esc="res_company.phone"/></span><br/>
+                                <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
+                            </address>
+                            <img class="oe_screenshot" t-att-src="google_map_url"/>
                         </div>
                     </div>
-                </t>
+                </div>
+            </t>
         </template>
 
      </data>
