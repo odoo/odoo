@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="span4">
                             <h5>Product and services</h5>
-                            <ul>
+                            <ul class='unstyled'>
                                 <li><a href="https://www.openerp.com/start?download">Download</a></li>
                                 <li><a href="https://launchpad.net/openobject">Launchpad</a></li>
                                 <li><a href="http://runbot.openerp.com">Automated Tests</a></li>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="span4">
                             <h5>Social</h5>
-                            <ul>
+                            <ul class='unstyled'>
                                 <li><a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i>Twitter</a></li>
                                 <li><a href="http://www.facebook.com/OpenERP"><i class="icon-facebook-sign"></i>Facebook</a></li>
                                 <li><a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i>Google+</a></li>
@@ -39,11 +39,11 @@
                         </div>
                         <div class="span4" name="about_us">
                             <h5 t-record="res_company" t-field="name">Company name</h5>
-                            <ul>
+                            <ul class='unstyled'>
                                 <li><a href="/page/website.contactus">Contact us</a></li>
                                 <li><a href="/page/website.news">News</a></li>
                                 <li><a href="/page/website.contactus">About us</a></li>
-                                <li>&amp;#x2706; <span t-record="res_company" t-field="phone"/></li>
+                                <li><a href='#'>&amp;#x2706; <span t-record="res_company" t-field="phone"/></a></li>
                             </ul>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                         <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css'/>
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                         <link rel='stylesheet' href='/website/static/src/css/website.css'/>
-                        <!--<link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>-->
+                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
                         <div id='wrap'>
