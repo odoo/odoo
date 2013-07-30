@@ -1097,9 +1097,7 @@ class stock_move(osv.osv):
         return {'value': result}
 
     def _picking_assign(self, cr, uid, move, context=None):
-        if move.picking_id or \
-          move.location_id.usage in ['production', 'inventory'] or \
-          move.location_dest_id.usage in ['production', 'inventory']:
+        if move.picking_id or not move.picking_type_id:
             return False
         context = context or {}
         pick_obj = self.pool.get("stock.picking")
@@ -1149,9 +1147,7 @@ class stock_move(osv.osv):
                 if m.state not in ('done', 'cancel'):
                     state = 'waiting'
             states[state].append(move.id)
-
             self._picking_assign(cr, uid, move, context=context)
-
 
         for state, write_ids in states.items():
             if len(write_ids):
