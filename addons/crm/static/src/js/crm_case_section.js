@@ -8,7 +8,6 @@ openerp.crm = function(openerp) {
             }
         },
     });
-
     openerp.crm.SparklineBarWidget = openerp.web_kanban.AbstractField.extend({
         className: "oe_sparkline_bar",
         start: function() {
@@ -20,12 +19,12 @@ openerp.crm = function(openerp) {
                 self.$el.sparkline(value, {
                     type: 'bar',
                     barWidth: 5,
-                    tooltipFormat: '{{offset:offset}} {{value}}',
+                    tooltipFormat: _.str.sprintf("{{offset:offset}}: {{value}} %s",self.$el.closest("div[class='oe_salesteams_leads']").attr('class') ? 'Leads' : self.getParent().record.currency_symbol.raw_value),
                     tooltipValueLookups: {
                         'offset': tooltips
                     },
                 });
-                self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
+                self.$el.tipsy({'delayIn': 3000, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
             }, 0);
         },
     });

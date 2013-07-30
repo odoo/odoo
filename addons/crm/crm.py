@@ -156,6 +156,13 @@ class crm_case_section(osv.osv):
             res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date'], 'planned_revenue', 'create_date', context=context)
         return res
 
+    def _get_currency_symbol(self, cr, uid, ids, name, arg, context=None):
+        """Set currency symbole of company currency"""
+        res = {}
+        for sales_team in self.browse(cr, uid, ids, context=context):
+            res[sales_team.id] = sales_team.company_id.currency_id.symbol
+        return res
+
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
@@ -184,7 +191,9 @@ class crm_case_section(osv.osv):
             string='Open Leads per Month'),
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
-            string='Planned Revenue per Month')
+            string='Planned Revenue per Month'),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'currency_symbol': fields.function(_get_currency_symbol, string='Currency Symbol', method=True, type='char'),
     }
 
     def _get_stage_common(self, cr, uid, context):
@@ -195,6 +204,7 @@ class crm_case_section(osv.osv):
         'active': 1,
         'stage_ids': _get_stage_common,
         'use_leads': True,
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case.section', context=c),
     }
 
     _sql_constraints = [
