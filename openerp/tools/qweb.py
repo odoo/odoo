@@ -292,7 +292,7 @@ class QWebXml(object):
                 inner = getattr(record, field)
             if e.tagName != 't':
                 g_att += ''.join(
-                    ' %s="%s"' % (name, cgi.escape(value, True))
+                    ' %s="%s"' % (name, cgi.escape(str(value), True))
                     for name, value in [
                         ('data-oe-model', record._model._name),
                         ('data-oe-id', str(record.id)),
