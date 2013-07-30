@@ -5443,69 +5443,9 @@ class BaseModel(object):
 
         with self._scope:
             field = self._fields[name]
+            field.compute_value(self)
 
-            # pure function fields: simply evaluate them on self
-            if not field.store:
-                assert field.compute
-                getattr(self, field.compute)()
-                return record_cache[name]
-
-            # recompute field on self if required
-            recomputation = scope_proxy.recomputation
-            recompute_recs = recomputation.todo(field)
-            if self in recompute_recs:
-                # field must be recomputed in batch
-                getattr(recompute_recs.exists(), field.compute)()
-                recomputation.done(field, recompute_recs)
-                return record_cache[name]
-
-            # fetch the self of this model without name in their cache
-            fetch_recs = self.browse(fid
-                for fid, fcache in self._model_cache.iteritems()
-                if isinstance(fid, DatabaseID) and name not in fcache)
-
-            # prefetch all classic and many2one fields if column is one of them
-            # Note: do not prefetch fields when self.pool._init is True, because
-            # some columns may be missing from the database!
-            column = self._columns[name]
-            if column._prefetch and not self.pool._init:
-                fetch_fields = set(fname
-                    for fname, fcolumn in self._columns.iteritems()
-                    if fcolumn._classic_write and fcolumn._prefetch)
-            else:
-                fetch_fields = set((name,))
-
-            # do not fetch the records/fields that have to be recomputed
-            if recomputation:
-                for fname in list(fetch_fields):
-                    recs = recomputation.todo(self._fields[fname])
-                    if self in recs:
-                        fetch_fields.discard(fname)     # do not fetch that one
-                    else:
-                        fetch_recs -= recs              # do not fetch recs
-
-            # fetch and check result;
-            # method read is supposed to fetch the cache with the results
-            assert name in fetch_fields and self in fetch_recs
-            result = fetch_recs.read(list(fetch_fields), load='_classic_write')
-
-            if name not in record_cache:
-                # retrieve values for self in result
-                try:
-                    values = next(data for data in result if data['id'] == self.id)
-                except StopIteration:
-                    raise except_orm("AccessError", "%s does not exist." % self)
-
-                # retrieve the field's value in values
-                if name not in values:
-                    # Could be a missing model due to custom fields used too soon.
-                    _logger.warning("Unknown field %r in %s" % (name, self))
-                    raise KeyError(name)
-
-                # read hasn't done its job: put value in record_cache
-                record_cache[name] = field.convert_from_read(values[name])
-
-            return record_cache[name]
+        return record_cache[name]
 
     def _set_field(self, name, value):
         """ Assign the field `name` of `self` to `value`.

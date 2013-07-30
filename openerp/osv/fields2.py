@@ -194,10 +194,82 @@ class Field(object):
         """ convert `value` from the cache to a valid value for export. """
         return bool(value) and ustr(value)
 
+    #
+    # Management of the computation of field values.
+    #
+
+    def call_compute(self, records):
+        """ Invoke the compute method on `records`. """
+        if isinstance(self.compute, basestring):
+            getattr(records, self.compute)()
+        elif callable(self.compute):
+            self.compute(self, records)
+        else:
+            raise Warning("No way to compute %s on %s" % (self, records))
+
+    def read_value(self, records):
+        """ Read the value of `self` for `records` from the database. """
+        name = self.name
+        column = records._columns[name]
+
+        # fetch the records of this model without name in their cache
+        fetch_recs = records.browse(fid
+            for fid, fcache in records._model_cache.iteritems()
+            if not isinstance(fid, VirtualID) and name not in fcache)
+
+        # prefetch all classic and many2one fields if column is one of them
+        # Note: do not prefetch fields when records.pool._init is True, because
+        # some columns may be missing from the database!
+        if column._prefetch and not records.pool._init:
+            fetch_fields = set(fname
+                for fname, fcolumn in records._columns.iteritems()
+                if fcolumn._classic_write and fcolumn._prefetch)
+        else:
+            fetch_fields = set((name,))
+
+        # do not fetch the records/fields that have to be recomputed
+        if scope.recomputation:
+            for fname in list(fetch_fields):
+                recs = scope.recomputation.todo(records._fields[fname])
+                if records & recs:
+                    fetch_fields.discard(fname)     # do not fetch that one
+                else:
+                    fetch_recs -= recs              # do not fetch recs
+
+        # fetch records
+        result = fetch_recs.read(list(fetch_fields), load='_classic_write')
+
+        # method read is supposed to fetch the cache with the results
+        if any(name not in record._record_cache for record in records):
+            for data in result:
+                record = records.browse(data['id'])
+                record._record_cache[name] = self.convert_from_read(data[name])
+
+            failed = records.browse()
+            for record in records:
+                if name not in record._record_cache:
+                    failed += record
+
+            if failed:
+                raise AccessError("Cannot read %s on %s." % (name, failed))
+
+    def compute_value(self, record):
+        """ Determine the value of `self` for `record`. """
+        if self.store:
+            # recompute field on record if required
+            recs_todo = scope.recomputation.todo(self)
+            if record in recs_todo:
+                self.call_compute(recs_todo.exists())
+                scope.recomputation.done(self, recs_todo)
+            else:
+                self.read_value(record)
+        else:
+            self.call_compute(record)
+
     def compute_default(self, record):
         """ assign the default value of field `self` to `record` """
         if self.compute:
-            getattr(record, self.compute)()
+            self.call_compute(record)
         else:
             # None means "no value" in the case of draft records
             record._set_field(self.name, None)
@@ -825,6 +897,7 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
+from openerp.exceptions import AccessError, Warning
 from openerp.osv import fields
-from openerp.osv.orm import BaseModel
+from openerp.osv.orm import BaseModel, VirtualID
 from openerp.osv.scope import proxy as scope
