@@ -166,6 +166,36 @@ class product_product(osv.osv):
 
         return move_ids
 
+    def write(self, cr, uid, ids, values, context=None):
+        standard_prices = self.pool['standard.prices']
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.cost_method == 'standard':
+                data = {
+                    'company_id': False,
+                    'quant_id': False,
+                    'product_id': False,
+                    'cost': False,
+                    'date': False,
+                    'reason': False,
+                }
+                standard_prices.create(cr, uid, data, context=context)
+            elif record.cost_method == 'average':
+                data = {
+                    'company_id': False,
+                    'quant_id': False,
+                    'product_id': False,
+                    'cost': False,
+                    'date': False,
+                    'reason': False,
+                }
+                standard_prices.create(cr, uid, data, context=context)
+            elif record.cost_method == 'real':
+                # For a 'real' cost_method, entries in standard_prices are
+                # created when quants are created.
+                pass
+        return super(product_product, self).write(cr, uid, ids, values,
+            context=context)
+
     _columns = {
         'valuation':fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
                                         ('real_time','Real Time (automated)'),], string = 'Inventory Valuation',

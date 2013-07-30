@@ -20,6 +20,7 @@
 ##############################################################################
 
 import product
+import standard_prices
 import stock_account
 import wizard
 
