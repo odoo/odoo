@@ -5161,19 +5161,21 @@ class BaseModel(object):
                 # restore the original method
                 model._revert_method('write')
         """
-        origin = getattr(self.__class__, name)
+        cls = type(self)
+        origin = getattr(cls, name)
         method.origin = origin
         # propagate @returns from origin to method, and apply api decorator
         wrapped = api.guess(api.returns(origin)(method))
         wrapped.origin = origin
-        setattr(self.__class__, name, wrapped)
+        setattr(cls, name, wrapped)
 
     def _revert_method(self, name):
         """ Revert the original method of `self` called `name`.
             See :meth:`~._patch_method`.
         """
-        method = getattr(self.__class__, name)
-        setattr(self.__class__, name, method.origin)
+        cls = type(self)
+        method = getattr(cls, name)
+        setattr(cls, name, method.origin)
 
     #
     # Instance creation

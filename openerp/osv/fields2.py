@@ -87,10 +87,7 @@ class Field(object):
     def copy(self):
         """ make a copy of `self` (used for field inheritance among models) """
         field = copy(self)
-        # reset all lazy properties
-        for attr, value in field.__class__.__dict__.iteritems():
-            if isinstance(value, lazy_property):
-                field.__dict__.pop(attr, None)
+        lazy_property.reset_all(field)      # reset all lazy properties on field
         return field
 
     def set_model_name(self, model_name, name):
