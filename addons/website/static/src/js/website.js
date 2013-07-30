@@ -253,6 +253,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         this.$el.show();
         this.disable();
+        this.snippet_carousel();
         CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
             .not('span, [data-oe-type]')
@@ -308,6 +309,57 @@ instance.website.RTE = instance.web.Widget.extend({
             allowedContent: true,
         };
     },
+    // TODO clean
+    snippet_carousel: function () {
+        var self = this;
+        $(".carousel").each(function() {
+            var $carousel = new instance.website.snippet.carousel(self, this);
+            $carousel.insertAfter(self.$el);
+        });
+    }
+});
+
+
+instance.website.snippet = {};
+instance.website.snippet.carousel = instance.web.Widget.extend({
+    template: 'Website.Snipped.carousel',
+    events: {
+        'click .add': 'add_page',
+        'click .remove': 'remove_page',
+    },
+    instances: [],
+    init: function (parent, carousel) {
+        this._super(parent);
+        this.parent = parent;
+        var index = instance.website.snippet.carousel.index || 0;
+        instance.website.snippet.carousel.index = index++;
+        this.index = index;
+        $(carousel).addClass("carousel-index-"+index);
+        this.offset = $(carousel).offset();
+    },
+    start: function () {
+        var self = this;
+        this.$el.css({position: 'absolute', top: this.offset.top+'px', left: this.offset.left+'px'});
+    },
+    destroy: function () {
+        return this._super();
+    },
+    get_carousel: function() {
+        return $(".carousel.carousel-index-"+this.index);
+    },
+    add_page: function() {
+        var $c = this.get_carousel();
+        var cycle = $c.find(".carousel-inner .item").size();
+        $c.find(".carousel-inner").append(this.$(".item").clone());
+        $c.carousel(cycle);
+    },
+    remove_page: function() {
+        var $c = this.get_carousel();
+        var cycle = $c.find(".carousel-inner .item.active").remove();
+        $c.find(".carousel-inner .item:first").addClass("active");
+        $c.carousel(0);
+        this.parent.trigger('change', this.parent, null);
+    }
 });
 
 $(function(){
@@ -365,8 +417,6 @@ $(function(){
             }
         });
     }
-
-        
 
     function append_snippet(event){
         console.log('click',this,event.button);
