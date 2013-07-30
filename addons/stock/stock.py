@@ -587,6 +587,9 @@ class stock_picking(osv.osv):
         self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
         unlink_operation_order = [(2, op.id) for op in picking.pack_operation_ids]
         self.write(cr, uid, [picking.id], {'backorder_id': backorder_id, 'pack_operation_ids': unlink_operation_order}, context=context)
+
+        done_move_ids = [x.id for x in picking.move_lines if x.state == 'done']
+        self.write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
         return backorder_id
 
     def make_packaging(self, cr, uid, picking_id, todo_move_ids, context=None):
@@ -1339,12 +1342,11 @@ class stock_move(osv.osv):
                     self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
 
+        # FP Note: I would move this code to the do_partial of stock.picking?
         #if all moves of a picking aren't done, we create a backorder
         for picking in picking_obj.browse(cr, uid, list(pickings), context=context):
             if picking.state != 'done':
-                backorder_id = picking_obj._create_backorder(cr, uid, picking, context=context)
-                done_move_ids = [x.id for x in picking.move_lines if x.state == 'done']
-                self.write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
+                picking_obj._create_backorder(cr, uid, picking, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
