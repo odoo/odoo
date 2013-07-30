@@ -14,6 +14,6 @@ $(function() {
     $(function() {
         var editor = new instance.website.EditorBar(instance.webclient);
         editor.prependTo($('body'));
-        $('body').css('padding-top', editor.$el.outerHeight());
+        $('body').css('padding-top', '48px'); // Not working properly: editor.$el.outerHeight());
     });
 });
