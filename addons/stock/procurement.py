@@ -83,7 +83,8 @@ class procurement_order(osv.osv):
             'location_dest_id': procurement.rule_id.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             'group_id': procurement.group_id and procurement.group_id.id or False, 
-            'rule_id': procurement.rule_id.id, 
+            'rule_id': procurement.rule_id.id,
+            'picking_type_id': procurement.rule_id.picking_type_id.id,
         }
 
     def _run(self, cr, uid, procurement, context=None):

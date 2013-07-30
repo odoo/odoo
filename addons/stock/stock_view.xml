@@ -670,7 +670,7 @@
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Internal Moves</field>
+            <field name="name">Moves</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -688,23 +688,6 @@
               </p>
             </field>
         </record>
-
-        <record model="ir.actions.act_window.view" id="action_picking_tree_tree_view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="vpicktree"/>
-            <field name="act_window_id" ref="action_picking_tree"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_picking_tree_form_view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_form"/>
-            <field name="act_window_id" ref="action_picking_tree"/>
-        </record>
-
-
-        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="0"/>
-
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
@@ -943,8 +926,6 @@
             <field name="tag">stock.ui</field>
             <field name="res_model">stock</field>
         </record>
-
-        <menuitem action="action_stock_stock_ui" id="menu_action_stock_stock_ui" parent="menu_stock_warehouse_mgmt" sequence="4"/>
 
         <!--
             Reception Picking (By Stock Move)
@@ -1207,7 +1188,7 @@
                                     </div>
                                     <div class="oe_items_list">
                                         <div>
-                                            <a name="%(action_picking_tree)d" type="action">
+                                            <a name="%(action_picking_tree)d" type="action" domain="[('picking_type_id', '=', record.id)]" context="{'toto': 1}">
                                                 <field name="count_picking"/>
                                                 <t t-esc="record.name.raw_value"/>
                                             </a>

@@ -567,8 +567,8 @@ class stock_picking(osv.osv):
         context = context or {}
         for pick in self.browse(cr, uid, ids, context=context):
             ids2 = [move.id for move in pick.move_lines]
-            move_obj.action_cancel(cr, uid, ids2, ctx)
-            move_obj.unlink(cr, uid, ids2, ctx)
+            move_obj.action_cancel(cr, uid, ids2, context=context)
+            move_obj.unlink(cr, uid, ids2, context=context)
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
     # Methods for partial pickings
@@ -1102,11 +1102,13 @@ class stock_move(osv.osv):
             return False
         context = context or {}
         pick_obj = self.pool.get("stock.picking")
-        picks = pick_obj.search(cr, uid, [
-            ('group_id', '=', move.group_id and move.group_id.id or False),
-            ('location_id', '=', move.location_id.id),
-            ('location_dest_id', '=', move.location_dest_id.id),
-            ('state', 'in', ['confirmed', 'auto'])], context=context)
+        picks = []
+        if move.group_id:
+            picks = pick_obj.search(cr, uid, [
+                ('group_id', '=', move.group_id.id),
+                ('location_id', '=', move.location_id.id),
+                ('location_dest_id', '=', move.location_dest_id.id),
+                ('state', 'in', ['confirmed', 'auto'])], context=context)
         if picks:
             pick = picks[0]
         else:
