@@ -42,11 +42,22 @@ instance.website.EditorBar = instance.web.Widget.extend({
             .add(this.$buttons.save)
             .parent().show();
         // TODO: span edition changing edition state (save button)
-        this.rte.start_edition(
-                $('[data-oe-model]')
-                    .not('link, script')
-                    .prop('contentEditable', true)
-                    .addClass('oe_editable'));
+        var $editables = $('[data-oe-model]')
+                .not('link, script').prop('contentEditable', true)
+                .addClass('oe_editable');
+        var $rte_ables = $editables.filter('div, p, :not([data-oe-type])');
+        var $raw_editables = $editables.not($rte_ables);
+
+        this.rte.start_edition($rte_ables);
+        $raw_editables.on('keydown keypress cut paste', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('oe_dirty')) {
+                return;
+            }
+
+            $target.addClass('oe_dirty');
+            this.$buttons.save.prop('disabled', false);
+        }.bind(this));
     },
     rte_changed: function () {
         this.$buttons.save.prop('disabled', false);
