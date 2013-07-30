@@ -649,14 +649,14 @@ class Many2one(_Relational):
     def convert_from_write(self, value):
         if isinstance(value, dict):
             # convert values to the cache level
-            return self.comodel.draft(dict(
+            return self.comodel.new(dict(
                 (k, self.comodel._fields[k].convert_from_write(v))
                 for k, v in value.iteritems()
             ))
         return self.comodel.browse(value)
 
     def convert_to_write(self, value):
-        if value.is_draft():
+        if value.draft:
             return False
         return value.id
 
@@ -669,8 +669,8 @@ class Many2one(_Relational):
             # special case: fields that implement inheritance between models
             value = record[self.name]
             if not value:
-                # the default value cannot be null, use a draft record instead
-                record[self.name] = self.comodel.draft()
+                # the default value cannot be null, use a new record instead
+                record[self.name] = self.comodel.new()
 
 
 class _RelationalMulti(_Relational):
@@ -695,7 +695,7 @@ class _RelationalMulti(_Relational):
             if isinstance(command, (int, long)):
                 ids.append(command)
             elif command[0] == 0:
-                record = self.comodel.draft(dict(
+                record = self.comodel.new(dict(
                     (k, self.comodel._fields[k].convert_from_write(v))
                     for k, v in command[2].iteritems()
                 ))
@@ -717,7 +717,7 @@ class _RelationalMulti(_Relational):
     def convert_to_write(self, value):
         result = [(5,)]
         for record in value:
-            if record.is_draft():
+            if record.draft:
                 result.append((0, 0, record.get_draft_values()))
             else:
                 result.append((4, record.id))

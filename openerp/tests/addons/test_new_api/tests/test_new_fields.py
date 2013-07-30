@@ -244,22 +244,22 @@ class TestNewFields(common.TransactionCase):
     def test_40_draft(self):
         """ test draft records. """
         # create a draft partner
-        draft = self.Partner.draft()
-        self.assertTrue(draft.is_draft())
+        partner = self.Partner.new()
+        self.assertTrue(partner.draft)
 
         # assign some fields; should have no side effect
-        draft.name = "Foo"
-        self.assertEqual(draft.name, "Foo")
+        partner.name = "Foo"
+        self.assertEqual(partner.name, "Foo")
 
         children = self.Partner.search([('parent_id', '=', False)], limit=2)
-        draft.child_ids = children
-        self.assertEqual(draft.child_ids, children)
+        partner.child_ids = children
+        self.assertEqual(partner.child_ids, children)
 
         # check computed values of fields
-        self.assertEqual(draft.active, True)
-        self.assertEqual(draft.number_of_employees, 1)
-        self.assertEqual(draft.name_size, 3)
-        self.assertEqual(draft.children_count, 2)
+        self.assertEqual(partner.active, True)
+        self.assertEqual(partner.number_of_employees, 1)
+        self.assertEqual(partner.name_size, 3)
+        self.assertEqual(partner.children_count, 2)
 
     def test_41_defaults(self):
         """ test default values. """

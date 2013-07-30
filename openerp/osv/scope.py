@@ -269,7 +269,7 @@ class Cache(defaultdict):
             model = proxy.model(model_name)
             for record_id, record_cache in model_cache.iteritems():
                 record = model.browse(record_id)
-                if not record.is_draft():
+                if not record.draft:
                     for field, value in record_cache.iteritems():
                         if record[field] != value:
                             info = {'cached': value, 'fetched': record[field]}

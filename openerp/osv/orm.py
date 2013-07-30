@@ -1347,8 +1347,8 @@ class BaseModel(object):
         # trigger view init hook
         self.view_init(cr, uid, fields_list, context)
 
-        # use a draft record to determine default values
-        draft = self.draft()
+        # use a new record to determine default values
+        draft = self.new()
         for name in fields_list:
             draft[name]                 # force evaluation of defaults
 
@@ -1362,7 +1362,7 @@ class BaseModel(object):
             The value must be assigned to `self` as ``self.field = value`` or
             ``self[name] = value``.
         """
-        assert self.is_draft(), "Expected draft record: %s" % self
+        assert self.draft, "Expected draft record: %s" % self
         cr, uid, context = scope_proxy.args
         field = self._fields[name]
 
@@ -2710,7 +2710,7 @@ class BaseModel(object):
             default = default(self, cr, SUPERUSER_ID, context)
         # get new_style default if no old-style
         if default is None:
-            draft = self.draft()
+            draft = self.new()
             field = self._fields[column_name]
             field.compute_default(draft)
             default = draft.get_draft_values().get(column_name)
@@ -5236,24 +5236,26 @@ class BaseModel(object):
         return list(self._ids)
 
     #
-    # Draft instances - represent records that do not exist in the database yet;
+    # New records - represent records that do not exist in the database yet;
     # they are used to compute default values.
     #
 
-    def draft(self, values={}):
-        """ Return a new draft instance attached to the current scope, and
-            initialized with the `values` dictionary.
+    def new(self, values={}):
+        """ Return a new record attached to the current scope, and initialized
+            with the `values` dictionary. Such a record does not exist in the
+            database.
         """
         #
-        # A draft instance has a special record id and uses the regular record
+        # A new instance has a special record id and uses the regular record
         # cache to store its values.
         #
         instance = self.browse(VirtualID())
         instance._record_cache.update(values)
         return instance
 
-    def is_draft(self):
-        """ Test whether `self` is a draft record. """
+    @property
+    def draft(self):
+        """ Whether ``self[0]`` is a draft record. """
         return self._ids and isinstance(self._ids[0], VirtualID)
 
     def get_draft_values(self):
@@ -5430,7 +5432,7 @@ class BaseModel(object):
         record_cache = self._record_cache
 
         # draft records: retrieve default values
-        if self.is_draft():
+        if self.draft:
             with self._scope:
                 if name not in record_cache:
                     self.add_default_value(name)
@@ -5457,7 +5459,7 @@ class BaseModel(object):
 
         field = self._fields[name]
 
-        if self.is_draft():
+        if self.draft:
             # draft records: simply invalidate other fields on self
             field.modified_draft(self)
 
@@ -5557,8 +5559,8 @@ class BaseModel(object):
         )
         field_value = record_values.pop(field_name)
 
-        # create a draft with those values
-        record = self.draft(record_values)
+        # create a new record with those values
+        record = self.new(record_values)
 
         # simply assign the modified field to trigger invalidations, etc.
         # TODO: call record.onchange_XXX() instead, if it exists
@@ -5592,7 +5594,7 @@ class Draft(object):
     """ Pseudo-class for testing draft instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and inst.is_draft()
+            return isinstance(inst, BaseModel) and inst.draft
 
 
 class Model(BaseModel):
