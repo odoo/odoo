@@ -572,8 +572,6 @@ class stock_picking(osv.osv):
             move_obj.unlink(cr, uid, ids2, ctx)
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
-    # FP Note: review all methods bellow this line for stock.picking
-
     def _create_backorder(self, cr, uid, picking, context=None):
         sequence_obj = self.pool.get('ir.sequence')
         new_picking_name = picking.name
@@ -592,6 +590,9 @@ class stock_picking(osv.osv):
         self.write(cr, uid, done_move_ids, {'picking_id': backorder_id}, context=context)
         return backorder_id
 
+    # FP Note: review all methods bellow this line for stock.picking
+
+
     def make_packaging(self, cr, uid, picking_id, todo_move_ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         package_obj = self.pool.get('stock.quant.package')
@@ -606,7 +607,6 @@ class stock_picking(osv.osv):
             if op.quant_id:
                 #if the quant was split, work on the new quant because the original quant may be referenced in another operation
                 quant = quant_obj._quant_split(cr, uid, op.quant_id, op.quant_id.qty - op.product_qty, context=context) or op.quant_id
-                #TODO raise an error if the quant already had a package_id not null ?
                 quant_obj.write(cr, uid, quant.id, {'package_id': op.result_package_id.id}, context=context)
             if op.product_id:
                 #this kind of operation has the lowest priority so we delay its resolution untill all others are done
@@ -652,47 +652,30 @@ class stock_picking(osv.osv):
                                                'price_unit': cost}, context=context)
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
-        assert len(picking_ids) == 1, 'Partial picking is only supported for one record at a time'
+        context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
-        if context is None:
-            context = {}
-        picking = self.browse(cr, uid, picking_ids[0], context=context)
-        vals = []
-        package_ids = set()
-        for move in picking.move_lines:
-            remaining_qty = move.product_qty
-            #if move.move_orig_ids and move.move_orig_ids[0].picking_id:   # TODO: check on previous moves ??? o_O
-            for quant in move.reserved_quant_ids:
-                qty = min(quant.qty, move.product_qty)  # TODO: check if min() is necessary here, cause the assignation should have split the quants.. so i'd say probably not necessarry
-                remaining_qty -= qty
-                if quant.package_id:
-                    package_ids.add(quant.package_id.id)
-                    continue
-                vals += [{
-                    'picking_id': picking.id,
-                    'product_qty': qty,
-                    'quant_id': quant.id,
-                    'product_id': quant.product_id.id,  # TODO: check that we can use product_id + quant_id
-                    'product_uom_id': quant.product_id.uom_id.id,  # TODO: use move.product_packaging?
-                    'cost': quant.cost,
-                }]
-            if remaining_qty > 0:
-                vals += [{
-                    'picking_id': picking.id,
-                    'product_qty': remaining_qty,
-                    'product_id': move.product_id.id,
-                    'product_uom_id': move.product_id.uom_id.id,
-                    'cost': move.product_id.standard_price,
-                }]
-        #create the operations for all the packages found
-        for package_id in list(package_ids):
-            vals += [{
-                'picking_id': picking.id,
-                'product_qty': 1,
-                'package_id': package_id,
-            }]
-        for values in vals:
-            pack_operation_obj.create(cr, uid, values, context=context)
+        for picking in self.browse(cr, uid, picking_ids, context=context):
+            for move in picking.move_lines:
+                remaining_qty = move.product_qty
+                for quant in move.reserved_quant_ids:
+                    qty = min(quant.qty, move.product_qty)
+                    remaining_qty -= qty
+                    pack_operation_obj.create(cr, uid, {
+                        'picking_id': picking.id,
+                        'product_qty': qty,
+                        'quant_id': quant.id,
+                        'product_id': quant.product_id.id,
+                        'product_uom_id': quant.product_id.uom_id.id,
+                        'cost': quant.cost,
+                    }, context=context)
+                if remaining_qty > 0:
+                    pack_operation_obj.create(cr, uid, {
+                        'picking_id': picking.id,
+                        'product_qty': remaining_qty,
+                        'product_id': move.product_id.id,
+                        'product_uom_id': move.product_id.uom_id.id,
+                        'cost': move.product_id.standard_price,
+                    }, context=context)
 
     def do_partial(self, cr, uid, picking_ids, context=None):
         """ Makes partial picking based on pack_operation_ids field.
@@ -704,6 +687,7 @@ class stock_picking(osv.osv):
         quant_obj = self.pool.get('stock.quant')
         quant_package_obj = self.pool.get('stock.quant.package')
         todo_move_ids = []
+        # FP Note: remove this constraint
         assert len(picking_ids) == 1, 'Partial picking is only supported for one record at a time'
         picking = self.browse(cr, uid, picking_ids[0], context=context)
         for op in picking.pack_operation_ids:
