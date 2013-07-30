@@ -21,7 +21,7 @@
         <template id="footer">
                 <div class="container">
                     <div class="row">
-                        <div class="span4">
+                        <div class="span4" name="product">
                             <h5>Product and services</h5>
                             <ul class='unstyled'>
                                 <li><a href="https://www.openerp.com/start?download">Download</a></li>
@@ -29,7 +29,7 @@
                                 <li><a href="http://runbot.openerp.com">Automated Tests</a></li>
                             </ul>
                         </div>
-                        <div class="span4">
+                        <div class="span4" name="social">
                             <h5>Social</h5>
                             <ul class='unstyled'>
                                 <li><a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i>Twitter</a></li>
@@ -192,6 +192,41 @@
                     </div>
                 </section>
 
+                <section class="container mt64">
+                    <div class="row">
+                        <div class="span12">
+                            <div id="myCarousel" class="carousel slide">
+                                <!-- Carousel items -->
+                                <div class="carousel-inner" style="height: 300px; overflow: hidden;">
+                                    <div class="item">
+                                        <img src="/website/static/src/img/greenfields.jpg"/>
+                                        <div class="css_titlebox" style="position: absolute; top: 25px; right: 80px;">
+                                            <div style="text-align: right; background: #f6f6f6; padding: 7px 20px; border-radius: 5px;">
+                                                <h1>OpenDays</h1>
+                                                <h4>1000+ participants.<br/>A success thanks to you !</h4>
+                                                <a class="btn btn-info" href="https://www.openerp.com/news/post/133-OpenERP-Open-Days-2013-wrap-up-">More Info</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item active">
+                                        <img src="/website/static/src/img/fields.jpg"/>
+                                        <div class="css_titlebox" style="position: absolute; top: 25px; right: 80px;">
+                                            <div style="text-align: right;">
+                                                <h1>OpenERP</h1>
+                                                <h4>Beautiful Business Applications<br/>Powerful, Integrated, Open Source</h4>
+                                                <a class="btn btn-primary" href="https://www.openerp.com/start">Start your free trial</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Carousel nav -->
+                                <a class="carousel-control left" href="#myCarousel" data-slide="prev">&amp;lsaquo;</a>
+                                <a class="carousel-control right" href="#myCarousel" data-slide="next">&amp;rsaquo;</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <div class='dark mt64'>
                 <section class="container">
                     <div class="row">
@@ -307,38 +342,38 @@
         </template>
 
         <template id="contactus">
-                <t t-call="website.layout">
-                    <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
-                    <div class="container">
-                        <div class="row">
-                            <h2>Contact us</h2>
+            <t t-call="website.layout">
+                <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                <div class="container">
+                    <div class="row">
+                        <h2>Contact us</h2>
+                    </div>
+                    <div class="row">
+                        <div class="span8">
+                            <p>
+                                Contact us about anything related to our company or services.
+                            </p><p>
+                                We'll do our best to get back to you as soon as possible.
+                            </p>
+                            <div class="text-center oe_mt32" name="mail_button">
+                                <a t-att-href="'mailto:'+res_company.email" class="btn btn-primary">Send us an email</a>
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="span8">
-                                <p>
-                                    Contact us about anything related to our company or services.
-                                </p><p>
-                                    We'll do our best to get back to you as soon as possible.
-                                </p>
-                                <div class="oe_centeralign oe_mt32" name="mail_button">
-                                    <a t-att-href="'mailto:'+res_company.email" class="oe_button oe_big oe_tacky">Send us an email</a>
-                                </div>
-                            </div>
-                            <div class="span4">
-                                <address>
-                                    <strong t-record="res_company" t-field="name">Name</strong><br/>
-                                    <span t-record="res_company" t-field="street"/><br/>
-                                    <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
-                                    <span t-record="res_company" t-field="country_id"/><br/>
-                                    <br/>
-                                    &amp;#x2706; <t t-esc="res_company.phone"/><br/>
-                                    <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
-                                </address>
-                                <img class="oe_screenshot" t-att-src="google_map_url"/>
-                            </div>
+                        <div class="span4">
+                            <address>
+                                <strong t-record="res_company" t-field="name">Name</strong><br/>
+                                <span t-record="res_company" t-field="street"/><br/>
+                                <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
+                                <span t-record="res_company" t-field="country_id"> </span><br/>
+                                <br/>
+                                <span>&amp;#x2706; <t t-esc="res_company.phone"/></span><br/>
+                                <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
+                            </address>
+                            <img class="thumbnail" t-att-src="google_map_url"/>
                         </div>
                     </div>
-                </t>
+                </div>
+            </t>
         </template>
 
      </data>

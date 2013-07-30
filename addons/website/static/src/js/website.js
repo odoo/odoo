@@ -42,11 +42,22 @@ instance.website.EditorBar = instance.web.Widget.extend({
             .add(this.$buttons.save)
             .parent().show();
         // TODO: span edition changing edition state (save button)
-        this.rte.start_edition(
-                $('[data-oe-model]')
-                    .not('link, script')
-                    .prop('contentEditable', true)
-                    .addClass('oe_editable'));
+        var $editables = $('[data-oe-model]')
+                .not('link, script').prop('contentEditable', true)
+                .addClass('oe_editable');
+        var $rte_ables = $editables.filter('div, p, li').not('[data-oe-type]');
+        var $raw_editables = $editables.not($rte_ables);
+
+        this.rte.start_edition($rte_ables);
+        $raw_editables.on('keydown keypress cut paste', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('oe_dirty')) {
+                return;
+            }
+
+            $target.addClass('oe_dirty');
+            this.$buttons.save.prop('disabled', false);
+        }.bind(this));
     },
     rte_changed: function () {
         this.$buttons.save.prop('disabled', false);
@@ -215,9 +226,12 @@ instance.website.RTE = instance.web.Widget.extend({
         [Command, "\uf12c", 'subscript'],
         [Command, "\uf0c1", 'link'],
         [Command, "\uf127", 'unlink'],
+        [Command, "\uf10d", 'blockquote'],
         [Group, "\uf0ca", [
             [Command, "\uf0ca", 'bulletedlist'],
-            [Command, "\uf0cb", 'numberedlist']
+            [Command, "\uf0cb", 'numberedlist'],
+            [Command, "\uf03b", 'outdent'],
+            [Command, "\uf03c", 'indent']
         ]],
         [Group, _lt("Heading"), [
             [Style, _lt('H1'), { element: 'h1' }],
@@ -226,6 +240,12 @@ instance.website.RTE = instance.web.Widget.extend({
             [Style, _lt('H4'), { element: 'h4', }],
             [Style, _lt('H5'), { element: 'h5', }],
             [Style, _lt('H6'), { element: 'h6', }]
+        ]],
+        [Group, "\uf039", [
+            [Command, "\uf039", 'justifyblock'],
+            [Command, "\uf036", 'justifyleft'],
+            [Command, "\uf038", 'justifyright'],
+            [Command, "\uf037", 'justifycenter']
         ]]
     ],
     // editor.ui.items -> possible commands &al
@@ -253,6 +273,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         this.$el.show();
         this.disable();
+        this.snippet_carousel();
         CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
             .not('span, [data-oe-type]')
@@ -308,6 +329,57 @@ instance.website.RTE = instance.web.Widget.extend({
             allowedContent: true,
         };
     },
+    // TODO clean
+    snippet_carousel: function () {
+        var self = this;
+        $(".carousel").each(function() {
+            var $carousel = new instance.website.snippet.carousel(self, this);
+            $carousel.insertAfter(self.$el);
+        });
+    }
+});
+
+
+instance.website.snippet = {};
+instance.website.snippet.carousel = instance.web.Widget.extend({
+    template: 'Website.Snipped.carousel',
+    events: {
+        'click .add': 'add_page',
+        'click .remove': 'remove_page',
+    },
+    instances: [],
+    init: function (parent, carousel) {
+        this._super(parent);
+        this.parent = parent;
+        var index = instance.website.snippet.carousel.index || 0;
+        instance.website.snippet.carousel.index = index++;
+        this.index = index;
+        $(carousel).addClass("carousel-index-"+index);
+        this.offset = $(carousel).offset();
+    },
+    start: function () {
+        var self = this;
+        this.$el.css({position: 'absolute', top: this.offset.top+'px', left: this.offset.left+'px'});
+    },
+    destroy: function () {
+        return this._super();
+    },
+    get_carousel: function() {
+        return $(".carousel.carousel-index-"+this.index);
+    },
+    add_page: function() {
+        var $c = this.get_carousel();
+        var cycle = $c.find(".carousel-inner .item").size();
+        $c.find(".carousel-inner").append(this.$(".item").clone());
+        $c.carousel(cycle);
+    },
+    remove_page: function() {
+        var $c = this.get_carousel();
+        var cycle = $c.find(".carousel-inner .item.active").remove();
+        $c.find(".carousel-inner .item:first").addClass("active");
+        $c.carousel(0);
+        this.parent.trigger('change', this.parent, null);
+    }
 });
 
 $(function(){
@@ -365,8 +437,6 @@ $(function(){
             }
         });
     }
-
-        
 
     function append_snippet(event){
         console.log('click',this,event.button);
