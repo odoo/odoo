@@ -2066,7 +2066,7 @@ class stock_picking_type(osv.osv):
                 ('date', '>=', groupby_begin),
                 ('date', '<', groupby_end),
             ]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date'], '__count', 'date', context=context)
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date'], 'picking_type_id_count', 'date', context=context)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
@@ -2082,7 +2082,8 @@ class stock_picking_type(osv.osv):
             data = obj.read_group(cr, uid, domains[field] +
                 [('state', 'not in',('done','cancel','draft')), ('picking_type_id', 'in', ids)],
                 ['picking_type_id'], ['picking_type_id'], context=context)
-            count = dict(map(lambda x: (x['picking_type_id'], x['__count']), data))
+            print data
+            count = dict(map(lambda x: (x['picking_type_id'], x['picking_type_id_count']), data))
             for tid in ids:
                 result.setdefault(tid, {})[field] = count.get(tid, 0)
         for tid in ids:
