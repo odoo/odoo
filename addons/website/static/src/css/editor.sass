@@ -1,0 +1,42 @@
+@charset "utf-8"
+
+.oe_website_editorbar
+    position: fixed
+    top: 0
+    right: 0
+    z-index: 10
+    display: block
+    width: 100%
+    padding: 10px
+    margin: 0px
+    z-index: 10000
+    background-color: #414141
+    background: -webkit-linear-gradient(#646060, #262626)
+    box-sizing: border-box
+    li
+        display: inline
+        color: #eee
+        &:hover
+            background: rgba(0,0,0,0.2)
+            text-shadow: black 0px 0px 3px
+            color: white
+
+.oe_website_editorbar .oe_rte_toolbar
+    div.dropdown
+        display: inline-block
+        li
+            display: list-item
+
+    button
+        font-family: FontAwesome
+        font-weight: normal
+        font-style: normal
+        text-decoration: inherit
+        &.oe_button_list
+            padding-right: 3px
+            &:after
+                content: "\F0D7"
+                padding-left: 6px
+
+.oe_editable:focus
+    outline: #80B5F2 solid 5px !important

@@ -6,12 +6,13 @@
         <template id="header">
                 <div class="container">
                     <div class="row">
-                        <div class="oe_website_logo span4">
-                            <a href='/page/website.homepage'><img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>
-                        </div>
-                        <ul class="oe_website_nav span8 nav nav-pills">
-                            <li class="pull-right"><a href="/admin">Sign in</a></li>
-                            <li class="pull-right"><a href="/page/website.contactus">Contact us</a></li>
+                        <a href='/page/website.homepage' class='brand'>
+                            <em>Open</em><b>ERP</b>
+                            <!--<img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>-->
+                        </a>
+                        <ul class="nav">
+                            <li class=""><a href="/admin">Sign in</a></li>
+                            <li class=""><a href="/page/website.contactus">Contact us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -54,14 +55,6 @@
                 <html>
                     <head>
                         <title t-raw="title"><t t-esc="res_company.name"/></title>
-                        <link rel='stylesheet' href='/website/static/src/css/base.css'/>
-                        <link rel='stylesheet' href='/website/static/src/css/website.css'/>
-                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css'/>
-                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <link rel='stylesheet' href='https://www.openerp.com/saas_master/static/site_new/fonts/lato/stylesheet.css'/>
-                        <link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'/>
-                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'/>
-
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery-1.8.3.js"></script>
                         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
                         <script type="text/javascript">
@@ -76,28 +69,39 @@
                             <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
                         </t>
                         <t t-raw="head"/>
+                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css'/>
+                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+                        <link rel='stylesheet' href='/website/static/src/css/website.css'/>
+                        <!--<link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>-->
                     </head>
-                    <body class="oe_website">
-                        <header class="oe_website_header">
-                            <t t-call="website.header"/>
-                        </header>
-                        <div class="oe_website_body" t-raw="0">
-                            <div class="container">
-                                <div class="row">
-                                    <h1>I'm an empty page, please edit me...</h1>
+                    <body>
+                        <div id='wrap'>
+                            <header class='navbar navbar-fixed-top'>
+                                <div class='navbar-inner'>
+                                    <t t-call="website.header"/>
+                                </div>
+                            </header>
+                            <div t-raw="0">
+                                <div class="container">
+                                    <div class="row">
+                                        <h1>I'm an empty page, please edit me...</h1>
+                                    </div>
                                 </div>
                             </div>
+                            <div id='push-footer'>
+                            </div>
                         </div>
-                        <footer class="oe_website_footer">
+                        <footer>
                             <t t-call="website.footer"/>
-                            <p class="oe_website_copy text-center">&amp;copy; <span t-record="res_company" t-field="name">Company name</span>.</p>
+                            <p class="text-center">&amp;copy; <span t-record="res_company" t-field="name">Company name</span>.</p>
                         </footer>
 
+                        <!--
                         <div class='oe_snippet_editor' style="display: none;">
                             <div class='oe_snippet_list'>
 
-                            <div class='oe_snippet' name='Screenshot' selafter='.oe_span6' selinside='.oe_row'>
-                                <div class="oe_span6">
+                            <div class='oe_snippet' name='Screenshot' selafter='.span6' selinside='.row'>
+                                <div class="span6">
                                     <div class="oe_demo oe_picture oe_screenshot">
                                         <a href="#">
                                             <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
@@ -105,21 +109,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class='oe_snippet' name='Introduction' data-selector=".oe_container"> 
-                                <section class="oe_container">
-                                    <div class="oe_row oe_spaced">
-                                        <div class="oe_span12">
+                            <div class='oe_snippet' name='Introduction' data-selector=".container"> 
+                                <section class="container">
+                                    <div class="row oe_spaced">
+                                        <div class="span12">
                                             <h2 class="oe_slogan">A very friendly Point of Sale</h2>
                                             <h3 class="oe_slogan">Set up in a minute, Sell in seconds</h3>
                                         </div>
-                                        <div class="oe_span6">
+                                        <div class="span6">
                                             <div class="oe_demo oe_picture oe_screenshot">
                                                 <a href="#">
                                                     <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
                                                 </a>
                                             </div>
                                         </div>
-                                        <div class="oe_span6">
+                                        <div class="span6">
                                             <p class='oe_mt32'>
                                                 OpenERP's Point of Sale introduces a super clean interface with no installation required
                                                 that runs online and offline on modern hardwares.
@@ -135,19 +139,19 @@
                                     </div>
                                 </section>
                             </div>
-                            <div class='oe_snippet' name='Call To Action' selafter='p,h1,h2,h3,h4,h5,ul,ol' selinside='.oe_span6'>
+                            <div class='oe_snippet' name='Call To Action' selafter='p,h1,h2,h3,h4,h5,ul,ol' selinside='.span6'>
                                     <div class="oe_centeralign oe_websiteonly">
                                         <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
                                     </div>
                             </div>
-                            <div class='oe_snippet' name='Alternate Paragraph' data-selector=".oe_container"> 
-                                <section class="oe_container oe_dark">
-                                    <div class="oe_row oe_spaced">
-                                        <div class="oe_span12">
-                                            <h2 class="oe_slogan">A very friendly Point of Sale</h2>
-                                            <h3 class="oe_slogan">Set up in a minute, Sell in seconds</h3>
+                            <div class='oe_snippet' name='Alternate Paragraph' data-selector=".container"> 
+                                <section class="container oe_dark">
+                                    <div class="row oe_spaced">
+                                        <div class="span12">
+                                            <h2>A very friendly Point of Sale</h2>
+                                            <h3>Set up in a minute, Sell in seconds</h3>
                                         </div>
-                                        <div class="oe_span6">
+                                        <div class="span6">
                                             <p class='oe_mt32'>
                                                 OpenERP's Point of Sale introduces a super clean interface with no installation required
                                                 that runs online and offline on modern hardwares.
@@ -160,7 +164,7 @@
                                                 <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
                                             </div>
                                         </div>
-                                        <div class="oe_span6">
+                                        <div class="span6">
                                             <div class="oe_demo oe_picture oe_screenshot">
                                                 <a href="#">
                                                     <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
@@ -174,56 +178,88 @@
                             </div>
                             </div>
                         </div>
+                        -->
                     </body>
                 </html>
         </template>
 
         <template id="homepage">
             <t t-call="website.layout">
-                <div>
-                    <section class="oe_container">
-                        <div class="oe_row oe_spaced oe_dark">
-                            <div class="oe_span12">
-                                <h2 class="oe_slogan">I'm your home page, please edit me...</h2>
-                                <h3 class="oe_slogan">I'm a motto please edit me...</h3>
-                            </div>
-                            <div class="oe_span6">
-                                <div class="oe_demo oe_picture oe_screenshot">
-                                    <a href="#">
-                                        <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="oe_span6">
-                                <p class='oe_mt32'>
-                                    Here you can describoe you company...
-                                    OpenERP's Point of Sale introduces a super
-                                    clean interface with no installation required
-                                    that runs online and offline on modern
-                                    hardwares.
-                                </p>
-                                <p>
-                                    It's full integration with the company
-                                    inventory and accounting, gives you real time
-                                    statistics and consolidations amongst all shops
-                                    without the hassle of integrating several
-                                    applications.
-                                </p>
-                                <div class="oe_centeralign oe_websiteonly">
-                                    <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <div class="container">
+                <section class="container">
                     <div class="row">
-                        <div class="span12">
-                            <h1></h1>
+                        <div class="span12 text-center">
+                            <h1 class='mt64'>Welcome To Your New Homepage,</h1>
+                            <h2 class='mt32 subheader'>where <b><em>everything</em></b> can be customized </h2>
                         </div>
                     </div>
+                </section>
+
+                <div class='dark mt64'>
+                <section class="container">
+                    <div class="row">
+                        <div class="span5">
+                            <img class='img-rounded' src="/website/static/src/img/island.jpg"/>
+                        </div>
+                        <div class="span6 offset1">
+                            <p class='mt16'>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna 
+                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            </p>
+                            <p>
+                                Duis aute irure dolor in reprehenderit in voluptate velit 
+                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                                occaecat cupidatat non proident, sunt in culpa qui officia 
+                                deserunt mollit anim id est laborum
+                            </p>
+                            <div class="text-center">
+                                <a href="http://www.openerp.com/start" class="btn mt16 btn-large btn-primary">Call To  <em>Action</em></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 </div>
+
+                <section class="container">
+                    <div class="row">
+                        <div class="span12 text-center">
+                            <h2 class='mt48'>Ut enim ad minim veniam</h2>
+                        </div>
+                    </div>
+                    <div class="row mt32">
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/china_thumb.jpg"/>
+                            <h4 class='mt16'>Cillum Dolore</h4>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna 
+                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            </p>
+                        </div>
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/desert_thumb.jpg"/>
+                            <h4 class='mt16'>Mollit Anim</h4>
+                            <p>
+                                Duis aute irure dolor in reprehenderit in voluptate velit 
+                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                                occaecat cupidatat non proident, sunt in culpa qui officia 
+                                deserunt mollit anim id est laborum
+                            </p>
+                        </div>
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/deers_thumb.jpg"/>
+                            <h4 class='mt16'>Nemo Enim Ipsam</h4>
+                            <p>
+                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
+                                quae ab illo inventore veritatis et quasi architecto beatae vitae
+                                dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
+                            </p>
+                        </div>
+                    </div>
+                </section>
             </t>
         </template>
 
@@ -246,7 +282,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="span12">
-                                <h1 class="oe_slogan">404: Page not found!</h1>
+                                <h1>404: Page not found!</h1>
                                 <p class="oe_grey">
                                     The page you were looking for could not be
                                     found; it is possible you have typed the
@@ -276,8 +312,8 @@
                 <t t-call="website.layout">
                     <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
                     <div class="container">
-                        <div class="oe_row">
-                            <h2 class="oe_slogan">Contact us</h2>
+                        <div class="row">
+                            <h2>Contact us</h2>
                         </div>
                         <div class="row">
                             <div class="span8">
