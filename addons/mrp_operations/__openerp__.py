@@ -63,7 +63,6 @@ So, that we can compare the theoretic delay and real delay.
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
         'report/mrp_workorder_analysis_view.xml',
-        'process/mrp_operation_process.xml',
         'mrp_operations_workflow_instance.xml'
     ],
     'demo': [ 

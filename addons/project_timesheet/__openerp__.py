@@ -38,7 +38,6 @@ with the effect of creating, editing and deleting either ways.
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
-        'process/project_timesheet_process.xml',
         'report/task_report_view.xml',
         'project_timesheet_view.xml',
     ],

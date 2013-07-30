@@ -50,7 +50,7 @@ task is completed.
     'website': 'http://www.openerp.com',
     'images': ['images/product.jpeg', 'images/task_from_SO.jpeg'],
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
-    'data': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
+    'data': ['project_mrp_workflow.xml', 'project_mrp_view.xml'],
     'demo': ['project_mrp_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,

@@ -52,7 +52,6 @@ Dashboard for CRM will include:
         'base_action_rule',
         'base_setup',
         'base_status',
-        'process',
         'mail',
         'email_template',
         'base_calendar',
@@ -88,8 +87,6 @@ Dashboard for CRM will include:
 
         'report/crm_lead_report_view.xml',
         'report/crm_phonecall_report_view.xml',
-
-        'process/crm_configuration_process.xml',
 
         'res_partner_view.xml',
         'board_crm_view.xml',
