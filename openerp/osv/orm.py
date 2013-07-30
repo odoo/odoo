@@ -794,6 +794,9 @@ class BaseModel(object):
             # If _log_access is not specified, it is the same value as _auto.
             cls._log_access = getattr(cls, "_auto", True)
 
+        # reinitialize the list of non-stored function fields for this model
+        pool._pure_function_fields[cls._name] = []
+
         # process store of low-level function fields
         for fname, column in cls._columns.iteritems():
             if hasattr(column, 'digits_change'):
@@ -804,7 +807,11 @@ class BaseModel(object):
                 for stored in pool._store_function.get(cls._name, [])
                 if (stored[0], stored[1]) != (cls._name, fname)
             ]
-            if not(isinstance(column, fields.function) and column.store):
+            if not isinstance(column, fields.function):
+                continue
+            if not column.store:
+                # register it on the pool for invalidation
+                pool._pure_function_fields[cls._name].append(fname)
                 continue
             # process store parameter
             store = column.store
@@ -5443,6 +5450,7 @@ class BaseModel(object):
                 getattr(self, field.compute)()
                 return record_cache[name]
 
+            # recompute field on self if required
             recomputation = scope_proxy.recomputation
             recompute_recs = recomputation.todo(field)
             if self in recompute_recs:
@@ -5450,14 +5458,6 @@ class BaseModel(object):
                 getattr(recompute_recs.exists(), field.compute)()
                 recomputation.done(field, recompute_recs)
                 return record_cache[name]
-
-            # handle the case of low-level fields
-            column = self._columns[name]
-
-            # pure function fields: simply evaluate them on self
-            if isinstance(column, fields.function) and not column.store:
-                value = self.read([name], load='_classic_write')[0][name]
-                return field.convert_from_read(value)
 
             # fetch the self of this model without name in their cache
             fetch_recs = self.browse(fid
@@ -5467,6 +5467,7 @@ class BaseModel(object):
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because
             # some columns may be missing from the database!
+            column = self._columns[name]
             if column._prefetch and not self.pool._init:
                 fetch_fields = set(fname
                     for fname, fcolumn in self._columns.iteritems()
@@ -5571,6 +5572,11 @@ class BaseModel(object):
         # each field knows what to invalidate and recompute
         for fname in fnames:
             self._fields[fname].modified(self)
+
+        # HACK: invalidate all non-stored fields.function
+        for mname, fnames in self.pool._pure_function_fields.iteritems():
+            for fname in fnames:
+                scope_proxy.invalidate(mname, fname, None)
 
     def recompute(self):
         """ Recompute stored function fields. The fields and records to

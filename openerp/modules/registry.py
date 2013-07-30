@@ -50,6 +50,7 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
+        self._pure_function_fields = {}         # {model: [field, ...], ...}
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
