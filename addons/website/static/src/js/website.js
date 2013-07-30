@@ -45,7 +45,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var $editables = $('[data-oe-model]')
                 .not('link, script').prop('contentEditable', true)
                 .addClass('oe_editable');
-        var $rte_ables = $editables.filter('div, p, :not([data-oe-type])');
+        var $rte_ables = $editables.filter('div, p, li').not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
 
         this.rte.start_edition($rte_ables);
