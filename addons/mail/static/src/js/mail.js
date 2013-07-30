@@ -2,7 +2,7 @@ openerp.mail = function (session) {
     var _t = session.web._t,
        _lt = session.web._lt;
 
-    var mail = session.mail = {};
+    var mail = session.mail;
 
     openerp_mail_followers(session, mail);          // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
