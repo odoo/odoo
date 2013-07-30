@@ -263,7 +263,7 @@ class Field(object):
         # invalidate dependent fields, and prepare their recomputation
         for field, path in self._triggers:
             if field.store:
-                with scope.SUDO():
+                with scope(user=SUPERUSER_ID, context={'active_test': False}):
                     target = field.model.search([(path, 'in', ids)])
                 scope.invalidate(field.model_name, field.name, target.unbrowse())
                 scope.recomputation.todo(field, target)
@@ -824,6 +824,7 @@ class Id(Field):
 
 
 # imported here to avoid dependency cycle issues
+from openerp import SUPERUSER_ID
 from openerp.osv import fields
 from openerp.osv.orm import BaseModel
 from openerp.osv.scope import proxy as scope
