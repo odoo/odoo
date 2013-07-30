@@ -418,7 +418,7 @@ class stock_picking(osv.osv):
 
             order = {'confirmed':0, 'auto':1, 'assigned':2}
             order_inv = dict(zip(order.values(),order.keys()))
-            lst = [order[x.state] for x in pick.move_lines if x not in ('cancel','done')]
+            lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel','done')]
             if pick.move_lines == 'one':
                 res[pick.id] = order_inv[min(lst)]
             else:
@@ -536,9 +536,6 @@ class stock_picking(osv.osv):
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
-        """ Changes picking state to cancel.
-        @return: True
-        """
         for pick in self.browse(cr, uid, ids, context=context):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
@@ -572,7 +569,6 @@ class stock_picking(osv.osv):
             move_obj.unlink(cr, uid, ids2, ctx)
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
-
     # Methods for partial pickings
 
     def _create_backorder(self, cr, uid, picking, context=None):
@@ -598,6 +594,7 @@ class stock_picking(osv.osv):
         pack_operation_obj = self.pool.get('stock.pack.operation')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             for move in picking.move_lines:
+                if move.state <> 'assigned': continue
                 remaining_qty = move.product_qty
                 for quant in move.reserved_quant_ids:
                     qty = min(quant.qty, move.product_qty)
@@ -628,10 +625,10 @@ class stock_picking(osv.osv):
                 todo = min(move.product_qty, qty)
                 partial_datas = {
                     'product_qty': todo,
-                    'product_uom_id': quant.product_id.uom_id.id,
-                    'reserved_quant_ids': [(4, quant.id)],
+                    'product_uom_id': product.uom_id.id,
+                    'reserved_quant_ids': quant and [(4, quant.id)] or [],
                 }
-                newmove_id = stock_move_obj.split(cr, uid, move_id, todo, context=context)
+                newmove_id = stock_move_obj.split(cr, uid, move, todo, context=context)
                 stock_move_obj.action_done(cr, uid, [newmove_id], context=context)
 
                 # TODO: To be removed after new API implementation
@@ -658,12 +655,16 @@ class stock_picking(osv.osv):
         return moves
 
     def do_partial(self, cr, uid, picking_ids, context=None):
-        """ Makes partial picking based on pack_operation_ids field.
-        :param only_split_line: boolen that depicts if the moves should not be set to done.
+        """
+            If no pack operation, we close the whole move
+            Otherwise, do the pack operations
         """
         #TODO: this variable should be in argument
         quant_obj = self.pool.get('stock.quant')
         for picking in self.browse(cr, uid, picking_ids, context=context):
+            if not picking.pack_operation_ids:
+                self.action_done(cr, uid, [picking.id], context=context)
+                continue
             for op in picking.pack_operation_ids:
                 if op.package_id:
                     for quant in quant_package_obj.quants_get(cr, uid, op.package_id, context=context):
@@ -672,12 +673,12 @@ class stock_picking(osv.osv):
                         'parent_id': op.result_package_id.id
                     }, context=context)
                 elif op.product_id:
-                    moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.qty, op.quant_id, context=context)
+                    moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
                     quants = []
                     for m in moves:
                         for quant in m.quant_ids:
                             quants.append(quand.id)
-                    quand_obj.write(cr, uid, quants, {
+                    quant_obj.write(cr, uid, quants, {
                         'package_id': op.result_package_id.id
                     }, context=context)
 
@@ -1212,7 +1213,6 @@ class stock_move(osv.osv):
         """
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
-            # FP Note: should we create a MTS procurement here?
             if move.move_dest_id:
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
@@ -1493,10 +1493,10 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         context = context or {}
 
-        uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom_id.id)
+        uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, qty, move.product_uom.id)
         uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
 
-        if move.state in ('done', 'cancel') or product_uom_qty == 0:
+        if move.state in ('done', 'cancel'):
             raise osv.except_osv(_('Error'), _('You cannot split a move done'))
 
         defaults = {
