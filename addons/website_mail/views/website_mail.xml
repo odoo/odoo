@@ -89,13 +89,11 @@
                                                 <span class="label label-success">Unpublish</span>
                                                 <span class="label label-important">Publish</span>
                                             </a>
-                                            <div class="media">
-                                                <t t-raw="body"/>
-                                                <small class="pull-right muted text-right">
-                                                    <div><t t-esc="author_id[1]"/></div>
-                                                    <div><t t-esc="date"/></div>
-                                                </small>
-                                            </div>
+                                            <t t-raw="body"/>
+                                            <small class="pull-right muted text-right">
+                                                <div><t t-esc="author_id[1]"/></div>
+                                                <div><t t-esc="date"/></div>
+                                            </small>
                                         </div>
                                     </li>
                                 </t>
