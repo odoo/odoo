@@ -715,6 +715,9 @@ class view(osv.osv):
         return r['arch']
 
     def distribute_branding(self, e, branding=None, xpath=None, count=None):
+        if e.attrib.get('t-ignore'):
+            # TODO: find a better name and check if we have a string to boolean helper
+            return
         branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
         branding_dist = {}
         xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 1)
