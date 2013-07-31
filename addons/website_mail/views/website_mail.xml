@@ -83,7 +83,7 @@
                             <ul class="media-list">
                                 <t t-foreach="comments">
                                     <!-- TODO: check qweb iteration -->
-                                    <li class="media well well-small">
+                                    <li class="media">
                                         <div t-att-class="'media-body %%s' %% (website_published and 'css_published' or '')">
                                             <a href="#" title="Click to publish or unpublish this message" t-att-data-id="id" class="js_publish pull-right" groups="group_website_mail_manager">
                                                 <span class="label label-success">Unpublish</span>
