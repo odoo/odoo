@@ -1694,15 +1694,14 @@ class stock_move(osv.osv):
             property_out = self.pool.get('res.partner').browse(cr, uid, context['address_out_id'], context).property_stock_customer
             location_id = property_out and property_out.id or False
         else:
+            location_xml_id = False
             if picking_type in ('in', 'internal'):
-                try:
-                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-                except (orm.except_orm, ValueError):
-                    location_id = False
+                location_xml_id = 'stock_location_stock'
             elif picking_type == 'out':
+                location_xml_id = 'stock_location_customers'
+            if location_xml_id:
                 try:
-                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
                     self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
@@ -1735,7 +1734,12 @@ class stock_move(osv.osv):
             elif picking_type in ('out', 'internal'):
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
+
         return location_id
 
     def _default_destination_address(self, cr, uid, context=None):
@@ -2897,8 +2901,12 @@ class stock_inventory_line(osv.osv):
     }
 
     def _default_stock_location(self, cr, uid, context=None):
-        stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return stock_location.id
+        try:
+            location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            location_id = False
+        return location_id
 
     _defaults = {
         'location_id': _default_stock_location
