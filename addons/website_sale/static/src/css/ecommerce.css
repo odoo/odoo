@@ -67,7 +67,12 @@
   display: none;
 }
 .oe_ecommerce .oe_mycart .oe_product {
-  padding: 3px 5px 6px 10px;
+  display: inline-block;
+  width: 250px;
+  margin-left: 0px;
+  float: none;
+  margin-right: 16px;
+  padding: 8px 5px 6px 10px;
 }
 .oe_ecommerce .oe_mycart .oe_product > .pull-left {
   width: 84px;
@@ -79,9 +84,9 @@
   margin: auto;
 }
 .oe_ecommerce .oe_mycart .oe_product .oe_button_cart {
+  position: static;
   right: 6px;
   top: 6px;
-  text-align: right;
 }
 .oe_ecommerce .oe_mycart form input {
   margin-bottom: 0;
@@ -153,9 +158,6 @@
 .oe_ecommerce .oe_recommended img {
   max-width: 64px;
   max-height: 64px;
-}
-.oe_ecommerce .oe_checkout .css_required input, .oe_ecommerce .oe_checkout .css_required select {
-  background-color: #d2d2ff !important;
 }
 .oe_ecommerce .oe_checkout h4 {
   border-bottom: 1px solid #dddddd;
