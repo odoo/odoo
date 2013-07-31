@@ -19,33 +19,20 @@
 #
 ##############################################################################
 
-import time
 from openerp.osv import fields, osv
-from openerp.osv.orm import browse_record, browse_null
-from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
-class purchase_requisition_partner(osv.osv_memory):
-    _name = "purchase.requisition.partner"
-    _description = "Purchase Requisition Partner"
+class bid_line_qty(osv.osv_memory):
+    _name = "bid.line.qty"
+    _description = "Change Bid line quantity"
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Supplier', required=True,domain=[('supplier', '=', True)]),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
     }
 
-    def view_init(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
-        res = super(purchase_requisition_partner, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False) or False
-        tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id, context=context)
-        if not tender.line_ids:
-            raise osv.except_osv(_('Error!'), _('No product in call for bids.'))
-        return res
-
-    def create_order(self, cr, uid, ids, context=None):
+    def change_qty(self, cr, uid, ids, context=None):
         active_ids = context and context.get('active_ids', [])
-        data =  self.browse(cr, uid, ids, context=context)[0]
-        self.pool.get('purchase.requisition').make_purchase_order(cr, uid, active_ids, data.partner_id.id, context=context)
+        data = self.browse(cr, uid, ids, context=context)[0]
+        self.pool.get('purchase.order.line').write(cr, uid, active_ids, {'quantity_bid': data.qty})
         return {'type': 'ir.actions.act_window_close'}
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
