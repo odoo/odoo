@@ -173,7 +173,6 @@ class view(osv.osv):
             origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
             origin_tree = etree.fromstring(origin.encode('utf-8'))
             zone = origin_tree.xpath(xpath)[0]
-            print "zone", zone, "value", value
             zone.getparent().replace(zone, lxml.html.fromstring(value))
             value = etree.tostring(origin_tree, encoding='utf-8')
 
