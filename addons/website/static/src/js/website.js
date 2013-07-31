@@ -43,7 +43,10 @@ instance.website.EditorBar = instance.web.Widget.extend({
             .parent().show();
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
-                .not('link, script').prop('contentEditable', true)
+                .not('link, script')
+                // FIXME: propagation should make "meta" blocks non-editable in the first place...
+                .not('.oe_snippet_editor')
+                .prop('contentEditable', true)
                 .addClass('oe_editable');
         var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
@@ -101,27 +104,31 @@ instance.website.EditorBar = instance.web.Widget.extend({
     cancel: function () {
         window.location.reload();
     },
-    snippet_start: function () {
+    setup_droppable: function () {
         var self = this;
-        $('.oe_snippet').click(function(ev) {
+        $('.oe_snippet_drop').remove();
+        var droppable = '<div class="oe_snippet_drop"></div>';
+        var $zone = $('section.container');
+        $zone.before(droppable).after(droppable);
+
+        $(".oe_snippet_drop").droppable({
+            hoverClass: 'oe_accepting',
+            drop: function( event, ui ) {
+                console.log(event, ui, "DROP");
+
+                $(event.target).replaceWith($(ui.draggable).html());
+                $('.oe_selected').remove();
+                self.setup_droppable();
+            }
+        }).hide();
+    },
+    snippet_start: function () {
+        this.setup_droppable();
+
+        $('.oe_snippet').draggable().click(function(ev) {
+            $(".oe_snippet_drop").show();
             $('.oe_selected').removeClass('oe_selected');
-            var $snippet = $(ev.currentTarget);
-            $snippet.addClass('oe_selected');
-            $snippet.draggable();
-            var selector = $snippet.data("selector");
-            var $zone = $(".oe_website_body " + selector);
-            var droppable = '<div class="oe_snippet_drop" style="border:1px solid red;">.<br/>.<br/>.<br/>.<br/>.<br/></div>';
-            $zone.before(droppable);
-            $zone.after(droppable);
-            $(".oe_snippet_drop").droppable({
-                drop: function( event, ui ) {
-                    console.log(event, ui, "DROP");
-                    var $target = $(event.target);
-                    $target.before($snippet.html());
-                    $('.oe_selected').remove();
-                    $('.oe_snippet_drop').remove();
-                }
-            });
+            $(ev.currentTarget).addClass('oe_selected');
         });
 
     },
@@ -327,6 +334,8 @@ instance.website.RTE = instance.web.Widget.extend({
             customConfig: '',
             // Disable ACF
             allowedContent: true,
+            // Don't insert paragraphs around content in e.g. <li>
+            autoParagraph: false,
         };
     },
     // TODO clean
@@ -470,5 +479,10 @@ instance.web.ActionRedirect = function(parent, action) {
     }
 };
 instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
+
+instance.web.GoToWebsite = function(parent, action) {
+    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
+};
+instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
 
 };
