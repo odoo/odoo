@@ -327,6 +327,8 @@ instance.website.RTE = instance.web.Widget.extend({
             customConfig: '',
             // Disable ACF
             allowedContent: true,
+            // Don't insert paragraphs around content in e.g. <li>
+            autoParagraph: false,
         };
     },
     // TODO clean
