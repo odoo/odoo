@@ -104,7 +104,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('company').currency_id[0]]]);
                 }).then(function(currencies){
-                    console.log('Currency:',currencies[0]);
                     self.set('currency',currencies[0]);
 
                     return self.fetch('product.uom', null, null);
@@ -145,7 +144,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ['name','journal_ids','warehouse_id','journal_id','pricelist_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                          'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                         'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
+                         'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','state','sequence_id','session_ids'],
                         [['id','=', self.get('pos_session').config_id[0]]]
                     );
                 }).then(function(configs){
@@ -156,6 +155,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.iface_vkeyboard           =  !!pos_config.iface_vkeyboard; 
                     self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
                     self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
+                    self.iface_invoicing           =  !!pos_config.iface_invoicing;
 
                     return self.fetch('stock.warehouse',[],[['id','=',pos_config.warehouse_id[0]]]);
                 }).then(function(shops){
@@ -240,12 +240,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
 
-        // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
-        push_order: function(record) {
-            this.db.add_order(record);
-            this.flush();
-        },
-
         //creates a new empty order and sets it as the current order
         add_new_order: function(){
             var order = new module.Order({pos:this});
@@ -253,45 +247,161 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.set('selectedOrder', order);
         },
 
+        // saves the order locally and try to send it to the backend. 
+        // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
+        push_order: function(order) {
+            var self = this;
+            var order_id = this.db.add_order(order.export_as_JSON());
+            var pushed = new $.Deferred();
+
+            this.set('nbr_pending_operations',self.db.get_orders().length);
+
+            this.flush_mutex.exec(function(){
+                var flushed = self._flush_all_orders();
+
+                flushed.always(function(){
+                    pushed.resolve();
+                });
+
+                return flushed;
+            });
+            return pushed;
+        },
+
+        // saves the order locally and try to send it to the backend and make an invoice
+        // returns a deferred that succeeds when the order has been posted and successfully generated
+        // an invoice. This method can fail in various ways:
+        // error-no-client: the order must have an associated partner_id. You can retry to make an invoice once
+        //     this error is solved
+        // error-transfer: there was a connection error during the transfer. You can retry to make the invoice once
+        //     the network connection is up 
+
+        push_and_invoice_order: function(order){
+            var self = this;
+            var invoiced = new $.Deferred(); 
+
+            if(!order.get_client()){
+                invoiced.reject('error-no-client');
+                return invoiced;
+            }
+
+            var order_id = this.db.add_order(order.export_as_JSON());
+
+            this.set('nbr_pending_operations',self.db.get_orders().length);
+
+            this.flush_mutex.exec(function(){
+                var done = new $.Deferred(); // holds the mutex
+
+                // send the order to the server
+                // we have a 30 seconds timeout on this push.
+                // FIXME: if the server takes more than 30 seconds to accept the order,
+                // the client will believe it wasn't successfully sent, and very bad
+                // things will happen as a duplicate will be sent next time
+                // so we must make sure the server detects and ignores duplicated orders
+
+                var transfer = self._flush_order(order_id, {timeout:30000, to_invoice:true});
+                
+                transfer.fail(function(){
+                    invoiced.reject('error-transfer');
+                    done.reject();
+                });
+
+                // on success, get the order id generated by the server
+                transfer.pipe(function(order_server_id){    
+                    // generate the pdf and download it
+                    self.pos_widget.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
+                        active_ids:order_server_id,
+                    }});
+                    invoiced.resolve();
+                    done.resolve();
+                });
+
+                return done;
+
+            });
+
+            return invoiced;
+        },
+
         // attemps to send all pending orders ( stored in the pos_db ) to the server,
         // and remove the successfully sent ones from the db once
         // it has been confirmed that they have been sent correctly.
         flush: function() {
-            //TODO make the mutex work 
-            //this makes sure only one _int_flush is called at the same time
-            /*
-            return this.flush_mutex.exec(_.bind(function() {
-                return this._flush(0);
-            }, this));
-            */
-            this._flush(0);
+            var self = this;
+            var flushed = new $.Deferred();
+
+            this.flush_mutex.exec(function(){
+                var done = new $.Deferred();
+
+                self._flush_all_orders()
+                    .done(  function(){ flushed.resolve();})
+                    .fail(  function(){ flushed.reject(); })
+                    .always(function(){ done.resolve();   });
+
+                return done;
+            });
+
+            return flushed;
         },
-        // attempts to send an order of index 'index' in the list of order to send. The index
-        // is used to skip orders that failed. do not call this method outside the mutex provided
-        // by flush() 
-        _flush: function(index){
+
+        // attempts to send the locally stored order of id 'order_id'
+        // the sending is asynchronous and can take some time to decide if it is successful or not
+        // it is therefore important to only call this method from inside a mutex
+        // this method returns a deferred indicating wether the sending was successful or not
+        // there is a timeout parameter which is set to 2 seconds by default. 
+        _flush_order: function(order_id, options){
+            var self   = this;
+            options = options || {};
+            timeout = typeof options.timeout === 'number' ? options.timeout : 5000;
+
+            var order  = this.db.get_order(order_id);
+            order.to_invoice = options.to_invoice || false;
+
+            if(!order){
+                // flushing a non existing order always fails
+                return (new $.Deferred()).reject();
+            }
+
+            // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
+            // then we want to notify the user that we are waiting on something )
+            var rpc = (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{shadow: !options.to_invoice, timeout:timeout});
+
+            rpc.fail(function(unused,event){
+                // prevent an error popup creation by the rpc failure
+                // we want the failure to be silent as we send the orders in the background
+                event.preventDefault();
+                console.error('Failed to send order:',order);
+            });
+
+            rpc.done(function(){
+                self.db.remove_order(order_id);
+                self.set('nbr_pending_operations',self.db.get_orders().length);
+            });
+
+            return rpc;
+        },
+        
+        // attempts to send all the locally stored orders. As with _flush_order, it should only be
+        // called from within a mutex. 
+        // this method returns a deferred that always succeeds when all orders have been tried to be sent,
+        // even if none of them could actually be sent. 
+        _flush_all_orders: function(){
             var self = this;
             var orders = this.db.get_orders();
-            self.set('nbr_pending_operations',orders.length);
+            var tried_all = new $.Deferred();
 
-            var order  = orders[index];
-            if(!order){
-                return;
+            function rec_flush(index){
+                if(index < orders.length){
+                    self._flush_order(orders[index].id).always(function(){ 
+                        rec_flush(index+1); 
+                    })
+                }else{
+                    tried_all.resolve();
+                }
             }
-            //try to push an order to the server
-            // shadow : true is to prevent a spinner to appear in case of timeout
-            (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{ shadow:true })
-                .fail(function(unused, event){
-                    //don't show error popup if it fails 
-                    event.preventDefault();
-                    console.error('Failed to send order:',order);
-                    self._flush(index+1);
-                })
-                .done(function(){
-                    //remove from db if success
-                    self.db.remove_order(order.id);
-                    self._flush(index);
-                });
+            rec_flush(0);
+
+            return tried_all;
         },
 
         scan_product: function(parsed_ean){
@@ -590,11 +700,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     module.Order = Backbone.Model.extend({
         initialize: function(attributes){
             Backbone.Model.prototype.initialize.apply(this, arguments);
+            this.uid =     this.generateUniqueId();
             this.set({
                 creationDate:   new Date(),
                 orderLines:     new module.OrderlineCollection(),
                 paymentLines:   new module.PaymentlineCollection(),
-                name:           "Order " + this.generateUniqueId(),
+                name:           "Order " + this.uid,
                 client:         null,
             });
             this.pos =     attributes.pos; 
@@ -770,7 +881,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 currency: this.pos.get('currency'),
             };
         },
-        exportAsJSON: function() {
+        export_as_JSON: function() {
             var orderLines, paymentLines;
             orderLines = [];
             (this.get('orderLines')).each(_.bind( function(item) {
@@ -789,8 +900,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 lines: orderLines,
                 statement_ids: paymentLines,
                 pos_session_id: this.pos.get('pos_session').id,
-                partner_id: this.pos.get('client') ? this.pos.get('client').id : undefined,
+                partner_id: this.get_client() ? this.get_client().id : false,
                 user_id: this.pos.get('cashier') ? this.pos.get('cashier').id : this.pos.get('user').id,
+                uid: this.uid,
             };
         },
         getSelectedLine: function(){

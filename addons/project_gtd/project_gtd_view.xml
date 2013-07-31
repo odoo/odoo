@@ -79,7 +79,6 @@
             <field name="remaining_hours" position="after">
                 <field string="Timeframe" name="timebox_id" invisible=" not context.get('gtd', False)"/>
                 <field name="context_id" invisible="not context.get('context_show', False)" widget="selection"/>
-                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
     </record>
@@ -103,15 +102,16 @@
         <field name="arch" type="xml">
            <search string="My Tasks">
                 <field name="name" string="My Tasks"/>
-                <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
-                <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
+                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
-                <filter name="message_unread" string="Unread Messages" domain="[('message_unread','=',True)]"/>
-                <separator/>
-                <filter string="Inbox" domain="[('timebox_id','=', False)]" help="Tasks having no timebox assigned yet"/>
+                <filter string="No Timebox" domain="[('timebox_id', '=', False)]" help="Tasks having no timebox assigned yet"/>
                 <group expand="0" string="Display">
                     <filter string="Show Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>
                     <filter string="Show Deadlines" context="{'deadline_visible': False}" domain="[]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                </group>
+                <group expand="0" string="Group By...">
+                    <filter string="Stage" name="group_stage_id" context="{'group_by':'stage_id'}"/>
+                    <filter string="Timebox" name="group_timebox_id" context="{'group_by':'timebox_id'}"/>
                 </group>
             </search>
         </field>
