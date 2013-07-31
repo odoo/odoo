@@ -470,6 +470,20 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }).then(function(res) {
             action = _.clone(action);
             action.context = res.context;
+
+            // iOS devices doesn't allow iframe use the way we do it,
+            // opening a new window seems the best way to workaround
+            if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+                var params = {
+                    action: JSON.stringify(action),
+                    token: new Date().getTime()
+                }
+                var url = self.session.url('/web/report', params)
+                instance.web.unblockUI();
+                $('<a href="'+url+'" target="_blank"></a>')[0].click();
+                return;
+            }
+
             var c = instance.webclient.crashmanager;
             return $.Deferred(function (d) {
                 self.session.get_file({
