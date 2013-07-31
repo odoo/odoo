@@ -18,8 +18,9 @@ import werkzeug.wrappers
 logger = logging.getLogger(__name__)
 
 def template_values():
-    script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
-    css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db))
+    debug = 'debug' in request.params
+    script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db, debug=debug)])
+    css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db, debug=debug))
     try:
         request.session.check_security()
         loggued = True
