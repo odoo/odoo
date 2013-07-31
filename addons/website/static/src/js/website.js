@@ -118,7 +118,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         $('.oe_snippet_drop').remove();
         var droppable = '<div class="oe_snippet_drop"></div>';
         var $zone = $(':not(.oe_snippet) > .container');
-        $zone.before(droppable).after(droppable);
+        $zone.before(droppable);//.after(droppable);
 
         $(".oe_snippet_drop").droppable({
             hoverClass: 'oe_accepting',
@@ -127,14 +127,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
 
                 $(event.target).replaceWith($(ui.draggable).html());
                 $('.oe_selected').remove();
-                self.setup_droppable();
+                $('.oe_snippet_drop').remove();
             }
-        }).hide();
+        });
     },
     snippet_start: function () {
-        this.setup_droppable();
-
+        var self = this;
         $('.oe_snippet').draggable().click(function(ev) {
+            self.setup_droppable();
             $(".oe_snippet_drop").show();
             $('.oe_selected').removeClass('oe_selected');
             $(ev.currentTarget).addClass('oe_selected');
