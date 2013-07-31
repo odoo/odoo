@@ -51,6 +51,33 @@ class res_currency(osv.osv):
             else:
                 raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (id)))
         return res
+
+    def _current_rate_silent(self, cr, uid, ids, name, arg, context=None):
+        """Same function as currency_rate with 0 for undefined rates
+        Not using a wrapper over _current_rate as it would produce only 0 in a
+        tree view with one error
+        """
+        if context is None:
+            context = {}
+        res = {}
+        if 'date' in context:
+            date = context['date']
+        else:
+            date = time.strftime('%Y-%m-%d')
+        date = date or time.strftime('%Y-%m-%d')
+        # Convert False values to None ...
+        currency_rate_type = context.get('currency_rate_type_id') or None
+        # ... and use 'is NULL' instead of '= some-id'.
+        operator = '=' if currency_rate_type else 'is'
+        for id in ids:
+            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
+            if cr.rowcount:
+                id, rate = cr.fetchall()[0]
+                res[id] = rate
+            else:
+                res[id] = 0
+        return res
+
     _name = "res.currency"
     _description = "Currency"
     _columns = {
@@ -59,6 +86,10 @@ class res_currency(osv.osv):
         'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
+
+        # Do not use for computation ! Same as rate field with silent failing
+        'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12,6),
+            help='The rate of the currency to the currency of rate 1 (0 if no rate defined).'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
