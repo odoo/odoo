@@ -51,6 +51,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
 
+        // temporary fix until we fix ckeditor
+        $raw_editables.each(function () {
+            $(this).parents().add($(this).find('*')).on('click', function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+            });
+        });
+
         this.rte.start_edition($rte_ables);
         $raw_editables.on('keydown keypress cut paste', function (e) {
             var $target = $(e.target);
@@ -348,9 +356,16 @@ instance.website.RTE = instance.web.Widget.extend({
     // TODO clean
     snippet_carousel: function () {
         var self = this;
+        $carousels = $("<div/>");
+        $carousels.css({'position': 'absolute', 'top': 0, 'white-space': 'nowrap'});
+        $carousels.insertAfter(self.$el);
+
         $(".carousel").each(function() {
             var $carousel = new instance.website.snippet.carousel(self, this);
-            $carousel.insertAfter(self.$el);
+            $carousel.appendTo($carousels);
+        });
+        $(document).on("scroll", function () {
+            $carousels.css("top", (-self.$el.offset().top+2) + 'px');
         });
     }
 });

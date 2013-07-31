@@ -1,5 +1,5 @@
 {
-    'name': 'Contact Form',
+    'name': 'Website Contact Form',
     'category': 'CRM',
     'version': '1.0',
     'description': """

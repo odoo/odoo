@@ -1,5 +1,5 @@
 {
-    'name': 'Website Blog',
+    'name': 'Website Team',
     'category': 'mail',
     'version': '1.0',
     'description': """
@@ -8,11 +8,9 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'mail'],
+    'depends': ['website', 'hr'],
     'data': [
-        'views/website_mail.xml',
-        'views/res_config.xml',
-        'security/website_mail.xml',
+        'views/website_hr.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
