@@ -43,7 +43,10 @@ instance.website.EditorBar = instance.web.Widget.extend({
             .parent().show();
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
-                .not('link, script').prop('contentEditable', true)
+                .not('link, script')
+                // FIXME: propagation should make "meta" blocks non-editable in the first place...
+                .not('.oe_snippet_editor')
+                .prop('contentEditable', true)
                 .addClass('oe_editable');
         var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
