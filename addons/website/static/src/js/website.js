@@ -117,7 +117,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var self = this;
         $('.oe_snippet_drop').remove();
         var droppable = '<div class="oe_snippet_drop"></div>';
-        var $zone = $('*:not(.oe_snippet) > .container');
+        var $zone = $(':not(.oe_snippet) > .container');
         $zone.before(droppable).after(droppable);
 
         $(".oe_snippet_drop").droppable({
@@ -339,11 +339,18 @@ instance.website.RTE = instance.web.Widget.extend({
         this.toggle(!!CKEDITOR.currentInstance);
     },
     _config: function () {
+        var removed_plugins = [
+                // remove toolbar entirely
+                'toolbar,elementspath,resize',
+                // remove custom context menu
+                'contextmenu,tabletools,liststyle',
+                // magicline captures mousein/mouseout => draggable does not work
+                'magicline'
+        ];
         return {
             // Don't load ckeditor's style rules
             stylesSet: [],
-            // Remove toolbar entirely, also custom context menu
-            removePlugins: 'toolbar,elementspath,resize,contextmenu,tabletools,liststyle',
+            removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
             customConfig: '',
