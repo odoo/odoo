@@ -37,20 +37,18 @@
     top:0px; left:0px; right:0px; bottom:0px;
     background: rgba(151, 137, 255, 0.2);
 }
+*/
 
 .oe_snippet_editor{
     position: fixed;    
     z-index: 1000;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 214px;
     background: rgb(160,160,160);
-    box-shadow: 0px 1px 3px rgb(100,100,100) inset;
-    overflow-y: hidden;
-    overflow-x: scroll;
+    box-shadow: 0 1px 3px rgb(100,100,100) inset;
 }
-*/
 
 .oe_snippet_list{
     width: auto;
@@ -64,14 +62,12 @@
     height: 160px;
     border-radius: 3px;
     background: white;
-    margin: 20px;
-    margin-left: 0px;
+    margin: 20px 20px 20px 0;
     cursor: pointer;
     border: 2px solid transparent;
-    box-shadow: 0px 1px 3px rgb(100,100,100);
+    box-shadow: 0 1px 3px rgb(100,100,100);
     position: relative;
-    top: 0px;
-    -webkit-transition: all 150ms linear;
+    top: 0;
     overflow: hidden;
     vertical-align: top;
     user-select: none;
@@ -161,9 +157,19 @@
     line-height: 160px;
     padding: 0px;
 }
+
+.oe_snippet_drop {
+    border: 1px dashed black;
+    min-height: 25px;
+}
+.oe_snippet_drop.oe_accepting {
+    border: 1px dashed #24ff0f;
+}
+/*
 [class*="span"]{
     margin-left: 0px !important;
 }
+*/
 
     
     

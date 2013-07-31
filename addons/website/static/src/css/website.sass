@@ -1,241 +1,77 @@
 @charset "utf-8"
 
-// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:fdl=0
-
-// Mixins {{{
-@font-face
-    font-family: 'mnmliconsRegular'
-    src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
-    src: url('/web/static/src/font/mnmliconsv21-webfont.woff') format('woff')
-    src: url('/web/static/src/font/mnmliconsv21-webfont.ttf') format('truetype')
-    src: url('/web/static/src/font/mnmliconsv21-webfont.svg') format('svg') active
-    font-weight: normal
-    font-style: normal
-
-@font-face
-    font-family: 'EntypoRegular'
-    src: url('/web/static/src/font/entypo-webfont.eot') format('eot')
-    src: url('/web/static/src/font/entypo-webfont.eot?#iefix') format('embedded-opentype')
-    src: url('/web/static/src/font/entypo-webfont.woff') format('woff')
-    src: url('/web/static/src/font/entypo-webfont.ttf') format('truetype')
-    src: url('/web/static/src/font/entypo-webfont.svg') format('svg') active
-    font-weight: normal
-    font-style: normal
-
-@mixin reset()
-    border: none
-    padding: 0
-    margin: 0
-    background: none
-    @include radius(0)
-    @include box-shadow(none)
-
-@mixin vertical-gradient($startColor: #555, $endColor: #333)
-    background-color: mix($startColor, $endColor)
-    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
-    background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
-    background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
-    background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
-    background-image:         linear-gradient(to bottom, $startColor, $endColor)
-
-@mixin radial-gradient($gradient)
-    background-position: center center
-    background-image: -webkit-radial-gradient(circle, $gradient)
-    background-image: -moz-radial-gradient($gradient)
-    background-image: -ms-radial-gradient($gradient)
-    background-image: radial-gradient($gradient)
-
-@mixin radius($radius: 5px)
-    -moz-border-radius: $radius
-    -webkit-border-radius: $radius
-    border-radius: $radius
-
-@mixin box-shadow($bsval: 0px 1px 4px #777)
-    -moz-box-shadow: $bsval
-    -webkit-box-shadow: $bsval
-    box-shadow: $bsval
-
-@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
-    -webkit-transition: $transval
-    -moz-transition: $transval
-    -ms-transition: $transval
-    -o-transition: $transval
-    transition: $transval
-
-@mixin opacity($opacity: .5)
-    filter: alpha(opacity=$opacity * 100)
-    opacity: $opacity
-
-@mixin background-clip($clip: padding-box)
-    -webkit-background-clip: $clip
-    -moz-background-clip: $clip
-    background-clip: $clip
-
-@mixin box-sizing($type: content)
-    // type = border || content || padding
-    -webkit-box-sizing: #{$type}-box
-    -moz-box-sizing: #{$type}-box
-    -ms-box-sizing: #{$type}-box
-    box-sizing: #{$type}-box
-
-@mixin skew-gradient($startColor: #555, $endColor: #333)
-    background-color: $endColor
-    background: -moz-linear-gradient(135deg, $endColor, $startColor)
-    background: -o-linear-gradient(135deg, $startColor, $endColor)
-    background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
-    background: -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
-
-@mixin transform($transform)
-    -webkit-transform: $transform
-    -moz-transform: $transform
-    -ms-transform: $transform
-    -o-transform: $transform
-    transform: $transform
-
-@mixin keyframes($name)
-    @-webkit-keyframes #{$name}
-        @content
-    @-moz-keyframes #{$name}
-        @content
-    @-ms-keyframes #{$name}
-        @content
-    @-o-keyframes #{$name}
-        @content
-    @keyframes #{$name}
-        @content
+.mt128
+    margin-top: 128px !important
+.mt92
+    margin-top: 92px !important
+.mt64
+    margin-top: 64px !important
+.mt48
+    margin-top: 48px !important
+.mt32
+    margin-top: 32px !important
+.mt16
+    margin-top: 16px !important
+.mt8
+    margin-top: 8px !important
+.mt4
+    margin-top: 4px !important
+.mt0
+    margin-top: 0px !important
 
 
-// Transforms the (readable) text of an inline element into an mmlicons icon,
-// allows for actual readable text in-code (and in readers?) with iconic looks
-@mixin text-to-icon($icon-name, $color: #404040)
-    font-size: 1px
-    letter-spacing: -1px
-    color: transparent
-    text-shadow: none
-    font-weight: normal
-    &:before
-        font: 21px "mnmliconsRegular"
-        content: $icon-name
-        color: $color
-
-@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
-    font-size: 1px
-    letter-spacing: -1px
-    color: transparent
-    text-shadow: none
-    font-weight: normal
-    &:before
-        font: $size "entypoRegular"
-        content: $icon-name
-        color: $color
-
-// }}}
-@media print
-    .oe_website
-        padding-top: 0 !important
-        .oe_website_editorbar, .css_noprint, .oe_snippet_editor, .oe_website_footer
-            display: none !important
-        .oe_website_header, .oe_website_body
-            > .container > .row
-                margin-left: 0px !important
-
-.oe_website
-    background: #e9e9e9
-    color: #646464
-
-.oe_website_header
-    background: whitesmoke
-    color: #333
-    padding-top: 8px
-
-/* Body {{{ */
-.oe_website_body
-    background: #fff
-    color: #333
-    padding-bottom: 32px
-/* }}} */
-
-/* Footer {{{ */
-.oe_website_footer
-    border-top: solid 1px #e0e0e0
-    padding-bottom: 32px
-    padding-top: 32px
-
-.oe_website_footer h5
-    border-bottom: solid 1px rgba(0, 0, 0, 0.06)
-    margin-right: 24px
-    padding-bottom: 6px
-    margin-bottom: 6px
-    margin-top: 24px
-
-.oe_website_footer ul
-    list-style: none
-    padding: 0
-    margin: 0
-
-.oe_website_footer ul li
-    display: block
-    margin-bottom: 4px
-    font-size: 14px
-    margin-right: 32px
-
-.oe_website_footer ul li a
-    color: inherit
-    text-decoration: inherit
-
-.oe_website_footer ul li a:visited
-    color: inherit
-    text-decoration: inherit
-
-.oe_website_footer ul li a:hover
-    color: black
-    text-decoration: inherit
-
-.oe_website_copy
-    margin-top: 24px
-    margin-bottom: 6px
-/* }}} */
-
-/* Editor {{{ */
-.oe_website_editorbar
-    position: fixed
-    top: 0
-    right: 0
-    z-index: 10
-    display: block
-    width: 100%
-    padding: 10px
-    margin: 0px
-    background-color: #414141
-    @include vertical-gradient(#646060, #262626)
+html,body
+    height: 100%
     box-sizing: border-box
-    li
-        display: inline
-        color: #eee
-        &:hover
-            background: rgba(0,0,0,0.2)
-            text-shadow: black 0px 0px 3px
-            color: white
+    position: relative
 
-.oe_website_editorbar .oe_rte_toolbar
-    div.dropdown
-        display: inline-block
-        li
-            display: list-item
+#wrap
+    min-height: 100%
+    height: auto !important
+    height: 100%
+    margin: 0 auto -300px
 
-    button
-        font-family: FontAwesome
-        font-weight: normal
-        font-style: normal
-        text-decoration: inherit
-        &.oe_button_list
-            padding-right: 3px
-            &:after
-                content: "\F0D7"
-                padding-left: 6px
+#push-footer
+    height: 364px
 
-/* }}} */
+footer
+    box-sizing: border-box
+    height: 300px
+    background: rgb(239, 248, 248) // rgb(221, 235, 227)
+    padding-top: 64px
+    padding-bottom: 64px
+    //*
+        color: #1abc9c !important
 
-.oe_editable:focus
-    outline: #80B5F2 solid 5px !important
+.subheader
+    letter-spacing: 3px   
+    font-weight: 300
+
+header.navbar-fixed-top
+    position: static
+
+.dark
+    background: rgb(239, 248, 248)
+    padding: 64px
+
+h5
+    font-weight: bold 
+
+.nav > .pull-right
+    float: right !important //bugfix for flatly theme
+
+.navbar .nav > li > p
+    margin-bottom: 0px
+
+.navbar .nav > li  a
+    text-shadow: none
+
+.navbar .nav > li  a 
+    float: none
+    padding: 15px 15px 15px
+    color: #ffffff
+    text-decoration: none
+    text-shadow: 0 1px 0 #2c3e50
+
+.nav > li  a 
+    display: block

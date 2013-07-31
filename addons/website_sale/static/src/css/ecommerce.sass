@@ -37,6 +37,7 @@
       height: 220px
       margin-right: 15px
       margin-left: 3px
+      padding-top: 8px
       &:nth-child(3n)
         margin-right: 0
       .oe_ecommerce_price
@@ -55,7 +56,12 @@
           display: none
   .oe_mycart
     .oe_product
-      padding: 3px 5px 6px 10px
+      display: inline-block
+      width: 250px
+      margin-left: 0px
+      float: none
+      margin-right: 16px
+      padding: 8px 5px 6px 10px
       > .pull-left
         width: 84px
         height: 64px
@@ -64,9 +70,9 @@
           max-height: 64px
           margin: auto
       .oe_button_cart
+        position: static
         right: 6px
         top: 6px
-        text-align: right
     form
       input
         margin-bottom: 0
@@ -77,7 +83,7 @@
     margin-bottom: 15px
     +border-radius(5px)
     border: 1px solid rgba(0,0,0,.1)
-    +box-shadow(0 0 3px 1px rgba(0,0,0,.1))
+    +box-shadow(0px 1px 3px rgba(0,0,0,.1))
   .oe_button_cart
     width: 100%
     font-size: 11px
@@ -116,7 +122,7 @@
   .oe_checkout
     .css_required
       input, select
-        background-color: #d2d2ff !important
+        //background-color: #d2d2ff !important
     h4
       border-bottom: 1px solid #ddd
       margin-right: 30px

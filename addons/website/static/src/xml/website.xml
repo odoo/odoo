@@ -18,4 +18,21 @@
         <ul class="dropdown-menu" role="menu"/>
     </div>
 </t>
+<t t-name="Website.Snipped.carousel">
+    <div style="position: absolute; top: -4px;">
+        <button class="add"><t t-esc="'Add a new banner\'s page'"/></button>
+        <button class="remove"><t t-esc="'Remove this banner\'s page'"/></button>
+        <div style="display: none;">
+            <div class="item">
+                <img src="/website/static/src/img/volcano.jpg"/>
+                <div class="css_titlebox" style="position: absolute; top: 25px; right: 80px;">
+                    <div style="text-align: right; background: #f6f6f6; padding: 7px 20px; border-radius: 5px;">
+                        <h1>Insert Title Here</h1>
+                        <h4>Insert subtitle here</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
 </templates>

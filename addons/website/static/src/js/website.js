@@ -43,9 +43,12 @@ instance.website.EditorBar = instance.web.Widget.extend({
             .parent().show();
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
-                .not('link, script').prop('contentEditable', true)
+                .not('link, script')
+                // FIXME: propagation should make "meta" blocks non-editable in the first place...
+                .not('.oe_snippet_editor')
+                .prop('contentEditable', true)
                 .addClass('oe_editable');
-        var $rte_ables = $editables.filter('div, p, :not([data-oe-type])');
+        var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
 
         this.rte.start_edition($rte_ables);
@@ -101,27 +104,31 @@ instance.website.EditorBar = instance.web.Widget.extend({
     cancel: function () {
         window.location.reload();
     },
-    snippet_start: function () {
+    setup_droppable: function () {
         var self = this;
-        $('.oe_snippet').click(function(ev) {
+        $('.oe_snippet_drop').remove();
+        var droppable = '<div class="oe_snippet_drop"></div>';
+        var $zone = $('section.container');
+        $zone.before(droppable).after(droppable);
+
+        $(".oe_snippet_drop").droppable({
+            hoverClass: 'oe_accepting',
+            drop: function( event, ui ) {
+                console.log(event, ui, "DROP");
+
+                $(event.target).replaceWith($(ui.draggable).html());
+                $('.oe_selected').remove();
+                self.setup_droppable();
+            }
+        }).hide();
+    },
+    snippet_start: function () {
+        this.setup_droppable();
+
+        $('.oe_snippet').draggable().click(function(ev) {
+            $(".oe_snippet_drop").show();
             $('.oe_selected').removeClass('oe_selected');
-            var $snippet = $(ev.currentTarget);
-            $snippet.addClass('oe_selected');
-            $snippet.draggable();
-            var selector = $snippet.data("selector");
-            var $zone = $(".oe_website_body " + selector);
-            var droppable = '<div class="oe_snippet_drop" style="border:1px solid red;">.<br/>.<br/>.<br/>.<br/>.<br/></div>';
-            $zone.before(droppable);
-            $zone.after(droppable);
-            $(".oe_snippet_drop").droppable({
-                drop: function( event, ui ) {
-                    console.log(event, ui, "DROP");
-                    var $target = $(event.target);
-                    $target.before($snippet.html());
-                    $('.oe_selected').remove();
-                    $('.oe_snippet_drop').remove();
-                }
-            });
+            $(ev.currentTarget).addClass('oe_selected');
         });
 
     },
@@ -273,6 +280,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         this.$el.show();
         this.disable();
+        this.snippet_carousel();
         CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
             .not('span, [data-oe-type]')
@@ -326,8 +334,61 @@ instance.website.RTE = instance.web.Widget.extend({
             customConfig: '',
             // Disable ACF
             allowedContent: true,
+            // Don't insert paragraphs around content in e.g. <li>
+            autoParagraph: false,
         };
     },
+    // TODO clean
+    snippet_carousel: function () {
+        var self = this;
+        $(".carousel").each(function() {
+            var $carousel = new instance.website.snippet.carousel(self, this);
+            $carousel.insertAfter(self.$el);
+        });
+    }
+});
+
+
+instance.website.snippet = {};
+instance.website.snippet.carousel = instance.web.Widget.extend({
+    template: 'Website.Snipped.carousel',
+    events: {
+        'click .add': 'add_page',
+        'click .remove': 'remove_page',
+    },
+    instances: [],
+    init: function (parent, carousel) {
+        this._super(parent);
+        this.parent = parent;
+        var index = instance.website.snippet.carousel.index || 0;
+        instance.website.snippet.carousel.index = index++;
+        this.index = index;
+        $(carousel).addClass("carousel-index-"+index);
+        this.offset = $(carousel).offset();
+    },
+    start: function () {
+        var self = this;
+        this.$el.css({position: 'absolute', top: this.offset.top+'px', left: this.offset.left+'px'});
+    },
+    destroy: function () {
+        return this._super();
+    },
+    get_carousel: function() {
+        return $(".carousel.carousel-index-"+this.index);
+    },
+    add_page: function() {
+        var $c = this.get_carousel();
+        var cycle = $c.find(".carousel-inner .item").size();
+        $c.find(".carousel-inner").append(this.$(".item").clone());
+        $c.carousel(cycle);
+    },
+    remove_page: function() {
+        var $c = this.get_carousel();
+        var cycle = $c.find(".carousel-inner .item.active").remove();
+        $c.find(".carousel-inner .item:first").addClass("active");
+        $c.carousel(0);
+        this.parent.trigger('change', this.parent, null);
+    }
 });
 
 $(function(){
@@ -386,8 +447,6 @@ $(function(){
         });
     }
 
-        
-
     function append_snippet(event){
         console.log('click',this,event.button);
         if(event.button === 0){
@@ -420,5 +479,10 @@ instance.web.ActionRedirect = function(parent, action) {
     }
 };
 instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
+
+instance.web.GoToWebsite = function(parent, action) {
+    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
+};
+instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
 
 };
