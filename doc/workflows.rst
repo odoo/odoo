@@ -54,8 +54,8 @@ instance, here is a simple sequence of two activities defined in XML::
     </record>
 
 A worfklow is always defined with respect to a particular model (the model is
-given by attribute ``osv`` on the model ``workflow``). Methods specified in the
-activities or transitions will be called on that model.
+given by the attribute ``osv`` on the model ``workflow``). Methods specified in
+the activities or transitions will be called on that model.
 
 In the example code above, a workflow called "test_workflow" is created. It is
 made up of two activies, named "a" and "b", and one transition, going from "a"
@@ -67,10 +67,10 @@ Because ``on_create`` is set to True on the workflow record, the workflow is
 instanciated for each newly created record. (Otherwise, the workflow should be
 instanciated by other means, such as from some module Python code.)
 
-When the workflow is instanciated, it begins with activity "a". That activity is
-of kind ``function``, which means that the action ``print_a()`` is method call
-on the model ``test.workflow`` (the usual ``cr, uid, ids, context`` arguments
-are passed for you).
+When the workflow is instanciated, it begins with activity "a". That activity
+is of kind ``function``, which means that the action ``print_a()`` is a method
+call on the model ``test.workflow`` (the usual ``cr, uid, ids, context``
+arguments are passed for you).
 
 The transition between "a" and "b" does not specify any condition. This means
 that the workflow instance immediately goes from "a" to "b" after "a" has been
@@ -107,14 +107,8 @@ may be several lines long; in that case, the value of the last one determines
 whether the transition can be taken.
 
 In the condition evaluation environment, several symbols are conveniently
-defined:
+defined (in addition to the OpenERP ``safe_eval`` environment):
 
-- the database cursor (``cr``),
-- the user ID (``uid``),
-- the record ID tied to the workflow instance (``id``),
-- the record ID wrapped in a list (``ids``),
-- the model name (``model``),
-- the model instance (``obj``),
 - all the model column names, and
 - all the browse record's attributes.
 
@@ -122,14 +116,15 @@ Signals
 '''''''
 
 In addition to a condition, a transition can specify a signal name. When such
-signal name is present, the transition is not taken directly, even if the
+a signal name is present, the transition is not taken directly, even if the
 condition evaluates to ``True``. Instead the transition blocks, waiting to be
 woken up.
 
 In order to wake up a transition with a defined signal name, the signal must be
 sent to the workflow instance. A common way to send a signal is to use a button
 in the user interface, using the element ``<button/>`` with the signal name as
-the ``name`` attribute of the button. Once the button is clicked, 
+the attribute ``name`` of the button. Once the button is clicked, the signal is
+sent to the workflow instance of the current record.
 
 .. note:: The condition is still evaluated when the signal is sent to the
     workflow instance.
@@ -139,20 +134,20 @@ Triggers
 
 With conditions that evaluate to ``False``, transitions are not taken (and thus
 the activity it leads to is not processed immediately). Still, the workflow
-instance can get new chances to progress across that transition by providing so-
-called triggers. The idea is that when the condition is not satisfied, triggers
-are recorded in database. Later, it is possible to wake up specifically the
-workflow instances that installed those triggers, offering them to reevaluate
-their transition conditions. This mechanism makes it cheaper to wake up workflow
-instances by targetting just a few of them (those that have installed the
-triggers) instead of all of them.
+instance can get new chances to progress across that transition by providing
+so-called triggers. The idea is that when the condition is not satisfied,
+triggers are recorded in database. Later, it is possible to wake up
+specifically the workflow instances that installed those triggers, offering
+them to reevaluate their transition conditions. This mechanism makes it cheaper
+to wake up workflow instances by targetting just a few of them (those that have
+installed the triggers) instead of all of them.
 
 Triggers are recorded in database as record IDs (together with the model name)
 and refer to the workflow instance waiting for those records. The transition
 definition provides a model name (attribute ``trigger_model``) and a Python
 expression (attribute ``trigger_expression``) that evaluates to a list of record
 IDs in the given model. Any of those records can wake up the workflow instance
-they are associated to.
+they are associated with.
 
 .. note:: Note that triggers are not re-installed whenever the transition is
     re-tried.
@@ -189,7 +184,7 @@ outgoing transitions afterwards.
 
 The attribute ``flow_stop`` is a boolean value specifying whether the activity
 stops the workflow instance. A workflow instance is considered completed when
-all its activities with the ``flow_stop`` attribute set to ``True`` are
+all its activities with the attribute ``flow_stop`` set to ``True`` are
 completed.
 
 It is important for OpenERP to know when a workflow instance is completed. A
@@ -214,9 +209,9 @@ Sending a signal from a subflow
 
 When a workflow is embedded in an activity (as a subflow) of a workflow, the
 sublow can send a signal from its own activities to the parent workflow by
-giving a signal name in attribute ``signal_send``. OpenERP processes those
-activities by sending the value of ``signal_send`` prefixed by "subflow"  to the
-parent workflow instance.
+giving a signal name in the attribute ``signal_send``. OpenERP processes those
+activities by sending the value of ``signal_send`` prefixed by "subflow."  to
+the parent workflow instance.
 
 In other words, it is possible to react and get transitions in the parent
 workflow as activities are executed in the sublow.
@@ -230,8 +225,8 @@ An activity can run a "Server Action" by specifying its ID in the attribute
 Python action
 '''''''''''''
 
-An activity can execute some Python code, given by attribute ``action``. The
-evaluation environment is the same as the one explained in the section
+An activity can execute some Python code, given by the attribute ``action``.
+The evaluation environment is the same as the one explained in the section
 `Conditions`_.
 
 Split mode
@@ -242,7 +237,7 @@ Normally, if a transition can be taken, OpenERP traverses it and proceed to the
 activity the transition leads to.
 
 Actually, when more than a single transition is leaving an activity, OpenERP may
-proceed or not, depending on the other transitions. That is, the condition on
+proceed or not, depending on the other transitions. That is, the conditions on
 the transitions can be combined together, and the combined result instructs
 OpenERP to traverse zero, one, or all the transitions. The way they are combined
 is controlled by the attribute ``split_mode``.
