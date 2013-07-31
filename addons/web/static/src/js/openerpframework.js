@@ -768,6 +768,52 @@ openerp.web.qweb.default_dict = {
     'JSON': JSON
 };
 
+var genericJsonRpc = function(fct_name, params, fct) {
+    var data = {
+        jsonrpc: "2.0",
+        method: fct_name,
+        params: params,
+        id: Math.floor(Math.random() * 1000 * 1000 * 1000),
+    };
+    return fct(data).pipe(function(result) {
+        if (result.error !== undefined) {
+            console.error("Server application error", result.error);
+            return $.Deferred().reject("server", result.error);
+        } else {
+            return result.result;
+        }
+    }, function() {
+        console.error("JsonRPC communication error", _.toArray(arguments));
+        var def = $.Deferred();
+        return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
+    });
+};
+
+openerp.web.jsonRpc = function(url, fct_name, params, settings) {
+    return genericJsonRpc(fct_name, params, function(data) {
+        return $.ajax(url, _.extend({}, settings, {
+            url: url,
+            dataType: 'json',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+        }));
+    });
+};
+
+openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
+    return genericJsonRpc(fct_name, params, function(data) {
+        return $.ajax(url, _.extend({}, settings, {
+            url: url,
+            dataType: 'jsonp',
+            jsonp: 'jsonp',
+            type: 'GET',
+            cache: false,
+            data: {r: JSON.stringify(data)},
+        }));
+    });
+};
+
 openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     triggers: {
         'request': 'Request sent',
@@ -788,8 +834,10 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         this.session_id = undefined;
     },
     setup: function(origin) {
-        var window_origin = location.protocol+"//"+location.host, self=this;
-        this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
+        // must be able to customize server
+        var window_origin = location.protocol + "//" + location.host;
+        var self = this;
+        this.origin = origin ? origin.replace( /\/+$/, '') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
@@ -962,7 +1010,9 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         if (this.override_session)
             params.session_id = this.session_id;
         var qs = '?' + $.param(params);
-        var prefix = _.any(['http://', 'https://', '//'], _.bind(_.str.startsWith, null, path)) ? '' : this.prefix; 
+        var prefix = _.any(['http://', 'https://', '//'], function(el) {
+            return path.length >= el.length && path.slice(0, el.length) === el;
+        }) ? '' : this.prefix; 
         return prefix + path + qs;
     },
 });
