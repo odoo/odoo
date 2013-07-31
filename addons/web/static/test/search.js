@@ -1132,7 +1132,7 @@ openerp.testing.section('search.groupby', {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
             ok(group, "should have a GroupbyGroup input");
-            strictEqual(group.getParent(), view,
+            strictEqual(group.__parentedParent, view,
                         "group's parent should be view");
 
             group.toggle(group.filters[0]);
