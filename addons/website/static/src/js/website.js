@@ -356,9 +356,16 @@ instance.website.RTE = instance.web.Widget.extend({
     // TODO clean
     snippet_carousel: function () {
         var self = this;
+        $carousels = $("<div/>");
+        $carousels.css({'position': 'absolute', 'top': 0, 'white-space': 'nowrap'});
+        $carousels.insertAfter(self.$el);
+
         $(".carousel").each(function() {
             var $carousel = new instance.website.snippet.carousel(self, this);
-            $carousel.insertAfter(self.$el);
+            $carousel.appendTo($carousels);
+        });
+        $(document).on("scroll", function () {
+            $carousels.css("top", (-self.$el.offset().top+2) + 'px');
         });
     }
 });
