@@ -202,13 +202,14 @@ class account_invoice(osv.osv):
     def copy(self, cr, uid, ids, default=None, context=None):
         default = default or {}
         invoice = self.browse(cr, uid, ids, context=context)
-        reference_type = invoice.reference_type or 'none'
-        default['reference_type'] = reference_type
-        if reference_type == 'bba':
-            partner = invoice.partner_id
-            default['reference'] = self.generate_bbacomm(cr, uid, ids,
-                invoice.type, reference_type,
-                partner.id, '', context=context)['value']['reference']
+        if invoice.type in ['out_invoice']:
+            reference_type = invoice.reference_type or 'none'
+            default['reference_type'] = reference_type
+            if reference_type == 'bba':
+                partner = invoice.partner_id
+                default['reference'] = self.generate_bbacomm(cr, uid, ids,
+                    invoice.type, reference_type,
+                    partner.id, '', context=context)['value']['reference']
         return super(account_invoice, self).copy(cr, uid, ids, default, context=context)
 
     _columns = {
