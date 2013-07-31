@@ -622,8 +622,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     renderElement: function() {
         var $el;
         if (this.template) {
-            $el = $(_.str.trim(openerp.web.qweb.render(
-                this.template, {widget: this})));
+            $el = $(openerp.web.qweb.render(this.template, {widget: this}).trim());
         } else {
             $el = this._make_descriptive();
         }
