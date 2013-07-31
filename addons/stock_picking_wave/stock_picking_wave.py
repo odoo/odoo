@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class stock_picking_wave(osv.osv):
     _name = "stock.picking.wave"
@@ -26,7 +27,9 @@ class stock_picking_wave(osv.osv):
         '''
         picking_ids = []
         for wave in self.browse(cr, uid, ids, context=context):
-            picking_ids.append([picking.id for picking in wave.picking_ids])
+            picking_ids += [picking.id for picking in wave.picking_ids]
+        if not picking_ids:
+            raise osv.except_osv(_('Error!'), _('Nothing to print.'))
         datas = {
             'ids': picking_ids,
             'model': 'stock.picking',
