@@ -73,8 +73,8 @@
                                     <i class="icon-ok-circle css_publish"></i>
                                     <i class="icon-remove-sign css_unpublish"></i>
                                 </a>
-                                <h3><t t-record="blog_id" t-field="subject"/></h3>
-                                <p><t t-record="blog_id" t-field="body"/></p>
+                                <h3 t-record="blog_id" t-field="subject"></h3>
+                                <p t-record="blog_id" t-field="body"></p>
                                 <small class="pull-right muted text-right">
                                     <div><t t-esc="blog_id.read(['author_id'])[0]['author_id'][1]"/></div>
                                     <div><t t-esc="blog_id.date"/></div>
