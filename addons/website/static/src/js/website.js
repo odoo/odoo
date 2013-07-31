@@ -471,4 +471,9 @@ instance.web.ActionRedirect = function(parent, action) {
 };
 instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
 
+instance.web.GoToWebsite = function(parent, action) {
+    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
+};
+instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
+
 };
