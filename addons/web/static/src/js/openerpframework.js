@@ -968,7 +968,8 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             // Indirect jsonp request
             var ifid = _.uniqueId('oe_rpc_iframe');
             var display = 'none';
-            var $iframe = $(_.str.sprintf("<iframe src='javascript:false;' name='%s' id='%s' style='display:%s'></iframe>", ifid, ifid, display));
+            var html = "<iframe src='javascript:false;' name='" + ifid + "' id='" + ifid + "' style='display:" + display + "'></iframe>";
+            var $iframe = $(html);
             var $form = $('<form>')
                         .attr('method', 'POST')
                         .attr('target', ifid)
