@@ -1,5 +1,6 @@
 openerp.website = function(instance) {
 var _lt = instance.web._lt;
+var QWeb = instance.web.qweb;
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
     events: {
@@ -116,7 +117,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var self = this;
         $('.oe_snippet_drop').remove();
         var droppable = '<div class="oe_snippet_drop"></div>';
-        var $zone = $('*:not(.oe_snippet) > .container');
+        var $zone = $(':not(.oe_snippet) > .container');
         $zone.before(droppable).after(droppable);
 
         $(".oe_snippet_drop").droppable({
@@ -338,11 +339,18 @@ instance.website.RTE = instance.web.Widget.extend({
         this.toggle(!!CKEDITOR.currentInstance);
     },
     _config: function () {
+        var removed_plugins = [
+                // remove toolbar entirely
+                'toolbar,elementspath,resize',
+                // remove custom context menu
+                'contextmenu,tabletools,liststyle',
+                // magicline captures mousein/mouseout => draggable does not work
+                'magicline'
+        ];
         return {
             // Don't load ckeditor's style rules
             stylesSet: [],
-            // Remove toolbar entirely, also custom context menu
-            removePlugins: 'toolbar,elementspath,resize,contextmenu,tabletools,liststyle',
+            removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
             customConfig: '',
@@ -356,60 +364,24 @@ instance.website.RTE = instance.web.Widget.extend({
     // TODO clean
     snippet_carousel: function () {
         var self = this;
-        $carousels = $("<div/>");
-        $carousels.css({'position': 'absolute', 'top': 0, 'white-space': 'nowrap'});
-        $carousels.insertAfter(self.$el);
+        $('.carousel .js_carousel_options .label').on('click', function (e) {
+            e.preventDefault();
+            var $button = $(e.currentTarget)
+            var $c = $button.parents(".carousel:first");
 
-        $(".carousel").each(function() {
-            var $carousel = new instance.website.snippet.carousel(self, this);
-            $carousel.appendTo($carousels);
+            if($button.hasClass("js_add")) {
+                var cycle = $c.find(".carousel-inner .item").size();
+                $c.find(".carousel-inner").append(QWeb.render("Website.Snipped.carousel"));
+                $c.carousel(cycle);
+            }
+            else {
+                var cycle = $c.find(".carousel-inner .item.active").remove();
+                $c.find(".carousel-inner .item:first").addClass("active");
+                $c.carousel(0);
+                self.trigger('change', self, null);
+            }
         });
-        $(document).on("scroll", function () {
-            $carousels.css("top", (-self.$el.offset().top+2) + 'px');
-        });
-    }
-});
-
-
-instance.website.snippet = {};
-instance.website.snippet.carousel = instance.web.Widget.extend({
-    template: 'Website.Snipped.carousel',
-    events: {
-        'click .add': 'add_page',
-        'click .remove': 'remove_page',
-    },
-    instances: [],
-    init: function (parent, carousel) {
-        this._super(parent);
-        this.parent = parent;
-        var index = instance.website.snippet.carousel.index || 0;
-        instance.website.snippet.carousel.index = index++;
-        this.index = index;
-        $(carousel).addClass("carousel-index-"+index);
-        this.offset = $(carousel).offset();
-    },
-    start: function () {
-        var self = this;
-        this.$el.css({position: 'absolute', top: this.offset.top+'px', left: this.offset.left+'px'});
-    },
-    destroy: function () {
-        return this._super();
-    },
-    get_carousel: function() {
-        return $(".carousel.carousel-index-"+this.index);
-    },
-    add_page: function() {
-        var $c = this.get_carousel();
-        var cycle = $c.find(".carousel-inner .item").size();
-        $c.find(".carousel-inner").append(this.$(".item").clone());
-        $c.carousel(cycle);
-    },
-    remove_page: function() {
-        var $c = this.get_carousel();
-        var cycle = $c.find(".carousel-inner .item.active").remove();
-        $c.find(".carousel-inner .item:first").addClass("active");
-        $c.carousel(0);
-        this.parent.trigger('change', this.parent, null);
+        $('.carousel .js_carousel_options').show();
     }
 });
 
@@ -490,9 +462,7 @@ $(function(){
         }
         event.preventDefault();
     }
-
 });
-
 
 instance.web.ActionRedirect = function(parent, action) {
     var url = $.deparam(window.location.href).url;
