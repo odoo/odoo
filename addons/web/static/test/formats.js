@@ -116,25 +116,37 @@ openerp.testing.section('web-formats', {
 //        equal(val.toString("HH:mm:ss"), res.toString("HH:mm:ss"));
 //    });
     test('parse_integer', function (instance) {
-        var val = instance.web.parse_value('123,456', {type: 'integer'});
-        equal(val, 123456);
-        instance.web._t.database.parameters.thousands_sep = '|';
-        var val2 = instance.web.parse_value('123|456', {type: 'integer'});
-        equal(val2, 123456);
+        var tmp = instance.web._t.database.parameters.thousands_sep;
+        try {
+            var val = instance.web.parse_value('123,456', {type: 'integer'});
+            equal(val, 123456);
+            instance.web._t.database.parameters.thousands_sep = '|';
+            var val2 = instance.web.parse_value('123|456', {type: 'integer'});
+            equal(val2, 123456);
+        } finally {
+            instance.web._t.database.parameters.thousands_sep = tmp;
+        }
     });
     test("parse_float", function (instance) {
-        var str = "134,112.1234";
-        var val = instance.web.parse_value(str, {type:"float"});
-        equal(val, 134112.1234);
-        str = "-134,112.1234";
-        val = instance.web.parse_value(str, {type:"float"});
-        equal(val, -134112.1234);
-        _.extend(instance.web._t.database.parameters, {
-            decimal_point: ',',
-            thousands_sep: '.'
-        });
-        var val3 = instance.web.parse_value('123.456,789', {type: 'float'});
-        equal(val3, 123456.789);
+        var tmp1 = instance.web._t.database.parameters.thousands_sep;
+        var tmp2 = instance.web._t.database.parameters.decimal_point;
+        try {
+            var str = "134,112.1234";
+            var val = instance.web.parse_value(str, {type:"float"});
+            equal(val, 134112.1234);
+            str = "-134,112.1234";
+            val = instance.web.parse_value(str, {type:"float"});
+            equal(val, -134112.1234);
+            _.extend(instance.web._t.database.parameters, {
+                decimal_point: ',',
+                thousands_sep: '.'
+            });
+            var val3 = instance.web.parse_value('123.456,789', {type: 'float'});
+            equal(val3, 123456.789);
+        } finally {
+            instance.web._t.database.parameters.thousands_sep = tmp1;
+            instance.web._t.database.parameters.decimal_point = tmp2;
+        }
     });
     test('intersperse', function (instance) {
         var g = instance.web.intersperse;
