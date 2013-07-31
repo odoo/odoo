@@ -69,9 +69,9 @@
                     <div class="span8" t-if="blog_id">
                         <div class="media">
                             <div t-att-class="'media-body well %%s' %% (blog_id.website_published and 'css_published' or '')">
-                                <a href="#" title="Click to publish or unpublish this blog" t-att-data-id="blog_id.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
-                                    <i class="icon-ok-circle css_publish"></i>
-                                    <i class="icon-remove-sign css_unpublish"></i>
+                                <a href="#" title="Click to publish or unpublish this blog" t-att-data-id="blog_id.id" class="js_publish pull-right" groups="group_website_mail_manager">
+                                    <span class="label label-success">Unpublish</span>
+                                    <span class="label label-important">Publish</span>
                                 </a>
                                 <h3 t-record="blog_id" t-field="subject"></h3>
                                 <div t-record="blog_id" t-field="body"></div>
@@ -85,9 +85,9 @@
                                     <!-- TODO: check qweb iteration -->
                                     <li class="media well well-small">
                                         <div t-att-class="'media-body %%s' %% (website_published and 'css_published' or '')">
-                                            <a href="#" title="Click to publish or unpublish this message" t-att-data-id="id" class="js_publish css_button_publish" groups="group_website_mail_manager">
-                                                <i class="icon-ok-circle css_publish"></i>
-                                                <i class="icon-remove-sign css_unpublish"></i>
+                                            <a href="#" title="Click to publish or unpublish this message" t-att-data-id="id" class="js_publish pull-right" groups="group_website_mail_manager">
+                                                <span class="label label-success">Unpublish</span>
+                                                <span class="label label-important">Publish</span>
                                             </a>
                                             <div class="media">
                                                 <t t-raw="body"/>
@@ -111,9 +111,9 @@
                             <t t-foreach="blog_ids" t-as="blog">
                                 <li class="media well">
                                     <div t-att-class="'media-body %%s' %% (blog.website_published and 'css_published' or '')">
-                                        <a href="#" title="Click to publish or unpublish this message" t-att-data-id="blog.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
-                                            <i class="icon-ok-circle css_publish"></i>
-                                            <i class="icon-remove-sign css_unpublish"></i>
+                                        <a href="#" title="Click to publish or unpublish this message" t-att-data-id="blog.id" class="js_publish pull-right" groups="group_website_mail_manager">
+                                            <span class="label label-success">Unpublish</span>
+                                            <span class="label label-important">Publish</span>
                                         </a>
                                         <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)" t-record="blog" t-field="subject"></a></h4>
                                         <div class="media">
@@ -128,8 +128,8 @@
                                 </li>
                             </t>
                         </ul>
-                        <a t-if="prev_date" t-att-href="'?date=%%s' %% (prev_date)" class="css_newer">Newer</a>
-                        <a t-if="next_date" t-att-href="'?date=%%s' %% (next_date)" class="css_older">Older</a>
+                        <a t-if="prev_date" t-att-href="'?date=%%s' %% (prev_date)" class="pull-left">Newer</a>
+                        <a t-if="next_date" t-att-href="'?date=%%s' %% (next_date)" class="pull-right">Older</a>
                     </div>
                 </div>
             </div>
