@@ -287,9 +287,11 @@ class QWebXml(object):
             if field_type == 'many2one':
                 field = getattr(record, field)
                 if field:
-                    inner = field.name_get()[0][1]
+                    inner = field.name_get()[0][1] or ""
             else:
-                inner = getattr(record, field)
+                inner = getattr(record, field) or ""
+            if field_type != 'html':
+                cgi.escape(str(inner))
             if e.tagName != 't':
                 g_att += ''.join(
                     ' %s="%s"' % (name, cgi.escape(str(value), True))
@@ -303,6 +305,6 @@ class QWebXml(object):
         except AttributeError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att,  g_att, v, cgi.escape(str(inner)))
+        return self.render_element(e, t_att,  g_att, v, str(inner))
 
 # leave this, al.
