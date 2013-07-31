@@ -118,7 +118,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         $('.oe_snippet_drop').remove();
         var droppable = '<div class="oe_snippet_drop"></div>';
         var $zone = $(':not(.oe_snippet) > .container');
-        $zone.before(droppable);//.after(droppable);
+        $zone.after(droppable);//.after(droppable);
 
         $(".oe_snippet_drop").droppable({
             hoverClass: 'oe_accepting',
