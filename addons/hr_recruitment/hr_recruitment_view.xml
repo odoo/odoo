@@ -305,6 +305,16 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar</field>
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+        <field name="help" type="html">
+              <p>
+                OpenERP helps you track applicants in the recruitment
+                process and follow up all operations: meetings, interviews, etc.
+              </p><p>
+                Applicants and their attached CV are created automatically when an email is sent.
+                If you install the document management modules, all resumes are indexed automatically, 
+                so that you can easily search through their content.
+              </p>
+         </field>
     </record>
 
     <record id="view_job_filter_recruitment" model="ir.ui.view">
