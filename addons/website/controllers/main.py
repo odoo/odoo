@@ -59,7 +59,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         view_model, view_id = imd.get_object_reference(request.cr, uid, 'website', 'default_page')
         newview_id = view.copy(request.cr, uid, view_id)
         newview = view.browse(request.cr, uid, newview_id, context={})
-        newview.write({'arch': newview.arch.replace("website.default_page", path), 'name': "page/%s" % path })
+        newview.write({
+            'arch': newview.arch.replace("website.default_page", path),
+            'name': "page/%s" % path
+        })
         if '.' in path:
             module, idname = path.split('.')
         else:
@@ -70,6 +73,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             'module': module,
             'model': 'ir.ui.view',
             'res_id': newview_id,
+            'noupdate': True
         })
         return werkzeug.utils.redirect("/page/%s" % path)
 
