@@ -234,6 +234,12 @@ instance.website.RTE = instance.web.Widget.extend({
         [Command, "\uf0c1", 'link'],
         [Command, "\uf127", 'unlink'],
         [Command, "\uf10d", 'blockquote'],
+        // 'image' uses either filebrowserImageUploadUrl or
+        // filebrowserUploadUrl, and provides a `link` tab. imagebutton only
+        // uses filebrowserImageUploadUrl and does not provide a `link` tab to
+        // hotlink an image from the internets.
+        [Command, "\uf03e", 'image'],
+        // [Command, "\uf030", 'imagebutton'],
         [Group, "\uf0ca", [
             [Command, "\uf0ca", 'bulletedlist'],
             [Command, "\uf0cb", 'numberedlist'],
@@ -336,6 +342,7 @@ instance.website.RTE = instance.web.Widget.extend({
             allowedContent: true,
             // Don't insert paragraphs around content in e.g. <li>
             autoParagraph: false,
+            filebrowserImageUploadUrl: "/website/attach",
         };
     },
     // TODO clean
