@@ -74,7 +74,7 @@
                                     <i class="icon-remove-sign css_unpublish"></i>
                                 </a>
                                 <h3 t-record="blog_id" t-field="subject"></h3>
-                                <p t-record="blog_id" t-field="body"></p>
+                                <div t-record="blog_id" t-field="body"></div>
                                 <small class="pull-right muted text-right">
                                     <div><t t-esc="blog_id.read(['author_id'])[0]['author_id'][1]"/></div>
                                     <div><t t-esc="blog_id.date"/></div>
@@ -115,9 +115,9 @@
                                             <i class="icon-ok-circle css_publish"></i>
                                             <i class="icon-remove-sign css_unpublish"></i>
                                         </a>
-                                        <a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><h4 class="media-heading"><t t-record="blog" t-field="subject"/></h4></a>
+                                        <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)" t-record="blog" t-field="subject"></a></h4>
                                         <div class="media">
-                                            <t t-record="blog" t-field="body"/>
+                                            <div t-record="blog" t-field="body"></div>
                                             <small class="pull-right muted text-right">
                                                 <a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)">Read more </a>
                                                 <div><t t-esc="blog.read(['author_id'])[0]['author_id'][1]"/></div>
