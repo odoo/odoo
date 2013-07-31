@@ -31,6 +31,12 @@ CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        return self._current_rate_computation(cr, uid, ids, name, arg, True, context=context)
+
+    def _current_rate_silent(self, cr, uid, ids, name, arg, context=None):
+        return self._current_rate_computation(cr, uid, ids, name, arg, False, context=context)
+
+    def _current_rate_computation(self, cr, uid, ids, name, arg, raise_on_no_rate, context=None):
         if context is None:
             context = {}
         res = {}
@@ -48,9 +54,12 @@ class res_currency(osv.osv):
             if cr.rowcount:
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
+            elif not raise_on_no_rate:
+                res[id] = 0
             else:
                 raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (id)))
         return res
+
     _name = "res.currency"
     _description = "Currency"
     _columns = {
@@ -59,6 +68,10 @@ class res_currency(osv.osv):
         'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
+
+        # Do not use for computation ! Same as rate field with silent failing
+        'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12,6),
+            help='The rate of the currency to the currency of rate 1 (0 if no rate defined).'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
