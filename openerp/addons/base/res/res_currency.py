@@ -31,32 +31,12 @@ CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
-        res = {}
-        if 'date' in context:
-            date = context['date']
-        else:
-            date = time.strftime('%Y-%m-%d')
-        date = date or time.strftime('%Y-%m-%d')
-        # Convert False values to None ...
-        currency_rate_type = context.get('currency_rate_type_id') or None
-        # ... and use 'is NULL' instead of '= some-id'.
-        operator = '=' if currency_rate_type else 'is'
-        for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
-            if cr.rowcount:
-                id, rate = cr.fetchall()[0]
-                res[id] = rate
-            else:
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (id)))
-        return res
+        return self._current_rate_computation(cr, uid, ids, name, arg, raise_on_no_rate=True, context=None)
 
     def _current_rate_silent(self, cr, uid, ids, name, arg, context=None):
-        """Same function as currency_rate with 0 for undefined rates
-        Not using a wrapper over _current_rate as it would produce only 0 in a
-        tree view with one error
-        """
+        return self._current_rate_computation(cr, uid, ids, name, arg, raise_on_no_rate=False, context=None)
+
+    def _current_rate_computation(self, cr, uid, ids, name, arg, raise_on_no_rate, context=None):
         if context is None:
             context = {}
         res = {}
@@ -74,8 +54,10 @@ class res_currency(osv.osv):
             if cr.rowcount:
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
-            else:
+            elif not raise_on_no_rate:
                 res[id] = 0
+            else:
+                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (id)))
         return res
 
     _name = "res.currency"
