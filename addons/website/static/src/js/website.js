@@ -104,27 +104,31 @@ instance.website.EditorBar = instance.web.Widget.extend({
     cancel: function () {
         window.location.reload();
     },
-    snippet_start: function () {
+    setup_droppable: function () {
         var self = this;
-        $('.oe_snippet').click(function(ev) {
+        $('.oe_snippet_drop').remove();
+        var droppable = '<div class="oe_snippet_drop"></div>';
+        var $zone = $('section.container');
+        $zone.before(droppable).after(droppable);
+
+        $(".oe_snippet_drop").droppable({
+            hoverClass: 'oe_accepting',
+            drop: function( event, ui ) {
+                console.log(event, ui, "DROP");
+
+                $(event.target).replaceWith($(ui.draggable).html());
+                $('.oe_selected').remove();
+                self.setup_droppable();
+            }
+        }).hide();
+    },
+    snippet_start: function () {
+        this.setup_droppable();
+
+        $('.oe_snippet').draggable().click(function(ev) {
+            $(".oe_snippet_drop").show();
             $('.oe_selected').removeClass('oe_selected');
-            var $snippet = $(ev.currentTarget);
-            $snippet.addClass('oe_selected');
-            $snippet.draggable();
-            var selector = $snippet.data("selector");
-            var $zone = $(".oe_website_body " + selector);
-            var droppable = '<div class="oe_snippet_drop" style="border:1px solid red;">.<br/>.<br/>.<br/>.<br/>.<br/></div>';
-            $zone.before(droppable);
-            $zone.after(droppable);
-            $(".oe_snippet_drop").droppable({
-                drop: function( event, ui ) {
-                    console.log(event, ui, "DROP");
-                    var $target = $(event.target);
-                    $target.before($snippet.html());
-                    $('.oe_selected').remove();
-                    $('.oe_snippet_drop').remove();
-                }
-            });
+            $(ev.currentTarget).addClass('oe_selected');
         });
 
     },
