@@ -11,6 +11,7 @@ import openerp
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import manifest_list
 from openerp.addons.web.http import request
+import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
 
@@ -54,8 +55,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = template_values()
         uid = values['uid']
         imd = request.registry['ir.model.data']
+        view = request.registry['ir.ui.view']
         view_model, view_id = imd.get_object_reference(request.cr, uid, 'website', 'default_page')
-        newview_id = request.registry['ir.ui.view'].copy(request.cr, uid, view_id)
+        newview_id = view.copy(request.cr, uid, view_id)
+        newview = view.browse(request.cr, uid, newview_id, context={})
+        newview.write({'arch': newview.arch.replace("website.default_page", path), 'name': "page/%s" % path })
         if '.' in path:
             module, idname = path.split('.')
         else:
@@ -67,8 +71,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             'model': 'ir.ui.view',
             'res_id': newview_id,
         })
-        # TODO: replace by a redirect
-        return self.page(path)
+        return werkzeug.utils.redirect("/page/%s" % path)
 
     @http.route('/page/<path:path>', type='http', auth="admin")
     def page(self, path):
