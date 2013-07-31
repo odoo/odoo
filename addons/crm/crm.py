@@ -111,7 +111,7 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, type=None, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
             This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
 
@@ -135,8 +135,19 @@ class crm_case_section(osv.osv):
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
-            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            month = self._period_number - (relativedelta.relativedelta(month_begin, group_begin_date).months + 1)
+            section_result[month] = {'value': 0, 'tooltip': group_begin_date.strftime('%B')}
+            inner_groupby = (group.get('__context', {})).get('group_by',[])
+            if type == "Lead" or not inner_groupby:
+                section_result[month]['value'] = group.get(value_field, 0)
+                continue
+            if inner_groupby:
+                groupby_company = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
+                for groupby in groupby_company:
+                    company = self.pool.get('res.company').browse(cr, uid, groupby['__domain'][0][2], context=context)
+                    user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+                    value = self.pool.get('res.currency').compute(cr, uid, company.currency_id.id, user.company_id.currency_id.id, groupby.get(value_field, 0))
+                    section_result[month]['value'] = section_result[month]['value'] + value
         return section_result
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -151,16 +162,16 @@ class crm_case_section(osv.osv):
         for id in ids:
             res[id] = dict()
             lead_domain = [('type', '=', 'lead'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
-            res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
+            res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date','company_id'], 'create_date_count', ['create_date', 'company_id'], type="Lead", context=context)
             opp_domain = [('type', '=', 'opportunity'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
-            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date'], 'planned_revenue', 'create_date', context=context)
+            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date', 'company_id'], 'planned_revenue', ['create_date', 'company_id'], context=context)
         return res
 
     def _get_currency_symbol(self, cr, uid, ids, name, arg, context=None):
         """Set currency symbole of company currency"""
         res = {}
-        for sales_team in self.browse(cr, uid, ids, context=context):
-            res[sales_team.id] = sales_team.company_id.currency_id.symbol
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        res = dict.fromkeys(ids, user.company_id.currency_id.symbol)
         return res
 
     _columns = {
@@ -192,7 +203,6 @@ class crm_case_section(osv.osv):
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
-        'company_id': fields.many2one('res.company', 'Company', select=1),
         'currency_symbol': fields.function(_get_currency_symbol, string='Currency Symbol', method=True, type='char'),
     }
 
@@ -204,7 +214,6 @@ class crm_case_section(osv.osv):
         'active': 1,
         'stage_ids': _get_stage_common,
         'use_leads': True,
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case.section', context=c),
     }
 
     _sql_constraints = [
