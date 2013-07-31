@@ -333,8 +333,8 @@ instance.website.RTE = instance.web.Widget.extend({
         return {
             // Don't load ckeditor's style rules
             stylesSet: [],
-            // Remove toolbar entirely
-            removePlugins: 'toolbar,elementspath,resize',
+            // Remove toolbar entirely, also custom context menu
+            removePlugins: 'toolbar,elementspath,resize,contextmenu,tabletools,liststyle',
             uiColor: '',
             // Ensure no config file is loaded
             customConfig: '',
