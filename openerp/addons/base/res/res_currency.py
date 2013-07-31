@@ -31,10 +31,10 @@ CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
-        return self._current_rate_computation(cr, uid, ids, name, arg, raise_on_no_rate=True, context=None)
+        return self._current_rate_computation(cr, uid, ids, name, arg, True, context=context)
 
     def _current_rate_silent(self, cr, uid, ids, name, arg, context=None):
-        return self._current_rate_computation(cr, uid, ids, name, arg, raise_on_no_rate=False, context=None)
+        return self._current_rate_computation(cr, uid, ids, name, arg, False, context=context)
 
     def _current_rate_computation(self, cr, uid, ids, name, arg, raise_on_no_rate, context=None):
         if context is None:
