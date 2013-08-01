@@ -83,16 +83,23 @@
                             <input type="hidden" t-att-value="job.id" name="job_id"/>
                             <input type="hidden" t-att-value="job.name" name="name"/>
                             <div class="control-group">
-                                <input type="text" class="input-xlarge" id="nametxt" name="partner_name" required="True" placeholder="Name..."/>
+                                <input type="text" class="input-xlarge" id="nametxt" name="partner_name" required="true" placeholder="Name..."/>
                             </div>
                             <div class="control-group">
-                                <input type="text" class="input-xlarge" id="emailtxt" name="email_from" required="True" placeholder="Email..."/>
+                                <input type="text" class="input-xlarge" id="emailtxt" name="email_from" required="true" placeholder="Email..."/>
                             </div>
                             <div class="control-group">
                                 <textarea class="span8" style="margin-top:5px; height: 140px;" name="description" placeholder="Enter your comment..."> </textarea>
                             </div>
                             <div class="control-group">
-                                <input class="input-file" id="fileInput" type="file" name="ufile" required="True"/>
+                                <input class="input-file" id="fileInput" type="file" name="ufile" required="true"/>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Please enter the letters displayed:</label>
+                                <div class="controls">
+                                    <input type="text" id="defaultReal" name="defaultReal" required="true"/>
+                                    <input type="hidden" id="captchaval" name="captchaval"/>
+                                </div>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">Save</button>
