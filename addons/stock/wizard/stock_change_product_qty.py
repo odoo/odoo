@@ -67,7 +67,7 @@ class stock_change_product_qty(osv.osv_memory):
                 self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
             except (orm.except_orm, ValueError):
                 location_id = False
-            res.update({'location_id': location_id and location_id.id or False})
+            res.update({'location_id': location_id})
         return res
 
     def change_product_qty(self, cr, uid, ids, context=None):
