@@ -19,7 +19,6 @@ class website_mail(http.Controller):
         message_obj = request.registry['mail.message']
 
         values = {
-            'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1),
             'blog_ids': None,
             'blog_id': None,
             'nav_list': dict(),
@@ -28,7 +27,7 @@ class website_mail(http.Controller):
             'mail_group_id': mail_group_id,
         }
         domain = mail_group_id and [("res_id", "=", mail_group_id)] or []
-        
+
         for group in message_obj.read_group(request.cr, request.uid, domain + group_obj.get_public_blog(request.cr, request.uid), ['subject', 'date'], groupby="date", orderby="create_date asc"):
             year = group['date'].split(" ")[1]
             if not values['nav_list'].get(year):
@@ -58,13 +57,11 @@ class website_mail(http.Controller):
 
     @http.route(['/blog/nav'], type='http', auth="public")
     def nav(self, **post):
-        request.uid = website.get_request.uid()
         comment_ids = request.registry['mail.group'].get_public_message_ids(request.cr, request.uid, domain=safe_eval(post.get('domain')), order="create_date asc", limit=None)
         return simplejson.dumps(request.registry['mail.message'].read(request.cr, request.uid, comment_ids, ['website_published', 'subject', 'res_id']))
 
     @http.route(['/blog/publish'], type='http', auth="public")
     def publish(self, **post):
-        request.uid = website.get_request.uid()
         message_id = int(post['message_id'])
         message_obj = request.registry['mail.message']
 
@@ -76,7 +73,6 @@ class website_mail(http.Controller):
 
     @http.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="public")
     def blog_post(self, mail_group_id=None, blog_id=None, **post):
-        request.uid = website.get_request.uid()
         url = request.httprequest.host_url
         if post.get('body'):
             request.session.body = post.get('body')
@@ -101,7 +97,6 @@ class website_mail(http.Controller):
 
     @http.route(['/blog/<int:mail_group_id>/new'], type='http', auth="public")
     def new_blog_post(self, mail_group_id=None, **post):
-        request.uid = website.get_request.uid()
         blog_id = request.registry['mail.group'].message_post(request.cr, request.uid, mail_group_id,
                 body=_("Blog content.<br/>Please edit this content then you can publish this blog."),
                 subject=_("Blog title"),

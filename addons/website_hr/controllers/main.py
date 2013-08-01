@@ -12,7 +12,6 @@ class website_hr(http.Controller):
 
         employee_ids = hr_obj.search(request.cr, request.uid, [(1, "=", 1)])
         values = {
-            'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1),
             'employee_ids': hr_obj.browse(request.cr, request.uid, employee_ids),
         }
 

@@ -14,8 +14,8 @@ class Ecommerce(http.Controller):
         return category_obj.browse(request.cr, request.uid, category_ids)
 
     def get_current_order(self):
-        order = self.get_order(request.httprequest.session.get('ecommerce_order'))
-        request.httprequest.session['ecommerce_order'] = order.id
+        order = self.get_order(request.httprequest.session.get('ecommerce_order_id'))
+        request.httprequest.session['ecommerce_order_id'] = order.id
         return order
 
     def get_order(self, order_id=None):
@@ -30,7 +30,9 @@ class Ecommerce(http.Controller):
         if not order_id:
             fields = [k for k, v in order_obj._columns.items()]
             order_value = order_obj.default_get(request.cr, request.uid, fields)
-            order_value['partner_id'] = partner_id or request.registry.get('res.users').browse(request.cr, request.uid, request.uid).partner_id.id
+            order_value['partner_id'] = request.uid != request.public_uid and \
+                request.registry.get('res.users').browse(request.cr, request.uid, request.uid).partner_id.id or \
+                None
             order_value.update(order_obj.onchange_partner_id(request.cr, request.uid, [], request.uid, context={})['value'])
             order_id = order_obj.create(request.cr, request.uid, order_value)
         return order_obj.browse(request.cr, request.uid, order_id)
@@ -65,7 +67,7 @@ class Ecommerce(http.Controller):
             product_ids.append(p[0])
         return request.registry.get('product.product').browse(request.cr, request.uid, product_ids)
 
-    @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="admin")
+    @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="public")
     def category(self, cat_id=0, offset=0, **post):
 
         domain = []
@@ -86,7 +88,7 @@ class Ecommerce(http.Controller):
         html = self.render("website_sale.products", values)
         return html
 
-    @http.route(['/shop/product/<product_id>'], type='http', auth="admin")
+    @http.route(['/shop/product/<product_id>'], type='http', auth="public")
     def product(self, cat_id=0, product_id=0):
         order = self.get_current_order()
 
@@ -104,7 +106,7 @@ class Ecommerce(http.Controller):
         html = self.render("website_sale.product", values)
         return html
 
-    @http.route(['/shop/mycart'], type='http', auth="admin")
+    @http.route(['/shop/mycart'], type='http', auth="public")
     def mycart(self, **post):
         order = self.get_current_order()
 
@@ -120,7 +122,7 @@ class Ecommerce(http.Controller):
         html = self.render("website_sale.mycart", values)
         return html
 
-    @http.route(['/shop/add_cart'], type='http', auth="admin")
+    @http.route(['/shop/add_cart'], type='http', auth="public")
     def add_cart(self, product_id=0, remove=False):
         
         context = {}
@@ -162,15 +164,15 @@ class Ecommerce(http.Controller):
                 order_line_id = order_line_obj.create(request.cr, request.uid, values, context=context)
                 order.write({'order_line': [(4, order_line_id)]}, context=context)
 
-        html = self.render("website_sale.total", self.get_values())
+        html = self.render("website_sale.total")
 
         return simplejson.dumps({"quantity": quantity, "totalHTML": html})
 
-    @http.route(['/shop/remove_cart'], type='http', auth="admin")
+    @http.route(['/shop/remove_cart'], type='http', auth="public")
     def remove_cart(self, product_id=0):
         return self.add_cart(product_id=product_id, remove=True)
 
-    @http.route(['/shop/checkout'], type='http', auth="admin")
+    @http.route(['/shop/checkout'], type='http', auth="public")
     def checkout(self, **post):
         order = self.get_current_order()
 
@@ -188,8 +190,8 @@ class Ecommerce(http.Controller):
         values = {'partner': False}
 
         if request.uid != request.public_uid:
-            values['partner'] = partner_obj.browse(request.cr, request.uid, partner_id)
-            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')])
+            values['partner'] = user_obj.browse(request.cr, request.uid, request.uid).partner_id
+            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", values['partner'].id), ('type', "=", 'delivery')])
             values['shipping'] = None
             if shipping_ids:
                 values['shipping'] = partner_obj.browse(request.cr, request.uid, shipping_ids[0])
@@ -205,7 +207,7 @@ class Ecommerce(http.Controller):
 
         return self.render("website_sale.checkout", values)
 
-    @http.route(['/shop/confirm_order'], type='http', auth="admin")
+    @http.route(['/shop/confirm_order'], type='http', auth="public")
     def confirm_order(self, **post):
         order = self.get_current_order()
         
@@ -291,16 +293,16 @@ class Ecommerce(http.Controller):
         json['validation'] = True
         return simplejson.dumps(json)
 
-    @http.route(['/shop/confirmed'], type='http', auth="admin")
+    @http.route(['/shop/confirmed'], type='http', auth="public")
     def confirmed(self, **post):
 
-        if request.httprequest.session.get('ecommerce_order'):
+        if request.httprequest.session.get('ecommerce_order_id'):
             order = self.get_current_order()
             if order.state != 'draft':
-                request.httprequest.session['ecommerce_order_old'] = order.id
-                request.httprequest.session['ecommerce_order'] = None
+                request.httprequest.session['ecommerce_order_id_old'] = order.id
+                request.httprequest.session['ecommerce_order_id'] = None
 
-        order_old = self.get_order(request.httprequest.session.get('ecommerce_order_old'))
+        order_old = self.get_order(request.httprequest.session.get('ecommerce_order_id_old'))
         if not order_old.order_line:
             return self.mycart(**post)
 

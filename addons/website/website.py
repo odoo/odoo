@@ -8,6 +8,7 @@ from openerp.addons.web.http import request
 
 def auth_method_public():
     registry = openerp.modules.registry.RegistryManager.get(request.db)
+    request.public_uid = None
     with registry.cursor() as cr:
         request.public_uid = request.registry['ir.model.data'].get_object_reference(cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
         if not request.session.uid:
@@ -30,6 +31,7 @@ class website(object):
             'script': script,
             'css': css,
             'host_url': request.httprequest.host_url,
+            'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
         }
         _values.update(add_values)
         return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, _values)
