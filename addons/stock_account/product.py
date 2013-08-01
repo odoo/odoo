@@ -167,32 +167,24 @@ class product_product(osv.osv):
         return move_ids
 
     def write(self, cr, uid, ids, values, context=None):
-        standard_prices = self.pool['standard.prices']
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.cost_method == 'standard':
+        if 'standard_price' in values:
+            standard_prices = self.pool['standard.prices']
+            for product in self.browse(cr, uid, ids, context=context):
                 data = {
-                    'company_id': False,
-                    'quant_id': False,
-                    'product_id': False,
-                    'cost': False,
-                    'date': False,
-                    'reason': False,
+                    'product_id': product.id,
+                    'cost': values['standard_price'],
+                    'reason': 'standard_price is changed.',
+                    # Provided by self._defaults:
+                    # 'company_id':
+                    # 'quant_id':
+                    # 'datetime':
                 }
-                standard_prices.create(cr, uid, data, context=context)
-            elif record.cost_method == 'average':
-                data = {
-                    'company_id': False,
-                    'quant_id': False,
-                    'product_id': False,
-                    'cost': False,
-                    'date': False,
-                    'reason': False,
-                }
-                standard_prices.create(cr, uid, data, context=context)
-            elif record.cost_method == 'real':
-                # For a 'real' cost_method, entries in standard_prices are
-                # created when quants are created.
-                pass
+                if product.cost_method in ('standard', 'average'):
+                    standard_prices.create(cr, uid, data, context=context)
+                elif product.cost_method in ('real',):
+                    # For a 'real' cost_method, entries in standard_prices are
+                    # created when quants are created.
+                    pass
         return super(product_product, self).write(cr, uid, ids, values,
             context=context)
 
