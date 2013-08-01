@@ -23,7 +23,7 @@ import time
 from datetime import datetime
 
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from openerp.tools import float_compare
 from openerp.tools.translate import _
@@ -406,20 +406,12 @@ class mrp_production(osv.osv):
         return result
 
     def _src_id_default(self, cr, uid, ids, context=None):
-        try:
-            location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
-            location_id = False
-        return location_id
+        src_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+        return src_location_id.id
 
     def _dest_id_default(self, cr, uid, ids, context=None):
-        try:
-            location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
-            location_id = False
-        return location_id
+        dest_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+        return dest_location_id.id
 
     def _get_progress(self, cr, uid, ids, name, arg, context=None):
         """ Return product quantity percentage """
@@ -885,7 +877,7 @@ class mrp_production(osv.osv):
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
                 })
-        self.signal_button_confirm(cr, uid, [procurement_id])
+        procurement_order.signal_button_confirm(cr, uid, [procurement_id])
         return procurement_id
 
     def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
