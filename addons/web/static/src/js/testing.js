@@ -198,8 +198,7 @@ openerp.testing = {};
             0, module_index + 1 || undefined);
 
         // Serialize options for this precise test case
-        // WARNING: typo is from jquery, do not fix!
-        var env = QUnit.config.currentModuleTestEnviroment;
+        var env = QUnit.config.currentModuleTestEnvironment;
         // section setup
         //     case setup
         //         test

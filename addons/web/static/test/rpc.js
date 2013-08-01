@@ -113,7 +113,6 @@ openerp.testing.section('misordered resolution managemeng', {
 
         var done = $.Deferred();
         setTimeout(function () {
-            start();
             // d1 is failed
             ok(!done1);
             ok(fail1);
