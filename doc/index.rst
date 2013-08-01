@@ -14,6 +14,7 @@ OpenERP Server
    02_architecture
    03_module_dev
    04_security
+   workflows
    05_test_framework
    06_misc
    deployment-gunicorn
