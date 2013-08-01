@@ -1,0 +1,47 @@
+.oe_website_editorbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  width: 100%;
+  padding: 2px;
+  margin: 0px;
+  z-index: 10000;
+  background-color: #414141;
+  background: -webkit-linear-gradient(#646060, #262626);
+  box-sizing: border-box;
+}
+.oe_website_editorbar li {
+  display: inline;
+  color: #eeeeee;
+}
+.oe_website_editorbar li:hover {
+  background: rgba(0, 0, 0, 0.2);
+  text-shadow: black 0px 0px 3px;
+  color: white;
+}
+
+.oe_website_editorbar .oe_rte_toolbar div.dropdown {
+  display: inline-block;
+}
+.oe_website_editorbar .oe_rte_toolbar div.dropdown li {
+  display: list-item;
+}
+.oe_website_editorbar .oe_rte_toolbar button {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+}
+.oe_website_editorbar .oe_rte_toolbar button.oe_button_list {
+  padding-right: 3px;
+}
+.oe_website_editorbar .oe_rte_toolbar button.oe_button_list:after {
+  content: "\F0D7";
+  padding-left: 6px;
+}
+
+.oe_editable:focus {
+  outline: #80b5f2 solid 5px !important;
+}

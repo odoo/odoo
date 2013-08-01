@@ -27,7 +27,7 @@
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
-            <div class="container oe_ecommerce">
+            <div class="container mt48 oe_ecommerce">
                 <div class="row">
                     <div class="span4 css_noprint">
                         <ul class="nav nav-list">
@@ -64,8 +64,8 @@
         <t t-call="website_sale.page">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class="oe_search">
-                    <form action="/shop" method="get" class="navbar-search">
+                <div class="oe_search clearfix">
+                    <form action="/shop" method="get" class="navbar-search pull-right">
                         <input type="text" name="search" class="search-query span4" placeholder="Search" t-att-value="search or '' or ''"/>
                         <button type="submit" class="btn">Submit</button>
                     </form>
@@ -81,15 +81,15 @@
     </template>
 
     <template id="product_card">
-        <div class="media oe_product">
+        <div class="media oe_product span3">
             <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h4></a>
             <a class="pull-left" t-att-href="'/shop/product/%%s' %% product.id"><img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/></a>
             <div class="media-body">
                 <div class="oe_ecommerce_description" t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
                 <div class="oe_ecommerce_price"><span><span t-record="product" t-field="list_price"><t t-esc="product.list_price"/></span>€</span></div>
                 <div class="oe_button_cart">
-                    <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                    <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
+                    <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                    <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
                         <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
                     </button>
                 </div>
@@ -180,7 +180,7 @@
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Shop - Checkout</t>
-            <div class="container oe_ecommerce">
+            <div class="container mt48 oe_ecommerce">
                 <div class="row">
                     <div class="span4 oe_total">
                         <table class="table table-condensed" t-if="order.order_line">

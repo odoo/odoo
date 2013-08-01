@@ -1,5 +1,6 @@
 openerp.website = function(instance) {
 var _lt = instance.web._lt;
+var QWeb = instance.web.qweb;
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
     events: {
@@ -42,11 +43,33 @@ instance.website.EditorBar = instance.web.Widget.extend({
             .add(this.$buttons.save)
             .parent().show();
         // TODO: span edition changing edition state (save button)
-        this.rte.start_edition(
-                $('[data-oe-model]')
-                    .not('link, script')
-                    .prop('contentEditable', true)
-                    .addClass('oe_editable'));
+        var $editables = $('[data-oe-model]')
+                .not('link, script')
+                // FIXME: propagation should make "meta" blocks non-editable in the first place...
+                .not('.oe_snippet_editor')
+                .prop('contentEditable', true)
+                .addClass('oe_editable');
+        var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
+        var $raw_editables = $editables.not($rte_ables);
+
+        // temporary fix until we fix ckeditor
+        $raw_editables.each(function () {
+            $(this).parents().add($(this).find('*')).on('click', function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+            });
+        });
+
+        this.rte.start_edition($rte_ables);
+        $raw_editables.on('keydown keypress cut paste', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('oe_dirty')) {
+                return;
+            }
+
+            $target.addClass('oe_dirty');
+            this.$buttons.save.prop('disabled', false);
+        }.bind(this));
     },
     rte_changed: function () {
         this.$buttons.save.prop('disabled', false);
@@ -90,27 +113,31 @@ instance.website.EditorBar = instance.web.Widget.extend({
     cancel: function () {
         window.location.reload();
     },
+    setup_droppable: function () {
+        var self = this;
+        $('.oe_snippet_drop').remove();
+        var droppable = '<div class="oe_snippet_drop"></div>';
+        var $zone = $(':not(.oe_snippet) > .container');
+        $zone.after(droppable);//.after(droppable);
+
+        $(".oe_snippet_drop").droppable({
+            hoverClass: 'oe_accepting',
+            drop: function( event, ui ) {
+                console.log(event, ui, "DROP");
+
+                $(event.target).replaceWith($(ui.draggable).html());
+                $('.oe_selected').remove();
+                $('.oe_snippet_drop').remove();
+            }
+        });
+    },
     snippet_start: function () {
         var self = this;
-        $('.oe_snippet').click(function(ev) {
+        $('.oe_snippet').draggable().click(function(ev) {
+            self.setup_droppable();
+            $(".oe_snippet_drop").show();
             $('.oe_selected').removeClass('oe_selected');
-            var $snippet = $(ev.currentTarget);
-            $snippet.addClass('oe_selected');
-            $snippet.draggable();
-            var selector = $snippet.data("selector");
-            var $zone = $(".oe_website_body " + selector);
-            var droppable = '<div class="oe_snippet_drop" style="border:1px solid red;">.<br/>.<br/>.<br/>.<br/>.<br/></div>';
-            $zone.before(droppable);
-            $zone.after(droppable);
-            $(".oe_snippet_drop").droppable({
-                drop: function( event, ui ) {
-                    console.log(event, ui, "DROP");
-                    var $target = $(event.target);
-                    $target.before($snippet.html());
-                    $('.oe_selected').remove();
-                    $('.oe_snippet_drop').remove();
-                }
-            });
+            $(ev.currentTarget).addClass('oe_selected');
         });
 
     },
@@ -215,9 +242,18 @@ instance.website.RTE = instance.web.Widget.extend({
         [Command, "\uf12c", 'subscript'],
         [Command, "\uf0c1", 'link'],
         [Command, "\uf127", 'unlink'],
+        [Command, "\uf10d", 'blockquote'],
+        // 'image' uses either filebrowserImageUploadUrl or
+        // filebrowserUploadUrl, and provides a `link` tab. imagebutton only
+        // uses filebrowserImageUploadUrl and does not provide a `link` tab to
+        // hotlink an image from the internets.
+        [Command, "\uf03e", 'image'],
+        // [Command, "\uf030", 'imagebutton'],
         [Group, "\uf0ca", [
             [Command, "\uf0ca", 'bulletedlist'],
-            [Command, "\uf0cb", 'numberedlist']
+            [Command, "\uf0cb", 'numberedlist'],
+            [Command, "\uf03b", 'outdent'],
+            [Command, "\uf03c", 'indent']
         ]],
         [Group, _lt("Heading"), [
             [Style, _lt('H1'), { element: 'h1' }],
@@ -226,6 +262,12 @@ instance.website.RTE = instance.web.Widget.extend({
             [Style, _lt('H4'), { element: 'h4', }],
             [Style, _lt('H5'), { element: 'h5', }],
             [Style, _lt('H6'), { element: 'h6', }]
+        ]],
+        [Group, "\uf039", [
+            [Command, "\uf039", 'justifyblock'],
+            [Command, "\uf036", 'justifyleft'],
+            [Command, "\uf038", 'justifyright'],
+            [Command, "\uf037", 'justifycenter']
         ]]
     ],
     // editor.ui.items -> possible commands &al
@@ -253,6 +295,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         this.$el.show();
         this.disable();
+        this.snippet_carousel();
         CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
             .not('span, [data-oe-type]')
@@ -296,18 +339,50 @@ instance.website.RTE = instance.web.Widget.extend({
         this.toggle(!!CKEDITOR.currentInstance);
     },
     _config: function () {
+        var removed_plugins = [
+                // remove toolbar entirely
+                'toolbar,elementspath,resize',
+                // remove custom context menu
+                'contextmenu,tabletools,liststyle',
+                // magicline captures mousein/mouseout => draggable does not work
+                'magicline'
+        ];
         return {
             // Don't load ckeditor's style rules
             stylesSet: [],
-            // Remove toolbar entirely
-            removePlugins: 'toolbar,elementspath,resize',
+            removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
             customConfig: '',
             // Disable ACF
             allowedContent: true,
+            // Don't insert paragraphs around content in e.g. <li>
+            autoParagraph: false,
+            filebrowserImageUploadUrl: "/website/attach",
         };
     },
+    // TODO clean
+    snippet_carousel: function () {
+        var self = this;
+        $('.carousel .js_carousel_options .label').on('click', function (e) {
+            e.preventDefault();
+            var $button = $(e.currentTarget)
+            var $c = $button.parents(".carousel:first");
+
+            if($button.hasClass("js_add")) {
+                var cycle = $c.find(".carousel-inner .item").size();
+                $c.find(".carousel-inner").append(QWeb.render("Website.Snipped.carousel"));
+                $c.carousel(cycle);
+            }
+            else {
+                var cycle = $c.find(".carousel-inner .item.active").remove();
+                $c.find(".carousel-inner .item:first").addClass("active");
+                $c.carousel(0);
+                self.trigger('change', self, null);
+            }
+        });
+        $('.carousel .js_carousel_options').show();
+    }
 });
 
 $(function(){
@@ -366,8 +441,6 @@ $(function(){
         });
     }
 
-        
-
     function append_snippet(event){
         console.log('click',this,event.button);
         if(event.button === 0){
@@ -389,9 +462,7 @@ $(function(){
         }
         event.preventDefault();
     }
-
 });
-
 
 instance.web.ActionRedirect = function(parent, action) {
     var url = $.deparam(window.location.href).url;
@@ -400,5 +471,10 @@ instance.web.ActionRedirect = function(parent, action) {
     }
 };
 instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
+
+instance.web.GoToWebsite = function(parent, action) {
+    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
+};
+instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
 
 };

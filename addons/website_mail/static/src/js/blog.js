@@ -1,9 +1,9 @@
 $(document).ready(function () {
     $('.js_website_mail').on('click', '.js_publish', function (e) {
         e.preventDefault();
-        var $media = $link.parent();
+        var $media = $(this).parent();
         $media.toggleClass('css_published');
-        $.post('/blog/publish/', {'message_id': $link.data('id')}, function (result) {
+        $.post('/blog/publish/', {'message_id': $(this).data('id')}, function (result) {
             if (+result) $media.addClass('css_published');
             else $media.removeClass('css_published');
         });

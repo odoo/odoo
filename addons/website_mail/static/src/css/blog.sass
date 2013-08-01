@@ -2,27 +2,16 @@
 
 .css_website_mail
   .media
-    position: relative
-    clear: both
-    .css_button_publish
-      position: absolute
-      right: 5px
-      top: 5px
-      .css_publish
-        color: green
-        display: none
-        background: none
-      .css_unpublish
-        color: red
-        background: none
-    .css_published
-      .css_publish
-        display: block
-      .css_unpublish
-        display: none
+    .label-success
+      display: none
+  .css_published
+    .label-important
+      display: none
+    .label-success
+      display: inline-block
   .has-error
     border-color: red
-  .css_older
-    float: right
-  .css_newer
-    float: left
+  .css_nav_month
+    display: none
+    &:first-of-type
+      display: block

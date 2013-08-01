@@ -28,6 +28,7 @@ class website(http.Controller):
         script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db)])
         css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db))
         _values = {
+            'editable': self.isloggued(),
             'request': request,
             'registry': request.registry,
             'cr': cr,
