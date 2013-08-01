@@ -124,17 +124,7 @@ class WebRequest(object):
             except SessionExpiredException, e:
                 self.session.logout()
                 raise SessionExpiredException("Session expired for request %s" % self.httprequest)
-        if self.auth_method == "none":
-            self.disable_db = True
-            self.uid = None
-        elif self.auth_method == "admin":
-            self.disable_db = False
-            if not self.db:
-                raise SessionExpiredException("No valid database for request %s" % self.httprequest)
-            self.uid = openerp.SUPERUSER_ID
-        else: # auth
-            self.disable_db = False
-            self.uid = self.session.uid
+        auth_methods[self.auth_method]()
     @property
     def registry(self):
         """
@@ -187,6 +177,24 @@ class WebRequest(object):
             self.disable_db = True
             self.uid = None
 
+def auth_method_user():
+    request.uid = request.session.uid
+
+def auth_method_admin():
+    if not request.db:
+        raise SessionExpiredException("No valid database for request %s" % request.httprequest)
+    request.uid = openerp.SUPERUSER_ID
+
+def auth_method_none():
+    request.disable_db = True
+    request.uid = None
+
+auth_methods = {
+    "user": auth_method_user,
+    "admin": auth_method_admin,
+    "none": auth_method_none,
+}
+
 def route(route, type="http", auth="user"):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
@@ -206,7 +214,7 @@ def route(route, type="http", auth="user"):
         configuration indicating the current database nor the current user.
     """
     assert type in ["http", "json"]
-    assert auth in ["user", "admin", "none"]
+    assert auth in auth_methods.keys()
     def decorator(f):
         if isinstance(route, list):
             f.routes = route
