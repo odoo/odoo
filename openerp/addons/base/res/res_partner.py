@@ -494,11 +494,10 @@ class res_partner(osv.osv, format_address):
         #(this is to allow the code from res_users to write to the partner!) or
         #if setting the company_id to False (this is compatible with any user company)
         if vals.get('company_id'):
-            user_pool = self.pool.get('res.users')
             for partner in self.browse(cr, uid, ids, context=context):
                 if partner.user_ids:
                     user_companies = set([user.company_id.id for user in partner.user_ids])
-                    if len(user_companies) > 1 or vals.get('company_id') not in user_companies:
+                    if len(user_companies) > 1 or vals['company_id'] not in user_companies:
                         raise osv.except_osv(_("Warning"),_("You can not change the company as the partner/user has multiple user linked with different companies."))
         result = super(res_partner,self).write(cr, uid, ids, vals, context=context)
         for partner in self.browse(cr, uid, ids, context=context):
