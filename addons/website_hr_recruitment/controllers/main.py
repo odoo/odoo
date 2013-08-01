@@ -9,7 +9,7 @@ import tempfile
 
 from urllib import quote_plus
 
-class website_career(http.Controller):
+class website_hr_recruitment(http.Controller):
 
     @http.route(['/career'], type='http', auth="admin")
     def career(self, *arg, **post):
@@ -19,7 +19,7 @@ class website_career(http.Controller):
            'res_job': request.registry['hr.job'].browse(request.cr, request.uid, jobpost_ids),
            'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1)
         })
-        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_career.career", values)
+        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_hr_recruitment.career", values)
         return html
 
     @http.route(['/job/detail/<id>'], type='http', auth="admin")
@@ -30,7 +30,7 @@ class website_career(http.Controller):
             'job': request.registry['hr.job'].browse(request.cr, request.uid, id),
             'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1)
         })
-        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_career.detail", values)
+        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_hr_recruitment.detail", values)
         return html
 
     @http.route(['/job/success'], type='http', auth="admin")
@@ -51,6 +51,6 @@ class website_career(http.Controller):
                'jobid': post['job_id'],
                'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1)
            })
-        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_career.thankyou", values)
+        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_hr_recruitment.thankyou", values)
         return html
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
