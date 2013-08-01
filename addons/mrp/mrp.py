@@ -885,7 +885,7 @@ class mrp_production(osv.osv):
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
                 })
-        self.signal_button_confirm(cr, uid, [procurement_id])
+        procurement_order.signal_button_confirm(cr, uid, [procurement_id])
         return procurement_id
 
     def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
