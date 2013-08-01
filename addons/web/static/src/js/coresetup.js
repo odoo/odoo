@@ -250,10 +250,15 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 continue;
             instance[mod] = {};
             // init module mod
-            if(instance._openerp[mod] !== undefined) {
-                instance._openerp[mod](instance,instance[mod]);
-                this.module_loaded[mod] = true;
+            var fct = instance._openerp[mod];
+            if(typeof(fct) === "function") {
+                instance._openerp[mod] = {};
+                for (var k in fct) {
+                    instance._openerp[mod][k] = fct[k];
+                }
+                fct(instance, instance._openerp[mod]);
             }
+            this.module_loaded[mod] = true;
         }
     },
     /**
@@ -559,14 +564,11 @@ instance.web._t = new instance.web.TranslationDataBase().build_translation_funct
 instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }};
 };
-instance.web.qweb = new QWeb2.Engine();
 instance.web.qweb.debug = instance.session.debug;
-instance.web.qweb.default_dict = {
-    '_' : _,
+_.extend(instance.web.qweb.default_dict, {
     '_t' : instance.web._t,
-    'JSON': JSON,
     '__debug__': instance.session.debug,
-};
+});
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
     switch (this.node.nodeType) {

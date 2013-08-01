@@ -1132,8 +1132,8 @@ openerp.testing.section('search.groupby', {
                 return f instanceof instance.web.search.GroupbyGroup;
             });
             ok(group, "should have a GroupbyGroup input");
-            strictEqual(group.getParent(), view,
-                        "group's parent should be view");
+            ok(group.getParent() === view,
+                "group's parent should be view");
 
             group.toggle(group.filters[0]);
             group.toggle(group.filters[2]);
@@ -1387,10 +1387,8 @@ openerp.testing.section('search.invisible', {
     templates: true,
 }, function (test) {
     var registerTestField = function (instance, methods) {
+        instance.testing.TestWidget = instance.web.search.Field.extend(methods);
         instance.web.search.fields.add('test', 'instance.testing.TestWidget');
-        instance.testing = {
-            TestWidget: instance.web.search.Field.extend(methods),
-        };
     };
     var makeView = function (instance, mock, fields, arch, defaults) {
         mock('ir.filters:get_filters', function () { return []; });

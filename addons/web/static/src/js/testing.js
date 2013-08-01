@@ -164,6 +164,8 @@ openerp.testing = {};
         });
     };
 
+    var openerp_inited = false;
+
     var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
@@ -193,8 +195,7 @@ openerp.testing = {};
             0, module_index + 1 || undefined);
 
         // Serialize options for this precise test case
-        // WARNING: typo is from jquery, do not fix!
-        var env = QUnit.config.currentModuleTestEnviroment;
+        var env = QUnit.config.currentModuleTestEnvironment;
         // section setup
         //     case setup
         //         test
@@ -240,40 +241,13 @@ openerp.testing = {};
         }
 
         QUnit.test(name, function () {
-            var instance;
-            if (!opts.dependencies) {
-                instance = openerp.init(module_deps);
-            } else {
-                // empty-but-specified dependencies actually allow running
-                // without loading any module into the instance
-
-                // TODO: clean up this mess
-                var d = opts.dependencies.slice();
-                // dependencies list should be in deps order, reverse to make
-                // loading order from last
-                d.reverse();
-                var di = 0;
-                while (di < d.length) {
-                    var m = /^web\.(\w+)$/.exec(d[di]);
-                    if (m) {
-                        d[di] = m[1];
-                    }
-                    d.splice.apply(d, [di+1, 0].concat(
-                        _(dependencies[d[di]]).reverse()));
-                    ++di;
-                }
-
-                instance = openerp.init(null);
-                _(d).chain()
-                    .reverse()
-                    .uniq()
-                    .each(function (module) {
-                        openerp.web[module](instance);
-                    });
+            var instance = openerp;
+            if (!openerp_inited) {
+                openerp.init(module_deps);
+                openerp_inited = true;
             }
-            if (instance.session) {
-                instance.session.uid = 42;
-            }
+            instance.session = new instance.web.Session();
+            instance.session.uid = 42;
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);
             }
