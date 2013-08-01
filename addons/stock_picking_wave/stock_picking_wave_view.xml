@@ -5,41 +5,51 @@
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
                 <form string="Stock Picking Waves" version="7.0">
+                    <header>
+                        <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                        <button name="confirm_picking" string="Confirm all pickings" type="object"/>
-                        <button name="cancel_picking" string="Cancel all pickings" type="object"/>
-                        <button name="print_picking" string="Print all internal pickings" type="object" context="{'report':'stock.picking.list.internal'}"/>
-                        <button name="print_picking" string="Print all in/out pickings" type="object" context="{'report':'stock.picking.list'}"/>
-                    </div>
-                        <group>
-                    <group>
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                    </group>
-                    <group>
-                        <label for="capacity"/>
-                        <div>
-                            <field name="capacity" class="oe_inline"/>
-                            <field name="capacity_uom" class="oe_inline"/>
+                            <button name="confirm_picking" string="Confirm all pickings" type="object"/>
+                            <button name="cancel_picking" string="Cancel all pickings" type="object"/>
+                            <button name="print_picking" string="Print all internal pickings" type="object" context="{'report':'stock.picking.list.internal'}"/>
+                            <button name="print_picking" string="Print all in/out pickings" type="object" context="{'report':'stock.picking.list'}"/>
                         </div>
-                        <field name="time" widget="float_time"/>
-                    </group>
-                </group>
-                <separator string="Pickings"/>
-                    <field name="picking_ids" widget="many2many">
-                        <tree>
-                            <field name="name"/>
-                            <field name="backorder_id"/>
-                            <field name="origin"/>
-                            <field name="date"/>
-                            <field name="min_date"/>
-                            <field name="invoice_state"/>
-                            <field name="state"/>
-                            <button name="action_done" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
-                            <button name="action_cancel" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
-                        </tree>
-                    </field>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                            </group>
+                            <group>
+                                <label for="capacity"/>
+                                <div>
+                                    <field name="capacity" class="oe_inline"/>
+                                    <field name="capacity_uom" class="oe_inline"/>
+                                </div>
+                                <field name="time" widget="float_time"/>
+                            </group>
+                        </group>
+
+                        <separator string="Pickings"/>
+                        
+                        <field name="picking_ids" widget="many2many">
+                            <tree>
+                                <field name="name"/>
+                                <field name="backorder_id"/>
+                                <field name="origin"/>
+                                <field name="date"/>
+                                <field name="min_date"/>
+                                <field name="state"/>
+                                <button name="action_done" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <button name="action_cancel" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
@@ -60,6 +70,15 @@
             </field>
         </record>
 
+        <record id="view_picking_wave_filter" model="ir.ui.view">
+            <field name="name">picking.wave.filter</field>
+            <field name="model">stock.picking.wave</field>
+            <field name="arch" type="xml">
+                <search string="Search Picking Waves">
+                    <filter name="in_progress" string="In progress" domain="[('state','=','in_progress')]" help="Picking Waves not finished"/>
+               </search>
+            </field>
+        </record>
 
         <record id="action_picking_wave" model="ir.actions.act_window">
             <field name="name">Picking Waves</field>
@@ -67,6 +86,8 @@
             <field name="res_model">stock.picking.wave</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_in_progress" : True,}</field>
+            <field name="search_view_id" ref="view_picking_wave_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a Picking Wave. 

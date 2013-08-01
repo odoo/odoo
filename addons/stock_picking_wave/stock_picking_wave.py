@@ -11,7 +11,12 @@ class stock_picking_wave(osv.osv):
         'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
         'capacity': fields.float('Capacity', help='The capacity of the transport used to get the goods'),
         'capacity_uom': fields.many2one('product.uom', 'Unit of Measure', help='The Unity Of Measure of the transport capacity'),
+        'state': fields.selection([('in_progress', 'Running'), ('done', 'Done')], required=True),
     }
+    _defaults = {
+        'name': '/',
+        'state': 'in_progress',
+        }
 
     def confirm_picking(self, cr, uid, ids, context=None):
         picking_todo = self.pool.get('stock.picking').search(cr, uid, [('wave_id', 'in', ids)], context=context)
@@ -41,6 +46,23 @@ class stock_picking_wave(osv.osv):
             'datas': datas,
             'nodestroy': True
         }
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'picking.wave') or '/'
+        return super(stock_picking_wave, self).create(cr, uid, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'state': 'in_progress',
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'picking.wave'),
+        })
+        return super(stock_picking_wave, self).copy(cr, uid, id, default=default, context=context)
+
+    def done(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
 
 class stock_picking(osv.osv):
