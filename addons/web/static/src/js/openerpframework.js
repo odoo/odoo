@@ -827,11 +827,12 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
      */
-    init: function() {
-        openerp.web.PropertiesMixin.init.call(this);
+    init: function(parent, origin) {
+        openerp.web.PropertiesMixin.init.call(this, parent);
         this.server = null;
         this.override_session = false;
         this.session_id = undefined;
+        this.setup(origin);
     },
     setup: function(origin) {
         // must be able to customize server
@@ -840,7 +841,7 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         this.origin = origin ? origin.replace( /\/+$/, '') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
-        this.is_jsonp = this.origin !== window_origin;
+        this.origin_server = this.origin === window_origin;
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -859,8 +860,8 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     rpc: function(url, params, options) {
         var self = this;
         options = options || {};
-        //TODO: remove
         var jqOptions = {};
+        // TODO: remove
         if (! _.isString(url)) {
             _.extend(jqOptions, url);
             url = url.url;
@@ -870,12 +871,17 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             jqOptions.timeout = options.timeout;
         if (! options.shadow)
             this.trigger('request');
-        var p;
-        if (! this.is_jsonp) {
-            p = openerp.web.jsonRpc(url, "call", params, jqOptions);
+        var fct;
+        if (this.force_method) {
+            fct = this.force_method;
         } else {
-            p = openerp.web.jsonpRpc(url, "call", params, jqOptions);
+            if (this.origin_server) {
+                fct = openerp.web.jsonRpc;
+            } else {
+                fct = openerp.web.jsonpRpc;
+            }
         }
+        var p = fct(url, "call", params, jqOptions);
         p = p.then(function (result) {
             if (! options.shadow)
                 self.trigger('response');
