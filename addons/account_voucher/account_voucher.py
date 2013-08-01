@@ -1284,10 +1284,8 @@ class account_voucher(osv.osv):
                 }
                 new_id = move_line_obj.create(cr, uid, move_line_foreign_currency, context=context)
                 rec_ids.append(new_id)
-
             if line.move_line_id.id:
                 rec_lst_ids.append(rec_ids)
-
         return (tot_line, rec_lst_ids)
 
     def writeoff_move_line_get(self, cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=None):

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import tools
@@ -62,7 +62,11 @@ class stock_change_product_qty(osv.osv_memory):
         if 'product_id' in fields:
             res.update({'product_id': product_id})
         if 'location_id' in fields:
-            location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+            try:
+                model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+                self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+            except (orm.except_orm, ValueError):
+                location_id = False
             res.update({'location_id': location_id and location_id.id or False})
         return res
 

@@ -4,6 +4,53 @@
 
     <!-- SALES TAXES -->
 
+    <!-- British Columbia PST -->
+
+    <record id="gstpst_bc_sale_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">GST + PST for sales (BC)</field>
+        <field name="description">GSTPST_BC_SALE</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">1</field>
+        <field name="type">percent</field>
+        <field name="child_depend">1</field>
+    </record>
+
+    <record id="gstpst_sale_bc_gst_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">GST for sales - 5% (BC)</field>
+        <field name="description">GST</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0.050000</field>
+        <field name="type">percent</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="account_collected_id" ref="chart2131_en"/>
+        <field name="account_paid_id" ref="chart2131_en"/>
+        <field name="base_code_id" ref="vat_code_base_receivable_gst_en"/>
+        <field name="tax_code_id" ref="vat_code_payable_gst_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_gst_en"/>
+        <field name="parent_id" ref="gstpst_bc_sale_en"/>
+    </record>
+
+    <record id="pst_bc_sale_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">PST for sales - 7% (BC)</field>
+        <field name="description">PST</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0.070000</field>
+        <field name="type">percent</field>
+        <field name="sequence">2</field>
+        <field name="account_collected_id" ref="chart2132_en"/>
+        <field name="account_paid_id" ref="chart2132_en"/>
+        <field name="base_code_id" ref="vat_code_base_receivable_pst_en"/>
+        <field name="tax_code_id" ref="vat_code_payable_pst_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_pst_en"/>
+        <field name="parent_id" ref="gstpst_bc_sale_en"/>
+    </record>
+
     <!-- Manitoba PST -->
 
     <record id="gstpst_mb_sale_en" model="account.tax.template">
@@ -13,6 +60,7 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_sale_mb_gst_en" model="account.tax.template">
@@ -35,10 +83,10 @@
 
     <record id="pst_mb_sale_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">PST for sales - 7%</field>
+        <field name="name">PST for sales - 8% (MB)</field>
         <field name="description">PST</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount">0.070000</field>
+        <field name="amount">0.080000</field>
         <field name="type">percent</field>
         <field name="sequence">2</field>
         <field name="account_collected_id" ref="chart2132_en"/>
@@ -50,65 +98,19 @@
         <field name="parent_id" ref="gstpst_mb_sale_en"/>
     </record>
 
-    <!-- Prince Edward Island PST -->
-
-    <record id="gstpst_pe_sale_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">GST + PST for sales (PE)</field>
-        <field name="description">GSTPST_PE_SALE</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount">1</field>
-        <field name="child_depend">1</field>
-        <field name="type">percent</field>
-    </record>
-
-    <record id="gstpst_sale_pe_gst_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">GST for sales - 5% (PE)</field>
-        <field name="description">GST</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount">0.050000</field>
-        <field name="type">percent</field>
-        <field name="sequence">1</field>
-        <field name="include_base_amount" eval="True"/>
-        <field name="account_collected_id" ref="chart2131_en"/>
-        <field name="account_paid_id" ref="chart2131_en"/>
-        <field name="base_code_id" ref="vat_code_base_receivable_gst_en"/>
-        <field name="tax_code_id" ref="vat_code_payable_gst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable_gst_en"/>
-        <field name="parent_id" ref="gstpst_pe_sale_en"/>
-    </record>
-
-    <record id="pst_pe_sale_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">PST for sale - 10%</field>
-        <field name="description">PST</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount">0.100000</field>
-        <field name="type">percent</field>
-        <field name="sequence">2</field>
-        <field name="account_collected_id" ref="chart2132_en"/>
-        <field name="account_paid_id" ref="chart2132_en"/>
-        <field name="base_code_id" ref="vat_code_base_receivable_pst_en"/>
-        <field name="tax_code_id" ref="vat_code_payable_pst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable_pst_en"/>
-        <field name="parent_id" ref="gstpst_pe_sale_en"/>
-    </record>
-
     <!-- Quebec PST -->
 
-    <record id="gsttvq_sale_en" model="account.tax.template">
+    <record id="gstqst_sale_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">GST + QST for sales</field>
         <field name="description">GSTQST_SALE</field>
         <field name="type_tax_use">sale</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
-    <record id="gsttvq_sale_gst_en" model="account.tax.template">
+    <record id="gstqst_sale_gst_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">GST for sales - 5% (QC)</field>
         <field name="description">GST</field>
@@ -122,10 +124,10 @@
         <field name="tax_code_id" ref="vat_code_payable_gst_en"/>
         <field name="ref_base_code_id" ref="vat_code_base_receivable_gst_en"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_en"/>
-        <field name="parent_id" ref="gsttvq_sale_en"/>
+        <field name="parent_id" ref="gstqst_sale_en"/>
     </record>
 
-    <record id="tvq_sale_en" model="account.tax.template">
+    <record id="qst_sale_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">QST for sales - 9.975%</field>
         <field name="description">QST</field>
@@ -139,7 +141,7 @@
         <field name="tax_code_id" ref="vat_code_payable_pst_en"/>
         <field name="ref_base_code_id" ref="vat_code_base_receivable_pst_en"/>
         <field name="ref_tax_code_id" ref="vat_code_payable_pst_en"/>
-        <field name="parent_id" ref="gsttvq_sale_en"/>
+        <field name="parent_id" ref="gstqst_sale_en"/>
     </record>
 
     <!-- Saskatchewan PST -->
@@ -151,6 +153,7 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_sale_sk_gst_en" model="account.tax.template">
@@ -190,21 +193,6 @@
 
     <!-- HST -->
 
-    <record id="hst12_sale_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">HST for sales - 12%</field>
-        <field name="description">HST12_SALE</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount">0.120000</field>
-        <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart2133_en"/>
-        <field name="account_paid_id" ref="chart2133_en"/>
-        <field name="base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_payable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable_hst_en"/>
-    </record>
-
     <record id="hst13_sale_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">HST for sales - 13%</field>
@@ -212,27 +200,27 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">0.130000</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart2133_en"/>
-        <field name="account_paid_id" ref="chart2133_en"/>
-        <field name="base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_payable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable_hst_en"/>
+        <field name="account_collected_id" ref="chart21331_en"/>
+        <field name="account_paid_id" ref="chart21331_en"/>
+        <field name="base_code_id" ref="vat_code_base_receivable_hst13_en"/>
+        <field name="tax_code_id" ref="vat_code_payable_hst13_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst13_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_hst13_en"/>
     </record>
 
-    <record id="hst135_sale_en" model="account.tax.template">
+    <record id="hst14_sale_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">HST for sales - 13.5%</field>
-        <field name="description">HST135_SALE</field>
+        <field name="name">HST for sales - 14%</field>
+        <field name="description">HST14_SALE</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount">0.135000</field>
+        <field name="amount">0.14000</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart2133_en"/>
-        <field name="account_paid_id" ref="chart2133_en"/>
-        <field name="base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_payable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable_hst_en"/>
+        <field name="account_collected_id" ref="chart21332_en"/>
+        <field name="account_paid_id" ref="chart21332_en"/>
+        <field name="base_code_id" ref="vat_code_base_receivable_hst14_en"/>
+        <field name="tax_code_id" ref="vat_code_payable_hst14_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst14_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_hst14_en"/>
     </record>
 
     <record id="hst15_sale_en" model="account.tax.template">
@@ -242,12 +230,12 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">0.150000</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart2133_en"/>
-        <field name="account_paid_id" ref="chart2133_en"/>
-        <field name="base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_payable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable_hst_en"/>
+        <field name="account_collected_id" ref="chart21333_en"/>
+        <field name="account_paid_id" ref="chart21333_en"/>
+        <field name="base_code_id" ref="vat_code_base_receivable_hst15_en"/>
+        <field name="tax_code_id" ref="vat_code_payable_hst15_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_receivable_hst15_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_hst15_en"/>
     </record>
 
     <!-- GST -->
@@ -267,8 +255,54 @@
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_en"/>
     </record>
 
-
     <!-- PURCHASE TAXES -->
+
+    <!-- British Columbia PST -->
+
+    <record id="gstpst_bc_purc_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">GST + PST for purchases (BC)</field>
+        <field name="description">GSTPST_BC_PURC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">1</field>
+        <field name="type">percent</field>
+        <field name="child_depend">1</field>
+    </record>
+
+    <record id="gstpst_purc_bc_gst_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">GST for purchases - 5% (BC)</field>
+        <field name="description">GST</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0.050000</field>
+        <field name="type">percent</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount" eval="True"/>
+        <field name="account_collected_id" ref="chart1181_en"/>
+        <field name="account_paid_id" ref="chart1181_en"/>
+        <field name="base_code_id" ref="vat_code_base_payable_gst_en"/>
+        <field name="tax_code_id" ref="vat_code_receivable_gst_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_payable_gst_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_receivable_gst_en"/>
+        <field name="parent_id" ref="gstpst_bc_purc_en"/>
+    </record>
+
+    <record id="pst_bc_purc_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">PST for purchases - 7% (BC)</field>
+        <field name="description">PST</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0.070000</field>
+        <field name="type">percent</field>
+        <field name="sequence">2</field>
+        <field name="account_collected_id" ref="chart1182_en"/>
+        <field name="account_paid_id" ref="chart1182_en"/>
+        <field name="base_code_id" ref="vat_code_base_payable_pst_en"/>
+        <field name="tax_code_id" ref="vat_code_receivable_pst_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_payable_pst_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_receivable_pst_en"/>
+        <field name="parent_id" ref="gstpst_bc_purc_en"/>
+    </record>
 
     <!-- Manitoba PST -->
 
@@ -279,6 +313,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_purc_mb_gst_en" model="account.tax.template">
@@ -301,10 +336,10 @@
 
     <record id="pst_mb_purc_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">PST for purchases - 7%</field>
+        <field name="name">PST for purchases - 8% (MB)</field>
         <field name="description">PST</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount">0.070000</field>
+        <field name="amount">0.080000</field>
         <field name="type">percent</field>
         <field name="sequence">2</field>
         <field name="account_collected_id" ref="chart1182_en"/>
@@ -316,65 +351,19 @@
         <field name="parent_id" ref="gstpst_mb_purc_en"/>
     </record>
 
-    <!-- Prince Edward Island PST -->
-
-    <record id="gstpst_pe_purc_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">GST + PST for purchases (PE)</field>
-        <field name="description">GSTPST_PE_PURC</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="amount">1</field>
-        <field name="child_depend">1</field>
-        <field name="type">percent</field>
-    </record>
-
-    <record id="gstpst_purc_pe_gst_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">GST for purchases - 5% (PE)</field>
-        <field name="description">GST</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="amount">0.050000</field>
-        <field name="type">percent</field>
-        <field name="sequence">1</field>
-        <field name="include_base_amount" eval="True"/>
-        <field name="account_collected_id" ref="chart1181_en"/>
-        <field name="account_paid_id" ref="chart1181_en"/>
-        <field name="base_code_id" ref="vat_code_base_payable_gst_en"/>
-        <field name="tax_code_id" ref="vat_code_receivable_gst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_payable_gst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_receivable_gst_en"/>
-        <field name="parent_id" ref="gstpst_pe_purc_en"/>
-    </record>
-
-    <record id="pst_pe_purc_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">PST for purchases - 10%</field>
-        <field name="description">PST</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="amount">0.100000</field>
-        <field name="type">percent</field>
-        <field name="sequence">2</field>
-        <field name="account_collected_id" ref="chart1182_en"/>
-        <field name="account_paid_id" ref="chart1182_en"/>
-        <field name="base_code_id" ref="vat_code_base_payable_pst_en"/>
-        <field name="tax_code_id" ref="vat_code_receivable_pst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_payable_pst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_receivable_pst_en"/>
-        <field name="parent_id" ref="gstpst_pe_purc_en"/>
-    </record>
-
     <!-- Quebec PST -->
 
-    <record id="gsttvq_purc_en" model="account.tax.template">
+    <record id="gstqst_purc_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">GST + QST for purchases</field>
         <field name="description">GSTQST_PURC</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
-    <record id="gsttvq_purc_gst_en" model="account.tax.template">
+    <record id="gstqst_purc_gst_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">GST for purchases - 5% (QC)</field>
         <field name="description">GST</field>
@@ -388,10 +377,10 @@
         <field name="tax_code_id" ref="vat_code_receivable_gst_en"/>
         <field name="ref_base_code_id" ref="vat_code_base_payable_gst_en"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_gst_en"/>
-        <field name="parent_id" ref="gsttvq_purc_en"/>
+        <field name="parent_id" ref="gstqst_purc_en"/>
     </record>
 
-    <record id="tvq_purc_en" model="account.tax.template">
+    <record id="qst_purc_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">QST for purchases - 9.975%</field>
         <field name="description">QST</field>
@@ -405,7 +394,7 @@
         <field name="tax_code_id" ref="vat_code_receivable_pst_en"/>
         <field name="ref_base_code_id" ref="vat_code_base_payable_pst_en"/>
         <field name="ref_tax_code_id" ref="vat_code_receivable_pst_en"/>
-        <field name="parent_id" ref="gsttvq_purc_en"/>
+        <field name="parent_id" ref="gstqst_purc_en"/>
     </record>
 
     <!-- Saskatchewan PST -->
@@ -417,6 +406,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_purc_sk_gst_en" model="account.tax.template">
@@ -456,21 +446,6 @@
 
     <!-- HST -->
 
-    <record id="hst12_purc_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">HST for purchases - 12%</field>
-        <field name="description">HST12_PURC</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="amount">0.120000</field>
-        <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart1183_en"/>
-        <field name="account_paid_id" ref="chart1183_en"/>
-        <field name="base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_receivable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_receivable_hst_en"/>
-    </record>
-
     <record id="hst13_purc_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">HST for purchases - 13%</field>
@@ -478,27 +453,27 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">0.130000</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart1183_en"/>
-        <field name="account_paid_id" ref="chart1183_en"/>
-        <field name="base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_receivable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_receivable_hst_en"/>
+        <field name="account_collected_id" ref="chart11831_en"/>
+        <field name="account_paid_id" ref="chart11831_en"/>
+        <field name="base_code_id" ref="vat_code_base_payable_hst13_en"/>
+        <field name="tax_code_id" ref="vat_code_receivable_hst13_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_payable_hst13_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_receivable_hst13_en"/>
     </record>
 
-    <record id="hst135_purc_en" model="account.tax.template">
+    <record id="hst14_purc_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">HST for purchases - 13.5%</field>
-        <field name="description">HST135_PURC</field>
+        <field name="name">HST for purchases - 14%</field>
+        <field name="description">HST14_PURC</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount">0.135000</field>
+        <field name="amount">0.140000</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart1183_en"/>
-        <field name="account_paid_id" ref="chart1183_en"/>
-        <field name="base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_receivable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_receivable_hst_en"/>
+        <field name="account_collected_id" ref="chart11832_en"/>
+        <field name="account_paid_id" ref="chart11832_en"/>
+        <field name="base_code_id" ref="vat_code_base_payable_hst14_en"/>
+        <field name="tax_code_id" ref="vat_code_receivable_hst14_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_payable_hst14_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_receivable_hst14_en"/>
     </record>
 
     <record id="hst15_purc_en" model="account.tax.template">
@@ -508,12 +483,12 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">0.150000</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="chart1183_en"/>
-        <field name="account_paid_id" ref="chart1183_en"/>
-        <field name="base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="tax_code_id" ref="vat_code_receivable_hst_en"/>
-        <field name="ref_base_code_id" ref="vat_code_base_payable_hst_en"/>
-        <field name="ref_tax_code_id" ref="vat_code_receivable_hst_en"/>
+        <field name="account_collected_id" ref="chart11833_en"/>
+        <field name="account_paid_id" ref="chart11833_en"/>
+        <field name="base_code_id" ref="vat_code_base_payable_hst15_en"/>
+        <field name="tax_code_id" ref="vat_code_receivable_hst15_en"/>
+        <field name="ref_base_code_id" ref="vat_code_base_payable_hst15_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_receivable_hst15_en"/>
     </record>
 
     <!-- GST -->
