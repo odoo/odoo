@@ -1668,13 +1668,55 @@
             <field name="model">stock.quant.package</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Package">
-                    <field name="complete_name"/>
-                    <field name="name"/>
-                    <field name="packaging_id"/>
-                    <field name="location_id"/>
-                    <field name="quant_ids"/>
-                    <field name="children_ids"/>
+                <form string="Package" version="7.0">
+                    <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button name="unpack" string="Unpack" type="object"/>
+                        </div>
+                        <div class="oe_title">
+                        <h1>
+                            <label string="Package Reference "/>
+                            <field name="name" class="oe_inline" attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                            <field name="complete_name" class="oe_inline" attrs="{'invisible': [('parent_id','=',False)]}"/>
+                        </h1>
+                        </div>
+                        <group>
+                            <group>
+                            <field name="packaging_id"/>
+                            </group>
+                            <group>
+                            <field name="location_id"/>
+                            <field name="parent_id"/>
+                            </group>
+                            
+                        </group>
+                        <notebook>
+                            <page string="Content">
+                                <separator string="Bulk Content" />
+                                <field name="quant_ids">
+                                    <tree string="Quants">
+                                        <field name="product_id"/>
+                                        <field name="qty"/>
+                                        <field name="location_id"/>
+                                        <field name="in_date"/>
+                                    </tree>
+                                </field>
+
+                                <div class="oe_right oe_button_box" style="margin-top: 10px">
+                                    <button name="get_content_package" type="object" string="View Contained Packages content" icon="gtk-execute" attrs="{'invisible': [('children_ids','=',[])]}"/>
+                                </div>
+                                <separator string="Contained Packages"/>
+                                <field name="children_ids">
+                                    <tree string="Contained Packages">
+                                        <field name="complete_name"/>
+                                        <field name="packaging_id"/>
+                                        <field name="location_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook> 
+                    </sheet>
+
                 </form>
             </field>
         </record>

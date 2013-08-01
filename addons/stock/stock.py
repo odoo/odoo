@@ -1739,7 +1739,7 @@ class stock_package(osv.osv):
             parent = m.parent_id
             while parent:
                 res[m.id] = parent.name + ' / ' + res[m.id]
-                parent = parent.location_id
+                parent = parent.parent_id
         return res
 
     def _get_subpackages(self, cr, uid, ids, context=None):
@@ -1772,12 +1772,24 @@ class stock_package(osv.osv):
     }
     def _check_location(self, cr, uid, ids, context=None):
         '''checks that all quants in a package are stored in the same location'''
+        pack_ids = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
+        quant_obj = self.pool.get('stock.quant')
         for pack in self.browse(cr, uid, ids, context=context):
-            if not all([quant.location_id.id == pack.quant_ids[0].location_id.id for quant in pack.quant_ids]):
-                return False
+            parent = pack
+            while parent:
+                if parent.parent_id:
+                    pack_ids.append(parent.parent_id.id)
+                parent = parent.parent_id
+        quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', pack_ids)], context=context)
+        if len(quant_ids)==0:
+            return True
+        browse_quants = quant_obj.browse(cr, uid, quant_ids, context=context)
+        location = browse_quants[0].location_id.id
+        if not all([quant.location_id.id == location for quant in browse_quants]):
+            return False
         return True
     _constraints = [
-        (_check_location, 'All quants inside a package should be in the same location', ['location_id']),
+        (_check_location, 'All quants inside a package (and its contained packages) should be in the same location', ['location_id']),
     ]
 
     def action_print(self, cr, uid, ids, context=None):
@@ -1793,6 +1805,29 @@ class stock_package(osv.osv):
             'report_name': 'stock.quant.package.barcode',
             'datas': datas
         }
+
+    def unpack(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        quant_obj = self.pool.get('stock.quant')
+        for package in self.browse(cr, uid, ids, context=context):
+            for quant in package.quant_ids:
+                quant_obj.write(cr, uid, quant.id, {'package_id': package.parent_id.id or False}, context=context)
+            for child_package in package.children_ids:
+                self.write(cr, uid, child_package.id, {'parent_id': package.parent_id.id or False}, context=context)
+        #delete current package since it contains nothing anymore
+        self.unlink(cr, uid, ids, context=context)
+        return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'stock','action_package_view', context=context)
+    
+    def get_content_package(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should be use on one package at a time'
+        if context is None:
+            context = {}
+        child_package_ids = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
+        quants_ids = self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'stock','quantsact', context=context)
+        res['domain'] = [('id','in', quants_ids)]
+        return res
 
     def quants_get(self, cr, uid, package, context=None):
         ''' find all the quants in the given package (browse record) recursively'''
