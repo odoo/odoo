@@ -45,11 +45,11 @@
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Blog</t>
-            <div class="container mt48 css_website_mail js_website_mail">
+            <div class="container mt48 js_website_mail">
                 <div class="row">
                     <div class="span4">
                         <ul class="nav nav-list">
-                            <a t-if="mail_group_id" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn" groups="group_website_mail_manager">Add a new Blog</a>
+                            <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
                             <li class="nav-header">BLOG ARCHIVE</li>
                             <!-- TODO: check qweb iteration -->
                             <t t-foreach="nav_list" t-as="year">
@@ -68,10 +68,10 @@
                     </div>
                     <div class="span8" t-if="blog_id">
                         <div class="media">
-                            <div t-att-class="'media-body well %%s' %% (blog_id.website_published and 'css_published' or '')">
-                                <a href="#" title="Click to publish or unpublish this blog" t-att-data-id="blog_id.id" class="js_publish pull-right" groups="group_website_mail_manager">
-                                    <span class="label label-success">Unpublish</span>
-                                    <span class="label label-important">Publish</span>
+                            <div t-att-class="media-body well">
+                                <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
+                                    <span t-att-class="'label label-success js_unpublish %%s' %% (not blog_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                    <span t-att-class="'label label-important js_publish %%s' %% (blog_id.website_published and 'hidden' or '')">Click to Publish</span>
                                 </a>
                                 <h3 t-record="blog_id" t-field="subject"></h3>
                                 <div t-record="blog_id" t-field="body"></div>
@@ -84,10 +84,10 @@
                                 <t t-foreach="comments">
                                     <!-- TODO: check qweb iteration -->
                                     <li class="media">
-                                        <div t-att-class="'media-body %%s' %% (website_published and 'css_published' or '')">
-                                            <a href="#" title="Click to publish or unpublish this message" t-att-data-id="id" class="js_publish pull-right" groups="group_website_mail_manager">
-                                                <span class="label label-success">Unpublish</span>
-                                                <span class="label label-important">Publish</span>
+                                        <div class="media-body">
+                                            <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
+                                                <span t-att-class="'label label-success js_unpublish %%s' %% (not website_published and 'hidden' or '')">Click to Unpublish</span>
+                                                <span t-att-class="'label label-important js_publish %%s' %% (website_published and 'hidden' or '')">Click to Publish</span>
                                             </a>
                                             <t t-raw="body"/>
                                             <small class="pull-right muted text-right">
@@ -109,9 +109,9 @@
                             <t t-foreach="blog_ids" t-as="blog">
                                 <li class="media well">
                                     <div t-att-class="'media-body %%s' %% (blog.website_published and 'css_published' or '')">
-                                        <a href="#" title="Click to publish or unpublish this message" t-att-data-id="blog.id" class="js_publish pull-right" groups="group_website_mail_manager">
-                                            <span class="label label-success">Unpublish</span>
-                                            <span class="label label-important">Publish</span>
+                                        <a href="#" t-att-data-id="blog.id" class="pull-right" t-if="editable">
+                                            <span t-att-class="'label label-success js_unpublish %%s' %% (not blog.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                            <span t-att-class="'label label-important js_publish %%s' %% (blog.website_published and 'hidden' or '')">Click to Publish</span>
                                         </a>
                                         <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)" t-record="blog" t-field="subject"></a></h4>
                                         <div class="media">

@@ -6,45 +6,33 @@ from openerp.addons.web.controllers import main
 from openerp.addons.web.http import request
 
 
-class website(http.Controller):
-    public_user_id = None
+def auth_method_public():
+    registry = openerp.modules.registry.RegistryManager.get(request.db)
+    request.public_uid = None
+    with registry.cursor() as cr:
+        request.public_uid = request.registry['ir.model.data'].get_object_reference(cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
+        if not request.session.uid:
+            request.uid = request.public_uid
+        else:
+            request.uid = request.session.uid
+http.auth_methods['public'] = auth_method_public
 
-    def get_uid(self):
-        try:
-            request.session.check_security()
-            uid = request.session._uid
-        except http.SessionExpiredException:
-            if not website.public_user_id:
-                data_obj = request.registry['ir.model.data']
-                website.public_user_id = data_obj.get_object_reference(request.cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
-            uid = website.public_user_id
 
-        return uid
-
-    def isloggued(self):
-        return website.public_user_id != self.get_uid()
-
-    def render(self, cr, uid, template, add_values={}):
+class website(object):
+    def render(self, template, add_values={}):
         script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db)])
         css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db))
         _values = {
-            'editable': self.isloggued(),
+            'editable': request.uid != request.public_uid,
             'request': request,
             'registry': request.registry,
-            'cr': cr,
-            'uid': uid,
+            'cr': request.cr,
+            'uid': request.uid,
             'script': script,
             'css': css,
             'host_url': request.httprequest.host_url,
+            'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
         }
         _values.update(add_values)
-        return request.registry.get("ir.ui.view").render(cr, uid, template, _values)
-
-    @staticmethod
-    def route(*args, **kwargs):
-        def wrap(_funct):
-            @http.route(*args, **kwargs)
-            def wrapper(self, *a, **k):
-                return _funct(self, request.cr, self.get_uid(), *a, **k)
-            return wrapper
-        return wrap
+        return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, _values)
+website = website()

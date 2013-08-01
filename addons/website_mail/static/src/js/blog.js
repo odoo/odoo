@@ -1,11 +1,18 @@
 $(document).ready(function () {
-    $('.js_website_mail').on('click', '.js_publish', function (e) {
+    $('.js_website_mail').on('click', '.js_publish, .js_unpublish', function (e) {
         e.preventDefault();
-        var $media = $(this).parent();
-        $media.toggleClass('css_published');
-        $.post('/blog/publish/', {'message_id': $(this).data('id')}, function (result) {
-            if (+result) $media.addClass('css_published');
-            else $media.removeClass('css_published');
+        var $link = $(this).parent();
+        $link.find('.js_publish, .js_unpublish').addClass("hidden");
+        var $unp = $link.find(".js_unpublish");
+        var $p = $link.find(".js_publish");
+        $.post('/blog/publish/', {'message_id': $link.data('id')}, function (result) {
+            if (+result) {
+                $p.addClass("hidden");
+                $unp.removeClass("hidden");
+            } else {
+                $p.removeClass("hidden");
+                $unp.addClass("hidden");
+            }
         });
     });
 
