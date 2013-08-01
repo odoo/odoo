@@ -7,7 +7,7 @@ from openerp.tests import common
 
 class test_transaction_case(common.TransactionCase):
 
-    def test_00(self):
+    def _test_00(self):
         cr, uid = self.cr, self.uid
         location_id = self.registry('stock.location').create(cr, uid,
             {'name': 'Test Location A'})
@@ -20,7 +20,7 @@ class test_transaction_case(common.TransactionCase):
             location_id, product_id, openerp.osv.fields.datetime.now())
         self.assertEqual(value, 0)
 
-    def test_01(self):
+    def _test_01(self):
         cr, uid = self.cr, self.uid
         stock_location_company = self.registry('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_company')
         location_id = self.registry('stock.location').create(cr, uid,
@@ -45,6 +45,9 @@ class test_transaction_case(common.TransactionCase):
         self.assertEqual(value, 0)
 
         self.registry('stock.move').action_done(cr, uid, [move_id])
+        value = self.registry('stock.value')._get_value(cr, uid,
+            location_id, product_id, openerp.osv.fields.datetime.now())
+        self.assertEqual(value, 10)
 
 if __name__ == '__main__':
     unittest2.main()
