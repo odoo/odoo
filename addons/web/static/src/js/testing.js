@@ -80,7 +80,7 @@ openerp.testing = {};
             try {
                 return $.when(fn.apply(null, params)).then(function (result) {
                     // Wrap for RPC layer unwrapper thingy
-                    return {result: result};
+                    return result;
                 });
             } catch (e) {
                 // not sure why this looks like that
