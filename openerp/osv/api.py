@@ -185,14 +185,18 @@ def _returns_new(method):
         return _CONVERT_ID
 
 
-def _returns_new_one(method):
-    """ Same as above, but adapted to a method decorated with ``@one``. """
+def _returns_one(method):
+    """ Return a function `convert(self, value)` that aggregates record-style
+        `value` for a method decorated with ``@one``.
+    """
     spec = _returns(method)
     if spec:
-        # value is a list of instances, browse the concatenated tuple of ids
-        convert = _returns_new(method)
-        return lambda self, value: \
-            convert(self, tuple(chain(*(elem._ids for elem in value))))
+        # value is a list of instances, concatenate them
+        model, traditional = spec
+        if model == 'self':
+            return lambda self, value: sum(value, self.browse())
+        else:
+            return lambda self, value: sum(value, self.pool[model].browse())
     else:
         return _CONVERT_ID
 
@@ -323,7 +327,7 @@ def one(method):
     """
     method._api = one
     convert = _returns_old(method)
-    convert_new = _returns_new_one(method)
+    convert_new = _returns_one(method)
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _context_args_kwargs(method, args, kwargs)
@@ -432,7 +436,7 @@ def cr_uid_id(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, _context = scope.args
-        value = [method(self, cr, uid, id, *args, **kwargs) for id in self._ids]
+        value = [method(self, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
         return convert(self, value)
 
     return _make_wrapper(method, old_api, new_api)
@@ -464,7 +468,7 @@ def cr_uid_id_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope.args
         kwargs = dict(kwargs, context=context)
-        value = [method(self, cr, uid, id, *args, **kwargs) for id in self._ids]
+        value = [method(self, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
         return convert(self, value)
 
     return _make_wrapper(method, old_api, new_api)

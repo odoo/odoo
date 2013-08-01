@@ -325,14 +325,6 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
-# Special class for refering to records without an actual id
-class VirtualID(object): pass
-
-# Valid classes for record ids
-DatabaseID = (int, long)
-AnyID = (int, long, VirtualID)
-
-
 class MetaModel(api.Meta):
     """ Metaclass for the models.
 
@@ -416,8 +408,6 @@ class BaseModel(object):
     _sequence = None
     _description = None
     _needaction = False
-
-    _scope = None
 
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
@@ -5187,6 +5177,26 @@ class BaseModel(object):
     #
     # Instance creation
     #
+    # An instance represents an ordered collection of records in a given scope.
+    # The instance object refers to the scope, and the records themselves are
+    # represented by their cache dictionary. The 'id' of each record is found in
+    # its corresponding cache dictionary.
+    #
+    # This design has the following advantages:
+    #  - cache access is direct and thus fast;
+    #  - one can consider records without an 'id' (see new records);
+    #  - the global cache is only an index to "resolve" a record 'id'.
+    #
+
+    @classmethod
+    def _instance(cls, scope, caches):
+        """ Create an instance attached to `scope`; `caches` is a tuple with the
+            cache dictionaries of the records in the instance.
+        """
+        records = object.__new__(cls)
+        records._scope = scope
+        records._caches = caches
+        return records
 
     @classmethod
     @api.model
@@ -5195,24 +5205,21 @@ class BaseModel(object):
             current scope. The parameter `arg` is either a record id, or a
             collection of record ids.
         """
-        if isinstance(arg, Iterable):
+        if isinstance(arg, Iterable) and not isinstance(arg, basestring):
             ids = tuple(arg)
         elif arg:
             ids = (arg,)
         else:
             ids = ()
-        assert all(isinstance(id, AnyID) for id in ids), "Unexpected ids: %s" % ids
+        scope = scope_proxy.current
+        model_cache = scope.cache[cls._name]
+        return cls._instance(scope, tuple(model_cache[id] for id in ids))
 
-        instance = object.__new__(cls)
-        instance._scope = scope_proxy.current
-        instance._ids = ids
-
-        # cache prefetching: all records in instance must have a cache entry
-        model_cache = instance._model_cache
-        for id in ids:
-            model_cache[id]
-
-        return instance
+    @tools.lazy_property
+    def _refs(self):
+        """ The set of dictionary refs used in `self`. """
+        # This is a temporary hack to compare sets of caches
+        return frozenset(id(cache) for cache in self._caches)
 
     #
     # Conversion methods
@@ -5224,16 +5231,23 @@ class BaseModel(object):
         """
         if len(self) == 1:
             return self
-        else:
-            raise except_orm("ValueError", "Expected singleton: %s" % self)
+        raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    def scoped(self):
-        """ Return an instance equivalent to `self` attached to the current scope. """
-        return self.browse(self._ids)
+    def scoped(self, scope=None):
+        """ Return an instance equivalent to `self` attached to `scope` or the
+            current scope.
+        """
+        scope = scope or scope_proxy.current
+        if self._scope is scope:
+            return self
+        ids = self.unbrowse()
+        if len(ids) == len(self):
+            return self.browse(ids)
+        raise except_orm("ValueError", "Cannot scope %s" % self)
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """
-        return list(self._ids)
+        return list(cache['id'] for cache in self._caches if 'id' in cache)
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5245,18 +5259,12 @@ class BaseModel(object):
             with the `values` dictionary. Such a record does not exist in the
             database.
         """
-        #
-        # A new instance has a special record id and uses the regular record
-        # cache to store its values.
-        #
-        instance = self.browse(VirtualID())
-        instance._record_cache.update(values)
-        return instance
+        return self._instance(scope_proxy.current, (dict(values),))
 
     @property
     def draft(self):
         """ Whether ``self[0]`` is a draft record. """
-        return self._ids and isinstance(self._ids[0], VirtualID)
+        return bool(self._caches) and 'id' not in self._caches[0]
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
@@ -5275,55 +5283,68 @@ class BaseModel(object):
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty. """
-        return bool(self._ids)
+        return bool(self._caches)
 
     def __len__(self):
         """ Return the size of `self`. """
-        return len(self._ids)
+        return len(self._caches)
 
     def __iter__(self):
         """ Return an iterator over `self`. """
-        with self._scope:
-            return iter(map(self.browse, self._ids))
+        for cache in self._caches:
+            yield self._instance(self._scope, (cache,))
 
     def __contains__(self, item):
-        """ Test whether `item` is a record id in `self` or a field name. """
+        """ Test whether `item` is a subset of `self` or a field name. """
         if isinstance(item, BaseModel):
-            if self._name != item._name:
-                raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
-            return set(item._ids) <= set(self._ids)
-        return (isinstance(item, basestring) and item in self._fields) or item in self._ids
+            if self._name == item._name:
+                return item.scoped(self._scope)._refs <= self._refs
+            raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
+        if isinstance(item, basestring):
+            return item in self._fields
+        return item in self.unbrowse()
 
     def __add__(self, other):
         """ Return the concatenation of two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s + %s" % (self, other))
-        return self.browse(self._ids + other._ids)
+        scope = scope_proxy.current
+        caches = self.scoped(scope)._caches + other.scoped(scope)._caches
+        return self._instance(scope, caches)
 
     def __sub__(self, other):
         """ Return the difference between two instances (order-preserving). """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
-        return self.browse(id for id in self._ids if id not in other._ids)
+        scope = scope_proxy.current
+        orefs = other.scoped(scope)._refs
+        caches = tuple(cache for cache in self.scoped(scope)._caches if id(cache) not in orefs)
+        return self._instance(scope, caches)
 
     def __and__(self, other):
         """ Return the intersection of two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s & %s" % (self, other))
-        return self.browse(set(self._ids) & set(other._ids))
+        scope = scope_proxy.current
+        orefs = other.scoped(scope)._refs
+        caches = tuple(cache for cache in self.scoped(scope)._caches if id(cache) in orefs)
+        return self._instance(scope, caches)
 
     def __or__(self, other):
         """ Return the union of two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s | %s" % (self, other))
-        return self.browse(set(self._ids) | set(other._ids))
+        scope = scope_proxy.current
+        caches = self.scoped(scope)._caches + other.scoped(scope)._caches
+        caches = tuple(dict((id(cache), cache) for cache in caches).itervalues())
+        return self._instance(scope, caches)
 
     def __eq__(self, other):
         """ Test whether two instances are equivalent (as sets). """
         if not isinstance(other, BaseModel):
             _logger.warning("Comparing apples and oranges: %s == %s", self, other)
             return False
-        return self._name == other._name and set(self._ids) == set(other._ids)
+        return self._name == other._name and self._refs == other._refs
 
     def __ne__(self, other):
         return not self == other
@@ -5331,29 +5352,29 @@ class BaseModel(object):
     def __lt__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s < %s" % (self, other))
-        return set(self._ids) < set(other._ids)
+        return self._refs < other._refs
 
     def __le__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s <= %s" % (self, other))
-        return set(self._ids) <= set(other._ids)
+        return self._refs <= other._refs
 
     def __gt__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s > %s" % (self, other))
-        return set(self._ids) > set(other._ids)
+        return self._refs > other._refs
 
     def __ge__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s >= %s" % (self, other))
-        return set(self._ids) >= set(other._ids)
+        return self._refs >= other._refs
 
     def __int__(self):
-        return (self._ids or (False,))[0]
+        return bool(self._caches) and self._caches[0].get('id', False)
 
     def __str__(self):
         model_name = self._name.replace('.', '_')
-        return "%s%s" % (model_name, self._ids)
+        return "%s%s" % (model_name, tuple(cache.get('id', False) for cache in self._caches))
 
     def __unicode__(self):
         return unicode(str(self))
@@ -5361,7 +5382,7 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        return hash((self._name, frozenset(self._ids)))
+        return hash((self._name, self._refs))
 
     def __getitem__(self, key):
         """ If `key` is an integer or a slice, return the corresponding record
@@ -5375,12 +5396,13 @@ class BaseModel(object):
                 rs = inst[10:20]            # subset of inst
                 nm = rs['name']             # name of first record in inst
         """
-        if isinstance(key, (int, long, slice)):
-            with self._scope:
-                return self.browse(self._ids[key])
-        else:
+        if isinstance(key, basestring):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
+        elif isinstance(key, slice):
+            return self._instance(self._scope, self._caches[key])
+        else:
+            return self._instance(self._scope, (self._caches[key],))
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
@@ -5413,23 +5435,23 @@ class BaseModel(object):
         # cache of models, even when all caches are invalidated.
         return self._scope.cache[self._name]
 
-    @property
+    @tools.lazy_property
     def _record_cache(self):
         """ Return the cache of the first record in `self`. """
-        # Note: Contrary to the model's cache, a record's cache can be dropped
-        # by cache invalidation. Therefore, this property must be evaluated at
-        # every access.
-        return self._model_cache[self._ids[0]]
+        return self._caches[0]
 
     def _get_field(self, name):
         """ read the field with the given `name` on a record instance """
         # null instances: return null values
-        if not self._ids:
+        if not self:
             with self._scope:
                 return self._fields[name].null()
 
         self = self[0]
         record_cache = self._record_cache
+
+        if name == 'id':
+            return record_cache.get('id', False)
 
         # draft records: retrieve default values
         if self.draft:
@@ -5440,12 +5462,10 @@ class BaseModel(object):
                 return self._fields[name].null() if value is None else value
 
         # check the record's cache
-        if name in record_cache:
-            return record_cache[name]
-
-        with self._scope:
-            field = self._fields[name]
-            field.compute_value(self)
+        if name not in record_cache:
+            with self._scope:
+                field = self._fields[name]
+                field.compute_value(self)
 
         return record_cache[name]
 
@@ -5457,6 +5477,7 @@ class BaseModel(object):
         if not self:
             return
 
+        self = self[0]
         field = self._fields[name]
 
         if self.draft:
@@ -5467,7 +5488,7 @@ class BaseModel(object):
             # store value in database
             with self._scope:
                 # FIXME: no fnct_inv
-                self[0].write({name: field.convert_to_write(value)})
+                self.write({name: field.convert_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
         self._record_cache[name] = value

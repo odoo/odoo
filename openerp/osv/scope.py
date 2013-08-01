@@ -209,20 +209,11 @@ class Scope(object):
 # Records cache
 #
 
-def get_values(d, keys):
-    """ return the values of dictionary `d` corresponding to `keys`, or all
-        values of `d` if `keys` is ``None``
-    """
-    if keys is None:
-        return d.itervalues()
-    else:
-        return (d[key] for key in keys if key in d)
-
-
 class ModelCache(defaultdict):
     """ Cache for the records of a given model in a given scope. """
-    def __init__(self):
-        super(ModelCache, self).__init__(dict)
+    def __missing__(self, key):
+        self[key] = record_cache = {'id': key}
+        return record_cache
 
 
 class Cache(defaultdict):
@@ -239,15 +230,20 @@ class Cache(defaultdict):
     def invalidate(self, model_name, field_name, ids=None):
         """ Invalidate a field for the given record ids. """
         model_cache = self[model_name]
-        for record_cache in get_values(model_cache, ids):
+        record_caches = model_cache.itervalues() if ids is None else \
+                        (model_cache[id] for id in ids)
+        for record_cache in record_caches:
             record_cache.pop(field_name, None)
 
     def invalidate_all(self):
         """ Invalidate the whole cache. """
-        # Note that model caches cannot be dropped from the cache, because they
-        # are memoized in model instances (see BaseModel._model_cache).
+        # Note that record caches cannot be dropped from the cache, since they
+        # are memoized in model instances.
         for model_cache in self.itervalues():
-            model_cache.clear()
+            for record_cache in model_cache.itervalues():
+                id = record_cache['id']
+                record_cache.clear()
+                record_cache['id'] = id
 
     def check(self):
         """ self-check for validating the cache """

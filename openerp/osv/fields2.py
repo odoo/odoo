@@ -215,7 +215,7 @@ class Field(object):
         # fetch the records of this model without name in their cache
         fetch_recs = records.browse(fid
             for fid, fcache in records._model_cache.iteritems()
-            if not isinstance(fid, VirtualID) and name not in fcache)
+            if name not in fcache)
 
         # prefetch all classic and many2one fields if column is one of them
         # Note: do not prefetch fields when records.pool._init is True, because
@@ -342,17 +342,18 @@ class Field(object):
             else:
                 scope.invalidate(field.model_name, field.name, None)
 
-    def modified_draft(self, records):
-        """ Same as :meth:`modified`, but in the case where `records` is a draft
+    def modified_draft(self, record):
+        """ Same as :meth:`modified`, but in the case where `record` is a draft
             instance.
         """
+        assert record.draft and len(record) == 1
         # invalidate cache for self
-        ids = records.unbrowse()
-        scope.invalidate(self.model_name, self.name, ids)
-        # invalidate dependent fields of records only
+        cache = record._record_cache
+        cache.pop(self.name, None)
+        # invalidate dependent fields on record only
         for field, _path in self._triggers:
-            if field.model_name == records._name:
-                scope.invalidate(field.model_name, field.name, ids)
+            if field.model_name == record._name:
+                cache.pop(field.name, None)
 
 
 class Boolean(Field):
@@ -889,7 +890,7 @@ class Id(Field):
     def __get__(self, instance, owner):
         if instance is None:
             return self         # the field is accessed through the class owner
-        return (instance._ids or (False,))[0]
+        return int(instance)
 
     def __set__(self, instance, value):
         raise NotImplementedError()
@@ -899,5 +900,5 @@ class Id(Field):
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError, Warning
 from openerp.osv import fields
-from openerp.osv.orm import BaseModel, VirtualID
+from openerp.osv.orm import BaseModel
 from openerp.osv.scope import proxy as scope
