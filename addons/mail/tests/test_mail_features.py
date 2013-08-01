@@ -640,7 +640,7 @@ class test_mail(TestMailBase):
             })
         compose = mail_compose.browse(cr, uid, compose_id)
 
-        # D: Post the comment, get created message for each group
+        # Do: Post the comment, get created message for each group
         mail_compose.send_mail(cr, user_raoul.id, [compose_id], context={
                         'default_res_id': -1,
                         'active_ids': [self.group_pigs_id, group_bird_id]
@@ -678,6 +678,37 @@ class test_mail(TestMailBase):
         test_pids = [self.partner_admin_id]
         self.assertEqual(set(bird_pids), set(test_pids),
                         'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
+
+        # Do: Compose in mass_mail, coming from list_view, we have an active_domain that should be supported
+        compose_id = mail_compose.create(cr, user_raoul.id,
+            {
+                'subject': _subject,
+                'body': '${object.description}',
+                'partner_ids': [(4, p_c_id), (4, p_d_id)],
+            }, context={
+                'default_composition_mode': 'mass_mail',
+                'default_model': 'mail.group',
+                'default_res_id': False,
+                'active_ids': [self.group_pigs_id],
+                'active_domain': [('name', 'in', ['Pigs', 'Bird'])],
+            })
+        compose = mail_compose.browse(cr, uid, compose_id)
+
+        # Do: Post the comment, get created message for each group
+        mail_compose.send_mail(
+            cr, user_raoul.id, [compose_id], context={
+                'default_res_id': -1,
+                'active_ids': [self.group_pigs_id, group_bird_id]
+            })
+        group_pigs.refresh()
+        group_bird.refresh()
+        message1 = group_pigs.message_ids[0]
+        message2 = group_bird.message_ids[0]
+
+        # Test: Pigs and Bird did receive their message
+        test_msg_ids = self.mail_message.search(cr, uid, [], limit=2)
+        self.assertIn(message1.id, test_msg_ids, 'compose wizard: Pigs did not receive its mass mailing message')
+        self.assertIn(message2.id, test_msg_ids, 'compose wizard: Bird did not receive its mass mailing message')
 
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
