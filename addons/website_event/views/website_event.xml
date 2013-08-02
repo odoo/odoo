@@ -42,8 +42,8 @@
                         <ul class="nav nav-list">
                             <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
-                                <li t-att-class="date_active == date[0] and 'active' or ''">
-                                    <a  t-att-href="'./search/date-%%s' %% date[0]"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
+                                <li t-att-class="search.get('date')[0] == date[0] and 'active' or ''">
+                                    <a  t-att-href="'/event%%s/date-%%s' %% (search_path, date[0])"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
                                 </li>
                             </t>
                         </ul>
