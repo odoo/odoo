@@ -1739,12 +1739,8 @@ class stock_package(osv.osv):
             parent = m.parent_id
             while parent:
                 res[m.id] = parent.name + ' / ' + res[m.id]
-                parent = parent.location_id
+                parent = parent.parent_id
         return res
-
-    def _get_subpackages(self, cr, uid, ids, context=None):
-        """ return all sublocations of the given stock locations (included) """
-        return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
     def _get_packages(self, cr, uid, ids, context=None):
         """Returns packages from quants for store"""
@@ -1754,17 +1750,36 @@ class stock_package(osv.osv):
                 res.add(quant.package_id.id)
         return list(res)
 
+    def _get_packages_to_relocate(self, cr, uid, ids, context=None):
+        res = set()
+        for pack in self.browse(cr, uid, ids, context=context):
+            res.add(pack.id)
+            if pack.parent_id:
+                res.add(pack.parent_id.id)
+        return list(res)
+
+    def _get_package_location(self, cr, uid, ids, name, args, context=None):
+        res = {}.fromkeys(ids, False)
+        for pack in self.browse(cr, uid, ids, context=context):
+            if pack.quant_ids:
+                res[pack.id] = pack.quant_ids[0].location_id.id
+            elif pack.children_ids:
+                res[pack.id] = pack.children_ids[0].location_id.id
+        return res
+
     _columns = {
         'name': fields.char('Package Reference', size=64, select=True),
-        'complete_name': fields.function(_complete_name, type='char', string="Package Name",
-                                         store={'stock.quant.package': (_get_subpackages, ['name', 'parent_id'], 10)}),
+        'complete_name': fields.function(_complete_name, type='char', string="Package Name",),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
         'packaging_id': fields.many2one('product.packaging', 'Type of Packaging'),
-        'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location',
-                                      store={'stock.quant': (_get_packages, ['location_id'], 10)}, readonly=True),
+        'location_id': fields.function(_get_package_location, type='many2one', relation='stock.location', string='Location',
+                                    store={
+                                       'stock.quant': (_get_packages, ['location_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['children_ids', 'quant_ids', 'parent_id'], 10),
+                                    }, readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
-        'parent_id': fields.many2one('stock.quant.package', 'Container Package', help="The package containing this item"),
+        'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item"),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),
     }
     _defaults = {
@@ -1772,12 +1787,20 @@ class stock_package(osv.osv):
     }
     def _check_location(self, cr, uid, ids, context=None):
         '''checks that all quants in a package are stored in the same location'''
+        quant_obj = self.pool.get('stock.quant')
         for pack in self.browse(cr, uid, ids, context=context):
-            if not all([quant.location_id.id == pack.quant_ids[0].location_id.id for quant in pack.quant_ids]):
+            parent = pack
+            while parent.parent_id:
+                parent = parent.parent_id
+            quant_ids = self.get_content(cr, uid, [parent.id], context=context)
+            quants = quant_obj.browse(cr, uid, quant_ids, context=context)
+            location_id = quants and quants[0].location_id.id or False
+            if not all([quant.location_id.id == location_id for quant in quants]):
                 return False
         return True
+
     _constraints = [
-        (_check_location, 'All quants inside a package should be in the same location', ['location_id']),
+        (_check_location, 'Everything inside a package should be in the same location', ['location_id']),
     ]
 
     def action_print(self, cr, uid, ids, context=None):
@@ -1794,19 +1817,31 @@ class stock_package(osv.osv):
             'datas': datas
         }
 
-    def quants_get(self, cr, uid, package, context=None):
-        ''' find all the quants in the given package (browse record) recursively'''
-        res = []
-        for child in package.children_ids:
-            res += self.quants_get(cr, uid, child, context=context)
-        res += package.quant_ids
+    def unpack(self, cr, uid, ids, context=None):
+        quant_obj = self.pool.get('stock.quant')
+        for package in self.browse(cr, uid, ids, context=context):
+            quant_ids = [quant.id for quant in package.quant_ids]
+            quant_obj.write(cr, uid, quant_ids, {'package_id': package.parent_id.id or False}, context=context)
+            children_package_ids = [child_package.id for child_package in package.children_ids]
+            self.write(cr, uid, children_package_ids, {'parent_id': package.parent_id.id or False}, context=context)
+        #delete current package since it contains nothing anymore
+        self.unlink(cr, uid, ids, context=context)
+        return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'stock', 'action_package_view', context=context)
+
+    def get_content(self, cr, uid, ids, context=None):
+        child_package_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
+        return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
+
+    def get_content_package(self, cr, uid, ids, context=None):
+        quants_ids = self.get_content(cr, uid, ids, context=context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'stock', 'quantsact', context=context)
+        res['domain'] = [('id', 'in', quants_ids)]
         return res
 
     def _get_product_total_qty(self, cr, uid, package_record, product_id, context=None):
         ''' find the total of given product 'product_id' inside the given package 'package_id'''
         quant_obj = self.pool.get('stock.quant')
-        included_package_ids = self.search(cr, uid, [('parent_id', 'child_of', [package_record.id])], context=context)
-        all_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
+        all_quant_ids = self.get_content(cr, uid, [package_record.id], context=context)
         total = 0
         for quant in quant_obj.browse(cr, uid, all_quant_ids, context=context):
             if quant.product_id.id == product_id:
