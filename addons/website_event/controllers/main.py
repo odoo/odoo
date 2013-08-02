@@ -18,7 +18,7 @@ class website_hr(http.Controller):
         html = website.render("website_event.index", values)
         return html
 
-    @http.route(['/hr/publish'], type='http', auth="public")
+    @http.route(['/event/publish'], type='http', auth="public")
     def publish(self, **post):
         obj_id = int(post['id'])
         data_obj = request.registry['event.event']

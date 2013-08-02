@@ -51,14 +51,20 @@
                                     <h5 class="media-heading"><span t-record="event_id" t-field="name"> </span></h5>
                                     <div>Start Date: <span t-record="event_id" t-field="date_begin"> </span></div>
                                     <div>End Date: <span t-record="event_id" t-field="date_end"> </span></div>
+                                    <div>Organized by: <span t-record="event_id" t-field="user_id"> </span></div>
                                     <div t-record="event_id" t-field="type"> </div>
                                     <div t-record="event_id" t-field="country_id"> </div>
-                                    <div>Participations :
-                                        <span t-record="event_id" t-field="register_current">0</span>
-                                        <t t-if="event_id.register_max"> / <span t-record="event_id" t-field="register_max"> </span></t>
-                                    </div>
+                                    <span class="label label-info">
+                                        <t t-if="event_id.register_avail lte 10 and record.register_avail gt 0">Only</t>
+                                        <t t-if="event_id.register_avail == 9999">No ticket available.</t>
+                                        <t t-if="event_id.register_avail != 9999">
+                                            <t t-esc="event_id.register_avail"/>
+                                            <t t-if="event_id.register_avail > 1">tickets </t>
+                                            <t t-if="event_id.register_avail lte 1">ticket </t>
+                                            available.
+                                        </t>
+                                    </span>
                                     <div t-record="event_id" t-field="note"> </div>
-                                    <div t-record="event_id" t-field="country_id"> </div>
                                 </div>
                             </div>
                         </div>
