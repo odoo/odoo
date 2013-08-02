@@ -234,6 +234,10 @@ class RecordCache(MutableMapping):
     def __len__(self):
         return len(self.data)
 
+    def dump(self):
+        """ Return a "dump" of the record cache. """
+        return RecordCache(None, self.iteritems())
+
 
 class ModelCache(defaultdict):
     """ Cache for the records of a given model in a given scope. """
@@ -251,6 +255,13 @@ class ModelCache(defaultdict):
     def __missing__(self, key):
         self[key] = record_cache = self.record_cache(id=key)
         return record_cache
+
+    def dump(self):
+        """ Return a "dump" of the model cache. """
+        return dict(
+            (record_id, record_cache.dump())
+            for record_id, record_cache in self.iteritems()
+        )
 
 
 class Cache(defaultdict):
@@ -286,31 +297,31 @@ class Cache(defaultdict):
                 record_cache.clear()
                 record_cache['id'] = id
 
+    def dump(self):
+        """ Return a "dump" of the cache. """
+        return dict(
+            (model_name, model_cache.dump())
+            for model_name, model_cache in self.iteritems()
+        )
+
     def check(self):
         """ self-check for validating the cache """
         assert proxy.cache is self
 
         # make a full copy of the cache, and invalidate it
-        cache_copy = dict(
-            (model_name, dict(
-                (record_id, dict(record_cache))
-                for record_id, record_cache in model_cache.iteritems()
-            ))
-            for model_name, model_cache in self.iteritems()
-        )
+        cache_dump = self.dump()
         self.invalidate_all()
 
         # re-fetch the records, and compare with their former cache
         invalids = []
-        for model_name, model_cache in cache_copy.iteritems():
+        for model_name, model_dump in cache_dump.iteritems():
             model = proxy.model(model_name)
-            for record_id, record_cache in model_cache.iteritems():
-                record = model.browse(record_id)
-                if not record.draft:
-                    for field, value in record_cache.iteritems():
-                        if record[field] != value:
-                            info = {'cached': value, 'fetched': record[field]}
-                            invalids.append((record, field, info))
+            records = model.browse(model_dump)
+            for record, record_dump in zip(records, model_dump.itervalues()):
+                for field, value in record_dump.iteritems():
+                    if record[field] != value:
+                        info = {'cached': value, 'fetched': record[field]}
+                        invalids.append((record, field, info))
 
         if invalids:
             raise Exception('Invalid cache for records\n' + pformat(invalids))
