@@ -714,36 +714,39 @@ class view(osv.osv):
         return r['arch']
 
     def distribute_branding(self, e, branding=None, xpath=None, count=None):
-        if e.attrib.get('t-ignore') or e.tag in ('head',):
+        if e.attrib.get('t-ignore') or e.tag == 'head':
             # TODO: find a better name and check if we have a string to boolean helper
             return
-        branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
-        branding_dist = {}
-        xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 1)
+        xpath = "%s/%s[%s]" % (xpath or '', e.tag, count[e.tag] if count else 1)
         if branding and not (e.attrib.get('data-oe-model') or e.attrib.get('t-field')):
             e.attrib.update(branding)
             e.attrib['data-oe-xpath'] = xpath
-        if e.attrib.get('data-oe-model'):
-            # if a branded tag containg branded tag distribute to the childs
-            child_text = "".join([etree.tostring(x, encoding='utf-8') for x in e])
-            if re.search('( data-oe-model=| t-esc=| t-raw=| t-field=| t-call=| t-ignore=)',child_text) or e.tag == "t" or 't-raw' in e.attrib:
-                for i in branding_copy:
-                    if e.attrib.get(i):
-                        branding_dist[i] = e.attrib.get(i)
-                        e.attrib.pop(i)
-                if 't-raw' not in e.attrib:
-                    count = {}
-                    for child in e:
-                        count[child.tag] = count.get(child.tag, 0) + 1
-                        self.distribute_branding(child, branding_dist, xpath, count)
+        if not e.attrib.get('data-oe-model'): return
+
+        # if a branded element contains branded elements distribute own
+        # branding to children unless it's t-raw, then just remove branding
+        # on current element
+        if e.tag == 't' or 't.raw' in e.attrib or any(BRANDING_TRIGGERS.intersection(child.attrib) for child in e.iterdescendants()):
+            distributed_branding = dict(
+                (attribute, e.attrib.pop(attribute))
+                for attribute in MOVABLE_BRANDING
+                if e.attrib.get(attribute))
+
+            if 't-raw' not in e.attrib:
+                # running index by tag type, for XPath query generation
+                count = {}
+                for child in e:
+                    count[child.tag] = count.get(child.tag, 0) + 1
+                    self.distribute_branding(child, distributed_branding, xpath, count)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
             arch = self.read_template(cr, uid, name, context=context)
             arch_tree = etree.fromstring(arch)
             self.distribute_branding(arch_tree)
-            arch = etree.tostring(arch_tree, encoding='utf-8')
-            arch = '<?xml version="1.0" encoding="utf-8"?><tpl>%s</tpl>' % (arch)
+            root = etree.Element('tpl')
+            root.append(arch_tree)
+            arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
             return arch
 
         engine = qweb.QWebXml(loader)
@@ -826,6 +829,8 @@ class view(osv.osv):
         })
         return super(view, self).copy(cr, uid, id, default, context=context)
 
+MOVABLE_BRANDING = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
+BRANDING_TRIGGERS = frozenset(('data-oe-model', 't-esc', 't-raw', 't-field', 't-call', 't-ignore'))
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
