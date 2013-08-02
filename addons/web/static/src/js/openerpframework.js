@@ -802,15 +802,71 @@ openerp.web.jsonRpc = function(url, fct_name, params, settings) {
 };
 
 openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
+    settings = settings || {};
     return genericJsonRpc(fct_name, params, function(data) {
-        return $.ajax(url, _.extend({}, settings, {
-            url: url,
-            dataType: 'jsonp',
-            jsonp: 'jsonp',
-            type: 'GET',
-            cache: false,
-            data: {r: JSON.stringify(data)},
-        }));
+        var payload_str = JSON.stringify(data);
+        var payload_url = $.param({r:payload_str});
+        var force2step = settings.force2step || false;
+        delete settings.force2step;
+        var session_id = settings.session_id || null;
+        delete settings.session_id;
+        if (payload_url.length < 2000 && ! force2step) {
+            return $.ajax(url, _.extend({}, settings, {
+                url: url,
+                dataType: 'jsonp',
+                jsonp: 'jsonp',
+                type: 'GET',
+                cache: false,
+                data: {r: payload_str, session_id: session_id},
+            }));
+        } else {
+            var args = {session_id: session_id, id: data.id};
+            var ifid = _.uniqueId('oe_rpc_iframe');
+            var html = "<iframe src='javascript:false;' name='" + ifid + "' id='" + ifid + "' style='display:none'></iframe>";
+            var $iframe = $(html);
+            var nurl = 'jsonp=1&' + $.param(args);
+            nurl = url.indexOf("?") !== -1 ? url + "&" + nurl : url + "?" + nurl;
+            var $form = $('<form>')
+                        .attr('method', 'POST')
+                        .attr('target', ifid)
+                        .attr('enctype', "multipart/form-data")
+                        .attr('action', nurl)
+                        .append($('<input type="hidden" name="r" />').attr('value', payload_str))
+                        .hide()
+                        .appendTo($('body'));
+            var cleanUp = function() {
+                if ($iframe) {
+                    $iframe.unbind("load").remove();
+                }
+                $form.remove();
+            };
+            var deferred = $.Deferred();
+            // the first bind is fired up when the iframe is added to the DOM
+            $iframe.bind('load', function() {
+                // the second bind is fired up when the result of the form submission is received
+                $iframe.unbind('load').bind('load', function() {
+                    $.ajax({
+                        url: url,
+                        dataType: 'jsonp',
+                        jsonp: 'jsonp',
+                        type: 'GET',
+                        cache: false,
+                        data: {session_id: session_id, id: data.id},
+                    }).always(function() {
+                        cleanUp();
+                    }).done(function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    }).fail(function() {
+                        deferred.reject.apply(deferred, arguments);
+                    });
+                });
+                // now that the iframe can receive data, we fill and submit the form
+                $form.submit();
+            });
+            // append the iframe to the DOM (will trigger the first load)
+            $form.after($iframe);
+            return deferred;
+        }
     });
 };
 
@@ -827,11 +883,13 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
      */
-    init: function(parent, origin) {
+    init: function(parent, origin, options) {
         openerp.web.PropertiesMixin.init.call(this, parent);
+        options = options || {};
         this.server = null;
-        this.override_session = false;
+        this.override_session = options.override_session || false;
         this.session_id = undefined;
+        this.avoid_recursion = false;
         this.setup(origin);
     },
     setup: function(origin) {
@@ -842,6 +900,30 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
         this.origin_server = this.origin === window_origin;
+        this.session_id = null;
+    },
+    check_session_id: function(force) {
+        var self = this;
+        if (this.avoid_recursion)
+            return $.when();
+        if (this.session_id)
+            return $.when(); // we already have the session id
+        if (this.origin_server && ! this.override_session && ! force)
+            return $.when(); // no need for session_id if we are using the origin server
+        this.avoid_recursion = true;
+        function always() {
+            self.avoid_recursion = false;
+        }
+        if (this.override_server) {
+            return this.rpc("/gen_session_id", {}).then(function() {
+                debugger;
+            }).always(always);
+        } else {
+            this.avoid_recursion = true;
+            return this.rpc("/web/session/get_session_info", {}).then(function(res) {
+                self.session_id = res.session_id;
+            }).always(always);
+        }
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -859,57 +941,57 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
      */
     rpc: function(url, params, options) {
         var self = this;
-        options = options || {};
-        var jqOptions = {};
-        // TODO: remove
-        if (! _.isString(url)) {
-            _.extend(jqOptions, url);
-            url = url.url;
-        }
-        // TODO correct handling of timeouts
-        if (options.timeout)
-            jqOptions.timeout = options.timeout;
-        if (! options.shadow)
-            this.trigger('request');
-        var fct;
-        if (this.force_method) {
-            fct = this.force_method;
-        } else {
-            if (this.origin_server) {
+        options = _.clone(options || {});
+        var shadow = options.shadow || false;
+        delete options.shadow;
+
+        return self.check_session_id().then(function() {
+            // TODO: remove
+            if (! _.isString(url)) {
+                _.extend(options, url);
+                url = url.url;
+            }
+            // TODO correct handling of timeouts
+            if (! shadow)
+                self.trigger('request');
+            var fct;
+            if (self.origin_server) {
                 fct = openerp.web.jsonRpc;
             } else {
                 fct = openerp.web.jsonpRpc;
+                url = self.url(url, null);
+                options.session_id = self.session_id;
             }
-        }
-        var p = fct(url, "call", params, jqOptions);
-        p = p.then(function (result) {
-            if (! options.shadow)
-                self.trigger('response');
-            return result;
-        }, function(type, error, textStatus, errorThrown) {
-            if (type === "server") {
-                if (! options.shadow)
+            var p = fct(url, "call", params, options);
+            p = p.then(function (result) {
+                if (! shadow)
                     self.trigger('response');
-                if (error.code === 100) {
-                    self.uid = false;
+                return result;
+            }, function(type, error, textStatus, errorThrown) {
+                if (type === "server") {
+                    if (! shadow)
+                        self.trigger('response');
+                    if (error.code === 100) {
+                        self.uid = false;
+                    }
+                    return $.Deferred().reject(error, $.Event());
+                } else {
+                    if (! shadow)
+                        self.trigger('response_failed');
+                    var nerror = {
+                        code: -32098,
+                        message: "XmlHttpRequestError " + errorThrown,
+                        data: {type: "xhr"+textStatus, debug: error.responseText, objects: [error, errorThrown] }
+                    };
+                    return $.Deferred().reject(nerror, $.Event());
                 }
-                return $.Deferred().reject(error, $.Event());
-            } else {
-                if (! options.shadow)
-                    self.trigger('response_failed');
-                var nerror = {
-                    code: -32098,
-                    message: "XmlHttpRequestError " + errorThrown,
-                    data: {type: "xhr"+textStatus, debug: error.responseText, objects: [error, errorThrown] }
-                };
-                return $.Deferred().reject(nerror, $.Event());
-            }
-        });
-        return p.fail(function() { // Allow deferred user to disable rpc_error call in fail
-            p.fail(function(error, event) {
-                if (!event.isDefaultPrevented()) {
-                    self.trigger('error', error, event);
-                }
+            });
+            return p.fail(function() { // Allow deferred user to disable rpc_error call in fail
+                p.fail(function(error, event) {
+                    if (!event.isDefaultPrevented()) {
+                        self.trigger('error', error, event);
+                    }
+                });
             });
         });
     },
@@ -917,7 +999,9 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         params = _.extend(params || {});
         if (this.override_session)
             params.session_id = this.session_id;
-        var qs = '?' + $.param(params);
+        var qs = $.param(params);
+        if (qs.length > 0)
+            qs = "?" + qs;
         var prefix = _.any(['http://', 'https://', '//'], function(el) {
             return path.length >= el.length && path.slice(0, el.length) === el;
         }) ? '' : this.prefix; 

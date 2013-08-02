@@ -275,13 +275,12 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-
+        
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
-            self.init(args)
-
             def handler():
                 self.session.jsonp_requests[request_id] = self.httprequest.form['r']
+                self.session.modified = True
                 headers=[('Content-Type', 'text/plain; charset=utf-8')]
                 r = werkzeug.wrappers.Response(request_id, headers=headers)
                 return r
@@ -292,7 +291,6 @@ class JsonRequest(WebRequest):
             request = args.get('r')
         elif jsonp and request_id:
             # jsonp 2 steps step2 GET: run and return result
-            self.init(args)
             request = self.session.jsonp_requests.pop(request_id, "")
         else:
             # regular jsonrpc2
