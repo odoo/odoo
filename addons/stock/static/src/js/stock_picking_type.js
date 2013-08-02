@@ -12,12 +12,12 @@ openerp.stock = function(openerp) {
                 self.$el.sparkline(value, {
                     type: type,
                     barWidth: 5,
-                    tooltipFormat: '{{offset:offset}} {{value}}',
+                    tooltipFormat: '{{offset:offset}}: {{value}} Move(s)',
                     tooltipValueLookups: {
                         'offset': tooltips
                     },
                 });
-                self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
+                self.$el.tipsy({'delayIn': 3000, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
             }, 0);
         },
     });
