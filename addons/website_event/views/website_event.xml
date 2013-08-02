@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- Layout add nav and footer -->
+
+    <record id="header_website_event" model="ir.ui.view">
+        <field name="name">header_website_event</field>
+        <field name="inherit_id" ref="website.header"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="(//li)[last()]" position="after">
+                    <li class="pull-right"><a href="/event">Events</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+    <record id="footer_website_event" model="ir.ui.view">
+        <field name="name">footer_website_event</field>
+        <field name="inherit_id" ref="website.footer"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//a[@href='/page/website.contactus']" position="after">
+                    <li><a href="/event">Events</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+
+    <!-- Page --> 
+
+    <template id="index">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
+                <t t-raw="head"/>
+            </t>
+            <t t-set="title">Events</t>
+            <div class="container">
+                <div class="thumbnails">
+                    <t t-foreach="event_ids" t-as="event_id">
+                        <div class="span4 mt16">
+                            <div class="media thumbnail">
+                                <div class="media-body">
+                                    <t t-if="editable">
+                                        <a href="#" t-att-data-id="event_id.id" class="pull-right">
+                                            <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                            <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                        </a>
+                                    </t>
+                                    <h5 class="media-heading"><span t-record="event_id" t-field="name"> </span></h5>
+                                    <div>Start Date: <span t-record="event_id" t-field="date_begin"> </span></div>
+                                    <div>End Date: <span t-record="event_id" t-field="date_end"> </span></div>
+                                    <div t-record="event_id" t-field="type"> </div>
+                                    <div t-record="event_id" t-field="country_id"> </div>
+                                    <div>Participations :
+                                        <span t-record="event_id" t-field="register_current">0</span>
+                                        <t t-if="event_id.register_max"> / <span t-record="event_id" t-field="register_max"> </span></t>
+                                    </div>
+                                    <div t-record="event_id" t-field="note"> </div>
+                                    <div t-record="event_id" t-field="country_id"> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+ </data>
+</openerp>
