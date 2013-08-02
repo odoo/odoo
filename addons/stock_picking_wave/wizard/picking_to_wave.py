@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -18,24 +17,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
-{
-    'name': 'Stock Picking Waves',
-    'version': '1.0',
-    'category': 'Stock Management',
-    'description': """
-This module adds the picking wave option in warehouse management.
-=================================================================
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['stock'],
-    'data': ['security/ir.model.access.csv',
-            'stock_picking_wave_view.xml',
-            'stock_picking_wave_sequence.xml',
-            'wizard/picking_to_wave_view.xml'],
-    'demo': [],
-    'installable': True,
-    'auto_install': True,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class stock_picking_to_wave(osv.osv_memory):
+    _name = 'stock.picking.to.wave'
+    _description = 'Add pickings to a picking wave'
+    _columns = {
+        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', required=True),
+    }
+
+    def merge(self, cr, uid, ids, context=None):
+        #use active_ids to add picking line to the selected wave
+        wave = self.browse(cr, uid, ids, context=context)[0].wave_id.id
+        picking = context.get('active_ids', False)
+        return self.pool.get('stock.picking.wave').write(cr, uid, [wave], {'picking_ids': map(lambda x: (4, x, False), picking)}, context=context)

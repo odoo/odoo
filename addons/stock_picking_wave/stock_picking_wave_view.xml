@@ -25,6 +25,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"/>
+                                <field name="wave_type"/>
                             </group>
                             <group>
                                 <label for="capacity"/>
@@ -45,7 +46,6 @@
                                 <field name="origin"/>
                                 <field name="date"/>
                                 <field name="min_date"/>
-                                <field name="invoice_state" groups="account.group_account_invoice"/>
                                 <field name="stock_journal_id" widget="selection"/>
                                 <field name="state"/>
                                 <button name="action_done" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
@@ -67,6 +67,7 @@
                     <field name="partner_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
+                    <field name="wave_type"/>
                     <field name="time" widget="float_time"/>
                 </tree>
             </field>
@@ -113,6 +114,17 @@
             </xpath>
 
         </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_wave_type">
+            <field name="name">partner.wave.type.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="wave_type" widget="many2many_tags"/>
+                </xpath>
+            </field>
         </record>
 
     </data>
