@@ -126,8 +126,14 @@
                                 </li>
                             </t>
                         </ul>
-                        <a t-if="prev_date" t-att-href="'?date=%%s' %% (prev_date)" class="pull-left">Newer</a>
-                        <a t-if="next_date" t-att-href="'?date=%%s' %% (next_date)" class="pull-right">Older</a>
+                        <ul class="pager">
+                            <li t-if="next_date" class="previous">
+                                <a t-att-href="'?date=%%s' %% (next_date)">&amp;larr; Older</a>
+                            </li>
+                            <li t-if="prev_date" class="next">
+                                <a t-att-href="'?date=%%s' %% (prev_date)">Newer &amp;rarr;</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
