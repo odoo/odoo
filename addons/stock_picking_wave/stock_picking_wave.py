@@ -86,5 +86,5 @@ class res_partner(osv.osv):
 class stock_picking_wave_type(osv.osv):
     _name = 'stock.picking.wave.type'
     _columns = {
-        'name': fields.char('Type'),
+        'name': fields.char('Type', required=True),
     }

@@ -27,8 +27,8 @@ class stock_picking_to_wave(osv.osv_memory):
         'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', required=True),
     }
 
-    def merge(self, cr, uid, ids, context=None):
+    def attach_pickings(self, cr, uid, ids, context=None):
         #use active_ids to add picking line to the selected wave
-        wave = self.browse(cr, uid, ids, context=context)[0].wave_id.id
-        picking = context.get('active_ids', False)
-        return self.pool.get('stock.picking.wave').write(cr, uid, [wave], {'picking_ids': map(lambda x: (4, x, False), picking)}, context=context)
+        wave_id = self.browse(cr, uid, ids, context=context)[0].wave_id.id
+        picking_ids = context.get('active_ids', False)
+        return self.pool.get('stock.picking').write(cr, uid, picking_ids, {'wave_id': wave_id})
