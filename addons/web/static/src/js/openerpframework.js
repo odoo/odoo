@@ -902,27 +902,26 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         this.origin_server = this.origin === window_origin;
         this.session_id = null;
     },
-    check_session_id: function(force) {
+    check_session_id: function() {
         var self = this;
         if (this.avoid_recursion)
             return $.when();
         if (this.session_id)
             return $.when(); // we already have the session id
-        if (this.origin_server && ! this.override_session && ! force)
-            return $.when(); // no need for session_id if we are using the origin server
-        this.avoid_recursion = true;
-        function always() {
-            self.avoid_recursion = false;
-        }
-        if (this.override_session) {
+        if (this.override_session || ! this.origin_server) {
+            // If we don't use the origin server we consider we should always create a new session.
+            // Even if some browsers could support cookies when using jsonp that behavior is
+            // not consistent and the browser creators are tending to removing that feature.
+            this.avoid_recursion = true;
             return this.rpc("/gen_session_id", {}).then(function(result) {
                 self.session_id = result;
-            }).always(always);
+            }).always(function() {
+                self.avoid_recursion = false;
+            });
         } else {
-            this.avoid_recursion = true;
-            return this.rpc("/web/session/get_session_info", {}).then(function(res) {
-                self.session_id = res.session_id;
-            }).always(always);
+            // normal use case, just use the cookie
+            self.session_id = openerp.web.get_cookie("session_id");
+            return $.when();
         }
     },
     /**
@@ -1013,6 +1012,21 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         return prefix + path + qs;
     },
 });
+
+openerp.web.get_cookie = function(c_name) {
+    if (document.cookie.length > 0) {
+        var c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            var c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+};
 
 openerp.declare = declare;
 
