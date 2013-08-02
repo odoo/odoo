@@ -326,13 +326,14 @@ class Field(object):
 
     def modified(self, records):
         """ Notify that field `self` has been modified on `records`: invalidate
-            the cache, and return a sequence of triples (`model_name`,
-            `field_name`, `record_ids`) to recompute.
+            the cache, and prepare the fields/records to recompute.
         """
         # invalidate cache for self
         ids = records.unbrowse()
-        records.invalidate_cache((self.name,), ids)
-        # invalidate dependent fields, and prepare their recomputation
+        scope.invalidate(self.model_name, self.name, ids)
+
+        # invalidate the fields that depend on self, and prepare their
+        # recomputation
         for field, path in self._triggers:
             if field.store:
                 with scope(user=SUPERUSER_ID, context={'active_test': False}):
@@ -596,6 +597,15 @@ class _Relational(Field):
         if path1:
             # recursively traverse the dependency
             field._depends_on_model(self.comodel, path0 + [self.name], path1)
+
+    def modified(self, records):
+        # Invalidate cache for self.inverse_field, too. Note that recomputation
+        # of fields that depend on self.inverse_field is already covered by the
+        # triggers (see above).
+        super(_Relational, self).modified(records)
+        if self.inverse_field:
+            inv = self.inverse_field
+            scope.invalidate(inv.model_name, inv.name, None)
 
 
 class Many2one(_Relational):
