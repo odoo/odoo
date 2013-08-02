@@ -5,7 +5,7 @@ $(document).ready(function () {
         $link.find('.js_publish, .js_unpublish').addClass("hidden");
         var $unp = $link.find(".js_unpublish");
         var $p = $link.find(".js_publish");
-        $.post('/blog/publish/', {'message_id': $link.data('id')}, function (result) {
+        $.post('/blog/publish', {'id': $link.data('id')}, function (result) {
             if (+result) {
                 $p.addClass("hidden");
                 $unp.removeClass("hidden");

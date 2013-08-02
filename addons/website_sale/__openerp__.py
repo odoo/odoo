@@ -11,7 +11,9 @@ OpenERP E-Commerce
     'depends': ['website', 'sale', 'point_of_sale'],
     'data': [
         'views/ecommerce.xml',
-        'views/pricelist.xml'
+        'views/pricelist.xml',
+        'security/ir.model.access.csv',
+        'security/ecommerce.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
