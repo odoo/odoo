@@ -40,16 +40,48 @@
                 <div class="row">
                     <div class="span4 css_noprint">
                         <ul class="nav nav-list">
-                        
+                            <li class="nav-header">Date</li>
+                            <t t-foreach="dates" t-as="date">
+                                <li t-att-class="date_active == date[0] and 'active' or ''">
+                                    <a  t-att-href="'./search/date-%%s' %% date[0]"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
+                                </li>
+                            </t>
+                        </ul>
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Category</li>
+                            <li class="active">
+                                <a >All Categories <span>(27)</span></a>
+                            </li>
+                            <li>
+                                <a >Conferences <span>(18)</span></a>
+                            </li>
+                            <li>
+                                <a >Business <span>(18)</span></a>
+                            </li>
+                            <li>
+                                <a>Classes <span>(9)</span></a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Location</li>
+                            <li>
+                                <a>Ramillies <span>(7)</span></a>
+                            </li>
+                            <li>
+                                <a>Eindhoven <span>(6)</span></a>
+                            </li>
+                            <li>
+                                <a>Hasselt <span>(6)</span></a>
+                            </li>
+                            <li>
+                                <a>Herentals <span>(6)</span></a>
+                            </li>
+                            <li>
+                                <a>Geel <span>(2)</span></a>
+                            </li>
                         </ul>
                     </div>
                     <div class="span8">
-                        <div class="clearfix">
-                            <form action="/shop" method="get" class="navbar-search">
-                                <input type="text" name="search" class="search-query span4" placeholder="Search" t-att-value="search or '' or ''"/>
-                                <button type="submit" class="btn">Submit</button>
-                            </form>
-                        </div>
                         <ul class="media-list mt32">
                             <t t-foreach="event_ids" t-as="event_id">
                                 <li class="media thumbnail">
