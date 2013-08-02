@@ -151,10 +151,14 @@ class stock_quant(osv.osv):
         'in_date': fields.datetime('Incoming Date'),
 
         'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
-        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong"),
+        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong", required=True),
 
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
+    }
+
+    _defaults = {
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.quant', context=c),
     }
 
     def _check_qorder(self, word):
@@ -762,6 +766,7 @@ class stock_production_lot(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants'),
         'create_date': fields.datetime('Creation Date'),
+        'partner_id': fields.many2one('res.partner', 'Owner'),
     }
     _defaults = {
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
@@ -1758,13 +1763,16 @@ class stock_package(osv.osv):
                 res.add(pack.parent_id.id)
         return list(res)
 
-    def _get_package_location(self, cr, uid, ids, name, args, context=None):
-        res = {}.fromkeys(ids, False)
+    def _get_package_info(self, cr, uid, ids, name, args, context=None):
+        default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id})
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
-                res[pack.id] = pack.quant_ids[0].location_id.id
+                res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
+                res[pack.id]['company_id'] = pack.quant_ids[0].company_id.id
             elif pack.children_ids:
-                res[pack.id] = pack.children_ids[0].location_id.id
+                res[pack.id]['location_id'] = pack.children_ids[0].location_id.id
+                res[pack.id]['company_id'] = pack.children_ids[0].company_id.id
         return res
 
     _columns = {
@@ -1773,7 +1781,7 @@ class stock_package(osv.osv):
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
         'packaging_id': fields.many2one('product.packaging', 'Type of Packaging'),
-        'location_id': fields.function(_get_package_location, type='many2one', relation='stock.location', string='Location',
+        'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
                                        'stock.quant': (_get_packages, ['location_id'], 10),
                                        'stock.quant.package': (_get_packages_to_relocate, ['children_ids', 'quant_ids', 'parent_id'], 10),
@@ -1781,6 +1789,7 @@ class stock_package(osv.osv):
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
         'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item"),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),
+        'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package"),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')

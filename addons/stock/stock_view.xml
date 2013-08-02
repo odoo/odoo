@@ -1682,6 +1682,7 @@
                         <group>
                             <group>
                             <field name="packaging_id"/>
+                       	    <field name='company_id' groups="base.group_multi_company"/>
                             </group>
                             <group>
                             <field name="location_id"/>
@@ -1730,6 +1731,7 @@
                     <field name="complete_name"/>
                     <field name="packaging_id"/>
                     <field name="location_id"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -1739,14 +1741,13 @@
             <field eval="10" name="priority"/>            
             <field name="arch" type="xml">
                 <search string="Package">
-                    <field name="name" string="Package Name" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
+                    <field name="name" string="Package Name"/>
                     <field name="location_id"/>
                     <field name="packaging_id"/>
                     <group  expand='0' string='Group by...'>
                        <filter string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Name' icon="terp-mrp" domain="[]" context="{'group_by' : 'name'}"/>
                        <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_id'}"/>
-                       <!--<filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>-->
+                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
             </field>

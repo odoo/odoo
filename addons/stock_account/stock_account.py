@@ -85,6 +85,9 @@ class stock_quant(osv.osv):
             context = {}
         if quant.product_id.valuation != 'real_time':
             return False
+        if quant.lot_id and quant.lot_id.partner_id:
+            #if the quant isn't owned by the company, we don't make any valuation entry
+            return False
         if quant.qty <= 0 or quant.propagated_from_id:
             #we don't make any stock valuation for negative quants because we may not know the real cost price.
             #The valuation will be made at the time of the reconciliation of the negative quant.
