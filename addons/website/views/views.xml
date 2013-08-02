@@ -351,7 +351,7 @@
 
         <template id="contactus">
             <t t-call="website.layout">
-                <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                <t t-set="title">Contact us - <span t-record="res_company" t-field="name"/></t>
                 <div class="container">
                     <div class="row">
                         <h2>Contact us</h2>
@@ -374,8 +374,8 @@
                                 <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
                                 <span t-record="res_company" t-field="country_id"> </span><br/>
                                 <br/>
-                                <span>&amp;#x2706; <span t-record="res_company" t-field="phone"><t t-esc="res_company.phone"/></span></span><br/>
-                                <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
+                                <span>&amp;#x2706; <span t-record="res_company" t-field="phone"/></span><br/>
+                                <i class="icon-envelope"></i> <span t-record="res_company" t-field="email"/>
                             </address>
                             <img class="thumbnail" t-att-src="google_map_url"/>
                         </div>
