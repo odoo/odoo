@@ -1,6 +1,33 @@
 -
   In order to test the stock_location module, I create a product and define its pulled flows. If a product is needed either in Chicago Shop or in Birmingham shop, there must be a incomming move from transit location to these shops, and an outgoing move from Stock to the transit location.
 -
+  !record {model: stock.location.route, id: stock_location_route}:
+    name: 'Route from one company to the other'
+    pull_ids: 
+      - invoice_state: none
+        location_id: stock.stock_location_shop0
+        location_src_id: stock.stock_location_intermediatelocation0
+        name: E001
+        picking_type: in
+        action: move
+        company_id: stock.res_company_1
+      - invoice_state: none
+        location_id: stock.stock_location_shop1
+        location_src_id: stock.stock_location_intermediatelocation0
+        name: E002
+        picking_type: in
+        procure_method: make_to_order
+        action: move
+        company_id: stock.res_company_2
+      - invoice_state: none
+        location_id: stock.stock_location_intermediatelocation0
+        location_src_id: stock.stock_location_stock
+        name: E003
+        action: move
+        picking_type: out
+        company_id: base.main_company
+
+- 
   !record {model: product.product, id: product_product_hpcdwriters01}:
     list_price: 1000.0
     mes_type: fixed
@@ -10,31 +37,7 @@
     uom_po_id: product.product_uom_unit
     property_account_expense: account.a_expense
     property_account_income: account.rev
-    route_ids:
-      - name: 'Route from one company to the other'
-        pull_ids: 
-        - invoice_state: none
-          location_id: stock.stock_location_shop0
-          location_src_id: stock.stock_location_intermediatelocation0
-          name: E001
-          picking_type: in
-          type_proc: move
-          company_id: stock.res_company_1
-        - invoice_state: none
-          location_id: stock.stock_location_shop1
-          location_src_id: stock.stock_location_intermediatelocation0
-          name: E002
-          picking_type: in
-          procure_method: make_to_order
-          type_proc: move
-          company_id: stock.res_company_2
-        - invoice_state: none
-          location_id: stock.stock_location_intermediatelocation0
-          location_src_id: stock.stock_location_stock
-          name: E003
-          type_proc: move
-          picking_type: out
-          company_id: base.main_company
+    route_ids: stock_location_route
     property_stock_inventory: stock.location_inventory
     property_stock_procurement: stock.location_procurement
     property_stock_production: stock.location_production
