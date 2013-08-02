@@ -398,7 +398,7 @@ class stock_picking(osv.osv):
     def create(self, cr, user, vals, context=None):
         context = context or {}
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
-            ptype_id = vals.get('picking_type_id', context.get('picking_type_id', False))
+            ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
             vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
         return super(stock_picking, self).create(cr, user, vals, context)
@@ -931,31 +931,26 @@ class stock_move(osv.osv):
 
     def _default_location_destination(self, cr, uid, context=None):
         context = context or {}
-        if context.get('picking_type_id', False):
-            pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['picking_type_id'], context=context)
-            return pick_type.location_dest_id and pick_type.location_dest_id.id or False
+        if context.get('default_picking_type_id', False):
+            pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['default_picking_type_id'], context=context)
+            return pick_type.default_location_dest_id and pick_type.default_location_dest_id.id or False
         return False
 
     def _default_location_source(self, cr, uid, context=None):
         context = context or {}
-        if context.get('picking_type_id', False):
-            pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['picking_type_id'], context=context)
-            return pick_type.location_src_id and pick_type.location_src_id.id or False
+        if context.get('default_picking_type_id', False):
+            pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['default_picking_type_id'], context=context)
+            return pick_type.default_location_src_id and pick_type.default_location_src_id.id or False
         return False
 
     def _default_destination_address(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
 
-    def _default_picking_type(self, cr, uid, context=None):
-        context = context or {}
-        return context.get('picking_type_id', False)
-
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
         'partner_id': _default_destination_address,
-        'picking_type_id': _default_picking_type,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
