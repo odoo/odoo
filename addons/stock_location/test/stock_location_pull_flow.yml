@@ -8,24 +8,21 @@
         location_id: stock.stock_location_shop0
         location_src_id: stock.stock_location_intermediatelocation0
         name: E001
-        picking_type: in
+        picking_type_id: stock.picking_type_in
         action: move
-        company_id: stock.res_company_1
       - invoice_state: none
         location_id: stock.stock_location_shop1
         location_src_id: stock.stock_location_intermediatelocation0
         name: E002
-        picking_type: in
+        picking_type_id: stock.picking_type_in
         procure_method: make_to_order
         action: move
-        company_id: stock.res_company_2
       - invoice_state: none
         location_id: stock.stock_location_intermediatelocation0
         location_src_id: stock.stock_location_stock
         name: E003
         action: move
-        picking_type: out
-        company_id: base.main_company
+        picking_type_id: stock.picking_type_out
 
 - 
   !record {model: product.product, id: product_product_hpcdwriters01}:
@@ -35,9 +32,7 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-    property_account_expense: account.a_expense
-    property_account_income: account.rev
-    route_ids: stock_location_route
+    route_ids: [stock_location_route]
     property_stock_inventory: stock.location_inventory
     property_stock_procurement: stock.location_procurement
     property_stock_production: stock.location_production
@@ -49,9 +44,8 @@
     company_id: stock.res_company_1
     date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     location_id: stock.stock_location_shop0
-    name: Testing pulled flow
+    name: Testing001
     priority: '1'
-    procure_method: make_to_order
     product_id: product_product_hpcdwriters01
     product_qty: 5.0
     product_uom: product.product_uom_unit
@@ -61,18 +55,18 @@
   I confirm the procurement order.
 -
   !python {model: procurement.order}: |
-    self.run(cr, uid, ref("procurement_order_test0"))
+    self.run(cr, uid, [ref("procurement_order_test0")])
 -
   I check the new procurement order has been created .
 -
   !python {model: procurement.order }: |
-   procurement_ids = self.search(cr, uid, [('name','=','E001')])
+   procurement_ids = self.search(cr, uid, [('origin','=','E001')])
    assert len(procurement_ids), "Procurement order hasn't been created."
 -
   I check the Outgoing Picking is created for source location Stock and destination Chicago shop.
 -
   !python {model: stock.picking }: |
-    in_picking_id = self.search(cr, uid, [('origin','=','Testing pulled flow:E001'),('type','=','in')])
+    in_picking_id = self.search(cr, uid, [('origin','=','Testing001:E001'),('type','=','in')])
     assert len(in_picking_id), "Picking in hasn't been created."
     in_picking = self.browse(cr, uid, in_picking_id[0])
     assert in_picking.move_lines[0].location_id.id == ref('stock.stock_location_intermediatelocation0'), "wrong source location for picking in"
