@@ -726,7 +726,9 @@ class view(osv.osv):
         # if a branded element contains branded elements distribute own
         # branding to children unless it's t-raw, then just remove branding
         # on current element
-        if e.tag == 't' or 't.raw' in e.attrib or any(BRANDING_TRIGGERS.intersection(child.attrib) for child in e.iterdescendants()):
+        if e.tag == 't' or 't-raw' in e.attrib or\
+                any(BRANDING_TRIGGERS.intersection(child.attrib)
+                    for child in e.iterdescendants()):
             distributed_branding = dict(
                 (attribute, e.attrib.pop(attribute))
                 for attribute in MOVABLE_BRANDING
@@ -830,7 +832,7 @@ class view(osv.osv):
         return super(view, self).copy(cr, uid, id, default, context=context)
 
 MOVABLE_BRANDING = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
-BRANDING_TRIGGERS = frozenset(('data-oe-model', 't-esc', 't-raw', 't-field', 't-call', 't-ignore'))
+BRANDING_TRIGGERS = frozenset(('data-oe-model', 't-esc', 't-raw', 't-call', 't-ignore'))
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
