@@ -24,6 +24,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"/>
+                                <field name="wave_type"/>
                             </group>
                             <group>
                                 <label for="capacity"/>
@@ -62,6 +63,7 @@
                     <field name="partner_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
+                    <field name="wave_type"/>
                     <field name="time" widget="float_time"/>
                     <field name="state"/>
                 </tree>
@@ -115,6 +117,17 @@
             </xpath>
 
         </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_wave_type">
+            <field name="name">partner.wave.type.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="wave_type" widget="many2many_tags"/>
+                </xpath>
+            </field>
         </record>
 
     </data>
