@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//a[@href='/page/website.contactus']" position="after">
-                    <li><a href="/team">Team</a></li>
+                    <li><a href="/hr">Team</a></li>
                 </xpath>
            </data>
         </field>
@@ -21,27 +21,42 @@
     <template id="index">
         <t t-call="website.layout">
             <t t-set="head">
-                <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
-                <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
+                <script type="text/javascript" src="/website_hr/static/src/js/hr.js"></script>
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Team</t>
-            <div class="container mt48">
-                <ul class="media-list">
-                    <t t-foreach="employee_ids">
-                        <!-- TODO: check qweb iteration -->
-                        <li class="media pull-left">
-                            <div t-att-class="'media-body %%s' %% (website_important and 'css_important' or '')">
-                                <a href="#" t-att-data-id="id" class="js_important pull-right" groups="group_website_mail_manager">
-                                    <span class="label label-success">Unpublish</span>
-                                    <span class="label label-important">Publish</span>
+            <div class="container">
+                <div class="thumbnails">
+                    <t t-foreach="employee_ids" t-as="employee_id">
+                        <div class="span4 mt16">
+                            <div class="media thumbnail">
+                                <a class="pull-left" href="#">
+                                    <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
                                 </a>
-                                <t t-raw="image"/>
-                                <t t-raw="name"/>
+                                <div class="media-body">
+                                    <t t-if="editable">
+                                        <div class="pull-right">
+                                            <a href="#" t-att-data-id="employee_id.id">
+                                                <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                                <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                            </a><br/>
+                                            <a href="#" t-att-data-id="employee_id.id">
+                                                <span t-att-class="'label label-success js_unpublish_contact %%s' %% (not employee_id.website_published and 'hidden' or '')">hidden on Contacts</span>
+                                                <span t-att-class="'label label-important js_publish_contact %%s' %% (employee_id.website_published and 'hidden' or '')">display in Contacts</span>
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <h5 class="media-heading"><t t-esc="employee_id.name"/></h5>
+                                    <div t-record="employee_id" t-field="department_id"> </div>
+                                    <div t-record="employee_id" t-field="job_id"> </div>
+                                    <div t-record="employee_id" t-field="work_location"> </div>
+                                    <div t-record="employee_id" t-field="work_phone"> </div>
+                                    <div t-record="employee_id" t-field="work_email"> </div>
+                                </div>
                             </div>
-                        </li>
+                        </div>
                     </t>
-                </ul>
+                </div>
             </div>
         </t>
     </template>
