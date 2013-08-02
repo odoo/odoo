@@ -29,12 +29,12 @@
                     </field>
                     <field name="line_exist_ids" attrs="{'invisible':[('use_exist','!=',True)]}">
                         <tree string="Lots Number" editable="bottom">
-                            <field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
+                            <field name="lot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
                             <field name="quantity" />
                         </tree>
                         <form string="Lots Number" version="7.0">
                             <group>
-                                <field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
+                                <field name="lot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
                                 <field name="quantity" />
                             </group>
                         </form>

@@ -1,58 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
-        <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="type">notification</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">Warehouse Management application installed!</field>
-            <field name="body"><![CDATA[<p>Manage your product inventoy and stock locations: you can control stock moves history and planning,
-watch your stock valuation, and track production lots upstream and downstream (based on serial numbers).</p>]]></field>
-        </record>
-
-        <record id="stock_journal_sequence" model="ir.sequence">
-            <field name="name">Stock Journal Sequence</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">STJ/%(year)s/</field>
-        </record>
-        <record forcecreate="1" id="stock_journal" model="account.journal">
-            <field name="name">Stock Journal</field>
-            <field name="code">STJ</field>
-            <field name="type">general</field>
-            <field name="sequence_id" ref="stock_journal_sequence"/>
-            <field name="user_id" ref="base.user_root"/>
-        </record>
-
-        <!--
-    Request link
-    -->
-        <record id="req_link_tracking" model="res.request.link">
-            <field name="name">Serial Number</field>
-            <field name="object">stock.production.lot</field>
-        </record>
-
-        <!--
+    <data>
+        
+        
+                <!--
     Resource: stock.location
     -->
         <record id="stock_location_locations" model="stock.location">
             <field name="name">Physical Locations</field>
             <field name="usage">view</field>
-            <field name="icon">terp-stock</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_locations_partner" model="stock.location">
             <field name="name">Partner Locations</field>
             <field name="usage">view</field>
-            <field name="icon">terp-partner</field>
             <field name="posz">1</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_locations_virtual" model="stock.location">
             <field name="name">Virtual Locations</field>
             <field name="usage">view</field>
-            <field name="icon">terp-mrp</field>
             <field name="posz">1</field>
             <field name="company_id"></field>
         </record>
@@ -100,22 +67,120 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="location_id" ref="stock_location_locations"/>
         </record>
 
-        <record id="journal_delivery" model="stock.journal">
-            <field name="name">Delivery Orders</field>
-        </record>
         <record id="stock_location_output" model="stock.location">
             <field name="name">Output</field>
             <field name="location_id" ref="stock_location_company"/>
             <field name="usage">internal</field>
-            <field name="chained_location_type">customer</field>
-            <field name="chained_auto_packing">transparent</field>
-            <field name="chained_picking_type">out</field>
-            <field name="chained_journal_id" ref="journal_delivery"/>
         </record>
         <record id="stock_location_stock" model="stock.location">
             <field name="name">Stock</field>
             <field name="location_id" ref="stock_location_company"/>
         </record>
+
+        
+        
+        
+                <!--
+            Picking types, sequences and codes
+         -->
+
+        <!-- Sequences for picking types   -->
+        <record id="seq_picking_type_in" model="ir.sequence">
+            <field name="name">Picking in</field>
+            <field name="prefix">IN</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_picking_type_out" model="ir.sequence">
+            <field name="name">Picking out</field>
+            <field name="prefix">OUT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_picking_type_internal" model="ir.sequence">
+            <field name="name">Picking internal</field>
+            <field name="prefix">INT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="picking_code_in" model="stock.picking.code">
+            <field name="name">Suppliers</field>
+        </record>
+        
+        <record id="picking_code_out" model="stock.picking.code">
+            <field name="name">Customers</field>
+        </record>
+        
+        <record id="picking_code_internal" model="stock.picking.code">
+            <field name="name">Internal</field>
+        </record>
+        
+        <record id="picking_type_in" model="stock.picking.type">
+            <field name="name">Receptions</field>
+            <field name="sequence_id" ref="seq_picking_type_in"/>
+            <field name="default_location_src_id" ref="stock_location_suppliers"/>
+            <field name="default_location_dest_id" ref="stock_location_stock"/>
+            <field name="code_id" ref="picking_code_in"/>
+        </record>
+        
+        <record id="picking_type_out" model="stock.picking.type">
+            <field name="name">Delivery Orders</field>
+            <field name="sequence_id" ref="seq_picking_type_out"/>
+            <field name="default_location_src_id" ref="stock_location_stock"/>
+            <field name="default_location_dest_id" ref="stock_location_customers"/>
+            <field name="code_id" ref="picking_code_out"/>
+        </record>
+        
+        <record id="picking_type_internal" model="stock.picking.type">
+            <field name="name">Internal Transfers</field>
+            <field name="sequence_id" ref="seq_picking_type_internal"/>
+            <field name="code_id" ref="picking_code_internal"/>
+        </record>
+        
+        
+
+    </data>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Warehouse Management application installed!</field>
+            <field name="body"><![CDATA[<p>Manage your product inventoy and stock locations: you can control stock moves history and planning,
+watch your stock valuation, and track production lots upstream and downstream (based on serial numbers).</p>]]></field>
+        </record>
+
+
+        <!--
+    Request link
+    -->
+        <record id="req_link_tracking" model="res.request.link">
+            <field name="name">Serial Number</field>
+            <field name="object">stock.production.lot</field>
+        </record>
+
+
+
+
+
+        <!--
+             Procurement rules
+        -->
+
+        <record id="procurement_rule_customer0" model="procurement.rule">
+            <field name="name">Stock > Customer</field>
+            <field name="action">move</field>
+            <field name="location_id" ref="stock_location_customers"/>
+            <field name="location_src_id" ref="stock_location_stock"/>
+            <field name="picking_type_id" ref="picking_type_out"/>
+        </record>
+
+
 
         <!--
     Properties
@@ -165,6 +230,20 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="lot_input_id" ref="stock_location_stock"/>
             <field name="lot_stock_id" ref="stock_location_stock"/>
             <field name="lot_output_id" ref="stock_location_output"/>
+        </record>
+
+        <record id="sequence_mrp_op_type" model="ir.sequence.type">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">stock.orderpoint</field>
+        </record>
+        
+        <record id="sequence_mrp_op" model="ir.sequence">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">stock.orderpoint</field>
+            <field name="prefix">OP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
         </record>
     </data>
 </openerp>

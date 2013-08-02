@@ -693,7 +693,6 @@ class pos_order(osv.osv):
                 'move_type': 'direct',
                 'note': order.note or "",
                 'invoice_state': 'none',
-                'auto_picking': True,
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
             location_id = order.warehouse_id.lot_stock_id.id

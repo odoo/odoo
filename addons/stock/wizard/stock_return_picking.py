@@ -34,7 +34,7 @@ class stock_return_picking_memory(osv.osv_memory):
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
-        'prodlot_id': fields.related('move_id', 'prodlot_id', type='many2one', relation='stock.production.lot', string='Serial Number', readonly=True),
+        'lot_id': fields.related('move_id', 'lot_id', type='many2one', relation='stock.production.lot', string='Serial Number', readonly=True),
 
     }
 
@@ -71,11 +71,11 @@ class stock_return_picking(osv.osv_memory):
                     res.update({'invoice_state': '2binvoiced'})
                 else:
                     res.update({'invoice_state': 'none'})
-            return_history = self.get_return_history(cr, uid, record_id, context)       
+            return_history = self.get_return_history(cr, uid, record_id, context)
             for line in pick.move_lines:
-                qty = line.product_qty - return_history.get(line.id, 0)
+                qty = line.product_uom_qty - return_history.get(line.id, 0)
                 if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'prodlot_id': line.prodlot_id and line.prodlot_id.id or False})
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'lot_id': line.lot_id and line.lot_id.id or False})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res
@@ -101,7 +101,7 @@ class stock_return_picking(osv.osv_memory):
             valid_lines = 0
             return_history = self.get_return_history(cr, uid, record_id, context)
             for m  in pick.move_lines:
-                if m.state == 'done' and m.product_qty * m.product_uom.factor > return_history.get(m.id, 0):
+                if m.state == 'done' and m.product_uom_qty * m.product_uom.factor > return_history.get(m.id, 0):
                     valid_lines += 1
             if not valid_lines:
                 raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
@@ -130,7 +130,7 @@ class stock_return_picking(osv.osv_memory):
                     #     (src location, dest location) <=> (dest location, src location))
                     if rec.location_dest_id.id == m.location_id.id \
                         and rec.location_id.id == m.location_dest_id.id:
-                        return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
+                        return_history[m.id] += (rec.product_uom_qty * rec.product_uom.factor)
         return return_history
 
     def create_returns(self, cr, uid, ids, context=None):
@@ -185,9 +185,9 @@ class stock_return_picking(osv.osv_memory):
             new_qty = data_get.quantity
             move = move_obj.browse(cr, uid, mov_id, context=context)
             new_location = move.location_dest_id.id
-            returned_qty = move.product_qty
+            returned_qty = move.product_uom_qty
             for rec in move.move_history_ids2:
-                returned_qty -= rec.product_qty
+                returned_qty -= rec.product_uom_qty
 
             if returned_qty != new_qty:
                 set_invoice_state_to_none = False
@@ -210,18 +210,12 @@ class stock_return_picking(osv.osv_memory):
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'}, context=context)
         pick_obj.signal_button_confirm(cr, uid, [new_picking])
         pick_obj.force_assign(cr, uid, [new_picking], context)
-        # Update view id in context, lp:702939
-        model_list = {
-                'out': 'stock.picking.out',
-                'in': 'stock.picking.in',
-                'internal': 'stock.picking',
-        }
         return {
             'domain': "[('id', 'in', ["+str(new_picking)+"])]",
             'name': _('Returned Picking'),
             'view_type':'form',
             'view_mode':'tree,form',
-            'res_model': model_list.get(new_type, 'stock.picking'),
+            'res_model': 'stock.picking',
             'type':'ir.actions.act_window',
             'context':context,
         }

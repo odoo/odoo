@@ -31,7 +31,8 @@ class product_product(osv.osv):
         move_pool=self.pool.get('stock.move')
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
-            ('picking_id.type', '=', 'in'),
+            ('location_id.usage', '!=', 'internal'),
+            ('location_dest_id.usage', '=', 'internal'),
             ('state','in',('confirmed','assigned','pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
@@ -39,153 +40,14 @@ class product_product(osv.osv):
             res[product_id]['reception_count'] = move['product_id_count']
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
-            ('picking_id.type', '=', 'out'),
+            ('location_id.usage', '=', 'internal'),
+            ('location_dest_id.usage', '!=', 'internal'),
             ('state','in',('confirmed','assigned','pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
             res[product_id]['delivery_count'] = move['product_id_count']
         return res
-
-    def get_product_accounts(self, cr, uid, product_id, context=None):
-        """ To get the stock input account, stock output account and stock journal related to product.
-        @param product_id: product id
-        @return: dictionary which contains information regarding stock input account, stock output account and stock journal
-        """
-        if context is None:
-            context = {}
-        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-
-        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False
-        if not stock_input_acc:
-            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
-
-        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
-        if not stock_output_acc:
-            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
-
-        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
-        return {
-            'stock_account_input': stock_input_acc,
-            'stock_account_output': stock_output_acc,
-            'stock_journal': journal_id,
-            'property_stock_valuation_account_id': account_valuation
-        }
-
-    def do_change_standard_price(self, cr, uid, ids, datas, context=None):
-        """ Changes the Standard Price of Product and creates an account move accordingly.
-        @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-        @param context: A standard dictionary
-        @return:
-
-        """
-        location_obj = self.pool.get('stock.location')
-        move_obj = self.pool.get('account.move')
-        move_line_obj = self.pool.get('account.move.line')
-        if context is None:
-            context = {}
-
-        new_price = datas.get('new_price', 0.0)
-        stock_output_acc = datas.get('stock_output_account', False)
-        stock_input_acc = datas.get('stock_input_account', False)
-        journal_id = datas.get('stock_journal', False)
-        product_obj=self.browse(cr, uid, ids, context=context)[0]
-        account_valuation = product_obj.categ_id.property_stock_valuation_account_id
-        account_valuation_id = account_valuation and account_valuation.id or False
-        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Specify valuation Account for Product Category: %s.') % (product_obj.categ_id.name))
-        move_ids = []
-        loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
-        for rec_id in ids:
-            for location in location_obj.browse(cr, uid, loc_ids, context=context):
-                c = context.copy()
-                c.update({
-                    'location': location.id,
-                    'compute_child': False
-                })
-
-                product = self.browse(cr, uid, rec_id, context=c)
-                qty = product.qty_available
-                diff = product.standard_price - new_price
-                if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
-                if qty:
-                    company_id = location.company_id and location.company_id.id or False
-                    if not company_id: raise osv.except_osv(_('Error!'), _('Please specify company in Location.'))
-                    #
-                    # Accounting Entries
-                    #
-                    if not journal_id:
-                        journal_id = product.categ_id.property_stock_journal and product.categ_id.property_stock_journal.id or False
-                    if not journal_id:
-                        raise osv.except_osv(_('Error!'),
-                            _('Please define journal '\
-                              'on the product category: "%s" (id: %d).') % \
-                                (product.categ_id.name,
-                                    product.categ_id.id,))
-                    move_id = move_obj.create(cr, uid, {
-                                'journal_id': journal_id,
-                                'company_id': company_id
-                                })
-
-                    move_ids.append(move_id)
-
-
-                    if diff > 0:
-                        if not stock_input_acc:
-                            stock_input_acc = product.\
-                                property_stock_account_input.id
-                        if not stock_input_acc:
-                            stock_input_acc = product.categ_id.\
-                                    property_stock_account_input_categ.id
-                        if not stock_input_acc:
-                            raise osv.except_osv(_('Error!'),
-                                    _('Please define stock input account ' \
-                                            'for this product: "%s" (id: %d).') % \
-                                            (product.name,
-                                                product.id,))
-                        amount_diff = qty * diff
-                        move_line_obj.create(cr, uid, {
-                                    'name': product.name,
-                                    'account_id': stock_input_acc,
-                                    'debit': amount_diff,
-                                    'move_id': move_id,
-                                    })
-                        move_line_obj.create(cr, uid, {
-                                    'name': product.categ_id.name,
-                                    'account_id': account_valuation_id,
-                                    'credit': amount_diff,
-                                    'move_id': move_id
-                                    })
-                    elif diff < 0:
-                        if not stock_output_acc:
-                            stock_output_acc = product.\
-                                property_stock_account_output.id
-                        if not stock_output_acc:
-                            stock_output_acc = product.categ_id.\
-                                    property_stock_account_output_categ.id
-                        if not stock_output_acc:
-                            raise osv.except_osv(_('Error!'),
-                                    _('Please define stock output account ' \
-                                            'for this product: "%s" (id: %d).') % \
-                                            (product.name,
-                                                product.id,))
-                        amount_diff = qty * -diff
-                        move_line_obj.create(cr, uid, {
-                                        'name': product.name,
-                                        'account_id': stock_output_acc,
-                                        'credit': amount_diff,
-                                        'move_id': move_id
-                                    })
-                        move_line_obj.create(cr, uid, {
-                                        'name': product.categ_id.name,
-                                        'account_id': account_valuation_id,
-                                        'debit': amount_diff,
-                                        'move_id': move_id
-                                    })
-
-            self.write(cr, uid, rec_id, {'standard_price': new_price})
-
-        return move_ids
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
         if context is None:
@@ -196,162 +58,91 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
-    def get_product_available(self, cr, uid, ids, context=None):
-        """ Finds whether product is available or not in particular warehouse.
-        @return: Dictionary of values
-        """
-        if context is None:
-            context = {}
-        
+    def _get_domain_locations(self, cr, uid, ids, context=None):
+        '''
+        Parses the context and returns a list of location_ids based on it.
+        It will return all stock locations when no parameters are given
+        Possible parameters are shop, warehouse, location, force_company, compute_child
+        '''
+        context = context or {}
+
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
-        
-        states = context.get('states',[])
-        what = context.get('what',())
-        if not ids:
-            ids = self.search(cr, uid, [])
-        res = {}.fromkeys(ids, 0.0)
-        if not ids:
-            return res
 
-        if context.get('warehouse', False):
-            lot_id = warehouse_obj.read(cr, uid, int(context['warehouse']), ['lot_stock_id'])['lot_stock_id'][0]
-            if lot_id:
-                context['location'] = lot_id
-
+        location_ids = []
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
-                location_ids = location_obj.search(cr, uid, [('name','ilike',context['location'])], context=context)
+                domain = [('name','ilike',context['location'])]
+                if context.get('force_company', False):
+                    domain += [('company_id', '=', context['force_company'])]
+                location_ids = location_obj.search(cr, uid, domain, context=context)
             else:
                 location_ids = context['location']
         else:
-            location_ids = []
-            wids = warehouse_obj.search(cr, uid, [], context=context)
-            if not wids:
-                return res
+            if context.get('warehouse', False):
+                wh = warehouse_obj.browse(cr, uid, [context['warehouse']], context=context)
+            else:
+                wids = warehouse_obj.search(cr, uid, [], context=context)
+                wh = warehouse_obj.browse(cr, uid, wids, context=context)
+
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 location_ids.append(w.lot_stock_id.id)
 
-        # build the list of ids of children of the location given by id
-        if context.get('compute_child',True):
-            child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids = child_location_ids or location_ids
-        
-        # this will be a dictionary of the product UoM by product id
-        product2uom = {}
-        uom_ids = []
-        for product in self.read(cr, uid, ids, ['uom_id'], context=context):
-            product2uom[product['id']] = product['uom_id'][0]
-            uom_ids.append(product['uom_id'][0])
-        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
-        uoms_o = {}
-        for uom in self.pool.get('product.uom').browse(cr, uid, uom_ids, context=context):
-            uoms_o[uom.id] = uom
+        operator = context.get('compute_child',True) and 'child_of' or 'in'
+        domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
+        domain += [('product_id', 'in', ids)]
+        return (
+            domain + [('location_id', operator, location_ids)],
+            domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
+            domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
+        )
 
-        results = []
-        results2 = []
-
+    def _get_domain_dates(self, cr, uid, ids, context):
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False)
-        date_str = False
-        date_values = False
-        where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
-        if from_date and to_date:
-            date_str = "date>=%s and date<=%s"
-            where.append(tuple([from_date]))
-            where.append(tuple([to_date]))
-        elif from_date:
-            date_str = "date>=%s"
-            date_values = [from_date]
-        elif to_date:
-            date_str = "date<=%s"
-            date_values = [to_date]
-        if date_values:
-            where.append(tuple(date_values))
-
-        prodlot_id = context.get('prodlot_id', False)
-        prodlot_clause = ''
-        if prodlot_id:
-            prodlot_clause = ' and prodlot_id = %s '
-            where += [prodlot_id]
-
-        # TODO: perhaps merge in one query.
-        if 'in' in what:
-            # all moves from a location out of the set to a location in the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id NOT IN %s '\
-                'and location_dest_id IN %s '\
-                'and product_id IN %s '\
-                'and state IN %s ' + (date_str and 'and '+date_str+' ' or '') +' '\
-                + prodlot_clause + 
-                'group by product_id,product_uom',tuple(where))
-            results = cr.fetchall()
-        if 'out' in what:
-            # all moves from a location in the set to a location out of the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id IN %s '\
-                'and location_dest_id NOT IN %s '\
-                'and product_id  IN %s '\
-                'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
-                + prodlot_clause + 
-                'group by product_id,product_uom',tuple(where))
-            results2 = cr.fetchall()
-            
-        # Get the missing UoM resources
-        uom_obj = self.pool.get('product.uom')
-        uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
-        if context.get('uom', False):
-            uoms += [context['uom']]
-        uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
-        if uoms:
-            uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
-            for o in uoms:
-                uoms_o[o.id] = o
-                
-        #TOCHECK: before change uom of product, stock move line are in old uom.
-        context.update({'raise-exception': False})
-        # Count the incoming quantities
-        for amount, prod_id, prod_uom in results:
-            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
-            res[prod_id] += amount
-        # Count the outgoing quantities
-        for amount, prod_id, prod_uom in results2:
-            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
-            res[prod_id] -= amount
-        return res
+        domain = []
+        if from_date:
+            domain.append(('date','>=',from_date))
+        if to_date:
+            domain.append(('date','<=',to_date))
+        return domain
 
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        """ Finds the incoming and outgoing quantity of product.
-        @return: Dictionary of values
-        """
-        if not field_names:
-            field_names = []
-        if context is None:
-            context = {}
+        context = context or {}
+        field_names = field_names or []
+
+        domain_products = [('product_id', 'in', ids)]
+        domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
+        domain_quant += domain_products
+
+        if context.get('lot_id', False):
+            domain_quant.append(('lot_id','=',context['lot_id']))
+            moves_in  = []
+            moves_out = []
+        else:
+#             if field_names in ['incoming_qty', 'outgoing_qty', 'virtual_available']:
+            moves_in  = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
+            moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
+
+        quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
+
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+
+        moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
+        moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
+
         res = {}
         for id in ids:
-            res[id] = {}.fromkeys(field_names, 0.0)
-        for f in field_names:
-            c = context.copy()
-            if f == 'qty_available':
-                c.update({ 'states': ('done',), 'what': ('in', 'out') })
-            if f == 'virtual_available':
-                c.update({ 'states': ('confirmed','waiting','assigned','done'), 'what': ('in', 'out') })
-            if f == 'incoming_qty':
-                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('in',) })
-            if f == 'outgoing_qty':
-                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('out',) })
-            stock = self.get_product_available(cr, uid, ids, context=c)
-            for id in ids:
-                res[id][f] = stock.get(id, 0.0)
+            res[id] = {
+                'qty_available': quants.get(id, 0.0),
+                'incoming_qty': moves_in.get(id, 0.0),
+                'outgoing_qty': moves_out.get(id, 0.0),
+                'virtual_available': quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0),
+            }
         return res
 
     _columns = {
@@ -417,15 +208,6 @@ class product_product(osv.osv):
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
-        'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time','Real Time (automated)'),], 'Inventory Valuation',
-                                        help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
-                                             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-                                        , required=True),
-    }
-
-    _defaults = {
-        'valuation': 'manual_periodic',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -494,18 +276,6 @@ class product_template(osv.osv):
             string="Inventory Location",
             domain=[('usage','like','inventory')],
             help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."),
-        'property_stock_account_input': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Input Account',
-            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
-        'property_stock_account_output': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Output Account',
-            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
         'sale_delay': fields.float('Customer Lead Time', help="The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
@@ -514,36 +284,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'sale_delay': 7,
-    }
-
-class product_category(osv.osv):
-
-    _inherit = 'product.category'
-    _columns = {
-        'property_stock_journal': fields.property(
-            relation='account.journal',
-            type='many2one',
-            string='Stock Journal',
-            help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
-        'property_stock_account_input_categ': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Input Account',
-            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
-                 "can also directly be set on each product"),
-        'property_stock_account_output_categ': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Output Account',
-            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
-                 "can also directly be set on each product"),
-        'property_stock_valuation_account_id': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="Stock Valuation Account",
-            help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
 
 

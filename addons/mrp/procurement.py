@@ -25,6 +25,13 @@ from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
 
+class procurement_rule(osv.osv):
+    _inherit = 'procurement.rule'
+
+    def _get_action(self, cr, uid, context=None):
+        return [('manufacture', 'Manufacture')] + super(procurement_rule, self)._get_action(cr, uid, context=context)
+
+
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
@@ -32,6 +39,26 @@ class procurement_order(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
+
+    def _find_suitable_rule(self, cr, uid, procurement, context=None):
+        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+        if not rule_id:
+            #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
+            if procurement.product_id.supply_method == 'manufacture' and self.check_bom_exists(cr, uid, [procurement.id], context=context):
+                rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)], context=context)
+                rule_id = rule_id and rule_id[0] or False
+        return rule_id
+
+    def _run(self, cr, uid, procurement, context=None):
+        if procurement.rule_id and procurement.rule_id.action == 'manufacture':
+            #make a manufacturing order for the procurement
+            return self.make_mo(cr, uid, [procurement.id], context=context)
+        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+
+    def _check(self, cr, uid, procurement, context=None):
+        if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method? 
+            return True
+        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         result = super(procurement_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)

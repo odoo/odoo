@@ -35,14 +35,8 @@
     standard_price: 70.0
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
-    procure_method: make_to_stock
     property_stock_inventory: location_opening
-    valuation: real_time
-    cost_method: average
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
     description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
-
 -
  !record {model: stock.production.lot, id: lot_icecream_0}:
     name: Lot0 for Ice cream
@@ -70,30 +64,28 @@
     product_qty: 40.0
     prod_lot_id: lot_icecream_1
     location_id: location_refrigerator
-
 -
  !record {model: stock.picking, id: outgoing_shipment}:
-    type: out
     location_dest_id: location_delivery_counter
+    picking_type_id: picking_type_out
 -
  !record {model: stock.move, id: outgoing_shipment_icecream}:
     picking_id: outgoing_shipment
     product_id: product_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 130.0
+    product_uom_qty: 130.0
     location_id: location_refrigerator
     location_dest_id: location_delivery_counter
 -
  !record {model: stock.picking, id: incomming_shipment}:
-    type: in
-    invoice_state: 2binvoiced
     partner_id: base.res_partner_address_9
     location_dest_id: location_refrigerator
+    picking_type_id: picking_type_in
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:
     picking_id: incomming_shipment
     product_id: product_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 50.0
+    product_uom_qty: 50.0
     location_id: location_convenience_shop
     location_dest_id: location_refrigerator

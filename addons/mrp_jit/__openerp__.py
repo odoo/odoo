@@ -40,7 +40,7 @@ In that case, you can not use priorities any more on the different picking.
     """,
     'author': 'OpenERP SA',
     'depends': ['procurement'],
-    'data': ['mrp_jit.xml'],
+    'data': [],
     'demo': [],
     'test': ['test/mrp_jit.yml'],
     'installable': True,

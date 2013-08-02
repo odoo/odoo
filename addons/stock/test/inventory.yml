@@ -1,0 +1,83 @@
+-
+  I create an inventory of 10 products
+-
+  !record {model: stock.inventory, id: inventory_test0}:
+    name: Test
+    inventory_line_id:
+      - product_id: product.product_product_3
+        product_qty: 10
+        location_id: stock.stock_location_14
+-
+  I post this inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_confirm(cr, uid, [ref('inventory_test0')], context=context)
+    self.action_done(cr, uid, [ref('inventory_test0')], context=context)
+-
+  I check that this inventory has a stock.move and a quant
+-
+  !python {model: stock.inventory}: |
+    inv = self.browse(cr, uid, ref('inventory_test0'), context=context)
+    assert len(inv.move_ids) == 1, "No move created for the inventory."
+    assert len(inv.move_ids[0].quant_ids) >= 1, "No quant created for this inventory"
+-
+  I check that the quantity on hand is 10 on the location and it's parent.
+-
+  !python {model: product.product}: |
+    context['location'] = ref('stock.stock_location_14')
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==10, 'Expecting 10 products, got %.2f on location stock_location_14!' % (product.qty_available,)
+    context['location'] = ref('stock.stock_location_stock')
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==10, 'Expecting 10 products, got %.2f on location stock_location_stock!' % (product.qty_available,)
+-
+  I check that the quantity on hand is 0 on a brother location
+-
+  !python {model: product.product}: |
+    context['location'] = ref('stock.stock_location_components')
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==0, 'Expecting 0 products, got %.2f on location stock_location_components!' % (product.qty_available,)
+-
+  I create an inventory of 20 products
+-
+  !record {model: stock.inventory, id: inventory_test1}:
+    name: Test
+    inventory_line_id:
+      - product_id: product.product_product_3
+        product_qty: 20
+        location_id: stock.stock_location_14
+-
+  I post this new inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_confirm(cr, uid, [ref('inventory_test1')], context=context)
+    self.action_done(cr, uid, [ref('inventory_test1')], context=context)
+
+-
+  I check that the quantity on hand is 20 on the location and it's parent.
+-
+  !python {model: product.product}: |
+    context['location'] = ref('stock.stock_location_14')
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==20, 'Expecting 20 products, got %.2f on location stock_location_14!' % (product.qty_available,)
+-
+  !record {model: stock.inventory, id: inventory_test2}:
+    name: Test
+    inventory_line_id:
+      - product_id: product.product_product_3
+        product_qty: 18
+        location_id: stock.stock_location_14
+-
+  I post this new inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_confirm(cr, uid, [ref('inventory_test2')], context=context)
+    self.action_done(cr, uid, [ref('inventory_test2')], context=context)
+-
+  I check that the quantity on hand is 18 on the location and it's parent.
+-
+  !python {model: product.product}: |
+    context['location'] = ref('stock.stock_location_14')
+    product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
+    assert product.qty_available==18, 'Expecting 18 products, got %.2f on location stock_location_14!' % (product.qty_available,)
+

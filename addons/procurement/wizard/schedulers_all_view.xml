@@ -9,9 +9,9 @@
             <field name="model">procurement.order.compute.all</field>
             <field name="arch" type="xml">
                 <form string="Scheduler Parameters" version="7.0">
-                    <group>
-                        <field name="automatic"/>
-                    </group>
+                    <p>
+                        Compute all procurements in the background.
+                    </p>
                     <footer>
                         <button name="procure_calculation" string="Run Schedulers" type="object"  class="oe_highlight"  />
                         or

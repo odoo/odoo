@@ -7,21 +7,20 @@
                 <form string="Stock Picking Waves" version="7.0">
                     <header>
                         <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
+                        <button name="cancel_picking" string="Cancel" type="object" states="in_progress"/>
+                        <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="confirm_picking" string="Confirm all pickings" type="object"/>
-                            <button name="cancel_picking" string="Cancel all pickings" type="object"/>
                             <button name="print_picking" string="Print all internal pickings" type="object" context="{'report':'stock.picking.list.internal'}"/>
                             <button name="print_picking" string="Print all in/out pickings" type="object" context="{'report':'stock.picking.list'}"/>
+                            <button name="confirm_picking" string="Confirm all pickings" type="object"/>
                         </div>
                         <div class="oe_title">
                             <h1>
                                 <field name="name" class="oe_inline" readonly="1"/>
                             </h1>
                         </div>
-                        
                         <group>
                             <group>
                                 <field name="partner_id"/>
@@ -36,9 +35,7 @@
                                 <field name="time" widget="float_time"/>
                             </group>
                         </group>
-
                         <separator string="Pickings"/>
-                        
                         <field name="picking_ids" widget="many2many">
                             <tree>
                                 <field name="name"/>
@@ -46,7 +43,6 @@
                                 <field name="origin"/>
                                 <field name="date"/>
                                 <field name="min_date"/>
-                                <field name="stock_journal_id" widget="selection"/>
                                 <field name="state"/>
                                 <button name="action_done" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <button name="action_cancel" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
@@ -62,13 +58,14 @@
             <field name="name">picking.wave.tree</field>
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <tree string="Stock Picking Waves">
+                <tree string="Stock Picking Waves" colors="black:state in ('in_progress','done');grey: state=='cancel'">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
                     <field name="wave_type"/>
                     <field name="time" widget="float_time"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -78,7 +75,13 @@
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
                 <search string="Search Picking Waves">
-                    <filter name="in_progress" string="In progress" domain="[('state','=','in_progress')]" help="Picking Waves not finished"/>
+                    <field name="name" string="Picking Wave"/>
+                    <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Picking Waves not finished"/>
+                    <field name="partner_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
                </search>
             </field>
         </record>
@@ -109,7 +112,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='auto_picking']" position="after">
+            <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="wave_id"/>
             </xpath>
 

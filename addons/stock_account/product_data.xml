@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="property_stock_journal" model="ir.property">
+            <field name="name">property_stock_journal</field>
+            <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_journal')]"/>
+            <field eval="'account.journal,'+str(ref('stock_journal'))" model="account.journal" name="value"/>
+        </record>
+
+        <record forcecreate="True" id="property_stock_account_output_prd" model="ir.property">
+            <field name="name">property_stock_account_output</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_account_output')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_stock_account_input_prd" model="ir.property">
+            <field name="name">property_stock_account_input</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_account_input')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_stock_account_output_categ" model="ir.property">
+            <field name="name">property_stock_account_output_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_account_output_categ')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_stock_account_input_categ" model="ir.property">
+            <field name="name">property_stock_account_input_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_account_input_categ')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<document filename="Packing BarCode.pdf">
+  <template pageSize="(595.0,842.0)" title="Packing BarCode" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="0.0" y1="57.0" width="538" height="728"/>
+    </pageTemplate>
+  </template>
+  <story>
+    <barCode code="code128" quiet="9" fontName="Times-Roman" fontSize="50" alignment="CENTER"> [[ packaging_id.product_id.ean13 ]] </barCode>
+  </story>
+</document>

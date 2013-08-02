@@ -41,7 +41,7 @@ You can add the following additional dates to a sales order:
     'data': ['sale_order_dates_view.xml'],
     'demo': [],
     'test': [],
-    'installable': True,
+    'installable': False, #TODO picking_ids does not exist anymore on sale object, check to adapt this module once it has been changed in sales
     'auto_install': False,
 }
 

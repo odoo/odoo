@@ -30,7 +30,7 @@ class stock_change_product_qty(osv.osv_memory):
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),
         'new_quantity': fields.float('New Quantity on Hand', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, help='This quantity is expressed in the Default Unit of Measure of the product.'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
+        'lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
 
@@ -41,7 +41,7 @@ class stock_change_product_qty(osv.osv_memory):
 
         if view_type == 'form' and (context.get('active_model') == 'product.product') and product_id:
             prod_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            fvg['fields']['prodlot_id']['required'] =  prod_obj.track_production
+            fvg['fields']['lot_id']['required'] =  prod_obj.track_production
 
         return fvg
 
@@ -96,7 +96,7 @@ class stock_change_product_qty(osv.osv_memory):
                 'location_id' : data.location_id.id,
                 'product_id' : rec_id,
                 'product_uom' : res_original.uom_id.id,
-                'prod_lot_id' : data.prodlot_id.id
+                'prod_lot_id' : data.lot_id.id
             }
             inventry_line_obj.create(cr , uid, line_data, context=context)
 

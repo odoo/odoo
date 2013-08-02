@@ -1,0 +1,365 @@
+-
+  Set a product as using fifo price
+-
+  !record {model: product.product, id: product_fifo_icecream}:
+    default_code: FIFO
+    name: FIFO Ice Cream
+    type: product
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    cost_method: real
+    valuation: real_time
+    property_stock_account_input: account.o_expense
+    property_stock_account_output: account.o_income
+    description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
+- 
+  I create a draft Purchase Order for first in move for 10 kg at 50 euro
+- 
+  !record {model: purchase.order, id: purchase_order_fifo1}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: 1
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 10.0
+        product_uom: product.product_uom_categ_kgm
+        price_unit: 50.0
+        name: 'FIFO Ice Cream'
+- 
+  I create a draft Purchase Order for second shipment for 30 kg at 80 euro
+- 
+  !record {model: purchase.order, id: purchase_order_fifo2}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: 1
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 30.0
+        product_uom: product.product_uom_categ_kgm
+        price_unit: 80.0
+        name: 'FIFO Ice Cream'
+- 
+  I confirm the first purchase order
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo1}
+- 
+  I check the "Approved" status of purchase order 1
+-
+  !assert {model: purchase.order, id: purchase_order_fifo1}:
+    - state == 'approved'
+- 
+  Process the reception of purchase order 1 and set date
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo1")).picking_ids
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Check the standard price of the product (fifo icecream)
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 70.0, 'Standard price should not have changed!'
+- 
+  I confirm the second purchase order
+- 
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo2}
+- 
+  Process the reception of purchase order 2
+- 
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo2")).picking_ids
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  A purchase order towards the Chicago shop TODO code for receiving
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_comp}:
+    partner_id: base.res_partner_3
+    company_id: stock.res_company_1
+    location_id: stock.stock_location_shop0
+    pricelist_id: 1
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 35.0
+        product_uom: product.product_uom_categ_kgm
+        price_unit: 50.0
+        name: 'FIFO Ice Cream'
+- 
+  Check the standard price should not have changed
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 70.0, 'Standard price as fifo price of second reception incorrect!'
+- 
+  Let us send some goods
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream}:
+    picking_id: outgoing_fifo_shipment
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 20.0
+    type: out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking}: |
+    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment")])
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment")], 'default_type':'out'})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Check product standard price changed to 65.0
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0
+- 
+  Do a delivery of an extra 500 g (delivery order)
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_uom}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_gram}:
+    picking_id: outgoing_fifo_shipment_uom
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_gram
+    product_qty: 500.0
+    type: out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking}: |
+    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_uom")])
+-
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_uom")], 'default_type':'out'})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Check product price changed to 80.0
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0
+- 
+  We will temporarily change the currency rate on the sixth of June to have the same results all year
+- 
+  !record {model: res.currency.rate, id: base.rateUSDbis}:
+    rate: 1.2834
+    currency_id: base.USD
+    name: !eval time.strftime('%Y-06-06')
+- 
+  Create new pricelist in usd
+- 
+  !record {model: product.pricelist, id: supplier_pricelist_usd}:
+    name: Supplier Pricelist
+    type: purchase
+    currency_id: base.USD
+    version_id:
+      - name: v1.0
+        items_id:
+            - name: First version
+              sequence: 1
+              price_min_margin: 2
+              price_max_margin: 5
+              product_id: product_fifo_icecream
+              base: -2
+- 
+  Purchase order in usd
+- 
+  I create a draft Purchase Order for 30000 g at 0.150 USD/g and 10 kg at 150 USD/kg
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_usd}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: supplier_pricelist_usd
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 30000
+        product_uom: product.product_uom_gram
+        price_unit: 0.150
+        name: 'FIFO Ice Cream'
+      - product_id: product_fifo_icecream
+        product_qty: 10.0
+        product_uom: product.product_uom_kgm
+        price_unit: 150.0
+- 
+  I confirm the purchase order in USD
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_usd}
+- 
+  Process the reception of purchase order with usd
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd")).picking_ids
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  We create delivery order of 49.5 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_cur}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_cur}:
+    picking_id: outgoing_fifo_shipment_cur
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 49.5
+    type: out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking}: |
+    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_cur")])
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_cur")], 'default_type':'out'})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Check rounded price is 102 euro
+- 
+  !python {model: product.product}: |
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == 102, "Price after doing other currency is wrong"
+- 
+  Do a delivery of an extra 10 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_ret}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_ret}:
+    picking_id: outgoing_fifo_shipment_ret
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 10.0
+    type: out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking}: |
+    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_ret")])
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_ret")], 'default_type':'out'})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Check rounded price is 150.0 / 1.2834
+- 
+  !python {model: product.product}: |
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834)
+- 
+  Let us create some outs to get negative stock. Create outpicking.  We create delivery order of 200 kg, but will pick only 100 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_neg}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_neg}:
+    picking_id: outgoing_fifo_shipment_neg
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 200.0
+    type: out
+- 
+  Let us create another out of 400 kg, but will pick only 50 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_neg2}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_neg2}:
+    picking_id: outgoing_fifo_shipment_neg2
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 400.0
+    type: out
+- 
+  Process the delivery of the outgoing shipments
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_neg")], 'default_type':'out'})
+    line = self.browse(cr, uid, partial_id, context=context).move_ids[0]
+    self.pool.get("stock.partial.picking.line").write(cr, uid, [line.id], {'quantity':100})
+    self.do_partial(cr, uid, [partial_id])
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_neg2")], 'default_type':'out'})
+    line = self.browse(cr, uid, partial_id, context=context).move_ids[0]
+    self.pool.get("stock.partial.picking.line").write(cr, uid, [line.id], {'quantity':50})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Receive purchase order with 50 kg FIFO Ice Cream at 50 euro/kg
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_neg}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: 1
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 50.0
+        product_uom: product.product_uom_categ_kgm
+        price_unit: 50.0
+        name: 'FIFO Ice Cream'
+- 
+  I confirm the first purchase order
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_neg}
+- 
+  Process the reception of purchase order 1
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg")).picking_ids
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Assert price on product is still the old price as the out move has not been received fully yet
+- 
+  !python {model: product.product}: |
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834)
+- 
+  Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_neg2}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: 1
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 60.0
+        product_uom: product.product_uom_categ_kgm
+        price_unit: 80
+        name: 'FIFO Ice Cream'
+- 
+  I confirm the second negative purchase order
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_neg2}
+- 
+  Process the reception of purchase order 2
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg2")).picking_ids
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  The price of the product should have changed back to 65.0 
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0

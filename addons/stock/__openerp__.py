@@ -24,12 +24,12 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
-    'description' : """
+    'description': """
 Manage multi-warehouses, multi- and structured stock locations
 ==============================================================
 
-The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins. 
-The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories. 
+The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins.
+The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories.
 
 OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
 
@@ -53,13 +53,15 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'http://www.openerp.com',
-    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg','images/warehouse_dashboard.jpeg'],
-    'depends': ['product', 'account'],
+    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg', 'images/location.jpeg', 'images/moves_analysis.jpeg', 'images/physical_inventories.jpeg', 'images/warehouse_dashboard.jpeg'],
+    'depends': ['product', 'procurement', 'board'],
     'category': 'Warehouse Management',
     'sequence': 16,
     'demo': [
         'stock_demo.xml',
-#        'stock_demo.yml',
+        'procurement_demo.xml',
+        'stock_orderpoint.xml',
+        'stock_demo.yml',
     ],
     'data': [
         'security/stock_security.xml',
@@ -67,22 +69,18 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_data.xml',
         'wizard/stock_move_view.xml',
         'wizard/stock_change_product_qty_view.xml',
-        'wizard/stock_partial_picking_view.xml',
-        'wizard/stock_partial_move_view.xml',
         'wizard/stock_fill_inventory_view.xml',
-        'wizard/stock_invoice_onshipping_view.xml',
         'wizard/stock_inventory_merge_view.xml',
         'wizard/stock_location_product_view.xml',
-        'wizard/stock_splitinto_view.xml',
         'wizard/stock_inventory_line_split_view.xml',
-        'wizard/stock_change_standard_price_view.xml',
         'wizard/stock_return_picking_view.xml',
-        'stock_workflow.xml',
+        'wizard/make_procurement_view.xml',
+        'wizard/mrp_procurement_view.xml',
+        'wizard/orderpoint_procurement_view.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
         'stock_sequence.xml',
-        'product_data.xml',
         'product_view.xml',
         'partner_view.xml',
         'report/report_stock_move_view.xml',
@@ -91,14 +89,24 @@ Dashboard / Reports for Warehouse Management will include:
         'res_config_view.xml',
     ],
     'test': [
-#        'test/opening_stock.yml',
-#        'test/shipment.yml',
-#        'test/stock_report.yml',
+        'test/inventory.yml',
+        'test/move.yml',
+#         'test/shipment.yml',
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'css': [ 'static/src/css/stock.css' ],
+    'css': [
+        'static/src/css/picking.css',
+        'static/src/css/stock.css',
+    ],
+    'js': [
+        'static/lib/sparkline/jquery.sparkline.js',
+        'static/lib/justgage.js',
+        'static/src/js/stock_picking_type.js',
+        'static/src/js/widgets.js',
+    ],
+    'qweb': ['static/src/xml/picking.xml'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

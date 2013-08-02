@@ -11,7 +11,7 @@
             id="act_stock_return_picking"/>
          <act_window name="Return Shipment"
             res_model="stock.return.picking"
-            src_model="stock.picking.in"
+            src_model="stock.picking"
             view_mode="form"
             target="new"
             key2="client_action_multi"
@@ -19,7 +19,7 @@
             id="act_stock_return_picking_in"/>
          <act_window name="Return Shipment"
             res_model="stock.return.picking"
-            src_model="stock.picking.out"
+            src_model="stock.picking"
             view_mode="form"
             target="new"
             key2="client_action_multi"
@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Product Moves">
                     <field name="product_id" />
-                    <field name="prodlot_id" groups="stock.group_production_lot"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="quantity" />
                 </tree>
             </field>
@@ -45,7 +45,7 @@
                 <form string="Return Picking Memory" version="7.0">
                     <group col="4">
                         <field name="product_id" />
-                        <field name="prodlot_id" groups="stock.group_production_lot"/>
+                        <field name="lot_id" groups="stock.group_production_lot"/>
                         <field name="quantity" />
                     </group>
                  </form>

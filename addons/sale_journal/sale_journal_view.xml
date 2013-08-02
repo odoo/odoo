@@ -98,7 +98,7 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_in">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="model">stock.picking.in</field>
+            <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_form" />
             <field name="arch" type="xml">
                 <field name="move_type" position="before">
@@ -109,7 +109,7 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree_in">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="model">stock.picking.in</field>
+            <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_tree" />
             <field name="arch" type="xml">
                 <field name="state" position="before">
@@ -120,8 +120,8 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_out">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="model">stock.picking.out</field>
-            <field name="inherit_id" ref="stock.view_picking_out_form" />
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
             <field name="arch" type="xml">
                 <field name="move_type" position="before">
                     <field name="invoice_type_id"/>
@@ -131,7 +131,7 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree_out">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="model">stock.picking.out</field>
+            <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_tree" />
             <field name="arch" type="xml">
                 <field name="state" position="before">
@@ -178,8 +178,8 @@
 
         <record id="view_picking_out_search" model="ir.ui.view">
             <field name="name">stock.picking.out.search.inherit</field>
-            <field name="model">stock.picking.out</field>
-            <field name="inherit_id" ref="stock.view_picking_out_search"/>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//group/filter[@string='Journal']" position="after">
                     <filter string="Invoice Type" domain="[]" context="{'group_by':'invoice_type_id'}"/>
@@ -189,7 +189,7 @@
 
         <record id="view_picking_in_search" model="ir.ui.view">
             <field name="name">stock.picking.in.search.inherit</field>
-            <field name="model">stock.picking.in</field>
+            <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//group/filter[@string='Journal']" position="after">

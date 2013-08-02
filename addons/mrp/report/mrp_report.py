@@ -63,6 +63,7 @@ class report_mrp_inout(osv.osv):
     _columns = {
         'date': fields.char('Week', size=64, required=True),
         'value': fields.float('Stock value', required=True, digits=(16,2)),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
     def init(self, cr):
@@ -72,14 +73,15 @@ class report_mrp_inout(osv.osv):
                     min(sm.id) as id,
                     to_char(sm.date,'YYYY:IW') as date,
                     sum(case when (sl.usage='internal') then
-                        pt.standard_price * sm.product_qty
+                        sm.price_unit * sm.product_qty
                     else
                         0.0
                     end - case when (sl2.usage='internal') then
-                        pt.standard_price * sm.product_qty
+                        sm.price_unit * sm.product_qty
                     else
                         0.0
-                    end) as value
+                    end) as value, 
+                    sm.company_id
                 from
                     stock_move sm
                 left join product_product pp
@@ -91,9 +93,9 @@ class report_mrp_inout(osv.osv):
                 left join stock_location sl2
                     on ( sl2.id = sm.location_dest_id)
                 where
-                    sm.state in ('waiting','confirmed','assigned')
+                    sm.state = 'done'
                 group by
-                    to_char(sm.date,'YYYY:IW')
+                    to_char(sm.date,'YYYY:IW'), sm.company_id
             )""")
 
 

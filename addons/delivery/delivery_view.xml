@@ -221,41 +221,33 @@
         </record>
 
         <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.out.form.view</field>
-            <field name="model">stock.picking.out</field>
+            <field name="name">delivery.stock.picking_withcarrier.form.view</field>
+            <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
+                <xpath expr="/form/header//button[@name='action_process']" position="after">
+                    <button name="%(report_shipping)d" string="Print Delivery Order" states="confirmed,assigned" type="action"/>
+                    <button name="%(report_shipping)d" string="Print Delivery Order" states="done" type="action" class="oe_highlight"/>
+                </xpath>
                 <field name="min_date" position="after">
                     <field name="carrier_id"/>
                     <field name="carrier_tracking_ref"/>
                     <field name="number_of_packages"/>
                 </field>
                 <field name="company_id" position="before">
-                    <field name="weight"/>
-                    <field name="weight_net" groups="base.group_no_one"/>
-               </field>
-            </field>
-        </record>
-
-        <record id="view_picking_withweight_internal_form" model="ir.ui.view">
-            <field name="name">stock.picking_withweight.internal.form.view</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-                <field name="company_id" position="before">
                     <label for="weight" string="Weight"/>
                     <div>
                         <field name="weight" class="oe_inline"/>
                         <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                     </div>
-                     <field name="weight_net"  groups="base.group_no_one" class="oe_inline"/>
-                </field>
+                    <field name="weight_net" groups="base.group_no_one"/>
+               </field>
             </field>
         </record>
 
-        <record id="action_picking_tree4" model="ir.actions.act_window">
+        <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Picking to be invoiced</field>
-            <field name="res_model">stock.picking.out</field>
+            <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -316,28 +308,5 @@
             </field>
         </record>
 
-        <record id="view_delivery_order_inherit_stock" model="ir.ui.view">
-            <field name="name">stock.picking.out.form</field>
-            <field name="model">stock.picking.out</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/header//button[@name='action_process']" position="after">
-                    <button name="%(report_shipping)d" string="Print Delivery Order" states="confirmed,assigned" type="action"/>
-                    <button name="%(report_shipping)d" string="Print Delivery Order" states="done" type="action" class="oe_highlight"/>
-                </xpath>
-            </field>
-        </record>
-        
-        <record id="view_picking_withcarrier_in_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.in.form.view</field>
-            <field name="model">stock.picking.in</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-              <field name="company_id" position="before">
-                    <field name="weight"/>
-                    <field name="weight_net" groups="base.group_no_one"/>
-               </field>
-            </field>
-        </record>
     </data>
 </openerp>

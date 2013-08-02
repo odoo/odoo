@@ -30,10 +30,6 @@ class StockMove(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
     }
 
-    def create_chained_picking(self, cr, uid, moves, context=None):
-        new_moves = super(StockMove, self).create_chained_picking(cr, uid, moves, context=context)
-        self.write(cr, uid, [x.id for x in new_moves], {'production_id': False}, context=context)
-        return new_moves
     
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
@@ -68,8 +64,6 @@ class StockMove(osv.osv):
                         'move_dest_id': move.id,
                         'state': state,
                         'name': line['name'],
-                        'move_history_ids': [(6,0,[move.id])],
-                        'move_history_ids2': [(6,0,[])],
                         'procurements': [],
                     }
                     mid = move_obj.copy(cr, uid, move.id, default=valdef)
@@ -92,7 +86,6 @@ class StockMove(osv.osv):
                     
                 move_obj.write(cr, uid, [move.id], {
                     'location_dest_id': move.location_id.id, # dummy move for the kit
-                    'auto_validate': True,
                     'picking_id': False,
                     'state': 'confirmed'
                 })

@@ -41,16 +41,16 @@ tab), then the new task will be created in that specific project. Otherwise, the
 new task will not belong to any project, and may be added to a project manually
 later.
 
-When the project task is completed or cancelled, the workflow of the corresponding
-procurement line is updated accordingly. For example, if this procurement corresponds
-to a sale order line, the sale order line will be considered delivered when the
-task is completed.
+When the project task is completed or cancelled, the corresponding procurement
+is updated accordingly. For example, if this procurement corresponds to a sale
+order line, the sale order line will be considered delivered when the task is
+completed.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/product.jpeg', 'images/task_from_SO.jpeg'],
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
-    'data': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
+    'data': ['project_mrp_view.xml'], #'process/project_mrp_process.xml'
     'demo': ['project_mrp_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,

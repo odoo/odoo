@@ -14,19 +14,20 @@
             <field eval="'run_scheduler'" name="function"/>
             <field eval="'(False,)'" name="args"/>
         </record>
-        
-        <record id="sequence_mrp_op_type" model="ir.sequence.type">
-            <field name="name">Stock orderpoint</field>
-            <field name="code">stock.orderpoint</field>
+
+        <record id="sequence_proc_group_type" model="ir.sequence.type">
+            <field name="name">Procurement Group</field>
+            <field name="code">procurement.group</field>
         </record>
         
-        <record id="sequence_mrp_op" model="ir.sequence">
-            <field name="name">Stock orderpoint</field>
-            <field name="code">stock.orderpoint</field>
-            <field name="prefix">OP/</field>
-            <field name="padding">5</field>
+        <record id="sequence_proc_group" model="ir.sequence">
+            <field name="name">Procurement Group</field>
+            <field name="code">procurement.group</field>
+            <field name="prefix">PG/</field>
+            <field name="padding">6</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+        
     </data>
 </openerp>

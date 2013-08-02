@@ -14,7 +14,7 @@
 
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
-            <field name="model">stock.picking.in</field>
+            <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
@@ -28,8 +28,8 @@
 
         <record id="view_picking_in_search_picking_inherit" model="ir.ui.view">
             <field name="name">stock.picking.in.search.inherit</field>
-            <field name="model">stock.picking.in</field>
-            <field name="inherit_id" ref="stock.view_picking_in_search"/>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="before">
                     <field name="purchase_id"/>
@@ -55,15 +55,15 @@
             </field>
         </record>
 
-        <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
+        <record id="action_picking_tree_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">On Incoming Shipments</field>
-            <field name="res_model">stock.picking.in</field>
+            <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','in'),('purchase_id.invoice_method','=','picking')]</field>
+            <field name="domain">[('purchase_id.invoice_method','=','picking')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
-            <field name="search_view_id" ref="stock.view_picking_in_search"/>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new incoming shipment.
@@ -76,8 +76,8 @@
             </field>
        </record>
 
-        <menuitem action="action_picking_tree4_picking_to_invoice"
-            id="menu_action_picking_tree4_picking_to_invoice"
+        <menuitem action="action_picking_tree_picking_to_invoice"
+            id="menu_action_picking_tree_picking_to_invoice"
             parent="purchase.menu_procurement_management_invoice" sequence="90"/>
     </data>
 </openerp>

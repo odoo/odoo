@@ -42,6 +42,8 @@ class external_pdf(render):
         return self.pdf
 
 
+# FP Note: change to use product_qty instead of product_uom_qty to avoid doing conversions
+
 class report_stock(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if context is None:

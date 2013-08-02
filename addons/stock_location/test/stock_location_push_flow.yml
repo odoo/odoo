@@ -2,19 +2,13 @@
   In order to test the product pushed flow , I create account ,partner,product,shipment
   Push flow specification indicates which location is chained with which location.
 -
-  I create product category.
--
-  !record {model: product.category, id: product_category_computer0}:
-    name: Computer
-
--
   I create Supplier.
 -
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     street: Kailash Vaibhav, Parksite
     name: Micro Link Technologies
-    property_account_payable: account_account_payable0
-    property_account_receivable: account_account_receivable0
+    property_account_payable: account.a_pay
+    property_account_receivable: account.a_recv
     supplier: true
     is_company: true
 
@@ -35,25 +29,21 @@
   Stock Input to Quality test and Quality test -Stock  .
 -
   !record {model: product.product, id: product_product_hpcdwriters01}:
-    categ_id: product_category_computer0
-    cost_method: standard
     list_price: 1000.0
     mes_type: fixed
     name: HP CD writers
-    procure_method: make_to_stock
     seller_ids:
       - delay: 1
         name: res_partner_microlinktechnologies0
         min_qty: 5.0
-    path_ids:
-      - auto: auto
-        invoice_state: none
-        location_dest_id: stock_location.stock_location_qualitytest0
-        location_from_id: stock.stock_location_stock
-      - auto: auto
-        invoice_state: none
-        location_dest_id: stock.stock_location_components
-        location_from_id: stock_location.stock_location_qualitytest0
+    route_ids:
+      - push_ids:
+        - invoice_state: none
+          location_dest_id: stock_location.stock_location_qualitytest0
+          location_from_id: stock.stock_location_stock
+        - invoice_state: none
+          location_dest_id: stock.stock_location_components
+          location_from_id: stock_location.stock_location_qualitytest0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -74,7 +64,7 @@
         location_id: stock.stock_location_suppliers
         name: 'HP CD writers'
         product_id: product_product_hpcdwriters01
-        product_qty: 6.0
+        product_uom_qty: 6.0
         product_uom: product.product_uom_unit
         product_uos_qty: 6.0
     name: Pushed Flow Test
@@ -85,8 +75,8 @@
   !python {model: stock.picking }: |
     self.draft_force_assign(cr, uid, [ref("stock_picking_in0")], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "ir.ui.menu",
-      "contact_display": "partner_address", "active_ids": [ref("stock.menu_action_picking_tree4")],
-      "active_id": ref("stock.menu_action_picking_tree4"), })
+      "contact_display": "partner_address", "active_ids": [ref("stock.menu_action_picking_tree")],
+      "active_id": ref("stock.menu_action_picking_tree"), })
 -
   I check that the outgoing order of the supplier  is create with two move line.
   Stock/Input To Quality test and Quality test  To Stock.

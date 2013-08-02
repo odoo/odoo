@@ -2,12 +2,6 @@
 <openerp>
     <data>
 
-        <act_window
-            domain="[('tracking_id', '=', active_id)]"
-            id="act_stock_tracking_lot_2_stock_report_tracklots"
-            name="Stock" res_model="stock.report.tracklots"
-            src_model="stock.tracking"/>
-
            <!-- report , stock inventories date... start -->
         <record model="ir.ui.view" id="report_stock_lines_date_tree">
             <field name="name">report.stock.lines.date.tree</field>
@@ -58,17 +52,6 @@
         </record>
 
         <menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date" sequence="2"/>
-
-        <record id="view_location_graph" model="ir.ui.view">
-            <field name="name">stock.location.graph</field>
-            <field name="model">stock.location</field>
-            <field name="arch" type="xml">
-                <graph string="Stock Location">
-                    <field name="complete_name"/>
-                    <field name="stock_real_value" operator="+"/>
-                </graph>
-            </field>
-        </record>
 
     </data>
 </openerp>

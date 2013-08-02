@@ -172,8 +172,8 @@ class stock_picking(osv.osv):
 
 # FIXME:(class stock_picking_in and stock_picking_out) this is a temporary workaround because of a framework bug (ref: lp:996816). 
 # It should be removed as soon as the bug is fixed
-class stock_picking_in(osv.osv):
-    _inherit = 'stock.picking.in'
+class stock_picking(osv.osv):
+    _inherit = 'stock.picking'
 
     def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         if not partner_id:
@@ -192,32 +192,6 @@ class stock_picking_in(osv.osv):
                 'message': message
             }
         result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, ids, partner_id, context)
-        if result.get('warning',False):
-            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
-            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-
-        return {'value': result.get('value',{}), 'warning':warning}
-
-class stock_picking_out(osv.osv):
-    _inherit = 'stock.picking.out'
-
-    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
-        if not partner_id:
-            return {}
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        warning = {}
-        title = False
-        message = False
-        if partner.picking_warn != 'no-message':
-            if partner.picking_warn == 'block':
-                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.picking_warn_msg)
-            title = _("Warning for %s") % partner.name
-            message = partner.picking_warn_msg
-            warning = {
-                'title': title,
-                'message': message
-            }
-        result =  super(stock_picking_out, self).onchange_partner_in(cr, uid, ids, partner_id, context)
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']

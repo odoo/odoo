@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-
+from openerp import netsvc
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
@@ -29,7 +29,12 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-
+    def action_done(self, cr ,uid, ids, context=None):
+        res = super(stock_move, self).action_done(cr, uid, ids, context)
+        wf_service = netsvc.LocalService('workflow')
+        for id in ids:
+            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+        return res
 #
 # Inherit of picking to add the link to the PO
 #
@@ -38,6 +43,7 @@ class stock_picking(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
+        'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
 
     _defaults = {
@@ -120,26 +126,18 @@ class stock_picking(osv.osv):
         if picking.purchase_id:
             purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_ids': [(4, invoice_id)]})
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
+# 
+# class stock_partial_picking(osv.osv_memory):
+#     _inherit = 'stock.partial.picking'
+# 
+#     # Overridden to inject the purchase price as true 'cost price' when processing
+#     # incoming pickings. The price is always stored in the company currency.
+#     def _product_cost_for_average_update(self, cr, uid, move):
+#         if move.picking_id.purchase_id:
+#             currency_obj = self.pool.get("res.currency")
+#             new_price = currency_obj.compute(cr, uid, move.picking_id.purchase_id.pricelist_id.currency_id.id, move.company_id.currency_id.id, 
+#                                                  move.purchase_line_id.price_unit, round=False)
+#             return {'cost': new_price}
+#         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
-class stock_partial_picking(osv.osv_memory):
-    _inherit = 'stock.partial.picking'
-
-    # Overridden to inject the purchase price as true 'cost price' when processing
-    # incoming pickings.
-    def _product_cost_for_average_update(self, cr, uid, move):
-        if move.picking_id.purchase_id:
-            return {'cost': move.purchase_line_id.price_unit,
-                    'currency': move.picking_id.purchase_id.currency_id.id}
-        return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
-
-# Redefinition of the new field in order to update the model stock.picking.in in the orm
-# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
-#        the bug is fixed
-class stock_picking_in(osv.osv):
-    _inherit = 'stock.picking.in'
-    _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True),
-        'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
-    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

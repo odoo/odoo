@@ -34,8 +34,8 @@ class sale_order(osv.osv):
     _description = "Sales Order"
     _track = {
         'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual'],
-            'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['sent']
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual'],
+            'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj.state in ['sent']
         },
     }
 
@@ -173,7 +173,7 @@ class sale_order(osv.osv):
             ('done', 'Done'),
             ], 'Status', readonly=True, track_visibility='onchange',
             help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
-        'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
         'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
@@ -220,9 +220,10 @@ class sale_order(osv.osv):
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group'),
     }
     _defaults = {
-        'date_order': fields.date.context_today,
+        'date_order': fields.datetime.now,
         'order_policy': 'manual',
         'company_id': _get_default_company,
         'state': 'draft',
@@ -622,6 +623,69 @@ class sale_order(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+        date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
+        return {
+            'name': line.name,
+            'origin': order.name,
+            'date_planned': date_planned,
+            'product_id': line.product_id.id,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id) or line.product_uom.id,
+            'company_id': order.company_id.id,
+            'note': line.name,
+            'group_id': group_id,
+        }
+
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
+
+    def action_ship_create(self, cr, uid, ids, context=None):
+        """Create the required procurements to supply sales order lines, also connecting
+        the procurements to appropriate stock moves in order to bring the goods to the
+        sales order's requested location.
+
+        :param browse_record order: sales order to which the order lines belong
+        :param list(browse_record) order_lines: sales order line records to procure
+        :param int picking_id: optional ID of a stock picking to which the created stock moves
+                               will be added. A new picking will be created if omitted.
+        :return: True
+        """
+        procurement_obj = self.pool.get('procurement.order')
+        for order in self.browse(cr, uid, ids, context=context):
+            proc_ids = []
+            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'sale_id': order.id}, context=context)
+            order.write({'procurement_group_id': group_id}, context=context)
+            for line in order.order_line:
+                if (line.state == 'done') or not line.product_id:
+                    continue
+
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context))
+                proc_ids.append(proc_id)
+                line.write({'procurement_id': proc_id})
+            #Confirm procurement order such that rules will be applied on it
+            procurement_obj.run(cr, uid, proc_ids, context=context)
+            # FP NOTE: do we need this? isn't it the workflow that should set this
+            val = {}
+            if order.state == 'shipping_except':
+                val['state'] = 'progress'
+                val['shipped'] = False
+
+                if (order.order_policy == 'manual'):
+                    for line in order.order_line: 
+                        if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
+                            val['state'] = 'manual'
+                            break
+            order.write(val)
+        return True
+
+
+
+
 
 
 # TODO add a field price_unit_uos
@@ -664,6 +728,7 @@ class sale_order_line(osv.osv):
                                     WHERE rel.invoice_id = ANY(%s)""", (list(ids),))
         return [i[0] for i in cr.fetchall()]
 
+
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -697,6 +762,9 @@ class sale_order_line(osv.osv):
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
+        #'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _order = 'order_id desc, sequence, id'
     _defaults = {
@@ -708,6 +776,7 @@ class sale_order_line(osv.osv):
         'state': 'draft',
         'type': 'make_to_stock',
         'price_unit': 0.0,
+        'delay': 0.0,
     }
 
     def _get_line_qty(self, cr, uid, line, context=None):
@@ -775,6 +844,11 @@ class sale_order_line(osv.osv):
             }
 
         return res
+
+
+    
+
+
 
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
@@ -1004,5 +1078,13 @@ class account_invoice(osv.Model):
             for id in ids:
                 wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
+
+class procurement_group(osv.osv):
+    _inherit = 'procurement.group'
+    
+    _columns = {
+            'sale_id': fields.many2one('sale.order', string = 'Sales Order')
+                }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

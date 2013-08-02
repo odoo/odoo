@@ -115,8 +115,8 @@
         </record>
 
         <!-- Procurement -->
-
-        <record id="act_produce" model="workflow.activity">
+        <!-- TODO csn : check if fix is needed since no more workflow in procurement -->
+        <!-- <record id="act_produce" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
             <field name="name">produce</field>
             <field name="kind">subflow</field>
@@ -140,7 +140,7 @@
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="procurement.act_cancel"/>
             <field name="signal">subflow.cancel</field>
-        </record>
+        </record> -->
 
     </data>
 </openerp>

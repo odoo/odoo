@@ -1,0 +1,140 @@
+
+/* ----------------------- *
+ *  PICKING WIDGET LAYOUT  *
+ * ----------------------- */
+
+.oe_pick_widget {
+    position: absolute;
+    top: 0px; right: 0px; bottom: 0px; left: 0px;
+    color: #444444;
+    background: #686868;
+    text-shadow: none;
+    font-family: 'Lato', 'Open Sans', Arial, Helvetica, sans-serif;
+}
+.oe_pick_widget .oe_pick_layout {
+    width: 100%;
+    height: 100%;
+}
+
+.oe_pick_widget .oe_pick_header{
+    background: #454343;
+    background-image: linear-gradient(#646060,#262626);
+}
+.oe_pick_widget .oe_pick_body_cont{
+    height: 100%;
+}
+.oe_pick_widget .oe_pick_body{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    background: url('/web/static/src/img/form_sheetbg.png');
+    box-shadow: 0px 9px 5px -5px rgba(0, 0, 0, 0.16) inset;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.oe_pick_widget .oe_pick_app{
+    width: 600px;
+    background: white;
+    margin: 40px auto;
+    padding: 20px;
+    border: solid 1px rgb(228, 228, 255);
+    box-shadow: 0px 2px 3px rgba(114, 114, 175, 0.11);
+}
+.oe_pick_widget .oe_pick_toolbar{
+    width: 600px;
+    margin: auto;
+    text-align: center;
+}
+.oe_pick_widget .oe_pick_button{
+    display: inline-block;
+    min-width: 120px;
+    padding: 5px;
+    font-size: 18px;
+    border-radius: 3px;
+    margin: 10px 5px;
+    text-align: center;
+    line-height: 30px;
+    background: #b2b3d7;
+    background: linear-gradient(#b2b3d7, #7f82ac);
+    color: #273072;
+    border: 1px solid #353A7E;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    cursor: pointer;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+.oe_pick_widget .oe_pick_right_toolbar{
+    float: right;
+}
+.oe_pick_widget .oe_pick_right_toolbar .oe_pick_button{
+    margin-right: 10px;
+}
+.oe_pick_widget .oe_pick_col_small{     width: 60px; }
+.oe_pick_widget .oe_pick_col_medium{    width: 100px; }
+.oe_pick_widget .oe_pick_col_big{       width: 200px; }
+.oe_pick_widget .oe_pick_col_expand{    width: 100%; }
+.oe_pick_widget .oe_centeralign{  text-align: center; }
+
+.oe_pick_widget .oe_invalid{ 
+    background: rgb(255, 226, 226);
+    color: rgb(168, 6, 6);
+}
+
+/* ----------------------- *
+ *      PICKING TABLES     *
+ * ----------------------- */
+
+.oe_pick_widget .oe_pick_list{
+    margin: 0px 0px 20px 0px;
+    padding: 5px;
+}
+
+.oe_pick_widget .oe_pick_list_header{
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.oe_pick_widget .oe_pick_list_table{
+    background: whitesmoke;
+    width: 100%;
+    table-layout: fixed;
+    font-size: 16px;
+    border-radius: 3px;
+
+}
+.oe_pick_widget .oe_pick_list_table tbody tr:nth-child(odd){
+    background: rgb(250,250,250);
+}
+.oe_pick_widget .oe_pick_list_table tbody tr.oe_selected{
+    background: rgb(236, 236, 247);
+    outline: solid 1px rgba(79, 107, 255, 0.25);
+}
+.oe_pick_widget .oe_pick_list_table td,
+.oe_pick_widget .oe_pick_list_table th {
+    padding: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.oe_pick_widget .oe_pick_list_table thead{
+    background: rgb(224, 225, 235);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.oe_pick_widget .oe_pick_list_table th {
+    background: none;
+    border: none;
+    font-weight: bold;
+}
+.oe_pick_widget .oe_row_button{
+    display: inline-block;
+    background: rgb(238, 237, 248);
+    padding: 2px 4px;
+    line-height: 14px;
+    color: rgb(137, 127, 173);
+    border-radius: 3px;
+    border: solid 1px rgba(0, 0, 0, 0.09);
+    cursor: pointer;
+}
+.oe_pick_widget .js_pack_select{
+    cursor: pointer;
+}
+
+

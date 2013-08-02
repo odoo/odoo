@@ -32,7 +32,7 @@
         <record id="action_sale_picking_out_form_view" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="stock.view_picking_out_form"/>
+            <field name="view_id" ref="stock.view_picking_form"/>
             <field name="act_window_id" ref="act_sale_order_2_stock_picking"/>
         </record>
         -->
@@ -41,8 +41,8 @@
 
         <record id="stock_picking_out_inherit_sale" model="ir.ui.view">
             <field name="name">Outgoing picking Inherited</field>
-            <field name="model">stock.picking.out</field>
-            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="move_type" position="after">
                     <field name="sale_id"/>
@@ -57,9 +57,9 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','out')]</field>
+            <field name="domain">[('location_id.usage','=','internal'), ('location_dest_id.usage','!=','internal')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1, 'default_invoice_state': '2binvoiced'}</field>
-            <field name="search_view_id" ref="stock.view_picking_out_search"/>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
         </record>
         <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="base.menu_invoiced" groups="sale_stock.group_invoice_deli_orders" sequence="20"/>
 
