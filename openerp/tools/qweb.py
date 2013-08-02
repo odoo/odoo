@@ -290,6 +290,8 @@ class QWebXml(object):
                     inner = field.name_get()[0][1] or ""
             else:
                 inner = getattr(record, field) or ""
+            if isinstance(inner, types.UnicodeType):
+                inner = inner.encode("utf8")
             if field_type != 'html':
                 cgi.escape(str(inner))
             if e.tagName != 't':
