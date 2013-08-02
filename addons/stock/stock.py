@@ -967,21 +967,21 @@ class stock_move(osv.osv):
             This will create a procurement order
         """
         proc_obj = self.pool.get("procurement.order")
-        origin = _('Procurement from %s created by rule %s') % (move.group_id and move.group_id.name or "", move.rule_id and move.rule_id.name or "")
+        origin = (move.group_id and (move.group_id.name+":") or "") +  (move.rule_id and move.rule_id.name or "/")
         return proc_obj.create(cr, uid, {
-                'name': _('MTO from rule %s') % move.rule_id and move.rule_id.name or "",
-                'origin': origin,
-                'company_id': move.company_id and move.company_id.id or False,
-                'date_planned': move.date,
-                'product_id': move.product_id.id,
-                'product_qty': move.product_qty,
-                'product_uom': move.product_uom.id,
-                'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_qty,
-                'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
-                'location_id': move.location_id.id,
-                'move_dest_id': move.id,
-                'group_id': move.group_id and move.group_id.id or False,
-            })
+            'name': move.rule_id and move.rule_id.name or "/",
+            'origin': origin,
+            'company_id': move.company_id and move.company_id.id or False,
+            'date_planned': move.date,
+            'product_id': move.product_id.id,
+            'product_qty': move.product_qty,
+            'product_uom': move.product_uom.id,
+            'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_qty,
+            'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
+            'location_id': move.location_id.id,
+            'move_dest_id': move.id,
+            'group_id': move.group_id and move.group_id.id or False,
+        })
 
     # Check that we do not modify a stock.move which is done
     def write(self, cr, uid, ids, vals, context=None):

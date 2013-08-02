@@ -8,10 +8,12 @@
         location_id: stock.stock_location_shop0
         location_src_id: stock.stock_location_intermediatelocation0
         name: E001
+        procure_method: make_to_order
         picking_type_id: stock.picking_type_in
         action: move
       - invoice_state: none
         location_id: stock.stock_location_shop1
+        procure_method: make_to_order
         location_src_id: stock.stock_location_intermediatelocation0
         name: E002
         picking_type_id: stock.picking_type_in
@@ -22,6 +24,7 @@
         location_src_id: stock.stock_location_stock
         name: E003
         action: move
+        procure_method: make_to_order
         picking_type_id: stock.picking_type_out
 
 - 
@@ -66,15 +69,11 @@
   I check the Outgoing Picking is created for source location Stock and destination Chicago shop.
 -
   !python {model: stock.picking }: |
-    in_picking_id = self.search(cr, uid, [('origin','=','Testing001:E001'),('type','=','in')])
+    in_picking_id = self.search(cr, uid, [('picking_type_id','=',ref('stock.picking_type_in'))])
     assert len(in_picking_id), "Picking in hasn't been created."
     in_picking = self.browse(cr, uid, in_picking_id[0])
     assert in_picking.move_lines[0].location_id.id == ref('stock.stock_location_intermediatelocation0'), "wrong source location for picking in"
     assert in_picking.move_lines[0].location_dest_id.id == ref('stock.stock_location_shop0'), "wrong destination location for picking in"
     assert in_picking.company_id.id == ref('stock.res_company_1'), "wrong company for picking in"
-    out_picking_id = self.search(cr, uid, [('origin','like','%E003%'),('type','=','out')])
+    out_picking_id = self.search(cr, uid, [('picking_type_id','=',ref('stock.picking_type_out'))])
     assert len(out_picking_id), "Picking out hasn't been created."
-    out_picking = self.browse(cr, uid, out_picking_id[0])
-    assert out_picking.move_lines[0].location_id.id == ref('stock.stock_location_stock'), "wrong source location for picking out"
-    assert out_picking.move_lines[0].location_dest_id.id == ref('stock.stock_location_intermediatelocation0'), "wrong destination location for picking out"
-    assert out_picking.company_id.id == ref('base.main_company'), "wrong company for picking out"

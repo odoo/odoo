@@ -171,7 +171,6 @@ class procurement_order(osv.osv):
     #
     # Method to overwrite in different procurement modules
     #
-    
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         '''This method returns a procurement.rule that depicts what to do with the given procurement
         in order to complete its needs. It returns False if no suiting rule is found.

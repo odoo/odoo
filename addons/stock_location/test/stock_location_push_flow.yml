@@ -7,8 +7,6 @@
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     street: Kailash Vaibhav, Parksite
     name: Micro Link Technologies
-    property_account_payable: account.a_pay
-    property_account_receivable: account.a_recv
     supplier: true
     is_company: true
 
@@ -28,6 +26,16 @@
   I set the chain location Supplier to stock Input
   Stock Input to Quality test and Quality test -Stock  .
 -
+  !record {model: stock.location.route, id: stock_location_route_push}:
+    name: 'Push'
+    push_ids:
+        - invoice_state: none
+          location_dest_id: stock_location.stock_location_qualitytest0
+          location_from_id: stock.stock_location_stock
+        - invoice_state: none
+          location_dest_id: stock.stock_location_components
+          location_from_id: stock_location.stock_location_qualitytest0
+-
   !record {model: product.product, id: product_product_hpcdwriters01}:
     list_price: 1000.0
     mes_type: fixed
@@ -36,14 +44,7 @@
       - delay: 1
         name: res_partner_microlinktechnologies0
         min_qty: 5.0
-    route_ids:
-      - push_ids:
-        - invoice_state: none
-          location_dest_id: stock_location.stock_location_qualitytest0
-          location_from_id: stock.stock_location_stock
-        - invoice_state: none
-          location_dest_id: stock.stock_location_components
-          location_from_id: stock_location.stock_location_qualitytest0
+    route_ids: [stock_location_route_push]
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -68,7 +69,7 @@
         product_uom: product.product_uom_unit
         product_uos_qty: 6.0
     name: Pushed Flow Test
-    type: in
+    picking_type_id: stock.stock_picking_in
 -
   I confirm picking.
 -
