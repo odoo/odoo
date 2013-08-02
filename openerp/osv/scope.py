@@ -28,7 +28,7 @@ __all__ = [
     'Scope', 'proxy', 'Cache',
 ]
 
-from collections import defaultdict
+from collections import defaultdict, MutableMapping
 from pprint import pformat
 from werkzeug.local import Local, release_local
 
@@ -209,10 +209,47 @@ class Scope(object):
 # Records cache
 #
 
+class RecordCache(MutableMapping):
+    """ Cache for the fields of a record in a given scope. """
+    def __init__(self, fields, *args, **kwargs):
+        self.fields = fields            # set of fields present in model cache
+        self.data = dict(*args, **kwargs)
+
+    def __contains__(self, name):
+        return name in self.data
+
+    def __getitem__(self, name):
+        return self.data[name]
+
+    def __setitem__(self, name, value):
+        self.data[name] = value
+        self.fields.add(name)
+
+    def __delitem__(self, name):
+        del self.data[name]
+
+    def __iter__(self):
+        return iter(self.data)
+
+    def __len__(self):
+        return len(self.data)
+
+
 class ModelCache(defaultdict):
     """ Cache for the records of a given model in a given scope. """
+    def __init__(self):
+        super(ModelCache, self).__init__()
+        self.fields = set()             # set of fields present in self
+
+    def record_cache(self, *args, **kwargs):
+        """ Create a new record cache for the model of `self`; the returned
+            cache is not automatically inserted in `self`. The arguments are the
+            same as the ones accepted by ``dict``.
+        """
+        return RecordCache(self.fields, *args, **kwargs)
+
     def __missing__(self, key):
-        self[key] = record_cache = {'id': key}
+        self[key] = record_cache = self.record_cache(id=key)
         return record_cache
 
 
@@ -230,18 +267,22 @@ class Cache(defaultdict):
     def invalidate(self, model_name, field_name, ids=None):
         """ Invalidate a field for the given record ids. """
         model_cache = self[model_name]
-        record_caches = model_cache.itervalues() if ids is None else \
-                        (model_cache[id] for id in ids)
-        for record_cache in record_caches:
-            record_cache.pop(field_name, None)
+        if field_name in model_cache.fields:
+            if ids is None:
+                model_cache.fields.discard(field_name)
+                for record_cache in model_cache.itervalues():
+                    record_cache.pop(field_name, None)
+            else:
+                for id in ids:
+                    model_cache[id].pop(field_name, None)
 
     def invalidate_all(self):
         """ Invalidate the whole cache. """
         # Note that record caches cannot be dropped from the cache, since they
         # are memoized in model instances.
         for model_cache in self.itervalues():
-            for record_cache in model_cache.itervalues():
-                id = record_cache['id']
+            model_cache.fields.clear()
+            for id, record_cache in model_cache.iteritems():
                 record_cache.clear()
                 record_cache['id'] = id
 

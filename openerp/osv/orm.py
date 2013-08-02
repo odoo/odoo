@@ -5259,7 +5259,9 @@ class BaseModel(object):
             with the `values` dictionary. Such a record does not exist in the
             database.
         """
-        return self._instance(scope_proxy.current, (dict(values),))
+        scope = scope_proxy.current
+        model_cache = scope.cache[self._name]
+        return self._instance(scope, (model_cache.record_cache(values),))
 
     @property
     def draft(self):
