@@ -173,7 +173,7 @@ class sale_order(osv.osv):
             ('done', 'Done'),
             ], 'Status', readonly=True, track_visibility='onchange',
             help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
-        'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
         'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
@@ -223,7 +223,7 @@ class sale_order(osv.osv):
         'procurement_group_id': fields.many2one('procurement.group', 'Procurement group'),
     }
     _defaults = {
-        'date_order': fields.date.context_today,
+        'date_order': fields.datetime.now,
         'order_policy': 'manual',
         'company_id': _get_default_company,
         'state': 'draft',
@@ -623,12 +623,7 @@ class sale_order(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
-
-
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
         return {
             'name': line.name,
@@ -637,18 +632,14 @@ class sale_order(osv.osv):
             'product_id': line.product_id.id,
             'product_qty': line.product_uom_qty,
             'product_uom': line.product_uom.id,
-            'product_uos_qty': (line.product_uos and line.product_uos_qty)\
-                    or line.product_uom_qty,
-            'product_uos': (line.product_uos and line.product_uos.id)\
-                    or line.product_uom.id,
-            'location_id': location_id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id) or line.product_uom.id,
             'company_id': order.company_id.id,
             'note': line.name,
-            'group_id': group_id, 
+            'group_id': group_id,
         }
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        start_date = self.date_to_datetime(cr, uid, start_date, context)
         date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned
