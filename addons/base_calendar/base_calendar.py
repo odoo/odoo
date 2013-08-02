@@ -296,6 +296,7 @@ property or property parameter."),
                             multi='event_end_date'),
         'ref': fields.reference('Event Ref', selection=_links_get, size=128),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
+        
     }
     _defaults = {
         'state': 'needs-action',
@@ -403,22 +404,14 @@ property or property parameter."),
         res = cal.serialize()
         return res
 
-    def meeting_invitation(self, cr, uid, ids, context=None):
-        meeting_id = self.pool.get('crm.meeting').search(cr, uid, [('attendee_ids','in',ids)])
-        action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model','=','crm.meeting')], context=context)
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        if action_id:
-            base_url += '/meeting/meeting_invitation?db=%s&token=%s&action=%s&id=%s' % (cr.dbname, ids,action_id[0],meeting_id[0]);
-        return base_url
-
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
         @return: True
         """
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
         mail_id = []
+        local_context = context.copy()
         color = {
                  'needs-action' : 'grey',
                  'accepted' :'green',
@@ -426,56 +419,23 @@ property or property parameter."),
                  'declined':'red',
                  'delegated':'grey'
                  }
-        image_cricle = "<div style='display:inline-block; border-radius: 50% %; width:10px; height:10px; background:%s;'> </div>"
         for attendee in self.browse(cr, uid, ids, context=context):
             res_obj = attendee.ref
+            data_pool = self.pool.get('ir.model.data')
             if res_obj:
-                att = {}
-                att_info = [(image_cricle % color.get('needs-action')) + 'You', (image_cricle % color.get('accepted')) + res_obj.organizer+ '<span style= "color:#A9A9A9; ont-size: 9px">- Organizer </br></span>']
-                sub = res_obj.name
-                other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
-                other_invitation_ids.remove(attendee.id)
-                for att2 in self.browse(cr, uid, other_invitation_ids):
-                    name = att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email
-                    att_info.append((image_cricle  % color.get(att2.state)) + name)
-                tz = context.get('tz', pytz.timezone('UTC'))
-                allday = False
-                date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-                date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-                if res_obj.allday:
-                    time =  "AllDay" + "," + date.strftime('%B-%d-%Y')
-                    tz = ''
-                elif res_obj.duration < 24:
-                    duration =  date + timedelta(hours= res_obj.duration)
-                    time =  date.strftime('%B-%d-%Y')  + " at (" + date.strftime('%H-%M') + " To " + duration.strftime('%H-%M') + ")"
-                else :
-                    time =  date.strftime('%B-%d-%Y')  + " at " + date.strftime('%H-%M') + " To \n" +  date_deadline.strftime('%B-%d-%Y') + " at " + date_deadline.strftime('%H-%M')
-                footer = self.meeting_invitation(cr, uid, attendee.id, context=context)
-                map_url = ''
-                if res_obj.location:
-                    map_url = """<span style= "color:#A9A9A9; "> (<a href="http://maps.google.com/maps?oi=map&q=%s">View Map</a>)</span>""" % res_obj.location
-                body_vals = {'user':attendee.user_id and attendee.user_id.name,
-                             'name': res_obj.name,
-                             'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                             'company': company,
-                             'description': res_obj.description or '-',
-                             'attendees': ',\n' .join(att_info),
-                             'time': time,
-                             'tz': tz,
-                             'location': res_obj.location or '-',
-                             'map' : map_url or '',
-                             'organizer' : res_obj.organizer,
-                             'url' : footer}
-                body_id = self.pool.get('email.template').search(cr, uid, [('subject', '=', 'Meeting Invitation')], context=context)
-                body = self.pool.get('email.template').browse(cr, uid, body_id[0], context=context).body_html % body_vals
+                model,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "crm_email_template_meeting_invitation")
+                model,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")
+                action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)
+                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+                body = self.pool.get('email.template').browse(cr, uid, template_id, context=context).body_html
                 if attendee.email and email_from:
                     ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
-                    vals = {'email_from': email_from,
-                            'email_to': attendee.email,
-                            'state': 'outgoing',
-                            'subject': sub,
-                            'body_html': body,
-                            'auto_delete': True}
+                    local_context['att_obj'] = attendee
+                    local_context['color'] = color
+                    local_context['action_id'] = action_id[0]
+                    local_context['dbname'] = cr.dbname
+                    local_context['base_url'] = base_url
+                    vals = self.pool.get('email.template').generate_email(cr, uid, template_id, res_obj.id, context=local_context)
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                     'datas_fname': 'invitation.ics',

@@ -28,5 +28,113 @@
             <field name="name">Meeting</field>
             <field name="object">crm.meeting</field>
         </record>
+        <record id="crm_email_template_meeting_invitation" model="email.template">
+            <field name="name">CRM Meeting Invitation</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">${object.name}</field>
+            <field name="email_to" >${ctx['att_obj'].email}</field>
+            <field name="model_id" ref="base_calendar.model_crm_meeting"/>
+            
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+            <html>
+                <head>
+                    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+                    <title>${object.name}</title>
+                </head>
+                <body>
+                    <table cellspacing="0" cellpadding="6" border="0" style = "margin: auto; display:block;  border:2px solid #8E0000;  background: #F8F8F8; border-radius: 2px;  width: 600px;  height: auto; ">
+                        <tr>
+                            <td  style = "display: block;  border: 2px solid #8E0000;  height: 45px; width: auto;background : #8E0000; text-align: center; font-family: Arial, sans-serif; font-size: 20px;  color:#FFFFFF; ">
+                                <div style="text-align: center" > <b>${object.name}</b> </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" > <b>Hello ${ctx['att_obj'].cn}, </b> <br/>
+         ${object.organizer} invited you for the ${object.name} meeting of ${object.user_id.company_id.name}. </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table cellspacing="0" cellpadding="0" border="0"  style="margin-top: 15px; margin-left: 10px; background: #F8F8F8">
+                                    <tr valign="top">
+                                        <td>
+                                            <div style = "height: 25px; width: 120px;  background : # CCCCCC;font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;"><b> When :</b>
+                                            </div>
+                                        </td>
+                                        <td colspan="1">
+                                            <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px" >
+                                                ${object.event_time}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr valign="top">
+                                        <td> 
+                                            <div  style = "height: 25px; width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"><b>Where :</b>
+                                            </div>
+                                        </td>
+                                        <td colspan="1"> 
+                                            <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
+                                                ${object.location or ''}
+                                                % if object.location :
+                                                <span style= "color:#A9A9A9; "> 
+                                                    (<a href="http://maps.google.com/maps?oi=map&q=${object.location}">View Map</a>)
+                                                </span> 
+                                                % endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr valign="top">
+                                        <td>
+                                            <div  style = "height: 25px; width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"><b>What :</b>
+                                            </div>
+                                        </td>
+                                        <td colspan="3"> 
+                                            <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
+                                                ${object.description or ''}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr valign="top">
+                                        <td style = "height: 25px;width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;"> 
+                                            <div><b>Attendees:<b></div>
+                                        </td>
+                                        <td colspan="3">
+                                            % for attendee in object.attendee_ids:
+                                                <div style='display:inline-block; border-radius: 50%; width:10px; height:10px;background:${ctx['color'][attendee.state]}'>
+                                                </div>
+                                                <span style="margin-left:5px">
+                                                        ${attendee.cn}
+                                                </span>
+                                            % endfor
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 10px" >
+                                    <span style= "margin-top: 50px; margin-left: 200px;" >
+                                        <a href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=form&status=accepted">Accept</a> |
+                                        <a href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=form&status=declined">Declined</a>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div >
+                                    -- </br>  Sent by ${object.user_id.name} from ${object.user_id.company_id.name}. View this meeting detail
+                                    <a href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=calendar&status=">directly in OpenERP.</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+            </html>
+            ]]]></field>
+        </record>
     </data>
 </openerp>

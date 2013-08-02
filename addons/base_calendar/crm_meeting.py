@@ -26,6 +26,9 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 from base_calendar import get_real_ids, base_calendar_id2real_id
 from openerp.addons.base_status.base_state import base_state
+from datetime import datetime, timedelta, date
+import pytz
+from openerp import tools
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
 # without forcing the installation of crm.
@@ -45,27 +48,48 @@ class crm_meeting(base_state, osv.Model):
     _order = "id desc"
     _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
     
-    def _check_status(self, cr, uid, ids, context=None):
+    def _check_status(self, cr, uid, meeting_id, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
-        user = self.pool.get('res.users').read(cr,uid,uid,['partner_id'],context)
-        for attendee in self.browse(cr,uid,ids,context)[0].attendee_ids:
-            if user['partner_id'][0] == attendee_pool.read(cr,uid,attendee.id,['partner_id'],context)['partner_id'][0]:
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        for attendee in self.browse(cr,uid,meeting_id,context).attendee_ids:
+            if user.partner_id.id == attendee.partner_id.id:
                 return attendee
         return False
 
     def _check_attendee(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        res[ids[0]] = False
-        if self._check_status(cr, uid, ids, context):
-                res[ids[0]] = True
+        for meeting_id in ids:
+            res[meeting_id] = False
+            if self._check_status(cr, uid, meeting_id, context):
+                res[meeting_id] = True
         return res
 
     def _compute_status(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        res[ids[0]] = 'needs-action'
-        attendee = self._check_status(cr, uid, ids, context)
-        if attendee:
-            res[ids[0]] = attendee.state
+        for meeting_id in ids:
+            res[meeting_id] = 'needs-action'
+            attendee = self._check_status(cr, uid, meeting_id, context)
+            if attendee:
+                res[meeting_id] = attendee.state
+        return res
+
+    def _compute_time(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        tz = context.get('tz', pytz.timezone('UTC'))
+        for meeting in self.browse(cr, uid, ids, context=context):
+            date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+            date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+            event_date = date.strftime('%B-%d-%Y')
+            event_time = date.strftime('%H-%M')
+            res[meeting.id] = False
+            if meeting.allday:
+                time =  _("AllDay , %s") % (date_event)
+            elif meeting.duration < 24:
+                duration =  date + timedelta(hours= meeting.duration)
+                time = ("%s at ( %s To %s) (%s)") % (str(event_date), str(event_time), str(duration.strftime('%H-%M')), str(tz))
+            else :
+                time = ("%s at %s To\n %s at %s (%s)") % (event_date, event_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
+            res[meeting.id] = time
         return res
 
     _columns = {
@@ -89,6 +113,7 @@ class crm_meeting(base_state, osv.Model):
                             type="boolean"),
         'attendee_status': fields.function(_compute_status, string='Attendee Status', \
                             type="selection"),
+        'event_time': fields.function(_compute_time, string='Event Time', type="char"),
     }
     _defaults = {
         'state': 'open',
@@ -151,20 +176,22 @@ class crm_meeting(base_state, osv.Model):
 
     def do_decline(self, cr, uid, ids, context=None, *args):
         attendee_pool = self.pool.get('calendar.attendee')
-        attendee = self._check_status(cr, uid, ids, context)
-        if attendee:
-            if attendee.state != 'declined':
-                self.message_post(cr, uid, ids, body=_(("%s has Declined Invitation") % (attendee.cn)), context=context)
-            attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
+        for meeting_id in ids:
+            attendee = self._check_status(cr, uid, meeting_id, context)
+            if attendee:
+                if attendee.state != 'declined':
+                    self.message_post(cr, uid, meeting_id, body=_(("%s has Declined Invitation") % (attendee.cn)), context=context)
+                attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
         return True
 
     def do_accept(self, cr, uid, ids, context=None, *args):
         attendee_pool = self.pool.get('calendar.attendee')
-        attendee = self._check_status(cr, uid, ids, context)
-        if attendee:
-            if attendee.state != 'accepted':
-                self.message_post(cr, uid, ids, body=_(("%s has Accepted Invitation") % (attendee.cn)), context=context)
-            attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
+        for meeting_id in ids:
+            attendee = self._check_status(cr, uid, meeting_id, context)
+            if attendee:
+                if attendee.state != 'accepted':
+                    self.message_post(cr, uid, meeting_id, body=_(("%s has Accepted Invitation") % (attendee.cn)), context=context)
+                attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
         return True
 
 class mail_message(osv.osv):
