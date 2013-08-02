@@ -914,9 +914,9 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         function always() {
             self.avoid_recursion = false;
         }
-        if (this.override_server) {
-            return this.rpc("/gen_session_id", {}).then(function() {
-                debugger;
+        if (this.override_session) {
+            return this.rpc("/gen_session_id", {}).then(function(result) {
+                self.session_id = result;
             }).always(always);
         } else {
             this.avoid_recursion = true;
@@ -957,10 +957,15 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             var fct;
             if (self.origin_server) {
                 fct = openerp.web.jsonRpc;
+                if (self.override_session) {
+                    options.headers = _.extend({}, options.headers, {
+                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : '',
+                    });
+                }
             } else {
                 fct = openerp.web.jsonpRpc;
                 url = self.url(url, null);
-                options.session_id = self.session_id;
+                options.session_id = self.session_id || '';
             }
             var p = fct(url, "call", params, options);
             p = p.then(function (result) {
