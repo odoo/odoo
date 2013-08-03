@@ -12,10 +12,11 @@ class stock_picking_wave(osv.osv):
         'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
         'capacity': fields.float('Capacity', help='The capacity of the transport used to get the goods'),
         'capacity_uom': fields.many2one('product.uom', 'Unit of Measure', help='The Unity Of Measure of the transport capacity'),
-        'wave_type': fields.many2one('stock.picking.wave.type', 'Picking Wave Type'),
+        'wave_type_id': fields.many2one('stock.picking.wave.type', 'Picking Wave Type'),
         'state': fields.selection([('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], required=True),
 
     }
+
     _defaults = {
         'name': '/',
         'state': 'in_progress',
@@ -73,14 +74,13 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
         'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', help='Picking wave associated to this picking'),
-
-        'wave_type': fields.many2one('stock.picking.wave', 'Picking Wave Type'),
+        'wave_type_ids': fields.related('partner_id', 'wave_type_ids', type="many2many", relation='stock.picking.wave.type', string='Picking Wave Type'),
     }
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-        'wave_type': fields.many2many('stock.picking.wave.type', 'stock_picking_wave_type_rel', 'wave_type_id', 'partner_id', 'Picking Wave Type'),
+        'wave_type_ids': fields.many2many('stock.picking.wave.type', 'stock_picking_wave_type_rel', 'wave_type_id', 'partner_id', 'Picking Wave Type'),
     }
 
 class stock_picking_wave_type(osv.osv):

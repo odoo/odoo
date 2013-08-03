@@ -24,7 +24,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"/>
-                                <field name="wave_type"/>
+                                <field name="wave_type_id"/>
                             </group>
                             <group>
                                 <label for="capacity"/>
@@ -63,7 +63,7 @@
                     <field name="partner_id"/>
                     <field name="capacity"/>
                     <field name="capacity_uom"/>
-                    <field name="wave_type"/>
+                    <field name="wave_type_id"/>
                     <field name="time" widget="float_time"/>
                     <field name="state"/>
                 </tree>
@@ -115,8 +115,45 @@
             <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="wave_id"/>
             </xpath>
-
+            <xpath expr="//field[@name='move_type']" position="after">
+                <field name="wave_type_ids" widget="many2many_tags"/>
+            </xpath>
         </field>
+        </record>
+        <record model="ir.ui.view" id="view_stock_picking_wave_tree_inherit">
+        <field name="name">stock.picking.wave.inherit.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="wave_type_ids" invisible="1"/>
+                <field name="wave_id"/>
+            </xpath>
+        </field>
+        </record>
+        <record model="ir.ui.view" id="view_stock_picking_wave_search_inherit">
+        <field name="name">stock.picking.wave.inherit.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='picking_type_id']" position="after">
+                <filter string="Wave" domain="[]" context="{'group_by':'wave_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                    <field name="wave_type_ids"/>
+            </xpath>
+        </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_wave_type">
+            <field name="name">partner.wave.type.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="wave_type_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
         </record>
 
         <record model="ir.ui.view" id="partner_wave_type">

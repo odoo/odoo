@@ -571,6 +571,7 @@
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="state"/>
+                    <field name="picking_type_id"/>
                 </tree>
             </field>
         </record>
@@ -666,7 +667,7 @@
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Picking Type"  domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter string="Picking Type" name="picking_type_id" domain="[]" context="{'group_by':'picking_type_id'}"/>
                     </group>
                 </search>
             </field>
