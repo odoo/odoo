@@ -586,11 +586,14 @@ class stock_picking(osv.osv):
 
     # Methods for partial pickings
 
-
-    def _create_backorder(self, cr, uid, picking, context=None):
+    def _create_backorder(self, cr, uid, picking, backorder_moves=[], context=None):
         """
             Move all non-done lines into a new backorder picking
         """
+        if not backorder_moves:
+            backorder_moves = picking.move_lines
+        backorder_move_ids = [x.id for x in backorder_moves if x.state not in ('done','cancel')]
+
         backorder_id = self.copy(cr, uid, picking.id, {
             'name': '/',
             'move_lines': [],
@@ -599,8 +602,7 @@ class stock_picking(osv.osv):
         })
         back_order_name = self.browse(cr, uid, backorder_id, context=context).name
         self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
-        notdone_move_ids = [x.id for x in picking.move_lines if x.state not in ('done','cancel')]
-        self.pool.get('stock.move').write(cr, uid, notdone_move_ids, {'picking_id': backorder_id}, context=context)
+        self.pool.get('stock.move').write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
         return backorder_id
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
@@ -608,7 +610,7 @@ class stock_picking(osv.osv):
         pack_operation_obj = self.pool.get('stock.pack.operation')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             for move in picking.move_lines:
-                if move.state <> 'assigned': continue
+                if move.state != 'assigned': continue
                 remaining_qty = move.product_qty
                 for quant in move.reserved_quant_ids:
                     qty = min(quant.qty, move.product_qty)
@@ -637,21 +639,17 @@ class stock_picking(osv.osv):
             if move.state in ('cancel','done'): continue
             if move.product_id.id == product.id:
                 todo = min(move.product_qty, qty)
-                partial_datas = {
-                    'product_qty': todo,
-                    'product_uom_id': product.uom_id.id,
-                    'reserved_quant_ids': quant and [(4, quant.id)] or [],
-                }
                 newmove_id = stock_move_obj.split(cr, uid, move, todo, context=context)
-                stock_move_obj.action_done(cr, uid, [newmove_id], context=context)
+                if not context.get('do_only_split'):
+                    stock_move_obj.action_done(cr, uid, [newmove_id], context=context)
 
                 # TODO: To be removed after new API implementation
                 move.refresh()
                 moves.append(move)
 
                 qty -= todo
-                if qty<=0: break
-        if qty>0:
+                if qty <= 0: break
+        if qty > 0:
             move_id = stock_move_obj.create(cr, uid, {
                 'name': product.name,
                 'product_id': product.id,
@@ -660,10 +658,11 @@ class stock_picking(osv.osv):
                 'location_id': picking.location_id.id,
                 'location_dest_id': picking.location_dest_id.id,
                 'picking_id': picking.id,
-                'reserved_quant_ids': quant and [(4,quant.id)] or [],
+                'reserved_quant_ids': quant and [(4, quant.id)] or [],
                 'picking_type_id': picking.picking_type_id.id
             }, context=context)
-            stock_move_obj.action_done(cr, uid, [move_id], context=context)
+            if not context.get('do_only_split'):
+                stock_move_obj.action_done(cr, uid, [move_id], context=context)
             move = stock_move_obj.browse(cr, uid, move_id, context=context)
             moves.append(move)
         return moves
@@ -675,6 +674,7 @@ class stock_picking(osv.osv):
         """
         #TODO: this variable should be in argument
         quant_obj = self.pool.get('stock.quant')
+        quant_package_obj = self.pool.get('stock.quant.package')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if not picking.pack_operation_ids:
                 self.action_done(cr, uid, [picking.id], context=context)
@@ -697,6 +697,30 @@ class stock_picking(osv.osv):
                     }, context=context)
 
             self._create_backorder(cr, uid, picking, context=context)
+        return True
+
+    def do_split(self, cr, uid, picking_ids, context=None):
+        """
+            If no pack operation, we close the whole move
+            Otherwise, do the pack operations
+        """
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['do_only_split'] = True
+        quant_package_obj = self.pool.get('stock.quant.package')
+        backorder_moves = []
+        for picking in self.browse(cr, uid, picking_ids, context=context):
+            if not picking.pack_operation_ids:
+                continue
+            for op in picking.pack_operation_ids:
+                if op.package_id:
+                    for quant in quant_package_obj.quants_get(cr, uid, op.package_id, context=context):
+                        backorder_moves += self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=ctx)
+                elif op.product_id:
+                    backorder_moves += self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=ctx)
+
+            self._create_backorder(cr, uid, picking, backorder_moves, context=context)
         return True
 
     # Methods for the barcode UI

@@ -136,7 +136,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='picking_type_id']" position="after">
+            <xpath expr="//filter[@string='Picking Type']" position="after">
                 <filter string="Wave" domain="[]" context="{'group_by':'wave_id'}"/>
             </xpath>
             <xpath expr="//field[@name='picking_type_id']" position="after">
@@ -152,17 +152,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='active']" position="after">
                     <field name="wave_type_ids" widget="many2many_tags"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="partner_wave_type">
-            <field name="name">partner.wave.type.view</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='active']" position="after">
-                    <field name="wave_type" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
