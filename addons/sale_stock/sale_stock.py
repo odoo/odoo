@@ -59,12 +59,10 @@ class sale_order(osv.osv):
     def _get_shipped(self, cr, uid, ids, name, args, context=None):
         res = {}
         for sale in self.browse(cr, uid, ids, context=context):
-            res[sale.id] = True
-            #TODO: not better to use picking
-            pickingstates = []
-            for pick in sale.picking_ids:
-                pickingstates += [x.state not in ['cancel', 'done'] for x in pick.move_lines]
-            if any(pickingstates):
+            group = sale.procurement_group_id
+            if group:
+                res[sale.id] = all([proc.state in ['cancel', 'done'] for proc in group.procurement_ids])
+            else:
                 res[sale.id] = False
         return res
 
@@ -79,37 +77,16 @@ class sale_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if not ids: return res
-        for id in ids:
-            res.setdefault(id, [])
-        '''SQL request that does exactly the same as the code below'''
-        cr.execute('''SELECT sol.order_id, sm.picking_id from sale_order_line as sol \
-                   LEFT JOIN procurement_order as po on (po.id = sol.procurement_id) \
-                   LEFT JOIN stock_move as sm on (sm.id = po.move_id) \
-                   LEFT JOIN stock_picking as sp on (sp.id = sm.picking_id) \
-                   WHERE sol.order_id in %s \
-                   GROUP BY sol.order_id, sm.picking_id ORDER BY sol.order_id''',(tuple(ids),))
-        result = cr.fetchall() #and sp.type = 'out'\
-        for r in result:
-            res[r[0]].append(r[1])
+        for element in self.browse(cr, uid, ids, context=context):
+            for procurement in element.procurement_group_id.procurement_ids:
+                if procurement.move_id and procurement.move_id.picking_id:
+                    picking_ids.append(procurement.move_id.picking_id.id)
+            res[element.id] = list(set(picking_ids))
         return res
 
-        #for element in self.browse(cr, uid, ids, context=context):
-        #    procu_ids = []
-        #    for line in element.order_line:
-        #        if line.procurement_id:
-        #            procu_ids.append(line.procurement_id.id)
-        #    picking_ids = []
-        #    for procurement in self.pool.get('procurement.order').browse(cr, uid, list(set(procu_ids)), context=context):
-        #        if procurement.move_id and procurement.move_id.picking_id and procurement.move_id.picking_id.type == 'out':
-        #            picking_ids.append(procurement.move_id.picking_id.id)
-        #    res[element.id] = list(set(picking_ids))
-        #return res
-
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
-        mod_obj = self.pool.get('ir.model.data')
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
-        location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
+        location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
         return vals
 
