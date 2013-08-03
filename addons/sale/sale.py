@@ -216,7 +216,6 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The total amount."),
 
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sales order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -229,7 +228,6 @@ class sale_order(osv.osv):
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: '/',
-        'invoice_quantity': 'order',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
         'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note
@@ -780,15 +778,13 @@ class sale_order_line(osv.osv):
     }
 
     def _get_line_qty(self, cr, uid, line, context=None):
-        if (line.order_id.invoice_quantity=='order'):
-            if line.product_uos:
-                return line.product_uos_qty or 0.0
+        if line.product_uos:
+            return line.product_uos_qty or 0.0
         return line.product_uom_qty
 
     def _get_line_uom(self, cr, uid, line, context=None):
-        if (line.order_id.invoice_quantity=='order'):
-            if line.product_uos:
-                return line.product_uos.id
+        if line.product_uos:
+            return line.product_uos.id
         return line.product_uom.id
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):

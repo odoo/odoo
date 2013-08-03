@@ -38,18 +38,6 @@ class sale_order(osv.osv):
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
-    #Might have been deleted before for a reason
-    def shipping_policy_change(self, cr, uid, ids, policy, context=None):
-        if not policy:
-            return {}
-        inv_qty = 'order'
-        if policy == 'prepaid':
-            inv_qty = 'order'
-        elif policy == 'picking':
-            inv_qty = 'procurement'
-        return {'value': {'invoice_quantity': inv_qty}}
-
-
     def _get_default_warehouse(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
@@ -78,11 +66,14 @@ class sale_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for element in self.browse(cr, uid, ids, context=context):
-            for procurement in element.procurement_group_id.procurement_ids:
+        for sale in self.browse(cr, uid, ids, context=context):
+            if not sale.procurement_group_id:
+                res[sale.id] = []
+                continue
+            for procurement in sale.procurement_group_id.procurement_ids:
                 if procurement.move_id and procurement.move_id.picking_id:
                     picking_ids.append(procurement.move_id.picking_id.id)
-            res[element.id] = list(set(picking_ids))
+            res[sale.id] = list(set(picking_ids))
         return res
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
@@ -116,7 +107,7 @@ class sale_order(osv.osv):
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.function(_get_shipped, type='boolean', store={'stock.move': (_get_orders, ['state'], 10)}),
+        'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={'stock.move': (_get_orders, ['state'], 10)}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }

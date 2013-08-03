@@ -75,8 +75,7 @@
                         <group name="logistics">
                             <field name="incoterm" widget="selection" groups="base.group_user"/>
                             <field name="picking_policy" required="True"/>
-                            <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                            <field name="invoice_quantity" invisible="True"/>
+                            <field name="order_policy"/>
                         </group>
                    </xpath>
                 </data>
