@@ -19,20 +19,12 @@
 #
 ##############################################################################
 
-from openerp.addons.base_status.base_stage import base_stage
-import binascii
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
-import time
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-CRM_CLAIM_PENDING_STATES = (
-    crm.AVAILABLE_STATES[2][0], # Cancelled
-    crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
-)
 
 class crm_claim_stage(osv.osv):
     """ Model for claim stages. This models the main stages of a claim
@@ -51,8 +43,6 @@ class crm_claim_stage(osv.osv):
         'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'state': fields.selection(crm.AVAILABLE_STATES, 'Status', required=True, help="The related status for the stage. The status of your document will automatically change regarding the selected stage. For example, if a stage is related to the status 'Close', when your document reaches this stage, it will be automatically have the 'closed' status."),
-        'case_refused': fields.boolean('Refused stage',
-                        help='Refused stages are specific stages for done.'),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty',
@@ -63,16 +53,24 @@ class crm_claim_stage(osv.osv):
         'sequence': lambda *args: 1,
         'state': 'draft',
         'fold': False,
-        'case_refused': False,
     }
 
-class crm_claim(base_stage, osv.osv):
+class crm_claim(osv.osv):
     """ Crm claim
     """
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
     _inherit = ['mail.thread']
+
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        return self.pool.get('crm.lead')._resolve_section_id_from_context(cr, uid, context=context) or False
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        section_id = self._get_default_section_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -117,15 +115,13 @@ class crm_claim(base_stage, osv.osv):
     }
 
     _defaults = {
-        'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
-        'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'user_id': lambda s, cr, uid, c: uid,
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
-        'date': fields.datetime.now,
+        'date': fields.datetime.now(),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'active': lambda *a: 1,
-        'stage_id':lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c)
+        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c)
     }
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
@@ -158,26 +154,23 @@ class crm_claim(base_stage, osv.osv):
             return stage_ids[0]
         return False
 
-    def case_refuse(self, cr, uid, ids, context=None):
-        """ Mark the case as refused: state=done and case_refused=True """
-        for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
-            if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
-        return True
-
-    def onchange_partner_id(self, cr, uid, ids, part, email=False):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, email=False, context=None):
         """This function returns value of partner address based on partner
-           :param part: Partner's id
            :param email: ignored
         """
-        if not part:
-            return {'value': {'email_from': False,
-                              'partner_phone': False
-                            }
-                   }
-        address = self.pool.get('res.partner').browse(cr, uid, part)
+        if not partner_id:
+            return {'value': {'email_from': False, 'partner_phone': False}}
+        address = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('section_id') and not context.get('default_section_id'):
+            context['default_section_id'] = vals.get('section_id')
+
+        # context: no_log, because subtype already handle this
+        return super(crm_claim, self).create(cr, uid, vals, context=context)
 
     # -------------------------------------------------------
     # Mail gateway

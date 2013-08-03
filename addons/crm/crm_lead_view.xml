@@ -95,10 +95,6 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="case_reset" string="Reset" type="object"
-                            states="cancel"/>
-                    <button name="case_cancel" string="Cancel Case" type="object"
-                            states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             on_change="onchange_stage_id(stage_id)"/>
@@ -118,7 +114,7 @@
                             <field name="partner_name" string="Company Name"/>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)"
+                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
                             <label for="street" string="Address"/>
@@ -412,7 +408,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"
-                                    on_change="onchange_partner_id(partner_id, email_from)"
+                                    on_change="on_change_partner_id(partner_id)"
                                     string="Customer"
                                     context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
                                 <field name="email_from" string="Email"/>
@@ -617,7 +613,7 @@
             <field name="state">code</field>
             <field name="code">
                 if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
-                    self.case_cancel(cr, uid, context['active_ids'], context=context)
+                    self.case_mark_lost(cr, uid, context['active_ids'], context=context)
             </field>
             <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
         </record>
