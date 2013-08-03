@@ -37,7 +37,7 @@ class sale_order(osv.osv):
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
-    #Might have been deleted before for a reason     
+    #Might have been deleted before for a reason
     def shipping_policy_change(self, cr, uid, ids, policy, context=None):
         if not policy:
             return {}
@@ -138,7 +138,7 @@ class sale_order(osv.osv):
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.function(_get_shipped, type='boolean', store = {'stock.move': (_get_orders, ['state'], 10)}), 
+        'shipped': fields.function(_get_shipped, type='boolean', store = {'stock.move': (_get_orders, ['state'], 10)}),
     #fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
@@ -281,7 +281,7 @@ class sale_order(osv.osv):
                 if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
-    
+
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
         for order in self.browse(cr, uid, ids, context={}):
@@ -299,8 +299,7 @@ class stock_move(osv.osv):
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
-    
-    
+
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -310,8 +309,7 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
-    
-    _columns = { 
+    _columns = {
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
@@ -329,7 +327,7 @@ class sale_order_line(osv.osv):
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
                             _('Cannot cancel sales order line!'),
-                            _('You must first cancel stock moves attached to this sales order line.'))   
+                            _('You must first cancel stock moves attached to this sales order line.'))
         return res
 
     def copy_data(self, cr, uid, id, default=None, context=None):
@@ -337,8 +335,7 @@ class sale_order_line(osv.osv):
             default = {}
         default.update({'move_ids': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
-    
-    
+
     def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
                                    partner_id=False, packaging=False, flag=False, context=None):
         if not product:
