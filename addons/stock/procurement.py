@@ -93,11 +93,9 @@ class procurement_order(osv.osv):
                 self.message_post(cr, uid, [procurement.id], body=_('No source location defined!'), context=context)
                 return False
             move_obj = self.pool.get('stock.move')
-            print 'Create Move'
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
             move_id = move_obj.create(cr, uid, move_dict, context=context)
             move_obj.action_confirm(cr, uid, [move_id], context=context)
-            print 'Confirm Move'
             self.write(cr, uid, [procurement.id], {'move_id': move_id}, context=context)
             return move_id
         return super(procurement_order, self)._run(cr, uid, procurement, context)
