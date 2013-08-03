@@ -502,7 +502,6 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         picking_obj = self.browse(cr, uid, id, context=context)
-        move_obj = self.pool.get('stock.move')
         if ('name' not in default) or (picking_obj.name == '/'):
             default['name'] = '/'
             default['origin'] = ''
@@ -511,12 +510,18 @@ class stock_picking(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
+        todo_force_assign = []
         for picking in self.browse(cr, uid, ids, context=context):
+            if picking.picking_type_id.auto_force_assign:
+                todo_force_assign.append(picking.id)
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
+
+        if todo_force_assign:
+            self.force_assign(cr, uid, todo_force_assign, context=context)
         return True
 
     def action_assign(self, cr, uid, ids, *args):
@@ -528,17 +533,17 @@ class stock_picking(osv.osv):
                 self.action_confirm(cr, uid, [pick.id])
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
-                raise osv.except_osv(_('Warning!'),_('No product available.'))
+                raise osv.except_osv(_('Warning!'), _('No product available.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids)
         return True
 
-    def force_assign(self, cr, uid, ids, *args):
+    def force_assign(self, cr, uid, ids, context=None):
         """ Changes state of picking to available if moves are confirmed or waiting.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
-            move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed','waiting']]
-            self.pool.get('stock.move').force_assign(cr, uid, move_ids)
+        for pick in self.browse(cr, uid, ids, context=context):
+            move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
+            self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
         return True
 
     def cancel_assign(self, cr, uid, ids, *args):
@@ -2184,8 +2189,9 @@ class stock_picking_type(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('name', translate=True),
-        'pack': fields.boolean('Pack', 'This picking type needs packing interface'),
+        'name': fields.char('name', translate=True, required=True),
+        'pack': fields.boolean('Pack', help='This picking type needs packing interface'),
+        'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in stock'),
         'color': fields.integer('Color Index'),
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required = True),
@@ -2221,4 +2227,4 @@ class stock_picking_type(osv.osv):
 
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4s
