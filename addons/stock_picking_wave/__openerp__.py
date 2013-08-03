@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Stock Picking Waves',
+    'name': 'Warehouse Management: Waves',
     'version': '1.0',
     'category': 'Stock Management',
     'description': """
@@ -36,6 +36,6 @@ This module adds the picking wave option in warehouse management.
             'wizard/picking_to_wave_view.xml'],
     'demo': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
