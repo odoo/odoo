@@ -34,6 +34,7 @@ class sale_order(osv.osv):
             default = {}
         default.update({
             'shipped': False,
+            'picking_ids': []
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
@@ -53,7 +54,7 @@ class sale_order(osv.osv):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
         if not warehouse_ids:
-            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
+            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for selected company.'))
         return warehouse_ids[0]
 
     def _get_shipped(self, cr, uid, ids, name, args, context=None):
@@ -115,8 +116,7 @@ class sale_order(osv.osv):
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.function(_get_shipped, type='boolean', store = {'stock.move': (_get_orders, ['state'], 10)}),
-    #fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
+        'shipped': fields.function(_get_shipped, type='boolean', store={'stock.move': (_get_orders, ['state'], 10)}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
@@ -163,9 +163,12 @@ class sale_order(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
+    # TODO: FP Note: I guess it's better to do:
+    # if order_policy<>picking: super()
+    # else: call invoice_on_picking_method()
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
         picking_obj = self.pool.get('stock.picking')
-        res = super(sale_order,self).action_invoice_create( cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
+        res = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             if order.order_policy == 'picking':
                 picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
@@ -183,13 +186,13 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-                if pick.state == 'cancel':
-                    for mov in pick.move_lines:
-                        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
-                        if proc_ids:
-                            proc_obj.signal_button_check(cr, uid, proc_ids)
-            for r in self.read(cr, uid, ids, ['picking_ids']):
-                stock_obj.signal_button_cancel(cr, uid, r['picking_ids'])
+                 # FP Note: not sure we need this
+                 #if pick.state == 'cancel':
+                 #    for mov in pick.move_lines:
+                 #        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
+                 #        if proc_ids:
+                 #            proc_obj.signal_button_check(cr, uid, proc_ids)
+            stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
@@ -413,35 +416,3 @@ class sale_order_line(osv.osv):
         res.update({'warning': warning})
         return res
 
-
-
-class sale_advance_payment_inv(osv.osv_memory):
-    _inherit = "sale.advance.payment.inv"
-
-    def _create_invoices(self, cr, uid, inv_values, sale_id, context=None):
-        result = super(sale_advance_payment_inv, self)._create_invoices(cr, uid, inv_values, sale_id, context=context)
-        sale_obj = self.pool.get('sale.order')
-        sale_line_obj = self.pool.get('sale.order.line')
-        wizard = self.browse(cr, uid, [result], context)
-        sale = sale_obj.browse(cr, uid, sale_id, context=context)
-
-        # If invoice on picking: add the cost on the SO
-        # If not, the advance will be deduced when generating the final invoice
-        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('name') or ''
-        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('invoice_line_tax_id') or False
-        if sale.order_policy == 'picking':
-            vals = {
-                'order_id': sale.id,
-                'name': line_name,
-                'price_unit': -inv_amount,
-                'product_uom_qty': wizard.qtty or 1.0,
-                'product_uos_qty': wizard.qtty or 1.0,
-                'product_uos': res.get('uos_id', False),
-                'product_uom': res.get('uom_id', False),
-                'product_id': wizard.product_id.id or False,
-                'discount': False,
-                'tax_id': line_tax,
-            }
-            sale_line_obj.create(cr, uid, vals, context=context)
-        return result
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
