@@ -39,7 +39,7 @@ class procurement_rule(osv.osv):
     _columns = {
         'location_id': fields.many2one('stock.location', 'Destination Location'),
         'location_src_id': fields.many2one('stock.location', 'Source Location',
-            help="Source location is action=move"), 
+            help="Source location is action=move"),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True, 
             help="Picking Type determines the way the picking should be shown in the view, reports, ...")
     }
@@ -48,7 +48,7 @@ class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
         'location_id': fields.many2one('stock.location', 'Destination Location'),
-        'move_id': fields.many2one('stock.move', 'Move', help="Move created by the procurement"),
+        'move_ids': fields.one2many('stock.move', 'procurement_id', 'Moves', help="Moves created by the procurement"),
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
     }
 
@@ -82,7 +82,7 @@ class procurement_order(osv.osv):
             'location_id': procurement.rule_id.location_src_id.id,
             'location_dest_id': procurement.rule_id.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
-            'group_id': procurement.group_id and procurement.group_id.id or False, 
+            'procurement_id': procurement.id,
             'rule_id': procurement.rule_id.id,
             'picking_type_id': procurement.rule_id.picking_type_id.id,
         }
@@ -96,12 +96,16 @@ class procurement_order(osv.osv):
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
             move_id = move_obj.create(cr, uid, move_dict, context=context)
             move_obj.action_confirm(cr, uid, [move_id], context=context)
-            self.write(cr, uid, [procurement.id], {'move_id': move_id}, context=context)
             return move_id
         return super(procurement_order, self)._run(cr, uid, procurement, context)
 
     def _check(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'move':
+            for move in procurement.move_ids:
+                if not move.state in ('done', 'cancel'):
+                    return False
+            else:
+                return True
             return procurement.move_id.state == 'done'
         return super(procurement_order, self)._check(cr, uid, procurement, context)
 

@@ -761,7 +761,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
-        'procurement_ids': fields.many2one('procurement.order', 'sale_line_ids', 'Procurements'),
+        'procurement_ids': fields.one2many('procurement.order', 'sale_line_id', 'Procurements'),
     }
     _order = 'order_id desc, sequence, id'
     _defaults = {
@@ -1072,7 +1072,7 @@ class account_invoice(osv.Model):
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'sale_line_id': fields.many2one('sale.order.line', string = 'Sale Order Line')
+        'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
         'invoice_state': fields.selection(
           [
             ("invoiced", "Invoiced"),
@@ -1083,6 +1083,4 @@ class procurement_order(osv.osv):
     _defaults = {
         'invoice_state': 'none',
     }
-
-    
 

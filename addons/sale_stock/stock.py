@@ -24,7 +24,7 @@ from openerp.tools.translate import _
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-    def __get_invoice_state(self, cursor, user, ids, name, arg, context=None):
+    def __get_invoice_state(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for pick in self.browse(cr, uid, ids, context=context):
             result[pick.id] = 'none'
@@ -37,14 +37,25 @@ class stock_picking(osv.osv):
                         break
         return result
 
+    def __get_picking_procurement(self, cr, uid, ids, context={}):
+        result = {}
+        for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
+            for move in proc.move_ids:
+                if move.picking_id:
+                    result[move.picking_id.id] = True
+        return result.keys()
+
     _columns = {
-        # TODO: add a store=...
-        'invoice_state': fields.function(_get_invoice_state, type='selection', selection=[
+        'invoice_state': fields.function(__get_invoice_state, type='selection', selection=[
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-          ], "Invoice Control", required=True),
-
+          ], string="Invoice Control", required=True,
+          store={'procurement.order': (__get_picking_procurement, ['invoice_state'], 10)},
+        ),
+    }
+    _defaults = {
+        'invoice_state': lambda *args, **argv: 'none'
     }
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
@@ -88,14 +99,14 @@ class stock_picking(osv.osv):
                 invoice_id = self.pool.get('account.invoice').create(cr, uid, {
                     'origin': sale.name,
                     'date_invoice': context.get('date_inv', False),
-                    'user_id': sale.user_id and sale.user_id.id or False
+                    'user_id': sale.user_id and sale.user_id.id or False,
                     'partner_id': partner.id,
                     'account_id': account_id,
                     'payment_term': payment_term,
                     'type': inv_type,
                     'fiscal_position': partner.property_account_position.id,
                     'company_id': sale.company_id.id,
-                    'currency_id': sale.pricelist_id.currency_id.id, 
+                    'currency_id': sale.pricelist_id.currency_id.id,
                     'journal_id': journal_id,
                 }, context=context)
                 invoices[key] = invoice_id

@@ -951,7 +951,8 @@ class stock_move(osv.osv):
         'quant_ids': fields.many2many('stock.quant',  'stock_quant_move_rel', 'move_id', 'quant_id', 'Quants'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
-        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
+        'group_id': fields.related('procurement_id', 'group_id', type='many2one', relation="procurement.group", string='Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
@@ -2135,5 +2136,4 @@ class stock_picking_type(osv.osv):
             type='string', multi='_get_picking_history'),
 
     }
-
 

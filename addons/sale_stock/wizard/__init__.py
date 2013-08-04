@@ -19,46 +19,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'WMS Accounting',
-    'version': '1.1',
-    'author': 'OpenERP SA',
-    'summary': 'Inventory, Logistic, Valuation, Accounting',
-    'description' : """
-TODO
-======================
-TODO
-
-Key Features
-------------
-* Stock Valuation (periodical or automatic)
-* Invoice from Picking
-
-Dashboard / Reports for Warehouse Management will include:
-----------------------------------------------------------
-* TODO
-    """,
-    'website': 'http://www.openerp.com',
-    'images': [],
-    'depends': ['stock', 'account'],
-    'category': 'Hidden',
-    'sequence': 16,
-    'demo': [
-        'stock_account_demo.xml'
-    ],
-    'data': [
-        'stock_account_data.xml', 
-        'wizard/stock_change_standard_price_view.xml',
-        'product_data.xml',
-        'product_view.xml',
-        'stock_account_view.xml', 
-        'valuationandcostmethod.yml',
-    ],
-    'test': [
-
-    ],
-    'installable': True,
-    'application': True,
-    'auto_install': True,
-}
-
+import stock_invoice_onshipping

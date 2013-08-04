@@ -57,11 +57,9 @@ class sale_order(osv.osv):
 
     def _get_orders(self, cr, uid, ids, context=None):
         res = set()
-        proc_obj = self.pool.get("procurement.order")
-        procs = proc_obj.search(cr, uid, [('move_id', 'in', ids)], context=context)
-        for proc in proc_obj.browse(cr, uid, procs, context=context):
-            if proc.group_id and proc.group_id.sale_id:
-                res.add(proc.group_id.sale_id.id)
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id:
+                res.add(move.procurement_id.sale_line_id.order_id.id)
         return list(res)
 
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
@@ -72,8 +70,9 @@ class sale_order(osv.osv):
                 continue
             picking_ids = {}
             for procurement in sale.procurement_group_id.procurement_ids:
-                if procurement.move_id and procurement.move_id.picking_id:
-                    picking_ids[procurement.move_id.picking_id.id] = True
+                for move in procurement.move_ids:
+                    if move.picking_id:
+                        picking_ids[move.picking_id.id] = True
             res[sale.id] = picking_ids.keys()
         return res
 
@@ -207,13 +206,12 @@ class sale_order(osv.osv):
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
-                if (not line.procurement_id) or (line.procurement_id.state=='done'):
-                    if line.state != 'done':
+                for procurement in line.procurement_ids:
+                    if procurement.state != 'done':
                         write_done_ids.append(line.id)
-                else:
-                    finished = False
-                if line.procurement_id:
-                    if (line.procurement_id.state == 'cancel'):
+                    else:
+                        finished = False
+                    if (procurement.state == 'cancel'):
                         canceled = True
                         if line.state != 'exception':
                             write_cancel_ids.append(line.id)
