@@ -61,7 +61,7 @@ class procurement_group(osv.osv):
             ('direct', 'Partial'), ('one', 'All at once')],
             'Delivery Method', required=True),
         'partner_id': fields.many2one('res.partner', string = 'Partner'), #Sale should pass it here 
-        'procurement_ids': fields.many2one('procurement.order', 'group_id', 'Procurements'), 
+        'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'), 
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',

@@ -45,7 +45,7 @@ You can choose flexible invoicing methods:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg'],
-    'depends': ['sale', 'stock_account', 'procurement'],
+    'depends': ['sale', 'stock_account'],
     'init_xml': [],
     'update_xml': ['security/sale_stock_security.xml',
                    'security/ir.model.access.csv',
@@ -65,4 +65,3 @@ You can choose flexible invoicing methods:
     'installable': True,
     'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

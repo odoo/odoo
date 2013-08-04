@@ -286,7 +286,7 @@ class sale_order(osv.osv):
             partner_lang = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).lang
             context_lang.update({'lang': partner_lang})
         return self.pool.get('res.users').browse(cr, uid, uid, context=context_lang).company_id.sale_note
-            
+
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
@@ -635,6 +635,8 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
             'note': line.name,
             'group_id': group_id,
+            'invoice_state': (order.order_policy=='picking') and '2binvoiced' or 'none',
+            'sale_line_id': line.id
         }
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
@@ -656,7 +658,7 @@ class sale_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
-            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'sale_id': order.id}, context=context)
+            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name}, context=context)
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
@@ -664,7 +666,7 @@ class sale_order(osv.osv):
 
                 proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context))
                 proc_ids.append(proc_id)
-                line.write({'procurement_id': proc_id})
+
             #Confirm procurement order such that rules will be applied on it
             procurement_obj.run(cr, uid, proc_ids, context=context)
             # FP NOTE: do we need this? isn't it the workflow that should set this
@@ -680,9 +682,6 @@ class sale_order(osv.osv):
                             break
             order.write(val)
         return True
-
-
-
 
 
 
@@ -738,7 +737,8 @@ class sale_order_line(osv.osv):
         'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
             store={
                 'account.invoice': (_order_lines_from_invoice, ['state'], 10),
-                'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)}),
+                'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)
+            }),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
          help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced."),
@@ -761,8 +761,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
-        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        #'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
+        'procurement_ids': fields.many2one('procurement.order', 'sale_line_ids', 'Procurements'),
     }
     _order = 'order_id desc, sequence, id'
     _defaults = {
@@ -840,11 +839,6 @@ class sale_order_line(osv.osv):
             }
 
         return res
-
-
-    
-
-
 
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
@@ -1075,12 +1069,20 @@ class account_invoice(osv.Model):
                 wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
 
-class procurement_group(osv.osv):
-    _inherit = 'procurement.group'
-    
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
     _columns = {
-            'sale_id': fields.many2one('sale.order', string = 'Sales Order')
-                }
+        'sale_line_id': fields.many2one('sale.order.line', string = 'Sale Order Line')
+        'invoice_state': fields.selection(
+          [
+            ("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not Applicable")
+          ], "Invoice Control", required=True),
+    }
+    _defaults = {
+        'invoice_state': 'none',
+    }
 
+    
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -39,7 +39,6 @@ class sale_report(osv.osv):
             ('cancel', 'Cancelled')
             ], 'Order Status', readonly=True),
     }
-    
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("""
@@ -93,4 +92,3 @@ class sale_report(osv.osv):
             )
         """)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

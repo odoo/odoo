@@ -70,10 +70,11 @@ class sale_order(osv.osv):
             if not sale.procurement_group_id:
                 res[sale.id] = []
                 continue
+            picking_ids = {}
             for procurement in sale.procurement_group_id.procurement_ids:
                 if procurement.move_id and procurement.move_id.picking_id:
-                    picking_ids.append(procurement.move_id.picking_id.id)
-            res[sale.id] = list(set(picking_ids))
+                    picking_ids[procurement.move_id.picking_id.id] = True
+            res[sale.id] = picking_ids.keys()
         return res
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
@@ -261,13 +262,6 @@ class sale_order(osv.osv):
                     res.append(line.procurement_id.id)
         return res
 
-class stock_move(osv.osv):
-    _inherit = 'stock.move'
-    _columns = {
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale Line'),
-    }
-
-
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
@@ -281,7 +275,6 @@ class sale_order_line(osv.osv):
         return res
 
     _columns = {
-        'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
     }
