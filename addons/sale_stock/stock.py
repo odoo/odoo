@@ -53,7 +53,7 @@ class stock_picking(osv.osv):
           ], string="Invoice Control", required=True,
           store={
             'procurement.order': (__get_picking_procurement, ['invoice_state'], 10),
-            'stock.picking': (lambda self, cr, uid, ids, c={}: uid, ['state'], 10)
+            'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10)
           },
         ),
     }
@@ -70,7 +70,6 @@ class stock_picking(osv.osv):
         """
         context = context or {}
         todo = {}
-        print 'Invoice Create', ids, journal_id, group, type, context
         for picking in self.browse(cr, uid, ids, context=context):
             key = group and picking.id or True
             for move in picking.move_lines:

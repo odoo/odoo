@@ -95,9 +95,7 @@ class procurement_order(osv.osv):
                 return False
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
-            print '***', move_dict
             move_id = move_obj.create(cr, uid, move_dict, context=context)
-            print '***', move_id, move_dict
             move_obj.action_confirm(cr, uid, [move_id], context=context)
             return move_id
         return super(procurement_order, self)._run(cr, uid, procurement, context)

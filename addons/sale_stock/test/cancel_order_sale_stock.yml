@@ -4,30 +4,42 @@
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_8}
 -
-  I send delivery in two shipments, so I am doing a partial delivery order.
+  I do a partial delivery order.
 -
   !python {model: stock.picking}: |
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
-    first_picking = self.browse(cr, uid, delivery_orders[-1], context=context)
-    if first_picking.force_assign(cr, uid, first_picking):
-      first_move = first_picking.move_lines[0]
-      values = {'move%s'%(first_move.id): {'product_qty': 2, 'product_uom':ref('product.product_uom_unit')}}
-      first_picking.do_partial(values, context=context)
+    picks = self.search(cr, uid, [('origin','=','Test/001')])
+    pick = self.browse(cr, uid, picks[-1], context=context)
+
+    self.pool.get('stock.pack.operation').create(cr, uid, {
+    	'picking_id': pick.id,
+	'product_id': ref('product.product_product_27'),
+	'product_uom_id': ref('product.product_uom_unit'),
+	'product_qty': 1
+    })
+    pick.do_partial(values, context=context)
 -
-  Now I cancel latest shipment.
+  I test that I have two pickings, one done and one backorder to do
 -
   !python {model: stock.picking}: |
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
-    last_delivery_order_id = delivery_orders[-1]
-    self.pool.get('stock.picking').signal_button_cancel(cr, uid, [last_delivery_order_id])
+    picks = self.search(cr, uid, [('origin','=','Test/001')])
+    assert len(picks)>1, 'Only one picking, partial picking may have failed!'
+    picks = self.search(cr, uid, [('origin','=','Test/001'), ('state','=','done')])
+    assert len(picks)==1, 'You should have one delivery order which is done!'
+    picks = self.search(cr, uid, [('origin','=','Test/001'), ('backorder_id','=',picks[0])])
+    assert len(picks)==1, 'You should have one backorder to process!'
+- 
+  I cancel the backorder
+-
+  !python {model: stock.picking}: |
+    picks = self.search(cr, uid, [('origin','=','Test/001'),('backorder_id','<>',False)])
+    self..action_cancel(cr, uid, picks)
 -
   I run the scheduler.
 -
   !python {model: procurement.order}: |
-
      self.run_scheduler(cr, uid)
 -
-  I check order status in "Ship Exception".
+  I check that the order status in "Ship Exception".
 -
   !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be in shipping exception}:
     - state == "shipping_except"
