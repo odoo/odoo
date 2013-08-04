@@ -11,10 +11,10 @@
     pick = self.browse(cr, uid, picks[-1], context=context)
 
     self.pool.get('stock.pack.operation').create(cr, uid, {
-    	'picking_id': pick.id,
-	'product_id': ref('product.product_product_27'),
-	'product_uom_id': ref('product.product_uom_unit'),
-	'product_qty': 1
+        'picking_id': pick.id,
+        'product_id': ref('product.product_product_27'),
+        'product_uom_id': ref('product.product_uom_unit'),
+        'product_qty': 1
     })
     pick.do_partial(values, context=context)
 -
