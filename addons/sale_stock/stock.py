@@ -51,7 +51,10 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
-          store={'procurement.order': (__get_picking_procurement, ['invoice_state'], 10)},
+          store={
+            'procurement.order': (__get_picking_procurement, ['invoice_state'], 10),
+            'stock.picking': (lambda self, cr, uid, ids, c={}: uid, ['state'], 10)
+          },
         ),
     }
     _defaults = {

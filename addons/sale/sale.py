@@ -685,8 +685,6 @@ class sale_order(osv.osv):
             order.write(val)
         return True
 
-
-
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
 # - use it in report if there is a uos

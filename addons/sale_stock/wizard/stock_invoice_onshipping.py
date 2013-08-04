@@ -20,11 +20,9 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-
 from openerp.tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
-
     def _get_journal(self, cr, uid, context=None):
         res = self._get_journal_id(cr, uid, context=context)
         if res:
@@ -34,50 +32,22 @@ class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
-
-        model = context.get('active_model')
-        if not model or 'stock.picking' not in model:
-            return []
-
-        model_pool = self.pool[model]
         journal_obj = self.pool.get('account.journal')
-        res_ids = context and context.get('active_ids', [])
+        value = journal_obj.search(cr, uid, [('type', 'in',('sale','sale_Refund'))])
         vals = []
-        browse_picking = model_pool.browse(cr, uid, res_ids, context=context)
-
-        for pick in browse_picking:
-            if not pick.move_lines:
-                continue
-            src_usage = pick.move_lines[0].location_id.usage
-            dest_usage = pick.move_lines[0].location_dest_id.usage
-            type = pick.type
-            if type == 'out' and dest_usage == 'supplier':
-                journal_type = 'purchase_refund'
-            elif type == 'out' and dest_usage == 'customer':
-                journal_type = 'sale'
-            elif type == 'in' and src_usage == 'supplier':
-                journal_type = 'purchase'
-            elif type == 'in' and src_usage == 'customer':
-                journal_type = 'sale_refund'
-            else:
-                journal_type = 'sale'
-
-            value = journal_obj.search(cr, uid, [('type', '=',journal_type )])
-            for jr_type in journal_obj.browse(cr, uid, value, context=context):
-                t1 = jr_type.id,jr_type.name
-                if t1 not in vals:
-                    vals.append(t1)
+        for jr_type in journal_obj.browse(cr, uid, value, context=context):
+            t1 = jr_type.id,jr_type.name
+            if t1 not in vals:
+                vals.append(t1)
         return vals
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
-
     _columns = {
         'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
     }
-
     _defaults = {
         'journal_id' : _get_journal,
     }
