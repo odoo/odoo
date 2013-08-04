@@ -280,7 +280,7 @@ class QWebXml(object):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
 
         record, field = t_att["field"].rsplit('.', 1)
-        record = self.eval_object(record)
+        record = self.eval_object(record, v)
 
         inner = ""
         field_type = record._model._all_columns.get(field).column._type
