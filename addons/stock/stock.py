@@ -942,7 +942,7 @@ class stock_move(osv.osv):
 
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order of", select=True),
-        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Source", store=True),
+        'origin': fields.char("Source"),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
 
         # used for colors in tree views:
@@ -1164,7 +1164,7 @@ class stock_move(osv.osv):
                 'origin': move.origin,
                 'company_id': move.company_id and move.company_id.id or False,
                 'move_type': move.group_id and move.group_id.move_type or 'one',
-                'partner_id': move.partner_id and move.partner_id.id or False,
+                'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
                 'date_done': move.date_expected,
                 'state': 'confirmed',
                 'group_id': move.group_id and move.group_id.id or False,

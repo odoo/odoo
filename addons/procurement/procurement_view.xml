@@ -30,13 +30,13 @@
                         <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight" type="object"/>
                         <button name="check" states="running" string="Check Procurement" class="oe_highlight" type="object"/>
                         <button name="cancel" states="exception,confirmed,running" string="Cancel Procurement" type="object"/>
-                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
+                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,running,done" />
                     </header>
                     <sheet>
                     <group>
                         <group>
                             <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                            <label for="product_qty" class="oe_edit_only"/>
+                            <label for="product_qty"/>
                             <div>
                                 <div>
                                     <field name="product_qty" class="oe_inline"/>
@@ -49,6 +49,7 @@
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
                         </group>
+                        <newline/>
                         <group>
                             <field name="rule_id"/>
                             <field name="date_planned"/>

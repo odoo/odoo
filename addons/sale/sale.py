@@ -658,7 +658,9 @@ class sale_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
-            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name}, context=context)
+            group_id = self.pool.get("procurement.group").create(cr, uid, {
+                'name': order.name, 'partner_id': order.partner_shipping_id.id
+            }, context=context)
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
