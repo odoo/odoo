@@ -146,6 +146,7 @@ class stock_quant(osv.osv):
         'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="Is this quant reserved for a stock.move?"),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'cost': fields.float('Unit Cost'),
+        'partner_id': fields.related('lot_id', 'partner_id', type='many2one', relation="res.partner", string="Owner", store=True),  # TODO implement store={}
 
         'create_date': fields.datetime('Creation Date'),
         'in_date': fields.datetime('Incoming Date'),
