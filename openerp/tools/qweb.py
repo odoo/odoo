@@ -278,10 +278,11 @@ class QWebXml(object):
 
     def render_tag_field(self, e, t_att, g_att, v):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
-        record = v[t_att["record"]]
+
+        record, field = t_att["field"].rsplit('.', 1)
+        record = self.eval_object(record)
 
         inner = ""
-        field = t_att["field"]
         field_type = record._model._all_columns.get(field).column._type
         try:
             if field_type == 'many2one':
