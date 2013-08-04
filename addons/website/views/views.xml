@@ -75,18 +75,14 @@
                         <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
-                        <div id='wrap'>
-                            <header class='navbar navbar-fixed-top'>
-                                <div class='navbar-inner'>
-                                    <t t-call="website.header"/>
-                                </div>
-                            </header>
-                            <div t-raw="0">
-                                <div class="container">
-                                    <div class="row">
-                                        <h1>I'm an empty page, please edit me...</h1>
-                                    </div>
-                                </div>
+                        <header class='navbar navbar-fixed-top'>
+                            <div class='navbar-inner'>
+                                <t t-call="website.header"/>
+                            </div>
+                        </header>
+                        <div t-raw="0" id="wrap">
+                            <div class="container">
+                                <h1>Main Layout</h1>
                             </div>
                         </div>
                         <footer>
