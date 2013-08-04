@@ -70,17 +70,21 @@ class stock_picking(osv.osv):
         """
         context = context or {}
         todo = {}
+        print 'Invoice Create', ids, journal_id, group, type, context
         for picking in self.browse(cr, uid, ids, context=context):
             key = group and picking.id or True
             for move in picking.move_lines:
-                if (not move.procurement_id) or (move.procurement_id.invoice_state <> '2binvoiced'):
+                if move.procurement_id and (move.procurement_id.invoice_state=='2binvoiced'):
                     if (move.state <> 'cancel') and not move.scrapped:
+                        todo.setdefault(key, [])
                         todo[key].append(move)
+        invoices = []
         for moves in todo.values():
-            self.__invoice_create_line(cr, uid, moves, journal_id, type, context=context)
-        return True
+            invoices = self.__invoice_create_line(cr, uid, moves, journal_id, type, context=context)
+        return invoices
 
     def __invoice_create_line(self, cr, uid, moves, journal_id=False, inv_type='out_invoice', context=None):
+        invoice_obj = self.pool.get('account.invoice')
         invoices = {}
         for move in moves:
             sale_line = move.procurement_id.sale_line_id
@@ -99,7 +103,7 @@ class stock_picking(osv.osv):
                     account_id = partner.property_account_payable.id
                     payment_term = partner.property_supplier_payment_term.id or False
 
-                invoice_id = self.pool.get('account.invoice').create(cr, uid, {
+                invoice_id = invoice_obj.create(cr, uid, {
                     'origin': sale.name,
                     'date_invoice': context.get('date_inv', False),
                     'user_id': sale.user_id and sale.user_id.id or False,
@@ -140,7 +144,7 @@ class stock_picking(osv.osv):
                 'origin': move.picking_id and move.picking_id.origin or False,
                 'invoice_id': invoices[key],
                 'account_id': account_id,
-                'product_id': line.product_id.id,
+                'product_id': move.product_id.id,
                 'uos_id': uos_id,
                 'quantity': quantity,
                 'price_unit': sale_line.price_unit,
@@ -161,4 +165,4 @@ class stock_picking(osv.osv):
             }, context=context)
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
-        return invoices.keys()
+        return invoices.values()
