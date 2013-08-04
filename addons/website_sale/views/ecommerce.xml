@@ -49,7 +49,7 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
-            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-record="category" t-field="name"><t t-esc="category.name"/></span></a>
+            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-field="category.name"><t t-esc="category.name"/></span></a>
             <ul t-if="category.child_id" class="nav nav-list">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -82,11 +82,11 @@
 
     <template id="product_card">
         <div class="media oe_product span3">
-            <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h4></a>
+            <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-field="product.name"><t t-esc="product.name"/></span></h4></a>
             <a class="pull-left" t-att-href="'/shop/product/%%s' %% product.id"><img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/></a>
             <div class="media-body">
-                <div class="oe_ecommerce_description" t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                <div class="oe_ecommerce_price"><span><span t-record="product" t-field="list_price"><t t-esc="product.list_price"/></span>€</span></div>
+                <div class="oe_ecommerce_description" t-field="product.description_sale"><t t-esc="product.description_sale"/></div>
+                <div class="oe_ecommerce_price"><span><span t-field="product.list_price"><t t-esc="product.list_price"/></span>€</span></div>
                 <div class="oe_button_cart">
                     <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
                     <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
@@ -113,7 +113,7 @@
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <div class="oe_product_detail">
-                    <h1><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h1>
+                    <h1 t-field="product.name"></h1>
                     <div class="oe_button_cart">
                         <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
                         <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
@@ -121,8 +121,8 @@
                         </button>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                    <div t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                    <div class="oe_ecommerce_price" t-record="product" t-field="list_price"><t t-esc="product.list_price"/> €</div>
+                    <div t-field="product.description_sale"></div>
+                    <div class="oe_ecommerce_price" t-field="product.list_price"><t t-esc="product.list_price"/> €</div>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>

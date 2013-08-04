@@ -38,12 +38,12 @@
                             </ul>
                         </div>
                         <div class="span4" name="about_us">
-                            <h5 t-record="res_company" t-field="name">Company name</h5>
+                            <h5 t-field="res_company.name">Company name</h5>
                             <ul class='unstyled'>
                                 <li><a href="/page/website.contactus">Contact us</a></li>
                                 <li><a href="/page/website.news">News</a></li>
                                 <li><a href="/page/website.contactus">About us</a></li>
-                                <li><a href='#'>&amp;#x2706; <span t-record="res_company" t-field="phone"/></a></li>
+                                <li><a href='#'>&amp;#x2706; <span t-field="res_company.phone"/></a></li>
                             </ul>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                         </div>
                         <footer>
                             <t t-call="website.footer"/>
-                            <p class="text-center">&amp;copy; <span t-record="res_company" t-field="name">Company name</span>.</p>
+                            <p class="text-center">&amp;copy; <span t-field="res_company.name">Company name</span>.</p>
                         </footer>
 
                         <div class='oe_snippet_editor' style="display: none;">
@@ -369,13 +369,13 @@
                         </div>
                         <div class="span4">
                             <address>
-                                <strong t-record="res_company" t-field="name">Name</strong><br/>
-                                <span t-record="res_company" t-field="street"/><br/>
-                                <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
-                                <span t-record="res_company" t-field="country_id"> </span><br/>
+                                <strong t-field="res_company.name">Name</strong><br/>
+                                <span t-field="res_company.street"/><br/>
+                                <span t-field="res_company.city"/>, <span t-field="res_company.zip"/><br/>
+                                <span t-field="res_company.country_id"> </span><br/>
                                 <br/>
-                                <span>&amp;#x2706; <span t-record="res_company" t-field="phone"><t t-esc="res_company.phone"/></span></span><br/>
-                                <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
+                                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br/>
+                                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
                             </address>
                             <img class="thumbnail" t-att-src="google_map_url"/>
                         </div>
