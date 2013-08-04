@@ -813,6 +813,15 @@ class stock_production_lot(osv.osv):
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
     ]
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for lot in self.browse(cr, uid, ids, context=context):
+            name = lot.name
+            if lot.partner_id:
+                name += ' (' + lot.partner_id.name + ')'
+            res.append((lot.id, name))
+        return res
+
 
 
 # ----------------------------------------------------
