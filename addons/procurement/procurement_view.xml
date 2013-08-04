@@ -27,43 +27,45 @@
             <field name="arch" type="xml">
                 <form string="Procurement" version="7.0">
                     <header>
-                        <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight"/>
-                        <button name="check" states="running" string="Check Procurement" class="oe_highlight"/>
-                        <button name="cancel" states="exception,confirmed,running" string="Cancel Procurement"/>
+                        <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight" type="object"/>
+                        <button name="check" states="running" string="Check Procurement" class="oe_highlight" type="object"/>
+                        <button name="cancel" states="exception,confirmed,running" string="Cancel Procurement" type="object"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
                     <sheet>
-                    <label for="product_id" class="oe_edit_only"/>
-                    <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                    </h1>
-                    <label for="product_qty" class="oe_edit_only"/>
-                    <h2>
-                        <div>
-                            <field name="product_qty" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                        </div>
-                    </h2>
-                    <field name="name" placeholder="External note..."/>
                     <group>
                         <group>
-                            <field name="date_planned"/>
-                            <field name="priority"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                            <label for="product_qty" class="oe_edit_only"/>
+                            <div>
+                                <div>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                </div>
+                            </div>
+                            <label for="product_uos_qty" groups="product.group_uos"/>
+                            <div groups="product.group_uos">
+                                <field name="product_uos_qty" class="oe_inline"/>
+                                <field name="product_uos" class="oe_inline"/>
+                            </div>
                         </group>
                         <group>
+                            <field name="rule_id"/>
+                            <field name="date_planned"/>
+                            <field name="priority"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="group_id"/>
                             <field name="origin" class="oe_inline" placeholder="e.g. SO005"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Extra Information">
-                            <group>
-                                <label for="product_uos_qty" groups="product.group_uos"/>
-                                <div groups="product.group_uos">
-                                    <field name="product_uos_qty" class="oe_inline"/>
-                                    <field name="product_uos" class="oe_inline"/>
-                                </div>
-                            </group>
+                            <label for="name" class="oe_edit_only"/>
+                            <field name="name" placeholder="External note..."/>
+                            <label for="message" class="oe_edit_only"/>
+                            <field name="message"/>
                         </page>
                     </notebook>
                     </sheet>
@@ -120,12 +122,12 @@
         </record>
 
         <record id="procurement_exceptions" model="ir.actions.act_window">
-            <field name="name">Procurement Exceptions</field>
+            <field name="name">Procurements</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_perm_exceptions':1}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help" type="html">
                 <p>

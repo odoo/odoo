@@ -148,6 +148,10 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
+    def cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        return True
+
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
             if self._assign(cr, uid, procurement, context=context):
