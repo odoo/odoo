@@ -191,6 +191,7 @@ class mail_message(osv.Model):
         'vote_user_ids': fields.many2many('res.users', 'mail_vote',
             'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
+        'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -780,8 +781,8 @@ class mail_message(osv.Model):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, uid, newid, context=context,
-                        force_send=context.get('mail_notify_force_send', True),
-                        user_signature=context.get('mail_notify_user_signature', True))
+                     force_send=context.get('mail_notify_force_send', True),
+                     user_signature=context.get('mail_notify_user_signature', True))
         # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
         # Because starred will call set_message_starred, that looks for notifications.
         # When creating a new mail_message, it will create a notification to a message
