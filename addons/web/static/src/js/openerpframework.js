@@ -1055,7 +1055,7 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
 
 openerp.web.Model = openerp.web.Class.extend({
     /**
-    new openerp.web.Model([session,] model_name[, context[, domain]])
+    new openerp.web.Model([session,] model_name)
 
     @constructs instance.web.Model
     @extends instance.web.Class
@@ -1067,22 +1067,18 @@ openerp.web.Model = openerp.web.Class.extend({
     @param {Array} [domain]
     */
     init: function () {
-        var session, model_name, context, domain;
+        var session, model_name;
         var args = _.toArray(arguments);
         args.reverse();
         session = args.pop();
-        if (! (session instanceof openerp.web.Session)) {
+        if (session && ! (session instanceof openerp.web.Session)) {
             model_name = session;
             session = null;
         } else {
             model_name = args.pop();
         }
-        context = args.length > 0 ? args.pop() : null;
-        domain = args.length > 0 ? args.pop() : null;
 
         this.name = model_name;
-        this._context = context || {};
-        this._domain = domain || [];
         this._session = session;
     },
     session: function() {
