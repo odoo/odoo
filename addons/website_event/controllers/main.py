@@ -8,18 +8,15 @@ from openerp.tools.translate import _
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import tools
+import urllib
+
 
 class website_hr(http.Controller):
 
-    @http.route(['/event', '/event/search/<path:searches>'], type='http', auth="public")
-    def events(self, searches=None, **post):
+    @http.route(['/event'], type='http', auth="public")
+    def events(self, **searches):
         data_obj = request.registry['event.event']
-
-        _search = {}
-        for search in searches.split("/"):
-            search = search.split("-")
-            if len(search) == 2:
-                _search[search[0]] = [search[1], []]
+        searches.setdefault('date', 'all')
 
         def sd(date):
             return date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
@@ -48,32 +45,36 @@ class website_hr(http.Controller):
                 0],
         ]
 
+        domain_search = {
+            'date': 'all'
+        }
+
         # search domains
         for date in dates:
-            if _search.get("date") and _search["date"][0] == date[0]:
-                _search["date"].append(date[2])
+            if searches.get("date") == date[0]:
+                domain_search["date"] = date[2]
 
         # count by domains without self search
+        domain = [(1, "=", 1)]
+        for key, search in domain_search.items():
+            if key != 'date':
+                domain += search
         for date in dates:
-            domain = [(1, "=", 1)]
-            for key, search in _search.items():
-                if key != 'date':
-                    domain += search[1]
             date[3] = data_obj.search(request.cr, request.uid, domain + date[2], count=True)
+
+
 
         # domain and search_path
         domain = [(1, "=", 1)]
-        search_path = '/search'
-        for key, search in _search.items():
-            search_path = "%s/%s-%s" % (search_path, key, search[0])
-            domain += search[1]
+        for key, search in domain_search.items():
+            domain += search
 
         obj_ids = data_obj.search(request.cr, request.uid, domain)
         values = {
             'event_ids': data_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
-            'search': _search,
-            'search_path': search_path,
+            'searches': searches,
+            'search_path': "?%s" % urllib.urlencode(searches),
         }
 
         html = website.render("website_event.index", values)

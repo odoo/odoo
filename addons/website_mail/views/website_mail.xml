@@ -68,7 +68,7 @@
                     </div>
                     <div class="span8" t-if="blog_id">
                         <div class="media">
-                            <div t-att-class="media-body well">
+                            <div class="media-body well">
                                 <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
                                     <span t-att-class="'label label-success js_unpublish %%s' %% (not blog_id.website_published and 'hidden' or '')">Click to Unpublish</span>
                                     <span t-att-class="'label label-important js_publish %%s' %% (blog_id.website_published and 'hidden' or '')">Click to Publish</span>
@@ -76,23 +76,23 @@
                                 <h3 t-field="blog_id.subject"></h3>
                                 <div t-field="blog_id.body"></div>
                                 <small class="pull-right muted text-right">
-                                    <div><t t-esc="blog_id.read(['author_id'])[0]['author_id'][1]"/></div>
-                                    <div><t t-esc="blog_id.date"/></div>
+                                    <div><t t-field="blog_id.author_id"/></div>
+                                    <div><t t-field="blog_id.date"/></div>
                                 </small>
                             </div>
                             <ul class="media-list">
-                                <t t-foreach="comments">
+                                <t t-foreach="blog_id.child_ids" t-as="comment">
                                     <!-- TODO: check qweb iteration -->
                                     <li class="media">
                                         <div class="media-body">
                                             <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
-                                                <span t-att-class="'label label-success js_unpublish %%s' %% (not website_published and 'hidden' or '')">Click to Unpublish</span>
-                                                <span t-att-class="'label label-important js_publish %%s' %% (website_published and 'hidden' or '')">Click to Publish</span>
+                                                <span t-att-class="'label label-success js_unpublish %%s' %% (not comment.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                                <span t-att-class="'label label-important js_publish %%s' %% (comment.website_published and 'hidden' or '')">Click to Publish</span>
                                             </a>
-                                            <t t-raw="body"/>
+                                            <t t-raw="comment.body"/>
                                             <small class="pull-right muted text-right">
-                                                <div><t t-esc="author_id[1]"/></div>
-                                                <div><t t-esc="date"/></div>
+                                                <div><t t-esc="comment.author_id"/></div>
+                                                <div><t t-esc="comment.date"/></div>
                                             </small>
                                         </div>
                                     </li>
@@ -116,10 +116,13 @@
                                         <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)" t-field="blog.subject"></a></h4>
                                         <div class="media">
                                             <div t-field="blog.body"></div>
+                                            <small class="pull-left muted text-right" t-if="len(blog.child_ids)">
+                                                <a t-if="len(blog.child_ids) &lt;= 1" t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Message</a>
+                                                <a t-if="len(blog.child_ids) > 1" t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Messages</a>
+                                            </small>
                                             <small class="pull-right muted text-right">
-                                                <a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)">Read more </a>
-                                                <div><t t-esc="blog.read(['author_id'])[0]['author_id'][1]"/></div>
-                                                <div><t t-esc="blog.date"/></div>
+                                                <div><t t-field="blog.author_id"/></div>
+                                                <div><t t-field="blog.date"/></div>
                                             </small>
                                         </div>
                                     </div>

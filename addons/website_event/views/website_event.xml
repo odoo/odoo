@@ -42,8 +42,8 @@
                         <ul class="nav nav-list">
                             <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
-                                <li t-att-class="search.get('date')[0] == date[0] and 'active' or ''">
-                                    <a  t-att-href="'/event%%s/date-%%s' %% (search_path, date[0])"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
+                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''">
+                                    <a  t-att-href="'/event/%%s&amp;date=%%s' %% (search_path, date[0])"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
                                 </li>
                             </t>
                         </ul>
@@ -98,7 +98,7 @@
                                                 available.
                                             </span>
                                         </t>
-                                        <h4 class="media-heading"><a t-att-href="'event/%%s' %% event_id.id"><span t-record="event_id" t-field="name"> </span></a></h4>
+                                        <h4 class="media-heading"><a t-att-href="'event/%%s' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
                                         <t t-if="editable">
                                             <a href="#" t-att-data-id="event_id.id" class="pull-right">
                                                 <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
@@ -106,18 +106,18 @@
                                             </a>
                                         </t>
                                         <div>
-                                            <span t-record="event_id" t-field="type">: </span>
+                                            <span t-field="event_id.type">: </span>
                                             <t t-if="event_id.user_id">
-                                                Organized by: <span t-record="event_id" t-field="user_id"> </span>
+                                                Organized by: <span t-field="event_id.user_id"> </span>
                                             </t>
                                         </div>
                                         <div>
-                                            <i class="icon-time"></i> <span t-record="event_id" t-field="date_begin"> </span> <i>to</i> <span t-record="event_id" t-field="date_end"> </span>
+                                            <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span> <i>to</i> <span t-field="event_id.date_end"> </span>
                                         </div>
                                         <div t-if="event_id.country_id">
-                                            <i class="icon-map-marker"></i> <span t-record="event_id" t-field="city"> </span>  <span t-record="event_id" t-field="zip"> </span>, <span t-record="event_id" t-field="country_id"> </span>
+                                            <i class="icon-map-marker"></i> <span t-field="event_id.city"> </span>  <span t-field="event_id.zip"> </span>, <span t-field="event_id.country_id"> </span>
                                         </div>
-                                        <div t-record="event_id" t-field="note"> </div>
+                                        <div t-field="event_id.note"> </div>
                                     </div>
                                 </li>
                             </t>
