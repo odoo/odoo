@@ -918,7 +918,7 @@ class Id(Field):
     def __get__(self, instance, owner):
         if instance is None:
             return self         # the field is accessed through the class owner
-        return int(instance)
+        return instance._id
 
     def __set__(self, instance, value):
         raise NotImplementedError()

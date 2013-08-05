@@ -1352,7 +1352,7 @@ class BaseModel(object):
             The value must be assigned to `self` as ``self.field = value`` or
             ``self[name] = value``.
         """
-        assert not self.id, "Expected new record: %s" % self
+        assert not self._id, "Expected new record: %s" % self
         cr, uid, context = scope_proxy.args
         field = self._fields[name]
 
@@ -5249,7 +5249,7 @@ class BaseModel(object):
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """
-        return list(cache['id'] for cache in self._caches if 'id' in cache)
+        return filter(None, self._ids)
 
     #
     # Draft records - records on which the field setters only affect the cache
@@ -5269,7 +5269,7 @@ class BaseModel(object):
         """ Return the draft values of `self` as a dictionary mapping field
             names to values in the format accepted by method :meth:`write`.
         """
-        if self.id:
+        if self._id:
             _logger.warning("%s.get_draft_values() non optimal", self[0])
         result = {}
         for name, value in self._record_cache.iteritems():
@@ -5290,8 +5290,9 @@ class BaseModel(object):
         """
         assert 'id' not in values, "New records do not have an 'id'."
         scope = scope_proxy.current
-        model_cache = scope.cache[self._name]
-        record = self._instance(scope, (model_cache.record_cache(values),))
+        record_cache = scope.cache[self._name][False]
+        record_cache.update(values)
+        record = self._instance(scope, (record_cache,))
         record.draft = True
         return record
 
@@ -5388,11 +5389,11 @@ class BaseModel(object):
         return self._refs >= other._refs
 
     def __int__(self):
-        return bool(self._caches) and self._caches[0].get('id', False)
+        return self._id
 
     def __str__(self):
         model_name = self._name.replace('.', '_')
-        return "%s%s" % (model_name, tuple(cache.get('id', False) for cache in self._caches))
+        return "%s%s" % (model_name, tuple(self._ids))
 
     def __unicode__(self):
         return unicode(str(self))
@@ -5445,6 +5446,16 @@ class BaseModel(object):
     # Field access/assignment
     #
 
+    @property
+    def _id(self):
+        """ Return the 'id' of record `self` or ``False``. """
+        return bool(self._caches) and self._caches[0]['id']
+
+    @property
+    def _ids(self):
+        """ Return the 'id' of all records in `self`. """
+        return (cache['id'] for cache in self._caches)
+
     @tools.lazy_property
     def _model_cache(self):
         """ Return the cache of the corresponding model. """
@@ -5468,11 +5479,8 @@ class BaseModel(object):
         self = self[0]
         record_cache = self._record_cache
 
-        if name == 'id':
-            return record_cache.get('id', False)
-
         # new records: retrieve default values
-        if not record_cache.get('id'):
+        if not record_cache['id']:
             with self._scope:
                 if name not in record_cache:
                     self.add_default_value(name)

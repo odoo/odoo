@@ -216,6 +216,7 @@ class RecordCache(MutableMapping):
     def __init__(self, fields, *args, **kwargs):
         self.fields = fields            # set of fields present in model cache
         self.data = dict(*args, **kwargs)
+        assert 'id' in self.data, "RecordCache must always have an 'id'."
 
     def __contains__(self, name):
         return name in self.data
@@ -228,6 +229,7 @@ class RecordCache(MutableMapping):
         self.fields.add(name)
 
     def __delitem__(self, name):
+        assert name != 'id', "RecordCache cannot drop 'id' field."
         del self.data[name]
 
     def __iter__(self):
@@ -236,26 +238,29 @@ class RecordCache(MutableMapping):
     def __len__(self):
         return len(self.data)
 
+    def clear(self):
+        id = self.data['id']
+        self.data.clear()
+        self.data['id'] = id
+
     def dump(self):
         """ Return a "dump" of the record cache. """
         return RecordCache(None, () if self.draft else self.iteritems())
 
 
 class ModelCache(defaultdict):
-    """ Cache for the records of a given model in a given scope. """
+    """ Cache for the records of a given model in a given scope. It contains the
+        caches of the records that have a non-null 'id'; caches for non-existing
+        records are not retained.
+    """
     def __init__(self):
         super(ModelCache, self).__init__()
         self.fields = set()             # set of fields present in self
 
-    def record_cache(self, *args, **kwargs):
-        """ Create a new record cache for the model of `self`; the returned
-            cache is not automatically inserted in `self`. The arguments are the
-            same as the ones accepted by ``dict``.
-        """
-        return RecordCache(self.fields, *args, **kwargs)
-
-    def __missing__(self, key):
-        self[key] = record_cache = self.record_cache(id=key)
+    def __missing__(self, id):
+        record_cache = RecordCache(self.fields, id=id)
+        if id:
+            self[id] = record_cache
         return record_cache
 
     def dump(self):
