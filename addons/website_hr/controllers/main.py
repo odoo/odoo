@@ -15,5 +15,5 @@ class website_hr(http.Controller):
             'employee_ids': hr_obj.browse(request.cr, request.uid, employee_ids),
         }
 
-        html = website.render(request.cr, request.uid, "website_hr.index", values)
+        html = website.render("website_hr.index", values)
         return html
