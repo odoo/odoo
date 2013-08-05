@@ -1244,7 +1244,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4 class="oe_center oe_center_name"><field name="name"/></h4>
+                                    <h4 class="oe_center"><field name="name"/></h4>
                                     <div class="oe_right">
                                         <a name="%(action_stock_stock_ui)d" type="action">
                                             <img src="/stock/static/src/img/scan.png" 
@@ -1252,7 +1252,7 @@
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
                                         </a>
                                     </div>
-                                    <div class="oe_items_list">
+                                    <div class="oe_items_list oe_kanban_ellipsis">
                                         <div>
                                             <a name="%(action_picking_tree)d" type="action">
                                                 <field name="count_picking"/>
@@ -1264,14 +1264,12 @@
                                         </div>
                                         <div t-if="record.count_picking_waiting.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_waiting)d" type="action">
-                                                <field name="count_picking_waiting"/>
-                                                Waiting
+                                                <field name="count_picking_waiting"/> Waiting
                                             </a>
                                         </div>
                                         <div t-if="record.count_picking_late.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_late)d" type="action">
-                                                <field name="count_picking_late"/>
-                                                Late
+                                                <field name="count_picking_late"/> Late
                                             </a>
                                             <a name="%(action_picking_tree_late)d" type="action" class="oe_sparkline_bar_link">
                                                 <field name="latest_picking_late" widget="stock_sparkline" options="{'type': 'tristate'}"/>
@@ -1279,17 +1277,13 @@
                                         </div>
                                         <div t-if="record.count_picking_backorders.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_backorder)d" type="action">
-                                                <field name="count_picking_backorders"/>
-                                                Backorders
+                                                <field name="count_picking_backorders"/> Backorders
                                             </a>
                                             <a name="%(action_picking_tree_backorder)d" type="action" class="oe_sparkline_bar_link">
                                                 <field name="latest_picking_backorders" widget="stock_sparkline" options="{'type': 'tristate'}"/>
                                             </a>
                                         </div>
-
                                     </div>
-
-                                    <div class="oe_clear"> </div>
                                     <div class="oe_center oe_stock_justgage">
                                         <field name="rate_picking_late" widget="stock_gage" style="width:160px; height: 120px;">Late</field>
                                         <field name="rate_picking_backorders" widget="stock_gage" style="width:160px; height: 120px;">Backorders</field>

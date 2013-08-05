@@ -67,29 +67,50 @@
     margin: 2px 0;
 }
 
-.oe_stock_scan_image {
-   opacity: 0.2;
-   margin: 0 5px 0; 
-}
-.oe_stock_scan_image:hover {
-   opacity: 1 
-}
 .openerp .oe_kanban_view .oe_kanban_stock_picking_type {
     width: 345px;
     cursor: default;
+    min-height: 100px !important;
 }
-.openerp .oe_kanban_view .oe_sparkline_bar_link {
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list {
+    position: relative;
+    margin: 10px;
+    height: 95px;
+}
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list div {
+    width: 160px;
+    height: 22px;
+    margin: 0 !important;
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list a:hover {
+    text-decoration: underline !important;
+}
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list div a:nth-child(2n) {
+    position: absolute;
+    left: 150px;
+    top: 0;
+}
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list div:nth-child(2n) a:nth-child(2n) {
+    left: 110px;
+}
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_sparkline_bar {
     height: 20px;
-    width: 36px !important;
+    width: 66px !important;
 }
-.openerp .oe_kanban_view .oe_sparkline_bar {
-    height: 20px;
-    width: 36px !important;
-}
-.oe_center_name {
-   text-align: center;
+.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_center {
+    text-align: center;
 }
 .openerp .oe_kanban_view .oe_stock_justgage {
     color: black;
     display: inline-block;
+}
+.openerp .oe_stock_scan_image {
+   opacity: 0.2;
+   margin: 0 5px 0; 
+}
+.openerp .oe_stock_scan_image:hover {
+   opacity: 1 
 }
