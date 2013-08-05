@@ -164,6 +164,15 @@ function (test) {
             });
         });
     });
+    test('models', {asserts: 3}, function () {
+        var session = new openerp.web.Session();
+        return session.session_authenticate(db, login, password).then(function() {
+            return session.model("res.users").call("search_read", {fields: ["login"], domain: [["id", "=", 1]]});
+        }).then(function(result) {
+            equal(result.length, 1, "Must have one result");
+            equal(result[0].login, "admin", "Must have admin's login");
+        });
+    });
 });
 
 })();
