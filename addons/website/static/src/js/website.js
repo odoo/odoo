@@ -1,4 +1,17 @@
 openerp.website = function(instance) {
+
+instance.web.ActionManager.include({
+    // Temporary fix until un-webclientization of the editorbar
+    ir_actions_client: function (action) {
+        if (instance.web.client_actions.get_object(action.tag)) {
+            return this._super.apply(this, arguments);
+        } else {
+            console.warn("Action '%s' not found in registry", action.tag);
+            return $.when();
+        }
+    }
+});
+
 var _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
 instance.website.EditorBar = instance.web.Widget.extend({

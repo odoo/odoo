@@ -20,8 +20,9 @@ http.auth_methods['public'] = auth_method_public
 
 class website(object):
     def render(self, template, add_values={}):
-        script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db)])
-        css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db))
+        debug = 'debug' in request.params
+        script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db, debug=debug)])
+        css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db, debug=debug))
         _values = {
             'editable': request.uid != request.public_uid,
             'request': request,
