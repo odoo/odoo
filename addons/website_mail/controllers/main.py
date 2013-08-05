@@ -62,7 +62,7 @@ class website_mail(http.Controller):
 
     @http.route(['/blog/publish'], type='http', auth="public")
     def publish(self, **post):
-        message_id = int(post['message_id'])
+        message_id = int(post['id'])
         message_obj = request.registry['mail.message']
 
         blog = message_obj.browse(request.cr, request.uid, message_id)

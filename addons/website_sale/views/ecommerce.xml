@@ -16,6 +16,31 @@
            </data>
         </field>
     </record>
+    <record id="header_ecommerce" model="ir.ui.view">
+        <field name="name">header_ecommerce</field>
+        <field name="inherit_id" ref="website.header"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="(//li)[last()]" position="after">
+                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
+                    <li class="pull-right"><a href="/shop">Shop</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+        <field name="arch" type="xml">
+            <group name="sale" position="before">
+                <group name="pos" string="Website">
+                    <field name="website_published"/>
+                </group>
+            </group>
+        </field>
+    </record>
 
     <!-- Page Shop --> 
 
@@ -88,10 +113,13 @@
                 <div class="oe_ecommerce_description" t-field="product.description_sale"><t t-esc="product.description_sale"/></div>
                 <div class="oe_ecommerce_price"><span><span t-field="product.list_price"><t t-esc="product.list_price"/></span>€</span></div>
                 <div class="oe_button_cart">
-                    <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                    <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
-                        <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
-                    </button>
+                    <div class="alert mb0" t-if="editable and not product.website_published">Product not published</div>
+                    <t t-if="product.website_published">
+                        <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                        <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
+                            <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
+                        </button>
+                    </t>
                 </div>
             </div>
         </div>
@@ -113,6 +141,10 @@
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <div class="oe_product_detail">
+                    <a href="#" t-att-data-id="product.id" class="pull-right" t-if="editable">
+                        <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Click to Unpublish</span>
+                        <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Click to Publish</span>
+                    </a>
                     <h1 t-field="product.name"></h1>
                     <div class="oe_button_cart">
                         <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>

@@ -1,19 +1,18 @@
 {
-    'name': 'E-Commerce',
-    'category': 'Sale',
+    'name': 'Website Event',
+    'category': 'mail',
     'version': '1.0',
     'description': """
-OpenERP E-Commerce
-==================
+OpenERP Blog
+============
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'sale', 'point_of_sale'],
+    'depends': ['website', 'event'],
     'data': [
-        'views/ecommerce.xml',
-        'views/pricelist.xml',
+        'views/website_event.xml',
         'security/ir.model.access.csv',
-        'security/ecommerce.xml',
+        'security/website_event.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

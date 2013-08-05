@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- Layout add nav and footer -->
+
+    <record id="header_website_event" model="ir.ui.view">
+        <field name="name">header_website_event</field>
+        <field name="inherit_id" ref="website.header"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="(//li)[last()]" position="after">
+                    <li class="pull-right"><a href="/event">Events</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+    <record id="footer_website_event" model="ir.ui.view">
+        <field name="name">footer_website_event</field>
+        <field name="inherit_id" ref="website.footer"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//a[@href='/page/website.contactus']" position="after">
+                    <li><a href="/event">Events</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+
+    <!-- Page --> 
+
+    <template id="index">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
+                <t t-raw="head"/>
+            </t>
+            <t t-set="title">Events</t>
+            <div class="container mt48">
+                <div class="row">
+                    <div class="span4 css_noprint">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Date</li>
+                            <t t-foreach="dates" t-as="date">
+                                <li t-att-class="search.get('date')[0] == date[0] and 'active' or ''">
+                                    <a  t-att-href="'/event%%s/date-%%s' %% (search_path, date[0])"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
+                                </li>
+                            </t>
+                        </ul>
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Category</li>
+                            <li class="active">
+                                <a >All Categories <span>(27)</span></a>
+                            </li>
+                            <li>
+                                <a >Conferences <span>(18)</span></a>
+                            </li>
+                            <li>
+                                <a >Business <span>(18)</span></a>
+                            </li>
+                            <li>
+                                <a>Classes <span>(9)</span></a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Location</li>
+                            <li>
+                                <a>Ramillies <span>(7)</span></a>
+                            </li>
+                            <li>
+                                <a>Eindhoven <span>(6)</span></a>
+                            </li>
+                            <li>
+                                <a>Hasselt <span>(6)</span></a>
+                            </li>
+                            <li>
+                                <a>Herentals <span>(6)</span></a>
+                            </li>
+                            <li>
+                                <a>Geel <span>(2)</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="span8">
+                        <ul class="media-list mt32">
+                            <t t-foreach="event_ids" t-as="event_id">
+                                <li class="media thumbnail">
+                                    <div class="media-body">
+                                        <t t-if="event_id.register_avail">
+                                            <t t-if="event_id.register_avail == 9999">
+                                                <span class="label pull-right">No ticket available.</span>
+                                            </t>
+                                            <span t-if="event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
+                                                <t t-if="event_id.register_avail &lt;= 10">Only</t>
+                                                <t t-esc="event_id.register_avail"/>
+                                                <t t-if="event_id.register_avail &gt; 1">tickets </t>
+                                                <t t-if="event_id.register_avail == 1">ticket </t>
+                                                available.
+                                            </span>
+                                        </t>
+                                        <h4 class="media-heading"><a t-att-href="'event/%%s' %% event_id.id"><span t-record="event_id" t-field="name"> </span></a></h4>
+                                        <t t-if="editable">
+                                            <a href="#" t-att-data-id="event_id.id" class="pull-right">
+                                                <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                                <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                            </a>
+                                        </t>
+                                        <div>
+                                            <span t-record="event_id" t-field="type">: </span>
+                                            <t t-if="event_id.user_id">
+                                                Organized by: <span t-record="event_id" t-field="user_id"> </span>
+                                            </t>
+                                        </div>
+                                        <div>
+                                            <i class="icon-time"></i> <span t-record="event_id" t-field="date_begin"> </span> <i>to</i> <span t-record="event_id" t-field="date_end"> </span>
+                                        </div>
+                                        <div t-if="event_id.country_id">
+                                            <i class="icon-map-marker"></i> <span t-record="event_id" t-field="city"> </span>  <span t-record="event_id" t-field="zip"> </span>, <span t-record="event_id" t-field="country_id"> </span>
+                                        </div>
+                                        <div t-record="event_id" t-field="note"> </div>
+                                    </div>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+ </data>
+</openerp>

@@ -71,7 +71,7 @@ class Ecommerce(http.Controller):
     @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="public")
     def category(self, cat_id=0, offset=0, **post):
 
-        domain = []
+        domain = [("sale_ok", "=", True)]
         if post.get("search"):
             domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('desrequest.cription', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
@@ -79,11 +79,11 @@ class Ecommerce(http.Controller):
             domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
 
         product_obj = request.registry.get('product.product')
-        product_ids = product_obj.search(request.cr, openerp.SUPERUSER_ID, domain or [(1, '=', 1)], limit=20, offset=offset)
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=20, offset=offset)
 
         values = {
             'current_category': cat_id,
-            'products': product_obj.browse(request.cr, openerp.SUPERUSER_ID, product_ids),
+            'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
         }
         html = self.render("website_sale.products", values)
@@ -313,5 +313,16 @@ class Ecommerce(http.Controller):
             'categories': self.get_categories(),
         }
         return self.render("website_sale.confirmed", values)
+
+    @http.route(['/shop/publish'], type='http', auth="public")
+    def publish(self, **post):
+        product_id = int(post['id'])
+        product_obj = request.registry['product.product']
+
+        product = product_obj.browse(request.cr, request.uid, product_id)
+        product_obj.write(request.cr, request.uid, [product_id], {'website_published': not product.website_published})
+        product = product_obj.browse(request.cr, request.uid, product_id)
+
+        return product.website_published and "1" or "0"
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
