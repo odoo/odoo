@@ -773,7 +773,7 @@ var genericJsonRpc = function(fct_name, params, fct) {
         jsonrpc: "2.0",
         method: fct_name,
         params: params,
-        id: Math.floor(Math.random() * 1000 * 1000 * 1000),
+        id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
     return fct(data).pipe(function(result) {
         if (result.error !== undefined) {
@@ -796,7 +796,7 @@ openerp.web.jsonRpc = function(url, fct_name, params, settings) {
             dataType: 'json',
             type: 'POST',
             data: JSON.stringify(data),
-            contentType: 'application/json',
+            contentType: 'application/json'
         }));
     });
 };
@@ -817,7 +817,7 @@ openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
                 jsonp: 'jsonp',
                 type: 'GET',
                 cache: false,
-                data: {r: payload_str, session_id: session_id},
+                data: {r: payload_str, session_id: session_id}
             }));
         } else {
             var args = {session_id: session_id, id: data.id};
@@ -851,7 +851,7 @@ openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
                         jsonp: 'jsonp',
                         type: 'GET',
                         cache: false,
-                        data: {session_id: session_id, id: data.id},
+                        data: {session_id: session_id, id: data.id}
                     }).always(function() {
                         cleanUp();
                     }).done(function() {
@@ -875,7 +875,7 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         'request': 'Request sent',
         'response': 'Response received',
         'response_failed': 'HTTP Error response or timeout received',
-        'error': 'The received response is an JSON-RPC error',
+        'error': 'The received response is an JSON-RPC error'
     },
     /**
      * @constructs openerp.web.JsonRPC
@@ -958,7 +958,7 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
                 fct = openerp.web.jsonRpc;
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
-                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : '',
+                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
                     });
                 }
             } else {
@@ -1001,7 +1001,7 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     },
     url: function(path, params) {
         params = _.extend(params || {});
-        if (this.override_session)
+        if (this.override_session || (! this.origin_server))
             params.session_id = this.session_id;
         var qs = $.param(params);
         if (qs.length > 0)
@@ -1010,7 +1010,7 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             return path.length >= el.length && path.slice(0, el.length) === el;
         }) ? '' : this.prefix; 
         return prefix + path + qs;
-    },
+    }
 });
 
 openerp.web.get_cookie = function(c_name) {

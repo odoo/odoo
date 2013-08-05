@@ -1,4 +1,10 @@
-openerp.testing.section('jsonrpc', {},
+(function() {
+
+var ropenerp = window.openerp;
+
+var openerp = ropenerp.declare($, _, QWeb2);
+
+ropenerp.testing.section('jsonrpc', {},
 function (test) {
     test('basic-jsonrpc', {asserts: 1}, function () {
         var session = new openerp.web.JsonRPC();
@@ -103,3 +109,5 @@ function (test) {
         });
     });
 });
+
+})();
