@@ -331,7 +331,7 @@ class Cache(defaultdict):
                         invalids.append((record, field, info))
 
         if invalids:
-            raise Exception('Invalid cache for records\n' + pformat(invalids))
+            raise Warning('Invalid cache for records\n' + pformat(invalids))
 
 
 class Recomputation(object):
@@ -370,5 +370,6 @@ class Recomputation(object):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
+from openerp.exceptions import Warning
 from openerp.osv.orm import BaseModel
 from openerp.modules.registry import RegistryManager
