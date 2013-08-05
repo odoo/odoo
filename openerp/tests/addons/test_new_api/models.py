@@ -126,9 +126,5 @@ class on_change_test(Model):
 class defaults(Model):
     _name = 'test_new_api.defaults'
 
-    name = fields.Char(required=True, compute='name_default')
+    name = fields.Char(required=True, compute=fields.default(u'Bob the Builder'))
     description = fields.Char()
-
-    @one
-    def name_default(self):
-        self.name = u'Bob the Builder'

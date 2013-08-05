@@ -271,6 +271,10 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(defaults['active'], True)
         self.assertEqual(defaults['number_of_employees'], 1)
 
+        fields = ['name', 'description']
+        defaults = self.registry('test_new_api.defaults').default_get(fields)
+        self.assertEqual(defaults, {'name': u"Bob the Builder"})
+
 class TestMagicalFields(common.TransactionCase):
 
     def setUp(self):

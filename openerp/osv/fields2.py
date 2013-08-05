@@ -32,6 +32,15 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 _logger = logging.getLogger(__name__)
 
 
+def default(value):
+    """ Return a compute function that provides a constant default value. """
+    def compute_default(field, records):
+        for record in records:
+            record[field.name] = value
+
+    return compute_default
+
+
 def _invoke_model(func, model):
     """ hack for invoking a callable with a model in both API styles """
     try:
@@ -286,9 +295,14 @@ class Field(object):
         """ Make `self` process its own dependencies and store triggers on other
             fields to be recomputed.
         """
-        if self.compute:
+        # retrieve dependencies from compute method
+        if isinstance(self.compute, basestring):
             method = getattr(type(self.model), self.compute)
-            self.depends = getattr(method, '_depends', ())
+        else:
+            method = self.compute
+        self.depends = getattr(method, '_depends', ())
+
+        # put invalidation/recomputation triggers on dependencies
         for path in self.depends:
             self._depends_on_model(self.model, [], path.split('.'))
 
