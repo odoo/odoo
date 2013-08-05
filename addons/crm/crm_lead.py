@@ -339,23 +339,6 @@ class crm_lead(format_address, osv.osv):
                 section_id = section_ids[0]
         return {'value': {'section_id': section_id}}
 
-    # TDE NOTE: replaced byu base action rule fully working ?
-    # def _check(self, cr, uid, ids=False, context=None):
-    #     """ Override of the base.stage method.
-    #         Function called by the scheduler to process cases for date actions
-    #         Only works on not done and cancelled cases
-    #     """
-    #     cr.execute('select * from crm_case \
-    #             where (date_action_last<%s or date_action_last is null) \
-    #             and (date_action_next<=%s or date_action_next is null) \
-    #             and state not in (\'cancel\',\'done\')',
-    #             (time.strftime("%Y-%m-%d %H:%M:%S"),
-    #                 time.strftime('%Y-%m-%d %H:%M:%S')))
-
-    #     ids2 = map(lambda x: x[0], cr.fetchall() or [])
-    #     cases = self.browse(cr, uid, ids2, context=context)
-    #     return self._action(cr, uid, cases, False, context=context)
-
     def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
