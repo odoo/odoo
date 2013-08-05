@@ -17,30 +17,6 @@ import werkzeug.wrappers
 
 logger = logging.getLogger(__name__)
 
-def template_values():
-    script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
-    css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db))
-    try:
-        request.session.check_security()
-        loggued = True
-        uid = request.session._uid
-    except http.SessionExpiredException:
-        loggued = False
-        uid = openerp.SUPERUSER_ID
-
-    values = {
-        'loggued': loggued,
-        'editable': loggued,
-        'request': request,
-        'registry': request.registry,
-        'cr': request.cr,
-        'uid': uid,
-        'script': script,
-        'css': css,
-        'host_url': request.httprequest.host_url,
-    }
-    return values
-
 class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth="admin")
     def index(self, **kw):
@@ -52,13 +28,11 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path):
-        values = template_values()
-        uid = values['uid']
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
-        view_model, view_id = imd.get_object_reference(request.cr, uid, 'website', 'default_page')
-        newview_id = view.copy(request.cr, uid, view_id)
-        newview = view.browse(request.cr, uid, newview_id, context={})
+        view_model, view_id = imd.get_object_reference(request.cr, request.uid, 'website', 'default_page')
+        newview_id = view.copy(request.cr, request.uid, view_id)
+        newview = view.browse(request.cr, request.uid, newview_id, context={})
         newview.write({
             'arch': newview.arch.replace("website.default_page", path),
             'name': "page/%s" % path
@@ -68,7 +42,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             module = False
             idname = path
-        imd.create(request.cr, uid, {
+        imd.create(request.cr, request.uid, {
             'name': idname,
             'module': module,
             'model': 'ir.ui.view',
@@ -79,29 +53,14 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/page/<path:path>', type='http', auth="admin")
     def page(self, path):
-        #def get_html_head():
-        #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
-        #modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
-        values = template_values()
-        uid = values['uid']
-        context = {
-            'inherit_branding': values['editable'],
-        }
-        company = request.registry['res.company'].browse(request.cr, uid, 1, context=context)
-        values.update(
-            res_company=company,
-            path=path,
-            google_map_url="http://maps.googleapis.com/maps/api/staticmap?" + urllib.urlencode({
-                'center': '%s, %s %s, %s' % (company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
-                'sensor': 'false',
-                'zoom': '8',
-                'size': '298x298',
-            }),
-        )
+        website = request.registry.get("website")
+        values = website.get_rendering_context({
+            'path': path
+        })
         try:
-            html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
-        except ValueError, e:
-            html = request.registry.get("ir.ui.view").render(request.cr, uid, 'website.404', values, context)
+            html = website.render(path, values)
+        except ValueError:
+            html = website.render('website.404', values)
         return html
 
     @http.route('/website/attach', type='http', auth='admin') # FIXME: auth

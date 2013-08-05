@@ -56,7 +56,7 @@
                 <div class="row">
                     <div class="span4 css_noprint">
                         <ul class="nav nav-list">
-                        <t t-foreach="categories" t-as="category">
+                        <t t-foreach="website_sale_get_categories()" t-as="category">
                             <t t-call="website_sale.categories_recursive"/>
                         </t>
                         </ul>
