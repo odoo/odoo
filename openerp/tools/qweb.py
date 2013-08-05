@@ -6,7 +6,6 @@ import types
 
 import xml   # FIXME use lxml
 import xml.dom.minidom
-from sets import Set
 
 _logger = logging.getLogger(__name__)
 
@@ -75,7 +74,7 @@ class QWebXml(object):
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
-        self._void_elements = Set(['area','base','br','col','embed','hr','img','input','keygen',
+        self._void_elements = set(['area','base','br','col','embed','hr','img','input','keygen',
                                   'link','menuitem','meta','param','source','track','wbr']);
         prefix = 'render_tag_'
         for i in [j for j in dir(self) if j.startswith(prefix)]:
