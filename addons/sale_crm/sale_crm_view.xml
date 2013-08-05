@@ -248,8 +248,8 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='code']" position="after">
-                    <field name="invoiced_target"/>
-                    <field name="invoiced_forecast"/>
+                    <field name="invoiced_target" readonly="0"/>
+                    <field name="invoiced_forecast" readonly="0"/>
                 </xpath>
             </data>
             </field>
