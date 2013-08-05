@@ -2,15 +2,14 @@
 <openerp>
 <data>
 
-    <!-- Workflow definition 
-        1. draft->submitted (no signal)
+    <!-- Workflow definition
+        1. draft->submitted (confirm signal)
         2. submitted->accepted (validate signal) if not double_validation
-        2. submitted -> first_accepted (validate signal) if double_validation
+        2. submitted->first_accepted (validate signal) if double_validation
         2. submitted->refused (refuse signal)
         3. accepted->refused (refuse signal)
         4. first_accepted -> accepted (second_validate  signal)
         4. first_accepted -> refused (refuse signal)
-
     -->
 
     <record model="workflow" id="wkf_holidays">
@@ -21,13 +20,15 @@
 
     <record model="workflow.activity" id="act_draft"> <!-- draft -->
         <field name="wkf_id" ref="wkf_holidays" />
-        <field name="flow_start">True</field>
         <field name="name">draft</field>
+        <field name="kind">function</field>
+        <field name="action">holidays_reset()</field>
     </record>
 
     <record model="workflow.activity" id="act_confirm"> <!-- submitted -->
         <field name="wkf_id" ref="wkf_holidays" />
         <field name="name">confirm</field>
+        <field name="flow_start">True</field>
         <field name="kind">function</field>
         <field name="action">holidays_confirm()</field>
         <field name="split_mode">OR</field>
@@ -61,9 +62,20 @@
         workflow transition
     -->
 
-    <record model="workflow.transition" id="holiday_draft2confirm"> <!-- 1. draft->submitted (no signal) -->
+    <record model="workflow.transition" id="holiday_draft2confirm"> <!-- 1. draft->submitted (confirm signal) -->
         <field name="act_from" ref="act_draft" />
         <field name="act_to" ref="act_confirm" />
+        <field name="signal">confirm</field>
+        <field name="condition">True</field>
+        <field name="group_id" ref="base.group_hr_user"/>
+    </record>
+
+    <record model="workflow.transition" id="holiday_confirm2draft"> <!-- 1. submitted->draft (reset signal) -->
+        <field name="act_from" ref="act_confirm" />
+        <field name="act_to" ref="act_draft" />
+        <field name="signal">reset</field>
+        <field name="condition">True</field>
+        <field name="group_id" ref="base.group_hr_user"/>
     </record>
 
     <record model="workflow.transition" id="holiday_confirm2validate"> <!-- 2. submitted->accepted (validate signal) if not double_validation-->
@@ -81,7 +93,6 @@
         <field name="condition">double_validation</field>
         <field name="group_id" ref="base.group_hr_user"/>
     </record>
-
 
     <record model="workflow.transition" id="holiday_confirm2refuse"> <!-- 2. submitted->refused (refuse signal) -->
         <field name="act_from" ref="act_confirm" />

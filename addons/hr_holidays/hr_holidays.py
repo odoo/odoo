@@ -165,7 +165,7 @@ class hr_holidays(osv.osv):
     }
     _defaults = {
         'employee_id': _employee_get,
-        'state': 'draft',
+        'state': 'confirm',
         'type': 'remove',
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
@@ -306,18 +306,16 @@ class hr_holidays(osv.osv):
                 raise osv.except_osv(_('Warning!'),_('You cannot modify a leave request that has been approved. Contact a human resource manager.'))
         return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
-    def set_to_draft(self, cr, uid, ids, context=None):
+    def holidays_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
             'state': 'draft',
             'manager_id': False,
             'manager_id2': False,
         })
-        self.delete_workflow(cr, uid, ids)
-        self.create_workflow(cr, uid, ids)
         to_unlink = []
         for record in self.browse(cr, uid, ids, context=context):
             for record2 in record.linked_request_ids:
-                self.set_to_draft(cr, uid, [record2.id], context=context)
+                self.holidays_reset(cr, uid, [record2.id], context=context)
                 to_unlink.append(record2.id)
         if to_unlink:
             self.unlink(cr, uid, to_unlink, context=context)
