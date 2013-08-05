@@ -1043,7 +1043,7 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     },
     model: function(model_name) {
         return new openerp.web.Model(this, model_name);
-    },
+    }
 });
 
 openerp.web.Model = openerp.web.Class.extend({
@@ -1102,7 +1102,7 @@ openerp.web.Model = openerp.web.Class.extend({
             args: args,
             kwargs: kwargs
         }, options);
-    },
+    }
 });
 
 /** OpenERP Translations */
@@ -1167,11 +1167,11 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends instance.w
         var self = this;
         return session.rpc('/web/webclient/translations', {
             "mods": modules || null,
-            "lang": lang || null,
+            "lang": lang || null
         }).done(function(trans) {
             self.set_bundle(trans);
         });
-    },
+    }
 });
 
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
@@ -1196,7 +1196,7 @@ openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.default_dict = {
     '_' : _,
     'JSON': JSON,
-    '_t' : openerp.web._t,
+    '_t' : openerp.web._t
 };
 
 openerp.declare = declare;
