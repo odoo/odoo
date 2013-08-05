@@ -49,8 +49,6 @@ class website_mail(http.Controller):
 
         if blog_id:
             values['blog_id'] = message_obj.browse(request.cr, request.uid, blog_id)
-            comment_ids = [child_id.id for child_id in values['blog_id'].child_ids]
-            values['comments'] = message_obj.read(request.cr, request.uid, comment_ids, ['website_published', 'author_id', 'date', 'body'])
 
         html = website.render("website_mail.index", values)
         return html

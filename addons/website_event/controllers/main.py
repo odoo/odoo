@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website import website
@@ -15,8 +16,11 @@ class website_hr(http.Controller):
 
     @http.route(['/event'], type='http', auth="public")
     def events(self, **searches):
-        data_obj = request.registry['event.event']
+        event_obj = request.registry['event.event']
+
         searches.setdefault('date', 'all')
+        searches.setdefault('type', 'all')
+        domain_search = {}
 
         def sd(date):
             return date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
@@ -45,14 +49,21 @@ class website_hr(http.Controller):
                 0],
         ]
 
-        domain_search = {
-            'date': 'all'
-        }
-
         # search domains
         for date in dates:
             if searches.get("date") == date[0]:
                 domain_search["date"] = date[2]
+        if searches.get("type") and searches.get("type") != 'all':
+            domain_search["type"] = [("type", "=", searches.get("type"))]
+
+
+        domain = [(1, "=", 1)]
+        for key, search in domain_search.items():
+            if key != 'type':
+                domain += search
+        types = event_obj.read_group(request.cr, request.uid, domain, ["id", "type"], groupby="type", orderby="type")
+        types.insert(0, {'type_count': event_obj.search(request.cr, request.uid, domain, count=True), 'type': ("all", _("All Categories"))})
+
 
         # count by domains without self search
         domain = [(1, "=", 1)]
@@ -60,7 +71,7 @@ class website_hr(http.Controller):
             if key != 'date':
                 domain += search
         for date in dates:
-            date[3] = data_obj.search(request.cr, request.uid, domain + date[2], count=True)
+            date[3] = event_obj.search(request.cr, request.uid, domain + date[2], count=True)
 
 
 
@@ -69,10 +80,11 @@ class website_hr(http.Controller):
         for key, search in domain_search.items():
             domain += search
 
-        obj_ids = data_obj.search(request.cr, request.uid, domain)
+        obj_ids = event_obj.search(request.cr, request.uid, domain)
         values = {
-            'event_ids': data_obj.browse(request.cr, request.uid, obj_ids),
+            'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
+            'types': types,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
         }

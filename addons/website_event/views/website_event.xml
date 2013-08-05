@@ -49,18 +49,11 @@
                         </ul>
                         <ul class="nav nav-list">
                             <li class="nav-header">Category</li>
-                            <li class="active">
-                                <a >All Categories <span>(27)</span></a>
-                            </li>
-                            <li>
-                                <a >Conferences <span>(18)</span></a>
-                            </li>
-                            <li>
-                                <a >Business <span>(18)</span></a>
-                            </li>
-                            <li>
-                                <a>Classes <span>(9)</span></a>
-                            </li>
+                            <t t-foreach="types">
+                                <li t-att-class="searches.get('type') == type[0] and 'active' or ''">
+                                    <a  t-att-href="'/event/%%s&amp;type=%%s' %% (search_path, type[0])"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
+                                </li>
+                            </t>
                         </ul>
                         <ul class="nav nav-list">
                             <li class="nav-header">Location</li>
