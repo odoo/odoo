@@ -211,6 +211,8 @@ class Scope(object):
 
 class RecordCache(MutableMapping):
     """ Cache for the fields of a record in a given scope. """
+    draft = False
+
     def __init__(self, fields, *args, **kwargs):
         self.fields = fields            # set of fields present in model cache
         self.data = dict(*args, **kwargs)
@@ -236,7 +238,7 @@ class RecordCache(MutableMapping):
 
     def dump(self):
         """ Return a "dump" of the record cache. """
-        return RecordCache(None, self.iteritems())
+        return RecordCache(None, () if self.draft else self.iteritems())
 
 
 class ModelCache(defaultdict):

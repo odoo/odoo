@@ -241,10 +241,11 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(data['computed_company'], company.name_get()[0])
         self.assertEqual(data['computed_companies'], companies.unbrowse())
 
-    def test_40_draft(self):
-        """ test draft records. """
-        # create a draft partner
+    def test_40_new(self):
+        """ test new records. """
+        # create a new partner
         partner = self.Partner.new()
+        self.assertFalse(partner.id)
         self.assertTrue(partner.draft)
 
         # assign some fields; should have no side effect

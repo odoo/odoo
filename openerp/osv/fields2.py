@@ -681,8 +681,6 @@ class Many2one(_Relational):
         return self.comodel.browse(value)
 
     def convert_to_write(self, value):
-        if value.draft:
-            return False
         return value.id
 
     def convert_to_export(self, value):
@@ -715,35 +713,41 @@ class _RelationalMulti(_Relational):
         return value.unbrowse()
 
     def convert_from_write(self, value):
-        ids = []
+        result = self.comodel.browse()
         for command in value:
             if isinstance(command, (int, long)):
-                ids.append(command)
+                result += self.comodel.browse(command)
             elif command[0] == 0:
-                record = self.comodel.new(dict(
+                values = dict(
                     (k, self.comodel._fields[k].convert_from_write(v))
                     for k, v in command[2].iteritems()
-                ))
-                ids.append(record.id)
+                )
+                result += self.comodel.new(values)
             elif command[0] == 1:
-                raise NotImplementedError()
+                record = self.comodel.browse(command[1])
+                record.draft = True
+                for name, value in command[2].iteritems():
+                    record[name] = value
+                result += record
             elif command[0] == 2:
                 pass
             elif command[0] == 3:
                 pass
             elif command[0] == 4:
-                ids.append(command[1])
+                result += self.comodel.browse(command[1])
             elif command[0] == 5:
-                ids = []
+                result = self.comodel.browse()
             elif command[0] == 6:
-                ids = list(command[2])
-        return self.comodel.browse(ids)
+                result = self.comodel.browse(command[2])
+        return result
 
     def convert_to_write(self, value):
         result = [(5,)]
         for record in value:
-            if record.draft:
+            if not record.id:
                 result.append((0, 0, record.get_draft_values()))
+            elif record.draft:
+                result.append((1, record.id, record.get_draft_values()))
             else:
                 result.append((4, record.id))
         return result

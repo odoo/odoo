@@ -1338,21 +1338,21 @@ class BaseModel(object):
         self.view_init(cr, uid, fields_list, context)
 
         # use a new record to determine default values
-        draft = self.new()
+        record = self.new()
         for name in fields_list:
-            draft[name]                 # force evaluation of defaults
+            record[name]                # force evaluation of defaults
 
-        # retrieve defaults from draft values
-        draft_values = draft.get_draft_values()
-        return dict((name, draft_values[name])
-                    for name in fields_list if name in draft_values)
+        # retrieve defaults from record's values
+        values = record.get_draft_values()
+        return dict((name, values[name])
+                    for name in fields_list if name in values)
 
     def add_default_value(self, name):
-        """ Set the default value of field `name` to the draft record `self`.
+        """ Set the default value of field `name` to the new record `self`.
             The value must be assigned to `self` as ``self.field = value`` or
             ``self[name] = value``.
         """
-        assert self.draft, "Expected draft record: %s" % self
+        assert not self.id, "Expected new record: %s" % self
         cr, uid, context = scope_proxy.args
         field = self._fields[name]
 
@@ -2698,12 +2698,14 @@ class BaseModel(object):
         default = self._defaults.get(column_name)
         if callable(default):
             default = default(self, cr, SUPERUSER_ID, context)
+
         # get new_style default if no old-style
         if default is None:
-            draft = self.new()
+            record = self.new()
             field = self._fields[column_name]
-            field.compute_default(draft)
-            default = draft.get_draft_values().get(column_name)
+            field.compute_default(record)
+            default = record.get_draft_values().get(column_name)
+
         if default is not None:
             _logger.debug("Table '%s': setting default value of new column %s",
                           self._table, column_name)
@@ -5250,34 +5252,48 @@ class BaseModel(object):
         return list(cache['id'] for cache in self._caches if 'id' in cache)
 
     #
-    # New records - represent records that do not exist in the database yet;
-    # they are used to compute default values.
+    # Draft records - records on which the field setters only affect the cache
     #
-
-    def new(self, values={}):
-        """ Return a new record attached to the current scope, and initialized
-            with the `values` dictionary. Such a record does not exist in the
-            database.
-        """
-        scope = scope_proxy.current
-        model_cache = scope.cache[self._name]
-        return self._instance(scope, (model_cache.record_cache(values),))
 
     @property
     def draft(self):
-        """ Whether ``self[0]`` is a draft record. """
-        return bool(self._caches) and 'id' not in self._caches[0]
+        """ Return whether ``self[0]`` is a draft record. """
+        return bool(self._caches) and self._caches[0].draft
+
+    @draft.setter
+    def draft(self, value):
+        """ Set whether ``self[0]`` is a draft record. """
+        self._caches[0].draft = value
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
             names to values in the format accepted by method :meth:`write`.
         """
+        if self.id:
+            _logger.warning("%s.get_draft_values() non optimal", self[0])
         result = {}
         for name, value in self._record_cache.iteritems():
-            if value is not None:
+            if name != 'id' and value is not None:
                 field = self._fields[name]
                 result[name] = field.convert_to_write(value)
         return result
+
+    #
+    # New records - represent records that do not exist in the database yet;
+    # they are used to compute default values.
+    #
+
+    def new(self, values={}):
+        """ Return a new record instance attached to the current scope, and
+            initialized with the `values` dictionary. Such a record does not
+            exist in the database. The returned instance is marked as draft.
+        """
+        assert 'id' not in values, "New records do not have an 'id'."
+        scope = scope_proxy.current
+        model_cache = scope.cache[self._name]
+        record = self._instance(scope, (model_cache.record_cache(values),))
+        record.draft = True
+        return record
 
     #
     # "Dunder" methods
@@ -5455,8 +5471,8 @@ class BaseModel(object):
         if name == 'id':
             return record_cache.get('id', False)
 
-        # draft records: retrieve default values
-        if self.draft:
+        # new records: retrieve default values
+        if not record_cache.get('id'):
             with self._scope:
                 if name not in record_cache:
                     self.add_default_value(name)
@@ -5612,12 +5628,6 @@ class browse_null(object):
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and not inst
-
-class Draft(object):
-    """ Pseudo-class for testing draft instances """
-    class __metaclass__(type):
-        def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and inst.draft
 
 
 class Model(BaseModel):
