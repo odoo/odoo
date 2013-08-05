@@ -6,6 +6,7 @@ import types
 
 import xml   # FIXME use lxml
 import xml.dom.minidom
+from sets import Set
 
 _logger = logging.getLogger(__name__)
 
@@ -74,7 +75,8 @@ class QWebXml(object):
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
-
+        self._void_elements = Set(['area','base','br','col','embed','hr','img','input','keygen',
+                                  'link','menuitem','meta','param','source','track','wbr']);
         prefix = 'render_tag_'
         for i in [j for j in dir(self) if j.startswith(prefix)]:
             name = i[len(prefix):].replace('_', '-')
@@ -184,8 +186,7 @@ class QWebXml(object):
             inner = inner.strip()
         if name == "t":
             return inner
-        elif len(inner) or name in ['script','i','div']:
-            # script should be rendered as <script></script>
+        elif len(inner) or name not in self._void_elements:
             return "<%s%s>%s</%s>" % (name, g_att, inner, name)
         else:
             return "<%s%s/>" % (name, g_att)
