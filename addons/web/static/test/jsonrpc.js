@@ -139,7 +139,7 @@ function (test) {
             });
         });
     });
-    test('share-sessions', {asserts: 6}, function () {
+    test('share-sessions', {asserts: 7}, function () {
         var session = new openerp.web.Session();
         var session2;
         return session.session_authenticate(db, login, password).then(function() {
@@ -151,6 +151,14 @@ function (test) {
         }).then(function() {
             equal(session2.uid, session.uid);
             equal(session2.uid, 1);
+            return session2.rpc("/web/dataset/call_kw", {
+                model: "res.users",
+                method: "read",
+                args: [1, ["login"]],
+                kwargs: {},
+            }).then(function(result) {
+                equal(result.login, "admin", "Admin's name must be 'admin'");
+            });
         });
     });
 });
