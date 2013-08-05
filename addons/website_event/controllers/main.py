@@ -110,7 +110,7 @@ class website_hr(http.Controller):
         if not post:
             return werkzeug.utils.redirect("/event/%s/" % event_id)
 
-        return werkzeug.utils.redirect("/shop/checkout" % event_id)
+        return werkzeug.utils.redirect("/shop/checkout")
 
     @http.route(['/event/publish'], type='http', auth="public")
     def publish(self, **post):

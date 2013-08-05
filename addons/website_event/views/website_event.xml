@@ -168,7 +168,7 @@
                                 <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
                             </a>
                             <h4>Ticket Information</h4>
-                            <form t-att-action="'/event/%%s/add_cart' %% event_id.id">
+                            <form t-att-action="'/event/%%s/add_cart' %% event_id.id" method="post">
                                 <div t-foreach="event_id.product_ids" t-as="prod">
                                     <span t-field="prod.product_id"/>
                                     <span t-field="prod.price"/>
