@@ -1050,6 +1050,69 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     }
 });
 
+openerp.web.Model = openerp.web.Class.extend({
+    /**
+    new openerp.web.Model([session,] model_name[, context[, domain]])
+
+    @constructs instance.web.Model
+    @extends instance.web.Class
+    
+    @param {openerp.web.Session} [session] The session object used to communicate with
+    the server.
+    @param {String} model_name name of the OpenERP model this object is bound to
+    @param {Object} [context]
+    @param {Array} [domain]
+    */
+    init: function () {
+        var session, model_name, context, domain;
+        var args = _.toArray(arguments);
+        args.reverse();
+        session = args.pop();
+        if (! (session instanceof openerp.web.Session)) {
+            model_name = session;
+            session = null;
+        } else {
+            model_name = args.pop();
+        }
+        context = args.length > 0 ? args.pop() : null;
+        domain = args.length > 0 ? args.pop() : null;
+
+        this.name = model_name;
+        this._context = context || {};
+        this._domain = domain || [];
+        this._session = session;
+    },
+    session: function() {
+        if (! this._session)
+            throw new Error("Not implemented");
+        return this._session;
+    },
+    /**
+     * Call a method (over RPC) on the bound OpenERP model.
+     *
+     * @param {String} method name of the method to call
+     * @param {Array} [args] positional arguments
+     * @param {Object} [kwargs] keyword arguments
+     * @param {Object} [options] additional options for the rpc() method
+     * @returns {jQuery.Deferred<>} call result
+     */
+    call: function (method, args, kwargs, options) {
+        args = args || [];
+        kwargs = kwargs || {};
+        if (!_.isArray(args)) {
+            // call(method, kwargs)
+            kwargs = args;
+            args = [];
+        }
+        return this.session().rpc('/web/dataset/call_kw', {
+            model: this.name,
+            method: method,
+            args: args,
+            kwargs: kwargs
+        }, options);
+    },
+});
+
 openerp.web.get_cookie = function(c_name) {
     if (document.cookie.length > 0) {
         var c_start = document.cookie.indexOf(c_name + "=");

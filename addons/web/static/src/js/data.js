@@ -253,19 +253,11 @@ instance.web.QueryGroup = instance.web.Class.extend({
     }
 });
 
-instance.web.Model = instance.web.Class.extend({
-    /**
-     * @constructs instance.web.Model
-     * @extends instance.web.Class
-     *
-     * @param {String} model_name name of the OpenERP model this object is bound to
-     * @param {Object} [context]
-     * @param {Array} [domain]
-     */
-    init: function (model_name, context, domain) {
-        this.name = model_name;
-        this._context = context || {};
-        this._domain = domain || [];
+instance.web.Model.include({
+    session: function() {
+        if (! this._session)
+            return instance.session;
+        return this._super();
     },
     /**
      * @deprecated does not allow to specify kwargs, directly use call() instead
@@ -294,13 +286,7 @@ instance.web.Model = instance.web.Class.extend({
             args = [];
         }
         instance.web.pyeval.ensure_evaluated(args, kwargs);
-        var debug = instance.session.debug ? '/'+this.name+':'+method : '';
-        return instance.session.rpc('/web/dataset/call_kw' + debug, {
-            model: this.name,
-            method: method,
-            args: args,
-            kwargs: kwargs
-        }, options);
+        return this._super(method, args, kwargs, options);
     },
     /**
      * Fetches a Query instance bound to this model, for searching
