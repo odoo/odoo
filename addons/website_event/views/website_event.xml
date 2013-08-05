@@ -50,28 +50,18 @@
                         <ul class="nav nav-list">
                             <li class="nav-header">Category</li>
                             <t t-foreach="types">
-                                <li t-att-class="searches.get('type') == type[0] and 'active' or ''">
-                                    <a  t-att-href="'/event/%%s&amp;type=%%s' %% (search_path, type[0])"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
+                                <li t-if="type" t-att-class="searches.get('type') == str(type[0]) and 'active' or ''">
+                                    <a t-att-href="'/event/%%s&amp;type=%%s' %% (search_path, type[0])"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
                                 </li>
                             </t>
                         </ul>
                         <ul class="nav nav-list">
                             <li class="nav-header">Location</li>
-                            <li>
-                                <a>Ramillies <span>(7)</span></a>
-                            </li>
-                            <li>
-                                <a>Eindhoven <span>(6)</span></a>
-                            </li>
-                            <li>
-                                <a>Hasselt <span>(6)</span></a>
-                            </li>
-                            <li>
-                                <a>Herentals <span>(6)</span></a>
-                            </li>
-                            <li>
-                                <a>Geel <span>(2)</span></a>
-                            </li>
+                            <t t-foreach="countries">
+                                <li t-if="country_id" t-att-class="searches.get('country') == str(country_id[0]) and 'active' or ''">
+                                    <a t-att-href="'/event/%%s&amp;country=%%s' %% (search_path, country_id[0])"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
+                                </li>
+                            </t>
                         </ul>
                     </div>
                     <div class="span8">

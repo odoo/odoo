@@ -20,6 +20,8 @@ class website_hr(http.Controller):
 
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
+        searches.setdefault('country', 'all')
+        
         domain_search = {}
 
         def sd(date):
@@ -53,38 +55,38 @@ class website_hr(http.Controller):
         for date in dates:
             if searches.get("date") == date[0]:
                 domain_search["date"] = date[2]
-        if searches.get("type") and searches.get("type") != 'all':
-            domain_search["type"] = [("type", "=", searches.get("type"))]
+        if searches.get("type", "all") != 'all':
+            domain_search["type"] = [("type", "=", int(searches.get("type")))]
+        if searches.get("country", "all") != 'all':
+            domain_search["country"] = [("country_id", "=", int(searches.get("country")))]
 
+        def dom_without(without):
+            domain = [(1, "=", 1)]
+            for key, search in domain_search.items():
+                if key != without:
+                    domain += search
+            print domain
+            return domain
 
-        domain = [(1, "=", 1)]
-        for key, search in domain_search.items():
-            if key != 'type':
-                domain += search
+        # count by domains without self search
+        for date in dates:
+            date[3] = event_obj.search(request.cr, request.uid, dom_without('date') + date[2], count=True)
+
+        domain = dom_without('type')
         types = event_obj.read_group(request.cr, request.uid, domain, ["id", "type"], groupby="type", orderby="type")
         types.insert(0, {'type_count': event_obj.search(request.cr, request.uid, domain, count=True), 'type': ("all", _("All Categories"))})
 
-
-        # count by domains without self search
-        domain = [(1, "=", 1)]
-        for key, search in domain_search.items():
-            if key != 'date':
-                domain += search
-        for date in dates:
-            date[3] = event_obj.search(request.cr, request.uid, domain + date[2], count=True)
+        domain = dom_without('country')
+        countries = event_obj.read_group(request.cr, request.uid, domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
+        countries.insert(0, {'country_id_count': event_obj.search(request.cr, request.uid, domain, count=True), 'country_id': ("all", _("All Countries"))})
 
 
-
-        # domain and search_path
-        domain = [(1, "=", 1)]
-        for key, search in domain_search.items():
-            domain += search
-
-        obj_ids = event_obj.search(request.cr, request.uid, domain)
+        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"))
         values = {
             'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
             'types': types,
+            'countries': countries,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
         }
