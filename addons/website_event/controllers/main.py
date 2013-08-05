@@ -10,6 +10,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
+import werkzeug
 
 
 class website_hr(http.Controller):
@@ -21,7 +22,7 @@ class website_hr(http.Controller):
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
-        
+
         domain_search = {}
 
         def sd(date):
@@ -81,7 +82,7 @@ class website_hr(http.Controller):
         countries.insert(0, {'country_id_count': event_obj.search(request.cr, request.uid, domain, count=True), 'country_id': ("all", _("All Countries"))})
 
 
-        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"))
+        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), order="date_begin DESC")
         values = {
             'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
@@ -96,7 +97,20 @@ class website_hr(http.Controller):
 
     @http.route(['/event/<int:event_id>'], type='http', auth="public")
     def event(self, event_id=None, **post):
-        return ""
+        event = request.registry['event.event'].browse(request.cr, request.uid, event_id)
+        values = {
+            'event_id': event,
+            'google_map_url': "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=12&size=298x298" % urllib.quote_plus('%s, %s %s, %s' % (event.street, event.city, event.zip, event.country_id and event.country_id.name_get()[0][1] or ''))
+        }
+        html = website.render("website_event.detail", values)
+        return html
+
+    @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
+    def add_cart(self, event_id=None, **post):
+        if not post:
+            return werkzeug.utils.redirect("/event/%s/" % event_id)
+
+        return werkzeug.utils.redirect("/shop/checkout" % event_id)
 
     @http.route(['/event/publish'], type='http', auth="public")
     def publish(self, **post):
