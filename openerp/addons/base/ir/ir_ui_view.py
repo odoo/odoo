@@ -714,7 +714,7 @@ class view(osv.osv):
         return r['arch']
 
     def distribute_branding(self, e, branding=None, xpath=None, count=None):
-        if e.attrib.get('t-ignore'):
+        if e.attrib.get('t-ignore') or e.tag in ('head',):
             # TODO: find a better name and check if we have a string to boolean helper
             return
         branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
@@ -726,7 +726,7 @@ class view(osv.osv):
         if e.attrib.get('data-oe-model'):
             # if a branded tag containg branded tag distribute to the childs
             child_text = "".join([etree.tostring(x, encoding='utf-8') for x in e])
-            if re.search('(data-oe-model=|t-esc=|t-raw=|t-field=|t-call=|t-ignore=)',child_text) or e.tag == "t" or 't-raw' in e.attrib:
+            if re.search('( data-oe-model=| t-esc=| t-raw=| t-field=| t-call=| t-ignore=)',child_text) or e.tag == "t" or 't-raw' in e.attrib:
                 for i in branding_copy:
                     if e.attrib.get(i):
                         branding_dist[i] = e.attrib.get(i)
