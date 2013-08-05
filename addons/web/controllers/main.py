@@ -599,7 +599,7 @@ class WebClient(http.Controller):
 
             data = re.sub(
                 rx_url,
-                r"""url(\1%s/""" % (web_dir,),
+                r"url(\1%s/" % (web_dir,),
                 data,
             )
             return data.encode('utf-8')
@@ -671,20 +671,24 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', auth="user")
-    def translations(self, mods, lang):
-        res_lang = request.session.model('res.lang')
-        ids = res_lang.search([("code", "=", lang)])
+    @http.route('/web/webclient/translations', type='json', auth="admin")
+    def translations(self, mods=None, lang="en"):
+        if mods is None:
+            m = request.registry.get('ir.module.module')
+            mods = [x['name'] for x in m.search_read(request.cr, request.uid,
+                [('state','=','installed')], ['name'])]
+        res_lang = request.registry.get('res.lang')
+        ids = res_lang.search(request.cr, request.uid, [("code", "=", lang)])
         lang_params = None
         if ids:
-            lang_params = res_lang.read(ids[0], ["direction", "date_format", "time_format",
+            lang_params = res_lang.read(request.cr, request.uid, ids[0], ["direction", "date_format", "time_format",
                                                 "grouping", "decimal_point", "thousands_sep"])
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
-        ir_translation = request.session.model('ir.translation')
+        ir_translation = request.registry.get('ir.translation')
         translations_per_module = {}
-        messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
+        messages = ir_translation.search_read(request.cr, request.uid, [('module','in',mods),('lang','=',lang),
                                                ('comments','like','openerp-web'),('value','!=',False),
                                                ('value','!=','')],
                                               ['module','src','value','lang'], order='module')

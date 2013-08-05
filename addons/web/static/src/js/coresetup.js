@@ -513,7 +513,6 @@ instance.session = new instance.web.Session();
 
 /** Configure default qweb */
 instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
-instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template)
