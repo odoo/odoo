@@ -7,27 +7,27 @@ var openerp = ropenerp.declare($, _, QWeb2);
 ropenerp.testing.section('jsonrpc', {},
 function (test) {
     test('basic-jsonrpc', {asserts: 1}, function () {
-        var session = new openerp.web.JsonRPC();
+        var session = new openerp.web.Session();
         return session.rpc("/gen_session_id", {}).then(function(result) {
             ok(result.length > 0, "Result returned by /gen_session_id");
         });
     });
     test('basic-jsonprpc', {asserts: 1}, function () {
-        var session = new openerp.web.JsonRPC();
+        var session = new openerp.web.Session();
         session.origin_server = false;
         return session.rpc("/gen_session_id", {}).then(function(result) {
             ok(result.length > 0, "Result returned by /gen_session_id");
         });
     });
     test('basic-jsonprpc2', {asserts: 1}, function () {
-        var session = new openerp.web.JsonRPC();
+        var session = new openerp.web.Session();
         session.origin_server = false;
         return session.rpc("/gen_session_id", {}, {force2step: true}).then(function(result) {
             ok(result.length > 0, "Result returned by /gen_session_id");
         });
     });
     test('session-jsonrpc', {asserts: 2}, function () {
-        var session = new openerp.web.JsonRPC();
+        var session = new openerp.web.Session();
         var tmp = _.uniqueId("something");
         return session.rpc("/web/tests/set_session_value", {value: tmp}).then(function() {
             ok(true, "set_session returned");
@@ -37,7 +37,7 @@ function (test) {
         });
     });
     test('session-jsonprpc', {asserts: 2}, function () {
-        var session = new openerp.web.JsonRPC();
+        var session = new openerp.web.Session();
         session.origin_server = false;
         var tmp = _.uniqueId("something");
         return session.rpc("/web/tests/set_session_value", {value: tmp}).then(function() {
@@ -48,7 +48,7 @@ function (test) {
         });
     });
     test('session-jsonprpc2', {asserts: 2}, function () {
-        var session = new openerp.web.JsonRPC();
+        var session = new openerp.web.Session();
         session.origin_server = false;
         var tmp = _.uniqueId("something");
         return session.rpc("/web/tests/set_session_value", {value: tmp}, {force2step: true}).then(function() {
@@ -59,9 +59,9 @@ function (test) {
         });
     });
     test('overridesession-jsonrpc', {asserts: 4}, function () {
-        var origin_session = new openerp.web.JsonRPC();
+        var origin_session = new openerp.web.Session();
         var origin_tmp = _.uniqueId("something");
-        var session = new openerp.web.JsonRPC(null, null, {override_session: true});
+        var session = new openerp.web.Session(null, null, {override_session: true});
         var tmp = _.uniqueId("something_else");
         return session.rpc("/web/tests/set_session_value", {value: tmp}).then(function() {
             ok(true, "set_session returned");
@@ -75,9 +75,9 @@ function (test) {
         });
     });
     test('overridesession-jsonprpc', {asserts: 4}, function () {
-        var origin_session = new openerp.web.JsonRPC();
+        var origin_session = new openerp.web.Session();
         var origin_tmp = _.uniqueId("something");
-        var session = new openerp.web.JsonRPC(null, null, {override_session: true});
+        var session = new openerp.web.Session(null, null, {override_session: true});
         var tmp = _.uniqueId("something_else");
         session.origin_server = false;
         return session.rpc("/web/tests/set_session_value", {value: tmp}).then(function() {
@@ -92,9 +92,9 @@ function (test) {
         });
     });
     test('overridesession-jsonprpc2', {asserts: 4}, function () {
-        var origin_session = new openerp.web.JsonRPC();
+        var origin_session = new openerp.web.Session();
         var origin_tmp = _.uniqueId("something");
-        var session = new openerp.web.JsonRPC(null, null, {override_session: true});
+        var session = new openerp.web.Session(null, null, {override_session: true});
         var tmp = _.uniqueId("something_else");
         session.origin_server = false;
         return session.rpc("/web/tests/set_session_value", {value: tmp}, {force2step: true}).then(function() {

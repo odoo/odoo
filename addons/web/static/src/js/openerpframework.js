@@ -870,7 +870,7 @@ openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
     });
 };
 
-openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
+openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     triggers: {
         'request': 'Request sent',
         'response': 'Response received',
@@ -878,29 +878,66 @@ openerp.web.JsonRPC = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         'error': 'The received response is an JSON-RPC error'
     },
     /**
-     * @constructs openerp.web.JsonRPC
-     *
-     * @param {String} [server] JSON-RPC endpoint hostname
-     * @param {String} [port] JSON-RPC endpoint port
+    @constructs openerp.web.Session
+    
+    @param parent The parent of the newly created object.
+    @param {String} origin Url of the OpenERP server to contact with this session object
+    or `null` if the server to contact is the origin server.
+    @param {Dict} options A dictionary that can contain the following options:
+        
+        * "override_session": Default to false. If true, the current session object will
+          not try to re-use a previously created session id stored in a cookie.
+        * "session_id": Default to null. If specified, the specified session_id will be used
+          by this session object. Specifying this option automatically implies that the option
+          "override_session" is set to true.
      */
     init: function(parent, origin, options) {
         openerp.web.PropertiesMixin.init.call(this, parent);
         options = options || {};
         this.server = null;
-        this.override_session = options.override_session || false;
-        this.session_id = undefined;
+        this.session_id = options.session_id || null;
+        this.override_session = options.override_session || !!options.session_id || false;
         this.avoid_recursion = false;
         this.setup(origin);
     },
     setup: function(origin) {
         // must be able to customize server
         var window_origin = location.protocol + "//" + location.host;
-        var self = this;
-        this.origin = origin ? origin.replace( /\/+$/, '') : window_origin;
+        origin = origin ? origin.replace( /\/+$/, '') : window_origin;
+        if (!_.isUndefined(this.origin) && this.origin !== origin)
+            throw new Error('Session already bound to ' + this.origin);
+        else
+            this.origin = origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
         this.origin_server = this.origin === window_origin;
-        this.session_id = null;
+    },
+    /**
+     * (re)loads the content of a session: db name, username, user id, session
+     * context and status of the support contract
+     *
+     * @returns {$.Deferred} deferred indicating the session is done reloading
+     */
+    session_reload: function () {
+        var self = this;
+        return self.rpc("/web/session/get_session_info", {}).then(function(result) {
+            delete result.session_id;
+            _.extend(self, result);
+        });
+    },
+    /**
+     * The session is validated either by login or by restoration of a previous session
+     */
+    session_authenticate: function(db, login, password) {
+        var self = this;
+        var params = {db: db, login: login, password: password};
+        return this.rpc("/web/session/authenticate", params).then(function(result) {
+            if (!result.uid) {
+                return $.Deferred().reject();
+            }
+            delete result.session_id;
+            _.extend(self, result);
+        });
     },
     check_session_id: function() {
         var self = this;

@@ -606,7 +606,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 return self.__setitem__(k, v)
         object.__setattr__(self, k, v)
 
-    def authenticate(self, db, login=None, password=None, env=None, uid=None):
+    def authenticate(self, db, login=None, password=None, uid=None):
         """
         Authenticate the current user with the given db, login and password. If successful, store
         the authentication parameters in the current session and request.
@@ -615,7 +615,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
 
         if uid is None:
-            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
+            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password,
+                request.httprequest.environ])
         else:
             security.check(db, uid, password)
         self.db = db

@@ -14,27 +14,23 @@ if (!console) {
 
 openerp.web.coresetup = function(instance) {
 
+/*
+    Some retro-compatibility.
+*/
+instance.web.JsonRPC = instance.web.Session;
+
 /** Session openerp specific RPC class */
-instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
+instance.web.Session.include( /** @lends instance.web.Session# */{
     init: function() {
         this._super.apply(this, arguments);
         // TODO: session store in cookie should be optional
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    rpc: function(url, params, options) {
-        return this._super(url, params, options);
-    },
     /**
      * Setup a sessionm
      */
     session_bind: function(origin) {
-        if (!_.isUndefined(this.origin)) {
-            if (this.origin === origin) {
-                return $.when();
-            }
-            throw new Error('Session already bound to ' + this.origin);
-        }
         var self = this;
         this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
@@ -69,33 +65,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             );
         });
     },
-    /**
-     * (re)loads the content of a session: db name, username, user id, session
-     * context and status of the support contract
-     *
-     * @returns {$.Deferred} deferred indicating the session is done reloading
-     */
-    session_reload: function () {
-        var self = this;
-        var def = $.when();
-        if (this.override_session) {
-            if (! this.session_id) {
-                def = this.rpc("/gen_session_id", {}).then(function(result) {
-                    self.session_id = result;
-                });
-            }
-        } else {
-            this.session_id = this.get_cookie('session_id');
-        }
-        return def.then(function() {
-            return self.rpc("/web/session/get_session_info", {});
-        }).then(function(result) {
-            // If immediately follows a login (triggered by trying to restore
-            // an invalid session or no session at all), refresh session data
-            // (should not change, but just in case...)
-            _.extend(self, result);
-        });
-    },
     session_is_valid: function() {
         var db = $.deparam.querystring().db;
         if (db && this.db !== db) {
@@ -106,15 +75,9 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    session_authenticate: function(db, login, password, _volatile) {
+    session_authenticate: function() {
         var self = this;
-        var base_location = document.location.protocol + '//' + document.location.host;
-        var params = { db: db, login: login, password: password, base_location: base_location };
-        return this.rpc("/web/session/authenticate", params).then(function(result) {
-            if (!result.uid) {
-                return $.Deferred().reject();
-            }
-            _.extend(self, result);
+        return $.when(this._super.apply(this, arguments)).then(function() {
             return self.load_modules();
         });
     },
@@ -549,6 +512,7 @@ $.async_when = function() {
 instance.session = new instance.web.Session();
 
 /** Configure default qweb */
+instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually

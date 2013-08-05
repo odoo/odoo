@@ -347,13 +347,7 @@ def make_conditional(response, last_modified=None, etag=None):
     return response.make_conditional(request.httprequest)
 
 def login_and_redirect(db, login, key, redirect_url='/'):
-    wsgienv = request.httprequest.environ
-    env = dict(
-        base_location=request.httprequest.url_root.rstrip('/'),
-        HTTP_HOST=wsgienv['HTTP_HOST'],
-        REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-    )
-    request.session.authenticate(db, login, key, env)
+    request.session.authenticate(db, login, key)
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
@@ -832,13 +826,7 @@ class Session(http.Controller):
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
-        wsgienv = request.httprequest.environ
-        env = dict(
-            base_location=base_location,
-            HTTP_HOST=wsgienv['HTTP_HOST'],
-            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-        )
-        request.session.authenticate(db, login, password, env)
+        request.session.authenticate(db, login, password)
 
         return self.session_info()
 
