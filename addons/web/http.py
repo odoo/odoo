@@ -114,7 +114,7 @@ class WebRequest(object):
             threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
-        self.context = self.session.context
+        self.context = dict(self.session.context)
         self.lang = self.context["lang"]
 
     def _authenticate(self):
