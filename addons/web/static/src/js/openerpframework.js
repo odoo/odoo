@@ -1047,7 +1047,10 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             return path.length >= el.length && path.slice(0, el.length) === el;
         }) ? '' : this.prefix; 
         return prefix + path + qs;
-    }
+    },
+    model: function(model_name) {
+        return new openerp.web.Model(this, model_name);
+    },
 });
 
 openerp.web.Model = openerp.web.Class.extend({
@@ -1084,7 +1087,7 @@ openerp.web.Model = openerp.web.Class.extend({
     },
     session: function() {
         if (! this._session)
-            throw new Error("Not implemented");
+            throw new Error("Not session specified");
         return this._session;
     },
     /**

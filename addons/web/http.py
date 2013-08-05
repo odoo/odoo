@@ -574,6 +574,8 @@ class Model(object):
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
             mod = request.registry.get(self.model)
+            if method.startswith('_'):
+                raise Exception("Access denied")
             meth = getattr(mod, method)
             cr = request.cr
             result = meth(cr, request.uid, *args, **kw)

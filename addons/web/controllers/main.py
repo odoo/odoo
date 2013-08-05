@@ -1071,7 +1071,10 @@ class DataSet(http.Controller):
                         names.get(record['id']) or "%s#%d" % (model, (record['id']))
                 return records
 
-        return getattr(request.session.model(model), method)(*args, **kwargs)
+        if method.startswith('_'):
+            raise Exception("Access denied")
+
+        return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):
