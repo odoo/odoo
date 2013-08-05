@@ -375,58 +375,13 @@ instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, 
 });
 instance.web.bus = new instance.web.Bus();
 
-/** OpenERP Translations */
-instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
-    /**
-     * @constructs instance.web.TranslationDataBase
-     * @extends instance.web.Class
-     */
-    init: function() {
-        this.db = {};
-        this.parameters = {"direction": 'ltr',
-                        "date_format": '%m/%d/%Y',
-                        "time_format": '%H:%M:%S',
-                        "grouping": [],
-                        "decimal_point": ".",
-                        "thousands_sep": ","};
-    },
+instance.web.TranslationDataBase.include({
     set_bundle: function(translation_bundle) {
-        var self = this;
-        this.db = {};
-        var modules = _.keys(translation_bundle.modules);
-        modules.sort();
-        if (_.include(modules, "web")) {
-            modules = ["web"].concat(_.without(modules, "web"));
-        }
-        _.each(modules, function(name) {
-            self.add_module_translation(translation_bundle.modules[name]);
-        });
+        this._super(translation_bundle);
         if (translation_bundle.lang_parameters) {
-            this.parameters = translation_bundle.lang_parameters;
-            this.parameters.grouping = py.eval(
-                    this.parameters.grouping);
+            this.parameters.grouping = py.eval(this.parameters.grouping);
         }
     },
-    add_module_translation: function(mod) {
-        var self = this;
-        _.each(mod.messages, function(message) {
-            self.db[message.id] = message.string;
-        });
-    },
-    build_translation_function: function() {
-        var self = this;
-        var fcnt = function(str) {
-            var tmp = self.get(str);
-            return tmp === undefined ? str : tmp;
-        };
-        fcnt.database = this;
-        return fcnt;
-    },
-    get: function(key) {
-        if (this.db[key])
-            return this.db[key];
-        return undefined;
-    }
 });
 
 /** Custom jQuery plugins */
@@ -511,8 +466,6 @@ $.async_when = function() {
 /** Setup default session */
 instance.session = new instance.web.Session();
 
-/** Configure default qweb */
-instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template)
@@ -529,7 +482,6 @@ instance.web._lt = function (s) {
 };
 instance.web.qweb.debug = instance.session.debug;
 _.extend(instance.web.qweb.default_dict, {
-    '_t' : instance.web._t,
     '__debug__': instance.session.debug,
 });
 instance.web.qweb.preprocess_node = function() {

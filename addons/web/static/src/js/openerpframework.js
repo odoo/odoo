@@ -761,13 +761,6 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     }
 });
 
-openerp.web.qweb = new QWeb2.Engine();
-
-openerp.web.qweb.default_dict = {
-    '_' : _,
-    'JSON': JSON
-};
-
 var genericJsonRpc = function(fct_name, params, fct) {
     var data = {
         jsonrpc: "2.0",
@@ -1112,6 +1105,58 @@ openerp.web.Model = openerp.web.Class.extend({
     },
 });
 
+/** OpenERP Translations */
+openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
+    /**
+     * @constructs instance.web.TranslationDataBase
+     * @extends instance.web.Class
+     */
+    init: function() {
+        this.db = {};
+        this.parameters = {"direction": 'ltr',
+                        "date_format": '%m/%d/%Y',
+                        "time_format": '%H:%M:%S',
+                        "grouping": [],
+                        "decimal_point": ".",
+                        "thousands_sep": ","};
+    },
+    set_bundle: function(translation_bundle) {
+        var self = this;
+        this.db = {};
+        var modules = _.keys(translation_bundle.modules);
+        modules.sort();
+        if (_.include(modules, "web")) {
+            modules = ["web"].concat(_.without(modules, "web"));
+        }
+        _.each(modules, function(name) {
+            self.add_module_translation(translation_bundle.modules[name]);
+        });
+        if (translation_bundle.lang_parameters) {
+            this.parameters = translation_bundle.lang_parameters;
+        }
+    },
+    add_module_translation: function(mod) {
+        var self = this;
+        _.each(mod.messages, function(message) {
+            self.db[message.id] = message.string;
+        });
+    },
+    build_translation_function: function() {
+        var self = this;
+        var fcnt = function(str) {
+            var tmp = self.get(str);
+            return tmp === undefined ? str : tmp;
+        };
+        fcnt.database = this;
+        return fcnt;
+    },
+    get: function(key) {
+        return this.db[key];
+    }
+});
+
+openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+
 openerp.web.get_cookie = function(c_name) {
     if (document.cookie.length > 0) {
         var c_start = document.cookie.indexOf(c_name + "=");
@@ -1125,6 +1170,14 @@ openerp.web.get_cookie = function(c_name) {
         }
     }
     return "";
+};
+
+openerp.web.qweb = new QWeb2.Engine();
+
+openerp.web.qweb.default_dict = {
+    '_' : _,
+    'JSON': JSON,
+    '_t' : openerp.web._t,
 };
 
 openerp.declare = declare;
