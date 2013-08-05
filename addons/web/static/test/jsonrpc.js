@@ -110,4 +110,49 @@ function (test) {
     });
 });
 
+var login = "admin";
+var password = "admin";
+var db = null;
+
+ropenerp.testing.section('jsonrpc-auth', {
+    setup: function() {
+        var session = new openerp.web.Session();
+        return session.session_reload().then(function() {
+            db = session.db;
+            ok(db, "db must be valid");
+        });
+    },
+},
+function (test) {
+    test('basic-auth', {asserts: 4}, function () {
+        var session = new openerp.web.Session();
+        equal(session.uid, undefined, "uid is expected to be undefined");
+        return session.session_authenticate(db, login, password).then(function() {
+            equal(session.uid, 1, "Admin's uid must be 1");
+            return session.rpc("/web/dataset/call_kw", {
+                model: "res.users",
+                method: "read",
+                args: [1, ["login"]],
+                kwargs: {},
+            }).then(function(result) {
+                equal(result.login, "admin", "Admin's name must be 'admin'");
+            });
+        });
+    });
+    test('share-sessions', {asserts: 6}, function () {
+        var session = new openerp.web.Session();
+        var session2;
+        return session.session_authenticate(db, login, password).then(function() {
+            equal(session.uid, 1, "Admin's uid must be 1");
+            session2 = new openerp.web.Session(null, null, {session_id: session.session_id});
+            equal(session2.uid, undefined, "uid should be undefined");
+            equal(session2.override_session, true, "overwrite_session should be true");
+            return session2.session_reload();
+        }).then(function() {
+            equal(session2.uid, session.uid);
+            equal(session2.uid, 1);
+        });
+    });
+});
+
 })();
