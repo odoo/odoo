@@ -58,19 +58,18 @@ instance.web.Query = instance.web.Class.extend({
     },
     _execute: function () {
         var self = this;
-        return instance.session.rpc('/web/dataset/search_read', {
-            model: this._model.name,
-            fields: this._fields || false,
+        return this._model.call('search_read', {
             domain: instance.web.pyeval.eval('domains',
                     [this._model.domain(this._filter)]),
-            context: instance.web.pyeval.eval('contexts',
-                    [this._model.context(this._context)]),
+            fields: this._fields || false,
             offset: this._offset,
             limit: this._limit,
-            sort: instance.web.serialize_sort(this._order_by)
+            order: instance.web.serialize_sort(this._order_by),
+            context: instance.web.pyeval.eval('contexts',
+                    [this._model.context(this._context)]),
         }).then(function (results) {
             self._count = results.length;
-            return results.records;
+            return results;
         }, null);
     },
     /**
