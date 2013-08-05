@@ -11,6 +11,8 @@ OpenERP Blog
     'depends': ['website', 'hr'],
     'data': [
         'views/website_hr.xml',
+        'security/ir.model.access.csv',
+        'security/website_hr.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

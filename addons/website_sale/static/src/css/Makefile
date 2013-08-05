@@ -1,2 +1,2 @@
 sass:
-	sass --compass --trace -t expanded ecommerce.sass ecommerce.css
+	sass --compass --trace -t expanded --watch ecommerce.sass:ecommerce.css

@@ -16,6 +16,31 @@
            </data>
         </field>
     </record>
+    <record id="header_ecommerce" model="ir.ui.view">
+        <field name="name">header_ecommerce</field>
+        <field name="inherit_id" ref="website.header"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="(//li)[last()]" position="after">
+                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
+                    <li class="pull-right"><a href="/shop">Shop</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+        <field name="arch" type="xml">
+            <group name="sale" position="before">
+                <group name="pos" string="Website">
+                    <field name="website_published"/>
+                </group>
+            </group>
+        </field>
+    </record>
 
     <!-- Page Shop --> 
 
@@ -36,10 +61,7 @@
                         </t>
                         </ul>
                     </div>
-                    <div class="span8">
-                        <t t-raw="shop_content">
-                        </t>
-                    </div>
+                    <t t-raw="shop_content"></t>
                 </div>
             </div>
         </t>
@@ -49,7 +71,7 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
-            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-record="category" t-field="name"><t t-esc="category.name"/></span></a>
+            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-field="category.name"><t t-esc="category.name"/></span></a>
             <ul t-if="category.child_id" class="nav nav-list">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -64,33 +86,64 @@
         <t t-call="website_sale.page">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class="oe_search clearfix">
-                    <form action="/shop" method="get" class="navbar-search pull-right">
-                        <input type="text" name="search" class="search-query span4" placeholder="Search" t-att-value="search or '' or ''"/>
-                        <button type="submit" class="btn">Submit</button>
-                    </form>
+                <div class='span8 navbar navbar-inverse'>
+                    <div class='navbar-inner'>
+                        <div class='pagination pull-left'>
+                            <ul>
+                                <li><a href='#'>Prev</a></li>
+                                <li class='active'><a href='#'>1</a></li>
+                                <li><a href='#'>2</a></li>
+                                <li><a href='#'>3</a></li>
+                                <li><a href='#'>4</a></li>
+                                <li><a href='#'>5</a></li>
+                                <li><a href='#'>Next</a></li>
+                            </ul>
+                        </div>
+                        <form action="/shop" method="get" class="navbar-search pull-right">
+                            <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="search or '' or ''"/>
+                        </form>
+                    </div>
                 </div>
-                <span class="oe_products">
-                    <t t-foreach="products" t-as="product">
-                        <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/>                            
-                        <t t-call="website_sale.product_card"/>
-                    </t>
-                </span>
+                <div class="span8">
+                    <div class='row grid grid-align-top'>
+                        <t t-foreach="products" t-as="product">
+                            <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/>                            
+                            <t t-call="website_sale.product_card"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="span8 offset4 text-center">
+                    <div class='pagination'>
+                        <ul>
+                            <li><a href='#'>Prev</a></li>
+                            <li class='active'><a href='#'>1</a></li>
+                            <li><a href='#'>2</a></li>
+                            <li><a href='#'>3</a></li>
+                            <li><a href='#'>4</a></li>
+                            <li><a href='#'>5</a></li>
+                            <li><a href='#'>Next</a></li>
+                        </ul>
+                    </div>
+                </div>
             </t>
         </t>
     </template>
 
     <template id="product_card">
-        <div class="media oe_product span3">
-            <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h4></a>
-            <a class="pull-left" t-att-href="'/shop/product/%%s' %% product.id"><img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/></a>
-            <div class="media-body">
-                <div class="oe_ecommerce_description" t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                <div class="oe_ecommerce_price"><span><span t-record="product" t-field="list_price"><t t-esc="product.list_price"/></span>€</span></div>
-                <div class="oe_button_cart">
-                    <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                    <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
-                        <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
+        <div class="oe_product span2 mb16 thumbnail text-center">
+            <a t-att-href="'/shop/product/%%s' %% product.id">
+                <h5  t-field="product.name"> </h5>
+            </a>
+            <a t-att-href="'/shop/product/%%s' %% product.id">
+                <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
+            </a>
+            <div>
+                <div t-field="product.description_sale">FIXME</div>
+                <div><span t-field="product.list_price"></span>€</div>
+                <div class="mb8 mt8">
+                    <button t-att-class="'btn mb8 btn-small btn-inverse %%s' %% (not quantity and 'hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                    <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
+                        Add to cart <t t-if="quantity">(<t t-esc="quantity"/>)</t>
                     </button>
                 </div>
             </div>
@@ -112,17 +165,22 @@
         <t t-call="website_sale.page">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class="oe_product_detail">
-                    <h1><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h1>
+                <div class="oe_product_detail span8">
+                    <a href="#" t-att-data-id="product.id" class="pull-right" t-if="editable">
+                        <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Click to Unpublish</span>
+                        <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Click to Publish</span>
+                    </a>
+                    <h2 t-field="product.name"></h2>
+
                     <div class="oe_button_cart">
-                        <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                        <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
-                            <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
+                        <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                        <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
+                            Add to cart <t t-if="quantity" >(<t t-esc="quantity"/>)</t>
                         </button>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                    <div t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                    <div class="oe_ecommerce_price" t-record="product" t-field="list_price"><t t-esc="product.list_price"/> €</div>
+                    <div t-field="product.description_sale"></div>
+                    <div class="oe_ecommerce_price" t-field="product.list_price"><t t-esc="product.list_price"/> €</div>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>
@@ -135,22 +193,24 @@
         <t t-call="website_sale.page">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">
-                <span class="oe_mycart">
-                    <t t-foreach="order.order_line or []" t-as="line">
-                        <t t-set="product" t-value="line.product_id"/>
-                        <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
-                        <t t-call="website_sale.product_card"/>
-                    </t>
-                    <t t-call="website_sale.product_recommended"/>
-                    <t t-call="website_sale.total"/>
-                    <div class="media well well-small" t-if="order.order_line">
-                        <form action="/shop/mycart" class="navbar-form">
-                            <input name="code" type="text" placeholder="Reduction Code..."/>
-                            <button class="btn">Submit your Reduction Code</button>
-                        </form>
+                <div class="span8 oe_mycart">
+                    <h2>My Shopping Cart</h2>
+                    <h3 t-if="not order.order_line">Your cart is empty</h3>
+                    <div class='row mt32 grid grid-align-top'>
+                        <t t-foreach="order.order_line or []" t-as="line">
+                            <t t-set="product" t-value="line.product_id"/>
+                            <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
+                            <t t-call="website_sale.product_card"/>
+                        </t>
                     </div>
-                    <a t-if="order.order_line" href="/shop/checkout"><button class="btn btn-success">Next stage</button></a>
-                </span>
+                    <t t-call="website_sale.total"/>
+                    <form t-if="order.order_line" class="well form-search" action="/shop/mycart" >
+                        <input name="code" class='input' type="text" placeholder="Reduction Code..."/>
+                        <button class="btn">Apply Code</button>
+                    </form>
+                    <a t-if="order.order_line" href="/shop/checkout"><button class="btn btn-success">Proceed To Payment</button></a>
+                    <t t-call="website_sale.product_recommended"/>
+                </div>
             </t>
         </t>
     </template>
@@ -158,14 +218,15 @@
     <!-- Total Shop my cart --> 
 
     <template id="total">
-        <div class="oe_total">
-            <div class="media well well-small">
-                <table t-if="order.order_line">
-                    <tr><td>Untaxed Amount</td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
-                    <tr><td>Taxes</td><td><t t-esc="order.amount_tax"/> €</td></tr>
-                    <tr><td>Total</td><td><h3><t t-esc="order.amount_total"/> €</h3></td></tr>
-                </table>
-                <span t-if="not order.order_line">Your cart is empty</span>
+        <div class="row oe_total">
+            <div class="span4"> 
+                <div class="well">
+                    <table class='table-equalized' t-if="order.order_line">
+                        <tr> <td>Subtotal </td>      <td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                        <tr> <td>Taxes </td>         <td><t t-esc="order.amount_tax"/> €</td></tr>
+                        <tr> <td><h4>Total</h4></td> <td><h4><t t-esc="order.amounttotal"/> €</h4></td></tr>
+                    </table>
+                </div>
             </div>
         </div>
     </template>

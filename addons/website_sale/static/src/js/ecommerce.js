@@ -1,4 +1,21 @@
 $(document).ready(function () {
+    $('.oe_ecommerce').on('click', '.js_publish, .js_unpublish', function (e) {
+        e.preventDefault();
+        var $link = $(this).parent();
+        $link.find('.js_publish, .js_unpublish').addClass("hidden");
+        var $unp = $link.find(".js_unpublish");
+        var $p = $link.find(".js_publish");
+        $.post('/shop/publish', {'id': $link.data('id')}, function (result) {
+            if (+result) {
+                $p.addClass("hidden");
+                $unp.removeClass("hidden");
+            } else {
+                $p.removeClass("hidden");
+                $unp.addClass("hidden");
+            }
+        });
+    });
+
     $('.oe_ecommerce').on('click', '.oe_product .btn, .oe_product_detail .btn', function (e) {
         var $button = $(e.currentTarget);
         var $product = $button.parents('.oe_product:first, .oe_product_detail:first');
@@ -13,7 +30,7 @@ $(document).ready(function () {
                 .html(quantity);
             $add.toggleClass('btn-primary', !quantity)
                 .toggleClass('btn-success', !!quantity);
-            $remove.toggleClass('oe_hidden', !quantity);
+            $remove.toggleClass('hidden', !quantity);
             if ($('.oe_mycart').size() && !quantity) {
                 $product.remove()
             }
