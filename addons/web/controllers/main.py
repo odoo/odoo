@@ -672,11 +672,13 @@ class WebClient(http.Controller):
                 "lang_parameters": None}
 
     @http.route('/web/webclient/translations', type='json', auth="admin")
-    def translations(self, mods=None, lang="en"):
+    def translations(self, mods=None, lang=None):
         if mods is None:
             m = request.registry.get('ir.module.module')
             mods = [x['name'] for x in m.search_read(request.cr, request.uid,
                 [('state','=','installed')], ['name'])]
+        if lang is None:
+            lang = request.context["lang"]
         res_lang = request.registry.get('res.lang')
         ids = res_lang.search(request.cr, request.uid, [("code", "=", lang)])
         lang_params = None

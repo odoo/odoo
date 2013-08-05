@@ -156,10 +156,7 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         });
     },
     load_translations: function() {
-        var params = { mods: this.module_list, lang: this.user_context.lang };
-        return this.rpc('/web/webclient/translations', params).done(function(trans) {
-            instance.web._t.database.set_bundle(trans);
-        });
+        return instance.web._t.database.load_translations(this, this.module_list, this.user_context.lang);
     },
     load_css: function (files) {
         var self = this;

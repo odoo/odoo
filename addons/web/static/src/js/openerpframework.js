@@ -1152,7 +1152,26 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends instance.w
     },
     get: function(key) {
         return this.db[key];
-    }
+    },
+    /**
+        Loads the translations from an OpenERP server.
+
+        @param {openerp.web.Session} session The session object to contact the server.
+        @param {Array} [modules] The list of modules to load the translation. If not specified,
+        it will default to all the modules installed in the current database.
+        @param {Object} [lang] lang The language. If not specified it will default to the language
+        of the current user.
+        @returns {jQuery.Deferred}
+    */
+    load_translations: function(session, modules, lang) {
+        var self = this;
+        return session.rpc('/web/webclient/translations', {
+            "mods": modules || null,
+            "lang": lang || null,
+        }).done(function(trans) {
+            self.set_bundle(trans);
+        });
+    },
 });
 
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
