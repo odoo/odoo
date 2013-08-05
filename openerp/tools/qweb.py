@@ -184,7 +184,7 @@ class QWebXml(object):
             inner = inner.strip()
         if name == "t":
             return inner
-        elif len(inner) or name in ['script','i']:
+        elif len(inner) or name in ['script','i','div']:
             # script should be rendered as <script></script>
             return "<%s%s>%s</%s>" % (name, g_att, inner, name)
         else:
