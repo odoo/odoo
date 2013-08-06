@@ -772,6 +772,7 @@ class mail_thread(osv.AbstractModel):
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
         fallback_model = model
+        bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
 
         # Get email.message.Message variables for future processing
         message_id = message.get('Message-Id')
@@ -779,6 +780,24 @@ class mail_thread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
+
+        # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
+        if bounce_alias in email_to:
+            bounce_match = tools.bounce_re.search(email_to)
+            if bounce_match:
+                bounced_mail_id = bounce_match.group(1)
+                if self.pool['mail.mail'].exists(cr, uid, bounced_mail_id):
+                    mail = self.pool['mail.mail'].browse(cr, uid, bounced_mail_id, context=context)
+                    bounced_model = mail.model
+                    bounced_thread_id = mail.res_id
+                else:
+                    bounced_model = bounce_match.group(2)
+                    bounced_thread_id = int(bounce_match.group(3)) if bounce_match.group(3) else 0
+                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s',
+                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id)
+                if bounced_model and bounced_model in self.pool and hasattr(self.pool[bounced_model], 'message_receive_bounce'):
+                    self.pool[bounced_model].message_receive_bounce(cr, uid, [bounced_thread_id], mail_id=bounced_mail_id, context=context)
+                return []
 
         # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
@@ -1017,6 +1036,15 @@ class mail_thread(osv.AbstractModel):
         if update_vals:
             self.write(cr, uid, ids, update_vals, context=context)
         return True
+
+    def message_receive_bounce(self, cr, uid, ids, mail_id=None, context=None):
+        """Called by ``message_process`` when a bounce email (such as Undelivered
+        Mail Returned to Sender) is received for an existing thread. The default
+        behavior is to check is an integer  ``message_bounce`` column exists.
+        If it is the case, its content is incremented. """
+        if self._all_columns.get('message_bounce'):
+            for obj in self.browse(cr, uid, ids, context=context):
+                self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 
     def _message_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""

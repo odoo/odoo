@@ -273,6 +273,8 @@ class crm_lead(format_address, osv.osv):
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
                 help='The Status is set to \'Draft\', when a case is created. If the case is in progress the Status is set to \'Open\'. When the case is over, the Status is set to \'Done\'. If the case needs to be reviewed then the Status is  set to \'Pending\'.'),
 
+        # Messaging and marketing
+        'message_bounce': fields.integer('Bounce'),
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),

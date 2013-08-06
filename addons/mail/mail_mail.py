@@ -61,14 +61,15 @@ class mail_mail(osv.Model):
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
-            help='Mail has been created to notify people of an existing mail.message')
+            help='Mail has been created to notify people of an existing mail.message'),
+        # Bounce and tracking
+        'opened': fields.integer(
+            'Opened',
+            help='Number of times this email has been seen, using the OpenERP tracking.'),
+        'replied': fields.integer(
+            'Reply Received',
+            help='If checked, a reply to this email has been received.'),
     }
-
-    def _get_default_from(self, cr, uid, context=None):
-        """ Kept for compatibility
-            TDE TODO: remove me in 8.0
-        """
-        return self.pool['mail.message']._get_default_from(cr, uid, context=context)
 
     _defaults = {
         'state': 'outgoing',
@@ -158,6 +159,18 @@ class mail_mail(osv.Model):
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
+    def set_opened(self, cr, uid, ids, context=None):
+        """ Increment opened counter """
+        for mail in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, [mail.id], {'opened': (mail.opened + 1)}, context=context)
+        return True
+
+    def set_replied(self, cr, uid, ids, context=None):
+        """ Increment replied counter """
+        for mail in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, [mail.id], {'replied': (mail.replied + 1)}, context=context)
+        return True
+
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
@@ -226,12 +239,21 @@ class mail_mail(osv.Model):
             }
             if mail.notification:
                 fragment.update({
-                        'message_id': mail.mail_message_id.id,
-                    })
+                    'message_id': mail.mail_message_id.id,
+                })
             url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
             return _("""<small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small>""") % url
         else:
             return None
+
+    def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
+        if not mail.auto_delete:
+            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+            track_url = urljoin(base_url, 'mail/track/%d/blank.gif' % mail.id)
+            print base_url, track_url
+            return '<img src="%s" alt=""/>' % track_url
+        else:
+            return ''
 
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
         """ If subject is void and record_name defined: '<Author> posted on <Resource>'
@@ -257,8 +279,11 @@ class mail_mail(osv.Model):
 
         # generate footer
         link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
         if link:
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
+        if tracking_url:
+            body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
@@ -319,25 +344,37 @@ class mail_mail(osv.Model):
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
                 for partner in mail.recipient_ids:
                     email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
+                # headers
+                headers = {}
+                bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
+                catchall_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+                if bounce_alias and catchall_domain:
+                    if mail.model and mail.res_id:
+                        headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
+                    else:
+                        headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
 
                 # build an RFC2822 email.message.Message object and send it without queuing
+                res = None
                 for email in email_list:
                     msg = ir_mail_server.build_email(
-                        email_from = mail.email_from,
-                        email_to = email.get('email_to'),
-                        subject = email.get('subject'),
-                        body = email.get('body'),
-                        body_alternative = email.get('body_alternative'),
-                        email_cc = tools.email_split(mail.email_cc),
-                        reply_to = mail.reply_to,
-                        attachments = attachments,
-                        message_id = mail.message_id,
-                        references = mail.references,
-                        object_id = mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
-                        subtype = 'html',
-                        subtype_alternative = 'plain')
+                        email_from=mail.email_from,
+                        email_to=email.get('email_to'),
+                        subject=email.get('subject'),
+                        body=email.get('body'),
+                        body_alternative=email.get('body_alternative'),
+                        email_cc=tools.email_split(mail.email_cc),
+                        reply_to=mail.reply_to,
+                        attachments=attachments,
+                        message_id=mail.message_id,
+                        references=mail.references,
+                        object_id=mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
+                        subtype='html',
+                        subtype_alternative='plain',
+                        headers=headers)
                     res = ir_mail_server.send_email(cr, uid, msg,
-                        mail_server_id=mail.mail_server_id.id, context=context)
+                                                    mail_server_id=mail.mail_server_id.id,
+                                                    context=context)
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True
