@@ -32,7 +32,7 @@ class website_mail(http.Controller):
 
         if request.uid != request.public_uid and mail_group_id:
             message_follower_ids = group_obj.read(request.cr, request.uid, [mail_group_id], ['message_follower_ids'])[0]['message_follower_ids']
-            parent_id = user_obj.browse(request.cr, request.uid, request.uid).partner_id.id
+            parent_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
             values['subscribe'] = parent_id in message_follower_ids
 
         domain = mail_group_id and [("res_id", "=", mail_group_id)] or []
