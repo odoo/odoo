@@ -1,40 +1,34 @@
 # -*- coding: utf-8 -*-
-
-import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.controllers.main import template_values
 import base64
-import tempfile
 
 from urllib import quote_plus
 
 class website_hr_recruitment(http.Controller):
 
-    @http.route(['/career'], type='http', auth="admin")
-    def career(self, *arg, **post):
-        values = template_values()
+    @http.route(['/career'], type='http', auth="public")
+    def career(self, **post):
+        website = request.registry['website']
         jobpost_ids = request.registry['hr.job'].search(request.cr, request.uid, [("state", "=", 'open')])
-        values.update({
-           'res_job': request.registry['hr.job'].browse(request.cr, request.uid, jobpost_ids),
-           'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1)
+        values = website.get_rendering_context({
+            'res_job': request.registry['hr.job'].browse(request.cr, request.uid, jobpost_ids)
         })
-        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_hr_recruitment.career", values)
+        html = website.render("website_hr_recruitment.career", values)
         return html
 
-    @http.route(['/job/detail/<id>'], type='http', auth="admin")
+    @http.route(['/job/detail/<id>'], type='http', auth="public")
     def detail(self, id=0):
-        values = template_values()
         id = id and int(id) or 0
-        values.update({
-            'job': request.registry['hr.job'].browse(request.cr, request.uid, id),
-            'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1)
+        website = request.registry['website']
+        values = website.get_rendering_context({
+            'job': request.registry['hr.job'].browse(request.cr, request.uid, id)
         })
-        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_hr_recruitment.detail", values)
+        html = website.render("website_hr_recruitment.detail", values)
         return html
 
     @http.route(['/job/success'], type='http', auth="admin")
-    def success(self, *arg, **post):
+    def success(self, **post):
         id = request.registry['hr.applicant'].create(request.cr, request.uid, post)
         if post['ufile']:
             attachment_values = {
@@ -46,11 +40,10 @@ class website_hr_recruitment(http.Controller):
                 'res_id': id
                 }
             request.registry['ir.attachment'].create(request.cr, request.uid, attachment_values)
-        values = template_values()
-        values.update({
-               'jobid': post['job_id'],
-               'res_company': request.registry['res.company'].browse(request.cr, request.uid, 1)
+        website = request.registry['website']
+        values = website.get_rendering_context({
+                'jobid': post['job_id']
            })
-        html = request.registry.get("ir.ui.view").render(request.cr, request.uid, "website_hr_recruitment.thankyou", values)
+        html = website.render("website_hr_recruitment.thankyou", values)
         return html
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

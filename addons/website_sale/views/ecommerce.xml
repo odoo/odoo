@@ -16,6 +16,31 @@
            </data>
         </field>
     </record>
+    <record id="header_ecommerce" model="ir.ui.view">
+        <field name="name">header_ecommerce</field>
+        <field name="inherit_id" ref="website.header"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="(//li)[last()]" position="after">
+                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
+                    <li class="pull-right"><a href="/shop">Shop</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+        <field name="arch" type="xml">
+            <group name="sale" position="before">
+                <group name="pos" string="Website">
+                    <field name="website_published"/>
+                </group>
+            </group>
+        </field>
+    </record>
 
     <!-- Page Shop --> 
 
@@ -31,7 +56,7 @@
                 <div class="row">
                     <div class="span4 css_noprint">
                         <ul class="nav nav-list">
-                        <t t-foreach="categories" t-as="category">
+                        <t t-foreach="website_sale_get_categories()" t-as="category">
                             <t t-call="website_sale.categories_recursive"/>
                         </t>
                         </ul>
@@ -49,7 +74,7 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
-            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-record="category" t-field="name"><t t-esc="category.name"/></span></a>
+            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-field="category.name"><t t-esc="category.name"/></span></a>
             <ul t-if="category.child_id" class="nav nav-list">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -82,16 +107,19 @@
 
     <template id="product_card">
         <div class="media oe_product span3">
-            <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h4></a>
+            <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-field="product.name"><t t-esc="product.name"/></span></h4></a>
             <a class="pull-left" t-att-href="'/shop/product/%%s' %% product.id"><img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/></a>
             <div class="media-body">
-                <div class="oe_ecommerce_description" t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                <div class="oe_ecommerce_price"><span><span t-record="product" t-field="list_price"><t t-esc="product.list_price"/></span>€</span></div>
+                <div class="oe_ecommerce_description" t-field="product.description_sale"><t t-esc="product.description_sale"/></div>
+                <div class="oe_ecommerce_price"><span><span t-field="product.list_price"><t t-esc="product.list_price"/></span>€</span></div>
                 <div class="oe_button_cart">
-                    <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                    <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
-                        <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
-                    </button>
+                    <div class="alert mb0" t-if="editable and not product.website_published">Product not published</div>
+                    <t t-if="product.website_published">
+                        <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                        <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
+                            <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
+                        </button>
+                    </t>
                 </div>
             </div>
         </div>
@@ -113,7 +141,11 @@
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <div class="oe_product_detail">
-                    <h1><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h1>
+                    <a href="#" t-att-data-id="product.id" class="pull-right" t-if="editable">
+                        <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Click to Unpublish</span>
+                        <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Click to Publish</span>
+                    </a>
+                    <h1 t-field="product.name"></h1>
                     <div class="oe_button_cart">
                         <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
                         <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
@@ -121,8 +153,8 @@
                         </button>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                    <div t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                    <div class="oe_ecommerce_price" t-record="product" t-field="list_price"><t t-esc="product.list_price"/> €</div>
+                    <div t-field="product.description_sale"></div>
+                    <div class="oe_ecommerce_price" t-field="product.list_price"><t t-esc="product.list_price"/> €</div>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>

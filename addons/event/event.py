@@ -211,7 +211,7 @@ class event_event(osv.osv):
         'city': fields.related('address_id','city',type='char',string='city'),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
-                    type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
+                    type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
