@@ -1437,7 +1437,7 @@ class stock_move(osv.osv):
                           moves with product_id, product_qty, uom
         """
         if move.product_qty==qty:
-            return move
+            return move.id
         if (move.product_qty < qty) or (qty==0):
             return False
 
