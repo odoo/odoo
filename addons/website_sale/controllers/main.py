@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 import openerp
 import simplejson
 from openerp.osv import osv
@@ -49,6 +50,45 @@ class website(osv.osv):
 
 class Ecommerce(http.Controller):
 
+    def get_categories(self):
+        category_obj = request.registry.get('pos.category')
+        category_ids = category_obj.search(request.cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
+        categories = category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
+        print categories
+        return categories
+
+    def get_current_order(self):
+        order = self.get_order(request.httprequest.session.get('ecommerce_order_id'))
+        request.httprequest.session['ecommerce_order_id'] = order.id
+        return order
+
+    def get_order(self, order_id=None):
+
+        order_obj = request.registry.get('sale.order')
+        # check if order allready exists
+        if order_id:
+            try:
+                order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id).pricelist_id
+            except:
+                order_id = None
+        if not order_id:
+            fields = [k for k, v in order_obj._columns.items()]
+            order_value = order_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields)
+            order_value['partner_id'] = openerp.SUPERUSER_ID != request.public_uid and \
+                request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id or \
+                None
+            order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
+            order_id = order_obj.create(request.cr, openerp.SUPERUSER_ID, order_value)
+        return order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
+
+    def render(self, template, values={}):
+        _values = {
+            'order': self.get_current_order(),
+            'categories': self.get_categories(),
+        }
+        _values.update(values)
+        return website.render(template, _values)
+
     def recommended_product(self, my_pids):
         if not my_pids:
             return []
@@ -71,24 +111,47 @@ class Ecommerce(http.Controller):
             product_ids.append(p[0])
         return request.registry.get('product.product').browse(request.cr, request.uid, product_ids)
 
-    @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="public")
-    def category(self, cat_id=0, offset=0, **post):
+    @http.route(['/shop', '/shop/category/<cat_id>', '/shop/category/<cat_id>/page/<page>', '/shop/page/<page>'], type='http', auth="public")
+    def category(self, cat_id=0, page=0, **post):
+
         website = request.registry['website']
+        product_obj = request.registry.get('product.product')
 
         domain = [("sale_ok", "=", True)]
-        if post.get("search"):
-            domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('desrequest.cription', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
-            cat_id = cat_id and int(cat_id) or 0
+            cat_id = int(cat_id)
             domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
 
-        product_obj = request.registry.get('product.product')
+        product_count = len(product_obj.search(request.cr, request.uid, domain))
+        page_count = int(math.ceil(product_count / 20.0))
+
+        #if post.get("search"):
+         #   domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('description', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+
+        page = max(1,min(int(page),page_count))
+        offset = (page-1) * 20
+
+        if page_count <= 5 or page <= 3:
+            pmin = 1
+            pmax = min(page_count,5)
+        elif page >= page_count - 2:
+            pmin = page_count - 4
+            pmax = page_count
+        else:
+            pmin = page - 2
+            pmax = page + 2
+
+        pages = range(pmin, pmax+1)
+
         product_ids = product_obj.search(request.cr, request.uid, domain, limit=20, offset=offset)
 
         values = website.get_rendering_context({
             'current_category': cat_id,
             'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
+            'page_count': page_count,
+            'pages': pages,
+            'page': page,
         })
         return website.render("website_sale.products", values)
 
