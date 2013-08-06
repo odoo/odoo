@@ -213,10 +213,9 @@ class RecordCache(MutableMapping):
     """ Cache for the fields of a record in a given scope. """
     draft = False
 
-    def __init__(self, fields, *args, **kwargs):
+    def __init__(self, fields, id):
         self.fields = fields            # set of fields present in model cache
-        self.data = dict(*args, **kwargs)
-        assert 'id' in self.data, "RecordCache must always have an 'id'."
+        self.data = {'id': id}
 
     def __contains__(self, name):
         return name in self.data
@@ -239,13 +238,11 @@ class RecordCache(MutableMapping):
         return len(self.data)
 
     def clear(self):
-        id = self.data['id']
-        self.data.clear()
-        self.data['id'] = id
+        self.data = {'id': self.data['id']}
 
     def dump(self):
         """ Return a "dump" of the record cache. """
-        return RecordCache(None, () if self.draft else self.iteritems())
+        return dict(() if self.draft else self.iteritems())
 
 
 class ModelCache(defaultdict):
@@ -258,7 +255,7 @@ class ModelCache(defaultdict):
         self.fields = set()             # set of fields present in self
 
     def __missing__(self, id):
-        record_cache = RecordCache(self.fields, id=id)
+        record_cache = RecordCache(self.fields, id)
         if id:
             self[id] = record_cache
         return record_cache
@@ -306,9 +303,8 @@ class Cache(defaultdict):
         # are memoized in model instances.
         for model_cache in self.itervalues():
             model_cache.fields.clear()
-            for id, record_cache in model_cache.iteritems():
+            for record_cache in model_cache.itervalues():
                 record_cache.clear()
-                record_cache['id'] = id
 
     def dump(self):
         """ Return a "dump" of the cache. """
