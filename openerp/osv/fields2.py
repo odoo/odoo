@@ -222,9 +222,7 @@ class Field(object):
         column = records._columns[name]
 
         # fetch the records of this model without name in their cache
-        fetch_recs = records.browse(fid
-            for fid, fcache in records._model_cache.iteritems()
-            if name not in fcache)
+        fetch_recs = records.browse(records._model_cache.without_field(name))
 
         # prefetch all classic and many2one fields if column is one of them
         # Note: do not prefetch fields when records.pool._init is True, because
@@ -273,7 +271,9 @@ class Field(object):
             else:
                 self.read_value(record)
         else:
-            self.call_compute(record)
+            # compute self for the records without value for self in their cache
+            recs = record.browse(record._model_cache.without_field(self.name))
+            self.call_compute(recs)
 
     def compute_default(self, record):
         """ assign the default value of field `self` to `record` """

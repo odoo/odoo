@@ -263,6 +263,12 @@ class ModelCache(defaultdict):
             self[id] = record_cache
         return record_cache
 
+    def without_field(self, name):
+        """ Return the ids of the records that do not have field `name` in their
+            cache.
+        """
+        return iter(id for id, cache in self.iteritems() if name not in cache)
+
     def dump(self):
         """ Return a "dump" of the model cache. """
         return dict(
