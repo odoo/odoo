@@ -5217,11 +5217,40 @@ class BaseModel(object):
         model_cache = scope.cache[cls._name]
         return cls._instance(scope, tuple(model_cache[id] for id in ids))
 
-    @tools.lazy_property
+    #
+    # Internal properties, for manipulating the instance's implementation
+    #
+
+    @property
+    def _id(self):
+        """ Return the 'id' of record `self` or ``False``. """
+        return bool(self._caches) and self._caches[0]['id']
+
+    @property
+    def _ids(self):
+        """ Return the 'id' of all records in `self`. """
+        return (cache['id'] for cache in self._caches)
+
+    @property
     def _refs(self):
-        """ The set of dictionary refs used in `self`. """
-        # This is a temporary hack to compare sets of caches
-        return frozenset(id(cache) for cache in self._caches)
+        """ Return a set of record identifiers for `self`. This is aimed at
+            comparing instances. The result is similar to `_ids`, but uses other
+            values for identifying new records, since they do not have an 'id'.
+        """
+        return set(cache['id'] or (id(cache),) for cache in self._caches)
+
+    @tools.lazy_property
+    def _model_cache(self):
+        """ Return the cache of the corresponding model. """
+        # Note: The value of this property is evaluated only once and memoized.
+        # It is correct to do so, because the scope's cache never drops the
+        # cache of models, even when all caches are invalidated.
+        return self._scope.cache[self._name]
+
+    @tools.lazy_property
+    def _record_cache(self):
+        """ Return the cache of the first record in `self`. """
+        return self._caches[0]
 
     #
     # Conversion methods
@@ -5242,8 +5271,8 @@ class BaseModel(object):
         scope = scope or scope_proxy.current
         if self._scope is scope:
             return self
-        ids = self.unbrowse()
-        if len(ids) == len(self):
+        ids = list(self._ids)
+        if all(ids):
             return self.browse(ids)
         raise except_orm("ValueError", "Cannot scope %s" % self)
 
@@ -5317,7 +5346,7 @@ class BaseModel(object):
         """ Test whether `item` is a subset of `self` or a field name. """
         if isinstance(item, BaseModel):
             if self._name == item._name:
-                return item.scoped(self._scope)._refs <= self._refs
+                return item._refs <= self._refs
             raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
         if isinstance(item, basestring):
             return item in self._fields
@@ -5328,16 +5357,16 @@ class BaseModel(object):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s + %s" % (self, other))
         scope = scope_proxy.current
-        caches = self.scoped(scope)._caches + other.scoped(scope)._caches
-        return self._instance(scope, caches)
+        self, other = self.scoped(scope), other.scoped(scope)
+        return self._instance(scope, self._caches + other._caches)
 
     def __sub__(self, other):
         """ Return the difference between two instances (order-preserving). """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
         scope = scope_proxy.current
-        orefs = other.scoped(scope)._refs
-        caches = tuple(cache for cache in self.scoped(scope)._caches if id(cache) not in orefs)
+        self, other = self.scoped(scope), other.scoped(scope)
+        caches = tuple(cache for cache in self._caches if cache not in other._caches)
         return self._instance(scope, caches)
 
     def __and__(self, other):
@@ -5345,8 +5374,8 @@ class BaseModel(object):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s & %s" % (self, other))
         scope = scope_proxy.current
-        orefs = other.scoped(scope)._refs
-        caches = tuple(cache for cache in self.scoped(scope)._caches if id(cache) in orefs)
+        self, other = self.scoped(scope), other.scoped(scope)
+        caches = tuple(cache for cache in self._caches if cache in other._caches)
         return self._instance(scope, caches)
 
     def __or__(self, other):
@@ -5354,9 +5383,10 @@ class BaseModel(object):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s | %s" % (self, other))
         scope = scope_proxy.current
-        caches = self.scoped(scope)._caches + other.scoped(scope)._caches
-        caches = tuple(dict((id(cache), cache) for cache in caches).itervalues())
-        return self._instance(scope, caches)
+        self, other = self.scoped(scope), other.scoped(scope)
+        # index all cache dicts by their id in order to "merge" duplicates
+        index = dict((id(cache), cache) for cache in self._caches + other._caches)
+        return self._instance(scope, tuple(index.itervalues()))
 
     def __eq__(self, other):
         """ Test whether two instances are equivalent (as sets). """
@@ -5401,7 +5431,10 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        return hash((self._name, self._refs))
+        ids = list(self._ids)
+        if all(ids):
+            return hash((self._name, frozenset(ids)))
+        raise except_orm("ValueError", "Cannot hash %s" % self)
 
     def __getitem__(self, key):
         """ If `key` is an integer or a slice, return the corresponding record
@@ -5445,29 +5478,6 @@ class BaseModel(object):
     #
     # Field access/assignment
     #
-
-    @property
-    def _id(self):
-        """ Return the 'id' of record `self` or ``False``. """
-        return bool(self._caches) and self._caches[0]['id']
-
-    @property
-    def _ids(self):
-        """ Return the 'id' of all records in `self`. """
-        return (cache['id'] for cache in self._caches)
-
-    @tools.lazy_property
-    def _model_cache(self):
-        """ Return the cache of the corresponding model. """
-        # Note: The value of this property is evaluated only once and memoized.
-        # It is correct to do so, because the scope's cache never drops the
-        # cache of models, even when all caches are invalidated.
-        return self._scope.cache[self._name]
-
-    @tools.lazy_property
-    def _record_cache(self):
-        """ Return the cache of the first record in `self`. """
-        return self._caches[0]
 
     def _get_field(self, name):
         """ read the field with the given `name` on a record instance """
