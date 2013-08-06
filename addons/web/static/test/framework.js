@@ -8,7 +8,7 @@ ropenerp.testing.section('class', {
     dependencies: ['web.corelib']
 }, function (test) {
     test('Basic class creation', function () {
-        var C = openerp.web.Class.extend({
+        var C = openerp.Class.extend({
             foo: function () {
                 return this.somevar;
             }
@@ -20,12 +20,12 @@ ropenerp.testing.section('class', {
         strictEqual(i.foo(), 3);
     });
     test('Class initialization', function () {
-        var C1 = openerp.web.Class.extend({
+        var C1 = openerp.Class.extend({
             init: function () {
                 this.foo = 3;
             }
         });
-        var C2 = openerp.web.Class.extend({
+        var C2 = openerp.Class.extend({
             init: function (arg) {
                 this.foo = arg;
             }
@@ -38,7 +38,7 @@ ropenerp.testing.section('class', {
         strictEqual(i2.foo, 42);
     });
     test('Inheritance', function () {
-        var C0 = openerp.web.Class.extend({
+        var C0 = openerp.Class.extend({
             foo: function () {
                 return 1;
             }
@@ -59,7 +59,7 @@ ropenerp.testing.section('class', {
         strictEqual(new C2().foo(), 3);
     });
     test('In-place extension', function () {
-        var C0 = openerp.web.Class.extend({
+        var C0 = openerp.Class.extend({
             foo: function () {
                 return 3;
             },
@@ -85,7 +85,7 @@ ropenerp.testing.section('class', {
         strictEqual(new C0().qux(), 5);
     });
     test('In-place extension and inheritance', function () {
-        var C0 = openerp.web.Class.extend({
+        var C0 = openerp.Class.extend({
             foo: function () { return 1; },
             bar: function () { return 1; }
         });
@@ -103,7 +103,7 @@ ropenerp.testing.section('class', {
         strictEqual(new C1().bar(), 2);
     });
     test('In-place extensions alter existing instances', function () {
-        var C0 = openerp.web.Class.extend({
+        var C0 = openerp.Class.extend({
             foo: function () { return 1; },
             bar: function () { return 1; }
         });
@@ -119,7 +119,7 @@ ropenerp.testing.section('class', {
         strictEqual(i.bar(), 3);
     });
     test('In-place extension of subclassed types', function () {
-        var C0 = openerp.web.Class.extend({
+        var C0 = openerp.Class.extend({
             foo: function () { return 1; },
             bar: function () { return 1; }
         });
@@ -142,7 +142,7 @@ ropenerp.testing.section('class', {
 ropenerp.testing.section('Widget.proxy', {
 }, function (test) {
     test('(String)', function () {
-        var W = openerp.web.Widget.extend({
+        var W = openerp.Widget.extend({
             exec: function () {
                 this.executed = true;
             }
@@ -153,7 +153,7 @@ ropenerp.testing.section('Widget.proxy', {
         ok(w.executed, 'should execute the named method in the right context');
     });
     test('(String)(*args)', function () {
-        var W = openerp.web.Widget.extend({
+        var W = openerp.Widget.extend({
             exec: function (arg) {
                 this.executed = arg;
             }
@@ -167,7 +167,7 @@ ropenerp.testing.section('Widget.proxy', {
     test('(String), include', function () {
         // the proxy function should handle methods being changed on the class
         // and should always proxy "by name", to the most recent one
-        var W = openerp.web.Widget.extend({
+        var W = openerp.Widget.extend({
             exec: function () {
                 this.executed = 1;
             }
@@ -183,14 +183,14 @@ ropenerp.testing.section('Widget.proxy', {
     });
 
     test('(Function)', function () {
-        var w = new (openerp.web.Widget.extend({ }))();
+        var w = new (openerp.Widget.extend({ }))();
 
         var fn = w.proxy(function () { this.executed = true; });
         fn();
         ok(w.executed, "should set the function's context (like Function#bind)");
     });
     test('(Function)(*args)', function () {
-        var w = new (openerp.web.Widget.extend({ }))();
+        var w = new (openerp.Widget.extend({ }))();
 
         var fn = w.proxy(function (arg) { this.executed = arg; });
         fn(42);
@@ -199,8 +199,8 @@ ropenerp.testing.section('Widget.proxy', {
 });
 ropenerp.testing.section('Widget.renderElement', {
     setup: function () {
-        openerp.web.qweb = new QWeb2.Engine();
-        openerp.web.qweb.add_template(
+        openerp.qweb = new QWeb2.Engine();
+        openerp.qweb.add_template(
             '<no>' +
                 '<t t-name="test.widget.template">' +
                     '<ol>' +
@@ -218,7 +218,7 @@ ropenerp.testing.section('Widget.renderElement', {
     }
 }, function (test) {
     test('no template, default', function () {
-        var w = new (openerp.web.Widget.extend({ }))();
+        var w = new (openerp.Widget.extend({ }))();
 
         var $original = w.$el;
         ok($original, "should initially have a root element");
@@ -233,7 +233,7 @@ ropenerp.testing.section('Widget.renderElement', {
         ok(_.isEmpty(w.$el.html(), "should not have generated any content"));
     });
     test('no template, custom tag', function () {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             tagName: 'ul'
         }))();
         w.renderElement();
@@ -241,7 +241,7 @@ ropenerp.testing.section('Widget.renderElement', {
         equal(w.el.nodeName, 'UL', "should have generated the custom element tag");
     });
     test('no template, @id', function () {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             id: 'foo'
         }))();
         w.renderElement();
@@ -251,7 +251,7 @@ ropenerp.testing.section('Widget.renderElement', {
         equal(w.el.id, 'foo', "should also be available via property");
     });
     test('no template, @className', function () {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             className: 'oe_some_class'
         }))();
         w.renderElement();
@@ -260,7 +260,7 @@ ropenerp.testing.section('Widget.renderElement', {
         equal(w.$el.attr('class'), 'oe_some_class', "should have the right attribute");
     });
     test('no template, bunch of attributes', function () {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             attributes: {
                 'id': 'some_id',
                 'class': 'some_class',
@@ -287,7 +287,7 @@ ropenerp.testing.section('Widget.renderElement', {
     });
 
     test('template', function () {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             template: 'test.widget.template'
         }))();
         w.renderElement();
@@ -297,7 +297,7 @@ ropenerp.testing.section('Widget.renderElement', {
         equal(w.el.textContent, '01234');
     });
     test('repeated', { asserts: 4 }, function (_unused, $fix) {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             template: 'test.widget.template-value'
         }))();
         w.value = 42;
@@ -314,8 +314,8 @@ ropenerp.testing.section('Widget.renderElement', {
 });
 ropenerp.testing.section('Widget.$', {
     setup: function () {
-        openerp.web.qweb = new QWeb2.Engine();
-        openerp.web.qweb.add_template(
+        openerp.qweb = new QWeb2.Engine();
+        openerp.qweb.add_template(
             '<no>' +
                 '<t t-name="test.widget.template">' +
                     '<ol>' +
@@ -330,7 +330,7 @@ ropenerp.testing.section('Widget.$', {
     }
 }, function (test) {
     test('basic-alias', function () {
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             template: 'test.widget.template'
         }))();
         w.renderElement();
@@ -341,8 +341,8 @@ ropenerp.testing.section('Widget.$', {
 });
 ropenerp.testing.section('Widget.events', {
     setup: function () {
-        openerp.web.qweb = new QWeb2.Engine();
-        openerp.web.qweb.add_template(
+        openerp.qweb = new QWeb2.Engine();
+        openerp.qweb.add_template(
             '<no>' +
                 '<t t-name="test.widget.template">' +
                     '<ol>' +
@@ -358,7 +358,7 @@ ropenerp.testing.section('Widget.events', {
 }, function (test) {
     test('delegate', function () {
         var a = [];
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             template: 'test.widget.template',
             events: {
                 'click': function () {
@@ -382,7 +382,7 @@ ropenerp.testing.section('Widget.events', {
     });
     test('undelegate', function () {
         var clicked = false, newclicked = false;
-        var w = new (openerp.web.Widget.extend({
+        var w = new (openerp.Widget.extend({
             template: 'test.widget.template',
             events: { 'click li': function () { clicked = true; } }
         }))();

@@ -7,6 +7,9 @@
  * @namespace openerp
  */
 (function() {
+    // copy everything in the openerp namespace to openerp.web
+    openerp.web = _.clone(openerp);
+
     var inited = false;
 
     _.extend(openerp, {

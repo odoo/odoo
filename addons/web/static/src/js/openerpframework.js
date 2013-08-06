@@ -5,7 +5,6 @@
 
 function declare($, _, QWeb2) {
 var openerp = {};
-openerp.web = {};
 
 /**
  * Improved John Resig's inheritance, based on:
@@ -21,7 +20,7 @@ openerp.web = {};
  *
  * Example:
  *
- * var Person = openerp.web.Class.extend({
+ * var Person = openerp.Class.extend({
  *  init: function(isDancing){
  *     this.dancing = isDancing;
  *   },
@@ -57,14 +56,14 @@ openerp.web = {};
     var initializing = false,
         fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
     // The web Class implementation (does nothing)
-    openerp.web.Class = function(){};
+    openerp.Class = function(){};
 
     /**
      * Subclass an existing class
      *
      * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
      */
-    openerp.web.Class.extend = function() {
+    openerp.Class.extend = function() {
         var _super = this.prototype;
         // Support mixins arguments
         var args = _.toArray(arguments);
@@ -104,7 +103,7 @@ openerp.web = {};
 
         // The dummy class constructor
         function Class() {
-            if(this.constructor !== openerp.web.Class){
+            if(this.constructor !== openerp.Class){
                 throw new Error("You can only instanciate objects with the 'new' operator");
             }
             // All construction is actually done in the init method
@@ -165,7 +164,7 @@ openerp.web = {};
  * When an object is destroyed, all its children are destroyed too releasing
  * any resource they could have reserved before.
  */
-openerp.web.ParentedMixin = {
+openerp.ParentedMixin = {
     __parentedMixin : true,
     init: function() {
         this.__parentedDestroyed = false;
@@ -274,7 +273,7 @@ openerp.web.ParentedMixin = {
  * http://backbonejs.org
  *
  */
-var Events = openerp.web.Class.extend({
+var Events = openerp.Class.extend({
     on : function(events, callback, context) {
         var ev;
         events = events.split(/\s+/);
@@ -355,10 +354,10 @@ var Events = openerp.web.Class.extend({
     }
 });
 
-openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
+openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     __eventDispatcherMixin: true,
     init: function() {
-        openerp.web.ParentedMixin.init.call(this);
+        openerp.ParentedMixin.init.call(this);
         this.__edispatcherEvents = new Events();
         this.__edispatcherRegisteredEvents = [];
     },
@@ -403,13 +402,13 @@ openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
             this.off(cal[0], cal[2], cal[1]);
         }, this);
         this.__edispatcherEvents.off();
-        openerp.web.ParentedMixin.destroy.call(this);
+        openerp.ParentedMixin.destroy.call(this);
     }
 });
 
-openerp.web.PropertiesMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
+openerp.PropertiesMixin = _.extend({}, openerp.EventDispatcherMixin, {
     init: function() {
-        openerp.web.EventDispatcherMixin.init.call(this);
+        openerp.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
     set: function(arg1, arg2, arg3) {
@@ -493,7 +492,7 @@ openerp.web.PropertiesMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
+openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
     // Backbone-ish API
     tagName: 'div',
     id: null,
@@ -510,14 +509,14 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
-     * @constructs openerp.web.Widget
+     * @constructs openerp.Widget
      *
-     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * @param {openerp.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      */
     init: function(parent) {
-        openerp.web.PropertiesMixin.init.call(this);
+        openerp.PropertiesMixin.init.call(this);
         this.setParent(parent);
         // Bind on_/do_* methods to this
         // We might remove this automatic binding in the future
@@ -541,7 +540,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         if(this.$el) {
             this.$el.remove();
         }
-        openerp.web.PropertiesMixin.destroy.call(this);
+        openerp.PropertiesMixin.destroy.call(this);
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -622,7 +621,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     renderElement: function() {
         var $el;
         if (this.template) {
-            $el = $(openerp.web.qweb.render(this.template, {widget: this}).trim());
+            $el = $(openerp.qweb.render(this.template, {widget: this}).trim());
         } else {
             $el = this._make_descriptive();
         }
@@ -782,7 +781,7 @@ var genericJsonRpc = function(fct_name, params, fct) {
     });
 };
 
-openerp.web.jsonRpc = function(url, fct_name, params, settings) {
+openerp.jsonRpc = function(url, fct_name, params, settings) {
     return genericJsonRpc(fct_name, params, function(data) {
         return $.ajax(url, _.extend({}, settings, {
             url: url,
@@ -794,7 +793,7 @@ openerp.web.jsonRpc = function(url, fct_name, params, settings) {
     });
 };
 
-openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
+openerp.jsonpRpc = function(url, fct_name, params, settings) {
     settings = settings || {};
     return genericJsonRpc(fct_name, params, function(data) {
         var payload_str = JSON.stringify(data);
@@ -863,7 +862,7 @@ openerp.web.jsonpRpc = function(url, fct_name, params, settings) {
     });
 };
 
-openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
+openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
     triggers: {
         'request': 'Request sent',
         'response': 'Response received',
@@ -871,7 +870,7 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         'error': 'The received response is an JSON-RPC error'
     },
     /**
-    @constructs openerp.web.Session
+    @constructs openerp.Session
     
     @param parent The parent of the newly created object.
     @param {String} origin Url of the OpenERP server to contact with this session object
@@ -885,7 +884,7 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
           "override_session" is set to true.
      */
     init: function(parent, origin, options) {
-        openerp.web.PropertiesMixin.init.call(this, parent);
+        openerp.PropertiesMixin.init.call(this, parent);
         options = options || {};
         this.server = null;
         this.session_id = options.session_id || null;
@@ -950,7 +949,7 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             });
         } else {
             // normal use case, just use the cookie
-            self.session_id = openerp.web.get_cookie("session_id");
+            self.session_id = openerp.get_cookie("session_id");
             return $.when();
         }
     },
@@ -985,14 +984,14 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
                 self.trigger('request');
             var fct;
             if (self.origin_server) {
-                fct = openerp.web.jsonRpc;
+                fct = openerp.jsonRpc;
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
                         "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
                     });
                 }
             } else {
-                fct = openerp.web.jsonpRpc;
+                fct = openerp.jsonpRpc;
                 url = self.url(url, null);
                 options.session_id = self.session_id || '';
             }
@@ -1042,18 +1041,18 @@ openerp.web.Session = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         return prefix + path + qs;
     },
     model: function(model_name) {
-        return new openerp.web.Model(this, model_name);
+        return new openerp.Model(this, model_name);
     }
 });
 
-openerp.web.Model = openerp.web.Class.extend({
+openerp.Model = openerp.Class.extend({
     /**
-    new openerp.web.Model([session,] model_name)
+    new openerp.Model([session,] model_name)
 
-    @constructs instance.web.Model
-    @extends instance.web.Class
+    @constructs instance.Model
+    @extends instance.Class
     
-    @param {openerp.web.Session} [session] The session object used to communicate with
+    @param {openerp.Session} [session] The session object used to communicate with
     the server.
     @param {String} model_name name of the OpenERP model this object is bound to
     @param {Object} [context]
@@ -1064,7 +1063,7 @@ openerp.web.Model = openerp.web.Class.extend({
         var args = _.toArray(arguments);
         args.reverse();
         session = args.pop();
-        if (session && ! (session instanceof openerp.web.Session)) {
+        if (session && ! (session instanceof openerp.Session)) {
             model_name = session;
             session = null;
         } else {
@@ -1106,10 +1105,10 @@ openerp.web.Model = openerp.web.Class.extend({
 });
 
 /** OpenERP Translations */
-openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
+openerp.TranslationDataBase = openerp.Class.extend(/** @lends instance.TranslationDataBase# */{
     /**
-     * @constructs instance.web.TranslationDataBase
-     * @extends instance.web.Class
+     * @constructs instance.TranslationDataBase
+     * @extends instance.Class
      */
     init: function() {
         this.db = {};
@@ -1156,7 +1155,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends instance.w
     /**
         Loads the translations from an OpenERP server.
 
-        @param {openerp.web.Session} session The session object to contact the server.
+        @param {openerp.Session} session The session object to contact the server.
         @param {Array} [modules] The list of modules to load the translation. If not specified,
         it will default to all the modules installed in the current database.
         @param {Object} [lang] lang The language. If not specified it will default to the language
@@ -1174,9 +1173,9 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends instance.w
     }
 });
 
-openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+openerp._t = new openerp.TranslationDataBase().build_translation_function();
 
-openerp.web.get_cookie = function(c_name) {
+openerp.get_cookie = function(c_name) {
     if (document.cookie.length > 0) {
         var c_start = document.cookie.indexOf(c_name + "=");
         if (c_start != -1) {
@@ -1191,12 +1190,12 @@ openerp.web.get_cookie = function(c_name) {
     return "";
 };
 
-openerp.web.qweb = new QWeb2.Engine();
+openerp.qweb = new QWeb2.Engine();
 
-openerp.web.qweb.default_dict = {
+openerp.qweb.default_dict = {
     '_' : _,
     'JSON': JSON,
-    '_t' : openerp.web._t
+    '_t' : openerp._t
 };
 
 openerp.declare = declare;
