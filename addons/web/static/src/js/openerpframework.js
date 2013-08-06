@@ -23,6 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+ /*
+    The only dependencies of this file are underscore >= 1.3.1, jQuery >= 1.8.3 and
+    QWeb >= 1.0.0 . No dependencies shall be added.
+
+    This file must compile in EcmaScript 3 and work in IE7.
+ */
+
 (function() {
 /* jshint es3: true */
 "use strict";
