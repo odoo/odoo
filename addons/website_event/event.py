@@ -8,7 +8,7 @@ class event(osv.osv):
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'description_website': fields.html('Description for the website'),
-        'product_ids': fields.one2many('event.event.product', "event_id", "Event"),
+        'event_product_ids': fields.one2many('event.event.product', "event_id", "Event"),
         'organizer_id': fields.many2one('res.partner', "Orgonizer"),
         'phone': fields.related('orgonizer_id', 'phone', type='char', string='Phone'),
         'email': fields.related('orgonizer_id', 'email', type='char', string='Email'),

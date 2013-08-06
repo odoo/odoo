@@ -64,7 +64,7 @@
                                 </ul>
                             </li>
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
-                                <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="request.uid == request.public_uid"/>
+                                <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="request.uid == website.get_public_uid()"/>
                                 <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
                             </form>
                             <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">

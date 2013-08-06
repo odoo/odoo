@@ -173,20 +173,28 @@
                                 <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
                                 <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
                             </a>
-                            <h4 t-if="event_id.product_ids">Ticket Information</h4>
-                            <form t-att-action="'/event/%%s/add_cart' %% event_id.id" method="post" t-if="event_id.product_ids">
-                                <div t-foreach="event_id.product_ids" t-as="prod">
-                                    <span t-field="prod.product_id"/>
-                                    <span t-field="prod.deadline"/>
-                                    <span t-field="prod.price"/>
-                                    <span t-field="prod.qty"/>
-                                    <span t-field="prod.max_qty"/>
-                                    <select t-att-name="'product[%%s]' %% prod.id">
-                                        <t t-foreach="range(0,10)" t-as="nb">
-                                            <option t-esc="nb"/>
-                                        </t>
-                                    </select>
-                                </div>
+                            <h4 t-if="event_id.event_product_ids">Ticket Information</h4>
+                            <form t-att-action="'/event/%%s/add_cart' %% event_id.id" method="post" t-if="event_id.event_product_ids">
+                                <table class="table">
+                                    <tr>
+                                        <th>Ticket type</th>
+                                        <th>Sales End</th>
+                                        <th>Price</th>
+                                        <th>Seats</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                    <tr t-foreach="event_id.event_product_ids" t-as="prod">
+                                        <td t-field="prod.product_id"/>
+                                        <td t-field="prod.deadline"/>
+                                        <td t-field="prod.price"/>
+                                        <td><span t-if="prod.max_qty"><t t-esc="prod.qty"/>/<t t-field="prod.max_qty"/></span></td>
+                                        <td>
+                                            <select t-att-name="'product[%%s]' %% prod.id">
+                                                <t t-foreach="range(0,10)" t-as="nb"><option t-esc="nb"/></t>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
                                 <button type="submit" class="btn btn-primary">Order Now</button>
                             </form>
                             <h4>Event Details</h4>
