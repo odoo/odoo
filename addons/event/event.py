@@ -203,7 +203,7 @@ class event_event(osv.osv):
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
-        'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
+        'address_id': fields.many2one('res.partner','Location', readonly=False, states={'done': [('readonly', True)]}),
         'street': fields.related('address_id','street',type='char',string='Street'),
         'street2': fields.related('address_id','street2',type='char',string='Street2'),
         'state_id': fields.related('address_id','state_id',type='many2one', relation="res.country.state", string='State'),

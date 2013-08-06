@@ -8,7 +8,7 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'event', 'website_sale'],
+    'depends': ['website', 'event_sale', 'website_sale'],
     'data': [
         'views/website_event.xml',
         'security/ir.model.access.csv',
