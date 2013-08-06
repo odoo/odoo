@@ -340,9 +340,16 @@ class Cache(defaultdict):
             raise Warning('Invalid cache for records\n' + pformat(invalids))
 
 
+#
+# Recomputation manager - stores the field/record to recompute
+#
+
 class Recomputation(object):
-    """ Collection of (`field`, `records`) to recompute. """
-    running = False
+    """ Collection of (`field`, `records`) to recompute.
+        Use it as a context manager to handle all recomputations at one level
+        only, and clear the recomputation manager after an exception.
+    """
+    _level = 0                          # nesting level for recomputations
 
     def __init__(self):
         self._todo = {}                 # {field: records, ...}
@@ -372,6 +379,15 @@ class Recomputation(object):
             self._todo[field] = remain
         else:
             self._todo.pop(field, None)
+
+    def __enter__(self):
+        self._level += 1
+        # return an empty collection at higher levels to let the top-level
+        # recomputation handle all recomputations
+        return () if self._level > 1 else self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._level -= 1
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

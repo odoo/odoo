@@ -5571,13 +5571,7 @@ class BaseModel(object):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        recomputation = scope_proxy.recomputation
-        if recomputation.running:
-            # already in recomputation process, avoid recursive recomputation
-            return
-
-        try:
-            recomputation.running = True
+        with scope_proxy.recomputation as recomputation:
             while recomputation:
                 field, recs = next(iter(recomputation))
                 # To recompute the field, simply evaluate it on the records; the
@@ -5590,12 +5584,10 @@ class BaseModel(object):
                     except Exception:
                         failed += rec
                 # check whether recomputation failed for some existing records
-                failed = failed and (failed & recs.exists())
+                failed = failed.exists()
                 if failed:
                     raise except_orm("Error",
                         "Recomputation of %s failed for %s" % (field, failed))
-        finally:
-            recomputation.running = False
 
     @api.multi
     def onchange(self, field_name, values):
