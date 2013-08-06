@@ -58,7 +58,7 @@
      * OpenERP Web web module split
      *---------------------------------------------------------*/
     function init_web_modules() {
-        var files = ["pyeval", "corelib","coresetup","dates","formats","chrome","data","views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
+        var files = ["pyeval","core","dates","formats","chrome","data","views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
         for(var i=0; i<files.length; i++) {
             var fct = openerp.web[files[i]];
             if(typeof(fct) === "function") {

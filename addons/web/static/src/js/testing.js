@@ -3,13 +3,12 @@ openerp.testing = {};
 (function (testing) {
     var dependencies = {
         pyeval: [],
-        corelib: ['pyeval'],
-        coresetup: ['corelib'],
-        data: ['corelib', 'coresetup'],
+        core: ['pyeval'],
+        data: ['core'],
         dates: [],
-        formats: ['coresetup', 'dates'],
-        chrome: ['corelib', 'coresetup'],
-        views: ['corelib', 'coresetup', 'data', 'chrome'],
+        formats: ['core', 'dates'],
+        chrome: ['core'],
+        views: ['core', 'data', 'chrome'],
         search: ['views', 'formats'],
         list: ['views', 'data'],
         form: ['data', 'views', 'list', 'formats'],

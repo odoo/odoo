@@ -5,7 +5,7 @@ var ropenerp = window.openerp;
 var openerp = ropenerp.declare($, _, QWeb2);
 
 ropenerp.testing.section('class', {
-    dependencies: ['web.corelib']
+    dependencies: ['web.core']
 }, function (test) {
     test('Basic class creation', function () {
         var C = openerp.Class.extend({
