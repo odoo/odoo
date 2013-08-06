@@ -40,7 +40,7 @@ class stock_inventory_line_split(osv.osv_memory):
         if 'product_id' in fields:
             res.update({'product_id':line.product_id.id})
         if 'product_uom' in fields:
-            res.update({'product_uom': line.product_uom.id})
+            res.update({'product_uom': line.product_uom_id.id})
         if 'qty' in fields:
             res.update({'qty': line.product_qty})
         return res

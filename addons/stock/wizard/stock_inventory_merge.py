@@ -64,7 +64,7 @@ class stock_inventory_merge(osv.osv_memory):
                 _('Merging is only allowed on draft inventories.'))
 
             for line in inventory.inventory_line_id:
-                key = (line.location_id.id, line.product_id.id, line.product_uom.id)
+                key = (line.location_id.id, line.product_id.id, line.product_uom_id.id)
                 if key in invent_lines:
                     invent_lines[key] += line.product_qty
                 else:
@@ -80,7 +80,7 @@ class stock_inventory_merge(osv.osv_memory):
                     'inventory_id': new_invent,
                     'location_id': key[0],
                     'product_id': key[1],
-                    'product_uom': key[2],
+                    'product_uom_id': key[2],
                     'product_qty': quantity,
                 })
 
