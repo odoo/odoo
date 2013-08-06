@@ -8,7 +8,6 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 
 def get_order(order_id=None):
-    website = request.registry['website']
     order_obj = request.registry.get('sale.order')
     # check if order allready exists
     if order_id:
@@ -19,9 +18,7 @@ def get_order(order_id=None):
     if not order_id:
         fields = [k for k, v in order_obj._columns.items()]
         order_value = order_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields)
-        order_value['partner_id'] = openerp.SUPERUSER_ID != website.get_public_uid() and \
-            request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id or \
-            None
+        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id
         order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
         order_id = order_obj.create(request.cr, openerp.SUPERUSER_ID, order_value)
     return order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
@@ -75,9 +72,7 @@ class Ecommerce(http.Controller):
         if not order_id:
             fields = [k for k, v in order_obj._columns.items()]
             order_value = order_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields)
-            order_value['partner_id'] = openerp.SUPERUSER_ID != request.public_uid and \
-                request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id or \
-                None
+            order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id
             order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
             order_id = order_obj.create(request.cr, openerp.SUPERUSER_ID, order_value)
         return order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
@@ -93,6 +88,7 @@ class Ecommerce(http.Controller):
     def recommended_product(self, my_pids):
         if not my_pids:
             return []
+        product_obj = request.registry.get('product.product')
 
         my_pids = str(my_pids)[1:-1]
         product_ids = []
@@ -110,7 +106,10 @@ class Ecommerce(http.Controller):
         request.cr.execute(query)
         for p in request.cr.fetchall():
             product_ids.append(p[0])
-        return request.registry.get('product.product').browse(request.cr, request.uid, product_ids)
+
+        # search to apply access rules
+        product_ids = product_obj.search(request.cr, request.uid, [("id", "in", product_ids)])
+        return product_obj.browse(request.cr, request.uid, product_ids)
 
     @http.route(['/shop', '/shop/category/<cat_id>', '/shop/category/<cat_id>/page/<page>', '/shop/page/<page>'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
@@ -119,6 +118,9 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.product')
 
         domain = [("sale_ok", "=", True)]
+        if openerp.SUPERUSER_ID != request.uid:
+            domain += [('website_published', '=', True)]
+
         if cat_id:
             cat_id = int(cat_id)
             domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
