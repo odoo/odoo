@@ -116,11 +116,12 @@ class crm_lead_report(osv.osv):
         for group in res:
             group['user_currency_probable_revenue'] = 0
             group['user_currency_planned_revenue'] = 0
-            group_ids = self.search(cr, uid, group.get('__domain'),context=context)
-            record = self._compute_amounts_in_user_currency(cr, uid, group_ids, context=context)
-            for id, rec in record.iteritems():
-                group['user_currency_planned_revenue'] += rec['user_currency_planned_revenue']
-                group['user_currency_probable_revenue'] += rec['user_currency_probable_revenue']
+            if group.get('__domain'):
+                group_ids = self.search(cr, uid, group.get('__domain'),context=context)
+                record = self._compute_amounts_in_user_currency(cr, uid, group_ids, context=context)
+                for id, rec in record.iteritems():
+                    group['user_currency_planned_revenue'] += rec['user_currency_planned_revenue']
+                    group['user_currency_probable_revenue'] += rec['user_currency_probable_revenue']
         return res
     
     def init(self, cr):
