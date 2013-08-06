@@ -508,7 +508,6 @@ class mrp_repair(osv.osv):
                 move_id = move_obj.create(cr, uid, {
                     'name': move.name,
                     'product_id': move.product_id.id,
-                    'product_qty': move.product_uom_qty,
                     'product_uom_qty': move.product_uom_qty,
                     'product_uom': move.product_uom.id,
                     'partner_id': repair.address_id and repair.address_id.id or False,

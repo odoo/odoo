@@ -133,7 +133,6 @@ class pos_return(osv.osv_memory):
                             qty = record.quantity
                             amount += qty * line.price_unit
                             stock_move_obj.create(cr, uid, {
-                                'product_qty': qty,
                                 'product_uom_qty': qty,
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                                 'picking_id': new_picking,
@@ -218,7 +217,6 @@ class add_product(osv.osv_memory):
                                 'date':date_cur
                             })
                 stock_move_obj.create(cr, uid, {
-                                'product_qty': qty,
                                 'product_uom_qty': qty,
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, prod_id.uom_id.id, qty, prod_id.uom_id.id),
                                 'picking_id':new_picking,
@@ -293,7 +291,6 @@ class add_product(osv.osv_memory):
                     else:
                         qty = line.qty
                     stock_move_obj.create(cr, uid, {
-                        'product_qty': qty,
                         'product_uom_qty': qty,
                         'product_uos_qty': uom_obj._compute_qty(cr, uid, qty, line.product_id.uom_id.id),
                         'picking_id':new_picking,

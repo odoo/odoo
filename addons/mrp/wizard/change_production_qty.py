@@ -52,7 +52,7 @@ class change_production_qty(osv.osv_memory):
     def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
         move_lines_obj = self.pool.get('stock.move')
         for m in prod.move_created_ids:
-            move_lines_obj.write(cr, uid, [m.id], {'product_qty': qty, 'product_uom_qty': qty})
+            move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': qty})
 
     def change_prod_qty(self, cr, uid, ids, context=None):
         """
@@ -93,9 +93,9 @@ class change_production_qty(osv.osv_memory):
                 product_move = dict((mv.product_id.id, mv.id) for mv in prod.picking_id.move_lines)
                 for r in product_details:
                     if r['product_id'] == move.product_id.id:
-                        move_obj.write(cr, uid, [move.id], {'product_qty': r['product_qty'], 'product_uom_qty': r['product_qty']})
+                        move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
                     if r['product_id'] in product_move:
-                        move_obj.write(cr, uid, [product_move[r['product_id']]], {'product_qty': r['product_qty'], 'product_uom_qty': r['product_qty']})
+                        move_obj.write(cr, uid, [product_move[r['product_id']]], {'product_uom_qty': r['product_qty']})
             if prod.move_prod_id:
                 move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_qty' :  wiz_qty.product_qty, 'product_uom_qty': r['product_qty']})
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
