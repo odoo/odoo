@@ -54,14 +54,8 @@
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container mt48 oe_ecommerce">
                 <div class="row">
-                    <div class="span4 css_noprint">
-                        <ul class="nav nav-list">
-                        <t t-foreach="categories" t-as="category">
-                            <t t-call="website_sale.categories_recursive"/>
-                        </t>
-                        </ul>
-                    </div>
-                    <t t-raw="shop_content"></t>
+                    <t t-call='website_sale.categories' />
+                    <t t-raw="shop_content" />
                 </div>
             </div>
         </t>
@@ -69,9 +63,20 @@
 
     <!-- List of categories --> 
 
+    <template id="categories">
+        <div class="span4">
+            <ul class="nav nav-list">
+                <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
+            <t t-foreach="categories" t-as="category">
+                <t t-call="website_sale.categories_recursive"/>
+            </t>
+            </ul>
+        </div>
+    </template>
+
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
-            <a t-att-href="'/shop/category/%%s' %% category.id"><span t-field="category.name"><t t-esc="category.name"/></span></a>
+            <a t-att-href="'/shop/category/%%s' %% category.id" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-list">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -82,23 +87,27 @@
 
     <!-- Product list --> 
 
+    <template id="product_pager">
+        <div t-if="page_count != 1" t-att-class=" (classname if classname else '') + ' pagination'">
+            <ul>
+                <li t-att-class=" 'disabled' if page == 1 else '' " ><a t-att-href=" '#' if page == 1 else ('/shop/category/%%s/page/%%s' %% (current_category, max(0,page-1))) ">Prev</a></li>
+                <t t-foreach="pages" t-as="p">
+                    <li t-att-class=" 'active' if p == page else '' " ><a t-att-href=" '/shop/category/%%s/page/%%s' %% (current_category, p)" t-raw='p'></a></li>
+                </t>
+                <li t-att-class=" 'disabled' if page == page_count else '' "><a t-att-href=" '#' if page == page_count else ('/shop/category/%%s/page/%%s' %% (current_category, min(page_count,page+1))) ">Next</a></li>
+            </ul>
+        </div>
+    </template>
+
     <template id="products">
         <t t-call="website_sale.page">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <div class='span8 navbar navbar-inverse'>
                     <div class='navbar-inner'>
-                        <div class='pagination pull-left'>
-                            <ul>
-                                <li><a href='#'>Prev</a></li>
-                                <li class='active'><a href='#'>1</a></li>
-                                <li><a href='#'>2</a></li>
-                                <li><a href='#'>3</a></li>
-                                <li><a href='#'>4</a></li>
-                                <li><a href='#'>5</a></li>
-                                <li><a href='#'>Next</a></li>
-                            </ul>
-                        </div>
+                        <t t-call="website_sale.product_pager" >
+                            <t t-set="classname">pull-left</t>
+                        </t>
                         <form action="/shop" method="get" class="navbar-search pull-right">
                             <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
@@ -113,17 +122,9 @@
                     </div>
                 </div>
                 <div class="span8 offset4 text-center">
-                    <div class='pagination'>
-                        <ul>
-                            <li><a href='#'>Prev</a></li>
-                            <li class='active'><a href='#'>1</a></li>
-                            <li><a href='#'>2</a></li>
-                            <li><a href='#'>3</a></li>
-                            <li><a href='#'>4</a></li>
-                            <li><a href='#'>5</a></li>
-                            <li><a href='#'>Next</a></li>
-                        </ul>
-                    </div>
+                    <t t-call="website_sale.product_pager" >
+                        <t t-set="classname"></t>
+                    </t>
                 </div>
             </t>
         </t>
@@ -138,7 +139,7 @@
                 <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
             </a>
             <div>
-                <div t-field="product.description_sale">FIXME</div>
+                <div t-field="product.description_sale"></div>
                 <div><span t-field="product.list_price"></span>€</div>
                 <div class="mb8 mt8">
                     <button t-att-class="'btn mb8 btn-small btn-inverse %%s' %% (not quantity and 'hidden' or '')" t-att-data-id="product.id">Remove one</button>
@@ -151,11 +152,20 @@
     </template>
 
     <template id="product_recommended">
-        <div class="oe_recommended media well well-small" t-if="recommended_products">
-            <h6>Other customers have also take this products:</h6>
+        <div class="well mt32" t-if="recommended_products">
+            <h4>Customers who have bought this item also bought</h4>
+            <div class='row mt16'>
             <t t-foreach="recommended_products or []" t-as="product">
-                <a t-att-href="'/shop/product/%%s' %% product.id"><img t-att-src="'data:image/png;base64,' + product.image"/></a>
+                <div class='span2 thumbnail'>
+                    <a t-att-href="'/shop/product/%%s' %% product.id">
+                        <div class='mt16 text-center'>
+                            <img t-att-src="'data:image/png;base64,' + product.image"/>
+                            <h5 t-field='product.name'></h5>
+                        </div>
+                    </a>
+                </div>
             </t>
+            </div>
         </div>
     </template>
 
@@ -180,7 +190,7 @@
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
                     <div t-field="product.description_sale"></div>
-                    <div class="oe_ecommerce_price" t-field="product.list_price"><t t-esc="product.list_price"/> €</div>
+                    <div class="oe_ecommerce_price"><t t-field="product.list_price" />€</div>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>

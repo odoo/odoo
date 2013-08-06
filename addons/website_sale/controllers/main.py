@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 import openerp
 import simplejson
 from openerp.addons.web import http
@@ -12,7 +13,9 @@ class Ecommerce(http.Controller):
     def get_categories(self):
         category_obj = request.registry.get('pos.category')
         category_ids = category_obj.search(request.cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
-        return category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
+        categories = category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
+        print categories
+        return categories
 
     def get_current_order(self):
         order = self.get_order(request.httprequest.session.get('ecommerce_order_id'))
@@ -68,23 +71,46 @@ class Ecommerce(http.Controller):
             product_ids.append(p[0])
         return request.registry.get('product.product').browse(request.cr, request.uid, product_ids)
 
-    @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="public")
-    def category(self, cat_id=0, offset=0, **post):
-
-        domain = [("sale_ok", "=", True)]
-        if post.get("search"):
-            domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('desrequest.cription', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
-        if cat_id:
-            cat_id = cat_id and int(cat_id) or 0
-            domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
+    @http.route(['/shop', '/shop/category/<cat_id>', '/shop/category/<cat_id>/page/<page>', '/shop/page/<page>'], type='http', auth="public")
+    def category(self, cat_id=0, page=0, **post):
 
         product_obj = request.registry.get('product.product')
+
+        domain = [("sale_ok", "=", True)]
+        if cat_id:
+            cat_id = int(cat_id)
+            domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
+
+        product_count = len(product_obj.search(request.cr, request.uid, domain))
+        page_count = int(math.ceil(product_count / 20.0))
+
+        #if post.get("search"):
+         #   domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('description', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+
+        page = max(1,min(int(page),page_count))
+        offset = (page-1) * 20
+
+        if page_count <= 5 or page <= 3:
+            pmin = 1
+            pmax = min(page_count,5)
+        elif page >= page_count - 2:
+            pmin = page_count - 4
+            pmax = page_count
+        else:
+            pmin = page - 2
+            pmax = page + 2
+
+        pages = range(pmin, pmax+1)
+
         product_ids = product_obj.search(request.cr, request.uid, domain, limit=20, offset=offset)
 
         values = {
             'current_category': cat_id,
             'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
+            'page_count': page_count,
+            'pages': pages,
+            'page': page,
         }
         html = self.render("website_sale.products", values)
         return html
