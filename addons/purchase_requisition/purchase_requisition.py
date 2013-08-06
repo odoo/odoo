@@ -149,7 +149,7 @@ class purchase_requisition(osv.osv):
         supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
         return {
             'origin': requisition.name,
-            'date_order': requisition.date_end or fields.date.context_today,
+            'date_order': requisition.date_end or fields.date.context_today(self, cr, uid, context=context),
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist,
             'location_id': location_id,
