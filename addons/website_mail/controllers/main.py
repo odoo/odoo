@@ -28,6 +28,7 @@ class website_mail(http.Controller):
             'next_date': None,
             'mail_group_id': mail_group_id,
             'subscribe': post.get('subscribe'),
+            'website': website,
         })
 
         if request.uid != website.get_public_uid() and mail_group_id:
