@@ -1478,6 +1478,15 @@ class stock_move(osv.osv):
 class stock_inventory(osv.osv):
     _name = "stock.inventory"
     _description = "Inventory"
+
+    def _get_move_ids_exist(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for inv in self.browse(cr, uid, ids, context=context):
+            res[inv.id] = False
+            if inv.move_ids:
+                res[inv.id] = True
+        return res
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date': fields.datetime('Creation Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -1491,6 +1500,7 @@ class stock_inventory(osv.osv):
         'package_id': fields.many2one('stock.quant.package', 'Pack'),
         'partner_id': fields.many2one('res.partner', 'Owner'),
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
+        'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
     }
 
     def _default_stock_location(self, cr, uid, context=None):
@@ -1530,6 +1540,8 @@ class stock_inventory(osv.osv):
             context = {}
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
+            if not inv.move_ids:
+                self.action_check(cr, uid, [inv.id], context=context)
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
@@ -1559,8 +1571,8 @@ class stock_inventory(osv.osv):
             vals['product_uom_qty'] = todo_line['product_qty']
         stock_move_obj.create(cr, uid, vals, context=context)
 
-    def action_confirm(self, cr, uid, ids, context=None):
-        """ Confirm the inventory and writes its finished date
+    def action_check(self, cr, uid, ids, context=None):
+        """ Checks the inventory and computes the stock move to do
         @return: True
         """
         inventory_line_obj = self.pool.get('stock.inventory.line')
@@ -1578,7 +1590,6 @@ class stock_inventory(osv.osv):
             for todo_line in theorical_lines:
                 if todo_line['product_qty'] != 0:
                     self._create_stock_move(cr, uid, inventory, todo_line, context=context)
-        return self.write(cr, uid, ids, {'state': 'confirm'})
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         """ Cancels the stock move and change inventory state to draft.
@@ -1605,6 +1616,7 @@ class stock_inventory(osv.osv):
                 if full_of_zeros:
                     product_line['product_qty'] = 0
                 inventory_line_obj.create(cr, uid, product_line, context=context)
+        return self.write(cr, uid, ids, {'state': 'confirm'})
 
     def _get_inventory_lines(self, cr, uid, inventory, context=None):
         location_obj = self.pool.get('stock.location')
