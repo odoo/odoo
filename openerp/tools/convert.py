@@ -151,11 +151,22 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), context)
                 raise
         def _process(s, idref):
-            m = re.findall('[^%]%\((.*?)\)[ds]', s)
-            for id in m:
+            matches = re.finditer('[^%]%\((.*?)\)[ds]', s)
+            done = []
+            for m in matches:
+                found = m.group()[1:]
+                if found in done:
+                    continue
+                done.append(found)
+                id = m.groups()[0]
                 if not id in idref:
-                    idref[id]=self.id_get(cr, id)
-            return s % idref
+                    idref[id] = self.id_get(cr, id)
+                s = s.replace(found, str(idref[id]))
+
+            s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
+
+            return s
+
         if t == 'xml':
             _fix_multiple_roots(node)
             return '<?xml version="1.0"?>\n'\
