@@ -1891,18 +1891,6 @@ class stock_pack_operation(osv.osv):
         'date': fields.date.context_today,
     }
 
-    def _find_product_ids(self, cr, uid, operation_id, context=None):
-        quant_obj = self.pool.get('stock.quant')
-        operation = self.browse(cr, uid, operation_id, context=context)
-        if operation.product_id:
-            return [operation.product_id.id]
-        elif operation.quant_id:
-            return [operation.quant_id.product_id.id]
-        elif operation.package_id:
-            included_package_ids = self.pool.get('stock.quant.package').search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
-            included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
-            return [quant.product_id.id for quant in quant_obj.browse(cr, uid, included_quant_ids, context=context)]
-
     #TODO: this function can be refactored
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
         '''Search for an operation on an existing key in a picking, if it exists increment the qty (+1) otherwise create it
