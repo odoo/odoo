@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//li[last()]" position="after">
-                    <li class="pull-right"><a href="/blog/%(website_mail.website_mail_blog)d">News</a></li>
+                    <li class="pull-right"><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
                 </xpath>
            </data>
         </field>
@@ -29,7 +29,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//a[@href='/page/website.news']" position="replace">
-                    <a href="/blog/%(website_mail.website_mail_blog)d">News</a>
+                    <a href="/blog/%(website_mail.website_mail_blog)d/">News</a>
                 </xpath>
            </data>
         </field>
@@ -50,7 +50,7 @@
                     <div class="span4">
                         <ul class="nav nav-list">
                             <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
-                            <li class="nav-header"><a t-att-href="'/blog/%%s' %% mail_group_id">BLOG ARCHIVE</a></li>
+                            <li class="nav-header"><a t-att-href="'/blog/%%s/' %% mail_group_id">BLOG ARCHIVE</a></li>
                             <!-- TODO: check qweb iteration -->
                             <li t-foreach="nav_list" t-as="year" class="js_nav_year">
                                 <t t-set="year" t-value="nav_list[year]"/>
@@ -63,6 +63,14 @@
                                     </t>
                                 </ul>
                             </li>
+                            <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
+                                <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="request.uid == request.public_uid"/>
+                                <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
+                            </form>
+                            <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
+                                <input type="hidden" name="email" t-att-value="subscribe"/>
+                                <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
+                            </form>
                         </ul>
                     </div>
                     <div class="span8" t-if="blog_id">
@@ -79,7 +87,7 @@
                                     <div t-field="blog_id.date"/>
                                 </small>
                             </div>
-                            <ul class="media-list">
+                            <ul class="media-list" id="comment">
                                 <li t-foreach="blog_id.child_ids" t-as="comment" class="media">
                                     <div class="media-body">
                                         <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
@@ -108,12 +116,12 @@
                                         <span t-att-class="'label label-success js_unpublish %%s' %% (not blog.website_published and 'hidden' or '')">Click to Unpublish</span>
                                         <span t-att-class="'label label-important js_publish %%s' %% (blog.website_published and 'hidden' or '')">Click to Publish</span>
                                     </a>
-                                    <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)" t-field="blog.subject"></a></h4>
+                                    <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)" t-field="blog.subject"></a></h4>
                                     <div class="media">
                                         <div t-field="blog.body"/>
                                         <small class="pull-left muted text-right" t-if="len(blog.child_ids)">
-                                            <a t-if="len(blog.child_ids) &lt;= 1" t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Message</a>
-                                            <a t-if="len(blog.child_ids) > 1" t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Messages</a>
+                                            <a t-if="len(blog.child_ids) &lt;= 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Message</a>
+                                            <a t-if="len(blog.child_ids) > 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Messages</a>
                                         </small>
                                         <small class="pull-right muted text-right">
                                             <div t-field="blog.author_id"/>
