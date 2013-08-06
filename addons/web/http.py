@@ -947,13 +947,9 @@ class Root(object):
         if httprequest.args.get('jsonp'):
             return JsonRequest(httprequest)
 
-        content = httprequest.stream.read()
-        import cStringIO
-        httprequest.stream = cStringIO.StringIO(content)
-        try:
-            simplejson.loads(content)
+        if httprequest.headers["Content-Type"] == "application/json":
             return JsonRequest(httprequest)
-        except:
+        else:
             return HttpRequest(httprequest)
 
     def load_addons(self):
