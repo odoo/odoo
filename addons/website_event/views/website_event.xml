@@ -51,19 +51,7 @@
     </record>
 
     <!-- Page --> 
-    <template id="button">
-        <t t-if="event_id.register_avail">
-            <span t-if="event_id.register_avail == 9999" class="label pull-right">No ticket available.</span>
-            <span t-if="event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
-                <t t-if="event_id.register_avail &lt;= 10">Only</t>
-                <t t-esc="event_id.register_avail"/>
-                <t t-if="event_id.register_avail &gt; 1">tickets </t>
-                <t t-if="event_id.register_avail == 1">ticket </t>
-                available.
-            </span>
-        </t>
-    </template>
-
+ 
     <template id="index">
         <t t-call="website.layout">
             <t t-set="head">
@@ -101,30 +89,37 @@
                     </div>
                     <div class="span8">
                         <ul class="media-list mt32">
-                            <t t-foreach="event_ids" t-as="event_id">
-                                <li class="media thumbnail">
-                                    <div class="media-body">
-                                        <t t-call="website_event.button"/>
-                                        <h4 class="media-heading"><a t-att-href="'/event/%%s' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
-                                        <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
-                                            <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                            <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
-                                        </a>
-                                        <div>
-                                            <span t-field="event_id.type">: </span>
-                                            <t t-if="event_id.user_id">
-                                                Organized by: <span t-field="event_id.user_id"> </span>
-                                            </t>
-                                        </div>
-                                        <div>
-                                            <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span> <i>to</i> <span t-field="event_id.date_end"> </span>
-                                        </div>
-                                        <div t-if="event_id.country_id">
-                                            <i class="icon-map-marker"></i> <span t-field="event_id.city"> </span>  <span t-field="event_id.zip"> </span>, <span t-field="event_id.country_id"> </span>
-                                        </div>
+                            <li t-foreach="event_ids" t-as="event_id" class="media thumbnail">
+                                <div class="media-body">
+                                    <t t-if="event_id.register_avail">
+                                        <span t-if="event_id.register_avail == 9999" class="label pull-right">No ticket available.</span>
+                                        <span t-if="event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
+                                            <t t-if="event_id.register_avail &lt;= 10">Only</t>
+                                            <t t-esc="event_id.register_avail"/>
+                                            <t t-if="event_id.register_avail &gt; 1">tickets </t>
+                                            <t t-if="event_id.register_avail == 1">ticket </t>
+                                            available.
+                                        </span>
+                                    </t>
+                                    <h4 class="media-heading"><a t-att-href="'/event/%%s' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
+                                    <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
+                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                        <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                    </a>
+                                    <div>
+                                        <span t-field="event_id.type">: </span>
+                                        <t t-if="event_id.user_id">
+                                            Organized by: <span t-field="event_id.user_id"> </span>
+                                        </t>
                                     </div>
-                                </li>
-                            </t>
+                                    <div>
+                                        <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span> <i>to</i> <span t-field="event_id.date_end"> </span>
+                                    </div>
+                                    <div t-if="event_id.country_id">
+                                        <i class="icon-map-marker"></i> <span t-field="event_id.city"> </span>  <span t-field="event_id.zip"> </span>, <span t-field="event_id.country_id"> </span>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -161,7 +156,16 @@
                     </div>
                     <div class="span8">
                         <div class="media-body">
-                            <t t-call="website_event.button"/>
+                            <t t-if="event_id.register_avail">
+                                <span t-if="event_id.register_avail == 9999" class="label pull-right">No ticket available.</span>
+                                <span t-if="event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
+                                    <t t-if="event_id.register_avail &lt;= 10">Only</t>
+                                    <t t-esc="event_id.register_avail"/>
+                                    <t t-if="event_id.register_avail &gt; 1">tickets </t>
+                                    <t t-if="event_id.register_avail == 1">ticket </t>
+                                    available.
+                                </span>
+                            </t>
                             <h4 class="media-heading"><a t-att-href="'/event/%%s' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
                             <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
                                 <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
