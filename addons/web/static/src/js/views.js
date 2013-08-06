@@ -2,7 +2,10 @@
  * OpenERP web library
  *---------------------------------------------------------*/
 
-openerp.web.views = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.views = {};
 var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
@@ -1616,6 +1619,6 @@ instance.web.xml_to_str = function(node) {
  */
 instance.web.views = new instance.web.Registry();
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

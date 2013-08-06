@@ -1,5 +1,9 @@
 
-openerp.web.formats = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.formats = {};
+
 var _t = instance.web._t;
 
 /**
@@ -345,4 +349,4 @@ instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
 };
 
-};
+})();

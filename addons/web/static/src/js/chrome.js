@@ -1,7 +1,11 @@
 /*---------------------------------------------------------
  * OpenERP Web chrome
  *---------------------------------------------------------*/
-openerp.web.chrome = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.chrome = {};
+
 var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
@@ -1619,6 +1623,6 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
     client.insertAfter(currentScript);
 };
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

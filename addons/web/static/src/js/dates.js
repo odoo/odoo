@@ -1,5 +1,9 @@
 
-openerp.web.dates = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.dates = {};
+
 var _t = instance.web._t;
 
 /**
@@ -152,4 +156,4 @@ instance.web.time_to_str = function(obj) {
          + zpad(obj.getSeconds(),2);
 };
     
-};
+})();

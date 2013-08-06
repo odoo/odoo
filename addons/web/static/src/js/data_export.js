@@ -1,4 +1,9 @@
-openerp.web.data_export = function(instance) {
+
+(function() {
+
+var instance = openerp;
+openerp.web.data_export = {};
+
 var QWeb = instance.web.qweb,
       _t = instance.web._t;
 instance.web.DataExport = instance.web.Dialog.extend({
@@ -408,4 +413,4 @@ instance.web.DataExport = instance.web.Dialog.extend({
     }
 });
 
-};
+})();

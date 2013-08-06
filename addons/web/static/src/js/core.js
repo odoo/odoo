@@ -1,17 +1,18 @@
 
 (function() {
-    if (typeof(console) === "undefined") {
-        // Even IE9 only exposes console object if debug window opened
-        window.console = {};
-        ('log error debug info warn assert clear dir dirxml trace group'
-            + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
-            + ' exception').split(/\s+/).forEach(function(property) {
-                console[property] = _.identity;
-        });
-    }
-})();
 
-openerp.web.core = function(instance) {
+if (typeof(console) === "undefined") {
+    // Even IE9 only exposes console object if debug window opened
+    window.console = {};
+    ('log error debug info warn assert clear dir dirxml trace group'
+        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
+        + ' exception').split(/\s+/).forEach(function(property) {
+            console[property] = _.identity;
+    });
+}
+
+var instance = openerp;
+openerp.web.core = {};
 
 var ControllerMixin = {
     /**
@@ -796,6 +797,6 @@ instance.web.unblockUI = function() {
  */
 instance.web.client_actions = new instance.web.Registry();
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
