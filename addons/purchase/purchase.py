@@ -25,7 +25,7 @@ from openerp import SUPERUSER_ID
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import attrgetter
-
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -377,7 +377,7 @@ class purchase_order(osv.osv):
 
     def view_picking(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing pîcking orders of given purchase order ids.
+        This function returns an action that display existing picking orders of given purchase order ids.
         '''
         mod_obj = self.pool.get('ir.model.data')
         pick_ids = []
@@ -386,7 +386,8 @@ class purchase_order(osv.osv):
 
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
         action = self.pool[action_model].read(cr, uid, action_id, context=context)
-        ctx = eval(action['context'])
+        active_id = context.get('active_id',ids[0])
+        ctx = eval(action['context'],{'active_id': active_id}, nocopy=True)
         ctx.update({
             'search_default_purchase_id': ids[0]
         })
