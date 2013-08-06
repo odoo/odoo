@@ -1253,18 +1253,25 @@
                                         </a>
                                     </div>
                                     <div class="oe_items_list oe_kanban_ellipsis">
-                                        <div>
+                                        <div t-if="record.count_picking.raw_value &gt; 0">
                                             <a name="%(action_picking_tree)d" type="action">
-                                                <field name="count_picking"/>
-                                                <t t-esc="record.name.raw_value"/>
+                                                <field name="count_picking"/> Ready
                                             </a>
                                             <a name="%(action_picking_tree)d" type="action">
                                                 <field name="weekly_picking" widget="stock_sparkline">Weekly Moves</field>
                                             </a>
                                         </div>
+                                        <div t-if="record.count_picking.raw_value == 0">
+                                            <a name="%(action_picking_tree)d" type="action">
+                                                Weekly Moves
+                                            </a>
+                                        </div>
                                         <div t-if="record.count_picking_waiting.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_waiting)d" type="action">
                                                 <field name="count_picking_waiting"/> Waiting
+                                            </a>
+                                            <a name="%(action_picking_tree_waiting)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="latest_picking_waiting" widget="stock_sparkline" options="{'type': 'tristate'}"/>
                                             </a>
                                         </div>
                                         <div t-if="record.count_picking_late.raw_value &gt; 0">

@@ -2146,13 +2146,15 @@ class stock_picking_type(osv.osv):
         for id in ids:
             result[id] = {
                 'latest_picking_late': [],
-                'latest_picking_backorders': []
+                'latest_picking_backorders': [],
+                'latest_picking_waiting': []
             }
         for type_id in ids:
             pick_ids = obj.search(cr, uid, [('state', '=','done'), ('picking_type_id','=',type_id)], limit=12, order="date desc", context=context)
             for pick in obj.browse(cr, uid, pick_ids, context=context):
                 result[type_id]['latest_picking_late'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
                 result[type_id]['latest_picking_backorders'] = bool(pick.backorder_id)
+                result[type_id]['latest_picking_waiting'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
         return result
 
     _columns = {
@@ -2187,6 +2189,8 @@ class stock_picking_type(osv.osv):
         'latest_picking_late': fields.function(_get_picking_history,
             type='string', multi='_get_picking_history'),
         'latest_picking_backorders': fields.function(_get_picking_history,
+            type='string', multi='_get_picking_history'),
+        'latest_picking_waiting': fields.function(_get_picking_history,
             type='string', multi='_get_picking_history'),
 
     }
