@@ -622,6 +622,7 @@ class stock_picking(osv.osv):
                         'product_qty': qty,
                         'quant_id': quant.id,
                         'product_id': quant.product_id.id,
+                        'lot_id': quant.lot_id.id,
                         'product_uom_id': quant.product_id.uom_id.id,
                         'cost': quant.cost,
                     }, context=context)
@@ -703,8 +704,7 @@ class stock_picking(osv.osv):
 
     def do_split(self, cr, uid, picking_ids, context=None):
         """
-            If no pack operation, we close the whole move
-            Otherwise, do the pack operations
+            just spit the picking without making it 'done'
         """
         if context is None:
             context = {}
@@ -1655,17 +1655,20 @@ class stock_inventory_line(osv.osv):
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
         found = False
+        #first try to match the inventory line with a theorical line with same product, lot and location
         for th_line in theorical_lines:
             if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and th_line['prod_lot_id'] == inventory_line.prod_lot_id.id:
                 th_line['product_qty'] -= inventory_line.product_qty
                 found = True
                 break
+        #then if the line was not found, try to match the inventory line with a theorical line with same product and location (only if it has no lot information given)
         if not found:
             for th_line in theorical_lines:
-                if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id:
+                if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and not inventory_line.prod_lot_id.id:
                     th_line['product_qty'] -= inventory_line.product_qty
                     found = True
                     break
+        #if it was still not found, we add it to the theorical lines so that it will create a stock move for it
         if not found:
             vals = {
                 'inventory_id': inventory_line.inventory_id.id,
@@ -1879,6 +1882,7 @@ class stock_pack_operation(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
+        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'), 
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
         #'lot_id': fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
