@@ -9,13 +9,10 @@ from openerp.addons.web.http import request
 
 def auth_method_public():
     registry = openerp.modules.registry.RegistryManager.get(request.db)
-    request.public_uid = None
-    with registry.cursor() as cr:
-        request.public_uid = request.registry['ir.model.data'].get_object_reference(cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
-        if not request.session.uid:
-            request.uid = request.public_uid
-        else:
-            request.uid = request.session.uid
+    if not request.session.uid:
+        request.uid = registry['website'].get_public_uid()
+    else:
+        request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
 
@@ -23,11 +20,16 @@ class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
 
+    public_uid = None
+
+    def get_public_uid(self):
+        if not self.public_uid:
+            self.public_uid = request.registry['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
+        return self.public_uid
+
     def get_rendering_context(self, additional_values=None):
         debug = 'debug' in request.params
-        editable = False
-        if request.uid or (request.public_uid and request.uid != request.public_uid):
-            editable = True
+        editable = request.uid != self.get_public_uid()
         values = {
             'debug': debug,
             'editable': editable,

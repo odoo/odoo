@@ -8,6 +8,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 
 def get_order(order_id=None):
+    website = request.registry['website']
     order_obj = request.registry.get('sale.order')
     # check if order allready exists
     if order_id:
@@ -18,7 +19,7 @@ def get_order(order_id=None):
     if not order_id:
         fields = [k for k, v in order_obj._columns.items()]
         order_value = order_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields)
-        order_value['partner_id'] = openerp.SUPERUSER_ID != request.public_uid and \
+        order_value['partner_id'] = openerp.SUPERUSER_ID != website.get_public_uid() and \
             request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id or \
             None
         order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
@@ -259,8 +260,7 @@ class Ecommerce(http.Controller):
         country_state_obj = request.registry.get('res.country.state')
         payment_obj = request.registry.get('portal.payment.acquirer')
 
-
-        if request.uid != request.public_uid:
+        if request.uid != website.get_public_uid():
             values['partner'] = user_obj.browse(request.cr, request.uid, request.uid).partner_id
             shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", values['partner'].id), ('type', "=", 'delivery')])
             values['shipping'] = None
@@ -280,6 +280,7 @@ class Ecommerce(http.Controller):
 
     @http.route(['/shop/confirm_order'], type='http', auth="public")
     def confirm_order(self, **post):
+        website = request.registry['website']
         order = get_current_order()
 
         json = {'error': [], 'validation': False}
@@ -323,7 +324,7 @@ class Ecommerce(http.Controller):
             'country_id': post['country_id'],
             'state_id': post['state_id'],
         }
-        if request.uid != request.public_uid:
+        if request.uid != website.get_public_uid():
             partner_id = user_obj.browse(request.cr, request.uid, request.uid).partner_id.id
             partner_obj.write(request.cr, request.uid, [partner_id], partner_value)
         else:

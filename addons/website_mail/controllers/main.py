@@ -79,10 +79,11 @@ class website_mail(http.Controller):
 
     @http.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="public")
     def blog_post(self, mail_group_id=None, blog_id=None, **post):
+        website = request.registry['website']
         url = request.httprequest.host_url
         if post.get('body'):
             request.session.body = post.get('body')
-            if not request.uid != request.public_uid:
+            if request.uid == website.get_public_uid()
                 return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, mail_group_id, blog_id)
 
         if 'body' in request.session and request.session.body:
