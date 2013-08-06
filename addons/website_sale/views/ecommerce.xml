@@ -153,7 +153,7 @@
                         </button>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                    <div t-field="product.description_sale"></div>
+                    <div t-field="product.description_website"></div>
                     <div class="oe_ecommerce_price" t-field="product.list_price"><t t-esc="product.list_price"/> €</div>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
