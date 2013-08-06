@@ -53,31 +53,34 @@ openerp.testing = {};
     testing.mockifyRPC = function (instance, responses) {
         var session = instance.session;
         session.responses = responses || {};
-        session.rpc_function = function (url, payload) {
+        session.rpc = function(url, rparams, options) {
+            if (_.isString(url)) {
+                url = {url: url};
+            }
             var fn, params;
-            var needle = payload.params.model + ':' + payload.params.method;
+            var needle = rparams.model + ':' + rparams.method;
             if (url.url === '/web/dataset/call_kw'
                 && needle in this.responses) {
                 fn = this.responses[needle];
                 params = [
-                    payload.params.args || [],
-                    payload.params.kwargs || {}
+                    rparams.args || [],
+                    rparams.kwargs || {}
                 ];
             } else {
                 fn = this.responses[url.url];
-                params = [payload];
+                params = [{params: rparams}];
             }
 
             if (!fn) {
                 return $.Deferred().reject({}, 'failed',
                     _.str.sprintf("Url %s not found in mock responses, with arguments %s",
-                                  url.url, JSON.stringify(payload.params))
+                                  url.url, JSON.stringify(rparams))
                 ).promise();
             }
             try {
                 return $.when(fn.apply(null, params)).then(function (result) {
                     // Wrap for RPC layer unwrapper thingy
-                    return {result: result};
+                    return result;
                 });
             } catch (e) {
                 // not sure why this looks like that

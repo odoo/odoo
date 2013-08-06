@@ -5,7 +5,6 @@
 
 function declare($, _, QWeb2) {
 var openerp = {};
-openerp.web = {};
 
 /**
  * Improved John Resig's inheritance, based on:
@@ -21,7 +20,7 @@ openerp.web = {};
  *
  * Example:
  *
- * var Person = openerp.web.Class.extend({
+ * var Person = openerp.Class.extend({
  *  init: function(isDancing){
  *     this.dancing = isDancing;
  *   },
@@ -57,14 +56,14 @@ openerp.web = {};
     var initializing = false,
         fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
     // The web Class implementation (does nothing)
-    openerp.web.Class = function(){};
+    openerp.Class = function(){};
 
     /**
      * Subclass an existing class
      *
      * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
      */
-    openerp.web.Class.extend = function() {
+    openerp.Class.extend = function() {
         var _super = this.prototype;
         // Support mixins arguments
         var args = _.toArray(arguments);
@@ -104,7 +103,7 @@ openerp.web = {};
 
         // The dummy class constructor
         function Class() {
-            if(this.constructor !== openerp.web.Class){
+            if(this.constructor !== openerp.Class){
                 throw new Error("You can only instanciate objects with the 'new' operator");
             }
             // All construction is actually done in the init method
@@ -165,7 +164,7 @@ openerp.web = {};
  * When an object is destroyed, all its children are destroyed too releasing
  * any resource they could have reserved before.
  */
-openerp.web.ParentedMixin = {
+openerp.ParentedMixin = {
     __parentedMixin : true,
     init: function() {
         this.__parentedDestroyed = false;
@@ -274,7 +273,7 @@ openerp.web.ParentedMixin = {
  * http://backbonejs.org
  *
  */
-var Events = openerp.web.Class.extend({
+var Events = openerp.Class.extend({
     on : function(events, callback, context) {
         var ev;
         events = events.split(/\s+/);
@@ -355,10 +354,10 @@ var Events = openerp.web.Class.extend({
     }
 });
 
-openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
+openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     __eventDispatcherMixin: true,
     init: function() {
-        openerp.web.ParentedMixin.init.call(this);
+        openerp.ParentedMixin.init.call(this);
         this.__edispatcherEvents = new Events();
         this.__edispatcherRegisteredEvents = [];
     },
@@ -403,13 +402,13 @@ openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
             this.off(cal[0], cal[2], cal[1]);
         }, this);
         this.__edispatcherEvents.off();
-        openerp.web.ParentedMixin.destroy.call(this);
+        openerp.ParentedMixin.destroy.call(this);
     }
 });
 
-openerp.web.PropertiesMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
+openerp.PropertiesMixin = _.extend({}, openerp.EventDispatcherMixin, {
     init: function() {
-        openerp.web.EventDispatcherMixin.init.call(this);
+        openerp.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
     set: function(arg1, arg2, arg3) {
@@ -493,7 +492,7 @@ openerp.web.PropertiesMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
+openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
     // Backbone-ish API
     tagName: 'div',
     id: null,
@@ -510,14 +509,14 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
-     * @constructs openerp.web.Widget
+     * @constructs openerp.Widget
      *
-     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * @param {openerp.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      */
     init: function(parent) {
-        openerp.web.PropertiesMixin.init.call(this);
+        openerp.PropertiesMixin.init.call(this);
         this.setParent(parent);
         // Bind on_/do_* methods to this
         // We might remove this automatic binding in the future
@@ -541,7 +540,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
         if(this.$el) {
             this.$el.remove();
         }
-        openerp.web.PropertiesMixin.destroy.call(this);
+        openerp.PropertiesMixin.destroy.call(this);
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -622,8 +621,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     renderElement: function() {
         var $el;
         if (this.template) {
-            $el = $(_.str.trim(openerp.web.qweb.render(
-                this.template, {widget: this})));
+            $el = $(openerp.qweb.render(this.template, {widget: this}).trim());
         } else {
             $el = this._make_descriptive();
         }
@@ -762,11 +760,442 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
     }
 });
 
-openerp.web.qweb = new QWeb2.Engine();
+var genericJsonRpc = function(fct_name, params, fct) {
+    var data = {
+        jsonrpc: "2.0",
+        method: fct_name,
+        params: params,
+        id: Math.floor(Math.random() * 1000 * 1000 * 1000)
+    };
+    return fct(data).pipe(function(result) {
+        if (result.error !== undefined) {
+            console.error("Server application error", result.error);
+            return $.Deferred().reject("server", result.error);
+        } else {
+            return result.result;
+        }
+    }, function() {
+        console.error("JsonRPC communication error", _.toArray(arguments));
+        var def = $.Deferred();
+        return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
+    });
+};
 
-openerp.web.qweb.default_dict = {
+openerp.jsonRpc = function(url, fct_name, params, settings) {
+    return genericJsonRpc(fct_name, params, function(data) {
+        return $.ajax(url, _.extend({}, settings, {
+            url: url,
+            dataType: 'json',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json'
+        }));
+    });
+};
+
+openerp.jsonpRpc = function(url, fct_name, params, settings) {
+    settings = settings || {};
+    return genericJsonRpc(fct_name, params, function(data) {
+        var payload_str = JSON.stringify(data);
+        var payload_url = $.param({r:payload_str});
+        var force2step = settings.force2step || false;
+        delete settings.force2step;
+        var session_id = settings.session_id || null;
+        delete settings.session_id;
+        if (payload_url.length < 2000 && ! force2step) {
+            return $.ajax(url, _.extend({}, settings, {
+                url: url,
+                dataType: 'jsonp',
+                jsonp: 'jsonp',
+                type: 'GET',
+                cache: false,
+                data: {r: payload_str, session_id: session_id}
+            }));
+        } else {
+            var args = {session_id: session_id, id: data.id};
+            var ifid = _.uniqueId('oe_rpc_iframe');
+            var html = "<iframe src='javascript:false;' name='" + ifid + "' id='" + ifid + "' style='display:none'></iframe>";
+            var $iframe = $(html);
+            var nurl = 'jsonp=1&' + $.param(args);
+            nurl = url.indexOf("?") !== -1 ? url + "&" + nurl : url + "?" + nurl;
+            var $form = $('<form>')
+                        .attr('method', 'POST')
+                        .attr('target', ifid)
+                        .attr('enctype', "multipart/form-data")
+                        .attr('action', nurl)
+                        .append($('<input type="hidden" name="r" />').attr('value', payload_str))
+                        .hide()
+                        .appendTo($('body'));
+            var cleanUp = function() {
+                if ($iframe) {
+                    $iframe.unbind("load").remove();
+                }
+                $form.remove();
+            };
+            var deferred = $.Deferred();
+            // the first bind is fired up when the iframe is added to the DOM
+            $iframe.bind('load', function() {
+                // the second bind is fired up when the result of the form submission is received
+                $iframe.unbind('load').bind('load', function() {
+                    $.ajax({
+                        url: url,
+                        dataType: 'jsonp',
+                        jsonp: 'jsonp',
+                        type: 'GET',
+                        cache: false,
+                        data: {session_id: session_id, id: data.id}
+                    }).always(function() {
+                        cleanUp();
+                    }).done(function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    }).fail(function() {
+                        deferred.reject.apply(deferred, arguments);
+                    });
+                });
+                // now that the iframe can receive data, we fill and submit the form
+                $form.submit();
+            });
+            // append the iframe to the DOM (will trigger the first load)
+            $form.after($iframe);
+            return deferred;
+        }
+    });
+};
+
+openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
+    triggers: {
+        'request': 'Request sent',
+        'response': 'Response received',
+        'response_failed': 'HTTP Error response or timeout received',
+        'error': 'The received response is an JSON-RPC error'
+    },
+    /**
+    @constructs openerp.Session
+    
+    @param parent The parent of the newly created object.
+    @param {String} origin Url of the OpenERP server to contact with this session object
+    or `null` if the server to contact is the origin server.
+    @param {Dict} options A dictionary that can contain the following options:
+        
+        * "override_session": Default to false. If true, the current session object will
+          not try to re-use a previously created session id stored in a cookie.
+        * "session_id": Default to null. If specified, the specified session_id will be used
+          by this session object. Specifying this option automatically implies that the option
+          "override_session" is set to true.
+     */
+    init: function(parent, origin, options) {
+        openerp.PropertiesMixin.init.call(this, parent);
+        options = options || {};
+        this.server = null;
+        this.session_id = options.session_id || null;
+        this.override_session = options.override_session || !!options.session_id || false;
+        this.avoid_recursion = false;
+        this.setup(origin);
+    },
+    setup: function(origin) {
+        // must be able to customize server
+        var window_origin = location.protocol + "//" + location.host;
+        origin = origin ? origin.replace( /\/+$/, '') : window_origin;
+        if (!_.isUndefined(this.origin) && this.origin !== origin)
+            throw new Error('Session already bound to ' + this.origin);
+        else
+            this.origin = origin;
+        this.prefix = this.origin;
+        this.server = this.origin; // keep chs happy
+        this.origin_server = this.origin === window_origin;
+    },
+    /**
+     * (re)loads the content of a session: db name, username, user id, session
+     * context and status of the support contract
+     *
+     * @returns {$.Deferred} deferred indicating the session is done reloading
+     */
+    session_reload: function () {
+        var self = this;
+        return self.rpc("/web/session/get_session_info", {}).then(function(result) {
+            delete result.session_id;
+            _.extend(self, result);
+        });
+    },
+    /**
+     * The session is validated either by login or by restoration of a previous session
+     */
+    session_authenticate: function(db, login, password) {
+        var self = this;
+        var params = {db: db, login: login, password: password};
+        return this.rpc("/web/session/authenticate", params).then(function(result) {
+            if (!result.uid) {
+                return $.Deferred().reject();
+            }
+            delete result.session_id;
+            _.extend(self, result);
+        });
+    },
+    check_session_id: function() {
+        var self = this;
+        if (this.avoid_recursion)
+            return $.when();
+        if (this.session_id)
+            return $.when(); // we already have the session id
+        if (this.override_session || ! this.origin_server) {
+            // If we don't use the origin server we consider we should always create a new session.
+            // Even if some browsers could support cookies when using jsonp that behavior is
+            // not consistent and the browser creators are tending to removing that feature.
+            this.avoid_recursion = true;
+            return this.rpc("/gen_session_id", {}).then(function(result) {
+                self.session_id = result;
+            }).always(function() {
+                self.avoid_recursion = false;
+            });
+        } else {
+            // normal use case, just use the cookie
+            self.session_id = openerp.get_cookie("session_id");
+            return $.when();
+        }
+    },
+    /**
+     * Executes an RPC call, registering the provided callbacks.
+     *
+     * Registers a default error callback if none is provided, and handles
+     * setting the correct session id and session context in the parameter
+     * objects
+     *
+     * @param {String} url RPC endpoint
+     * @param {Object} params call parameters
+     * @param {Object} options additional options for rpc call
+     * @param {Function} success_callback function to execute on RPC call success
+     * @param {Function} error_callback function to execute on RPC call failure
+     * @returns {jQuery.Deferred} jquery-provided ajax deferred
+     */
+    rpc: function(url, params, options) {
+        var self = this;
+        options = _.clone(options || {});
+        var shadow = options.shadow || false;
+        delete options.shadow;
+
+        return self.check_session_id().then(function() {
+            // TODO: remove
+            if (! _.isString(url)) {
+                _.extend(options, url);
+                url = url.url;
+            }
+            // TODO correct handling of timeouts
+            if (! shadow)
+                self.trigger('request');
+            var fct;
+            if (self.origin_server) {
+                fct = openerp.jsonRpc;
+                if (self.override_session) {
+                    options.headers = _.extend({}, options.headers, {
+                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
+                    });
+                }
+            } else {
+                fct = openerp.jsonpRpc;
+                url = self.url(url, null);
+                options.session_id = self.session_id || '';
+            }
+            var p = fct(url, "call", params, options);
+            p = p.then(function (result) {
+                if (! shadow)
+                    self.trigger('response');
+                return result;
+            }, function(type, error, textStatus, errorThrown) {
+                if (type === "server") {
+                    if (! shadow)
+                        self.trigger('response');
+                    if (error.code === 100) {
+                        self.uid = false;
+                    }
+                    return $.Deferred().reject(error, $.Event());
+                } else {
+                    if (! shadow)
+                        self.trigger('response_failed');
+                    var nerror = {
+                        code: -32098,
+                        message: "XmlHttpRequestError " + errorThrown,
+                        data: {type: "xhr"+textStatus, debug: error.responseText, objects: [error, errorThrown] }
+                    };
+                    return $.Deferred().reject(nerror, $.Event());
+                }
+            });
+            return p.fail(function() { // Allow deferred user to disable rpc_error call in fail
+                p.fail(function(error, event) {
+                    if (!event.isDefaultPrevented()) {
+                        self.trigger('error', error, event);
+                    }
+                });
+            });
+        });
+    },
+    url: function(path, params) {
+        params = _.extend(params || {});
+        if (this.override_session || (! this.origin_server))
+            params.session_id = this.session_id;
+        var qs = $.param(params);
+        if (qs.length > 0)
+            qs = "?" + qs;
+        var prefix = _.any(['http://', 'https://', '//'], function(el) {
+            return path.length >= el.length && path.slice(0, el.length) === el;
+        }) ? '' : this.prefix; 
+        return prefix + path + qs;
+    },
+    model: function(model_name) {
+        return new openerp.Model(this, model_name);
+    }
+});
+
+openerp.Model = openerp.Class.extend({
+    /**
+    new openerp.Model([session,] model_name)
+
+    @constructs instance.Model
+    @extends instance.Class
+    
+    @param {openerp.Session} [session] The session object used to communicate with
+    the server.
+    @param {String} model_name name of the OpenERP model this object is bound to
+    @param {Object} [context]
+    @param {Array} [domain]
+    */
+    init: function () {
+        var session, model_name;
+        var args = _.toArray(arguments);
+        args.reverse();
+        session = args.pop();
+        if (session && ! (session instanceof openerp.Session)) {
+            model_name = session;
+            session = null;
+        } else {
+            model_name = args.pop();
+        }
+
+        this.name = model_name;
+        this._session = session;
+    },
+    session: function() {
+        if (! this._session)
+            throw new Error("Not session specified");
+        return this._session;
+    },
+    /**
+     * Call a method (over RPC) on the bound OpenERP model.
+     *
+     * @param {String} method name of the method to call
+     * @param {Array} [args] positional arguments
+     * @param {Object} [kwargs] keyword arguments
+     * @param {Object} [options] additional options for the rpc() method
+     * @returns {jQuery.Deferred<>} call result
+     */
+    call: function (method, args, kwargs, options) {
+        args = args || [];
+        kwargs = kwargs || {};
+        if (!_.isArray(args)) {
+            // call(method, kwargs)
+            kwargs = args;
+            args = [];
+        }
+        return this.session().rpc('/web/dataset/call_kw', {
+            model: this.name,
+            method: method,
+            args: args,
+            kwargs: kwargs
+        }, options);
+    }
+});
+
+/** OpenERP Translations */
+openerp.TranslationDataBase = openerp.Class.extend(/** @lends instance.TranslationDataBase# */{
+    /**
+     * @constructs instance.TranslationDataBase
+     * @extends instance.Class
+     */
+    init: function() {
+        this.db = {};
+        this.parameters = {"direction": 'ltr',
+                        "date_format": '%m/%d/%Y',
+                        "time_format": '%H:%M:%S',
+                        "grouping": [],
+                        "decimal_point": ".",
+                        "thousands_sep": ","};
+    },
+    set_bundle: function(translation_bundle) {
+        var self = this;
+        this.db = {};
+        var modules = _.keys(translation_bundle.modules);
+        modules.sort();
+        if (_.include(modules, "web")) {
+            modules = ["web"].concat(_.without(modules, "web"));
+        }
+        _.each(modules, function(name) {
+            self.add_module_translation(translation_bundle.modules[name]);
+        });
+        if (translation_bundle.lang_parameters) {
+            this.parameters = translation_bundle.lang_parameters;
+        }
+    },
+    add_module_translation: function(mod) {
+        var self = this;
+        _.each(mod.messages, function(message) {
+            self.db[message.id] = message.string;
+        });
+    },
+    build_translation_function: function() {
+        var self = this;
+        var fcnt = function(str) {
+            var tmp = self.get(str);
+            return tmp === undefined ? str : tmp;
+        };
+        fcnt.database = this;
+        return fcnt;
+    },
+    get: function(key) {
+        return this.db[key];
+    },
+    /**
+        Loads the translations from an OpenERP server.
+
+        @param {openerp.Session} session The session object to contact the server.
+        @param {Array} [modules] The list of modules to load the translation. If not specified,
+        it will default to all the modules installed in the current database.
+        @param {Object} [lang] lang The language. If not specified it will default to the language
+        of the current user.
+        @returns {jQuery.Deferred}
+    */
+    load_translations: function(session, modules, lang) {
+        var self = this;
+        return session.rpc('/web/webclient/translations', {
+            "mods": modules || null,
+            "lang": lang || null
+        }).done(function(trans) {
+            self.set_bundle(trans);
+        });
+    }
+});
+
+openerp._t = new openerp.TranslationDataBase().build_translation_function();
+
+openerp.get_cookie = function(c_name) {
+    if (document.cookie.length > 0) {
+        var c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            var c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+};
+
+openerp.qweb = new QWeb2.Engine();
+
+openerp.qweb.default_dict = {
     '_' : _,
-    'JSON': JSON
+    'JSON': JSON,
+    '_t' : openerp._t
 };
 
 openerp.declare = declare;

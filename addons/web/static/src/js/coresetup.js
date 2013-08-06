@@ -14,27 +14,23 @@ if (!console) {
 
 openerp.web.coresetup = function(instance) {
 
+/*
+    Some retro-compatibility.
+*/
+instance.web.JsonRPC = instance.web.Session;
+
 /** Session openerp specific RPC class */
-instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
+instance.web.Session.include( /** @lends instance.web.Session# */{
     init: function() {
         this._super.apply(this, arguments);
         // TODO: session store in cookie should be optional
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    rpc: function(url, params, options) {
-        return this._super(url, params, options);
-    },
     /**
      * Setup a sessionm
      */
     session_bind: function(origin) {
-        if (!_.isUndefined(this.origin)) {
-            if (this.origin === origin) {
-                return $.when();
-            }
-            throw new Error('Session already bound to ' + this.origin);
-        }
         var self = this;
         this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
@@ -69,33 +65,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             );
         });
     },
-    /**
-     * (re)loads the content of a session: db name, username, user id, session
-     * context and status of the support contract
-     *
-     * @returns {$.Deferred} deferred indicating the session is done reloading
-     */
-    session_reload: function () {
-        var self = this;
-        var def = $.when();
-        if (this.override_session) {
-            if (! this.session_id) {
-                def = this.rpc("/gen_session_id", {}).then(function(result) {
-                    self.session_id = result;
-                });
-            }
-        } else {
-            this.session_id = this.get_cookie('session_id');
-        }
-        return def.then(function() {
-            return self.rpc("/web/session/get_session_info", {});
-        }).then(function(result) {
-            // If immediately follows a login (triggered by trying to restore
-            // an invalid session or no session at all), refresh session data
-            // (should not change, but just in case...)
-            _.extend(self, result);
-        });
-    },
     session_is_valid: function() {
         var db = $.deparam.querystring().db;
         if (db && this.db !== db) {
@@ -106,15 +75,9 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    session_authenticate: function(db, login, password, _volatile) {
+    session_authenticate: function() {
         var self = this;
-        var base_location = document.location.protocol + '//' + document.location.host;
-        var params = { db: db, login: login, password: password, base_location: base_location };
-        return this.rpc("/web/session/authenticate", params).then(function(result) {
-            if (!result.uid) {
-                return $.Deferred().reject();
-            }
-            _.extend(self, result);
+        return $.when(this._super.apply(this, arguments)).then(function() {
             return self.load_modules();
         });
     },
@@ -193,10 +156,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         });
     },
     load_translations: function() {
-        var params = { mods: this.module_list, lang: this.user_context.lang };
-        return this.rpc('/web/webclient/translations', params).done(function(trans) {
-            instance.web._t.database.set_bundle(trans);
-        });
+        return instance.web._t.database.load_translations(this, this.module_list, this.user_context.lang);
     },
     load_css: function (files) {
         var self = this;
@@ -412,58 +372,13 @@ instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, 
 });
 instance.web.bus = new instance.web.Bus();
 
-/** OpenERP Translations */
-instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
-    /**
-     * @constructs instance.web.TranslationDataBase
-     * @extends instance.web.Class
-     */
-    init: function() {
-        this.db = {};
-        this.parameters = {"direction": 'ltr',
-                        "date_format": '%m/%d/%Y',
-                        "time_format": '%H:%M:%S',
-                        "grouping": [],
-                        "decimal_point": ".",
-                        "thousands_sep": ","};
-    },
+instance.web.TranslationDataBase.include({
     set_bundle: function(translation_bundle) {
-        var self = this;
-        this.db = {};
-        var modules = _.keys(translation_bundle.modules);
-        modules.sort();
-        if (_.include(modules, "web")) {
-            modules = ["web"].concat(_.without(modules, "web"));
-        }
-        _.each(modules, function(name) {
-            self.add_module_translation(translation_bundle.modules[name]);
-        });
+        this._super(translation_bundle);
         if (translation_bundle.lang_parameters) {
-            this.parameters = translation_bundle.lang_parameters;
-            this.parameters.grouping = py.eval(
-                    this.parameters.grouping);
+            this.parameters.grouping = py.eval(this.parameters.grouping);
         }
     },
-    add_module_translation: function(mod) {
-        var self = this;
-        _.each(mod.messages, function(message) {
-            self.db[message.id] = message.string;
-        });
-    },
-    build_translation_function: function() {
-        var self = this;
-        var fcnt = function(str) {
-            var tmp = self.get(str);
-            return tmp === undefined ? str : tmp;
-        };
-        fcnt.database = this;
-        return fcnt;
-    },
-    get: function(key) {
-        if (this.db[key])
-            return this.db[key];
-        return undefined;
-    }
 });
 
 /** Custom jQuery plugins */
@@ -548,8 +463,6 @@ $.async_when = function() {
 /** Setup default session */
 instance.session = new instance.web.Session();
 
-/** Configure default qweb */
-instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template)
@@ -566,7 +479,6 @@ instance.web._lt = function (s) {
 };
 instance.web.qweb.debug = instance.session.debug;
 _.extend(instance.web.qweb.default_dict, {
-    '_t' : instance.web._t,
     '__debug__': instance.session.debug,
 });
 instance.web.qweb.preprocess_node = function() {
