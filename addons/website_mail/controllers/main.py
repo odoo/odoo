@@ -129,7 +129,8 @@ class website_mail(http.Controller):
                     partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": post.get('email'), "name": "Subscribe: %s" % post.get('email')})]
             else:
                 partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
-            group_obj.message_subscribe(request.cr, request.uid, [mail_group_id], partner_ids)
+            group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
+            group_obj.message_subscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
 
         return self.blog(mail_group_id=mail_group_id, blog_id=blog_id, subscribe=post.get('email'))
 
@@ -145,7 +146,8 @@ class website_mail(http.Controller):
                 partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
             else:
                 partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
-            group_obj.message_unsubscribe(request.cr, request.uid, [mail_group_id], partner_ids)
+            group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
+            group_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
 
         return self.blog(mail_group_id=mail_group_id, blog_id=blog_id, subscribe=None)
 
