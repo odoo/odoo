@@ -96,14 +96,14 @@
                                         </a>
                                         <t t-raw="comment.body"/>
                                         <small class="pull-right muted text-right">
-                                            <div t-esc="comment.author_id"/>
-                                            <div t-esc="comment.date"/>
+                                            <div t-field="comment.author_id"/>
+                                            <div t-field="comment.date"/>
                                         </small>
                                     </div>
                                 </li>
                                 <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
-                                    <textarea rows="4" placeholder="Your message" class="span7"> </textarea>
-                                    <button type="submit" class="btn">Post your message</button>
+                                    <textarea rows="4" placeholder="Your comment" class="span7"> </textarea>
+                                    <button type="submit" class="btn">Post your comment</button>
                                 </form>
                             </ul>
                         </div>
@@ -120,8 +120,8 @@
                                     <div class="media">
                                         <div t-field="blog.body"/>
                                         <small class="pull-left muted text-right" t-if="len(blog.child_ids)">
-                                            <a t-if="len(blog.child_ids) &lt;= 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Message</a>
-                                            <a t-if="len(blog.child_ids) > 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Messages</a>
+                                            <a t-if="len(blog.child_ids) &lt;= 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Comment</a>
+                                            <a t-if="len(blog.child_ids) > 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Comments</a>
                                         </small>
                                         <small class="pull-right muted text-right">
                                             <div t-field="blog.author_id"/>
