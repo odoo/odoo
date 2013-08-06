@@ -25,3 +25,9 @@ class event_product(osv.osv):
         'qty': fields.integer('Current Registrations', readonly=True),
         'max_qty': fields.integer('Maximum Registrations'),
     }
+
+class product(osv.osv):
+    _inherit = 'product.product'
+    _columns = {
+        'event_product_ids': fields.one2many('event.event.product', 'product_id', 'Linked event product'),
+    }
