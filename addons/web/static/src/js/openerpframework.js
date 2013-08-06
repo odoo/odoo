@@ -1222,6 +1222,21 @@ openerp.qweb.default_dict = {
     '_t' : openerp._t
 };
 
+openerp.Mutex = openerp.Class.extend({
+    init: function() {
+        this.def = $.Deferred().resolve();
+    },
+    exec: function(action) {
+        var current = this.def;
+        var next = this.def = $.Deferred();
+        return current.then(function() {
+            return $.when(action()).always(function() {
+                next.resolve();
+            });
+        });
+    }
+});
+
 openerp.declare = declare;
 
 return openerp;

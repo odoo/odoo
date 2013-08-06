@@ -612,21 +612,7 @@ $.fn.openerpBounce = function() {
 };
 
 /** Jquery extentions */
-$.Mutex = (function() {
-    function Mutex() {
-        this.def = $.Deferred().resolve();
-    }
-    Mutex.prototype.exec = function(action) {
-        var current = this.def;
-        var next = this.def = $.Deferred();
-        return current.then(function() {
-            return $.when(action()).always(function() {
-                next.resolve();
-            });
-        });
-    };
-    return Mutex;
-})();
+$.Mutex = openerp.Mutex;
 
 $.async_when = function() {
     var async = false;
