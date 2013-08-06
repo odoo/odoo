@@ -107,6 +107,7 @@ class mrp_production(osv.osv):
                     'date': production.date_planned,
                     'product_id': sub_product.product_id.id,
                     'product_qty': qty1,
+                    'product_uom_qty': production.product_qty,
                     'product_uom': sub_product.product_uom.id,
                     'product_uos_qty': qty2,
                     'product_uos': production.product_uos and production.product_uos.id or False,
