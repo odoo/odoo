@@ -723,7 +723,7 @@ class pos_order(osv.osv):
                     'picking_id': picking_id,
                     'product_id': line.product_id.id,
                     'product_uos_qty': abs(line.qty),
-                    'product_qty': abs(line.qty),
+                    'product_uom_qty': abs(line.qty),
                     'tracking_id': False,
                     'state': 'draft',
                     'location_id': location_id,
