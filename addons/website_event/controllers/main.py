@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
@@ -97,8 +98,11 @@ class website_event(http.Controller):
     def event(self, event_id=None, **post):
         website = request.registry['website']
         event = request.registry['event.event'].browse(request.cr, request.uid, event_id)
+        organizer = event.user_id and request.registry['res.users'].browse(request.cr, SUPERUSER_ID, event.user_id.id) or None
+
         values = website.get_rendering_context({
             'event_id': event,
+            'organizer': organizer,
             'google_map_url': "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=12&size=298x298" % urllib.quote_plus('%s, %s %s, %s' % (event.street, event.city, event.zip, event.country_id and event.country_id.name_get()[0][1] or ''))
         })
         return website.render("website_event.detail", values)
