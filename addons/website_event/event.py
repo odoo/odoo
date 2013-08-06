@@ -25,6 +25,9 @@ class event_product(osv.osv):
         'qty': fields.integer('Current Registrations', readonly=True),
         'max_qty': fields.integer('Maximum Registrations'),
     }
+    def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
+        return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
+
 
 class product(osv.osv):
     _inherit = 'product.product'

@@ -12,7 +12,7 @@
                     <page string="Tarifs">
                         <field name="product_ids">
                             <tree string="Payments" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="product_id" on_change='onchange_product_id(product_id)'/>
                                 <field name="deadline"/>
                                 <field name="price"/>
                                 <field name="max_qty"/>

@@ -200,7 +200,6 @@ class Ecommerce(http.Controller):
         values = website.get_rendering_context()
         context = {}
 
-        order_obj = request.registry.get('sale.order')
         order_line_obj = request.registry.get('sale.order.line')
         user_obj = request.registry.get('res.users')
 
