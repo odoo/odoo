@@ -83,8 +83,8 @@ class purchase_requisition(osv.osv):
         for tender in self.browse(cr, uid, ids, context=context):
             purchase_ids += [purchase.id for purchase in tender.purchase_ids]
         for purchase_id in purchase_ids:
-            purchase_order_obj.action_cancel(cr, uid, purchase_ids)
-            purchase_order_obj.message_post(cr, uid, purchase_id, body=_('Cancelled by the tender associated to this quotation.'), context=context)
+            purchase_order_obj.action_cancel(cr, uid, [purchase_id])
+            purchase_order_obj.message_post(cr, uid, [purchase_id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
