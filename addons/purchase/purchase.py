@@ -25,7 +25,7 @@ from openerp import SUPERUSER_ID
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import attrgetter
-
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -386,7 +386,8 @@ class purchase_order(osv.osv):
 
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
         action = self.pool[action_model].read(cr, uid, action_id, context=context)
-        ctx = eval(action['context'])
+        active_id = context.get('active_id',ids[0])
+        ctx = eval(action['context'],{'active_id': active_id}, nocopy=True)
         ctx.update({
             'search_default_purchase_id': ids[0]
         })
