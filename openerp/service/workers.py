@@ -415,10 +415,7 @@ class WorkerCron(Worker):
                 # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 # TODO why isnt openerp.addons.base defined ?
                 import openerp.addons.base as base
-                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                if not acquired:
-                    openerp.modules.registry.RegistryManager.delete(db_name)
-                    break
+                base.ir.ir_cron.ir_cron._acquire_job(db_name)
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
                 openerp.sql_db.close_db(db_name)
