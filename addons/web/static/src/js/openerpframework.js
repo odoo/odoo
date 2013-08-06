@@ -547,7 +547,7 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         for (var name in this) {
             if(typeof(this[name]) == "function") {
                 if((/^on_|^do_/).test(name)) {
-                    this[name] = this[name].bind(this);
+                    this[name] = _.bind(this[name], this);
                 }
             }
         }
