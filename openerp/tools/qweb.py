@@ -286,9 +286,10 @@ class QWebXml(object):
         field_type = record._model._all_columns.get(field).column._type
         try:
             if field_type == 'many2one':
-                field = getattr(record, field)
-                if field:
-                    inner = field.name_get()[0][1] or ""
+                inner = record.read([field])[0][field][1] or ""
+                #field = getattr(record, field)
+                #if field:
+                #    inner = field.name_get()[0][1] or ""
             else:
                 inner = getattr(record, field) or ""
             if isinstance(inner, types.UnicodeType):
