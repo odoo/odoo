@@ -133,8 +133,21 @@ class stock_quant(osv.osv):
     """
     _name = "stock.quant"
     _description = "Quants"
+
+    def _get_quant_name(self, cr, uid, ids, name, args, context=None):
+        """ Forms complete name of location from parent location to child location.
+        @return: Dictionary of values
+        """
+        res = {}
+        for q in self.browse(cr, uid, ids, context=context):
+            res[q.id] = q.product_id.code
+            if q.lot_id:
+                res[q.id] = q.lot_id.name 
+            res[q.id] += ': '+  str(q.qty) + q.product_id.uom_id.name
+        return res
+
     _columns = {
-        'name': fields.char('Identifier'),
+        'name': fields.function(_get_quant_name, type='char', string='Identifier'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
@@ -882,6 +895,15 @@ class stock_move(osv.osv):
                         res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
         return res
 
+    def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
+        res = dict.fromkeys(ids, False)
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.state == 'done':
+                res[move.id] = [q.id for q in move.quant_ids]
+            else:
+                res[move.id] = [q.id for q in move.reserved_quant_ids]
+        return res
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -954,6 +976,7 @@ class stock_move(osv.osv):
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
+        'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.quant', string='Lots'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
