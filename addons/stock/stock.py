@@ -954,6 +954,8 @@ class stock_move(osv.osv):
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
+        'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move'),
+        'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -963,6 +965,8 @@ class stock_move(osv.osv):
         default['move_orig_ids'] = []
         default['quant_ids'] = []
         default['reserved_quant_ids'] = []
+        default['returned_move_ids'] = []
+        default['origin_returned_move_id'] = False
         default['state'] = 'draft'
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
