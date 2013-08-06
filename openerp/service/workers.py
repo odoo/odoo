@@ -411,11 +411,11 @@ class WorkerCron(Worker):
             if rpc_request_flag:
                 start_time = time.time()
                 start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
-            while True:
-                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                # TODO why isnt openerp.addons.base defined ?
-                import openerp.addons.base as base
-                base.ir.ir_cron.ir_cron._acquire_job(db_name)
+            
+            import openerp.addons.base as base
+            base.ir.ir_cron.ir_cron._acquire_job(db_name)
+            openerp.modules.registry.RegistryManager.delete(db_name)
+
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
                 openerp.sql_db.close_db(db_name)
