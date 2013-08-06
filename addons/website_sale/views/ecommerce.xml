@@ -88,7 +88,8 @@
     <!-- Product list --> 
 
     <template id="product_pager">
-        <div t-if="page_count != 1" t-att-class=" (classname if classname else '') + ' pagination'">
+        <t t-set="classname" t-value="classname or ''" />
+        <div t-if="page_count != 1" t-att-class="classname + ' pagination'">
             <ul>
                 <li t-att-class=" 'disabled' if page == 1 else '' " ><a t-att-href=" '#' if page == 1 else ('/shop/category/%%s/page/%%s' %% (current_category, max(0,page-1))) ">Prev</a></li>
                 <t t-foreach="pages" t-as="p">
@@ -122,9 +123,7 @@
                     </div>
                 </div>
                 <div class="span8 offset4 text-center">
-                    <t t-call="website_sale.product_pager" >
-                        <t t-set="classname"></t>
-                    </t>
+                    <t t-call="website_sale.product_pager" />
                 </div>
             </t>
         </t>
