@@ -1,22 +1,29 @@
 # -*- coding: utf-8 -*-
 
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website import website
 from openerp.tools.translate import _
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
+import werkzeug
 
 
-class website_hr(http.Controller):
+class website_event(http.Controller):
 
     @http.route(['/event'], type='http', auth="public")
     def events(self, **searches):
-        data_obj = request.registry['event.event']
+        website = request.registry['website']
+        event_obj = request.registry['event.event']
+
         searches.setdefault('date', 'all')
+        searches.setdefault('type', 'all')
+        searches.setdefault('country', 'all')
+
+        domain_search = {}
 
         def sd(date):
             return date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
@@ -45,44 +52,67 @@ class website_hr(http.Controller):
                 0],
         ]
 
-        domain_search = {
-            'date': 'all'
-        }
-
         # search domains
         for date in dates:
             if searches.get("date") == date[0]:
                 domain_search["date"] = date[2]
+        if searches.get("type", "all") != 'all':
+            domain_search["type"] = [("type", "=", int(searches.get("type")))]
+        if searches.get("country", "all") != 'all':
+            domain_search["country"] = [("country_id", "=", int(searches.get("country")))]
+
+        def dom_without(without):
+            domain = [(1, "=", 1)]
+            for key, search in domain_search.items():
+                if key != without:
+                    domain += search
+            print domain
+            return domain
 
         # count by domains without self search
-        domain = [(1, "=", 1)]
-        for key, search in domain_search.items():
-            if key != 'date':
-                domain += search
         for date in dates:
-            date[3] = data_obj.search(request.cr, request.uid, domain + date[2], count=True)
+            date[3] = event_obj.search(request.cr, request.uid, dom_without('date') + date[2], count=True)
+
+        domain = dom_without('type')
+        types = event_obj.read_group(request.cr, request.uid, domain, ["id", "type"], groupby="type", orderby="type")
+        types.insert(0, {'type_count': event_obj.search(request.cr, request.uid, domain, count=True), 'type': ("all", _("All Categories"))})
+
+        domain = dom_without('country')
+        countries = event_obj.read_group(request.cr, request.uid, domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
+        countries.insert(0, {'country_id_count': event_obj.search(request.cr, request.uid, domain, count=True), 'country_id': ("all", _("All Countries"))})
 
 
-
-        # domain and search_path
-        domain = [(1, "=", 1)]
-        for key, search in domain_search.items():
-            domain += search
-
-        obj_ids = data_obj.search(request.cr, request.uid, domain)
-        values = {
-            'event_ids': data_obj.browse(request.cr, request.uid, obj_ids),
+        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), order="date_begin DESC")
+        values = website.get_rendering_context({
+            'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
+            'types': types,
+            'countries': countries,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
-        }
+        })
 
-        html = website.render("website_event.index", values)
-        return html
+        return website.render("website_event.index", values)
 
     @http.route(['/event/<int:event_id>'], type='http', auth="public")
     def event(self, event_id=None, **post):
-        return ""
+        website = request.registry['website']
+        event = request.registry['event.event'].browse(request.cr, request.uid, event_id)
+        organizer = event.user_id and request.registry['res.users'].browse(request.cr, SUPERUSER_ID, event.user_id.id) or None
+
+        values = website.get_rendering_context({
+            'event_id': event,
+            'organizer': organizer,
+            'google_map_url': "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=12&size=298x298" % urllib.quote_plus('%s, %s %s, %s' % (event.street, event.city, event.zip, event.country_id and event.country_id.name_get()[0][1] or ''))
+        })
+        return website.render("website_event.detail", values)
+
+    @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
+    def add_cart(self, event_id=None, **post):
+        if not post:
+            return werkzeug.utils.redirect("/event/%s/" % event_id)
+
+        return werkzeug.utils.redirect("/shop/checkout")
 
     @http.route(['/event/publish'], type='http', auth="public")
     def publish(self, **post):

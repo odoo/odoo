@@ -67,7 +67,7 @@
         <div class="span4">
             <ul class="nav nav-list">
                 <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
-            <t t-foreach="categories" t-as="category">
+            <t t-foreach="website_sale_get_categories()" t-as="category">
                 <t t-call="website_sale.categories_recursive"/>
             </t>
             </ul>
@@ -188,7 +188,7 @@
                         </button>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                    <div t-field="product.description_sale"></div>
+                    <div t-field="product.description_website"></div>
                     <div class="oe_ecommerce_price"><t t-field="product.list_price" />€</div>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
