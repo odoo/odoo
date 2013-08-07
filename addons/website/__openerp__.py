@@ -8,7 +8,7 @@ OpenERP Website CMS
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['web'],
     'installable': True,
     'data': [
         'views/views.xml',
