@@ -10,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
 import werkzeug
-from openerp.osv import osv
 
 
 class website_event(http.Controller):
