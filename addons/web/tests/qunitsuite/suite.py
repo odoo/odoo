@@ -91,7 +91,7 @@ class QUnitSuite(unittest.TestSuite):
             return True
 
         elif event_name == 'qunit.moduleStart':
-            self._module = args[1].encode('utf-8')
+            self._module = args[1].encode('utf-8') if args[1] else ''
         elif event_name == 'qunit.moduleStop':
             self._test = None
             self._module = None
