@@ -1,5 +1,8 @@
 
-openerp.web.data = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.data = {};
 
 /**
  * Serializes the sort criterion array of a dataset into a form which can be
@@ -58,19 +61,18 @@ instance.web.Query = instance.web.Class.extend({
     },
     _execute: function () {
         var self = this;
-        return instance.session.rpc('/web/dataset/search_read', {
-            model: this._model.name,
-            fields: this._fields || false,
+        return this._model.call('search_read', {
             domain: instance.web.pyeval.eval('domains',
                     [this._model.domain(this._filter)]),
-            context: instance.web.pyeval.eval('contexts',
-                    [this._model.context(this._context)]),
+            fields: this._fields || false,
             offset: this._offset,
             limit: this._limit,
-            sort: instance.web.serialize_sort(this._order_by)
+            order: instance.web.serialize_sort(this._order_by),
+            context: instance.web.pyeval.eval('contexts',
+                    [this._model.context(this._context)]),
         }).then(function (results) {
             self._count = results.length;
-            return results.records;
+            return results;
         }, null);
     },
     /**
@@ -253,19 +255,41 @@ instance.web.QueryGroup = instance.web.Class.extend({
     }
 });
 
-instance.web.Model = instance.web.Class.extend({
+instance.web.Model.include({
     /**
-     * @constructs instance.web.Model
-     * @extends instance.web.Class
-     *
-     * @param {String} model_name name of the OpenERP model this object is bound to
-     * @param {Object} [context]
-     * @param {Array} [domain]
-     */
-    init: function (model_name, context, domain) {
-        this.name = model_name;
+    new openerp.web.Model([session,] model_name[, context[, domain]])
+
+    @constructs instance.web.Model
+    @extends instance.web.Class
+    
+    @param {openerp.web.Session} [session] The session object used to communicate with
+    the server.
+    @param {String} model_name name of the OpenERP model this object is bound to
+    @param {Object} [context]
+    @param {Array} [domain]
+    */
+    init: function() {
+        var session, model_name, context, domain;
+        var args = _.toArray(arguments);
+        args.reverse();
+        session = args.pop();
+        if (session && ! (session instanceof openerp.web.Session)) {
+            model_name = session;
+            session = null;
+        } else {
+            model_name = args.pop();
+        }
+        context = args.length > 0 ? args.pop() : null;
+        domain = args.length > 0 ? args.pop() : null;
+
+        this._super(session, model_name, context, domain);
         this._context = context || {};
         this._domain = domain || [];
+    },
+    session: function() {
+        if (! this._session)
+            return instance.session;
+        return this._super();
     },
     /**
      * @deprecated does not allow to specify kwargs, directly use call() instead
@@ -294,13 +318,7 @@ instance.web.Model = instance.web.Class.extend({
             args = [];
         }
         instance.web.pyeval.ensure_evaluated(args, kwargs);
-        var debug = instance.session.debug ? '/'+this.name+':'+method : '';
-        return instance.session.rpc('/web/dataset/call_kw' + debug, {
-            model: this.name,
-            method: method,
-            args: args,
-            kwargs: kwargs
-        }, options);
+        return this._super(method, args, kwargs, options);
     },
     /**
      * Fetches a Query instance bound to this model, for searching
@@ -318,7 +336,7 @@ instance.web.Model = instance.web.Class.extend({
      * @param {String} signal signal to trigger on the workflow
      */
     exec_workflow: function (id, signal) {
-        return instance.session.rpc('/web/dataset/exec_workflow', {
+        return this.session().rpc('/web/dataset/exec_workflow', {
             model: this.name,
             id: id,
             signal: signal
@@ -355,7 +373,7 @@ instance.web.Model = instance.web.Class.extend({
      */
     call_button: function (method, args) {
         instance.web.pyeval.ensure_evaluated(args, {});
-        return instance.session.rpc('/web/dataset/call_button', {
+        return this.session().rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
             // Should not be necessary anymore. Integrate remote in this?
@@ -1071,6 +1089,6 @@ instance.web.DropMisordered = instance.web.Class.extend({
     }
 });
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

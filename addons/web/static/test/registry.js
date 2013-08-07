@@ -1,5 +1,5 @@
 openerp.testing.section('registry', {
-    dependencies: ['web.corelib'],
+    dependencies: ['web.core'],
     setup: function (instance) {
         instance.web.Foo = {};
         instance.web.Bar = {};

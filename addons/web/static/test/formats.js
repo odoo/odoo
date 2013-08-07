@@ -1,5 +1,5 @@
 openerp.testing.section('server-formats', {
-    dependencies: ['web.coresetup', 'web.dates']
+    dependencies: ['web.core', 'web.dates']
 }, function (test) {
     test('Parse server datetime', function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");

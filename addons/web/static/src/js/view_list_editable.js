@@ -2,7 +2,10 @@
  * handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
  * @namespace
  */
-openerp.web.list_editable = function (instance) {
+(function() {
+
+    var instance = openerp;
+    openerp.web.list_editable = {};
     var _t = instance.web._t;
 
     // editability status of list rows
@@ -834,4 +837,4 @@ openerp.web.list_editable = function (instance) {
             return null;
         }
     });
-};
+})();

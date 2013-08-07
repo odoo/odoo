@@ -347,13 +347,7 @@ def make_conditional(response, last_modified=None, etag=None):
     return response.make_conditional(request.httprequest)
 
 def login_and_redirect(db, login, key, redirect_url='/'):
-    wsgienv = request.httprequest.environ
-    env = dict(
-        base_location=request.httprequest.url_root.rstrip('/'),
-        HTTP_HOST=wsgienv['HTTP_HOST'],
-        REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-    )
-    request.session.authenticate(db, login, key, env)
+    request.session.authenticate(db, login, key)
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
@@ -605,7 +599,7 @@ class WebClient(http.Controller):
 
             data = re.sub(
                 rx_url,
-                r"""url(\1%s/""" % (web_dir,),
+                r"url(\1%s/" % (web_dir,),
                 data,
             )
             return data.encode('utf-8')
@@ -677,20 +671,26 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', auth="user")
-    def translations(self, mods, lang):
-        res_lang = request.session.model('res.lang')
-        ids = res_lang.search([("code", "=", lang)])
+    @http.route('/web/webclient/translations', type='json', auth="admin")
+    def translations(self, mods=None, lang=None):
+        if mods is None:
+            m = request.registry.get('ir.module.module')
+            mods = [x['name'] for x in m.search_read(request.cr, request.uid,
+                [('state','=','installed')], ['name'])]
+        if lang is None:
+            lang = request.context["lang"]
+        res_lang = request.registry.get('res.lang')
+        ids = res_lang.search(request.cr, request.uid, [("code", "=", lang)])
         lang_params = None
         if ids:
-            lang_params = res_lang.read(ids[0], ["direction", "date_format", "time_format",
+            lang_params = res_lang.read(request.cr, request.uid, ids[0], ["direction", "date_format", "time_format",
                                                 "grouping", "decimal_point", "thousands_sep"])
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
-        ir_translation = request.session.model('ir.translation')
+        ir_translation = request.registry.get('ir.translation')
         translations_per_module = {}
-        messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
+        messages = ir_translation.search_read(request.cr, request.uid, [('module','in',mods),('lang','=',lang),
                                                ('comments','like','openerp-web'),('value','!=',False),
                                                ('value','!=','')],
                                               ['module','src','value','lang'], order='module')
@@ -832,13 +832,7 @@ class Session(http.Controller):
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
-        wsgienv = request.httprequest.environ
-        env = dict(
-            base_location=base_location,
-            HTTP_HOST=wsgienv['HTTP_HOST'],
-            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-        )
-        request.session.authenticate(db, login, password, env)
+        request.session.authenticate(db, login, password)
 
         return self.session_info()
 
@@ -1083,7 +1077,10 @@ class DataSet(http.Controller):
                         names.get(record['id']) or "%s#%d" % (model, (record['id']))
                 return records
 
-        return getattr(request.session.model(model), method)(*args, **kwargs)
+        if method.startswith('_'):
+            raise Exception("Access denied")
+
+        return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):

@@ -1,4 +1,9 @@
-openerp.web.search = function(instance) {
+
+(function() {
+
+var instance = openerp;
+openerp.web.search = {};
+
 var QWeb = instance.web.qweb,
       _t =  instance.web._t,
      _lt = instance.web._lt;
@@ -2179,6 +2184,6 @@ instance.web.search.custom_filters = new instance.web.Registry({
     'id': 'instance.web.search.ExtendedSearchProposition.Id'
 });
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

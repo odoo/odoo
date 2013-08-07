@@ -114,7 +114,7 @@ class WebRequest(object):
             threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
-        self.context = self.session.context
+        self.context = dict(self.session.context)
         self.lang = self.context["lang"]
 
     def _authenticate(self):
@@ -275,13 +275,12 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-
+        
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
-            self.init(args)
-
             def handler():
                 self.session.jsonp_requests[request_id] = self.httprequest.form['r']
+                self.session.modified = True
                 headers=[('Content-Type', 'text/plain; charset=utf-8')]
                 r = werkzeug.wrappers.Response(request_id, headers=headers)
                 return r
@@ -292,7 +291,6 @@ class JsonRequest(WebRequest):
             request = args.get('r')
         elif jsonp and request_id:
             # jsonp 2 steps step2 GET: run and return result
-            self.init(args)
             request = self.session.jsonp_requests.pop(request_id, "")
         else:
             # regular jsonrpc2
@@ -576,6 +574,8 @@ class Model(object):
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
             mod = request.registry.get(self.model)
+            if method.startswith('_'):
+                raise Exception("Access denied")
             meth = getattr(mod, method)
             cr = request.cr
             result = meth(cr, request.uid, *args, **kw)
@@ -608,7 +608,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 return self.__setitem__(k, v)
         object.__setattr__(self, k, v)
 
-    def authenticate(self, db, login=None, password=None, env=None, uid=None):
+    def authenticate(self, db, login=None, password=None, uid=None):
         """
         Authenticate the current user with the given db, login and password. If successful, store
         the authentication parameters in the current session and request.
@@ -617,7 +617,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
 
         if uid is None:
-            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
+            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password,
+                request.httprequest.environ])
         else:
             security.check(db, uid, password)
         self.db = db
@@ -946,13 +947,9 @@ class Root(object):
         if httprequest.args.get('jsonp'):
             return JsonRequest(httprequest)
 
-        content = httprequest.stream.read()
-        import cStringIO
-        httprequest.stream = cStringIO.StringIO(content)
-        try:
-            simplejson.loads(content)
+        if httprequest.headers["Content-Type"] == "application/json":
             return JsonRequest(httprequest)
-        except:
+        else:
             return HttpRequest(httprequest)
 
     def load_addons(self):

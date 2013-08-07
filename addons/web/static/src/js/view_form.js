@@ -1,4 +1,6 @@
-openerp.web.form = function (instance) {
+(function() {
+
+var instance = openerp;
 var _t = instance.web._t,
    _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
@@ -5664,6 +5666,6 @@ instance.web.form.tags = new instance.web.Registry({
 instance.web.form.custom_widgets = new instance.web.Registry({
 });
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

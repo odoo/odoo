@@ -1,5 +1,5 @@
 openerp.testing.section('eval.types', {
-    dependencies: ['web.coresetup'],
+    dependencies: ['web.core'],
     setup: function (instance) {
         instance.session.uid = 42;
     }
@@ -562,7 +562,7 @@ openerp.testing.section('eval.edc.nonliterals', {
     });
 });
 openerp.testing.section('eval.contexts', {
-    dependencies: ['web.coresetup']
+    dependencies: ['web.core']
 }, function (test) {
     test('context_recursive', function (instance) {
         var context_to_eval = [{
@@ -773,7 +773,7 @@ openerp.testing.section('eval.contexts', {
     });
 });
 openerp.testing.section('eval.domains', {
-    dependencies: ['web.coresetup', 'web.dates']
+    dependencies: ['web.core', 'web.dates']
 }, function (test) {
     test('current_date', function (instance) {
         var current_date = instance.web.date_to_str(new Date());
@@ -802,7 +802,7 @@ openerp.testing.section('eval.domains', {
     });
 });
 openerp.testing.section('eval.groupbys', {
-    dependencies: ['web.coresetup']
+    dependencies: ['web.core']
 }, function (test) {
     test('groupbys_00', function (instance) {
         var result = instance.web.pyeval.eval('groupbys', [

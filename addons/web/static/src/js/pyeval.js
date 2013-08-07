@@ -1,7 +1,10 @@
 /*
  * py.js helpers and setup
  */
-openerp.web.pyeval = function (instance) {
+(function() {
+
+    var instance = openerp;
+
     instance.web.pyeval = {};
 
     var obj = function () {};
@@ -864,4 +867,4 @@ openerp.web.pyeval = function (instance) {
             }
         }, 0); });
     };
-};
+})();

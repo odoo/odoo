@@ -1,5 +1,5 @@
 openerp.testing.section('mutex', {
-    dependencies: ['web.coresetup'],
+    dependencies: ['web.core'],
     setup: function (instance) {
     }
 }, function (test) {

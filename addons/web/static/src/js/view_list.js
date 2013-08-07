@@ -1,4 +1,7 @@
-openerp.web.list = function (instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.list = {};
 var _t = instance.web._t,
     _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
@@ -2318,5 +2321,5 @@ instance.web.list.Many2Many = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
-};
+})();
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

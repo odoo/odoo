@@ -7,6 +7,9 @@
  * @namespace openerp
  */
 (function() {
+    // copy everything in the openerp namespace to openerp.web
+    openerp.web = _.clone(openerp);
+
     var inited = false;
 
     _.extend(openerp, {
@@ -30,13 +33,11 @@
             if (modules === null) {
                 modules = [];
             }
+            modules = _.without(modules, "web");
             if (inited)
                 throw new Error("OpenERP was already inited");
             inited = true;
-            init_web_modules();
             for(var i=0; i < modules.length; i++) {
-                if (modules[i] === "web")
-                    continue;
                 var fct = openerp[modules[i]];
                 if (typeof(fct) === "function") {
                     openerp[modules[i]] = {};
@@ -50,22 +51,5 @@
             return openerp;
         }
     });
-
-    /*---------------------------------------------------------
-     * OpenERP Web web module split
-     *---------------------------------------------------------*/
-    function init_web_modules() {
-        var files = ["pyeval", "corelib","coresetup","dates","formats","chrome","data","views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
-        for(var i=0; i<files.length; i++) {
-            var fct = openerp.web[files[i]];
-            if(typeof(fct) === "function") {
-                openerp.web[files[i]] = {};
-                for (var k in fct) {
-                    openerp.web[files[i]][k] = fct[k];
-                }
-                fct(openerp, openerp.web[files[i]]);
-            }
-        }
-    }
 })();
 
