@@ -1396,7 +1396,7 @@ class stock_move(osv.osv):
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
                 'location_id': source_location.id,
-                'product_qty': quantity,
+                'product_uom_qty': quantity,
                 'product_uos_qty': uos_qty,
                 'state': move.state,
                 'scrapped': True,
