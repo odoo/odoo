@@ -69,7 +69,7 @@ class QWebXml(object):
 
 
     """
-    def __init__(self, loader):
+    def __init__(self, loader=None):
         self.loader = loader
         self.node = xml.dom.Node
         self._t = {}
@@ -104,7 +104,7 @@ class QWebXml(object):
     def get_template(self, name):
         if name in self._t:
             return self._t[name]
-        else:
+        elif self.loader:
             xml = self.loader(name)
             self.add_template(xml)
             if name in self._t:
