@@ -33,12 +33,11 @@
             if (modules === null) {
                 modules = [];
             }
+            modules = _.without(modules, "web");
             if (inited)
                 throw new Error("OpenERP was already inited");
             inited = true;
             for(var i=0; i < modules.length; i++) {
-                if (modules[i] === "web")
-                    continue;
                 var fct = openerp[modules[i]];
                 if (typeof(fct) === "function") {
                     openerp[modules[i]] = {};
