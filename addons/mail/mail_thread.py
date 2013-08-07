@@ -706,7 +706,7 @@ class mail_thread(osv.AbstractModel):
                 return ()
 
         # New Document: check model accepts the mailgateway
-        if not thread_id and not hasattr(model_pool, 'message_new'):
+        if not thread_id and model and not hasattr(model_pool, 'message_new'):
             if assert_model:
                 assert hasattr(model_pool, 'message_new'), 'Model %s does not accept document creation, crashing' % model
             _warn('model %s does not accept document creation, skipping' % model)
@@ -817,16 +817,16 @@ class mail_thread(osv.AbstractModel):
 
         # 2. Reply to a private message
         if in_reply_to:
-            message_ids = self.pool.get('mail.message').search(cr, uid, [
+            mail_message_ids = self.pool.get('mail.message').search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
                             ], limit=1, context=context)
-            if message_ids:
-                message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+            if mail_message_ids:
+                mail_message = self.pool.get('mail.message').browse(cr, uid, mail_message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, message.id, custom_values, uid)
+                                email_from, email_to, message_id, mail_message.id, custom_values, uid)
                 route = self.message_route_verify(cr, uid, message, message_dict,
-                                (message.model, message.res_id, custom_values, uid, None),
+                                (mail_message.model, mail_message.res_id, custom_values, uid, None),
                                 update_author=True, assert_model=True, create_fallback=True, context=context)
                 return route and [route] or []
 
@@ -1415,6 +1415,12 @@ class mail_thread(osv.AbstractModel):
             parent_id = message_ids and message_ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
+            # update original mail_mail if exists
+            if type == 'email':
+                mail_mail_ids = self.pool['mail.mail'].search(cr, SUPERUSER_ID, [('mail_message_id', '=', parent_id)], context=context)
+                for mail in self.pool['mail.mail'].browse(cr, SUPERUSER_ID, mail_mail_ids, context=context):
+                    self.pool['mail.mail'].write(cr, SUPERUSER_ID, [mail.id], {'replied': mail.replied + 1}, context=context)
+
             message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
             # avoid loops when finding ancestors
             processed_list = []
