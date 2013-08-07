@@ -179,7 +179,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <button type="submit" class="btn btn-primary">Order Now</button>
+                                <button type="submit" class="btn btn-primary" t-if="event_id.register_avail">Order Now</button>
                             </form>
                             <h4>Event Details</h4>
                             <div t-field="event_id.description_website"></div>

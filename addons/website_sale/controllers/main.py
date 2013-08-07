@@ -12,7 +12,8 @@ def get_order(order_id=None):
     # check if order allready exists
     if order_id:
         try:
-            order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id).pricelist_id
+            order = order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
+            order.pricelist_id
         except:
             order_id = None
     if not order_id:
@@ -21,24 +22,20 @@ def get_order(order_id=None):
         order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id
         order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
         order_id = order_obj.create(request.cr, openerp.SUPERUSER_ID, order_value)
-    return order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
+        order = order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
+    return order
 
 def get_current_order():
     order = get_order(request.httprequest.session.get('ecommerce_order_id'))
+    if order.state != 'draft':
+        order = get_order()
     request.httprequest.session['ecommerce_order_id'] = order.id
     return order
-
-def get_categories():
-    category_obj = request.registry.get('pos.category')
-    category_ids = category_obj.search(request.cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
-    return category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
-
 
 class website(osv.osv):
     _inherit = "website"
     def get_rendering_context(self, additional_values=None):
         values = {
-            'website_sale_get_categories': get_categories,
             'order': get_current_order(),
             # 'website_sale_get_current_order': get_current_order, # TODO: replace 'order' key in templates
         }
@@ -55,31 +52,9 @@ class Ecommerce(http.Controller):
         print categories
         return categories
 
-    def get_current_order(self):
-        order = self.get_order(request.httprequest.session.get('ecommerce_order_id'))
-        request.httprequest.session['ecommerce_order_id'] = order.id
-        return order
-
-    def get_order(self, order_id=None):
-
-        order_obj = request.registry.get('sale.order')
-        # check if order allready exists
-        if order_id:
-            try:
-                order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id).pricelist_id
-            except:
-                order_id = None
-        if not order_id:
-            fields = [k for k, v in order_obj._columns.items()]
-            order_value = order_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields)
-            order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id
-            order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
-            order_id = order_obj.create(request.cr, openerp.SUPERUSER_ID, order_value)
-        return order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
-
     def render(self, template, values={}):
+        website = request.registry['website']
         _values = {
-            'order': self.get_current_order(),
             'categories': self.get_categories(),
         }
         _values.update(values)
@@ -156,7 +131,7 @@ class Ecommerce(http.Controller):
             'pages': pages,
             'page': page,
         })
-        return website.render("website_sale.products", values)
+        return self.render("website_sale.products", values)
 
     @http.route(['/shop/product/<product_id>'], type='http', auth="public")
     def product(self, cat_id=0, product_id=0):
@@ -174,7 +149,7 @@ class Ecommerce(http.Controller):
             'quantity': quantity,
             'recommended_products': self.recommended_product([product_id]),
         })
-        return website.render("website_sale.product", values)
+        return self.render("website_sale.product", values)
 
     @http.route(['/shop/mycart'], type='http', auth="public")
     def mycart(self, **post):
@@ -192,9 +167,7 @@ class Ecommerce(http.Controller):
             "recommended_products": self.recommended_product(my_pids),
         })
 
-        print values
-
-        return website.render("website_sale.mycart", values)
+        return self.render("website_sale.mycart", values)
 
     @http.route(['/shop/add_cart'], type='http', auth="public")
     def add_cart(self, product_id=0, remove=False):
@@ -238,7 +211,7 @@ class Ecommerce(http.Controller):
                 order.write({'order_line': [(4, order_line_id)]}, context=context)
 
         values = website.get_rendering_context()
-        html = website.render("website_sale.total", values)
+        html = self.render("website_sale.total", values)
         return simplejson.dumps({"quantity": quantity, "totalHTML": html})
 
     @http.route(['/shop/remove_cart'], type='http', auth="public")
@@ -387,7 +360,7 @@ class Ecommerce(http.Controller):
             'temp': 0,
             'order': order_old,
         })
-        return website.render("website_sale.confirmed", values)
+        return self.render("website_sale.confirmed", values)
 
     @http.route(['/shop/publish'], type='http', auth="public")
     def publish(self, **post):
