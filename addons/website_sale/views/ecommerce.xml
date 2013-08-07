@@ -67,7 +67,7 @@
         <div class="span4">
             <ul class="nav nav-list">
                 <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
-            <t t-foreach="website_sale_get_categories()" t-as="category">
+            <t t-foreach="categories" t-as="category">
                 <t t-call="website_sale.categories_recursive"/>
             </t>
             </ul>
@@ -260,7 +260,7 @@
                             <tbody>
                                 <t t-foreach="order.order_line or []" t-as="line">
                                     <tr>
-                                        <td><t t-esc="line.product_id.name"/></td>
+                                        <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="int(line.product_uom_qty)"/></td>
                                         <td class="css_alignright"><t t-esc="line.product_id.list_price"/> €</td>
                                     </tr>
