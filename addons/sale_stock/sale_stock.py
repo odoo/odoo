@@ -162,7 +162,7 @@ class sale_order(osv.osv):
         res = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             if order.order_policy == 'picking':
-                picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
+                picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids))
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):

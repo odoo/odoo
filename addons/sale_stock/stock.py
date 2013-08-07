@@ -57,9 +57,6 @@ class stock_picking(osv.osv):
           },
         ),
     }
-    _defaults = {
-        'invoice_state': lambda *args, **argv: 'none'
-    }
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.

@@ -79,9 +79,6 @@
 -
   I return last incomming shipment for 10 kgm Ice-cream.
 -
-  !record {model: stock.return.picking, id: return_incomming}:
-    invoice_state: none
--
   !python {model: stock.return.picking }: |
     # this work without giving the id of the picking to return, magically, thanks to the context
     self.create_returns(cr, uid, [ref('return_incomming')], context=context)

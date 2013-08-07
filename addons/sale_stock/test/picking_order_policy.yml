@@ -61,7 +61,6 @@
       assert picking.move_type == sale_order.picking_policy,"Delivery Method is not corresponding with delivery method of sale order."
       assert picking.partner_id.id == sale_order.partner_shipping_id.id,"Shipping Address is not correspond with sale order."
       assert picking.note == sale_order.note,"Note is not correspond with sale order."
-      assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
       assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
       location_id = sale_order.warehouse_id.lot_stock_id.id
       output_id = sale_order.warehouse_id.lot_output_id.id
