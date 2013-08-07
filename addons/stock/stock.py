@@ -152,6 +152,7 @@ class stock_quant(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
         'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant"),
+        'packaging_type_id': fields.related('package_id', 'packaging_id', type='many2one', relation='product.packaging', string='Type of packaging', store=True),
         'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="Is this quant reserved for a stock.move?"),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'cost': fields.float('Unit Cost'),

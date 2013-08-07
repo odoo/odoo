@@ -1478,8 +1478,10 @@
                     </group>
                     <group expand='0' string='Group by...'>
                        <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>
+                       <filter string='Lot' context="{'group_by' : 'lot_id'}"/>
                        <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
                        <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}"/>
+                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}"/>
                        <filter name="partnergroup" string='Partner' domain="[]" context="{'group_by': 'partner_id'}"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
@@ -1522,6 +1524,9 @@
                     <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>
+                    <field name="lot_id"/>
+                    <field name="package_id" invisible="1"/>
+                    <field name="packaging_type_id" invisible="1"/>
                     <field name="in_date"/>
                     <field name="reservation_id" invisible='1'/>
                     <field name="propagated_from_id" invisible='1'/>
