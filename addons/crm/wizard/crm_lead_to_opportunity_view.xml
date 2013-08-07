@@ -27,7 +27,7 @@
                         </field>
                     </group>
                     <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}">
-                        <field name="action" class="oe_inline"/>
+                        <field name="action" on_change="onchange_action(action, context)" class="oe_inline"/>
                         <field name="partner_id"
                             attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
                             class="oe_inline"/>

@@ -37,6 +37,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities'),
     }
 
+    def onchange_action(self, cr, uid, ids, action, context=None):
+        return {'value': {'partner_id': False if action != 'exist' else self._find_matching_partner(cr, uid, context=context)}}
+
     def default_get(self, cr, uid, fields, context=None):
         """
         Default get for name, opportunity_ids.
