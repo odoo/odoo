@@ -149,7 +149,6 @@ class mail_mail(osv.Model):
             reply_to = self._get_reply_to(cr, uid, values, context=context)
             if reply_to:
                 self.write(cr, uid, [mail_id], {'reply_to': reply_to}, context=context)
-
         return mail_id
 
     def unlink(self, cr, uid, ids, context=None):

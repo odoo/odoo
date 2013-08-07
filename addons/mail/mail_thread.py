@@ -682,6 +682,12 @@ class mail_thread(osv.AbstractModel):
                 assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
             _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
             thread_id = 0
+        # Private message: should have a parent_id (only answers)
+        if not model and not message_dict.get('parent_id'):
+            if assert_model:
+                assert message_dict.get('parent_id'), 'Routing: posting a message without model should be with a parent_id (private mesage).'
+            _warn('posting a message without model should be with a parent_id (private mesage), skipping')
+            return ()
 
         # Existing Document: check if exists; if not, fallback on create if allowed
         if thread_id and not model_pool.exists(cr, uid, thread_id):
@@ -695,7 +701,7 @@ class mail_thread(osv.AbstractModel):
                 return ()
 
         # Existing Document: check model accepts the mailgateway
-        if thread_id and not hasattr(model_pool, 'message_update'):
+        if thread_id and model and not hasattr(model_pool, 'message_update'):
             if create_fallback:
                 _warn('model %s does not accept document update, fall back on document creation' % model)
                 thread_id = None
