@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--  MASS MAILING CAMPAIGNS !-->
+        <record model="ir.ui.view" id="view_followers_tree">
+            <field name="name">mail.mass_mailing.campaign.tree</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Mass Mailing Campaigns">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_subscription_form">
+            <field name="name">mail.mass_mailing.campaign.form</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="arch" type="xml">
+                <form string="Mass Mailing Campaign" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="template_id"/>
+                            <field name="sent"/>
+                            <field name="opened_ratio"/>
+                            <field name="replied_ratio"/>
+                            <field name="bounce_ratio"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_mass_mailing_campaigns" model="ir.actions.act_window">
+            <field name="name">Mass Mailing Campaigns</field>
+            <field name="res_model">mail.mass_mailing.campaign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Add followers related menu entries in Settings/Email -->
+        <menuitem name="Mass mailing campaigns" id="menu_email_campaigns" parent="base.menu_email"
+                    action="action_view_mass_mailing_campaigns" sequence="60" groups="base.group_no_one"/>
+
+    </data>
+</openerp>
