@@ -893,6 +893,8 @@ class account_voucher(osv.osv):
         return res
 
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, date, amount, ttype, company_id, context=None):
+        if context is None:
+            context ={}
         if not journal_id:
             return False
         journal_pool = self.pool.get('account.journal')
@@ -915,7 +917,7 @@ class account_voucher(osv.osv):
         #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
         #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
-        if context and context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
+        if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
             vals['value']['amount'] = 0
             amount = 0
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
