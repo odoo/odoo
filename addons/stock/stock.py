@@ -903,6 +903,21 @@ class stock_move(osv.osv):
                 res[move.id] = [q.id for q in move.reserved_quant_ids]
         return res
 
+    def _get_product_availability(self, cr, uid, ids, field_name, args, context=None):
+        quant_obj = self.pool.get('stock.quant')
+        res = dict.fromkeys(ids, False)
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.state == 'done':
+                res[move.id] = move.product_qty
+            else:
+                sublocation_ids = self.pool.get('stock.location').search(cr, uid, [('id', 'child_of', [move.location_id.id])], context=context)
+                quant_ids = quant_obj.search(cr, uid, [('location_id', 'in', sublocation_ids), ('product_id', '=', move.product_id.id), ('reservation_id', '=', False)], context=context)
+                availability = 0
+                for quant in quant_obj.browse(cr, uid, quant_ids, context=context):
+                    availability += quant.qty
+                res[move.id] = min(move.product_qty, availability)
+        return res
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -978,6 +993,7 @@ class stock_move(osv.osv):
         'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.quant', string='Lots'),
         'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move'),
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
+        'availability': fields.function(_get_product_availability, type='float', string='Availability'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
