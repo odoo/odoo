@@ -226,6 +226,7 @@ instance.web.JsonRPC = instance.web.Session;
 instance.web.Session.include( /** @lends instance.web.Session# */{
     init: function() {
         this._super.apply(this, arguments);
+        this.debug = ($.deparam($.param.querystring()).debug !== undefined);
         // TODO: session store in cookie should be optional
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
