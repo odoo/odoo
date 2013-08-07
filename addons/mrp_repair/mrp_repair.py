@@ -518,7 +518,7 @@ class mrp_repair(osv.osv):
                 })
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
             if repair.deliver_bool:
-                pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
+                pick_name = seq_obj.get(cr, uid, 'stock.picking')
                 picking = pick_obj.create(cr, uid, {
                     'name': pick_name,
                     'origin': repair.name,
@@ -527,7 +527,7 @@ class mrp_repair(osv.osv):
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'note': repair.internal_notes,
                     'invoice_state': 'none',
-                    'type': 'out',
+                    'picking_type_id': self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id
                 })
                 move_id = move_obj.create(cr, uid, {
                     'name': repair.name,
