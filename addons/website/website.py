@@ -50,7 +50,7 @@ class website(osv.osv):
         return values
 
     def render(self, template, values={}):
-        # context = {
-        #     'inherit_branding': values['editable'],
-        # }
-        return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values)
+        context = {
+            'inherit_branding': values.get('editable', False),
+        }
+        return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values, context=context)
