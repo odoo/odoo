@@ -159,157 +159,16 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
 });
 
-instance.website.Action = instance.web.Widget.extend({
-    tagName: 'button',
-    attributes: {
-        type: 'button',
-    },
-    events: { click: 'perform' },
-    init: function (parent, name) {
-        this._super(parent);
-        this.name = name;
-    },
-    start: function () {
-        this.$el.text(this.name);
-        return this._super();
-    },
-    /**
-     * Executes action
-     */
-    perform: null,
-    toggle: function (to) {
-        this.$el.prop('disabled', !to);
-    },
-});
-var Style = instance.website.Style = instance.website.Action.extend({
-    init: function (parent, name, style) {
-        this._super(parent, name);
-        this.style = style;
-    },
-    perform: function () {
-        this.getParent().with_editor(function (editor) {
-            editor.applyStyle(new CKEDITOR.style(this.style))
-        }.bind(this));
-    },
-});
-var Command = instance.website.Command = instance.website.Action.extend({
-    init: function (parent, name, command) {
-        this._super(parent, name);
-        this.command = command;
-    },
-    perform: function () {
-        this.getParent().with_editor(function (editor) {
-            switch (typeof this.command) {
-            case 'string': editor.execCommand(this.command); break;
-            case 'function': this.command(editor); break;
-            }
-        }.bind(this));
-    },
-});
-var Group = instance.website.ActionGroup = instance.website.Action.extend({
-    template: 'Website.ActionGroup',
-    events: { 'click > button': 'perform' },
-    instances: [],
-    init: function (parent, name, actions) {
-        this._super(parent, name);
-        this.actions = _(actions).map(this.getParent().proxy('init_command'));
-    },
-    start: function () {
-        this.instances.push(this);
-        var $ul = this.$('ul');
-        return $.when.apply(null, _(this.actions).map(function (action) {
-            var $li = $('<li>').appendTo($ul);
-            return action.appendTo($li);
-        }));
-    },
-    destroy: function () {
-        this.instances = _(this.instances).without(this);
-        return this._super();
-    },
-    perform: function () {
-        this.getParent().with_editor(function () {
-            _(this.instances).chain()
-                .without(this)
-                .pluck('$el')
-                .invoke('removeClass', 'open');
-            // JS part of bootstrap dropdown does really weird stuff which
-            // interacts quite badly with the RTE thing, so bypass it
-            this.$el.toggleClass('open');
-        }.bind(this), false);
-        return false;
-    },
-    toggle: function (to) {
-        this.$('> button').prop('disabled', !to);
-    },
-});
-
 instance.website.RTE = instance.web.Widget.extend({
     tagName: 'li',
+    id: 'oe_rte_toolbar',
     className: 'oe_right oe_rte_toolbar',
-    commands: [
-        [Command, "\uf032", 'bold'],
-        [Command, "\uf033", 'italic'],
-        [Command, "\uf0cd", 'underline'],
-        [Command, "\uf0cc", 'strike'],
-        [Command, "\uf12b", 'superscript'],
-        [Command, "\uf12c", 'subscript'],
-        [Command, "\uf0c1", 'link'],
-        [Command, "\uf127", 'unlink'],
-        [Command, "\uf10d", 'blockquote'],
-        // 'image' uses either filebrowserImageUploadUrl or
-        // filebrowserUploadUrl, and provides a `link` tab. imagebutton only
-        // uses filebrowserImageUploadUrl and does not provide a `link` tab to
-        // hotlink an image from the internets.
-        [Command, "\uf03e", 'image'],
-        // [Command, "\uf030", 'imagebutton'],
-        [Group, "\uf0ca", [
-            [Command, "\uf0ca", 'bulletedlist'],
-            [Command, "\uf0cb", 'numberedlist'],
-            [Command, "\uf03b", 'outdent'],
-            [Command, "\uf03c", 'indent']
-        ]],
-        [Group, _lt("Heading"), [
-            [Style, _lt('H1'), { element: 'h1' }],
-            [Style, _lt('H2'), { element: 'h2', }],
-            [Style, _lt('H3'), { element: 'h3', }],
-            [Style, _lt('H4'), { element: 'h4', }],
-            [Style, _lt('H5'), { element: 'h5', }],
-            [Style, _lt('H6'), { element: 'h6', }]
-        ]],
-        [Group, "\uf039", [
-            [Command, "\uf039", 'justifyblock'],
-            [Command, "\uf036", 'justifyleft'],
-            [Command, "\uf038", 'justifyright'],
-            [Command, "\uf037", 'justifycenter']
-        ]]
-    ],
     // editor.ui.items -> possible commands &al
     // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
-    start: function () {
-        this.$el.hide();
 
-        return $.when.apply(
-            null, _(this.commands).map(this.proxy('start_command')));
-    },
-    init_command: function (command) {
-        var type = command[0], args = command.slice(1);
-        args.unshift(this);
-        var F = function (args) {
-            return type.apply(this, args);
-        };
-        F.prototype = type.prototype;
-
-        return new F(args);
-    },
-    start_command: function (command) {
-        return this.init_command(command).appendTo(this.$el);
-    },
     start_edition: function ($elements) {
         var self = this;
-        this.$el.show();
-        this.disable();
         this.snippet_carousel();
-        CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
             .not('span, [data-oe-type]')
             .each(function () {
@@ -321,48 +180,17 @@ instance.website.RTE = instance.web.Widget.extend({
             });
     },
 
-    /**
-     * @param {Function} fn
-     * @param {Boolean} [snapshot=true]
-     * @returns {$.Deferred}
-     */
-    with_editor: function (fn, snapshot) {
-        var editor = this._current_editor();
-        if (snapshot !== false) { editor.fire('saveSnapshot'); }
-        return $.when(fn(editor)).then(function () {
-            if (snapshot !== false) { editor.fire('saveSnapshot'); }
-            editor.focus();
-        });
-    },
-
-
-    toggle: function (to) {
-        _(this.getChildren()).chain()
-            .filter(function (child) { return child instanceof instance.website.Action })
-            .invoke('toggle', to);
-    },
-    disable: function () {
-        this.toggle(false);
-    },
-
     _current_editor: function () {
         return CKEDITOR.currentInstance;
     },
-    _change_focused_editor: function () {
-        this.toggle(!!CKEDITOR.currentInstance);
-    },
     _config: function () {
         var removed_plugins = [
-                // remove toolbar entirely
-                'toolbar,elementspath,resize',
                 // remove custom context menu
                 'contextmenu,tabletools,liststyle',
                 // magicline captures mousein/mouseout => draggable does not work
                 'magicline'
         ];
         return {
-            // Don't load ckeditor's style rules
-            stylesSet: [],
             removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
@@ -372,6 +200,31 @@ instance.website.RTE = instance.web.Widget.extend({
             // Don't insert paragraphs around content in e.g. <li>
             autoParagraph: false,
             filebrowserImageUploadUrl: "/website/attach",
+            // Support for sharedSpaces in 4.x
+            extraPlugins: 'sharedspace',
+            // Place toolbar in controlled location
+            sharedSpaces: { top: 'oe_rte_toolbar' },
+            toolbar: [
+                {name: 'items', items: [
+                    "Bold", "Italic", "Underline", "Strike", "Subscript",
+                    "Superscript", "TextColor", "BGColor", "RemoveFormat",
+                    "Link", "Unlink", "Blockquote", "BulletedList",
+                    "NumberedList", "Image", "Indent", "Outdent",
+                    "JustifyLeft", "JustifyCenter", "JustifyRight",
+                    "JustifyBlock", "Table", "Font", "FontSize", "Format",
+                    "Styles"
+                ]}
+            ],
+            // styles dropdown in toolbar
+            stylesSet: [
+                // emphasis
+                {name: "Muted", element: 'span', attributes: {'class': 'text-muted'}},
+                {name: "Primary", element: 'span', attributes: {'class': 'text-primary'}},
+                {name: "Warning", element: 'span', attributes: {'class': 'text-warning'}},
+                {name: "Danger", element: 'span', attributes: {'class': 'text-danger'}},
+                {name: "Success", element: 'span', attributes: {'class': 'text-success'}},
+                {name: "Info", element: 'span', attributes: {'class': 'text-info'}}
+            ],
         };
     },
     // TODO clean

@@ -30,7 +30,7 @@ $(document).ready(function () {
                 .html(quantity);
             $add.toggleClass('btn-primary', !quantity)
                 .toggleClass('btn-success', !!quantity);
-            $remove.toggleClass('oe_hidden', !quantity);
+            $remove.toggleClass('hidden', !quantity);
             if ($('.oe_mycart').size() && !quantity) {
                 $product.remove()
             }

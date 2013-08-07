@@ -53,8 +53,9 @@
                 <html>
                     <head>
                         <title t-raw="title"><t t-esc="res_company.name"/></title>
-                        <script type="text/javascript" src="/web/static/lib/jquery/jquery-1.8.3.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
                         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
+                        <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
                         <script type="text/javascript">
                             CKEDITOR.disableAutoInline = true;
                             CKEDITOR.dtd.$editable.li = 1;
@@ -198,7 +199,7 @@
 
                 <section>
                     <div id="myCarousel" class="carousel slide" data-interval='1000000'>
-                        <div class="css_carousel_options js_carousel_options" t-ignore="1">
+                        <div class="oe_carousel_options js_carousel_options" t-ignore="1">
                             <span class="label js_add"><i class="icon-plus-sign"></i></span>
                             <span class="label js_remove"><i class="icon-minus-sign"></i></span>
                         </div>
@@ -206,7 +207,7 @@
                         <div class="carousel-inner">
                             <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;" >
                                 <div class='container'>
-                                    <h1 class='mt64'>A Nice Banner</h1>
+                                    <h1 class='mt64'>A Nice Bidule</h1>
                                     <h2>A convincing subtitle</h2>
                                     <a href='#' class='btn btn-success btn-large mt16'>And a <em>Call To Action</em></a>
                                 </div>
@@ -318,13 +319,13 @@
                         <div class="row">
                             <div class="span12">
                                 <h1>404: Page not found!</h1>
-                                <p class="oe_grey">
+                                <p>
                                     The page you were looking for could not be
                                     found; it is possible you have typed the
                                     address incorrectly, but it has most
                                     probably been removed due to the recent
                                     website reorganisation.
-                                </p><p class="oe_grey">
+                                </p><p>
                                     Maybe you were looking for one of these
                                     popular pages ?
                                 </p>
@@ -335,8 +336,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="span12">
-                                <a class="oe_button oe_big oe_tacky" t-att-href="'/pagenew/'+path" t-if="editable">Create Page</a>
+                            <div class="span12 mt32">
+                                <a class="btn btn-primary" t-att-href="'/pagenew/'+path" t-if="editable">Create Page</a>
                             </div>
                         </div>
                     </div>
