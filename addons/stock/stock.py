@@ -1566,6 +1566,7 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
+            inv.refresh()
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
