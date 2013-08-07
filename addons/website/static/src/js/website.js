@@ -191,8 +191,6 @@ instance.website.RTE = instance.web.Widget.extend({
                 'magicline'
         ];
         return {
-            // Don't load ckeditor's style rules
-            stylesSet: [],
             removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
@@ -216,7 +214,17 @@ instance.website.RTE = instance.web.Widget.extend({
                     "JustifyBlock", "Table", "Font", "FontSize", "Format",
                     "Styles"
                 ]}
-            ]
+            ],
+            // styles dropdown in toolbar
+            stylesSet: [
+                // emphasis
+                {name: "Muted", element: 'span', attributes: {'class': 'text-muted'}},
+                {name: "Primary", element: 'span', attributes: {'class': 'text-primary'}},
+                {name: "Warning", element: 'span', attributes: {'class': 'text-warning'}},
+                {name: "Danger", element: 'span', attributes: {'class': 'text-danger'}},
+                {name: "Success", element: 'span', attributes: {'class': 'text-success'}},
+                {name: "Info", element: 'span', attributes: {'class': 'text-info'}}
+            ],
         };
     },
     // TODO clean
