@@ -54,10 +54,6 @@
 	<xsl:template match="lot-line" mode="story">
 		<para style="nospace"><xsl:value-of select="code"/><xsl:text>, </xsl:text><xsl:value-of select="quantity"/><xsl:text> </xsl:text><xsl:value-of select="uom"/></para>
 		<para style="nospace"><xsl:value-of select="product"/><xsl:text> </xsl:text><xsl:value-of select="variant"/></para>
-		<para style="nospace">Serial: <xsl:value-of select="serial"/></para>
-		<para style="nospace">Tracking: <xsl:value-of select="serial"/></para>
-		<spacer length="0.3cm"/>
-		<barCode><xsl:value-of select="tracking"/></barCode>
 		<nextFrame/>
 	</xsl:template>
 </xsl:stylesheet>

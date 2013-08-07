@@ -724,7 +724,6 @@ class pos_order(osv.osv):
                     'product_id': line.product_id.id,
                     'product_uos_qty': abs(line.qty),
                     'product_uom_qty': abs(line.qty),
-                    'tracking_id': False,
                     'state': 'draft',
                     'location_id': location_id,
                     'location_dest_id': output_id,

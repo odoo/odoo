@@ -1381,8 +1381,8 @@ class stock_move(osv.osv):
                 'state': move.state,
                 'scrapped': True,
                 'location_dest_id': location_id,
-                'tracking_id': move.tracking_id.id,
-                'lot_id': move.lot_id.id,
+                #TODO lot_id is now on quant and not on move, need to do something for this
+                #'lot_id': move.lot_id.id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
 

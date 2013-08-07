@@ -129,7 +129,6 @@ class StockMove(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
             #If we are not scrapping our whole move, tracking and lot references must not be removed
-            #self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 production_obj.signal_button_produce(cr, uid, [prod_id])
