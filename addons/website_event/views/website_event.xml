@@ -10,12 +10,12 @@
             <data>
                 <xpath expr="//notebook" position="inside">
                     <page string="Tarifs">
-                        <field name="product_ids">
+                        <field name="event_ticket_ids">
                             <tree string="Payments" editable="bottom">
                                 <field name="product_id" on_change='onchange_product_id(product_id)'/>
                                 <field name="deadline"/>
                                 <field name="price"/>
-                                <field name="max_qty"/>
+                                <field name="register_max"/>
                             </tree>
                         </field>
                     </page>
@@ -93,9 +93,11 @@
                         <ul class="media-list mt32">
                             <li t-foreach="event_ids" t-as="event_id" class="media thumbnail">
                                 <div class="media-body">
-                                    <t t-if="event_id.register_avail">
-                                        <span t-if="event_id.register_avail == 9999" class="label pull-right">No ticket available.</span>
-                                        <span t-if="event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
+                                    <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
+                                    <t t-if="event_id.event_ticket_ids">
+                                        <span t-if="event_id.register_avail == 9999" class="label pull-right label-info">Tickets availables.</span>
+                                        <span t-if="not event_id.register_avail" class="label pull-right">No ticket available.</span>
+                                        <span t-if="event_id.register_avail and event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
                                             <t t-if="event_id.register_avail &lt;= 10">Only</t>
                                             <t t-esc="event_id.register_avail"/>
                                             <t t-if="event_id.register_avail &gt; 1">tickets </t>
@@ -153,9 +155,11 @@
                     </div>
                     <div class="span8">
                         <div class="media-body">
-                            <t t-if="event_id.register_avail">
-                                <span t-if="event_id.register_avail == 9999" class="label pull-right">No ticket available.</span>
-                                <span t-if="event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
+                            <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
+                            <t t-if="event_id.event_ticket_ids">
+                                <span t-if="event_id.register_avail == 9999" class="label pull-right">Tickets availables.</span>
+                                <span t-if="not event_id.register_avail" class="label pull-right">No ticket available.</span>
+                                <span t-if="event_id.register_avail and event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
                                     <t t-if="event_id.register_avail &lt;= 10">Only</t>
                                     <t t-esc="event_id.register_avail"/>
                                     <t t-if="event_id.register_avail &gt; 1">tickets </t>
@@ -164,36 +168,40 @@
                                 </span>
                             </t>
                             <h4 class="media-heading"><a t-att-href="'/event/%%s/' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
+                            <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
+                                <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
+                            </a>
                             <h5 class="media-heading">
                                 <span t-field="event_id.address_id"/><br/>
                                 <i class="icon-time"></i> <span t-field="event_id.date_begin"/><br/>
                                 <i class="icon-time"></i> <span t-field="event_id.date_end"/>
                             </h5>
-                            <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
-                                <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
-                            </a>
-                            <h4 t-if="event_id.event_product_ids">Ticket Information</h4>
-                            <form t-att-action="'/event/%%s/add_cart' %% event_id.id" method="post" t-if="event_id.event_product_ids">
+                            <h4 t-if="event_id.event_ticket_ids">Ticket Information</h4>
+                            <form t-att-action="'/event/%%s/add_cart' %% event_id.id" method="post" t-if="event_id.event_ticket_ids">
                                 <table class="table">
-                                    <tr>
-                                        <th>Ticket type</th>
-                                        <th>Sales End</th>
-                                        <th>Price</th>
-                                        <th>Seats</th>
-                                        <th>Quantity</th>
-                                    </tr>
-                                    <tr t-foreach="event_id.event_product_ids" t-as="prod">
-                                        <td t-field="prod.product_id"/>
-                                        <td t-field="prod.deadline"/>
-                                        <td t-field="prod.price"/>
-                                        <td><span t-if="prod.max_qty"><t t-esc="prod.qty"/>/<t t-field="prod.max_qty"/></span></td>
-                                        <td>
-                                            <select t-att-name="'product[%%s]' %% prod.id">
-                                                <t t-foreach="range(0,10)" t-as="nb"><option t-esc="nb"/></t>
-                                            </select>
-                                        </td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Ticket type</th>
+                                            <th>Sales End</th>
+                                            <th>Price</th>
+                                            <th>Seats</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
+                                            <td t-field="ticket.product_id"/>
+                                            <td t-field="ticket.deadline"/>
+                                            <td t-field="ticket.price"/>
+                                            <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>
+                                            <td>
+                                                <select t-att-name="'product[%%s]' %% ticket.id">
+                                                    <t t-foreach="range(0,10)" t-as="nb"><option t-esc="nb"/></t>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                                 <button type="submit" class="btn btn-primary">Order Now</button>
                             </form>
