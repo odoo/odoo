@@ -514,8 +514,7 @@ class stock_picking(osv.osv):
         picking_obj = self.browse(cr, uid, id, context=context)
         if ('name' not in default) or (picking_obj.name == '/'):
             default['name'] = '/'
-            default['origin'] = ''
-            default['backorder_id'] = False
+        default['backorder_id'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -977,6 +976,8 @@ class stock_move(osv.osv):
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
         'lot_ids': fields.function(_get_lot_ids, type='many2many', relation='stock.quant', string='Lots'),
+        'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move'),
+        'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -986,6 +987,8 @@ class stock_move(osv.osv):
         default['move_orig_ids'] = []
         default['quant_ids'] = []
         default['reserved_quant_ids'] = []
+        default['returned_move_ids'] = []
+        default['origin_returned_move_id'] = False
         default['state'] = 'draft'
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
@@ -2203,10 +2206,11 @@ class stock_picking_type(osv.osv):
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in stock'),
         'color': fields.integer('Color Index'),
         'delivery': fields.boolean('Print delivery'),
-        'sequence_id': fields.many2one('ir.sequence', 'Sequence', required = True),
+        'sequence_id': fields.many2one('ir.sequence', 'Sequence', required=True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
-        'code_id': fields.many2one('stock.picking.code', 'Picking type code', required = True),
+        'code_id': fields.many2one('stock.picking.code', 'Picking type code', required=True),
+        'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
 
         # Statistics for the kanban view
         'weekly_picking': fields.function(_get_picking_data,

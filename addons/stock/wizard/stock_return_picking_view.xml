@@ -9,26 +9,10 @@
             key2="client_action_multi"
             multi="True"
             id="act_stock_return_picking"/>
-         <act_window name="Return Shipment"
-            res_model="stock.return.picking"
-            src_model="stock.picking"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            multi="True"
-            id="act_stock_return_picking_in"/>
-         <act_window name="Return Shipment"
-            res_model="stock.return.picking"
-            src_model="stock.picking"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            multi="True"
-            id="act_stock_return_picking_out"/>
 
-        <record id="stock_return_memory_tree_in" model="ir.ui.view">
-            <field name="name">stock.return.picking.memory.tree</field>
-            <field name="model">stock.return.picking.memory</field>
+        <record id="stock_return_line_tree_in" model="ir.ui.view">
+            <field name="name">stock.return.picking.line.tree</field>
+            <field name="model">stock.return.picking.line</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Product Moves">
                     <field name="product_id" />
@@ -38,9 +22,9 @@
             </field>
         </record>
         
-        <record id="stock_return_memory_form_in" model="ir.ui.view">
-            <field name="name">stock.return.picking.memory.from</field>
-            <field name="model">stock.return.picking.memory</field>
+        <record id="stock_return_line_form_in" model="ir.ui.view">
+            <field name="name">stock.return.picking.line.from</field>
+            <field name="model">stock.return.picking.line</field>
             <field name="arch" type="xml">
                 <form string="Return Picking Memory" version="7.0">
                     <group col="4">
@@ -60,7 +44,6 @@
                     <label string="Provide the quantities of the returned products."/>
                     <group>
                         <field name="product_return_moves"/>
-                        <field name="invoice_state" />
                     </group>
                     <footer>
                         <button name="create_returns" string="Return" type="object" class="oe_highlight"/>
@@ -70,6 +53,7 @@
                 </form>
             </field>
         </record>
+
         
     </data>
 </openerp>
