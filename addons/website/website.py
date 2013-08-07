@@ -1,50 +1,56 @@
 # -*- coding: utf-8 -*-
 
 import openerp
+from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.controllers import main
 from openerp.addons.web.http import request
 
 
-class website(http.Controller):
-    public_user_id = None
+def auth_method_public():
+    registry = openerp.modules.registry.RegistryManager.get(request.db)
+    if not request.session.uid:
+        request.uid = registry['website'].get_public_uid()
+    else:
+        request.uid = request.session.uid
+http.auth_methods['public'] = auth_method_public
 
-    def get_uid(self):
-        try:
-            request.session.check_security()
-            uid = request.session._uid
-        except http.SessionExpiredException:
-            if not website.public_user_id:
-                data_obj = request.registry['ir.model.data']
-                website.public_user_id = data_obj.get_object_reference(request.cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
-            uid = website.public_user_id
 
-        return uid
+class website(osv.osv):
+    _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
+    _description = "Website"
 
-    def isloggued(self):
-        return website.public_user_id != self.get_uid()
+    public_uid = None
 
-    def render(self, cr, uid, template, add_values={}):
-        script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db)])
-        css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db))
-        _values = {
-            'editable': self.isloggued(),
+    def get_public_uid(self):
+        if not self.public_uid:
+            self.public_uid = request.registry['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'website', 'public_user')[1]
+        return self.public_uid
+
+    def get_rendering_context(self, additional_values=None):
+        debug = 'debug' in request.params
+        editable = request.uid != self.get_public_uid()
+        values = {
+            'debug': debug,
+            'editable': editable,
             'request': request,
             'registry': request.registry,
-            'cr': cr,
-            'uid': uid,
-            'script': script,
-            'css': css,
+            'cr': request.cr,
+            'uid': request.uid,
             'host_url': request.httprequest.host_url,
+            'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
         }
-        _values.update(add_values)
-        return request.registry.get("ir.ui.view").render(cr, uid, template, _values)
+        if editable:
+            values.update({
+                'script': "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db, debug=debug)]),
+                'css': "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db, debug=debug))
+            })
+        if additional_values:
+            values.update(additional_values)
+        return values
 
-    @staticmethod
-    def route(*args, **kwargs):
-        def wrap(_funct):
-            @http.route(*args, **kwargs)
-            def wrapper(self, *a, **k):
-                return _funct(self, request.cr, self.get_uid(), *a, **k)
-            return wrapper
-        return wrap
+    def render(self, template, values={}):
+        context = {
+            'inherit_branding': values.get('editable', False),
+        }
+        return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values, context=context)

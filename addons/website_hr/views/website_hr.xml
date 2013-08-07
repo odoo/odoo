@@ -4,13 +4,13 @@
 
     <!-- Layout add nav and footer -->
 
-    <record id="footer_hr_mail" model="ir.ui.view">
+    <record id="footer_website_hr" model="ir.ui.view">
         <field name="name">footer_website_hr</field>
         <field name="inherit_id" ref="website.footer"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//a[@href='/page/website.contactus']" position="after">
-                    <li><a href="/team">Team</a></li>
+                    <li><a href="/hr">Team</a></li>
                 </xpath>
            </data>
         </field>
@@ -21,27 +21,35 @@
     <template id="index">
         <t t-call="website.layout">
             <t t-set="head">
-                <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
-                <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
+                <script type="text/javascript" src="/website_hr/static/src/js/hr.js"></script>
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Team</t>
-            <div class="container mt48">
-                <ul class="media-list">
-                    <t t-foreach="employee_ids">
-                        <!-- TODO: check qweb iteration -->
-                        <li class="media pull-left">
-                            <div t-att-class="'media-body %%s' %% (website_important and 'css_important' or '')">
-                                <a href="#" t-att-data-id="id" class="js_important pull-right" groups="group_website_mail_manager">
-                                    <span class="label label-success">Unpublish</span>
-                                    <span class="label label-important">Publish</span>
-                                </a>
-                                <t t-raw="image"/>
-                                <t t-raw="name"/>
+            <div class="container">
+                <div class="thumbnails">
+                    <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
+                        <div class="media thumbnail">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
+                            </a>
+                            <div class="media-body">
+                                <div t-if="editable" class="pull-right">
+                                    <a href="#" t-att-data-id="employee_id.id">
+                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Click to Unpublish</span>
+                                        <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                    </a>
+                                </div>
+                                <h5 class="media-heading" t-field="employee_id.name"/>
+                                <div t-field="employee_id.department_id"/>
+                                <div t-field="employee_id.job_id"/>
+                                <div t-field="employee_id.work_location"/>
+                                <div t-field="employee_id.work_phone"/>
+                                <div t-field="employee_id.work_email"/>
+                                <div t-field="employee_id.public_info"/>
                             </div>
-                        </li>
-                    </t>
-                </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </t>
     </template>
