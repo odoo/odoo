@@ -71,6 +71,8 @@ class stock_return_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         if pick:
+            if pick.state not in ['done','confirmed','assigned']:
+                raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Confirmed, Available or Done!"))
             for line in pick.move_lines:
                 qty = line.product_uom_qty
                 current_qty_returned = 0
@@ -81,40 +83,10 @@ class stock_return_picking(osv.osv_memory):
                 
                 if qty > 0 and current_qty_returned < qty:
                     result1.append({'product_id': line.product_id.id, 'quantity': qty-current_qty_returned,'move_id':line.id, 'lot_id': line.quant_ids[0].lot_id and line.quant_ids[0].lot_id.id or False})
+            if len(result1)==0:
+                raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
-        return res
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        """
-         Creates view dynamically and adding fields at runtime.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view with new columns.
-        """
-        if context is None:
-            context = {}
-        res = super(stock_return_picking, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False)
-        if record_id:
-            pick_obj = self.pool.get('stock.picking')
-            pick = pick_obj.browse(cr, uid, record_id, context=context)
-            if pick.state not in ['done','confirmed','assigned']:
-                raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Confirmed, Available or Done!"))
-            valid_lines = 0
-            for line  in pick.move_lines:
-                qty = line.product_uom_qty
-                current_qty_returned = 0
-                if line.returned_move_ids:
-                    for returned_move in line.returned_move_ids:
-                        if returned_move.product_id.id == line.product_id.id:
-                            current_qty_returned += returned_move.product_uom_qty
-                if line.state == 'done' and current_qty_returned < qty:
-                    valid_lines += 1
-            if not valid_lines:
-                raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
 
     def create_returns(self, cr, uid, ids, context=None):
