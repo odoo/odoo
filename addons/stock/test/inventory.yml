@@ -62,7 +62,6 @@
   !python {model: stock.inventory}: |
     context = {'active_ids': [ref('inventory_test1')]}
     self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_test0_wizard')], context=context)
-    self.action_done(cr, uid, [ref('inventory_test1')], context=context)
 -
   I create an inventory line with 20 product on this new inventory
 -
