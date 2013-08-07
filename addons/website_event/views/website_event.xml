@@ -2,31 +2,6 @@
 <openerp>
 <data>
 
-    <record id="view_event_form" model="ir.ui.view">
-        <field name="name">view_event_form</field>
-        <field name="model">event.event</field>
-        <field name="inherit_id" ref="event.view_event_form"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//notebook" position="inside">
-                    <page string="Tarifs">
-                        <field name="event_ticket_ids">
-                            <tree string="Payments" editable="bottom">
-                                <field name="product_id" on_change='onchange_product_id(product_id)'/>
-                                <field name="deadline"/>
-                                <field name="price"/>
-                                <field name="register_max"/>
-                            </tree>
-                        </field>
-                    </page>
-                </xpath>
-                <field name="address_id" position="after">
-                    <field name="organizer_id"/>
-                </field>
-           </data>
-        </field>
-    </record>
-
     <!-- Layout add nav and footer -->
 
     <record id="header_website_event" model="ir.ui.view">
