@@ -260,7 +260,7 @@
                             <tbody>
                                 <t t-foreach="order.order_line or []" t-as="line">
                                     <tr>
-                                        <td><t t-esc="line.product_id.name"/></td>
+                                        <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="int(line.product_uom_qty)"/></td>
                                         <td class="css_alignright"><t t-esc="line.product_id.list_price"/> €</td>
                                     </tr>

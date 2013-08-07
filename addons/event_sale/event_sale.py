@@ -77,7 +77,7 @@ class sale_order_line(osv.osv):
             context = {}
         registration_obj = self.pool.get('event.registration')
         for order_line in self.browse(cr, uid, ids, context=context):
-            if order_line.event_id.id:
+            if order_line.event_id:
                 dic = {
                     'name': order_line.order_id.partner_invoice_id.name,
                     'partner_id': order_line.order_id.partner_id.id,
@@ -91,8 +91,8 @@ class sale_order_line(osv.osv):
                 print dic
 
                 if order_line.event_ticket_id:
-                    if order_line.event_ticket_id.register_avail != 9999 and dic['nb_register'] < order_line.event_ticket_id.register_avail:
-                      raise osv.except_osv(_('Error!'), _('There are not enough tickets available (%s).' % order_line.event_ticket_id.register_avail))
+                    if order_line.event_ticket_id.register_avail != 9999 and dic['nb_register'] > order_line.event_ticket_id.register_avail:
+                        raise osv.except_osv(_('Error!'), _('There are not enough tickets available (%s) for %s' % (order_line.event_ticket_id.register_avail, order_line.event_ticket_id.name)))
                     message = _("The registration has been created for event <i>%s</i> with the ticket <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.event_ticket_id.name, order_line.order_id.name)
                 else:
                     message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
@@ -107,7 +107,7 @@ class sale_order_line(osv.osv):
         return {'value': {'price_unit': price}}
 
 
-class event(osv.osv):
+class event_event(osv.osv):
     _inherit = 'event.event'
 
     def _get_register_max(self, cr, uid, ids, field_name, arg, context=None):
@@ -129,6 +129,12 @@ class event(osv.osv):
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
             type='integer', store=True)
     }
+
+    def check_registration_limits(self, cr, uid, ids, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.event_ticket_ids:
+                event.event_ticket_ids.check_registration_limits_before(0)
+        return super(event_event, self).check_registration_limits(cr, uid, ids, context=context)
 
 
 class event_ticket(osv.osv):
@@ -181,6 +187,15 @@ class event_ticket(osv.osv):
         'register_attended': fields.function(_get_register, string='# of Participations', type='integer', multi='register_numbers'),
     }
 
+    def check_registration_limits_before(self, cr, uid, ids, number, context=None):
+        for ticket in self.browse(cr, uid, ids, context=context):
+            if ticket.register_max:
+                if not ticket.register_avail:
+                    raise osv.except_osv(_('Warning!'),_('No Tickets Available for "%s"' % ticket.name))
+                elif number + ticket.register_current > ticket.register_max:
+                    raise osv.except_osv(_('Warning!'), _('There only %d tickets available for "%s"' % (ticket.register_avail, ticket.name)))
+        return True
+
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
         return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
 
@@ -191,3 +206,11 @@ class event_registration(osv.osv):
     _columns = {
         'event_ticket_id': fields.many2one('event.event.ticket', 'Event Ticket'),
     }
+
+    def registration_open(self, cr, uid, ids, context=None):
+        """ Open Registration
+        """
+        for registration in self.browse(cr, uid, ids, context=context):
+            if registration.event_ticket_id:
+                registration.event_ticket_id.check_registration_limits_before(1)
+        return super(event_registration, self).registration_open(cr, uid, ids, context=context)

@@ -189,15 +189,16 @@ class Ecommerce(http.Controller):
 
         my_pids = [line.product_id.id for line in order.order_line]
         values = website.get_rendering_context({
-            "recommended_products": self.recommended_product(my_pids)
+            "recommended_products": self.recommended_product(my_pids),
         })
+
+        print values
 
         return website.render("website_sale.mycart", values)
 
     @http.route(['/shop/add_cart'], type='http', auth="public")
     def add_cart(self, product_id=0, remove=False):
         website = request.registry['website']
-        values = website.get_rendering_context()
         context = {}
 
         order_line_obj = request.registry.get('sale.order.line')
@@ -209,6 +210,7 @@ class Ecommerce(http.Controller):
         quantity = 0
 
         # values initialisation
+        values = {}
         order_line_ids = order_line_obj.search(request.cr, openerp.SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
         if order_line_ids:
             order_line = order_line_obj.read(request.cr, openerp.SUPERUSER_ID, order_line_ids, [], context=context)[0]
@@ -235,6 +237,7 @@ class Ecommerce(http.Controller):
                 order_line_id = order_line_obj.create(request.cr, openerp.SUPERUSER_ID, values, context=context)
                 order.write({'order_line': [(4, order_line_id)]}, context=context)
 
+        values = website.get_rendering_context()
         html = website.render("website_sale.total", values)
         return simplejson.dumps({"quantity": quantity, "totalHTML": html})
 

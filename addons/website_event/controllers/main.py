@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
 import werkzeug
+from openerp.osv import osv
 
 
 class website_event(http.Controller):
@@ -105,9 +106,45 @@ class website_event(http.Controller):
 
     @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
     def add_cart(self, event_id=None, **post):
-        if not post:
-            return werkzeug.utils.redirect("/event/%s/" % event_id)
+        order_line_obj = request.registry.get('sale.order.line')
+        ticket_obj = request.registry.get('event.event.ticket')
 
+        order = request.registry['website'].get_rendering_context()['order']
+        partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+
+        context = {}
+
+        fields = [k for k, v in order_line_obj._columns.items()]
+        values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=context)
+
+        _values = None
+        for key, value in post.items():
+            quantity = int(value)
+            ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
+            if not ticket_id or not quantity:
+                continue
+            ticket = ticket_obj.browse(request.cr, request.uid, ticket_id)
+
+            values['product_id'] = ticket.product_id.id
+            values['event_id'] = ticket.event_id.id
+            values['event_ticket_id'] = ticket.id
+            values['product_uom_qty'] = quantity
+            values['price_unit'] = ticket.price
+            values['order_id'] = order.id
+            values['name'] = "%s: %s" % (ticket.event_id.name, ticket.name)
+
+            ticket.check_registration_limits_before(quantity)
+
+            # change and record value
+            pricelist_id = order.pricelist_id and order.pricelist_id.id or False
+            _values = order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, ticket.product_id.id, partner_id=partner_id, context=context)['value']
+            _values.update(values)
+
+            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, _values, context=context)
+            order.write({'order_line': [(4, order_line_id)]}, context=context)
+
+        if not _values:
+            return werkzeug.utils.redirect("/event/%s/" % event_id)
         return werkzeug.utils.redirect("/shop/checkout")
 
     @http.route(['/event/publish'], type='http', auth="public")
@@ -120,3 +157,4 @@ class website_event(http.Controller):
         obj = data_obj.browse(request.cr, request.uid, obj_id)
 
         return obj.website_published and "1" or "0"
+
