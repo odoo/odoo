@@ -261,7 +261,7 @@ class Ecommerce(http.Controller):
         country_state_obj = request.registry.get('res.country.state')
         payment_obj = request.registry.get('portal.payment.acquirer')
 
-        if request.uid != website.get_public_uid():
+        if request.uid != website.get_public_user().id:
             values['partner'] = user_obj.browse(request.cr, request.uid, request.uid).partner_id
             shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", values['partner'].id), ('type', "=", 'delivery')])
             values['shipping'] = None
@@ -325,7 +325,7 @@ class Ecommerce(http.Controller):
             'country_id': post['country_id'],
             'state_id': post['state_id'],
         }
-        if request.uid != website.get_public_uid():
+        if request.uid != website.get_public_user().id:
             partner_id = user_obj.browse(request.cr, request.uid, request.uid).partner_id.id
             partner_obj.write(request.cr, request.uid, [partner_id], partner_value)
         else:

@@ -31,7 +31,7 @@ class website_mail(http.Controller):
             'website': website,
         })
 
-        if request.uid != website.get_public_uid() and mail_group_id:
+        if request.uid != website.get_public_user().id and mail_group_id:
             message_follower_ids = group_obj.read(request.cr, request.uid, [mail_group_id], ['message_follower_ids'])[0]['message_follower_ids']
             parent_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
             values['subscribe'] = parent_id in message_follower_ids
@@ -84,7 +84,7 @@ class website_mail(http.Controller):
         url = request.httprequest.host_url
         if post.get('body'):
             request.session.body = post.get('body')
-            if request.uid == website.get_public_uid():
+            if request.uid == website.get_public_user().id:
                 return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, mail_group_id, blog_id)
 
         if 'body' in request.session and request.session.body:
@@ -122,8 +122,8 @@ class website_mail(http.Controller):
         group_obj = request.registry['mail.group']
         user_obj = request.registry['res.users']
 
-        if mail_group_id and 'subscribe' in post and (post.get('email') or request.uid != website.get_public_uid()):
-            if request.uid == website.get_public_uid():
+        if mail_group_id and 'subscribe' in post and (post.get('email') or request.uid != website.get_public_user().id):
+            if request.uid == website.get_public_user().id:
                 partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
                 if not partner_ids:
                     partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": post.get('email'), "name": "Subscribe: %s" % post.get('email')})]
@@ -141,8 +141,8 @@ class website_mail(http.Controller):
         group_obj = request.registry['mail.group']
         user_obj = request.registry['res.users']
 
-        if mail_group_id and 'unsubscribe' in post and (post.get('email') or request.uid != website.get_public_uid()):
-            if request.uid == website.get_public_uid():
+        if mail_group_id and 'unsubscribe' in post and (post.get('email') or request.uid != website.get_public_user().id):
+            if request.uid == website.get_public_user().id:
                 partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
             else:
                 partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
