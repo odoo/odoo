@@ -1,36 +1,3 @@
-openerp.testing.section('server-formats', {
-    dependencies: ['web.core', 'web.dates']
-}, function (test) {
-    test('Parse server datetime', function (instance) {
-        var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
-        deepEqual(
-            [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
-             date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()],
-            [2009, 5 - 1, 4, 12, 34, 23]);
-        deepEqual(
-            [date.getFullYear(), date.getMonth(), date.getDate(),
-             date.getHours(), date.getMinutes(), date.getSeconds()],
-            [2009, 5 - 1, 4, 12 - (date.getTimezoneOffset() / 60), 34, 23]);
-
-        var date2 = instance.web.str_to_datetime('2011-12-10 00:00:00');
-        deepEqual(
-            [date2.getUTCFullYear(), date2.getUTCMonth(), date2.getUTCDate(),
-             date2.getUTCHours(), date2.getUTCMinutes(), date2.getUTCSeconds()],
-            [2011, 12 - 1, 10, 0, 0, 0]);
-    });
-    test('Parse server date', function (instance) {
-        var date = instance.web.str_to_date("2009-05-04");
-        deepEqual(
-            [date.getFullYear(), date.getMonth(), date.getDate()],
-            [2009, 5 - 1, 4]);
-    });
-    test('Parse server time', function (instance) {
-        var date = instance.web.str_to_time("12:34:23");
-        deepEqual(
-            [date.getHours(), date.getMinutes(), date.getSeconds()],
-            [12, 34, 23]);
-    });
-});
 openerp.testing.section('web-formats', {
     dependencies: ['web.formats']
 }, function (test) {
