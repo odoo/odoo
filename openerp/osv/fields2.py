@@ -27,7 +27,11 @@ from datetime import date, datetime
 import logging
 
 from openerp.tools import float_round, ustr, html_sanitize, lazy_property
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+
+DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
+DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 _logger = logging.getLogger(__name__)
 
@@ -493,9 +497,11 @@ class Date(Field):
 
     def convert_value(self, value):
         if isinstance(value, (date, datetime)):
-            value = value.strftime(DEFAULT_SERVER_DATE_FORMAT)
+            value = value.strftime(DATE_FORMAT)
         elif value:
-            datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT)    # check format
+            # check the date format
+            value = value[:DATE_LENGTH]
+            datetime.strptime(value, DATE_FORMAT)
         return value or False
 
 
@@ -505,9 +511,11 @@ class Datetime(Field):
 
     def convert_value(self, value):
         if isinstance(value, (date, datetime)):
-            value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            value = value.strftime(DATETIME_FORMAT)
         elif value:
-            datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)    # check format
+            # check the datetime format
+            value = value[:DATETIME_LENGTH]
+            datetime.strptime(value, DATETIME_FORMAT)
         return value or False
 
 
