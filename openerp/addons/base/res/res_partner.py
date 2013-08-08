@@ -465,7 +465,10 @@ class res_partner(osv.osv, format_address):
         # 2. To DOWNSTREAM: sync children 
         if partner.child_ids:
             # 2a. Commercial Fields: sync if commercial entity
-            if partner.commercial_partner_id == partner:
+            if partner.commercial_partner_id == partner and any(
+                    field in update_values 
+                    for field in self._commercial_fields(
+                        cr, uid, context=context)):
                 self._commercial_sync_to_children(cr, uid, partner, context=context)
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields(cr, uid, context=context)
