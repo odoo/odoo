@@ -176,6 +176,62 @@ XXXXXX
 HTML_3_OUT = ["Hi,", "My CRM-related question.",
     "Regards,"]
 
+HTML_4 = """
+<div>
+    <div>Hi Nicholas,</div>
+    <br>
+    <div>I'm free now. 00447710085916.</div>
+    <br>
+    <div>Regards,</div>
+    <div>Nicholas</div>
+    <br>
+    <span id="OLK_SRC_BODY_SECTION">
+        <div style="font-family:Calibri; font-size:11pt; text-align:left; color:black; BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; BORDER-TOP: #b5c4df 1pt solid; BORDER-RIGHT: medium none; PADDING-TOP: 3pt">
+            <span style="font-weight:bold">From: </span>OpenERP Enterprise &lt;<a href="mailto:sales@openerp.com">sales@openerp.com</a>&gt;<br><span style="font-weight:bold">Reply-To: </span>&lt;<a href="mailto:sales@openerp.com">sales@openerp.com</a>&gt;<br><span style="font-weight:bold">Date: </span>Wed, 17 Apr 2013 13:30:47 +0000<br><span style="font-weight:bold">To: </span>Microsoft Office User &lt;<a href="mailto:n.saxlund@babydino.com">n.saxlund@babydino.com</a>&gt;<br><span style="font-weight:bold">Subject: </span>Re: your OpenERP.com registration<br>
+        </div>
+        <br>
+        <div>
+            <p>Hello Nicholas Saxlund, </p>
+            <p>I noticed you recently registered to our OpenERP Online solution. </p>
+            <p>You indicated that you wish to use OpenERP in your own company. We would like to know more about your your business needs and requirements, and see how we can help you. When would you be available to discuss your project ?
+            </p>
+            <p>Best regards, </p>
+            <pre><a href="http://openerp.com">http://openerp.com</a>
+Belgium: +32.81.81.37.00
+U.S.: +1 (650) 307-6736
+India: +91 (79) 40 500 100
+                        </pre>
+        </div>
+    </span>
+</div>"""
+
+HTML_5 = """<div><pre>Hi,
+
+I have downloaded OpenERP installer 7.0 and successfully installed the postgresql server and the OpenERP.
+I created a database and started to install module by log in as administrator.
+However, I was not able to install any module due to "OpenERP Server Error" as shown in the attachement.
+Could you please let me know how could I fix this problem?
+
+&nbsp;Regards,
+Goh Sin Yih
+
+
+________________________________
+ From: OpenERP Enterprise &lt;sales@openerp.com&gt;
+To: sinyih_goh@yahoo.com 
+Sent: Friday, February 8, 2013 12:46 AM
+Subject: Feedback From Your OpenERP Trial
+ 
+
+Hello Goh Sin Yih, 
+Thank you for having tested OpenERP Online. 
+I noticed you started a trial of OpenERP Online (gsy) but you did not decide to keep using it. 
+So, I just wanted to get in touch with you to get your feedback. Can you tell me what kind of application you were you looking for and why you didn't decide to continue with OpenERP? 
+Thanks in advance for providing your feedback, 
+Do not hesitate to contact me if you have any questions, 
+Thanks, 
+</pre>"""
+
 GMAIL_1 = """Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
 <li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you ?</div>
 <div><p>--<br>Administrator</p></div>
@@ -351,4 +407,233 @@ MSOFFICE_1 = """
 </div>"""
 
 MSOFFICE_1_IN = ['Our requirements are simple. Just looking to replace some spreadsheets for tracking quotes and possibly using the timecard module.']
-MSOFFICE_1_OUT = ['I noticed you recently downloaded OpenERP.', 'Uou mentioned you wish to use OpenERP in your own company.']
+MSOFFICE_1_OUT = ['I noticed you recently downloaded OpenERP.', 'Uou mentioned you wish to use OpenERP in your own company.', 'Belgium: +32.81.81.37.00']
+
+MSOFFICE_2 = """
+<div>
+  <div class="WordSection1">
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Nicolas,</span></p><p></p>
+    <p></p>
+    <p class="MsoNormal" style="text-indent:.5in">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">We are currently investigating the possibility of moving away from our current ERP </span></p><p></p>
+    <p></p>
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+        </span></p><p>&nbsp;</p>
+      
+    <p></p>
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Thank You</span></p><p></p>
+    <p></p>
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Matt</span></p><p></p>
+    <p></p>
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+        </span></p><p>&nbsp;</p>
+      
+    <p></p>
+    <div>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Raoul Petitpoil</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Poil Industries</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Information Technology</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">920 Super Street</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Sanchez, Pa 17046 USA</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Tel: xxx.xxx</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Fax: xxx.xxx</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Email: </span>
+        <a href="mailto:raoul@petitpoil.com">
+          <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:blue">raoul@petitpoil.com</span>
+        </a>
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+          </span></p><p></p>
+        
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">www.poilindustries.com</span></p><p></p>
+      <p></p>
+      <p class="MsoNormal">
+        <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">www.superproducts.com</span></p><p></p>
+      <p></p>
+    </div>
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+        </span></p><p>&nbsp;</p>
+      
+    <p></p>
+    <div>
+      <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in 0in 0in">
+        <p class="MsoNormal">
+          <b>
+            <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">From:</span>
+          </b>
+          <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@openerp.com] <br><b>Sent:</b> Wednesday, April 17, 2013 1:31 PM<br><b>To:</b> Matt Witters<br><b>Subject:</b> Re: your OpenERP.com registration</span></p><p></p>
+        <p></p>
+      </div>
+    </div>
+    <p class="MsoNormal"></p>
+    <p>&nbsp;</p>
+    <p>Hello Raoul Petitpoil, </p>
+    <p></p>
+    <p>I noticed you recently downloaded OpenERP. </p>
+    <p></p>
+    <p>You indicated that you wish to use OpenERP in your own company. We would like to know more about your your business needs and requirements, and see how we can help you. When would you be available to discuss your project ? </p>
+    <p></p>
+    <p>Best regards, </p>
+    <p></p>
+    <pre>      <p>&nbsp;</p>
+    </pre>
+    <pre>--<p></p></pre>
+    <pre>Nicolas<p></p></pre>
+    <pre>      <a href="http://openerp.com">http://openerp.com</a>
+      <p></p>
+    </pre>
+    <pre>Belgium: +32.81.81.37.00<p></p></pre>
+    <pre>U.S.: +1 (650) 307-6736<p></p></pre>
+    <pre>India: +91 (79) 40 500 100<p></p></pre>
+    <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <p></p></pre>
+  </div>
+</div>"""
+
+MSOFFICE_2_IN = ['We are currently investigating the possibility']
+MSOFFICE_2_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated that you wish', 'Belgium: +32.81.81.37.00']
+
+MSOFFICE_3 = """<div>
+  <div class="WordSection1">
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Hi Nicolas&nbsp;!</span></p><p></p>
+    <p></p>
+    <p class="MsoNormal">
+      <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+        </span></p><p>&nbsp;</p>
+      
+    <p></p>
+    <p class="MsoNormal">
+      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Yes I’d be glad to hear about your offers as we struggle every year with the planning/approving of LOA. </span></p><p></p>
+    <p></p>
+    <p class="MsoNormal">
+      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">I saw your boss yesterday on tv and immediately wanted to test the interface. </span></p><p></p>
+    <p></p>
+    <p class="MsoNormal">
+      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+        </span></p><p>&nbsp;</p>
+
+    <p></p>
+    <div>
+      <p class="MsoNormal">
+        <b>
+          <span lang="NL-BE" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Bien à vous, </span></b></p><p></p><b>
+        </b>
+      <p></p>
+      <p class="MsoNormal">
+        <b>
+          <span lang="NL-BE" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Met vriendelijke groeten, </span></b></p><p></p><b>
+        </b>
+      <p></p>
+      <p class="MsoNormal">
+        <b>
+          <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Best regards,</span></b></p><p></p><b>
+        </b>
+      <p></p>
+      <p class="MsoNormal">
+        <b>
+          <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">
+            </span></b></p><p><b>&nbsp;</b></p><b>
+          
+        </b>
+      <p></p>
+      <p class="MsoNormal">
+        <b>
+          <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">R. Petitpoil&nbsp;&nbsp;&nbsp; <br></span>
+        </b>
+        <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">Human Resource Manager<b><br><br>Field Resource s.a n.v.&nbsp;&nbsp;<i> <br></i></b>Hermesstraat 6A <br>1930 Zaventem</span>
+        <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:gray"><br></span>
+        <b>
+          <span lang="FR" style="font-size:10.0pt;font-family:Wingdings;color:#1F497D">(</span>
+        </b>
+        <b>
+          <span lang="FR" style="font-size:9.0pt;font-family:Wingdings;color:#1F497D"> </span>
+        </b>
+        <b>
+          <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">xxx.xxx &nbsp;</span>
+        </b>
+        <b>
+          <span lang="EN-GB" style="font-size:9.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray"><br></span>
+        </b>
+        <b>
+          <span lang="FR" style="font-size:10.0pt;font-family:&quot;Wingdings 2&quot;;color:#1F497D">7</span>
+        </b>
+        <b>
+          <span lang="FR" style="font-size:9.0pt;font-family:&quot;Wingdings 2&quot;;color:#1F497D"> </span>
+        </b>
+        <b>
+          <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">+32 2 727.05.91<br></span>
+        </b>
+        <span lang="EN-GB" style="font-size:24.0pt;font-family:Webdings;color:green">P</span>
+        <span lang="EN-GB" style="font-size:8.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:green"> <b>&nbsp;&nbsp; </b></span>
+        <b>
+          <span lang="EN-GB" style="font-size:9.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:green">Please consider the environment before printing this email.</span>
+        </b>
+        <span lang="EN-GB" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy"> </span>
+        <span lang="EN-GB" style="font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy">
+          </span></p><p></p>
+        
+      <p></p>
+    </div>
+    <p class="MsoNormal">
+      <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
+        </span></p><p>&nbsp;</p>
+      
+    <p></p>
+    <div>
+      <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0cm">
+        <p class="MsoNormal">
+          <b>
+            <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">De&nbsp;:</span>
+          </b>
+          <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@openerp.com] <br><b>Envoyé&nbsp;:</b> jeudi 18 avril 2013 11:31<br><b>À&nbsp;:</b> Paul Richard<br><b>Objet&nbsp;:</b> Re: your OpenERP.com registration</span></p><p></p>
+        <p></p>
+      </div>
+    </div>
+    <p class="MsoNormal"></p>
+    <p>&nbsp;</p>
+    <p>Hello Raoul PETITPOIL, </p>
+    <p></p>
+    <p>I noticed you recently registered to our OpenERP Online solution. </p>
+    <p></p>
+    <p>You indicated that you wish to use OpenERP in your own company. We would like to know more about your your business needs and requirements, and see how we can help you. When would you be available to discuss your project ? </p>
+    <p></p>
+    <p>Best regards, </p>
+    <p></p>
+    <pre>      <p>&nbsp;</p>
+    </pre>
+    <pre>--<p></p></pre>
+    <pre>Nicolas<p></p></pre>
+    <pre>      <a href="http://openerp.com">http://openerp.com</a>
+      <p></p>
+    </pre>
+    <pre>Belgium: +32.81.81.37.00<p></p></pre>
+    <pre>U.S.: +1 (650) 307-6736<p></p></pre>
+    <pre>India: +91 (79) 40 500 100<p></p></pre>
+    <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <p></p></pre>
+  </div>
+</div>"""
+
+MSOFFICE_3_IN = ['I saw your boss yesterday']
+MSOFFICE_3_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated that you wish', 'Belgium: +32.81.81.37.00']

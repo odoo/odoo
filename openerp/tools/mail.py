@@ -76,19 +76,30 @@ def html_sanitize(src):
 #----------------------------------------------------------
 
 def html_email_clean(html, remove=False, shorten=False, max_length=300):
-    """ html_email_clean: clean the html
-        - try to strip email quotes (remove blockquote nodes)
-        - try to strip signatures
-        - allows having a shortened version of the html (read more/read less behavior)
+    """ html_email_clean: clean the html by doing the following steps:
 
-        :param string html: sanitized html; tags like html or head should not
-            be present in the html string. This method therefore takes as input
-            html code coming from a sanitized source, like fields.html.
-        :param boolean remove: remove the html code that is unwanted; otherwise
-            it is only flagged and tagged
-        :param boolean shorten: shorten the html
-        :param int max_length: if shortening, maximum number of characters before
-            shortening
+     - try to strip email quotes, by removing blockquotes or having some client-
+       specific heuristics
+     - try to strip signatures
+     - shorten the html to a maximum number of characters if requested
+
+    Some specific use case:
+
+     - MsOffice: ``div.style = border-top:solid;`` delimitates the beginning of
+       a quote; detecting by finding WordSection1 of MsoNormal
+     - Hotmail: ``hr.stopSpelling`` delimitates the beginning of a quote; detect
+       Hotmail by funding ``SkyDrivePlaceholder``
+
+    :param string html: sanitized html; tags like html or head should not
+                        be present in the html string. This method therefore
+                        takes as input html code coming from a sanitized source,
+                        like fields.html.
+    :param boolean remove: remove the html code that is unwanted; otherwise it
+                           is only flagged and tagged
+    :param boolean shorten: shorten the html; every excessing content will
+                            be flagged as to remove
+    :param int max_length: if shortening, maximum number of characters before
+                           shortening
     """
     def _replace_matching_regex(regex, source, replace=''):
         """ Replace all matching expressions in source by replace """
