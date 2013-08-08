@@ -1,5 +1,6 @@
 import cgi
 import logging
+import re
 import types
 
 #from openerp.tools.safe_eval import safe_eval as eval
@@ -9,49 +10,23 @@ import xml.dom.minidom
 
 _logger = logging.getLogger(__name__)
 
-class QWebEval(object):
-    def __init__(self, data):
-        self.data = data
+class QWebContext(dict):
+    def __init__(self, data, undefined_handler=None):
+        self.undefined_handler = undefined_handler
+        dict.__init__(self, data)
+        self['defined'] = lambda key: key in self
 
-    def __getitem__(self, expr):
-        if expr in self.data:
-            return self.data[expr]
-        r = ''
-        try:
-            r = eval(expr, self.data)
-        except NameError:
-            pass
-        except AttributeError:
-            pass
-        except Exception:
-            _logger.exception('invalid expression: %r', expr)
-
-        self.data.pop('__builtins__', None)
-        return r
-
-    def eval_object(self, expr):
-        return self[expr]
-
-    def eval_str(self, expr):
-        if expr == "0":
-            return self.data.get(0, '')
-        if isinstance(self[expr], unicode):
-            return self[expr].encode("utf8")
-        return str(self[expr])
-
-    def eval_format(self, expr):
-        try:
-            return str(expr % self)
-        except:
-            return "qweb: format error '%s' " % expr
-#       if isinstance(r,unicode):
-#           return r.encode("utf8")
-
-    def eval_bool(self, expr):
-        if self.eval_object(expr):
-            return 1
+    def __getitem__(self, key):
+        if key in self:
+            return self.get(key)
+        # Last minute change, this is WIP, do not remove.
+        #
+        # elif not self.undefined_handler:
+        #     raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
+        # else:
+        #     return self.get(key, self.undefined_handler(key, self))
         else:
-            return 0
+            return None
 
 class QWebXml(object):
     """QWeb Xml templating engine
@@ -74,6 +49,7 @@ class QWebXml(object):
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
+        self._format_regex = re.compile('#\{(.*?)\}')
         self._void_elements = set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
                                   'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
         prefix = 'render_tag_'
@@ -111,21 +87,48 @@ class QWebXml(object):
                 return self._t[name]
         raise KeyError('qweb: template "%s" not found' % name)
 
+    def eval(self, expr, v):
+        try:
+            return eval(expr, None, v)
+        except Exception:
+            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'" % (expr, v.get('__template__')))
+
     def eval_object(self, expr, v):
-        return QWebEval(v).eval_object(expr)
+        return self.eval(expr, v)
 
     def eval_str(self, expr, v):
-        return QWebEval(v).eval_str(expr)
+        if expr == "0":
+            return v.get(0, '')
+        val = self.eval(expr, v)
+        if isinstance(val, unicode):
+            return val.encode("utf8")
+        return str(val)
 
     def eval_format(self, expr, v):
-        return QWebEval(v).eval_format(expr)
+        use_native = True
+        for m in self._format_regex.finditer(expr):
+            use_native = False
+            expr = expr.replace(m.group(), self.eval(m.groups()[0], v))
+        if not use_native:
+            return expr
+        else:
+            try:
+                return str(expr % v)
+            except:
+                raise Exception("QWeb: format error '%s' " % expr)
 
     def eval_bool(self, expr, v):
-        return QWebEval(v).eval_bool(expr)
+        val = self.eval(expr, v)
+        if val:
+            return 1
+        else:
+            return 0
 
     def render(self, tname, v=None, out=None):
         if v is None:
             v = {}
+        v['__template__'] = tname
+        v = QWebContext(v)
         return self.render_node(self.get_template(tname), v)
 
     def render_node(self, e, v):
@@ -222,7 +225,7 @@ class QWebXml(object):
         enum = self.eval_object(expr, v)
         if enum is not None:
             var = t_att.get('as', expr).replace('.', '_')
-            d = v.copy()
+            d = QWebContext(v.copy())
             size = -1
             if isinstance(enum, types.ListType):
                 size = len(enum)
@@ -265,7 +268,7 @@ class QWebXml(object):
         if "import" in t_att:
             d = v
         else:
-            d = v.copy()
+            d = QWebContext(v.copy())
         d[0] = self.render_element(e, t_att, g_att, d)
         return self.render(t_att["call"], d)
 
