@@ -60,6 +60,7 @@ from scope import proxy as scope_proxy
 import fields
 import openerp
 import openerp.tools as tools
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
@@ -621,20 +622,19 @@ class BaseModel(object):
 
         cls._set_field_descriptor(
             cls.CONCURRENCY_CHECK_FIELD,
-            fields2.Char(compute=compute_concurrency_field, store=False))
+            fields2.Datetime(compute=compute_concurrency_field, store=False))
 
     @api.one
     def compute_concurrency_field(self):
-        self[self.CONCURRENCY_CHECK_FIELD] = str(datetime.datetime.utcnow())
+        self[self.CONCURRENCY_CHECK_FIELD] = \
+            datetime.datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     @api.one
     @api.depends('create_date', 'write_date')
     def compute_concurrency_field_with_access(self):
-        self[self.CONCURRENCY_CHECK_FIELD] = "%s%s%s" % (
-            self.write_date or '',
-            self.create_date or '',
-            datetime.datetime.utcnow(),
-        )
+        self[self.CONCURRENCY_CHECK_FIELD] = \
+            self.write_date or self.create_date or \
+            datetime.datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     #
     # Goal: try to apply inheritance at the instanciation level and
