@@ -29,7 +29,7 @@ class account_invoice_report(osv.osv):
     _auto = False
     _rec_name = 'date'
 
-    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
+    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names=[], args={}, context=None):
         """Compute the amounts in the currency of the user
         """
         if context is None:
@@ -102,6 +102,19 @@ class account_invoice_report(osv.osv):
         'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
     }
     _order = 'date desc'
+
+    #FIX:To show sum of values of function fields in groupby
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        res = super(account_invoice_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
+        for group in res:
+            group['user_currency_price_total'] = 0
+            group_ids = self.search(cr, uid, group.get('__domain'),context=context)
+            record = self._compute_amounts_in_user_currency(cr, uid, group_ids, context=context)
+            for id, rec in record.iteritems():
+                group['user_currency_price_total'] += rec['user_currency_price_total']
+
+        return res
+    
 
     def _select(self):
         select_str = """
