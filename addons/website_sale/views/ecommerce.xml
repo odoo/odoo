@@ -22,7 +22,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/shop/mycart/"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
+                    <li class="pull-right"><a href="/shop/mycart/"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/></a></li>
                     <li class="pull-right"><a href="/shop/">Shop</a></li>
                 </xpath>
            </data>
