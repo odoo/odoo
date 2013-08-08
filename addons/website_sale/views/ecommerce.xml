@@ -10,8 +10,15 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/shop/mycart/"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
-                    <li class="pull-right"><a href="/shop/">Shop</a></li>
+                    <li class="pull-right">
+                        <a href="/shop/mycart/">
+                            <i class="icon-shopping-cart icon-large" style="position: absolute;"></i>
+                            My cart
+                        </a>
+                    </li>
+                    <li class="pull-right">
+                        <a href="/shop/">Shop</a>
+                    </li>
                 </xpath>
            </data>
         </field>
@@ -22,7 +29,14 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/shop/mycart/"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/></a></li>
+                    <li class="pull-right">
+                        <a href="/shop/mycart/">
+                            <i class="icon-shopping-cart icon-large" style="position: absolute;"></i>
+                            My cart
+                            <!-- FIXME: logic to obtain the shopping cart numer of items shall not be in the template. Move it in models or in controllers -->
+                            <!-- <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/> -->
+                        </a>
+                    </li>
                     <li class="pull-right"><a href="/shop/">Shop</a></li>
                 </xpath>
            </data>
@@ -49,7 +63,7 @@
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/ecommerce.js"></script>
                 <link rel='stylesheet' href='/website_sale/static/src/css/ecommerce.css'/>
-                <t t-raw="head"/>
+                <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container mt48 oe_ecommerce">
@@ -88,14 +102,21 @@
     <!-- Product list --> 
 
     <template id="product_pager">
-        <t t-set="classname" t-value="classname or ''" />
-        <div t-if="page_count != 1" t-att-class="classname + ' pagination'">
+        <div t-if="page_count != 1" t-attf-class="#{ classname or '' } pagination">
             <ul>
-                <li t-att-class=" 'disabled' if page == 1 else '' " ><a t-att-href=" '#' if page == 1 else ('/shop/category/%%s/page/%%s/' %% (current_category, max(0,page-1))) ">Prev</a></li>
+                <li t-att-class=" 'disabled' if page == 1 else '' " >
+                    <t t-set="alt_url" t-valuef="/shop/category/#{ current_category }/page/#{ max(0, page - 1) }/'"/>
+                    <a t-att-href=" '#' if page == 1 else alt_url ">Prev</a>
+                </li>
                 <t t-foreach="pages" t-as="p">
-                    <li t-att-class=" 'active' if p == page else '' " ><a t-att-href=" '/shop/category/%%s/page/%%s/' %% (current_category, p)" t-raw='p'></a></li>
+                    <li t-att-class=" 'active' if p == page else '' ">
+                        <a t-attf-href="/shop/category/#{ current_category }/page/#{ p }/" t-raw='p'></a>
+                    </li>
                 </t>
-                <li t-att-class=" 'disabled' if page == page_count else '' "><a t-att-href=" '#' if page == page_count else ('/shop/category/%%s/page/%%s/' %% (current_category, min(page_count,page+1))) ">Next</a></li>
+                <li t-att-class=" 'disabled' if page == page_count else '' ">
+                    <t t-set="alt_url" t-valuef="/shop/category/#{ current_category }/page/#{ min(page_count, page + 1) }/'"/>
+                    <a t-att-href=" '#' if page == page_count else alt_url ">Next</a>
+                </li>
             </ul>
         </div>
     </template>
@@ -117,7 +138,9 @@
                 <div class="span8">
                     <div class='row grid grid-align-top'>
                         <t t-foreach="products" t-as="product">
-                            <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/>                            
+                            <t t-set="quantity" t-value="1"/>
+                            <!-- FIXME: logic to obtain a specific product count in the shopping cart shall not be in the template. Move it in models or in controllers -->
+                            <!-- <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/> -->
                             <t t-call="website_sale.product_card"/>
                         </t>
                     </div>
