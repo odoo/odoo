@@ -98,6 +98,35 @@ class TestNewFields(common.TransactionCase):
             for c in children:
                 self.assertEqual(c.has_sibling, c.parent_id.children_count >= 2)
 
+    def test_12_recursive(self):
+        """ test recursively dependent fields """
+        abel = self.Partner.create({'name': 'Abel'})
+        beth = self.Partner.create({'name': 'Bethany'})
+        cath = self.Partner.create({'name': 'Catherine'})
+        dean = self.Partner.create({'name': 'Dean'})
+        ethan = self.Partner.create({'name': 'Ethan'})
+        fanny = self.Partner.create({'name': 'Fanny'})
+        gabriel = self.Partner.create({'name': 'Gabriel'})
+
+        beth.parent_id = abel
+        cath.parent_id = abel
+        dean.parent_id = beth
+        ethan.parent_id = beth
+        fanny.parent_id = beth
+        gabriel.parent_id = cath
+
+        self.assertEqual(abel.child_ids, beth | cath)
+        self.assertEqual(beth.child_ids, dean | ethan | fanny)
+        self.assertEqual(cath.child_ids, gabriel)
+
+        self.assertEqual(abel.family_size, 7)
+        self.assertEqual(beth.family_size, 4)
+        self.assertEqual(cath.family_size, 2)
+        self.assertEqual(dean.family_size, 1)
+        self.assertEqual(ethan.family_size, 1)
+        self.assertEqual(fanny.family_size, 1)
+        self.assertEqual(gabriel.family_size, 1)
+
     def test_20_float(self):
         """ test float fields """
         # find a partner

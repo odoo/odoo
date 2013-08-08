@@ -49,6 +49,35 @@ def _invoke_model(func, model):
         return func(model, *scope.args)
 
 
+class CacheMissing(object):
+    """ Special value in cache that represents a missing value. """
+    def __init__(self, field):
+        self.field = field
+
+    def get(self):
+        return self.field.null()
+
+
+class CacheBusy(object):
+    """ Special value in cache to detect access cycle when computing a field. """
+    def __init__(self, field, record):
+        self.args = field, record
+
+    def get(self):
+        raise Warning("No value for field %s on %s" % self.args)
+
+
+class CacheCompute(object):
+    """ Special value in cache to compute a field one record at a time. """
+    def __init__(self, field, record):
+        self.args = field, record
+
+    def get(self):
+        field, record = self.args
+        field.call_compute(record)
+        return record[field.name]
+
+
 class MetaField(type):
     """ Metaclass for field classes. """
     _class_by_type = {}
@@ -209,6 +238,15 @@ class Field(object):
 
     def call_compute(self, records):
         """ Invoke the compute method on `records`. """
+        if len(records) > 1:
+            # In batch computing, a record may want to use another record's
+            # value for the field. In that case, compute record per record.
+            for record in records:
+                record._record_cache.set_special(self.name, CacheCompute(self, record))
+        else:
+            for record in records:
+                record._record_cache.set_special(self.name, CacheBusy(self, record))
+
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
         elif callable(self.compute):
@@ -280,8 +318,7 @@ class Field(object):
         if self.compute:
             self.call_compute(record)
         else:
-            # None means "no value" in the case of draft records
-            record._set_field(self.name, None)
+            record._record_cache.set_special(self.name, CacheMissing(self))
 
     #
     # Management of the recomputation of computed fields.

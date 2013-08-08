@@ -216,20 +216,33 @@ class RecordCache(MutableMapping):
     def __init__(self, fields, id):
         self.fields = fields            # set of fields present in model cache
         self.data = {'id': id}
+        self.special = {}
 
     def __contains__(self, name):
-        return name in self.data
+        return name in self.data or name in self.special
 
     def __getitem__(self, name):
-        return self.data[name]
+        try:
+            return self.data[name]
+        except KeyError:
+            return self.special[name].get()
 
     def __setitem__(self, name, value):
         self.data[name] = value
+        self.special.pop(name, None)
         self.fields.add(name)
+
+    def set_special(self, name, special):
+        """ assign a value container to key `name` in the cache """
+        self.data.pop(name, None)
+        self.special[name] = special
 
     def __delitem__(self, name):
         assert name != 'id', "RecordCache cannot drop 'id' field."
         del self.data[name]
+
+    def pop(self, *args):
+        return self.data.pop(*args) or self.special.pop(*args)
 
     def __iter__(self):
         return iter(self.data)
@@ -239,6 +252,7 @@ class RecordCache(MutableMapping):
 
     def clear(self):
         self.data = {'id': self.data['id']}
+        self.special.clear()
 
     def dump(self):
         """ Return a "dump" of the record cache. """

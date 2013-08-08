@@ -53,6 +53,7 @@ class res_partner(Model):
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
     has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
+    family_size = fields.Integer(compute='compute_family_size', store=False)
 
     @one
     def default_number_of_employees(self):
@@ -77,6 +78,14 @@ class res_partner(Model):
     @depends('parent_id.children_count')
     def compute_has_sibling(self):
         self.has_sibling = self.parent_id.children_count >= 2
+
+    @multi
+    @depends('child_ids')
+    def compute_family_size(self):
+        # make sure to trigger dependencies by sorting records in alphabetical order
+        self = sum(sorted(self, key=lambda rec: rec.name), self.browse())
+        for rec in self:
+            rec.family_size = 1 + sum(child.family_size for child in rec.child_ids)
 
     computed_company = fields.Many2one('res.company', compute='compute_relations', store=False)
     computed_companies = fields.Many2many('res.company', compute='compute_relations', store=False)

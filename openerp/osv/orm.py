@@ -5302,7 +5302,7 @@ class BaseModel(object):
             _logger.warning("%s.get_draft_values() non optimal", self[0])
         result = {}
         for name, value in self._record_cache.iteritems():
-            if name != 'id' and value is not None:
+            if name not in MAGIC_COLUMNS:
                 field = self._fields[name]
                 result[name] = field.convert_to_write(value)
         return result
@@ -5489,19 +5489,15 @@ class BaseModel(object):
         self = self[0]
         record_cache = self._record_cache
 
-        # new records: retrieve default values
-        if not record_cache['id']:
-            with self._scope:
-                if name not in record_cache:
-                    self.add_default_value(name)
-                value = record_cache[name]
-                return self._fields[name].null() if value is None else value
-
         # check the record's cache
         if name not in record_cache:
             with self._scope:
-                field = self._fields[name]
-                field.compute_value(self)
+                if not record_cache['id']:
+                    # new records: retrieve default values
+                    self.add_default_value(name)
+                else:
+                    # regular records: compute/read the field's value
+                    self._fields[name].compute_value(self)
 
         return record_cache[name]
 
