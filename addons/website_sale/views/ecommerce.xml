@@ -10,8 +10,8 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
-                    <li class="pull-right"><a href="/shop">Shop</a></li>
+                    <li class="pull-right"><a href="/shop/mycart/"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
+                    <li class="pull-right"><a href="/shop/">Shop</a></li>
                 </xpath>
            </data>
         </field>
@@ -22,8 +22,8 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
-                    <li class="pull-right"><a href="/shop">Shop</a></li>
+                    <li class="pull-right"><a href="/shop/mycart/"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
+                    <li class="pull-right"><a href="/shop/">Shop</a></li>
                 </xpath>
            </data>
         </field>
@@ -76,7 +76,7 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
-            <a t-att-href="'/shop/category/%%s' %% category.id" t-field="category.name"></a>
+            <a t-att-href="'/shop/category/%%s/' %% category.id" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-list">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -91,11 +91,11 @@
         <t t-set="classname" t-value="classname or ''" />
         <div t-if="page_count != 1" t-att-class="classname + ' pagination'">
             <ul>
-                <li t-att-class=" 'disabled' if page == 1 else '' " ><a t-att-href=" '#' if page == 1 else ('/shop/category/%%s/page/%%s' %% (current_category, max(0,page-1))) ">Prev</a></li>
+                <li t-att-class=" 'disabled' if page == 1 else '' " ><a t-att-href=" '#' if page == 1 else ('/shop/category/%%s/page/%%s/' %% (current_category, max(0,page-1))) ">Prev</a></li>
                 <t t-foreach="pages" t-as="p">
-                    <li t-att-class=" 'active' if p == page else '' " ><a t-att-href=" '/shop/category/%%s/page/%%s' %% (current_category, p)" t-raw='p'></a></li>
+                    <li t-att-class=" 'active' if p == page else '' " ><a t-att-href=" '/shop/category/%%s/page/%%s/' %% (current_category, p)" t-raw='p'></a></li>
                 </t>
-                <li t-att-class=" 'disabled' if page == page_count else '' "><a t-att-href=" '#' if page == page_count else ('/shop/category/%%s/page/%%s' %% (current_category, min(page_count,page+1))) ">Next</a></li>
+                <li t-att-class=" 'disabled' if page == page_count else '' "><a t-att-href=" '#' if page == page_count else ('/shop/category/%%s/page/%%s/' %% (current_category, min(page_count,page+1))) ">Next</a></li>
             </ul>
         </div>
     </template>
@@ -109,7 +109,7 @@
                         <t t-call="website_sale.product_pager" >
                             <t t-set="classname">pull-left</t>
                         </t>
-                        <form action="/shop" method="get" class="navbar-search pull-right">
+                        <form action="/shop/" method="get" class="navbar-search pull-right">
                             <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
                     </div>
@@ -131,20 +131,18 @@
 
     <template id="product_card">
         <div class="oe_product span2 mb16 thumbnail text-center">
-            <a t-att-href="'/shop/product/%%s' %% product.id">
+            <a t-att-href="'/shop/product/%%s/' %% product.id">
                 <h5  t-field="product.name"> </h5>
             </a>
-            <a t-att-href="'/shop/product/%%s' %% product.id">
+            <a t-att-href="'/shop/product/%%s/' %% product.id">
                 <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
             </a>
             <div>
                 <div t-field="product.description_sale"></div>
                 <div><span t-field="product.list_price"></span>€</div>
                 <div class="mb8 mt8">
-                    <button t-att-class="'btn mb8 btn-small btn-inverse %%s' %% (not quantity and 'hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                    <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
-                        Add to cart <t t-if="quantity">(<t t-esc="quantity"/>)</t>
-                    </button>
+                    <a t-if="quantity" t-att-href="'./remove_cart/%s/' % product.id" class="btn mb8 btn-small btn-inverse">Remove one</a>
+                    <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart <t t-if="quantity">(<t t-esc="quantity"/>)</t></a>
                 </div>
             </div>
         </div>
@@ -156,7 +154,7 @@
             <div class='row mt16'>
             <t t-foreach="recommended_products or []" t-as="product">
                 <div class='span2 thumbnail'>
-                    <a t-att-href="'/shop/product/%%s' %% product.id">
+                    <a t-att-href="'/shop/product/%%s/' %% product.id">
                         <div class='mt16 text-center'>
                             <img t-att-src="'data:image/png;base64,' + product.image"/>
                             <h5 t-field='product.name'></h5>
@@ -182,10 +180,8 @@
                     <h2 t-field="product.name"></h2>
 
                     <div class="oe_button_cart">
-                        <button t-att-class="'btn btn-small btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
-                        <button t-att-class="'btn btn-small %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
-                            Add to cart <t t-if="quantity" >(<t t-esc="quantity"/>)</t>
-                        </button>
+                        <a t-if="quantity" t-att-href="'./remove_cart/%s/' % product.id" class="btn btn-small btn-inverse">Remove one</a>
+                        <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart <t t-if="quantity">(<t t-esc="quantity"/>)</t></a>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
                     <div t-field="product.description_website"></div>
@@ -213,11 +209,11 @@
                         </t>
                     </div>
                     <t t-call="website_sale.total"/>
-                    <form t-if="order.order_line" class="well form-search" action="/shop/mycart" >
+                    <form t-if="order.order_line" class="well form-search" action="/shop/mycart/" method="post">
                         <input name="code" class='input' type="text" placeholder="Reduction Code..."/>
                         <button class="btn">Apply Code</button>
                     </form>
-                    <a t-if="order.order_line" href="/shop/checkout"><button class="btn btn-success">Proceed To Payment</button></a>
+                    <a t-if="order.order_line" href="/shop/checkout/"><button class="btn btn-success">Proceed To Payment</button></a>
                     <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>
@@ -246,7 +242,6 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/ecommerce.js"></script>
-                <link rel='stylesheet' href='/website_sale/static/src/css/ecommerce.css'/>
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Shop - Checkout</t>
@@ -272,58 +267,147 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="span8 oe_checkout">
+                    <form class="span8" action="/shop/confirm_order/" method="post">
                         <div class="js_inputs row">
-                            <a t-if="not partner" t-att-href="'/admin#action=redirect&amp;url=%%s/shop/checkout' %% host_url" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-att-href="'/admin#action=redirect&amp;url=%%s/shop/checkout/' %% host_url" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="span8">Billing Information</h3>
-                            <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="name" placeholder="Name and firstname" t-att-value="partner.name or ''"/></label>
-                            <label class="span4 css_required">Telephone<input type="tel" name="phone" placeholder="Telephone" t-att-value="partner.phone or ''"/></label>
-                            <label class="span4">Fax<input type="tel" name="fax" placeholder="Fax" t-att-value="partner.fax or ''"/></label>
-                            <label class="span4">Company<input type="text" name="company" placeholder="Company" t-att-value="partner.parent_id and partner.parent_id.name or ''"/></label>
-                            <label class="span4 css_required">Email address<input type="email" name="email" placeholder="Email address" t-att-value="partner.email or ''"/></label>
-                            <label class="span8 css_required">Street<input class="span7" type="text" name="street" placeholder="Street address" t-att-value="partner.street or ''"/></label>
-                            <label class="span4 css_required">City<input type="text" name="city" placeholder="City" t-att-value="partner.city or ''"/></label>
-                            <label class="span4">State / Province <select name="state_id">
-                                <option value="">State / Province...</option>
-                                <t t-foreach="states or []" t-as="state">
-                                    <option t-att-value="state.id" t-att-selected="partner and partner.state_id and state.id == partner.state_id.id or None"><t t-esc="state.name"/></option>
-                                </t>
-                            </select></label>
-                            <label class="span4 css_required">Zip / Postal Code<input type="text" name="zip" placeholder="Zip/Postal Code" t-att-value="partner.zip or ''"/></label>
-                            <label class="span4 css_required">Country <select name="country_id">
-                                <option value="">Country...</option>
-                                <t t-foreach="countries or []" t-as="country">
-                                    <option t-att-value="country.id" t-att-selected="partner and partner.country_id and country.id == partner.country_id.id or None"><t t-esc="country.name"/></option>
-                                </t>
-                            </select></label>
-                            <label class="span8 checkbox">Ship to different address<input type="checkbox" name="shipping_different"/></label>
+                            <label class="span8 css_required">
+                                Name and firstname
+                                <input class="span7" type="text" name="name" placeholder="Name and firstname" t-att-value="partner.name or checkout.get('name', '')" t-att-style="error.get('name') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                Telephone
+                                <input type="tel" name="phone" placeholder="Telephone" t-att-value="partner.phone or checkout.get('phone', '')" t-att-style="error.get('phone') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4">
+                                Fax
+                                <input type="tel" name="fax" placeholder="Fax" t-att-value="partner.fax or checkout.get('fax', '')" t-att-style="error.get('fax') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4">
+                                Company
+                                <input type="text" name="company" placeholder="Company" t-att-value="partner.parent_id and partner.parent_id.name or checkout.get('company', '')" t-att-style="error.get('company') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                Email address
+                                <input type="email" name="email" placeholder="Email address" t-att-value="partner.email or checkout.get('email', '')" t-att-style="error.get('email') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span8 css_required">
+                                Street
+                                <input class="span7" type="text" name="street" placeholder="Street address" t-att-value="partner.street or checkout.get('street', '')" t-att-style="error.get('street') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                City
+                                <input type="text" name="city" placeholder="City" t-att-value="partner.city or checkout.get('city', '')" t-att-style="error.get('city') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4">
+                                State / Province
+                                <select name="state_id" t-att-style="error.get('state_id') and 'border-color:red;' or ''">
+                                    <option value="">State / Province...</option>
+                                    <t t-foreach="states or []" t-as="state">
+                                        <option t-att-value="state.id" t-att-selected="partner and partner.state_id and state.id == partner.state_id.id or checkout.get('state_id', '')"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </label>
+                            <label class="span4 css_required">
+                                Zip / Postal Code
+                                <input type="text" name="zip" placeholder="Zip/Postal Code" t-att-value="partner.zip or checkout.get('zip', '')" t-att-style="error.get('zip') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                Country
+                                <select name="country_id" t-att-style="error.get('country_id') and 'border-color:red;' or ''">
+                                    <option value="">Country...</option>
+                                    <t t-foreach="countries or []" t-as="country">
+                                        <option t-att-value="country.id" t-att-selected="partner and partner.country_id and country.id == partner.country_id.id  or checkout.get('country_id', '')"><t t-esc="country.name"/></option>
+                                    </t>
+                                </select>
+                            </label>
+                            <label class="span8 checkbox">
+                                Ship to different address
+                                <input type="checkbox" name="shipping_different"/>
+                            </label>
                         </div>
                         <div class="js_inputs js_shipping row" style="display:none">
                             <h3 class="span8 oe_shipping" style="display:none">Shipping Information</h3>
-                            <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="shipping_name" placeholder="Name and firstname" t-att-value="shipping.name or ''"/></label>
-                            <label class="span4 css_required">Telephone<input type="tel" name="shipping_phone" placeholder="Telephone" t-att-value="shipping.phone or ''"/></label>
-                            <label class="span4">Fax<input type="tel" name="shipping_fax" placeholder="Fax" t-att-value="shipping.fax or ''"/></label>
-                            <label class="span8 css_required">Street<input class="span7" type="text" name="shipping_street" placeholder="Street address" t-att-value="shipping.street or ''"/></label>
-                            <label class="span4 css_required">City<input type="text" name="shipping_city" placeholder="City" t-att-value="shipping.city or ''"/></label>
-                            <label class="span4">State / Province <select name="shipping_state_id">
-                                <option value="">State / Province...</option>
-                                <t t-foreach="states or []" t-as="state">
-                                    <option t-att-value="state.id" t-att-selected="shipping and shipping.state_id and state.id == shipping.state_id.id or None"><t t-esc="state.name"/></option>
-                                </t>
-                            </select></label>
-                            <label class="span4 css_required">Zip / Postal Code<input type="text" name="shipping_zip" placeholder="Zip/Postal Code" t-att-value="shipping.zip or ''"/></label>
-                            <label class="span4 css_required">Country <select name="shipping_country_id">
-                                <option value="">Country...</option>
-                                <t t-foreach="countries or []" t-as="country">
-                                    <option t-att-value="country.id" t-att-selected="shipping and shipping.country_id and country.id == shipping.country_id.id or None"><t t-esc="country.name"/></option>
-                                </t>
-                            </select></label>
+                            <label class="span8 css_required">
+                                Name and firstname
+                                <input class="span7" type="text" name="shipping_name" placeholder="Name and firstname" t-att-value="shipping.name or checkout.get('shipping_name', '')" t-att-style="error.get('shipping_name') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                Telephone
+                                <input type="tel" name="shipping_phone" placeholder="Telephone" t-att-value="shipping.phone or checkout.get('shipping_phone', '')" t-att-style="error.get('shipping_phone') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4">
+                                Fax
+                                <input type="tel" name="shipping_fax" placeholder="Fax" t-att-value="shipping.fax or checkout.get('shipping_fax', '')" t-att-style="error.get('shipping_fax') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span8 css_required">
+                                Street
+                                <input class="span7" type="text" name="shipping_street" placeholder="Street address" t-att-value="shipping.street or checkout.get('shipping_street', '')" t-att-style="error.get('shipping_street') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                City
+                                <input type="text" name="shipping_city" placeholder="City" t-att-value="shipping.city or checkout.get('shipping_city', '')" t-att-style="error.get('shipping_city') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4">
+                                State / Province
+                                <select name="shipping_state_id" t-att-style="error.get('shipping_state_id') and 'border-color:red;' or ''">
+                                    <option value="">State / Province...</option>
+                                    <t t-foreach="states or []" t-as="state">
+                                        <option t-att-value="state.id" t-att-selected="shipping and shipping.state_id and state.id == shipping.state_id.id or checkout.get('shipping_state_id', '')"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </label>
+                            <label class="span4 css_required">
+                                Zip / Postal Code
+                                <input type="text" name="shipping_zip" placeholder="Zip/Postal Code" t-att-value="shipping.zip or checkout.get('shipping_zip', '')" t-att-style="error.get('shipping_zip') and 'border-color:red;' or ''"/>
+                            </label>
+                            <label class="span4 css_required">
+                                Country
+                                <select name="shipping_country_id" t-att-style="error.get('shipping_country_id') and 'border-color:red;' or ''">
+                                    <option value="">Country...</option>
+                                    <t t-foreach="countries or []" t-as="country">
+                                        <option t-att-value="country.id" t-att-selected="shipping and shipping.country_id and country.id == shipping.country_id.id or checkout.get('shipping_country_id', '')"><t t-esc="country.name"/></option>
+                                    </t>
+                                </select>
+                            </label>
                         </div>
+                        <button type="submit">Last stape</button>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="payment">
+        <t t-call="website.layout">
+            <t t-set="title">Shop - Payment</t>
+            <div class="container mt48 oe_ecommerce">
+                <div class="row">
+                    <div class="span4 oe_total">
+                        <table class="table table-condensed" t-if="order.order_line">
+                            <thead>
+                                <tr><th>Product</th><th>Qty.</th><th>Price</th></tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="order.order_line or []" t-as="line">
+                                    <tr>
+                                        <td><t t-esc="line.name"/></td>
+                                        <td><t t-esc="int(line.product_uom_qty)"/></td>
+                                        <td class="css_alignright"><t t-esc="line.product_id.list_price"/> €</td>
+                                    </tr>
+                                </t>
+                                <tr><td colspan="3" style="visibility: hidden; border: 0">-</td></tr>
+                                <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                                <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
+                                <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="span8">
                         <div class="js_payments css_payments row">
                             <h3 class="span8">Click on your payment method</h3>
                             <t t-foreach="payments or []" t-as="payment">
                                 <div class="css_payment" t-att-title="payment.name">
-                                    <div class="js_error_payment css_error_payment"> </div>
                                     <t t-raw="payment._content"/>
                                 </div>
                             </t>
@@ -331,32 +415,6 @@
                     </div>
                 </div>
             </div>
-        </t>
-    </template>
-
-    <template id="confirmed">
-        <t t-call="website_sale.page">
-            <t t-set="title">Order</t>
-            <t t-set="shop_content">
-                <table class="table table-condensed" t-if="order.order_line">
-                    <thead>
-                        <tr><th>Product</th><th>Qty.</th><th>Price</th></tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="order.order_line or []" t-as="line">
-                            <tr>
-                                <td><t t-esc="line.product_id.name"/></td>
-                                <td><t t-esc="int(line.product_uom_qty)"/></td>
-                                <td class="css_alignright"><t t-esc="line.product_id.list_price"/> €</td>
-                            </tr>
-                        </t>
-                        <tr><td colspan="3" style="visibility: hidden; border: 0">-</td></tr>
-                        <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
-                        <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
-                        <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
-                    </tbody>
-                </table>
-            </t>
         </t>
     </template>
  </data>
