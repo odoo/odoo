@@ -376,11 +376,26 @@ class product_pricelist_item(osv.osv):
         result.append((-2, _('Supplier Prices on the product form')))
         return result
 
+# Added default function to fetch the Price type Based on Pricelist type.
+    def _get_default_base(self, cr, uid, fields, context=None):
+        product_price_type_obj = self.pool.get('product.price.type')
+        if fields.get('type') == 'purchase':
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'standard_price')], context=context)
+        elif fields.get('type') == 'sale':
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
+        else:
+            return -1
+        if not product_price_type_ids:
+            return False
+        else:
+            pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
+            return pricetype.id
+
     _name = "product.pricelist.item"
     _description = "Pricelist item"
     _order = "sequence, min_quantity desc"
     _defaults = {
-        'base': lambda *a: -1,
+        'base': _get_default_base,
         'min_quantity': lambda *a: 0,
         'sequence': lambda *a: 5,
         'price_discount': lambda *a: 0,
