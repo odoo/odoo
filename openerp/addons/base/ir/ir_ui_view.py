@@ -746,7 +746,7 @@ class view(osv.osv):
             arch = '<?xml version="1.0" encoding="utf-8"?><tpl>%s</tpl>' % (arch)
             return arch
 
-        engine = qweb.QWebXml(loader)
+        engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
         return engine.render(id_or_xml_id, values)
 
     # maybe used to print the workflow ?

@@ -19,14 +19,10 @@ class QWebContext(dict):
     def __getitem__(self, key):
         if key in self:
             return self.get(key)
-        # Last minute change, this is WIP, do not remove.
-        #
-        # elif not self.undefined_handler:
-        #     raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
-        # else:
-        #     return self.get(key, self.undefined_handler(key, self))
+        elif not self.undefined_handler:
+            raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
         else:
-            return None
+            return self.get(key, self.undefined_handler(key, self))
 
 class QWebXml(object):
     """QWeb Xml templating engine
@@ -44,8 +40,9 @@ class QWebXml(object):
 
 
     """
-    def __init__(self, loader=None):
+    def __init__(self, loader=None, undefined_handler=None):
         self.loader = loader
+        self.undefined_handler = undefined_handler
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
@@ -128,7 +125,7 @@ class QWebXml(object):
         if v is None:
             v = {}
         v['__template__'] = tname
-        v = QWebContext(v)
+        v = QWebContext(v, self.undefined_handler)
         return self.render_node(self.get_template(tname), v)
 
     def render_node(self, e, v):
@@ -225,7 +222,7 @@ class QWebXml(object):
         enum = self.eval_object(expr, v)
         if enum is not None:
             var = t_att.get('as', expr).replace('.', '_')
-            d = QWebContext(v.copy())
+            d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
             if isinstance(enum, types.ListType):
                 size = len(enum)
@@ -268,7 +265,7 @@ class QWebXml(object):
         if "import" in t_att:
             d = v
         else:
-            d = QWebContext(v.copy())
+            d = QWebContext(v.copy(), self.undefined_handler)
         d[0] = self.render_element(e, t_att, g_att, d)
         return self.render(t_att["call"], d)
 
