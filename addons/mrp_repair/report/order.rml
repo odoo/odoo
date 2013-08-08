@@ -256,7 +256,7 @@
           <para style="P16">[[ o.product_id.name or '' ]]</para>
         </td>
         <td>
-          <para style="P16">[[ o.prodlot_id.name or ' ' ]]</para>
+          <para style="P16">[[ ' ' ]]</para>, <!-- TODO: NO prodlot_id on mrp_repair anymore, Once move_id will be replaced with quant_id everywhere this will fetch lot like o.quant_id.move_id.name  --> 
         </td>
         <td>
           <para style="P16">[[ formatLang(o.guarantee_limit,date = True) ]]</para>
