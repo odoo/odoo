@@ -13,7 +13,29 @@ _logger = logging.getLogger(__name__)
 class QWebContext(dict):
     def __init__(self, data, undefined_handler=None):
         self.undefined_handler = undefined_handler
-        dict.__init__(self, data)
+        d = {
+            'True': True,
+            'False': False,
+            'None': None,
+            'str': str,
+            'globals': locals,
+            'locals': locals,
+            'bool': bool,
+            'dict': dict,
+            'list': list,
+            'tuple': tuple,
+            'map': map,
+            'abs': abs,
+            'min': min,
+            'max': max,
+            'reduce': reduce,
+            'filter': filter,
+            'round': round,
+            'len': len,
+            'set': set
+        }
+        d.update(data)
+        dict.__init__(self, d)
         self['defined'] = lambda key: key in self
 
     def __getitem__(self, key):
@@ -105,7 +127,7 @@ class QWebXml(object):
         use_native = True
         for m in self._format_regex.finditer(expr):
             use_native = False
-            expr = expr.replace(m.group(), self.eval(m.groups()[0], v))
+            expr = expr.replace(m.group(), self.eval_str(m.groups()[0], v))
         if not use_native:
             return expr
         else:
@@ -272,6 +294,8 @@ class QWebXml(object):
     def render_tag_set(self, e, t_att, g_att, v):
         if "value" in t_att:
             v[t_att["set"]] = self.eval_object(t_att["value"], v)
+        elif "valuef" in t_att:
+            v[t_att["set"]] = self.eval_format(t_att["valuef"], v)
         else:
             v[t_att["set"]] = self.render_element(e, t_att, g_att, v)
         return ""
