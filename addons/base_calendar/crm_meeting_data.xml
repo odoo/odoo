@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
         <!--    CASE CATEGORY(categ_id)        -->
 
@@ -78,9 +78,9 @@
                                             <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
                                                 ${object.location or ''}
                                                 % if object.location :
-                                                <span style= "color:#A9A9A9; "> 
+                                                <span style= "color:#A9A9A9; ">
                                                     (<a href="http://maps.google.com/maps?oi=map&q=${object.location}">View Map</a>)
-                                                </span> 
+                                                </span>
                                                 % endif
                                             </div>
                                         </td>
@@ -90,7 +90,7 @@
                                             <div  style = "height: 25px; width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"><b>What :</b>
                                             </div>
                                         </td>
-                                        <td colspan="3"> 
+                                        <td colspan="3">
                                             <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
                                                 ${object.description or ''}
                                             </div>
@@ -113,19 +113,19 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr >
+                        <tr>
                             <td>
                                 <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 10px" >
                                     <span style= "margin-top: 50px; margin-left: 200px;" >
-                                        <a href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=form&status=accepted">Accept</a> |
-                                        <a href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=form&status=declined">Declined</a>
+                                        <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background: url(${ctx['base_url']}/web/static/src/img/icons/kanban-apply.png) no-repeat center left 4px,-moz-linear-gradient(top, #ffffff, #f6f6f6);background: url(${ctx['base_url']}/web/static/src/img/icons/kanban-apply.png) no-repeat center left 4px,-webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f6f6f6));margin : 0 15px 0 0;text-decoration: none;" href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=form&status=accepted">Accept</a>
+                                        <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background: url(${ctx['base_url']}/web/static/src/img/icons/gtk-cancel.png) no-repeat center left 4px,-moz-linear-gradient(top, #ffffff, #f6f6f6);background: url(${ctx['base_url']}/web/static/src/img/icons/gtk-cancel.png) no-repeat center left 4px,-webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f6f6f6));margin: 0 0 0 15px;text-decoration: none;" href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=form&status=declined">Decline</a>
                                     </span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <div >
+                                <div>
                                     -- </br>  Sent by ${object.user_id.name} from ${object.user_id.company_id.name}. View this meeting detail
                                     <a href="${ctx['base_url']}/meeting/meeting_invitation?db=${ctx['dbname']}&token=${ctx['att_obj'].id}&action=${ctx['action_id']}&id=${object.id}&view_type=calendar&status=">directly in OpenERP.</a>
                                 </div>
