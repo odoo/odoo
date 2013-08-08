@@ -272,18 +272,6 @@ def reverse_enumerate(l):
     """
     return izip(xrange(len(l)-1, -1, -1), reversed(l))
 
-#----------------------------------------------------------
-# SMS
-#----------------------------------------------------------
-# text must be latin-1 encoded
-def sms_send(user, password, api_id, text, to):
-    import urllib
-    url = "http://api.urlsms.com/SendSMS.aspx"
-    #url = "http://196.7.150.220/http/sendmsg"
-    params = urllib.urlencode({'UserID': user, 'Password': password, 'SenderID': api_id, 'MsgText': text, 'RecipientMobileNo':to})
-    urllib.urlopen(url+"?"+params)
-    # FIXME: Use the logger if there is an error
-    return True
 
 class UpdateableStr(local):
     """ Class that stores an updateable string (used in wizards)
