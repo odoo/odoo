@@ -103,6 +103,18 @@ class account_invoice_report(osv.osv):
     }
     _order = 'date desc'
 
+    #FIX:To show sum of values of function fields in groupby
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        res = super(account_invoice_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
+        for group in res:
+            group['user_currency_price_total'] = 0
+            if group.get('__domain'):
+                group_ids = self.search(cr, uid, group.get('__domain'),context=context)
+                record = self._compute_amounts_in_user_currency(cr, uid, group_ids, context=context)
+                for id, rec in record.iteritems():
+                    group['user_currency_price_total'] += rec['user_currency_price_total']
+        return res
+
     def _select(self):
         select_str = """
             SELECT sub.id, sub.date, sub.year, sub.month, sub.day, sub.product_id, sub.partner_id, sub.country_id,
