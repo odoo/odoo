@@ -29,7 +29,7 @@ class account_invoice_report(osv.osv):
     _auto = False
     _rec_name = 'date'
 
-    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
+    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names=[], args={}, context=None):
         """Compute the amounts in the currency of the user
         """
         if context is None:
