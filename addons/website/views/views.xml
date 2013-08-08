@@ -52,7 +52,7 @@
                 &lt;!DOCTYPE html&gt;
                 <html>
                     <head>
-                        <title t-raw="title"><t t-esc="res_company.name"/></title>
+                        <title><t t-esc="title or res_company.name"/></title>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
                         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
                         <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
@@ -346,7 +346,7 @@
 
         <template id="contactus">
             <t t-call="website.layout">
-                <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                <t t-set="title">Contact us - <t t-raw="res_company.name"/></t>
                 <div class="container">
                     <h2>Contact us</h2>
                     <div class="row">
@@ -379,7 +379,7 @@
 
         <template id="aboutus">
             <t t-call="website.layout">
-                <t t-set="title">About us - <t t-esc="res_company.name"/></t>
+                <t t-set="title">About us - <t t-raw="res_company.name"/></t>
                 <div class="container">
                     <h2>About us</h2>
                     <div class="row">
