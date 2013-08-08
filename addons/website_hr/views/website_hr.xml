@@ -2,6 +2,14 @@
 <openerp>
 <data>
 
+    <!-- Mail group for the company's jobs -->
+
+    <record id="website_mail_job" model="mail.group">
+        <field name="name">Job</field>
+        <field name="public">public</field>
+        <field name="description">Job offer displayed on your website</field>
+    </record>
+
     <!-- Layout add nav and footer -->
 
     <record id="footer_website_hr" model="ir.ui.view">
@@ -9,8 +17,8 @@
         <field name="inherit_id" ref="website.footer"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//a[@href='/page/website.contactus']" position="after">
-                    <li><a href="/hr">Team</a></li>
+                <xpath expr="//a[@href='/page/website.aboutus']" position="after">
+                    <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
                 </xpath>
            </data>
         </field>
@@ -18,14 +26,13 @@
 
     <!-- Page --> 
 
-    <template id="index">
-        <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_hr/static/src/js/hr.js"></script>
-                <t t-raw="head"/>
-            </t>
-            <t t-set="title">Team</t>
-            <div class="container">
+    <record id="aboutus" model="ir.ui.view">
+        <field name="name">aboutus</field>
+        <field name="type">qweb</field>
+        <field name="inherit_id" ref="website.aboutus"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='span8']" position="inside">
+                <h3>Our team</h3>
                 <div class="thumbnails">
                     <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
                         <div class="media thumbnail">
@@ -50,8 +57,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </t>
-    </template>
+            </xpath>
+        </field>
+    </record>
+
  </data>
 </openerp>

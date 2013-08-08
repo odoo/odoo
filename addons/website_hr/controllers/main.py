@@ -5,7 +5,7 @@ from openerp.addons.web.http import request
 
 class website_hr(http.Controller):
 
-    @http.route(['/hr'], type='http', auth="public")
+    @http.route(['/page/website.aboutus'], type='http', auth="public")
     def blog(self, **post):
         website = request.registry['website']
         hr_obj = request.registry['hr.employee']
@@ -13,9 +13,9 @@ class website_hr(http.Controller):
         values = website.get_rendering_context({
             'employee_ids': hr_obj.browse(request.cr, request.uid, employee_ids)
         })
-        return website.render("website_hr.index", values)
+        return website.render("website.aboutus", values)
 
-    @http.route(['/hr/publish'], type='http', auth="public")
+    @http.route(['/page/website.aboutus/publish'], type='http', auth="public")
     def publish(self, **post):
         obj_id = int(post['id'])
         data_obj = request.registry['hr.employee']
@@ -25,14 +25,3 @@ class website_hr(http.Controller):
         obj = data_obj.browse(request.cr, request.uid, obj_id)
 
         return obj.website_published and "1" or "0"
-
-    @http.route(['/hr/publish_contact'], type='http', auth="public")
-    def publish_contact(self, **post):
-        obj_id = int(post['id'])
-        data_obj = request.registry['hr.employee']
-
-        obj = data_obj.browse(request.cr, request.uid, obj_id)
-        data_obj.write(request.cr, request.uid, [obj_id], {'website_published_on_contact_form': not obj.website_published_on_contact_form})
-        obj = data_obj.browse(request.cr, request.uid, obj_id)
-
-        return obj.website_published_on_contact_form and "1" or "0"
