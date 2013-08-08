@@ -74,8 +74,8 @@ class QWebXml(object):
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
-        self._void_elements = set(['area','base','br','col','embed','hr','img','input','keygen',
-                                  'link','menuitem','meta','param','source','track','wbr']);
+        self._void_elements = set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
+                                  'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
         prefix = 'render_tag_'
         for i in [j for j in dir(self) if j.startswith(prefix)]:
             name = i[len(prefix):].replace('_', '-')
@@ -203,19 +203,19 @@ class QWebXml(object):
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
         inner = self.eval_str(t_att["raw"], v)
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_rawf(self, e, t_att, g_att, v):
         inner = self.eval_format(t_att["rawf"], v)
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_esc(self, e, t_att, g_att, v):
         inner = cgi.escape(self.eval_str(t_att["esc"], v))
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_escf(self, e, t_att, g_att, v):
         inner = cgi.escape(self.eval_format(t_att["escf"], v))
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_foreach(self, e, t_att, g_att, v):
         expr = t_att["foreach"]
@@ -307,6 +307,6 @@ class QWebXml(object):
         except AttributeError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att,  g_att, v, str(inner))
+        return self.render_element(e, t_att, g_att, v, str(inner))
 
 # leave this, al.
