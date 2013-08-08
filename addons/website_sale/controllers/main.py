@@ -2,10 +2,11 @@
 
 import math
 import openerp
-import simplejson
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+import werkzeug
+from urllib import urlencode
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
@@ -86,7 +87,7 @@ class Ecommerce(http.Controller):
         product_ids = product_obj.search(request.cr, request.uid, [("id", "in", product_ids)])
         return product_obj.browse(request.cr, request.uid, product_ids)
 
-    @http.route(['/shop', '/shop/category/<cat_id>', '/shop/category/<cat_id>/page/<page>', '/shop/page/<page>'], type='http', auth="public")
+    @http.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<page>/', '/shop/page/<page>/'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
 
         website = request.registry['website']
@@ -133,7 +134,7 @@ class Ecommerce(http.Controller):
         })
         return self.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<product_id>'], type='http', auth="public")
+    @http.route(['/shop/product/<product_id>/'], type='http', auth="public")
     def product(self, cat_id=0, product_id=0):
         website = request.registry['website']
         order = get_current_order()
@@ -151,7 +152,7 @@ class Ecommerce(http.Controller):
         })
         return self.render("website_sale.product", values)
 
-    @http.route(['/shop/mycart'], type='http', auth="public")
+    @http.route(['/shop/mycart/'], type='http', auth="public")
     def mycart(self, **post):
         website = request.registry['website']
         order = get_current_order()
@@ -169,9 +170,7 @@ class Ecommerce(http.Controller):
 
         return self.render("website_sale.mycart", values)
 
-    @http.route(['/shop/add_cart'], type='http', auth="public")
-    def add_cart(self, product_id=0, remove=False):
-        website = request.registry['website']
+    def add_product_to_cart(self, product_id=0, number=1):
         context = {}
 
         order_line_obj = request.registry.get('sale.order.line')
@@ -187,7 +186,7 @@ class Ecommerce(http.Controller):
         order_line_ids = order_line_obj.search(request.cr, openerp.SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
         if order_line_ids:
             order_line = order_line_obj.read(request.cr, openerp.SUPERUSER_ID, order_line_ids, [], context=context)[0]
-            quantity = order_line['product_uom_qty'] + (remove and -1 or 1)
+            quantity = order_line['product_uom_qty'] + number
             if quantity <= 0:
                 order_line_obj.unlink(request.cr, openerp.SUPERUSER_ID, order_line_ids, context=context)
         else:
@@ -210,32 +209,42 @@ class Ecommerce(http.Controller):
                 order_line_id = order_line_obj.create(request.cr, openerp.SUPERUSER_ID, values, context=context)
                 order.write({'order_line': [(4, order_line_id)]}, context=context)
 
-        values = website.get_rendering_context()
-        html = self.render("website_sale.total", values)
-        return simplejson.dumps({"quantity": quantity, "totalHTML": html})
+        return quantity
 
-    @http.route(['/shop/remove_cart'], type='http', auth="public")
+    @http.route(['/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
+    def json_add_cart(self, path=None, product_id=0, remove=False):
+        self.add_product_to_cart(product_id, remove and -1 or 1)
+        if path:
+            return werkzeug.utils.redirect("/shop/%s/" % path)
+        else:
+            return werkzeug.utils.redirect("/shop/")
+
+    @http.route(['/shop/remove_cart/<product_id>/', '/shop/<path:path>/remove_cart/<product_id>/'], type='http', auth="public")
+    def json_remove_cart(self, path=None, product_id=0, remove=False):
+        return self.json_add_cart(path=path, product_id=product_id, remove=True)
+
+    @http.route(['/shop/remove_cart/'], type='http', auth="public")
     def remove_cart(self, product_id=0):
         return self.add_cart(product_id=product_id, remove=True)
 
-    @http.route(['/shop/checkout'], type='http', auth="public")
+    @http.route(['/shop/checkout/'], type='http', auth="public")
     def checkout(self, **post):
         website = request.registry['website']
+
         values = website.get_rendering_context({
-            'partner': False
+            'partner': False,
+            'checkout': request.session.setdefault('checkout', {}),
+            'error': post.get("error") and dict.fromkeys(post.get("error").split(","), 1) or []
         })
         order = get_current_order()
 
-        if order.state != 'draft':
-            return self.confirmed(**post)
-        if not order.order_line:
+        if order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
 
         partner_obj = request.registry.get('res.partner')
         user_obj = request.registry.get('res.users')
         country_obj = request.registry.get('res.country')
         country_state_obj = request.registry.get('res.country.state')
-        payment_obj = request.registry.get('portal.payment.acquirer')
 
         if request.uid != website.get_public_user().id:
             values['partner'] = user_obj.browse(request.cr, request.uid, request.uid).partner_id
@@ -247,39 +256,33 @@ class Ecommerce(http.Controller):
         values['countries'] = country_obj.browse(request.cr, openerp.SUPERUSER_ID, country_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)]))
         values['states'] = country_state_obj.browse(request.cr, openerp.SUPERUSER_ID, country_state_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)]))
 
-        payment_ids = payment_obj.search(request.cr, openerp.SUPERUSER_ID, [('visible', '=', True)])
-        values['payments'] = payment_obj.browse(request.cr, openerp.SUPERUSER_ID, payment_ids)
-        for payment in values['payments']:
-            content = payment_obj.render(request.cr, openerp.SUPERUSER_ID, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
-            payment._content = content
-
         return website.render("website_sale.checkout", values)
 
-    @http.route(['/shop/confirm_order'], type='http', auth="public")
+    @http.route(['/shop/confirm_order/'], type='http', auth="public")
     def confirm_order(self, **post):
         website = request.registry['website']
         order = get_current_order()
 
-        json = {'error': [], 'validation': False}
+        error = []
         partner_obj = request.registry.get('res.partner')
         user_obj = request.registry.get('res.users')
 
         if order.state != 'draft':
-            json['validation'] = True
-            return json
+            return werkzeug.utils.redirect("/shop/checkout/")
         if not order.order_line:
-            json['error'].append("empty_cart")
-            return json
+            error.append("empty_cart")
+            return werkzeug.utils.redirect("/shop/checkout/")
 
         # check values
+        request.session['checkout'] = post
         required_field = ['phone', 'zip', 'email', 'street', 'city', 'name', 'country_id']
         for key in required_field:
             if not post.get(key):
-                json['error'].append(key)
-            if 'shipping_name' in post and key != 'email' and not post.get("shipping_%s" % key):
-                json['error'].append("shipping_%s" % key)
-        if json['error']:
-            return simplejson.dumps(json)
+                error.append(key)
+            if post.get('shipping_different') and key != 'email' and not post.get("shipping_%s" % key):
+                error.append("shipping_%s" % key)
+        if error:
+            return werkzeug.utils.redirect("/shop/checkout/?error=%s" % ",".join(error))
 
         # search or create company
         company_id = None
@@ -339,30 +342,34 @@ class Ecommerce(http.Controller):
         order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
         order.write(order_value)
 
-        json['validation'] = True
-        return simplejson.dumps(json)
+        request.httprequest.session['ecommerce_order_id_old'] = order.id
+        request.httprequest.session['ecommerce_order_id'] = None
 
-    @http.route(['/shop/confirmed'], type='http', auth="public")
-    def confirmed(self, **post):
+        return werkzeug.utils.redirect("/shop/payment/")
+
+    @http.route(['/shop/payment/'], type='http', auth="public")
+    def payment(self, **post):
         website = request.registry['website']
+        order = get_order(request.httprequest.session.get('ecommerce_order_id_old'))
 
-        if request.httprequest.session.get('ecommerce_order_id'):
-            order = get_current_order()
-            if order.state != 'draft':
-                request.httprequest.session['ecommerce_order_id_old'] = order.id
-                request.httprequest.session['ecommerce_order_id'] = None
-
-        order_old = get_order(request.httprequest.session.get('ecommerce_order_id_old'))
-        if not order_old.order_line:
+        if order.state != 'progress':
             return self.mycart(**post)
 
         values = website.get_rendering_context({
-            'temp': 0,
-            'order': order_old,
+            'partner': False,
+            'order': order
         })
-        return self.render("website_sale.confirmed", values)
 
-    @http.route(['/shop/publish'], type='http', auth="public")
+        payment_obj = request.registry.get('portal.payment.acquirer')
+        payment_ids = payment_obj.search(request.cr, openerp.SUPERUSER_ID, [('visible', '=', True)])
+        values['payments'] = payment_obj.browse(request.cr, openerp.SUPERUSER_ID, payment_ids)
+        for payment in values['payments']:
+            content = payment_obj.render(request.cr, openerp.SUPERUSER_ID, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
+            payment._content = content
+
+        return website.render("website_sale.payment", values)
+
+    @http.route(['/shop/publish/'], type='http', auth="public")
     def publish(self, **post):
         product_id = int(post['id'])
         product_obj = request.registry['product.product']
