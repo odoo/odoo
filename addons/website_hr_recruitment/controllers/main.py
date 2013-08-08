@@ -11,9 +11,13 @@ class website_hr_recruitment(http.Controller):
     def career(self, **post):
         website = request.registry['website']
         jobpost_ids = request.registry['hr.job'].search(request.cr, request.uid, [("state", "=", 'open')])
-        #groups = request.registry['hr.job'].read_group(request.cr, request.uid, [], [], ['company_id'])
-        #print "\n\n>>>>..grouos>>>>>>>>>>",groups
+        request.cr.execute("select distinct(com.id) from hr_job job, res_company com where com.id=job.company_id")
+        ids = [] 
+        for i in request.cr.fetchall():
+            ids.append(i[0])
+        companies = request.registry['res.company'].browse(request.cr, request.uid, ids)
         values = website.get_rendering_context({
+            'companies': companies,
             'res_job': request.registry['hr.job'].browse(request.cr, request.uid, jobpost_ids)
         })
         html = website.render("website_hr_recruitment.career", values)
