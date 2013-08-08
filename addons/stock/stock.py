@@ -140,7 +140,8 @@ class stock_quant(osv.osv):
         """
         res = {}
         for q in self.browse(cr, uid, ids, context=context):
-            res[q.id] = q.product_id.code
+
+            res[q.id] = q.product_id.code or ''
             if q.lot_id:
                 res[q.id] = q.lot_id.name 
             res[q.id] += ': '+  str(q.qty) + q.product_id.uom_id.name
