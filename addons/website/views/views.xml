@@ -40,7 +40,7 @@
                             <ul class='unstyled'>
                                 <li><a href="/page/website.contactus">Contact us</a></li>
                                 <li><a href="/page/website.news">News</a></li>
-                                <li><a href="/page/website.contactus">About us</a></li>
+                                <li><a href="/page/website.aboutus">About us</a></li>
                                 <li><a href='#'>&amp;#x2706; <span t-field="res_company.phone"/></a></li>
                             </ul>
                         </div>
@@ -371,6 +371,27 @@
                                 <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
                             </address>
                             <img class="thumbnail" t-att-src="google_map_url"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="aboutus">
+            <t t-call="website.layout">
+                <t t-set="title">About us - <t t-esc="res_company.name"/></t>
+                <div class="container">
+                    <h2>About us</h2>
+                    <div class="row">
+                        <div class="span4">
+                            <h3>Our vision</h3>
+                            <p>
+                                Contact us about anything related to our company or services.
+                            </p><p>
+                                We'll do our best to get back to you as soon as possible.
+                            </p>
+                        </div>
+                        <div class="span8">
                         </div>
                     </div>
                 </div>
