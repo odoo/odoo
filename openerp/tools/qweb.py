@@ -283,7 +283,7 @@ class QWebXml(object):
         record = self.eval_object(record, v)
 
         inner = ""
-        field_type = record._model._all_columns.get(field).column._type
+        field_type = record._model._all_columns[field].column._type
         try:
             if field_type == 'many2one':
                 field_data = record.read([field])[0].get(field)
