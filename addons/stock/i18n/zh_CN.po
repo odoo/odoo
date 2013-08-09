@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-08-05 16:41+0000\n"
+"PO-Revision-Date: 2013-08-08 16:54+0000\n"
 "Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-06 05:05+0000\n"
-"X-Generator: Launchpad (build 16718)\n"
+"X-Launchpad-Export-Date: 2013-08-09 05:35+0000\n"
+"X-Generator: Launchpad (build 16723)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -2006,6 +2006,18 @@ msgid ""
 "\n"
 "            * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"\n"
+"            * 草稿: 尚未确认，并且不会被排期，直到被确认。\n"
+"\n"
+"            * 等待其它的操作: 在变得可用前， 等待其它的移库单被处理(例如：在根据订单补货的流程中)\n"
+"\n"
+"            * 等待可用: 仍在等待产品的可用性。\n"
+"\n"
+"            * 等待转移: 产品已经保留，仅仅等待被确认。\n"
+"\n"
+"            * 转移完成: 已被处理，再也不能被修改或者取消。\n"
+"\n"
+"            * 取消: 已经被取消，再也不能被确认。"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2352,7 +2364,7 @@ msgstr "供货商库位"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Products Inventory"
-msgstr "查看产品存货清单"
+msgstr "查看产品库存"
 
 #. module: stock
 #: view:stock.move:0
@@ -3436,6 +3448,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击开始一次盘点。\n"
+"              </p><p>\n"
+"                "
+"定期盘点通常用于清点每个库位的商品数量。你可以每年定期使用本功能一次来做总体盘点，也可以在任何你需要的时候进行以便符合当前某个产品的存量级别。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -4537,6 +4556,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击新增一个产品的发货单。\n"
+"              </p><p>\n"
+"                你在此处会发现该产品相关的所有调拨历史，以及所有你需要发货给客户的产品。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -4903,3 +4928,6 @@ msgstr "仓库地址："
 
 #~ msgid "Time"
 #~ msgstr "时间"
+
+#~ msgid "Creation time, usually the time of the order."
+#~ msgstr "创建时间，通常是下单的时间。"
