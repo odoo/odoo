@@ -846,7 +846,7 @@ form: module.record_id""" % (xml_id,)
         if '.' in tpl_id:
             module, tpl_id = tpl_id.split('.', 1)
         # set the full template name for qweb <module>.<id>
-        el.attrib['t-name'] = '%s.%s' % (module, tpl_id)
+        el.set('t-name', '%s.%s' % (module, tpl_id))
         el.attrib.pop('id', None)
         el.tag = 't'
 
@@ -855,7 +855,7 @@ form: module.record_id""" % (xml_id,)
             'model': 'ir.ui.view',
         }
         for att in ['forcecreate', 'context']:
-            if att in el.attrib:
+            if att in el.keys():
                 record_attrs[att] = el.attrib.pop(att)
 
         record = etree.Element('record', attrib=record_attrs)
