@@ -129,6 +129,19 @@ class hr_holidays(osv.osv):
                 result[hol.id] = hol.number_of_days_temp
         return result
 
+    def _get_can_reset(self, cr, uid, ids, name, arg, context=None):
+        """User can reset a leave request if it is its own leave request or if
+        he is an Hr Manager. """
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        group_hr_manager_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_hr_manager')[1]
+        if group_hr_manager_id in [g.id for g in user.groups_id]:
+            return dict.fromkeys(ids, True)
+        result = dict.fromkeys(ids, False)
+        for holiday in self.browse(cr, uid, ids, context=context):
+            if holiday.employee_id and holiday.employee_id.user_id and holiday.employee_id.user_id.id == uid:
+                result[holiday.id] = True
+        return result
+
     def _check_date(self, cr, uid, ids):
         for holiday in self.browse(cr, uid, ids):
             holiday_ids = self.search(cr, uid, [('date_from', '<=', holiday.date_to), ('date_to', '>=', holiday.date_from), ('employee_id', '=', holiday.employee_id.id), ('id', '<>', holiday.id)])
@@ -162,6 +175,9 @@ class hr_holidays(osv.osv):
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Tag')], 'Allocation Mode', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category', required=True),
         'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)'),
         'double_validation': fields.related('holiday_status_id', 'double_validation', type='boolean', relation='hr.holidays.status', string='Apply Double Validation'),
+        'can_reset': fields.function(
+            _get_can_reset,
+            type='boolean'),
     }
     _defaults = {
         'employee_id': _employee_get,
@@ -297,14 +313,9 @@ class hr_holidays(osv.osv):
         if context is None:
             context = {}
         context = dict(context, mail_create_nolog=True)
-        return super(hr_holidays, self).create(cr, uid, values, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        check_fnct = self.pool.get('hr.holidays.status').check_access_rights
-        for  holiday in self.browse(cr, uid, ids, context=context):
-            if holiday.state in ('validate','validate1') and not check_fnct(cr, uid, 'write', raise_exception=False):
-                raise osv.except_osv(_('Warning!'),_('You cannot modify a leave request that has been approved. Contact a human resource manager.'))
-        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        hol_id = super(hr_holidays, self).create(cr, uid, values, context=context)
+        self.check_holidays(cr, uid, [hol_id], context=context)
+        return hol_id
 
     def holidays_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
