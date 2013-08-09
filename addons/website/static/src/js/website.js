@@ -208,17 +208,17 @@ instance.website.RTE = instance.web.Widget.extend({
                 {name: 'basicstyles', items: [
                     "Bold", "Italic", "Underline", "Strike", "Subscript",
                     "Superscript", "TextColor", "BGColor", "RemoveFormat"
-                ],
+                ]},{
                 name: 'span', items: [
                     "Link", "Unlink", "Blockquote", "BulletedList",
                     "NumberedList", "Indent", "Outdent",
-                ],
+                ]},{
                 name: 'justify', items: [
                     "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
-                ],
+                ]},{
                 name: 'special', items: [
                     "Image", "Table"
-                ],
+                ]},{
                 name: 'styles', items: [
                     "Format", "Styles"
                 ]}
