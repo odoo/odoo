@@ -859,7 +859,7 @@ form: module.record_id""" % (xml_id,)
                 record_attrs[att] = el.attrib.pop(att)
 
         record = etree.Element('record', attrib=record_attrs)
-        record.append(builder.E.field(str(tpl_id), name='name'))
+        record.append(builder.E.field(tpl_id, name='name'))
         record.append(builder.E.field("qweb", name='type'))
         record.append(builder.E.field(el, name="arch", type="xml"))
         return self._tag_record(cr, record, data_node)
