@@ -205,14 +205,22 @@ instance.website.RTE = instance.web.Widget.extend({
             // Place toolbar in controlled location
             sharedSpaces: { top: 'oe_rte_toolbar' },
             toolbar: [
-                {name: 'items', items: [
+                {name: 'basicstyles', items: [
                     "Bold", "Italic", "Underline", "Strike", "Subscript",
-                    "Superscript", "TextColor", "BGColor", "RemoveFormat",
+                    "Superscript", "TextColor", "BGColor", "RemoveFormat"
+                ],
+                name: 'span', items: [
                     "Link", "Unlink", "Blockquote", "BulletedList",
-                    "NumberedList", "Image", "Indent", "Outdent",
-                    "JustifyLeft", "JustifyCenter", "JustifyRight",
-                    "JustifyBlock", "Table", "Font", "FontSize", "Format",
-                    "Styles"
+                    "NumberedList", "Indent", "Outdent",
+                ],
+                name: 'justify', items: [
+                    "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
+                ],
+                name: 'special', items: [
+                    "Image", "Table"
+                ],
+                name: 'styles', items: [
+                    "Format", "Styles"
                 ]}
             ],
             // styles dropdown in toolbar
