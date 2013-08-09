@@ -81,7 +81,7 @@
         'active_model': 'ir.ui.menu', 'journal_type': 'purchase', 'active_ids': [ref('menu_action_invoice_tree2')],
         'type': 'in_invoice', 'active_id': ref('menu_action_invoice_tree2')})
       assert False, "This should never happen!"
-    except osv.except_osv, e:
+    except osv.except_osv:
       pass
 -
   I verify that 'Period Sum' and 'Year sum' of the tax code are the expected values 
