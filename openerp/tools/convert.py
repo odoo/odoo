@@ -49,7 +49,7 @@ except:
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from lxml import etree
+from lxml import etree, builder
 import misc
 from config import config
 from translate import _
@@ -850,7 +850,6 @@ form: module.record_id""" % (xml_id,)
         el.attrib.pop('id', None)
         el.tag = 't'
 
-        record = etree.Element('record')
         record_attrs = {
             'id': tpl_id,
             'model': 'ir.ui.view',
@@ -859,11 +858,10 @@ form: module.record_id""" % (xml_id,)
             if att in el.attrib:
                 record_attrs[att] = el.attrib.pop(att)
 
-        record.attrib.update(record_attrs)
-        record.append(etree.fromstring('<field name="name">%s</field>' % tpl_id))
-        record.append(etree.fromstring('<field name="type">qweb</field>'))
-        record.append(etree.fromstring('<field name="arch" type="xml"/>'))
-        record[-1].append(el)
+        record = etree.Element('record', attrib=record_attrs)
+        record.append(builder.E.field(str(tpl_id), name='name'))
+        record.append(builder.E.field("qweb", name='type'))
+        record.append(builder.E.field(el, name="arch", type="xml"))
         return self._tag_record(cr, record, data_node)
 
     def id_get(self, cr, id_str):
