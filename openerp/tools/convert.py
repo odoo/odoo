@@ -848,7 +848,9 @@ form: module.record_id""" % (xml_id,)
         # set the full template name for qweb <module>.<id>
         if (not el.get('inherit_id', False)) and (not el.get('inherit_option_id', False)):
             el.attrib['t-name'] = '%s.%s' % (module, tpl_id)
-        el.tag = 'data'
+            el.tag = 't'
+        else:
+            el.tag = 'data'
         el.attrib.pop('id', None)
 
         record = etree.Element('record')
