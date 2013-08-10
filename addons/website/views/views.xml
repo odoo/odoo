@@ -61,7 +61,7 @@
                         Create a <a href="http://openerp.com/apps/website">free website</a> with <a class="label label-important">OpenERP</a>
                     </div>
                     <div class="pull-left muted">
-                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="">Sitemap</a>
+                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                     </div>
                 </div>
         </template>
@@ -338,7 +338,7 @@
                                 This page does not exists, but you can create
                                 it as you are administrator of this site.
                             </p>
-                            <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
+                            <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a> <span class="muted"> or </span> <a href="/sitemap">Search a Page</a>
                         </div>
 
                         <div class="text-center muted">
