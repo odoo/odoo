@@ -20,7 +20,7 @@
                 <xpath expr="//li[last()]" position="after">
                     <li class="pull-right"><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
                 </xpath>
-           </data>
+            </data>
         </field>
     </record>
     <record id="footer_website_mail" model="ir.ui.view">
@@ -28,8 +28,10 @@
         <field name="inherit_id" ref="website.footer"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//a[@href='/page/website.news']" position="replace">
-                    <a href="/blog/%(website_mail.website_mail_blog)d/">News</a>
+                <xpath expr="//h5[@name='info_title']" position="after">
+                    <ul class='unstyled'>
+                        <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
+                    </ul>
                 </xpath>
            </data>
         </field>

@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="contactus" model="ir.ui.view">
-            <field name="name">contactus</field>
-            <field name="type">qweb</field>
-            <field name="inherit_id" ref="website.contactus"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='mail_button']" position="replace">
-                    <form action="/crm/contactus" method="post" class="navbar-form pull-left">
-                        <input class="span4" type="text" name="contact_name" required="True" placeholder="Name..."/><br/>
-                        <input class="span4" type="text" name="phone" required="True" placeholder="Phone number..."/><br/>
-                        <input class="span4" type="text" name="email_from" required="True" placeholder="Email..."/>
-                        <input class="span8" style="margin-top: 15px;" type="text" name="name" required="True" placeholder="Subject..."/><br/>
-                        <textarea class="span8" style="margin-top:5px; height: 140px;" name="description" placeholder="Enter your comment..."> </textarea><br/>
-                        <button class="btn">Send message</button>
-                    </form>
-                </xpath>
-            </field>
-        </record>
+        <template id="contactus" inherit_id="website.contactus" inherit_option_id="website.contactus">
+            <xpath expr="//div[@name='mail_button']" position="replace">
+                <form action="/crm/contactus" method="post" class="navbar-form pull-left">
+                    <input class="span4" type="text" name="contact_name" required="True" placeholder="Name..."/><br/>
+                    <input class="span4" type="text" name="phone" required="True" placeholder="Phone number..."/><br/>
+                    <input class="span4" type="text" name="email_from" required="True" placeholder="Email..."/>
+                    <input class="span8" style="margin-top: 15px;" type="text" name="name" required="True" placeholder="Subject..."/><br/>
+                    <textarea class="span8" style="margin-top:5px; height: 140px;" name="description" placeholder="Enter your comment..."> </textarea><br/>
+                    <button class="btn">Send message</button>
+                </form>
+            </xpath>
+        </template>
 
         <template id="thanks">
-                <t t-call="website.layout">
-                    <t t-set="title">Thank You!</t>
-                    <div class="container">
-                        <div class="oe_row">
-                            <h2 class="oe_slogan">Thanks for your message.</h2>
-                        </div>
+            <t t-call="website.layout">
+                <t t-set="title">Thank You!</t>
+                <div class="container">
+                    <div class="oe_row">
+                        <h2 class="oe_slogan">Thanks for your message.</h2>
                     </div>
-                </t>
+                </div>
+            </t>
         </template>
      </data>
 </openerp>
