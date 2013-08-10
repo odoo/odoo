@@ -685,7 +685,6 @@ class view(osv.osv):
     # view used as templates
 
     def read_template(self, cr, uid, id_, context=None):
-        import pprint
         try:
             id_ = int(id_)
         except ValueError:
