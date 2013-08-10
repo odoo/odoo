@@ -34,18 +34,33 @@
                             <textarea name="description"/>
                         </div>
                     </div>
-                    <button class="btn">Send message</button>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn">Send</button>
+                        </div>
+                    </div>
                 </form>
             </xpath>
         </template>
 
         <template id="thanks">
             <t t-call="website.layout">
-                <t t-set="title">Thank You!</t>
+                <t t-set="title">Message Sent</t>
                 <div class="container">
-                    <div class="oe_row">
-                        <h2 class="oe_slogan">Thanks for your message.</h2>
+                    <div class="alert mt32">
+                        Your message has been sent successfully.
+                        <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                     </div>
+                    <h2>Thanks!</h2>
+                    <p>
+                        We will get back to you shortly.
+                    </p><p class="mt64">
+                        If you have an emergency, do not hesitate to contact us by phone:
+                    </p>
+                    <ul class='unstyled'>
+                        <li><i class="icon-phone"></i> : <span t-field="res_company.phone"/></li>
+                        <li><i class="icon-envelope"></i> : <span t-field="res_company.email"></span></li>
+                    </ul>
                 </div>
             </t>
         </template>
