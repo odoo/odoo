@@ -868,7 +868,7 @@ form: module.record_id""" % (xml_id,)
         record[-1].append(el)
         for key in ('inherit_id','inherit_option_id'):
             if el.get(key, False):
-                record.append(etree.fromstring('<field name="%s" ref="%s"/>' % (key, el.get('key'))))
+                record.append(etree.fromstring('<field name="%s" ref="%s"/>' % (key, el.get(key))))
                 el.attrib.pop(key, None)
         return self._tag_record(cr, record, data_node)
 
