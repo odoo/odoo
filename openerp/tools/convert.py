@@ -866,7 +866,7 @@ form: module.record_id""" % (xml_id,)
         record.append(etree.fromstring('<field name="type">qweb</field>'))
         record.append(etree.fromstring('<field name="arch" type="xml"/>'))
         record[-1].append(el)
-        for field in ('inherit_id','inherit_option_id'):
+        for key in ('inherit_id','inherit_option_id'):
             if el.get(key, False):
                 record.append(etree.fromstring('<field name="%s" ref="%s"/>' % (key, el.get('key'))))
                 el.attrib.pop(key, None)
