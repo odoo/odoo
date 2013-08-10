@@ -3,12 +3,37 @@
     <data>
         <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" inherit_option_id="website.contactus">
             <xpath expr="//div[@name='mail_button']" position="replace">
-                <form action="/crm/contactus" method="post" class="navbar-form pull-left">
-                    <input class="span4" type="text" name="contact_name" required="True" placeholder="Name..."/><br/>
-                    <input class="span4" type="text" name="phone" required="True" placeholder="Phone number..."/><br/>
-                    <input class="span4" type="text" name="email_from" required="True" placeholder="Email..."/>
-                    <input class="span8" style="margin-top: 15px;" type="text" name="name" required="True" placeholder="Subject..."/><br/>
-                    <textarea class="span8" style="margin-top:5px; height: 140px;" name="description" placeholder="Enter your comment..."> </textarea><br/>
+                <form action="/crm/contactus" method="post" class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="contact_name">Name</label>
+                        <div class="controls">
+                            <input type="text" name="contact_name" required="True"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="phone">Phone number</label>
+                        <div class="controls">
+                            <input type="text" name="phone" required="True" placeholder="e.g. (+32).81.81.37.00"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="email_from">Email</label>
+                        <div class="controls">
+                            <input type="text" name="email_from" required="True"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="name">Subject</label>
+                        <div class="controls">
+                            <input type="text" name="name" required="True"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="description">Your Question</label>
+                        <div class="controls">
+                            <textarea name="description"/>
+                        </div>
+                    </div>
                     <button class="btn">Send message</button>
                 </form>
             </xpath>
