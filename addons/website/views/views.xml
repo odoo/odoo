@@ -332,31 +332,36 @@
 
         <template id="404">
                 <t t-call="website.layout">
+                    <div class="container" t-if="editable">
+                        <div class="well mt32">
+                            <p>
+                                This page does not exists, but you can create
+                                it as you are administrator of this site.
+                            </p>
+                            <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
+                        </div>
+
+                        <div class="text-center muted">
+                            Edit the content bellow this line to adapt the default "page not found" page.
+                        </div>
+                    </div>
+                    <hr/>
                     <div class="container">
-                        <div class="row">
-                            <div class="span12">
-                                <h1>404: Page not found!</h1>
-                                <p>
-                                    The page you were looking for could not be
-                                    found; it is possible you have typed the
-                                    address incorrectly, but it has most
-                                    probably been removed due to the recent
-                                    website reorganisation.
-                                </p><p>
-                                    Maybe you were looking for one of these
-                                    popular pages ?
-                                </p>
-                                <ul>
-                                    <li><a href="/">Homepage</a></li>
-                                    <li><a href="/">Contact Us</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="span12 mt32">
-                                <a class="btn btn-primary" t-att-href="'/pagenew/'+path" t-if="editable">Create Page</a>
-                            </div>
-                        </div>
+                        <h1 class="mt32">404: Page not found!</h1>
+                        <p>
+                            The page you were looking for could not be
+                            found; it is possible you have typed the
+                            address incorrectly, but it has most
+                            probably been removed due to the recent
+                            website reorganisation.
+                        </p><p>
+                            Maybe you were looking for one of these
+                            popular pages ?
+                        </p>
+                        <ul>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/">Contact Us</a></li>
+                        </ul>
                     </div>
                 </t>
         </template>
