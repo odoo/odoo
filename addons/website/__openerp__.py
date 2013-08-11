@@ -1,6 +1,6 @@
 {
     'name': 'Website',
-    'category': 'CMS',
+    'category': 'Website',
     'version': '1.0',
     'description': """
 OpenERP Website CMS

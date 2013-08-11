@@ -1,6 +1,6 @@
 {
     'name': 'Website Event',
-    'category': 'mail',
+    'category': 'Website',
     'version': '1.0',
     'description': """
 OpenERP Blog

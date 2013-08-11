@@ -9,20 +9,26 @@
                 <button data-action="edit" class="btn btn-primary">Edit</button>
             </form>
             <ul class="nav pull-right">
+                <li class="active"><a href="#"><span class="icon-desktop"/></a></li>
+                <li><a href="#"><span class="icon-mobile-phone"/></a></li>
+                <li class="divider-vertical"></li>
                 <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
                 <li><a href="#">Translate</a></li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <strong class="carret"></strong></a>
+                    <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
                     <div class="dropdown-menu">
-                         aaa
+                        <ul class="nav nav-list" id="customize-menu">
+                            <!-- filled in JS -->
+                        </ul>
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Settings <strong class="carret"></strong></a>
-                    <div class="dropdown-menu">
-                         Install Apps
-                         Paramters
-                    </div>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Settings <strong class="caret"></strong></a>
+                    <ul class="dropdown-menu">
+                         <li><a href="/admin#action=website.action_module_website">Install Apps</a></li>
+                         <li class="divider"></li>
+                         <li><a href="#">General Configuration</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>

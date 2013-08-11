@@ -34,4 +34,3 @@ class view(osv.osv):
         for child in node.xpath("//t[@t-call]"):
             result += self._views_get(cr, uid, child.get('t-call'), options=options, context=context)
         return result
-

@@ -1,6 +1,6 @@
 {
     'name': 'Website Contact Form',
-    'category': 'CRM',
+    'category': 'Website',
     'version': '1.0',
     'description': """
 OpenERP Contact Form

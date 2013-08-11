@@ -27,6 +27,34 @@ instance.website.EditorBar = instance.web.Widget.extend({
         this._super.apply(this, arguments);
         this.saving_mutex = new $.Mutex();
     },
+    customize_setup: function() {
+        var self = this;
+        this.$('#customize-menu-button').click(function(event) {
+            self.rpc('/website/customize_template_get', {'xml_id': 'website.contactus'}).then(
+                function(result) {
+                    node = $('#customize-menu').empty()
+                    for (var i in result) {
+                        item = result[i];
+                        if (item.header) {
+                            li = '<li class="nav-header">'+item.name+'</li>'
+                        } else {
+                            li = '<li><a href="#" data-view-id="'+item.id+'"><strong class="icon-check'+
+                                  (item.active?'':'-empty')+
+                                  '"></strong> '+item.name+'</a></li>'
+                        }
+                        node.append(li);
+                    }
+                    $('a', node).on('click', function (event) {
+                        self.rpc('/website/customize_template_toggle', {
+                            'view_id': $(event.target).attr('data-view-id')
+                        }).then( function(result) {
+                            window.location.reload();
+                        })
+                    });
+                }
+            )
+        });
+    },
     start: function() {
         var self = this;
 
@@ -34,6 +62,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         this.$('#website-top-view').show();
 
         $('.dropdown-toggle').dropdown();
+        this.customize_setup();
 
         this.$buttons = {
             edit: this.$('button[data-action=edit]'),
@@ -319,6 +348,12 @@ $(function(){
                 $(this).removeClass('oe_selected');
             }
         });
+    }
+
+    function customier_option_get(event){
+
+
+        event.preventDefault();
     }
 
     function append_snippet(event){

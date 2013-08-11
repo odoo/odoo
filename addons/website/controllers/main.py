@@ -63,6 +63,45 @@ class Website(openerp.addons.web.controllers.main.Home):
             html = website.render('website.404', values)
         return html
 
+    @http.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
+    def customize_template_set(self, view_id):
+        view_obj = request.registry.get("ir.ui.view")
+        view = view_obj.browse(request.cr, request.uid, int(view_id), context=request.context)
+        if view.inherit_id:
+            print '*', view.inherit_id
+            value = False
+        else:
+            value = view.inherit_option_id and view.inherit_option_id.id or False
+            print '*', view.inherit_id, 'no', value, view
+        view_obj.write(request.cr, request.uid, [view_id], {
+            'inherit_id': value
+        }, context=request.context)
+        print 'Wrote', value, 'on', view_id
+        return True
+
+    @http.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
+    def customize_template_get(self, xml_id):
+        view = request.registry.get("ir.ui.view")
+        views = view._views_get(request.cr, request.uid, xml_id, request.context)
+        done = {}
+        result = []
+        for v in views:
+            if v.inherit_option_id:
+                if v.inherit_option_id.id not in done:
+                    result.append({
+                        'name': v.inherit_option_id.name,
+                        'header': True,
+                        'active': False
+                    })
+                    done[v.inherit_option_id.id] = True
+                result.append({
+                    'name': v.name,
+                    'id': v.id,
+                    'header': False,
+                    'active': v.inherit_id.id == v.inherit_option_id.id
+                })
+        return result
+
     @http.route('/website/attach', type='http', auth='admin') # FIXME: auth
     def attach(self, CKEditorFuncNum, CKEditor, langCode, upload):
         req = request.httprequest

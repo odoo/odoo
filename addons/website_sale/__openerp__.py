@@ -1,6 +1,6 @@
 {
     'name': 'E-Commerce',
-    'category': 'Sale',
+    'category': 'Website',
     'version': '1.0',
     'description': """
 OpenERP E-Commerce
