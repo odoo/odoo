@@ -16,6 +16,22 @@
             </div>
         </template>
 
+        <!--
+            Files used in the generic theme, mostly bootstrap and a few OpenERP tags
+        -->
+        <template id="theme" name="Theme">
+            <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css'/>
+            <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css'/>
+        </template>
+
+        <template id="theme_flatly" name="Flat" inherit_option_id="website.theme">
+            <xpath expr="//link[@id='bootstrap_css']" position="replace">
+                <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css'/>
+            </xpath>
+            
+        </template>
+
+
         <template id="footer" name="Footer">
                 <div class="container" id="footer_container">
                     <div class="row">
@@ -92,9 +108,10 @@
                             <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
                         </t>
                         <t t-raw="head or ''"/>
-                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css'/>
+                        <t t-call="website.theme"/>
+
+
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <link rel='stylesheet' href='/website/static/src/css/website.css'/>
                         <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
