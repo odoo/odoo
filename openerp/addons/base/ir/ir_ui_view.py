@@ -75,6 +75,7 @@ class view(osv.osv):
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
+        'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
