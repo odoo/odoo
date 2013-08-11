@@ -9,9 +9,9 @@
                     <em>Open</em><b>ERP</b>
                     <!--<img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>-->
                 </a>
-                <ul class="nav pull-right">
-                    <li class='pull-right'><a href="/admin">Sign in</a></li>
-                    <li class='pull-right'><a href="/page/website.contactus">Contact us</a></li>
+                <ul class="nav pull-right" id="top_menu">
+                    <li><a href="/page/website.contactus">Contact us</a></li>
+                    <li><a href="/admin">Sign in</a></li>
                 </ul>
             </div>
         </template>
@@ -20,17 +20,16 @@
             Files used in the generic theme, mostly bootstrap and a few OpenERP tags
         -->
         <template id="theme" name="Theme">
-            <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css'/>
-            <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css'/>
+            <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
+            <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="theme_flatly" name="Flat" inherit_option_id="website.theme">
+        <template id="theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
             <xpath expr="//link[@id='bootstrap_css']" position="replace">
-                <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css'/>
+                <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
+                <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
             </xpath>
-            
         </template>
-
 
         <template id="footer" name="Footer">
                 <div class="container" id="footer_container">
@@ -110,12 +109,11 @@
                         <t t-raw="head or ''"/>
                         <t t-call="website.theme"/>
 
-
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                         <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
-                        <header class='navbar navbar-fixed-top'>
+                        <header class='navbar navbar-static-top'>
                             <div class='navbar-inner'>
                                 <t t-call="website.header"/>
                             </div>
@@ -249,7 +247,7 @@
                                 <div class='container'>
                                     <div class="mt64"> </div>
                                     <h1>Create Awesome Websites</h1>
-                                    <h2>So many features, so easy to use</h2>
+                                    <h3>Super easy, fully flexible</h3>
                                     <a href='/page/website.contactus' class='btn btn-success btn-large mt16'>Contact us</a>
                                 </div>
                             </div>

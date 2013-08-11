@@ -49,42 +49,6 @@
 .mb0
     margin-bottom: 0px !important
 
-/* Grid of unequally tall elements */
-.grid > [class*="span"]
-    display: inline-block
-    float: none
-    vertical-align: top
-    margin-right: -4px
-    box-sizing: border-box
-    &.grid-align-top > [class*="span"]
-        vertical-align: top
-    &.grid-align-middle > [class*="span"]
-        vertical-align: middle
-    &.grid-align-bottom > [class*="span"]
-        vertical-align: bottom
-
-/* Table with two collumns aligned on the center */
-.table-equalized
-    width: 100%
-    td:first-child
-        width: 50%
-        text-align: right
-        padding-right: 1em
-        vertical-align: bottom
-    td:last-child
-        width: 50%
-        text-align: left
-        vertical-align: bottom
-
-/* Theming pagination inside navbar */
-.navbar-inner > .pagination
-    margin: 6px 0
-    ul
-        position: relative
-        top: 2px
-        border: solid 2px rgba(0,0,0,0.05)
-        border-radius: 8px
-
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
 html,body
@@ -107,32 +71,6 @@ footer
     padding-top: 48px
     padding-bottom: 48px
 
-/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
-
-.subheader
-    letter-spacing: 3px   
-    font-weight: 300
-
-header.navbar-fixed-top
-    position: static
-
-.dark
-    background: rgb(239, 248, 248)
-    padding: 64px
-
-h5
-    font-weight: bold 
-
-#myCarousel .item
-    min-height: 300px
-    color: white
-
-
-.nav > .pull-right
-    float: right !important //bugfix for flatly theme
-
-.thumbnail
-    background: white
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
@@ -142,13 +80,16 @@ h5
 .navbar .nav > li  a
     text-shadow: none
 
-.navbar .nav > li  a 
-    float: none
-    padding: 15px 15px 15px
-    color: #ffffff
-    text-decoration: none
-    text-shadow: 0 1px 0 #2c3e50
-
 .nav > li  a 
     display: block
+
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
+
+header.navbar-fixed-top
+    position: static
+
+#myCarousel .item
+    min-height: 300px
+    color: white
+
 

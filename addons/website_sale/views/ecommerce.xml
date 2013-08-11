@@ -9,14 +9,14 @@
         <field name="inherit_id" ref="website.header"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right">
+                <xpath expr="//ul[@id='top_menu']/li" position="before">
+                    <li>
                         <a href="/shop/mycart/">
-                            <i class="icon-shopping-cart icon-large" style="position: absolute;"></i>
+                            <i class="icon-shopping-cart"></i>
                             My cart
                         </a>
                     </li>
-                    <li class="pull-right">
+                    <li>
                         <a href="/shop/">Shop</a>
                     </li>
                 </xpath>
@@ -28,16 +28,16 @@
         <field name="inherit_id" ref="website.header"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right">
+                <xpath expr="//ul[@id='top_menu']/li" position="before">
+                    <li>
+                        <li><a href="/shop/">Shop</a></li>
                         <a href="/shop/mycart/">
-                            <i class="icon-shopping-cart icon-large" style="position: absolute;"></i>
+                            <i class="icon-shopping-cart"></i>
                             My cart
                             <!-- FIXME: logic to obtain the shopping cart numer of items shall not be in the template. Move it in models or in controllers -->
                             <!-- <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/> -->
                         </a>
                     </li>
-                    <li class="pull-right"><a href="/shop/">Shop</a></li>
                 </xpath>
            </data>
         </field>

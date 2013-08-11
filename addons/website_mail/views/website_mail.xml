@@ -17,8 +17,8 @@
         <field name="inherit_id" ref="website.header"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//li[last()]" position="after">
-                    <li class="pull-right"><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
+                <xpath expr="//ul[@id='top_menu']/li" position="after">
+                    <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
                 </xpath>
             </data>
         </field>

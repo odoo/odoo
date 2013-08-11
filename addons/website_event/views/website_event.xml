@@ -9,8 +9,8 @@
         <field name="inherit_id" ref="website.header"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/event">Events</a></li>
+                <xpath expr="//ul[@id='top_menu']/li" position="after">
+                    <li><a href="/event">Events</a></li>
                 </xpath>
            </data>
         </field>

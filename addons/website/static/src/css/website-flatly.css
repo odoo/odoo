@@ -1,0 +1,84 @@
+@charset "utf-8";
+/*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
+ *
+ * css for editor buttons, openerp widget included in the website and other
+ * stuff must go to the editor.css 
+ *
+ */
+/* ----- GENERIC LAYOUTING HELPERS ---- */
+/* Grid of unequally tall elements */
+.grid > [class*="span"] {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+  margin-right: -4px;
+  box-sizing: border-box;
+}
+.grid > [class*="span"].grid-align-top > [class*="span"] {
+  vertical-align: top;
+}
+.grid > [class*="span"].grid-align-middle > [class*="span"] {
+  vertical-align: middle;
+}
+.grid > [class*="span"].grid-align-bottom > [class*="span"] {
+  vertical-align: bottom;
+}
+
+/* Table with two collumns aligned on the center */
+.table-equalized {
+  width: 100%;
+}
+.table-equalized td:first-child {
+  width: 50%;
+  text-align: right;
+  padding-right: 1em;
+  vertical-align: bottom;
+}
+.table-equalized td:last-child {
+  width: 50%;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+/* Theming pagination inside navbar */
+.navbar-inner > .pagination {
+  margin: 6px 0;
+}
+.navbar-inner > .pagination ul {
+  position: relative;
+  top: 2px;
+  border: solid 2px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
+.subheader {
+  letter-spacing: 3px;
+  font-weight: 300;
+}
+
+.dark {
+  background: #eff8f8;
+  padding: 64px;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+#myCarousel .item {
+  min-height: 300px;
+  color: white;
+}
+
+.thumbnail {
+  background: white;
+}
+
+.navbar .nav > li a {
+  float: none;
+  padding: 15px 15px 15px;
+  color: white;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #2c3e50;
+}
