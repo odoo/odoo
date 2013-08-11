@@ -16,8 +16,8 @@
             </div>
         </template>
 
-        <template id="footer">
-                <div class="container">
+        <template id="footer" name="Footer">
+                <div class="container" id="footer_container">
                     <div class="row">
                         <div class="span3" name="product">
                             <h5>Our products</h5>
@@ -64,6 +64,12 @@
                         Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                     </div>
                 </div>
+        </template>
+
+        <template id="footer_custom" inherit_option_id="website.footer" name="Custom Footer">
+            <xpath expr="//div[@id='footer_container']" position="attributes">
+                <attribute name="style">display: none</attribute>
+            </xpath>
         </template>
 
         <template id="layout">
