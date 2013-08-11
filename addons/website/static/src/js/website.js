@@ -30,6 +30,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
     customize_setup: function() {
         var self = this;
         this.$('#customize-menu-button').click(function(event) {
+            // TODO: replace contactus by the current view name (from website.render?)
             self.rpc('/website/customize_template_get', {'xml_id': 'website.contactus'}).then(
                 function(result) {
                     node = $('#customize-menu').empty()
