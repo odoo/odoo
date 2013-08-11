@@ -16,45 +16,8 @@
             </div>
         </template>
 
-        <template id="footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="span3" name="product">
-                            <h5>Our products</h5>
-                            <ul class='unstyled' name="products">
-                                <li><a href="/">Home</a></li>
-                            </ul>
-                        </div>
-                        <div class="span3" name="info">
-                            <h5 name="info_title">Connect with us</h5>
-                            <ul class='unstyled'>
-                                <li><a href="/page/website.aboutus">About us</a></li>
-                                <li><a href="/page/website.contactus">Contact us</a></li>
-                            </ul>
-                            <ul class='unstyled'>
-                                <li><i class="icon-phone"></i> <span t-field="res_company.phone"/></li>
-                                <li><i class="icon-envelope"></i> <span t-field="res_company.email"></span></li>
-                            </ul>
-                        </div>
-                        <div class="span5 offset1" name="about_us">
-                            <h5 t-field="res_company.name">About us</h5>
-                            <p>
-                                We are a team of passionated people whose goal
-                                is to improve everyone's life through
-                                disruptive products. We build great products to
-                                solve your business problems.
-                            </p><p>
-                                Our products are designed for small to medium
-                                companies willing to optimize their
-                                performance.
-                            </p>
-                            <h1 style="padding: 12px 24px">
-                                <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
-                                <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
-                                <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
-                            </h1>
-                        </div>
-                    </div>
+        <template id="footer_container" name="Footer">
+                <div class="container" id="footer_container">
                 </div>
                 <div class="container mt16">
                     <div class="pull-right" t-ignore="1">
@@ -64,6 +27,48 @@
                         Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                     </div>
                 </div>
+        </template>
+
+        <template id="footer" inherit_id="website.footer_container" inherit_option_id="website.footer_container" name="Full Menu">
+            <xpath expr="//div[@id='footer_container']" position="inside">
+                <div class="row">
+                    <div class="span3" name="product">
+                        <h5>Our products</h5>
+                        <ul class='unstyled' name="products">
+                            <li><a href="/">Home</a></li>
+                        </ul>
+                    </div>
+                    <div class="span3" name="info">
+                        <h5 name="info_title">Connect with us</h5>
+                        <ul class='unstyled'>
+                            <li><a href="/page/website.aboutus">About us</a></li>
+                            <li><a href="/page/website.contactus">Contact us</a></li>
+                        </ul>
+                        <ul class='unstyled'>
+                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"/></li>
+                            <li><i class="icon-envelope"></i> <span t-field="res_company.email"></span></li>
+                        </ul>
+                    </div>
+                    <div class="span5 offset1" name="about_us">
+                        <h5 t-field="res_company.name">About us</h5>
+                        <p>
+                            We are a team of passionated people whose goal
+                            is to improve everyone's life through
+                            disruptive products. We build great products to
+                            solve your business problems.
+                        </p><p>
+                            Our products are designed for small to medium
+                            companies willing to optimize their
+                            performance.
+                        </p>
+                        <h1 style="padding: 12px 24px">
+                            <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
+                            <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
+                            <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
+                        </h1>
+                    </div>
+                </div>
+            </xpath>
         </template>
 
         <template id="layout">
@@ -103,7 +108,7 @@
                             </div>
                         </div>
                         <footer>
-                            <t t-call="website.footer"/>
+                            <t t-call="website.footer_container"/>
                         </footer>
 
                         <div class='oe_snippet_editor' style="display: none;">
