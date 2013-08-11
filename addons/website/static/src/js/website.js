@@ -30,15 +30,17 @@ instance.website.EditorBar = instance.web.Widget.extend({
     start: function() {
         var self = this;
 
-        this.$('button[data-action]').prop('disabled', true)
-            .parent().hide();
+        this.$('#website-top-edit').hide();
+        this.$('#website-top-view').show();
+
+        $('.dropdown-toggle').dropdown();
+
         this.$buttons = {
             edit: this.$('button[data-action=edit]'),
             save: this.$('button[data-action=save]'),
             cancel: this.$('button[data-action=cancel]'),
             snippet: this.$('button[data-action=snippet]'),
         };
-        this.$buttons.edit.prop('disabled', false).parent().show();
 
         self.snippet_start();
 
@@ -51,10 +53,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
         );
     },
     edit: function () {
-        this.$buttons.edit.prop('disabled', true).parent().hide();
-        this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
-            .add(this.$buttons.save)
-            .parent().show();
+        this.$buttons.edit.prop('disabled', true);
+        this.$('#website-top-view').hide();
+        this.$('#website-top-edit').show();
+
+        // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
+        //     .add(this.$buttons.save)
+        //     .parent().show();
+        //
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
                 .not('link, script')
