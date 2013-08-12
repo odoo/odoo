@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import math
 import openerp
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 import werkzeug
-from urllib import urlencode
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
@@ -50,7 +48,6 @@ class Ecommerce(http.Controller):
         category_obj = request.registry.get('pos.category')
         category_ids = category_obj.search(request.cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
         categories = category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
-        print categories
         return categories
 
     def render(self, template, values={}):
@@ -87,7 +84,7 @@ class Ecommerce(http.Controller):
         product_ids = product_obj.search(request.cr, request.uid, [("id", "in", product_ids)])
         return product_obj.browse(request.cr, request.uid, product_ids)
 
-    @http.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<page>/', '/shop/page/<page>/'], type='http', auth="public")
+    @http.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
 
         website = request.registry['website']
@@ -101,36 +98,17 @@ class Ecommerce(http.Controller):
             cat_id = int(cat_id)
             domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
 
+        step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))
-        page_count = int(math.ceil(product_count / 20.0))
+        pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7)
 
-        #if post.get("search"):
-         #   domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('description', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
-
-        page = max(1,min(int(page),page_count))
-        offset = (page-1) * 20
-
-        if page_count <= 5 or page <= 3:
-            pmin = 1
-            pmax = min(page_count,5)
-        elif page >= page_count - 2:
-            pmin = page_count - 4
-            pmax = page_count
-        else:
-            pmin = page - 2
-            pmax = page + 2
-
-        pages = range(pmin, pmax+1)
-
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=20, offset=offset)
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
 
         values = website.get_rendering_context({
             'current_category': cat_id,
             'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
-            'page_count': page_count,
-            'pages': pages,
-            'page': page,
+            'pager': pager,
         })
         return self.render("website_sale.products", values)
 

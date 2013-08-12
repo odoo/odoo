@@ -25,32 +25,20 @@
 
     <!-- Page --> 
 
-    <template id="index">
+    <template id="index" name="Blogs">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
                 <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
-                <t t-raw="head"/>
+                <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Blog</t>
             <div class="container mt48 js_website_mail">
                 <div class="row">
-                    <div class="span4">
-                        <ul class="nav nav-list">
-                            <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
-                            <li class="nav-header"><a t-att-href="'/blog/%%s/' %% mail_group_id">BLOG ARCHIVE</a></li>
-                            <!-- TODO: check qweb iteration -->
-                            <li t-foreach="nav_list" t-as="year" class="js_nav_year">
-                                <t t-set="year" t-value="nav_list[year]"/>
-                                <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
-                                <ul class="nav nav-list css_nav_month">
-                                    <t t-foreach="year['months']">
-                                        <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
-                                            <ul class="nav nav-list"/>
-                                        </li>
-                                    </t>
-                                </ul>
-                            </li>
+                    <div class="span4" id="left_column">
+                        <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
+
+                        <div id="blog_subscribe">
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
                                 <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="is_public_user"/>
                                 <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
@@ -59,14 +47,14 @@
                                 <input type="hidden" name="email" t-att-value="subscribe"/>
                                 <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
                             </form>
-                        </ul>
+                        </div>
                     </div>
                     <div class="span8" t-if="blog_id">
                         <div class="media">
                             <div class="media-body well">
                                 <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
-                                    <span t-att-class="'label label-success js_unpublish %%s' %% (not blog_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                    <span t-att-class="'label label-important js_publish %%s' %% (blog_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                    <span t-att-class="'label label-success js_unpublish %%s' %% (not blog_id.website_published and 'hidden' or '')">Unpublish</span>
+                                    <span t-att-class="'label label-important js_publish %%s' %% (blog_id.website_published and 'hidden' or '')">Publish</span>
                                 </a>
                                 <h3 t-field="blog_id.subject"/>
                                 <div t-field="blog_id.body"/>
@@ -131,6 +119,26 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="blog_history" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="History">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <ul class="nav nav-list">    
+                <li class="nav-header"><a t-att-href="'/blog/%%s/' %% mail_group_id">BLOG ARCHIVE</a></li>
+                <!-- TODO: check qweb iteration -->
+                <li t-foreach="nav_list" t-as="year" class="js_nav_year">
+                    <t t-set="year" t-value="nav_list[year]"/>
+                    <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
+                    <ul class="nav nav-list css_nav_month">
+                        <t t-foreach="year['months']">
+                            <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
+                                <ul class="nav nav-list"/>
+                            </li>
+                        </t>
+                    </ul>
+                </li>
+            </ul>
+        </xpath>
     </template>
  </data>
 </openerp>

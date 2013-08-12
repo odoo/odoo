@@ -14,8 +14,8 @@ import werkzeug
 
 class website_event(http.Controller):
 
-    @http.route(['/event'], type='http', auth="public")
-    def events(self, **searches):
+    @http.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
+    def events(self, page=1, **searches):
         website = request.registry['website']
         event_obj = request.registry['event.event']
 
@@ -80,13 +80,17 @@ class website_event(http.Controller):
         countries = event_obj.read_group(request.cr, request.uid, domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
         countries.insert(0, {'country_id_count': event_obj.search(request.cr, request.uid, domain, count=True), 'country_id': ("all", _("All Countries"))})
 
+        step = 5
+        event_count = event_obj.search(request.cr, request.uid, dom_without("none"), count=True)
+        pager = website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
+        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), limit=step, offset=pager['offset'], order="date_begin DESC")
 
-        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), order="date_begin DESC")
         values = website.get_rendering_context({
             'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
             'types': types,
             'countries': countries,
+            'pager': pager,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
         })
