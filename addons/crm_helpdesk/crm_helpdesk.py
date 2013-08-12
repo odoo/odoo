@@ -26,6 +26,14 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
+AVAILABLE_STATES = [
+    ('draft', 'New'),
+    ('cancel', 'Cancelled'),
+    ('open', 'In Progress'),
+    ('pending', 'Pending'),
+    ('done', 'Closed')
+]
+
 
 class crm_helpdesk(base_state, osv.osv):
     """ Helpdesk Cases """
@@ -65,7 +73,7 @@ class crm_helpdesk(base_state, osv.osv):
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
+            'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True,
                                   help='The status is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the status is set to \'Open\'.\
                                   \nWhen the case is over, the status is set to \'Done\'.\
