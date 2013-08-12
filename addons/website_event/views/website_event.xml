@@ -50,8 +50,15 @@
                             </t>
                         </ul>
                     </div>
+                    <div class='span8 navbar navbar-inverse'>
+                        <div class='navbar-inner'>
+                            <t t-call="website.pager" >
+                                <t t-set="classname">pull-left</t>
+                            </t>
+                        </div>
+                    </div>
                     <div class="span8">
-                        <ul class="media-list mt32">
+                        <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event_id" class="media thumbnail">
                                 <div class="media-body">
                                     <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
@@ -86,6 +93,9 @@
                                 </div>
                             </li>
                         </ul>
+                    </div>
+                    <div class="span8 offset4 text-center">
+                        <t t-call="website.pager" />
                     </div>
                 </div>
             </div>
