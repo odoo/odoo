@@ -942,8 +942,16 @@ class Related(Field):
         return self.related_field.convert_to_read
 
     @lazy_property
+    def convert_from_write(self):
+        return self.related_field.convert_from_write
+
+    @lazy_property
     def convert_to_write(self):
         return self.related_field.convert_to_write
+
+    @lazy_property
+    def convert_to_export(self):
+        return self.related_field.convert_to_export
 
     def _add_trigger_for(self, field, path0, path1):
         # special case: expand the path
