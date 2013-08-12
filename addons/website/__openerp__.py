@@ -1,6 +1,7 @@
 {
     'name': 'Website',
     'category': 'Website',
+    'summary': 'Create Your Enterprise Website',
     'version': '1.0',
     'description': """
 OpenERP Website CMS

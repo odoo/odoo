@@ -1,6 +1,7 @@
 {
     'name': 'E-Commerce',
     'category': 'Website',
+    'summary': 'Sell Your Products Online',
     'version': '1.0',
     'description': """
 OpenERP E-Commerce
@@ -16,5 +17,4 @@ OpenERP E-Commerce
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
-    'auto_install': True,
 }
