@@ -1343,9 +1343,7 @@ class BaseModel(object):
             record[name]                # force evaluation of defaults
 
         # retrieve defaults from record's values
-        values = record.get_draft_values()
-        return dict((name, values[name])
-                    for name in fields_list if name in values)
+        return self._convert_to_write(record.get_draft_values())
 
     def add_default_value(self, name):
         """ Set the default value of field `name` to the new record `self`.
@@ -1359,14 +1357,14 @@ class BaseModel(object):
         # 1. look up context
         key = 'default_' + name
         if key in context:
-            self._set_field(name, field.convert_from_read(context[key]))
+            self[name] = context[key]
             return
 
         # 2. look up ir_values
         #    Note: performance is good, because get_defaults_dict is cached!
         ir_values_dict = self.pool['ir.values'].get_defaults_dict(self._name)
         if name in ir_values_dict:
-            self._set_field(name, field.convert_from_read(ir_values_dict[name]))
+            self[name] = ir_values_dict[name]
             return
 
         # 3. look up property fields
@@ -1381,7 +1379,7 @@ class BaseModel(object):
             value = self._defaults[name]
             if callable(value):
                 value = value(self, cr, uid, context)
-            self._set_field(name, field.convert_from_read(value))
+            self[name] = value
             return
 
         # 5. delegate to field
@@ -2704,7 +2702,9 @@ class BaseModel(object):
             record = self.new()
             field = self._fields[column_name]
             field.compute_default(record)
-            default = record.get_draft_values().get(column_name)
+            defaults = record.get_draft_values()
+            if column_name in defaults:
+                default = field.convert_to_write(defaults[column_name])
 
         if default is not None:
             _logger.debug("Table '%s': setting default value of new column %s",
@@ -3366,7 +3366,7 @@ class BaseModel(object):
         # update record caches
         model_cache = select._model_cache
         for f in old_fields:
-            convert = self._fields[f].convert_from_read
+            convert = self._fields[f].convert_to_cache
             for values in result:
                 model_cache[values['id']][f] = convert(values[f])
 
@@ -5280,6 +5280,13 @@ class BaseModel(object):
         """ Return the list of record ids of this instance. """
         return filter(None, self._ids)
 
+    def _convert_to_write(self, values):
+        """ Convert the `values` dictionary in the format of :meth:`write`. """
+        return dict(
+            (name, self._fields[name].convert_to_write(value))
+            for name, value in values.iteritems()
+        )
+
     #
     # Draft records - records on which the field setters only affect the cache
     #
@@ -5296,16 +5303,14 @@ class BaseModel(object):
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
-            names to values in the format accepted by method :meth:`write`.
+            names to values.
         """
         if self._id:
             _logger.warning("%s.get_draft_values() non optimal", self[0])
-        result = {}
-        for name, value in self._record_cache.iteritems():
-            if name not in MAGIC_COLUMNS:
-                field = self._fields[name]
-                result[name] = field.convert_to_write(value)
-        return result
+        return dict(item
+            for item in self._record_cache.iteritems()
+            if item[0] not in MAGIC_COLUMNS
+        )
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5320,7 +5325,10 @@ class BaseModel(object):
         assert 'id' not in values, "New records do not have an 'id'."
         scope = scope_proxy.current
         record_cache = scope.cache[self._name][False]
-        record_cache.update(values)
+        record_cache.update(
+            (name, self._fields[name].convert_to_cache(value))
+            for name, value in values.iteritems()
+        )
         record = self._instance(scope, (record_cache,))
         record.draft = True
         return record
@@ -5597,27 +5605,21 @@ class BaseModel(object):
 
     @api.multi
     def onchange(self, field_name, values):
-        # convert values to the record level
-        record_values = dict(
-            (k, self._fields[k].convert_from_write(v))
-            for k, v in values.iteritems()
-        )
-        field_value = record_values.pop(field_name)
+        # create a new record with the values
+        record = self.new(values)
 
-        # create a new record with those values
-        record = self.new(record_values)
+        # get a copy of the values in the cache
+        record_values = dict(record._record_cache)
 
         # simply assign the modified field to trigger invalidations, etc.
         # TODO: call record.onchange_XXX() instead, if it exists
+        field_value = record._record_cache.pop(field_name)
         record[field_name] = field_value
 
-        # check record values, and collect changes
-        changes = {}
-        record_values[field_name] = field_value
-        for k, v in record_values.iteritems():
-            if record[k] != v:
-                changes[k] = self._fields[k].convert_to_write(record[k])
-        return changes
+        # compare record values, and return the ones that have changed
+        return self._convert_to_write(dict(
+            (k, record[k]) for k, v in record_values.iteritems() if record[k] != v
+        ))
 
 
 # extra definitions for backward compatibility

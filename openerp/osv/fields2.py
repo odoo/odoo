@@ -197,38 +197,29 @@ class Field(object):
         assert instance._name == self.model_name
         # adapt value to the cache level (must be in record's scope!)
         with instance._scope:
-            value = self.convert_value(value)
+            value = self.convert_to_cache(value)
         return instance._set_field(self.name, value)
 
     def null(self):
         """ return the null value for this field """
         return False
 
-    def convert_value(self, value):
-        """ convert `value` (from an assignment) to the cache level """
-        return value
-
-    def convert_from_read(self, value):
-        """ convert `value` from method :meth:`openerp.osv.orm.BaseModel.read`
-            to the cache level
+    def convert_to_cache(self, value):
+        """ convert `value` to the cache level; `value` may come from an
+            assignment, or have the format of methods :meth:`BaseModel.read` or
+            :meth:`BaseModel.write`
         """
         return value
 
     def convert_to_read(self, value):
         """ convert `value` from the cache to a value as returned by method
-            :meth:`openerp.osv.orm.BaseModel.read`
+            :meth:`BaseModel.read`
         """
         return value
 
-    def convert_from_write(self, value):
-        """ convert `value` from method :meth:`openerp.osv.orm.BaseModel.write`
-            the cache level
-        """
-        return self.convert_from_read(value)
-
     def convert_to_write(self, value):
         """ convert `value` from the cache to a valid value for method
-            :meth:`openerp.osv.orm.BaseModel.write`
+            :meth:`BaseModel.write`
         """
         return self.convert_to_read(value)
 
@@ -292,7 +283,7 @@ class Field(object):
         if any(name not in record._record_cache for record in records):
             for data in result:
                 record = records.browse(data['id'])
-                record._record_cache[name] = self.convert_from_read(data[name])
+                record._record_cache[name] = self.convert_to_cache(data[name])
 
             failed = records.browse()
             for record in records:
@@ -416,7 +407,7 @@ class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         return bool(value)
 
     def convert_to_export(self, value):
@@ -427,7 +418,7 @@ class Integer(Field):
     """ Integer field. """
     type = 'integer'
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         return int(value or 0)
 
 
@@ -450,7 +441,7 @@ class Float(Field):
             self.digits = self.digits(scope.cr)
         return super(Float, self).to_column()
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -474,7 +465,7 @@ class Char(_String):
     _attrs = _String._attrs + ('size',)
     _desc1 = _String._desc1 + ('size',)
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         return bool(value) and ustr(value)[:self.size]
 
 
@@ -487,7 +478,7 @@ class Html(_String):
     """ Html field. """
     type = 'html'
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         return bool(value) and html_sanitize(value)
 
 
@@ -495,7 +486,7 @@ class Date(Field):
     """ Date field. """
     type = 'date'
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DATE_FORMAT)
         elif value:
@@ -509,7 +500,7 @@ class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
 
-    def convert_value(self, value):
+    def convert_to_cache(self, value):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DATETIME_FORMAT)
         elif value:
@@ -523,9 +514,7 @@ class Binary(Field):
     """ Binary field. """
     type = 'binary'
 
-    def convert_value(self, value):
-        if value:
-            base64.b64decode(value)             # check value format
+    def convert_to_cache(self, value):
         return value or False
 
 
@@ -570,11 +559,11 @@ class Selection(Field):
         """ return a list of the possible values """
         return [item[0] for item in self.get_selection()]
 
-    def convert_value(self, value):
-        if value is None or value is False:
-            return False
+    def convert_to_cache(self, value):
         if value in self.get_values():
             return value
+        elif not value:
+            return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_to_export(self, value):
@@ -603,18 +592,16 @@ class Reference(Selection):
         """
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
-    def convert_value(self, value):
-        if value is None or value is False:
-            return False
-        if isinstance(value, BaseModel) and value._name in self.get_values() and len(value) == 1:
-            return value.scoped()
-        raise ValueError("Wrong value for %s: %r" % (self, value))
-
-    def convert_from_read(self, value):
-        if value:
+    def convert_to_cache(self, value):
+        if isinstance(value, BaseModel):
+            if value._name in self.get_values() and len(value) <= 1:
+                return value.scoped() or False
+        elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
             return scope.model(res_model).browse(int(res_id))
-        return False
+        elif not value:
+            return False
+        raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_to_read(self, value):
         return "%s,%s" % (value._name, value.id) if value else False
@@ -701,29 +688,20 @@ class Many2one(_Relational):
         kwargs['domain'] = self.domain or []
         return kwargs
 
-    def convert_value(self, value):
-        if value is None or value is False:
-            return self.null()
-        if isinstance(value, BaseModel) and value._name == self.comodel_name and len(value) <= 1:
-            return value.scoped()
-        raise ValueError("Wrong value for %s: %r" % (self, value))
-
-    def convert_from_read(self, value):
-        if isinstance(value, tuple):
-            value = value[0]
-        return self.comodel.browse(value)
+    def convert_to_cache(self, value):
+        if isinstance(value, BaseModel):
+            if value._name == self.comodel_name and len(value) <= 1:
+                return value.scoped()
+            raise ValueError("Wrong value for %s: %r" % (self, value))
+        elif isinstance(value, tuple):
+            return self.comodel.browse(value[0])
+        elif isinstance(value, dict):
+            return self.comodel.new(value)
+        else:
+            return self.comodel.browse(value)
 
     def convert_to_read(self, value):
         return bool(value) and value.name_get()[0]
-
-    def convert_from_write(self, value):
-        if isinstance(value, dict):
-            # convert values to the cache level
-            return self.comodel.new(dict(
-                (k, self.comodel._fields[k].convert_from_write(v))
-                for k, v in value.iteritems()
-            ))
-        return self.comodel.browse(value)
 
     def convert_to_write(self, value):
         return value.id
@@ -744,55 +722,49 @@ class Many2one(_Relational):
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
-    def convert_value(self, value):
-        if value is None or value is False:
+    def convert_to_cache(self, value):
+        if isinstance(value, BaseModel):
+            if value._name == self.comodel_name:
+                return value.scoped()
+        elif isinstance(value, list):
+            # value is a list of record ids or commands
+            result = self.comodel.browse()
+            for command in value:
+                if not isinstance(command, (tuple, list)):
+                    result += self.comodel.browse(command)
+                elif command[0] == 0:
+                    result += self.comodel.new(command[2])
+                elif command[0] == 1:
+                    record = self.comodel.browse(command[1])
+                    record.draft = True
+                    for name, value in command[2].iteritems():
+                        record[name] = value
+                    result += record
+                elif command[0] == 2:
+                    pass
+                elif command[0] == 3:
+                    pass
+                elif command[0] == 4:
+                    result += self.comodel.browse(command[1])
+                elif command[0] == 5:
+                    result = self.comodel.browse()
+                elif command[0] == 6:
+                    result = self.comodel.browse(command[2])
+            return result
+        elif not value:
             return self.null()
-        if isinstance(value, BaseModel) and value._name == self.comodel_name:
-            return value.scoped()
         raise ValueError("Wrong value for %s: %s" % (self, value))
-
-    def convert_from_read(self, value):
-        return self.comodel.browse(value or ())
 
     def convert_to_read(self, value):
         return value.unbrowse()
 
-    def convert_from_write(self, value):
-        result = self.comodel.browse()
-        for command in value:
-            if isinstance(command, (int, long)):
-                result += self.comodel.browse(command)
-            elif command[0] == 0:
-                values = dict(
-                    (k, self.comodel._fields[k].convert_from_write(v))
-                    for k, v in command[2].iteritems()
-                )
-                result += self.comodel.new(values)
-            elif command[0] == 1:
-                record = self.comodel.browse(command[1])
-                record.draft = True
-                for name, value in command[2].iteritems():
-                    record[name] = value
-                result += record
-            elif command[0] == 2:
-                pass
-            elif command[0] == 3:
-                pass
-            elif command[0] == 4:
-                result += self.comodel.browse(command[1])
-            elif command[0] == 5:
-                result = self.comodel.browse()
-            elif command[0] == 6:
-                result = self.comodel.browse(command[2])
-        return result
-
     def convert_to_write(self, value):
         result = [(5,)]
         for record in value:
-            if not record.id:
-                result.append((0, 0, record.get_draft_values()))
-            elif record.draft:
-                result.append((1, record.id, record.get_draft_values()))
+            if record.draft:
+                values = record._convert_to_write(record.get_draft_values())
+                command = (1, record.id, values) if record.id else (0, 0, values)
+                result.append(command)
             else:
                 result.append((4, record.id))
         return result
@@ -930,20 +902,12 @@ class Related(Field):
         return self.related_field.null
 
     @lazy_property
-    def convert_value(self):
-        return self.related_field.convert_value
-
-    @lazy_property
-    def convert_from_read(self):
-        return self.related_field.convert_from_read
+    def convert_to_cache(self):
+        return self.related_field.convert_to_cache
 
     @lazy_property
     def convert_to_read(self):
         return self.related_field.convert_to_read
-
-    @lazy_property
-    def convert_from_write(self):
-        return self.related_field.convert_from_write
 
     @lazy_property
     def convert_to_write(self):
