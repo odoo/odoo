@@ -1,11 +1,25 @@
 
 require.config({
     context: "oelivesupport",
-    baseUrl: {{url | json}} + "/im_livechat/static/ext/static/js",
+    baseUrl: {{url | json}},
+    paths: {
+        jquery: "im_livechat/static/ext/static/lib/jquery/jquery",
+        underscore: "im_livechat/static/ext/static/lib/underscore/underscore",
+        qweb2: "im_livechat/static/ext/static/lib/qweb/qweb2",
+        openerp: "web/static/src/js/openerpframework",
+        "jquery.achtung": "im_livechat/static/ext/static/lib/achtung/jquery.achtung",
+        livesupport: "im_livechat/static/ext/static/js/livesupport",
+    },
     shim: {
         underscore: {
             init: function() {
                 return _.noConflict();
+            },
+        },
+        qweb2: {
+            init: function() {
+                // TODO: better solution to avoid contamination of global namespace
+                return QWeb2;
             },
         },
         "jquery.achtung": {
@@ -14,11 +28,12 @@ require.config({
     },
 })(["livesupport", "jquery"], function(livesupport, jQuery) {
     jQuery.noConflict();
-    livesupport.main({{url | json}}, {{db | json}}, "anonymous", "anonymous", {{channel | json}}, {
+    console.log("main method");
+    /*livesupport.main({{url | json}}, {{db | json}}, "anonymous", "anonymous", {{channel | json}}, {
         buttonText: {{buttonText | json}},
         inputPlaceholder: {{inputPlaceholder | json}},
         defaultMessage: {{(defaultMessage or None) | json}},
         auto: window.oe_im_livechat_auto || false,
         userName: {{userName | json}} || undefined,
-    });
+    });*/
 });

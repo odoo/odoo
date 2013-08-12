@@ -1,6 +1,7 @@
 
-define(["nova", "underscore", "oeclient", "require", "jquery",
-        "jquery.achtung"], function(nova, _, oeclient, require, $) {
+define(["openerp", "underscore", "require", "jquery",
+        "jquery.achtung"], function(openerp, _, require, $) {
+    /*
     var livesupport = {};
 
     var templateEngine = new nova.TemplateEngine();
@@ -283,10 +284,10 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             }
         },
         messages_change: function() {
-            /*if (! instance.webclient.set_title_part)
-                return;
-            instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
-                _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));*/
+            //if (! instance.webclient.set_title_part)
+            //    return;
+            //instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
+            //    _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
         activate_user: function(user, focus) {
             var conv = this.users[user.get('id')];
@@ -449,5 +450,6 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
 
 
 
-    return livesupport;
+    return livesupport;*/
+    console.log("loaded live chat");
 });
