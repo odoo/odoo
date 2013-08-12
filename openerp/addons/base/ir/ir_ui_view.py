@@ -162,7 +162,7 @@ class view(osv.osv):
         return super(view, self).write(cr, uid, ids, vals, context)
 
     def extract_embedded_fields(self, cr, uid, arch, context=None):
-        return arch.xpath('//*[@data-oe-model]')
+        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
     def save_embedded_field(self, cr, uid, el, context=None):
         embedded_id = int(el.get('data-oe-id'))
