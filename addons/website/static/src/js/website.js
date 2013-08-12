@@ -81,6 +81,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 // TODO: Add a queue with concurrency limit in webclient
                 // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
                 return self.saving_mutex.exec(function () {
+                    var $el = $(editor.element.$);
                     return self.saveEditor(editor)
                         .fail(function () {
                             var data = $el.data();
