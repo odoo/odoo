@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="header_jobs" model="ir.ui.view">
-            <field name="name">header_jobs</field>
-            <field name="type">qweb</field>
-            <field name="inherit_id" ref="website.header"/>
+        <record id="footer_website_hr_recruitment" model="ir.ui.view">
+            <field name="name">footer_website_hr_recruitment</field>
+            <field name="inherit_id" ref="website.footer"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="(//li)[last()]" position="after">
-                        <li class="pull-right"><a href="/jobs">Jobs</a></li>
+                    <xpath expr="//a[@href='/page/website.contactus']" position="after">
+                        <li><a href="/jobs">Jobs</a></li>
                     </xpath>
-                </data>
+               </data>
             </field>
         </record>
+        
         <template id="jobs">
             <t t-call="website.layout">
                 <t t-set="title">Jobs</t>
