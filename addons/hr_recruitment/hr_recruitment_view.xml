@@ -39,9 +39,10 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
+            <tree string="Applicants" fonts="bold:message_unread==True">
                 <field name="message_unread" invisible="1"/>
                 <field name="create_date"/>
+                <field name="date_last_stage_update" invisible="1"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -58,7 +59,6 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
-                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -69,13 +69,7 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <button name="case_close_with_emp" string="Hire &amp; Create Employee" type="object"
-                        class="oe_highlight"
-                        attrs="{'invisible':['|', ('emp_id','!=',False), ('state','=','cancel')]}"/>
-                <button name="case_cancel" string="Refuse" type="object"
-                        states="draft,open,pending" class="oe_highlight"/>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
-                <field name="emp_id" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -93,9 +87,12 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
-                    <h2>
+                    <h2 style="display: inline-block;">
                         <field name="partner_name" class="oe_inline"/>
                     </h2>
+                    <button string="Create Employee" name="create_employee_from_applicant" type="object"
+                                    class="oe_link oe_inline" style="margin-left: 8px;"
+                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
                 </div>
                 <group>
                     <group>
@@ -115,7 +112,6 @@
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
                         <field name="priority"/>
-                        <field name="state" invisible="1"/>
                         <field name="source_id"/>
                         <field name="reference"/>
                     </group>
@@ -123,7 +119,7 @@
                         <field name="survey" invisible="1"/>
                         <field name="response" invisible="1"/>
                         <field name="job_id" on_change="onchange_job(job_id)"/>
-                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                        <field name="department_id" on_change="onchange_department_id(department_id, stage_id)"/>
                         <label for="availability"/>
                         <div>
                             <field name="availability" class="oe_inline"/> <label string="Day(s)" class="oe_inline"/>
@@ -142,6 +138,7 @@
                             <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
+                        <field name="emp_id" readonly="1"/>
                     </group>
                 </group>
                 <group>
@@ -165,7 +162,7 @@
               <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
                 <field name="job_id"/>
                 <field name="salary_expected" operator="+"/>
-                <field name="state" group="True"/>
+                <field name="stage_id" group="True"/>
             </graph>
         </field>
     </record>
@@ -174,22 +171,22 @@
         <field name="name">Jobs - Recruitment Search</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <search string="Search Jobs">
+            <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
+                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="My" domain="[('user_id', '=', uid)]"/>
+                <separator/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
-                <separator/>
-                <filter string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
-                <filter string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
-                <filter string="Pending" domain="[('state','=','pending')]" help="Pending Jobs"/>
-                <separator/>
-                <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments"/>
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <field name="job_id"/>
+                <field name="department_id"/>
                 <field name="user_id"/>
+                <field name="stage_id" domain="[]"/>
                 <separator/>
                 <field name="categ_ids"/>
+                <separator/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
@@ -200,6 +197,7 @@
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                     <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
         </field>
@@ -342,7 +340,6 @@
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
                 <field name="department_id"/>
-                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -360,7 +357,6 @@
                         <field name="department_id"/>
                     </group>
                     <group>
-                        <field name="state"/>
                         <field name="sequence"/>
                         <field name="fold"/>
                     </group>

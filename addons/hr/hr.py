@@ -51,9 +51,9 @@ class hr_employee_category(osv.osv):
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
-        'name': fields.char("Category", size=64, required=True),
+        'name': fields.char("Employee Tag", size=64, required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
+        'parent_id': fields.many2one('hr.employee.category', 'Parent Employee Tag', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
@@ -129,7 +129,7 @@ class hr_job(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
+        ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
     ]
 
 
@@ -155,6 +155,8 @@ class hr_employee(osv.osv):
     _order = 'name_related'
     _inherits = {'resource.resource': "resource_id"}
     _inherit = ['mail.thread']
+
+    _mail_post_access = 'read'
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -323,22 +325,6 @@ class hr_employee(osv.osv):
     _constraints = [
         (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
-
-    # ---------------------------------------------------
-    # Mail gateway
-    # ---------------------------------------------------
-
-    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
-        """ mail.message document permission rule: can post a new message if can read
-            because of portal document. """
-        if not model_obj:
-            model_obj = self
-        employee_ids = model_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if employee_ids and operation == 'create':
-            model_obj.check_access_rights(cr, uid, 'read')
-            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
-        else:
-            return super(hr_employee, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
 
 
 class hr_department(osv.osv):
