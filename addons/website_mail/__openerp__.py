@@ -1,5 +1,5 @@
 {
-    'name': 'Website Blog',
+    'name': 'Blogs',
     'category': 'Website',
     'summary': 'News, Blogs, Announces, Discussions',
     'version': '1.0',

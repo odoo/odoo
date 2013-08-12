@@ -1,5 +1,5 @@
 {
-    'name': 'Website Contact Form',
+    'name': 'Contact Form',
     'category': 'Website',
     'summary': 'Generate Leads From Contact Form',
     'version': '1.0',

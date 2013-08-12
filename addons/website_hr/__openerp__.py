@@ -1,5 +1,5 @@
 {
-    'name': 'Website Team',
+'name': 'Team Page',
     'category': 'Website',
     'summary': 'Publish Your Team, Employees',
     'version': '1.0',
