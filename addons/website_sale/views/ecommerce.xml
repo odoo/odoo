@@ -11,26 +11,9 @@
             <data>
                 <xpath expr="//ul[@id='top_menu']/li" position="before">
                     <li>
-                        <a href="/shop/mycart/">
-                            <i class="icon-shopping-cart"></i>
-                            My cart
-                        </a>
-                    </li>
-                    <li>
                         <a href="/shop/">Shop</a>
                     </li>
-                </xpath>
-           </data>
-        </field>
-    </record>
-    <record id="header_ecommerce" model="ir.ui.view">
-        <field name="name">header_ecommerce</field>
-        <field name="inherit_id" ref="website.header"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//ul[@id='top_menu']/li" position="before">
                     <li>
-                        <li><a href="/shop/">Shop</a></li>
                         <a href="/shop/mycart/">
                             <i class="icon-shopping-cart"></i>
                             My cart
