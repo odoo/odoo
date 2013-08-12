@@ -846,9 +846,12 @@ form: module.record_id""" % (xml_id,)
         if '.' in tpl_id:
             module, tpl_id = tpl_id.split('.', 1)
         # set the full template name for qweb <module>.<id>
-        el.set('t-name', '%s.%s' % (module, tpl_id))
+        if not (el.get('inherit_id') or el.get('inherit_option_id')):
+            el.set('t-name', '%s.%s' % (module, tpl_id))
+            el.tag = 't'
+        else:
+            el.tag = 'data'
         el.attrib.pop('id', None)
-        el.tag = 't'
 
         record_attrs = {
             'id': tpl_id,
@@ -858,10 +861,18 @@ form: module.record_id""" % (xml_id,)
             if att in el.keys():
                 record_attrs[att] = el.attrib.pop(att)
 
+        Field = builder.E.field
+        name = el.get('name', tpl_id)
+
         record = etree.Element('record', attrib=record_attrs)
-        record.append(builder.E.field(tpl_id, name='name'))
-        record.append(builder.E.field("qweb", name='type'))
-        record.append(builder.E.field(el, name="arch", type="xml"))
+        record.append(Field(name, name='name'))
+        record.append(Field("qweb", name='type'))
+        record.append(Field(el, name="arch", type="xml"))
+        for field_name in ('inherit_id','inherit_option_id'):
+            if el.get(field_name):
+                record.append(Field(
+                    field_name, el.attrib.pop(field_name, None)))
+
         return self._tag_record(cr, record, data_node)
 
     def id_get(self, cr, id_str):

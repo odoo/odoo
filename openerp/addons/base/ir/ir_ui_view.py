@@ -74,6 +74,7 @@ class view(osv.osv):
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
+        'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
@@ -708,7 +709,6 @@ class view(osv.osv):
     # view used as templates
 
     def read_template(self, cr, uid, id_, context=None):
-        import pprint
         try:
             id_ = int(id_)
         except ValueError:
@@ -770,7 +770,7 @@ class view(osv.osv):
             arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
             return arch
 
-        engine = qweb.QWebXml(loader)
+        engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
         return engine.render(id_or_xml_id, values)
 
     # maybe used to print the workflow ?

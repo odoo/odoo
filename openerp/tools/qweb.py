@@ -1,5 +1,6 @@
 import cgi
 import logging
+import re
 import types
 
 #from openerp.tools.safe_eval import safe_eval as eval
@@ -9,49 +10,41 @@ import xml.dom.minidom
 
 _logger = logging.getLogger(__name__)
 
-class QWebEval(object):
-    def __init__(self, data):
-        self.data = data
+class QWebContext(dict):
+    def __init__(self, data, undefined_handler=None):
+        self.undefined_handler = undefined_handler
+        d = {
+            'True': True,
+            'False': False,
+            'None': None,
+            'str': str,
+            'globals': locals,
+            'locals': locals,
+            'bool': bool,
+            'dict': dict,
+            'list': list,
+            'tuple': tuple,
+            'map': map,
+            'abs': abs,
+            'min': min,
+            'max': max,
+            'reduce': reduce,
+            'filter': filter,
+            'round': round,
+            'len': len,
+            'set': set
+        }
+        d.update(data)
+        dict.__init__(self, d)
+        self['defined'] = lambda key: key in self
 
-    def __getitem__(self, expr):
-        if expr in self.data:
-            return self.data[expr]
-        r = ''
-        try:
-            r = eval(expr, self.data)
-        except NameError:
-            pass
-        except AttributeError:
-            pass
-        except Exception:
-            _logger.exception('invalid expression: %r', expr)
-
-        self.data.pop('__builtins__', None)
-        return r
-
-    def eval_object(self, expr):
-        return self[expr]
-
-    def eval_str(self, expr):
-        if expr == "0":
-            return self.data.get(0, '')
-        if isinstance(self[expr], unicode):
-            return self[expr].encode("utf8")
-        return str(self[expr])
-
-    def eval_format(self, expr):
-        try:
-            return str(expr % self)
-        except:
-            return "qweb: format error '%s' " % expr
-#       if isinstance(r,unicode):
-#           return r.encode("utf8")
-
-    def eval_bool(self, expr):
-        if self.eval_object(expr):
-            return 1
+    def __getitem__(self, key):
+        if key in self:
+            return self.get(key)
+        elif not self.undefined_handler:
+            raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
         else:
-            return 0
+            return self.get(key, self.undefined_handler(key, self))
 
 class QWebXml(object):
     """QWeb Xml templating engine
@@ -69,13 +62,15 @@ class QWebXml(object):
 
 
     """
-    def __init__(self, loader):
+    def __init__(self, loader=None, undefined_handler=None):
         self.loader = loader
+        self.undefined_handler = undefined_handler
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
-        self._void_elements = set(['area','base','br','col','embed','hr','img','input','keygen',
-                                  'link','menuitem','meta','param','source','track','wbr']);
+        self._format_regex = re.compile('#\{(.*?)\}')
+        self._void_elements = set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
+                                  'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
         prefix = 'render_tag_'
         for i in [j for j in dir(self) if j.startswith(prefix)]:
             name = i[len(prefix):].replace('_', '-')
@@ -98,34 +93,61 @@ class QWebXml(object):
         else:
             dom = xml.dom.minidom.parse(x)
         for n in dom.documentElement.childNodes:
-            if n.nodeName == "t":
+            if n.getAttribute('t-name'):
                 self._t[str(n.getAttribute("t-name"))] = n
 
     def get_template(self, name):
         if name in self._t:
             return self._t[name]
-        else:
+        elif self.loader:
             xml = self.loader(name)
             self.add_template(xml)
             if name in self._t:
                 return self._t[name]
         raise KeyError('qweb: template "%s" not found' % name)
 
+    def eval(self, expr, v):
+        try:
+            return eval(expr, None, v)
+        except Exception:
+            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'" % (expr, v.get('__template__')))
+
     def eval_object(self, expr, v):
-        return QWebEval(v).eval_object(expr)
+        return self.eval(expr, v)
 
     def eval_str(self, expr, v):
-        return QWebEval(v).eval_str(expr)
+        if expr == "0":
+            return v.get(0, '')
+        val = self.eval(expr, v)
+        if isinstance(val, unicode):
+            return val.encode("utf8")
+        return str(val)
 
     def eval_format(self, expr, v):
-        return QWebEval(v).eval_format(expr)
+        use_native = True
+        for m in self._format_regex.finditer(expr):
+            use_native = False
+            expr = expr.replace(m.group(), self.eval_str(m.groups()[0], v))
+        if not use_native:
+            return expr
+        else:
+            try:
+                return str(expr % v)
+            except:
+                raise Exception("QWeb: format error '%s' " % expr)
 
     def eval_bool(self, expr, v):
-        return QWebEval(v).eval_bool(expr)
+        val = self.eval(expr, v)
+        if val:
+            return 1
+        else:
+            return 0
 
     def render(self, tname, v=None, out=None):
         if v is None:
             v = {}
+        v['__template__'] = tname
+        v = QWebContext(v, self.undefined_handler)
         return self.render_node(self.get_template(tname), v)
 
     def render_node(self, e, v):
@@ -203,26 +225,26 @@ class QWebXml(object):
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
         inner = self.eval_str(t_att["raw"], v)
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_rawf(self, e, t_att, g_att, v):
         inner = self.eval_format(t_att["rawf"], v)
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_esc(self, e, t_att, g_att, v):
         inner = cgi.escape(self.eval_str(t_att["esc"], v))
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_escf(self, e, t_att, g_att, v):
         inner = cgi.escape(self.eval_format(t_att["escf"], v))
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_foreach(self, e, t_att, g_att, v):
         expr = t_att["foreach"]
         enum = self.eval_object(expr, v)
         if enum is not None:
             var = t_att.get('as', expr).replace('.', '_')
-            d = v.copy()
+            d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
             if isinstance(enum, types.ListType):
                 size = len(enum)
@@ -265,13 +287,15 @@ class QWebXml(object):
         if "import" in t_att:
             d = v
         else:
-            d = v.copy()
+            d = QWebContext(v.copy(), self.undefined_handler)
         d[0] = self.render_element(e, t_att, g_att, d)
         return self.render(t_att["call"], d)
 
     def render_tag_set(self, e, t_att, g_att, v):
         if "value" in t_att:
             v[t_att["set"]] = self.eval_object(t_att["value"], v)
+        elif "valuef" in t_att:
+            v[t_att["set"]] = self.eval_format(t_att["valuef"], v)
         else:
             v[t_att["set"]] = self.render_element(e, t_att, g_att, v)
         return ""
@@ -288,9 +312,6 @@ class QWebXml(object):
             if field_type == 'many2one':
                 field_data = record.read([field])[0].get(field)
                 inner = field_data and field_data[1] or ""
-                #field = getattr(record, field)
-                #if field:
-                #    inner = field.name_get()[0][1] or ""
             else:
                 inner = getattr(record, field) or ""
             if isinstance(inner, types.UnicodeType):
@@ -310,6 +331,6 @@ class QWebXml(object):
         except AttributeError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att,  g_att, v, str(inner))
+        return self.render_element(e, t_att, g_att, v, str(inner))
 
 # leave this, al.
