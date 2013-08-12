@@ -26,8 +26,7 @@ import sys
 import re
 import time
 
-import lxml.html
-from lxml import etree
+from lxml import etree, html
 from functools import partial
 
 from openerp import tools
@@ -161,24 +160,58 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
-    def save(self, cr, uid, model, res_id, field, value, xpath=None, context=None):
-        """ Update the content of a field
+    def extract_embedded_fields(self, cr, uid, arch, context=None):
+        return arch.xpath('//*[@data-oe-model]')
+
+    def save_embedded_field(self, cr, uid, el, context=None):
+        embedded_id = int(el.get('data-oe-id'))
+        # FIXME: type conversions
+        self.pool[el.get('data-oe-model')].write(cr, uid, embedded_id, {
+            el.get('data-oe-field'): el.text
+        }, context=context)
+
+    def to_field_ref(self, cr, uid, el, context=None):
+        # FIXME: better ref?
+        return html.html_parser.makeelement(el.tag, attrib={
+            't-field': 'registry[%(model)r].browse(cr, uid, %(id)r).%(field)s' % {
+                'model': el.get('data-oe-model'),
+                'id': int(el.get('data-oe-id')),
+                'field': el.get('data-oe-field'),
+            }
+        })
+
+    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
+        arch = replacement
+        if section_xpath:
+            previous_arch = etree.fromstring(self.browse(cr, uid, view_id, context=context).arch.encode('utf-8'))
+            # ensure there's only one match
+            [previous_section] = previous_arch.xpath(section_xpath)
+            previous_section.getparent().replace(previous_section, replacement)
+            arch = previous_arch
+        return arch
+
+    def save(self, cr, uid, res_id, value, xpath=None, context=None):
+        """ Update a view section. The view section may embed fields to write
 
         :param str model:
         :param int res_id:
         :param str xpath: valid xpath to the tag to replace
         """
-        model_obj = self.pool.get(model)
-        if xpath:
-            origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
-            origin_tree = etree.fromstring(origin.encode('utf-8'))
-            zone = origin_tree.xpath(xpath)[0]
-            zone.getparent().replace(zone, lxml.html.fromstring(value))
-            value = etree.tostring(origin_tree, encoding='utf-8')
+        res_id = int(res_id)
 
-        model_obj.write(cr, uid, res_id, {field: value}, context=context)
+        arch_section = etree.fromstring(value)
 
-    # default view selection
+        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
+            self.save_embedded_field(cr, uid, el, context=context)
+
+            # transform embedded field back to t-field
+            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
+
+        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
+        self.write(cr, uid, res_id, {
+            'arch': etree.tostring(arch, encoding='utf-8').decode('utf-8')
+        }, context=context)
+
 
     def default_view(self, cr, uid, model, view_type, context=None):
         """ Fetches the default view for the provided (model, view_type) pair:
@@ -272,24 +305,14 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id, base_xpath=None, count=None):
-        if not count:
-            count = {}
+    def inherit_branding(self, specs_tree, view_id):
         for node in specs_tree:
-            try:
-                count[node.tag] = count.get(node.tag, 0) + 1
-                xpath = "%s/%s[%s]" % (base_xpath or '', node.tag, count.get(node.tag))
-                if node.tag == 'data' or node.tag == 'xpath':
-                    node = self.inherit_branding(node, view_id, xpath, count)
-                else:
-                    node.attrib.update({
-                        'data-oe-model': 'ir.ui.view',
-                        'data-oe-id': str(view_id),
-                        'data-oe-field': 'arch',
-                        'data-oe-xpath': xpath
-                    })
-            except Exception,e:
-                print "inherit branding error",e,xpath,node.tag
+            xpath = node.getroottree().getpath(node)
+            if node.tag == 'data' or node.tag == 'xpath':
+                self.inherit_branding(node, view_id)
+            else:
+                node.set('data-oe-id', str(view_id))
+                node.set('data-oe-xpath', xpath)
 
         return specs_tree
 
@@ -713,14 +736,13 @@ class view(osv.osv):
         r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
         return r['arch']
 
-    def distribute_branding(self, e, branding=None, xpath=None, count=None):
+    def distribute_branding(self, e, branding=None):
         if e.attrib.get('t-ignore') or e.tag == 'head':
             # TODO: find a better name and check if we have a string to boolean helper
             return
-        xpath = "%s/%s[%s]" % (xpath or '', e.tag, count[e.tag] if count else 1)
         if branding and not (e.attrib.get('data-oe-model') or e.attrib.get('t-field')):
             e.attrib.update(branding)
-            e.attrib['data-oe-xpath'] = xpath
+            e.attrib['data-oe-xpath'] = e.getroottree().getpath(e)
         if not e.attrib.get('data-oe-model'): return
 
         # if a branded element contains branded elements distribute own
@@ -735,11 +757,8 @@ class view(osv.osv):
                 if e.attrib.get(attribute))
 
             if 't-raw' not in e.attrib:
-                # running index by tag type, for XPath query generation
-                count = {}
                 for child in e:
-                    count[child.tag] = count.get(child.tag, 0) + 1
-                    self.distribute_branding(child, distributed_branding, xpath, count)
+                    self.distribute_branding(child, distributed_branding)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
