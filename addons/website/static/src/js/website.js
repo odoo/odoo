@@ -29,31 +29,30 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     customize_setup: function() {
         var self = this;
+        var view_name = $('html').data('view-xmlid');
+        var menu = $('#customize-menu');
         this.$('#customize-menu-button').click(function(event) {
-            // TODO: replace contactus by the current view name (from website.render?)
-            self.rpc('/website/customize_template_get', {'xml_id': 'website.contactus'}).then(
+            menu.empty();
+            self.rpc('/website/customize_template_get', { 'xml_id': view_name }).then(
                 function(result) {
-                    node = $('#customize-menu').empty()
-                    for (var i in result) {
-                        item = result[i];
+                    _.each(result, function (item) {
                         if (item.header) {
-                            li = '<li class="nav-header">'+item.name+'</li>'
+                            menu.append('<li class="nav-header">' + item.name + '</li>');
                         } else {
-                            li = '<li><a href="#" data-view-id="'+item.id+'"><strong class="icon-check'+
-                                  (item.active?'':'-empty')+
-                                  '"></strong> '+item.name+'</a></li>'
+                            menu.append(_.str.sprintf('<li><a href="#" data-view-id="%s"><strong class="icon-check%s"></strong> %s</a></li>',
+                                item.id, item.active ? '' : '-empty', item.name));
                         }
-                        node.append(li);
-                    }
-                    $('a', node).on('click', function (event) {
-                        self.rpc('/website/customize_template_toggle', {
-                            'view_id': $(event.target).attr('data-view-id')
-                        }).then( function(result) {
-                            window.location.reload();
-                        })
                     });
                 }
-            )
+            );
+        });
+        menu.on('click', 'a', function (event) {
+            var view_id = $(event.target).data('view-id');
+            self.rpc('/website/customize_template_toggle', {
+                'view_id': view_id
+            }).then( function(result) {
+                window.location.reload();
+            });
         });
     },
     start: function() {
@@ -276,7 +275,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         $('.carousel .js_carousel_options .label').on('click', function (e) {
             e.preventDefault();
-            var $button = $(e.currentTarget)
+            var $button = $(e.currentTarget);
             var $c = $button.parents(".carousel:first");
 
             if($button.hasClass("js_add")) {
