@@ -52,76 +52,59 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     edit: function () {
         this.$buttons.edit.prop('disabled', true).parent().hide();
-        this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
+        this.$buttons.cancel.add(this.$buttons.snippet)
+            //.prop('disabled', false)
             .add(this.$buttons.save)
+            .prop('disabled', false)
             .parent().show();
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
-                .not('link, script')
+                .filter('div, p, li, section, header, footer')
+                .filter('[data-oe-xpath]')
+                .not('[data-oe-type]')
                 // FIXME: propagation should make "meta" blocks non-editable in the first place...
                 .not('.oe_snippet_editor')
                 .prop('contentEditable', true)
                 .addClass('oe_editable');
-        var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
-        var $raw_editables = $editables.not($rte_ables);
-
-        // temporary fix until we fix ckeditor
-        $raw_editables.each(function () {
-            $(this).parents().add($(this).find('*')).on('click', function(ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-            });
-        });
-
-        this.rte.start_edition($rte_ables);
-        $raw_editables.on('keydown keypress cut paste', function (e) {
-            var $target = $(e.target);
-            if ($target.hasClass('oe_dirty')) {
-                return;
-            }
-
-            $target.addClass('oe_dirty');
-            this.$buttons.save.prop('disabled', false);
-        }.bind(this));
+        this.rte.start_edition($editables);
     },
     rte_changed: function () {
         this.$buttons.save.prop('disabled', false);
     },
     save: function () {
         var self = this;
-        var defs = [];
-        $('.oe_dirty').each(function (i, v) {
-            var $el = $(this);
-            // TODO: Add a queue with concurrency limit in webclient
-            // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
-            var def = self.saving_mutex.exec(function () {
-                return self.saveElement($el).then(function () {
-                    $el.removeClass('oe_dirty');
-                }).fail(function () {
-                    var data = $el.data();
-                    console.error(_.str.sprintf('Could not save %s#%d#%s', data.oeModel, data.oeId, data.oeField));
+
+        var defs = _(CKEDITOR.instances).chain()
+            .filter(function (editor) { return editor.checkDirty(); })
+            .map(function (editor) {
+                console.log('Saving', editor);
+                // TODO: Add a queue with concurrency limit in webclient
+                // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
+                return self.saving_mutex.exec(function () {
+                    return self.saveEditor(editor)
+                        .fail(function () {
+                            var data = $el.data();
+                            console.error(_.str.sprintf('Could not save %s(%d).%s', data.oeModel, data.oeId, data.oeField));
+                        });
                 });
-            });
-            defs.push(def);
-        });
+            }).value();
         return $.when.apply(null, defs).then(function () {
             window.location.reload();
         });
     },
-    saveElement: function ($el) {
-        var data = $el.data();
-        var html = $el.html();
-        var xpath = data.oeXpath;
-        if (xpath) {
-            var $w = $el.clone();
-            $w.removeClass('oe_dirty');
-            _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
-            $w
-                .removeClass('oe_editable')
-                .prop('contentEditable', false);
-            html = $w.wrap('<div>').parent().html();
-        }
-        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
+    /**
+     * Saves an RTE content, which always corresponds to a view section (?).
+     *
+     *
+     */
+    saveEditor: function (editor) {
+        var element = editor.element;
+        var data = editor.getData();
+        return new instance.web.Model('ir.ui.view').call('save', {
+            res_id: element.data('oe-id'),
+            xpath: element.data('oe-xpath'),
+            value: data,
+        });
     },
     cancel: function () {
         window.location.reload();
@@ -170,11 +153,10 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         this.snippet_carousel();
         $elements
-            .not('span, [data-oe-type]')
             .each(function () {
                 var $this = $(this);
-                CKEDITOR.inline(this, self._config()).on('change', function () {
-                    $this.addClass('oe_dirty');
+                var editor = CKEDITOR.inline(this, self._config());
+                editor.on('change', function () {
                     self.trigger('change', this, null);
                 });
             });
@@ -201,7 +183,7 @@ instance.website.RTE = instance.web.Widget.extend({
             autoParagraph: false,
             filebrowserImageUploadUrl: "/website/attach",
             // Support for sharedSpaces in 4.x
-            extraPlugins: 'sharedspace',
+            extraPlugins: 'sharedspace,oeref',
             // Place toolbar in controlled location
             sharedSpaces: { top: 'oe_rte_toolbar' },
             toolbar: [
@@ -343,4 +325,35 @@ instance.web.GoToWebsite = function(parent, action) {
 };
 instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
 
+if (!window.CKEDITOR) { return; }
+
+CKEDITOR.plugins.add('oeref', {
+    requires: 'widget',
+
+    init: function (editor) {
+        editor.widgets.add('oeref', {
+            inline: true,
+            // dialog: 'oeref',
+            allowedContent: '[data-oe-type]',
+            editables: { text: '*' },
+
+            init: function () {
+                var element = this.element;
+                this.setData({
+                    model: element.data('oe-model'),
+                    id: parseInt(element.data('oe-id'), 10),
+                    field: element.data('oe-field'),
+                });
+            },
+            data: function () {
+                this.element.data('oe-model', this.data.model);
+                this.element.data('oe-id', this.data.id);
+                this.element.data('oe-field', this.data.field);
+            },
+            upcast: function (el) {
+                return el.attributes['data-oe-type'];
+            },
+        });
+    }
+});
 };
