@@ -50,40 +50,6 @@ class Ecommerce(http.Controller):
         categories = category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
         return categories
 
-    def render(self, template, values={}):
-        website = request.registry['website']
-        _values = {
-            'categories': self.get_categories(),
-        }
-        _values.update(values)
-        return website.render(template, _values)
-
-    def recommended_product(self, my_pids):
-        if not my_pids:
-            return []
-        product_obj = request.registry.get('product.product')
-
-        my_pids = str(my_pids)[1:-1]
-        product_ids = []
-        query = """
-            SELECT      sol.product_id
-            FROM        sale_order_line as my
-            LEFT JOIN   sale_order_line as sol
-            ON          sol.order_id = my.order_id
-            WHERE       my.product_id in (%s)
-            AND         sol.product_id not in (%s)
-            GROUP BY    sol.product_id
-            ORDER BY    COUNT(sol.order_id) DESC
-            LIMIT 8
-        """ % (my_pids, my_pids)
-        request.cr.execute(query)
-        for p in request.cr.fetchall():
-            product_ids.append(p[0])
-
-        # search to apply access rules
-        product_ids = product_obj.search(request.cr, request.uid, [("id", "in", product_ids)])
-        return product_obj.browse(request.cr, request.uid, product_ids)
-
     @http.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
 
@@ -105,12 +71,13 @@ class Ecommerce(http.Controller):
         product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
 
         values = website.get_rendering_context({
+            'categories': self.get_categories(),
             'current_category': cat_id,
             'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
             'pager': pager,
         })
-        return self.render("website_sale.products", values)
+        return website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<product_id>/'], type='http', auth="public")
     def product(self, cat_id=0, product_id=0):
@@ -121,32 +88,28 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.product')
 
         line = [line for line in order.order_line if line.product_id.id == product_id]
-        quantity = line and int(line[0].product_uom_qty) or 0
 
         values = website.get_rendering_context({
+            'categories': self.get_categories(),
             'product': product_obj.browse(request.cr, request.uid, product_id),
-            'quantity': quantity,
-            'recommended_products': self.recommended_product([product_id]),
         })
-        return self.render("website_sale.product", values)
+        return website.render("website_sale.product", values)
 
     @http.route(['/shop/mycart/'], type='http', auth="public")
     def mycart(self, **post):
-        website = request.registry['website']
         order = get_current_order()
+        website = request.registry['website']
 
         if post.get('code'):
             pricelist_obj = request.registry.get('product.pricelist')
             pricelist_ids = pricelist_obj.search(request.cr, openerp.SUPERUSER_ID, [('code', '=', post.get('code'))])
             if pricelist_ids:
                 order.write({'pricelist_id': pricelist_ids[0]})
-
-        my_pids = [line.product_id.id for line in order.order_line]
+        
         values = website.get_rendering_context({
-            "recommended_products": self.recommended_product(my_pids),
+            'categories': self.get_categories(),
         })
-
-        return self.render("website_sale.mycart", values)
+        return website.render("website_sale.mycart", values)
 
     def add_product_to_cart(self, product_id=0, number=1):
         context = {}

@@ -22,8 +22,7 @@
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart
-                    <!-- FIXME: logic to obtain the shopping cart numer of items shall not be in the template. Move it in models or in controllers -->
-                    <!-- <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/> -->
+                    <span class="badge badge-success" t-if="order.get_total_quantity()" t-esc="order.get_total_quantity()"/>
                 </a>
             </li>
         </xpath>
@@ -44,7 +43,7 @@
 
     <!-- Page Shop --> 
 
-    <template id="page">
+    <template id="layout_categories">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
@@ -54,25 +53,21 @@
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container mt48 oe_ecommerce">
                 <div class="row">
-                    <t t-call='website_sale.categories' />
+                    <div class="span4">
+                        <ul class="nav nav-list">
+                            <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
+                        <t t-foreach="categories" t-as="category">
+                            <t t-call="website_sale.categories_recursive"/>
+                        </t>
+                        </ul>
+                    </div>
                     <t t-raw="shop_content" />
                 </div>
             </div>
         </t>
     </template>
 
-    <!-- List of categories --> 
-
-    <template id="categories">
-        <div class="span4">
-            <ul class="nav nav-list">
-                <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
-            <t t-foreach="categories" t-as="category">
-                <t t-call="website_sale.categories_recursive"/>
-            </t>
-            </ul>
-        </div>
-    </template>
+    <!-- List of categories -->
 
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
@@ -88,7 +83,7 @@
     <!-- Product list --> 
 
     <template id="products">
-        <t t-call="website_sale.page">
+        <t t-call="website_sale.layout_categories">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <div class='span8 navbar navbar-inverse'>
@@ -105,8 +100,6 @@
                     <div class='row grid grid-align-top'>
                         <t t-foreach="products" t-as="product">
                             <t t-set="quantity" t-value="1"/>
-                            <!-- FIXME: logic to obtain a specific product count in the shopping cart shall not be in the template. Move it in models or in controllers -->
-                            <!-- <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/> -->
                             <t t-call="website_sale.product_card"/>
                         </t>
                     </div>
@@ -130,38 +123,19 @@
                 <div t-field="product.description_sale"></div>
                 <div><span t-field="product.list_price"></span>€</div>
                 <div class="mb8 mt8">
-                    <a t-if="quantity" t-att-href="'./remove_cart/%s/' % product.id" class="btn mb8 btn-small btn-inverse">Remove one</a>
-                    <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart <t t-if="quantity">(<t t-esc="quantity"/>)</t></a>
+                    <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
                 </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="product_recommended">
-        <div class="well mt32" t-if="recommended_products">
-            <h4>Customers who have bought this item also bought</h4>
-            <div class='row mt16'>
-            <t t-foreach="recommended_products or []" t-as="product">
-                <div class='span2 thumbnail'>
-                    <a t-att-href="'/shop/product/%%s/' %% product.id">
-                        <div class='mt16 text-center'>
-                            <img t-att-src="'data:image/png;base64,' + product.image"/>
-                            <h5 t-field='product.name'></h5>
-                        </div>
-                    </a>
-                </div>
-            </t>
             </div>
         </div>
     </template>
 
     <!-- product --> 
 
-    <template id="product">
-        <t t-call="website_sale.page">
+    <template id="product" name="Product">
+        <t t-call="website_sale.layout_categories">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class="oe_product_detail span8">
+                <div class="oe_product_detail span8" id="product_detail">
                     <a href="#" t-att-data-id="product.id" class="pull-right" t-if="editable">
                         <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Click to Unpublish</span>
                         <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Click to Publish</span>
@@ -169,41 +143,88 @@
                     <h2 t-field="product.name"></h2>
 
                     <div class="oe_button_cart">
-                        <a t-if="quantity" t-att-href="'./remove_cart/%s/' % product.id" class="btn btn-small btn-inverse">Remove one</a>
-                        <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart <t t-if="quantity">(<t t-esc="quantity"/>)</t></a>
+                        <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
                     </div>
                     <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
                     <div t-field="product.description_website"></div>
                     <div class="oe_ecommerce_price"><t t-field="product.list_price" />€</div>
-                    <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>
         </t>
+    </template>
+    <template id="recommended_products" inherit_id="website_sale.product" inherit_option_id="website_sale.product" name="Recommended Products">
+        <xpath expr="//div[@id='product_detail']" position="inside">
+            <div class="well mt32" t-if="product.recommended_products()">
+                <h4>Customers who have bought this item also bought</h4>
+                <div class='row mt16'>
+                <t t-foreach="product.recommended_products()" t-as="product">
+                    <div class='span2 thumbnail'>
+                        <a t-att-href="'/shop/product/%%s/' %% product.id">
+                            <div class='mt16 text-center'>
+                                <img t-att-src="'data:image/png;base64,' + product.image"/>
+                                <h5 t-field='product.name'></h5>
+                            </div>
+                        </a>
+                    </div>
+                </t>
+                </div>
+            </div>
+        </xpath>
     </template>
 
     <!-- Page Shop my cart --> 
 
     <template id="mycart">
-        <t t-call="website_sale.page">
+        <t t-call="website_sale.layout_categories">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">
                 <div class="span8 oe_mycart">
                     <h2>My Shopping Cart</h2>
                     <h3 t-if="not order.order_line">Your cart is empty</h3>
-                    <div class='row mt32 grid grid-align-top'>
-                        <t t-foreach="order.order_line or []" t-as="line">
-                            <t t-set="product" t-value="line.product_id"/>
-                            <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
-                            <t t-call="website_sale.product_card"/>
-                        </t>
-                    </div>
-                    <t t-call="website_sale.total"/>
+                    <table class='table-equalized' t-if="order.order_line">
+                        <thead>
+                            <tr><th>Product</th><th>Qty.</th><th>Price</th></tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="order.order_line" t-as="line">
+                                <tr>
+                                    <td>
+                                        <a t-att-href="line.product_id"><span t-field="line.product_id.name"/></a>
+                                    </td>
+                                    <td>
+                                        <a t-att-href="line.product_id"><img class="img-rounded" t-att-src="'data:image/png;base64,' + line.product_id.image"/></a>
+                                    </td>
+                                    <td>
+                                       <span t-field="line.product_id.list_price"></span>€
+                                    </td>
+                                    <td>
+                                        <div class="mb8 mt8">
+                                            <input type="text" t-att-value="line.product_uom_qty"/>
+                                            <a t-attf-href="./remove_cart/#{ line.product_id.id }/" class="btn mb8 btn-small btn-inverse">-</a>
+                                            <a t-attf-href="./add_cart/#{ line.product_id.id }/" class="btn mb8 btn-small btn-success">+</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td colspan="2">
+                                        <small t-field="line.product_id.description_sale"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+
+                        <tfoot>
+                            <tr> <td>Subtotal </td>      <td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                            <tr> <td>Taxes </td>         <td><t t-esc="order.amount_tax"/> €</td></tr>
+                            <tr> <td><h4>Total</h4></td> <td><h4><t t-esc="order.amount_total"/> €</h4></td></tr>
+                        </tfoot>
+                    </table>
                     <form t-if="order.order_line" class="well form-search" action="/shop/mycart/" method="post">
                         <input name="code" class='input' type="text" placeholder="Reduction Code..."/>
                         <button class="btn">Apply Code</button>
                     </form>
                     <a t-if="order.order_line" href="/shop/checkout/"><button class="btn btn-success">Proceed To Payment</button></a>
-                    <t t-call="website_sale.product_recommended"/>
                 </div>
             </t>
         </t>

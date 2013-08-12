@@ -27,6 +27,7 @@ def urlplus(url, params):
         url += "%s=%s&" % (k, urllib.quote_plus(v))
     return url
 
+
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
@@ -94,3 +95,24 @@ class website(osv.osv):
             d["pages"].append({'url': "%spage/%s/" % (url, page), 'num': page})
 
         return d
+
+
+class res_partner(osv.osv):
+    _inherit = "res.partner"
+
+    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
+        partner = self.browse(cr, uid, ids[0], context=context)
+        params = {
+            'center': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'size': "%sx%s" % (height, width),
+            'zoom': zoom,
+            'sensor': 'false',
+        }
+        return urlplus('http://maps.googleapis.com/maps/api/staticmap' , params)
+
+    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+        partner = self.browse(cr, uid, ids[0], context=context)
+        params = {
+            'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+        }
+        return urlplus('https://maps.google.be/maps' , params)
