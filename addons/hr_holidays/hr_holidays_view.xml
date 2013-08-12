@@ -357,8 +357,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
-            <field name="context">{'search_default_group_type': 1, 'search_default_validated': 1}</field>
-            <field name="domain">[('holiday_type','=','employee')]</field>
+            <field name="context">{'search_default_group_type': 1}</field>
+            <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
