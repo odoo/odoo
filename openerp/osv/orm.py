@@ -3363,19 +3363,22 @@ class BaseModel(object):
         select = self.browse(ids)
         result = select._read_flat(list(old_fields), load=load)
 
-        # update record caches
-        model_cache = select._model_cache
-        for f in old_fields:
-            convert = self._fields[f].convert_to_cache
-            for values in result:
-                model_cache[values['id']][f] = convert(values[f])
+        # associate field names to their corresponding field
+        old_fields = [(f, self._fields[f]) for f in old_fields]
+        new_fields = [(f, self._fields[f]) for f in new_fields]
 
-        # read new-style fields with records
-        record_values = [(self.browse(values['id']), values) for values in result]
-        for f in new_fields:
-            convert = self._fields[f].convert_to_read
-            for record, values in record_values:
-                values[f] = convert(record[f])
+        # update record caches with old-style fields
+        model_cache = select._model_cache
+        for values in result:
+            record = self.browse(values['id'])
+            for f, field in old_fields:
+                record._record_cache[f] = field.convert_to_cache(values[f])
+
+        # read new-style fields on records
+        for values in result:
+            record = self.browse(values['id'])
+            for f, field in new_fields:
+                values[f] = field.convert_to_read(record[f])
 
         return result if isinstance(ids, list) else (bool(result) and result[0])
 
