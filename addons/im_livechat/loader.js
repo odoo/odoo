@@ -7,7 +7,7 @@ require.config({
         underscore: "im_livechat/static/ext/static/lib/underscore/underscore",
         qweb2: "im_livechat/static/ext/static/lib/qweb/qweb2",
         openerp: "web/static/src/js/openerpframework",
-        "jquery.achtung": "im_livechat/static/ext/static/lib/achtung/jquery.achtung",
+        "jquery.achtung": "im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung",
         livesupport: "im_livechat/static/ext/static/js/livesupport",
     },
     shim: {
