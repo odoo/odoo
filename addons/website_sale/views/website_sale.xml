@@ -2,6 +2,17 @@
 <openerp>
 <data>
 
+    <record model="ir.ui.view" id="product_pricelist_view">
+        <field name="name">product.pricelist.website.form</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="code"/>
+            </field>
+        </field>
+    </record>
+    
     <!-- Layout add nav and footer -->
 
     <record id="header_ecommerce" model="ir.ui.view">
@@ -44,8 +55,8 @@
     <template id="page">
         <t t-call="website.layout">
             <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/ecommerce.js"></script>
-                <link rel='stylesheet' href='/website_sale/static/src/css/ecommerce.css'/>
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
@@ -247,7 +258,7 @@
     <template id="checkout">
         <t t-call="website.layout">
             <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/ecommerce.js"></script>
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
                 <t t-raw="head"/>
             </t>
             <t t-set="title">Shop - Checkout</t>

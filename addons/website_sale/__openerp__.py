@@ -10,10 +10,9 @@ OpenERP E-Commerce
     'author': 'OpenERP SA',
     'depends': ['website', 'sale', 'point_of_sale'],
     'data': [
-        'views/ecommerce.xml',
-        'views/pricelist.xml',
+        'views/website_sale.xml',
         'security/ir.model.access.csv',
-        'security/ecommerce.xml',
+        'security/website_sale.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

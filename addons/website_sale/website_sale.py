@@ -27,3 +27,10 @@ class product_pricelist(osv.osv):
     _columns = {
         'code': fields.char('Promotionnal Code', size=64, required=True, translate=True),
     }
+
+class product_product(osv.osv):
+    _inherit = "product.product"
+    _columns = {
+        'website_published': fields.boolean('Available in the website'),
+        'description_website': fields.html('Description for the website'),
+    }
