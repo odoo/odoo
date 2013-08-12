@@ -1675,7 +1675,7 @@ class account_invoice_tax(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
         'base': fields.float('Base', digits_compute=dp.get_precision('Account')),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'manual': fields.boolean('Manual'),
@@ -1752,6 +1752,14 @@ class account_invoice_tax(osv.osv):
                     val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
+
+                # If the taxes generate moves on the same financial account as the invoice line
+                # and no default analytic account is defined at the tax level, propagate the 
+                # analytic account from the invoice line to the tax line. This is necessary
+                # in situations were (part of) the taxes cannot be reclaimed, 
+                # to ensure the tax move is allocated to the proper analytic account.
+                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
+                    val['account_analytic_id'] = line.account_analytic_id.id
 
                 key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
                 if not key in tax_grouped:
