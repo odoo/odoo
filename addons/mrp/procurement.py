@@ -92,10 +92,10 @@ class procurement_order(osv.osv):
 
     def get_phantom_bom_id(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.move_id and procurement.move_id.product_id.supply_method=='produce' \
-                 and procurement.move_id.product_id.procure_method=='make_to_order':
+            if procurement.move_dest_id and procurement.move_dest_id.product_id.supply_method=='produce' \
+                 and procurement.move_dest_id.product_id.procure_method=='make_to_order':
                     phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
-                        ('product_id', '=', procurement.move_id.product_id.id),
+                        ('product_id', '=', procurement.move_dest_id.product_id.id),
                         ('bom_id', '=', False),
                         ('type', '=', 'phantom')]) 
                     return phantom_bom_id 
@@ -120,7 +120,7 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
-            res_id = procurement.move_id.id
+            res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
             newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
             newdate = newdate - relativedelta(days=company.manufacturing_lead)
             produce_id = production_obj.create(cr, uid, {

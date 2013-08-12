@@ -107,7 +107,6 @@ class procurement_order(osv.osv):
                     return False
             else:
                 return True
-            return procurement.move_id.state == 'done'
         return super(procurement_order, self)._check(cr, uid, procurement, context)
 
 
