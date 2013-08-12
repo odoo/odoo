@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import simplejson
 
 import openerp
 from openerp.osv import osv
@@ -41,6 +42,7 @@ class website(osv.osv):
             'uid': request.uid,
             'host_url': request.httprequest.host_url,
             'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
+            'json': simplejson,
         }
         if values['editable']:
             values.update({
