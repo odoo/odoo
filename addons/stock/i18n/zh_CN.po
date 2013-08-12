@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-07-27 18:34+0000\n"
+"PO-Revision-Date: 2013-08-06 09:26+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16700)\n"
+"X-Launchpad-Export-Date: 2013-08-07 04:46+0000\n"
+"X-Generator: Launchpad (build 16721)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -1432,6 +1432,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                创建一个新的凭证。\n"
+"              </p><p>\n"
+"                根据所执行操作的类型 或者 工人/团队 将要执行的操作，库存凭证系统允许你指定每个库存操作对应到指定的凭证。\n"
+"                例如库存凭证可以是：质量控制，分拣单，包装 等等。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -2332,7 +2339,7 @@ msgstr "供货商库位"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Products Inventory"
-msgstr "查看产品存货清单"
+msgstr "查看产品库存"
 
 #. module: stock
 #: view:stock.move:0
@@ -2415,6 +2422,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                创建一个库存移库单。\n"
+"              </p><p>\n"
+"                此菜单给你在一个特定产品上面的库存操作的完整的可追溯性。\n"
+"                你能过滤该产品，查看该产品所有已经发生和未发生的移库。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.location:0
@@ -2989,6 +3003,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                添加一个库位。\n"
+"              </p><p>\n"
+"                这是你的公司的仓库和库位的结构。\n"
+"                您能点击一个库位，获得产品的清单，和它们在每个库位及其子库位中的库存情况。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -3151,6 +3172,10 @@ msgid ""
 "needs, etc.\n"
 "                This installs the module stock_location."
 msgstr ""
+"提供推送物流。这个特性的典型使用是：\n"
+"                管理产品的生产链，管理每个产品的默认库位，,\n"
+"                根据业务需要定义仓库的内路线等等。\n"
+"这需要安装模块 stock_location 。"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3212,6 +3237,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                添加一个追踪号码。\n"
+"              </p><p>\n"
+"                这是所有包装的一个列表。当你选择了一个包装，你\n"
+"                能获得包含在这个包装中的产品的上下游的可追踪性。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: code:addons/stock/stock.py:2501
@@ -3381,6 +3413,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击开始一次盘点。\n"
+"              </p><p>\n"
+"                "
+"定期盘点通常用于清点每个库位的商品数量。你可以每年定期使用本功能一次来做总体盘点，也可以在任何你需要的时候进行以便符合当前某个产品的存量级别。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -3540,7 +3579,7 @@ msgstr "货架 1"
 #: help:stock.picking.in,date:0
 #: help:stock.picking.out,date:0
 msgid "Creation time, usually the time of the order."
-msgstr ""
+msgstr "创建时间，通常是下单的时间。"
 
 #. module: stock
 #: field:stock.tracking,name:0
@@ -3981,7 +4020,7 @@ msgstr "关注者"
 #: code:addons/stock/stock.py:2590
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "消耗的移库数量不能小于等于0。"
 
 #. module: stock
 #: help:stock.config.settings,decimal_precision:0
@@ -4068,6 +4107,8 @@ msgid ""
 "                to be invoiced when you send or deliver goods.\n"
 "                This installs the module stock_invoice_directly."
 msgstr ""
+"当您发送或交付货物，如果交付要开票，将能自动运行开票向导。\n"
+"这需要安装模块 stock_invoice_directly。"
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -4423,7 +4464,7 @@ msgid ""
 "This allows you to manage products by using serial numbers. When you select "
 "a serial number on product moves, you can get the upstream or downstream "
 "traceability of that product."
-msgstr ""
+msgstr "允许你使用序列号管理产品。当你在产品移库时选择了一个序列号，你能获得对产品的上游和下游的可追溯性。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
@@ -4482,6 +4523,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击新增一个产品的发货单。\n"
+"              </p><p>\n"
+"                你在此处会发现该产品相关的所有调拨历史，以及所有你需要发货给客户的产品。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
