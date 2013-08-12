@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <!-- <data noupdate="1"> -->
-    <data>
+    <data noupdate="1">
 
         <!--  Demo Leads -->
         <record id="crm_case_1" model="crm.lead">
@@ -360,7 +359,10 @@ Andrew</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="crm_case_15" model="crm.lead">
+            <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
         </record>
 
         <record id="crm_case_16" model="crm.lead">
@@ -384,7 +386,7 @@ Andrew</field>
             <field name="section_id" ref="crm_case_section_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <record id="crm_case_17" model="crm.lead">
@@ -409,7 +411,10 @@ Andrew</field>
             <field name="section_id" ref="crm_case_section_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="crm_case_17" model="crm.lead">
+            <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
         </record>
 
         <record id="crm_case_18" model="crm.lead">
@@ -435,6 +440,9 @@ Andrew</field>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
         </record>
+        <record id="crm_case_18" model="crm.lead">
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_demo'))]"/>
+        </record>
 
         <record id="crm_case_19" model="crm.lead">
             <field name="type">opportunity</field>
@@ -457,7 +465,7 @@ Andrew</field>
             <field name="section_id" ref="crm_case_section_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <record id="crm_case_20" model="crm.lead">
@@ -488,7 +496,7 @@ Andrew</field>
             <field name="section_id" ref="crm_case_section_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <record id="crm_case_22" model="crm.lead">
@@ -521,7 +529,7 @@ Andrew</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <record id="crm_case_24" model="crm.lead">
@@ -540,7 +548,7 @@ Andrew</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
-            <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(month=1)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="date_closed" eval="(DateTime.today() - relativedelta(month=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <record id="crm_case_25" model="crm.lead">
@@ -590,16 +598,6 @@ Andrew</field>
             <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
         </record>
 
-        <!-- Unsubscribe Admin from case15, subscribe Demo -->
-        <record id="crm_case_15" model="crm.lead">
-            <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
-        </record>
-        <record id="crm_case_17" model="crm.lead">
-            <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
-        </record>
-        <record id="crm_case_18" model="crm.lead">
-            <field name="message_follower_ids" eval="[(4, ref('base.partner_demo'))]"/>
-        </record>
         <!-- Some messages linked to the previous opportunities -->
         <record id="msg_case15_attach1" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
