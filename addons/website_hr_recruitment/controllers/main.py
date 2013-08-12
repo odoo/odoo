@@ -10,7 +10,7 @@ class website_hr_recruitment(http.Controller):
     @http.route(['/jobs'], type='http', auth="public")
     def career(self, **post):
         website = request.registry['website']
-        jobpost_ids = request.registry['hr.job'].search(request.cr, request.uid, [("state", "=", 'open')])
+        jobpost_ids = request.registry['hr.job'].search(request.cr, request.uid, [("state", "=", 'recruit')])
         request.cr.execute("select distinct(com.id) from hr_job job, res_company com where com.id=job.company_id")
         ids = [] 
         for i in request.cr.fetchall():

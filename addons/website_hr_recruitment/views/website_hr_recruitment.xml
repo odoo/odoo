@@ -35,8 +35,13 @@
                                     <tr t-if="job.company_id.id==company.id">
                                         <td>
                                             <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
-                                            <span t-if="job.department_id" t-esc="job.department_id.name"/>
+                                            <b><span t-if="job.department_id" t-esc="job.department_id.name"/></b><br/>
+                                            <span><b>No of Position:</b> <t t-esc="int(job.no_of_recruitment)"/></span><br/> 
                                             <span t-esc="job.write_date"/>
+                                        </td>
+                                        <td>
+                                            <span><b>Location:</b> <t t-esc="res_company.city+','"/> <t t-esc="res_company.state_id.name+','"/> <t t-esc="res_company.country_id.name+'.'"/></span><br/>
+                                            <span>&amp;#x2706; <t t-esc="res_company.phone+'.'"/></span>
                                         </td>
                                     </tr>
                                 </t>
