@@ -147,6 +147,11 @@ class QWebXml(object):
         if v is None:
             v = {}
         v['__template__'] = tname
+        stack = v.get('__stack__', [])
+        if stack:
+            v['__caller__'] = stack[-1]
+        stack.append(tname)
+        v['__stack__'] = stack
         v = QWebContext(v, self.undefined_handler)
         return self.render_node(self.get_template(tname), v)
 
