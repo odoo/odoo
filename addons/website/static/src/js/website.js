@@ -100,7 +100,11 @@ instance.website.EditorBar = instance.web.Widget.extend({
      */
     saveEditor: function (editor) {
         var element = editor.element;
-        var data = editor.getData();
+        editor.destroy();
+        element.removeClass('cke_focus')
+               .removeClass('oe_editable')
+               .removeAttribute('contentEditable');
+        var data = element.getOuterHtml();
         return new instance.web.Model('ir.ui.view').call('save', {
             res_id: element.data('oe-id'),
             xpath: element.data('oe-xpath'),
