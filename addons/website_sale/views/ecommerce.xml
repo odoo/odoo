@@ -88,7 +88,7 @@
         <div t-if="page_count != 1" t-attf-class="#{ classname or '' } pagination">
             <ul>
                 <li t-att-class=" 'disabled' if page == 1 else '' " >
-                    <t t-set="alt_url" t-valuef="/shop/category/#{ current_category }/page/#{ max(0, page - 1) }/'"/>
+                    <t t-set="alt_url" t-valuef="/shop/category/#{ current_category }/page/#{ max(0, page - 1) }/"/>
                     <a t-att-href=" '#' if page == 1 else alt_url ">Prev</a>
                 </li>
                 <t t-foreach="pages" t-as="p">
@@ -97,7 +97,7 @@
                     </li>
                 </t>
                 <li t-att-class=" 'disabled' if page == page_count else '' ">
-                    <t t-set="alt_url" t-valuef="/shop/category/#{ current_category }/page/#{ min(page_count, page + 1) }/'"/>
+                    <t t-set="alt_url" t-valuef="/shop/category/#{ current_category }/page/#{ min(page_count, page + 1) }/"/>
                     <a t-att-href=" '#' if page == page_count else alt_url ">Next</a>
                 </li>
             </ul>
