@@ -4,28 +4,14 @@
 
     <!-- Layout add nav and footer -->
 
-    <record id="header_website_event" model="ir.ui.view">
-        <field name="name">header_website_event</field>
-        <field name="inherit_id" ref="website.header"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//ul[@id='top_menu']/li" position="after">
-                    <li><a href="/event">Events</a></li>
-                </xpath>
-           </data>
-        </field>
-    </record>
-    <record id="footer_website_event" model="ir.ui.view">
-        <field name="name">footer_website_event</field>
-        <field name="inherit_id" ref="website.footer"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//a[@href='/page/website.contactus']" position="after">
-                    <li><a href="/event">Events</a></li>
-                </xpath>
-           </data>
-        </field>
-    </record>
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+            <li><a href="/event">Events</a></li>
+        </xpath>
+        <xpath expr="//body/footer//a[@href='/page/website.contactus']" position="after">
+            <li><a href="/event">Events</a></li>
+        </xpath>
+    </template>
 
     <!-- Page --> 
  

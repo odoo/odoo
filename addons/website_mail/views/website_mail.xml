@@ -12,30 +12,16 @@
 
     <!-- Layout add nav and footer -->
 
-    <record id="header_website_mail" model="ir.ui.view">
-        <field name="name">header_website_mail</field>
-        <field name="inherit_id" ref="website.header"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//ul[@id='top_menu']/li" position="after">
-                    <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
-                </xpath>
-            </data>
-        </field>
-    </record>
-    <record id="footer_website_mail" model="ir.ui.view">
-        <field name="name">footer_website_mail</field>
-        <field name="inherit_id" ref="website.footer"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//h5[@name='info_title']" position="after">
-                    <ul class='unstyled'>
-                        <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
-                    </ul>
-                </xpath>
-           </data>
-        </field>
-    </record>
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+            <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
+        </xpath>
+        <xpath expr="//body/footer//h5[@name='info_title']" position="after">
+            <ul class='unstyled'>
+                <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
+            </ul>
+        </xpath>
+    </template>
 
     <!-- Page --> 
 

@@ -12,17 +12,11 @@
 
     <!-- Layout add nav and footer -->
 
-    <record id="footer_website_hr" model="ir.ui.view">
-        <field name="name">footer_website_hr</field>
-        <field name="inherit_id" ref="website.footer"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//a[@href='/page/website.aboutus']" position="after">
-                    <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
-                </xpath>
-           </data>
-        </field>
-    </record>
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
+            <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
+        </xpath>
+    </template>
 
     <!-- Page --> 
 

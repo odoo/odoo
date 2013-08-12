@@ -15,27 +15,19 @@
     
     <!-- Layout add nav and footer -->
 
-    <record id="header_ecommerce" model="ir.ui.view">
-        <field name="name">header_ecommerce</field>
-        <field name="inherit_id" ref="website.header"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//ul[@id='top_menu']/li" position="before">
-                    <li>
-                        <a href="/shop/">Shop</a>
-                    </li>
-                    <li>
-                        <a href="/shop/mycart/">
-                            <i class="icon-shopping-cart"></i>
-                            My cart
-                            <!-- FIXME: logic to obtain the shopping cart numer of items shall not be in the template. Move it in models or in controllers -->
-                            <!-- <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/> -->
-                        </a>
-                    </li>
-                </xpath>
-           </data>
-        </field>
-    </record>
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
+            <li><a href="/shop/">Shop</a></li>
+            <li>
+                <a href="/shop/mycart/">
+                    <i class="icon-shopping-cart"></i>
+                    My cart
+                    <!-- FIXME: logic to obtain the shopping cart numer of items shall not be in the template. Move it in models or in controllers -->
+                    <!-- <span class="badge badge-success" t-if="order.order_line" t-esc="int(sum([l.product_uom_qty for l in order.order_line]))"/> -->
+                </a>
+            </li>
+        </xpath>
+    </template>
 
     <record id="product_normal_form_view" model="ir.ui.view">
         <field name="name">product.normal.form.inherit</field>
