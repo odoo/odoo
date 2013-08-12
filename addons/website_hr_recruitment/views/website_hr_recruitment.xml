@@ -36,7 +36,7 @@
                                         <td>
                                             <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
                                             <span t-if="job.department_id" t-esc="job.department_id.name"/>
-                                            <span t-esc="job.post_date"/>
+                                            <span t-esc="job.write_date"/>
                                         </td>
                                     </tr>
                                 </t>
@@ -60,8 +60,10 @@
                     </div>
                     <div class="row">
                         <div class="span12">
-                            <h3>Description</h3>
-                            <p t-if="job.description"><t t-esc="job.description"/></p>
+                            <t t-if="job.description">
+                                <h3>Description</h3>
+                                <p t-if="job.description"><t t-esc="job.description"/></p>
+                            </t>
                         </div>
                     </div>
                     <t t-call="website_hr_recruitment.applyjobpost"/>
