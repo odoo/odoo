@@ -15,7 +15,7 @@
 
     <!-- Page --> 
  
-    <template id="index">
+    <template id="index" name="E-commerce">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
@@ -24,28 +24,12 @@
             <t t-set="title">Events</t>
             <div class="container mt48">
                 <div class="row">
-                    <div class="span4 css_noprint">
+                    <div class="span4 css_noprint" id="left_column">
                         <ul class="nav nav-list">
                             <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
                                 <li t-att-class="searches.get('date') == date[0] and 'active' or ''">
                                     <a  t-att-href="'/event/%%s&amp;date=%%s' %% (search_path, date[0])"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
-                                </li>
-                            </t>
-                        </ul>
-                        <ul class="nav nav-list">
-                            <li class="nav-header">Category</li>
-                            <t t-foreach="types">
-                                <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                                    <a t-att-href="'/event/%%s&amp;type=%%s' %% (search_path, type[0])"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
-                                </li>
-                            </t>
-                        </ul>
-                        <ul class="nav nav-list">
-                            <li class="nav-header">Location</li>
-                            <t t-foreach="countries">
-                                <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                                    <a t-att-href="'/event/%%s&amp;country=%%s' %% (search_path, country_id[0])"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
                                 </li>
                             </t>
                         </ul>
@@ -100,6 +84,31 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="event_category" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Category">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <ul class="nav nav-list">
+                <li class="nav-header">Category</li>
+                <t t-foreach="types">
+                    <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
+                        <a t-att-href="'/event/%%s&amp;type=%%s' %% (search_path, type[0])"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
+                    </li>
+                </t>
+            </ul>
+        </xpath>
+    </template>
+    <template id="event_location" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Location">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <ul class="nav nav-list">
+                <li class="nav-header">Location</li>
+                <t t-foreach="countries">
+                    <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
+                        <a t-att-href="'/event/%%s&amp;country=%%s' %% (search_path, country_id[0])"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
+                    </li>
+                </t>
+            </ul>
+        </xpath>
     </template>
 
     <template id="detail">
