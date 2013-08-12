@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="header_career" model="ir.ui.view">
-            <field name="name">header_career</field>
+        <record id="header_jobs" model="ir.ui.view">
+            <field name="name">header_jobs</field>
             <field name="type">qweb</field>
             <field name="inherit_id" ref="website.header"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="(//li)[last()]" position="after">
-                        <li class="pull-right"><a href="/career">Career</a></li>
+                        <li class="pull-right"><a href="/jobs">Jobs</a></li>
                     </xpath>
                 </data>
             </field>
         </record>
-        <template id="career">
+        <template id="jobs">
             <t t-call="website.layout">
-                <t t-set="title">Career</t>
+                <t t-set="title">Jobs</t>
                 <div class="container">
                     <section id="tables">
                         <div class="page-header">
@@ -56,7 +56,7 @@
                 <t t-set="title">Job Detail</t>
                 <div class="span4 pull-right">
                     <ul class="pager">
-                        <li><a t-att-href="'/career'">Back</a></li>
+                        <li><a t-att-href="'/jobs'">Back</a></li>
                     </ul>
                 </div>
                 <div class="container">
@@ -67,8 +67,6 @@
                         <div class="span12">
                             <h3>Description</h3>
                             <p t-if="job.description"><t t-esc="job.description"/></p>
-                            <h3>Requirements</h3>
-                            <p t-if="job.requirements"><t t-esc="job.requirements"/></p>
                         </div>
                     </div>
                     <t t-call="website_hr_recruitment.applyjobpost"/>
@@ -101,7 +99,7 @@
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">Save</button>
-                                <button type="reset" class="btn"><a t-att-href="'/career'">Cancel</a></button>
+                                <button type="reset" class="btn"><a t-att-href="'/jobs'">Cancel</a></button>
                           </div>
                         </fieldset>
                     </form>

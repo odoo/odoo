@@ -7,7 +7,7 @@ from urllib import quote_plus
 
 class website_hr_recruitment(http.Controller):
 
-    @http.route(['/career'], type='http', auth="public")
+    @http.route(['/jobs'], type='http', auth="public")
     def career(self, **post):
         website = request.registry['website']
         jobpost_ids = request.registry['hr.job'].search(request.cr, request.uid, [("state", "=", 'open')])
@@ -20,7 +20,7 @@ class website_hr_recruitment(http.Controller):
             'companies': companies,
             'res_job': request.registry['hr.job'].browse(request.cr, request.uid, jobpost_ids)
         })
-        html = website.render("website_hr_recruitment.career", values)
+        html = website.render("website_hr_recruitment.jobs", values)
         return html
 
     @http.route(['/job/detail/<id>'], type='http', auth="public")
