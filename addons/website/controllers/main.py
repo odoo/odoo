@@ -52,7 +52,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return werkzeug.utils.redirect("/page/%s" % path)
 
     @http.route('/page/<path:path>', type='http', auth="admin")
-    def page(self, path):
+    def page(self, path, **kwargs):
         website = request.registry.get("website")
         values = website.get_rendering_context({
             'path': path
