@@ -445,6 +445,13 @@ class ir_translation(osv.osv):
                         tools.trans_load(cr, base_trans_file, lang, verbose=False, module_name=module_name, context=context)
                         context['overwrite'] = True # make sure the requested translation will override the base terms later
 
+                    # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
+                    base_trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
+                    if base_trans_extra_file:
+                        _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
+                        tools.trans_load(cr, base_trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
+                        context['overwrite'] = True # make sure the requested translation will override the base terms later
+
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
                 trans_file = openerp.modules.get_module_resource(module_name, 'i18n', lang_code + '.po')
                 if trans_file:
@@ -452,6 +459,11 @@ class ir_translation(osv.osv):
                     tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
                 elif lang_code != 'en_US':
                     _logger.warning('module %s: no translation for language %s', module_name, lang_code)
+
+                trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
+                if trans_extra_file:
+                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
+                    tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
         return True
 
 
