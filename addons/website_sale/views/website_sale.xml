@@ -137,8 +137,8 @@
             <t t-set="shop_content">
                 <div class="oe_product_detail span8" id="product_detail">
                     <a href="#" t-att-data-id="product.id" class="pull-right" t-if="editable">
-                        <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Click to Unpublish</span>
-                        <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Click to Publish</span>
+                        <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Unpublish</span>
+                        <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Publish</span>
                     </a>
                     <h2 t-field="product.name"></h2>
 
@@ -196,10 +196,10 @@
                             <t t-foreach="order.order_line" t-as="line">
                                 <tr>
                                     <td>
-                                        <a t-att-href="line.product_id"><img class="img-rounded" t-att-src="'data:image/png;base64,' + line.product_id.image"/></a>
+                                        <a t-att-href="'/shop/product/%%s/' %% line.product_id"><img class="img-rounded" t-att-src="'data:image/png;base64,' + line.product_id.image"/></a>
                                     </td>
                                     <td>
-                                        <a t-att-href="line.product_id"><span t-field="line.product_id.name"/></a><br/>
+                                        <a t-att-href="'/shop/product/%%s/' %% line.product_id"><span t-field="line.product_id.name"/></a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
@@ -441,41 +441,27 @@
             <div class="container mt48 oe_website_sale">
                 <div class="row">
                     <div class="span4 oe_total">
-                        <table class='table table-hover'>
+                        <table class="table table-condensed">
                             <thead>
                                 <tr>
-                                    <th width="80">Product</th>
-                                    <th></th>
-                                    <th width="80">Price</th>
-                                    <th width="140">Quantity</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Qty.</th>
                                 </tr>
                             </thead>
-                            <tbody t-if="not order.order_line">
-                                <tr><td colspan="4"><h3>Your cart is empty</h3></td></tr>
-                            </tbody>
                             <tbody t-if="order.order_line">
                                 <t t-foreach="order.order_line" t-as="line">
                                     <tr>
-                                        <td>
-                                            <a t-att-href="line.product_id"><img class="img-rounded" t-att-src="'data:image/png;base64,' + line.product_id.image"/></a>
-                                        </td>
-                                        <td>
-                                            <a t-att-href="line.product_id"><span t-field="line.product_id.name"/></a><br/>
-                                            <small t-field="line.product_id.description_sale"/>
-                                        </td>
-                                        <td>
-                                           <span t-field="line.product_id.list_price"></span>€
-                                        </td>
-                                        <td>
-                                            <span t-field="line.product_uom_qty"></span>
-                                        </td>
+                                        <td><t t-esc="line.name"/></td>
+                                        <td><t t-esc="line.product_uom_qty"/></td>
+                                        <td class="css_alignright"><t t-esc="line.product_id.list_price"/>€</td>
                                     </tr>
                                 </t>
                             </tbody>
                             <tfoot>
-                                <tr> <td colspan="3">Subtotal </td>      <td><t t-esc="order.amount_untaxed"/> €</td></tr>
-                                <tr> <td colspan="3">Taxes </td>         <td><t t-esc="order.amount_tax"/> €</td></tr>
-                                <tr> <td colspan="3"><h4>Total</h4></td> <td><h4><t t-esc="order.amount_total"/> €</h4></td></tr>
+                                <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                                <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
+                                <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
                             </tfoot>
                         </table>
                     </div>

@@ -36,8 +36,8 @@
                             <div class="media-body">
                                 <div t-if="editable" class="pull-right">
                                     <a href="#" t-att-data-id="employee_id.id">
-                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                        <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Unpublish</span>
+                                        <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Publish</span>
                                     </a>
                                 </div>
                                 <h5 class="media-heading" t-field="employee_id.name"/>

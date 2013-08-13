@@ -15,7 +15,7 @@
 
     <!-- Page --> 
  
-    <template id="index" name="E-commerce">
+    <template id="index" name="Events">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
@@ -59,8 +59,8 @@
                                     </t>
                                     <h4 class="media-heading"><a t-att-href="'/event/%%s/' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
                                     <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
-                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                        <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Unpublish</span>
+                                        <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Publish</span>
                                     </a>
                                     <div>
                                         <span t-field="event_id.type">: </span>
@@ -149,8 +149,8 @@
                             </t>
                             <h4 class="media-heading"><a t-att-href="'/event/%%s/' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
                             <a t-if="editable" href="#" t-att-data-id="event_id.id" class="pull-right">
-                                <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Click to Publish</span>
+                                <span t-att-class="'label label-success js_unpublish %%s' %% (not event_id.website_published and 'hidden' or '')">Unpublish</span>
+                                <span t-att-class="'label label-important js_publish %%s' %% (event_id.website_published and 'hidden' or '')">Publish</span>
                             </a>
                             <h5 class="media-heading">
                                 <span t-field="event_id.address_id"/><br/>

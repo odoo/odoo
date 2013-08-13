@@ -48,8 +48,8 @@ class product_product(osv.osv):
             GROUP BY    sol.product_id
             ORDER BY    COUNT(sol.order_id) DESC
             LIMIT 8
-        """ % (id, id)
-        cr.execute(query)
+        """
+        cr.execute(query, (id, id))
         for p in cr.fetchall():
             product_ids.append(p[0])
 
