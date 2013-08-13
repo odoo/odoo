@@ -44,7 +44,6 @@ _select_font=[ ('DejaVu Sans',"DejaVu Sans"),
         ('FreeMono Bold',"FreeMono Bold"),
         ('FreeMono Oblique',"FreeMono Oblique"),
         ('FreeMono BoldOblique',"FreeMono BoldOblique"),
-        ('Sun-ExtA',"Sun-ExtA")
 ]
 
 class multi_company_default(osv.osv):
