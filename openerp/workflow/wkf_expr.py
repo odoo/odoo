@@ -19,62 +19,92 @@
 #
 ##############################################################################
 
+"""
+Evaluate workflow code found in activity actions and transition conditions.
+"""
+
 import openerp
 from openerp.tools.safe_eval import safe_eval as eval
 
 class Env(dict):
-    def __init__(self, cr, uid, model, ids):
+    """
+    Dictionary class used as an environment to evaluate workflow code (such as
+    the condition on transitions).
+
+    This environment provides sybmols for cr, uid, id, model name, model
+    instance, column names, and all the record (the one obtained by browsing
+    the provided ID) attributes.
+    """
+    def __init__(self, cr, uid, model, id):
         self.cr = cr
         self.uid = uid
         self.model = model
-        self.ids = ids
+        self.id = id
+        self.ids = [id]
         self.obj = openerp.registry(cr.dbname)[model]
         self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
 
     def __getitem__(self, key):
         if (key in self.columns) or (key in dir(self.obj)):
-            res = self.obj.browse(self.cr, self.uid, self.ids[0])
+            res = self.obj.browse(self.cr, self.uid, self.id)
             return res[key]
         else:
             return super(Env, self).__getitem__(key)
 
-def _eval_expr(cr, ident, workitem, action):
-    ret=False
-    assert action, 'You used a NULL action in a workflow, use dummy node instead.'
-    for line in action.split('\n'):
+def _eval_expr(cr, ident, workitem, lines):
+    """
+    Evaluate each line of ``lines`` with the ``Env`` environment, returning
+    the value of the last line.
+    """
+    assert lines, 'You used a NULL action in a workflow, use dummy node instead.'
+    uid, model, id = ident
+    result = False
+    for line in lines.split('\n'):
         line = line.strip()
         if not line:
             continue
-        uid=ident[0]
-        model=ident[1]
-        ids=[ident[2]]
-        if line =='True':
-            ret=True
-        elif line =='False':
-            ret=False
+        if line == 'True':
+            result = True
+        elif line == 'False':
+            result = False
         else:
-            env = Env(cr, uid, model, ids)
-            ret = eval(line, env, nocopy=True)
-    return ret
+            env = Env(cr, uid, model, id)
+            result = eval(line, env, nocopy=True)
+    return result
 
 def execute_action(cr, ident, workitem, activity):
-    obj = openerp.registry(cr.dbname)['ir.actions.server']
-    ctx = {'active_model':ident[1], 'active_id':ident[2], 'active_ids':[ident[2]]}
-    result = obj.run(cr, ident[0], [activity['action_id']], ctx)
+    """
+    Evaluate the ir.actions.server action specified in the activity.
+    """
+    uid, model, id = ident
+    ir_actions_server = openerp.registry(cr.dbname)['ir.actions.server']
+    context = { 'active_model': model, 'active_id': id, 'active_ids': [id] }
+    result = ir_actions_server.run(cr, uid, [activity['action_id']], context)
     return result
 
 def execute(cr, ident, workitem, activity):
+    """
+    Evaluate the action specified in the activity.
+    """
     return _eval_expr(cr, ident, workitem, activity['action'])
 
 def check(cr, workitem, ident, transition, signal):
+    """
+    Test if a transition can be taken. The transition can be taken if:
+    
+    - the signal name matches,
+    - the uid is SUPERUSER_ID or the user groups contains the transition's
+      group,
+    - the condition evaluates to a truish value.
+    """
     if transition['signal'] and signal != transition['signal']:
         return False
 
     uid = ident[0]
-    if transition['group_id'] and uid != 1:
+    if uid != openerp.SUPERUSER_ID and transition['group_id']:
         registry = openerp.registry(cr.dbname)
         user_groups = registry['res.users'].read(cr, uid, [uid], ['groups_id'])[0]['groups_id']
-        if not transition['group_id'] in user_groups:
+        if transition['group_id'] not in user_groups:
             return False
 
     return _eval_expr(cr, ident, workitem, transition['condition'])

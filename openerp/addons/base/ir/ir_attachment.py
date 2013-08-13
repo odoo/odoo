@@ -233,10 +233,10 @@ class ir_attachment(osv.osv):
         targets = cr.dictfetchall()
         model_attachments = {}
         for target_dict in targets:
-            if not (target_dict['res_id'] and target_dict['res_model']):
+            if not target_dict['res_model']:
                 continue
             # model_attachments = { 'model': { 'res_id': [id1,id2] } }
-            model_attachments.setdefault(target_dict['res_model'],{}).setdefault(target_dict['res_id'],set()).add(target_dict['id'])
+            model_attachments.setdefault(target_dict['res_model'],{}).setdefault(target_dict['res_id'] or 0, set()).add(target_dict['id'])
 
         # To avoid multiple queries for each attachment found, checks are
         # performed in batch as much as possible.
@@ -250,7 +250,7 @@ class ir_attachment(osv.osv):
 
             # filter ids according to what access rules permit
             target_ids = targets.keys()
-            allowed_ids = self.pool[model].search(cr, uid, [('id', 'in', target_ids)], context=context)
+            allowed_ids = [0] + self.pool[model].search(cr, uid, [('id', 'in', target_ids)], context=context)
             disallowed_ids = set(target_ids).difference(allowed_ids)
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:

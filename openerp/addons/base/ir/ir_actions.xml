@@ -309,86 +309,208 @@
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
                 <form string="Server Action" version="7.0">
-                    <group>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <field name="menu_ir_values_id" invisible="1"/>
+                            <button name="create_action" string="Add in the 'More' menu" type="object"
+                                    attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
+                                    help="Display an option on related documents to run this sever action"/>
+                            <button name="unlink_action" string="Remove from the 'More' menu" type="object" 
+                                    attrs="{'invisible':[('menu_ir_values_id','=',False)]}"
+                                    help="Remove the contextual action related to this server action"/>
+                        </div>
                         <group>
-                            <field name="name"/>
-                            <field name="model_id"/>
-                            <field name="state"/>
+                            <group>
+                                <field name="type" invisible="1"/>
+                                <field name="model_id"
+                                        on_change="on_change_model_id(model_id, wkf_model_id, crud_model_id)"/>
+                                <field name="state"/>
+                            </group>
+                            <group>
+                                <field name="condition"/>
+                                <field name="sequence"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="condition"/>
-                            <field name="sequence"/>
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
-                            <field name="code"/>
-                        </page>
-                        <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
-                            <group string="Trigger Configuration" col="4">
-                                <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                                <field name="trigger_obj_id" context="{'key':''}"
-                                       domain="[('model_id','=',model_id),('ttype','in',['many2one','int'])]"
-                                       attrs="{'required':[('state','=','trigger')]}"/>
-                                <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
-                            </group>
-                        </page>
-                        <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
-                            <group>
-                                <field name="action_id" attrs="{'required':[('state','=','client_action')]}"/>
-                            </group>
-                        </page>
-                        <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
-                            <group>
-                                <field name="email" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','email')]}"/>
-                                <field name="subject" attrs="{'required':[('state','=','email')]}"/>
-                                <field name="message" attrs="{'required':[('state','=','email')]}"/>
-                                <newline/>
-                                <label colspan="2" string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
-                            </group>
-                        </page>
-                        <page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}">
-                            <group>
-                                <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','sms')]}"/>
-                                <field name="sms" attrs="{'required':[('state','=','sms')]}"/>
-                            </group>
-                            <label string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
-                        </page>
-                        <page string="Create / Write / Copy" attrs="{'invisible':[('state','!=','object_create'), ('state','!=','object_write'), ('state','!=','object_copy')]}">
-                            <group col="4" string="Fields Mapping">
-                                <field name="srcmodel_id" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
-                                <field name="copy_object" on_change="change_object(copy_object, state)" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_write'), ('state','!=','object_create'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
-                                <field name="fields_lines" nolabel="1" colspan="2">
-                                    <tree string="Field Mappings" editable="top">
-                                        <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
-                                        <field name="type"/>
-                                        <field name="value" colspan="4"/>
-                                    </tree>
-                                    <form string="Field Mapping" version="7.0">
-                                        <group col="4">
-                                            <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
-                                            <field name="type"/>
-                                            <field name="value" colspan="4"/>
+                        <notebook colspan="4">
+                            <page string="Python Code" name='code' autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'code')]}">
+                                <field name="code" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                            </page>
+
+                            <page string="Worflow Signal" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'trigger')]}">
+                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                                    Please set the Base Model before setting the action details.
+                                </p>
+                                <group attrs="{'invisible': [('model_id', '=', False)]}">
+                                    <field name="use_relational_model" widget="radio"
+                                            on_change="on_change_wkf_wonfig(use_relational_model, wkf_field_id, wkf_model_id, model_id)"
+                                            attrs="{'readonly': [('model_id', '=', False)]}"/>
+                                    <field name="wkf_field_id" context="{'key': ''}"
+                                            on_change="on_change_wkf_wonfig(use_relational_model, wkf_field_id, wkf_model_id, model_id)"
+                                            attrs="{'required': [('state', '=', 'trigger'), ('use_relational_model', '=', 'relational')],
+                                                    'invisible': [('use_relational_model', '=', 'base')]}"
+                                            domain="[('model_id', '=', model_id), ('ttype', 'in', ['many2one'])]"/>
+                                    <field name="wkf_model_id" invisible="1"
+                                            on_change="on_change_wkf_model_id(wkf_model_id)"/>
+                                    <field name="wkf_model_name" invisible="1"/>
+                                    <field name="wkf_transition_id" attrs="{'required': [('state', '=', 'trigger')]}"
+                                            domain="[('wkf_id.osv', '=', wkf_model_name)]"/>
+                                </group>
+                            </page>
+
+                            <page string="Client" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'client_action')]}">
+                                <group>
+                                    <field name="action_id" attrs="{'required':[('state', '=', 'client_action')]}"/>
+                                </group>
+                            </page>
+
+
+                            <page string="Create / Write / Copy" autofocus="autofocus"
+                                    attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
+                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                                    Please set the Base Model before setting the action details.
+                                </p>
+                                <group attrs="{'invisible': [('model_id', '=', False)]}">
+                                    <field name="use_create" widget="radio"
+                                            on_change="on_change_crud_config(state, use_create, use_write, ref_object, crud_model_id, model_id)"
+                                            attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+
+                                    <field name="use_write" widget="radio"
+                                            on_change="on_change_crud_config(state, use_create, use_write, ref_object, crud_model_id, model_id)"
+                                            attrs="{'invisible': [('state', '!=', 'object_write')]}"/>
+
+                                    <label for="ref_object" string=" "
+                                            attrs="{'invisible': ['&amp;', 
+                                                                    '|', ('state', '!=', 'object_write'), ('use_write', '!=', 'other'),
+                                                                    '|', ('state', '!=', 'object_create'), ('use_create', '!=', 'copy_other')]}"/>
+                                    <div style="margin-left: 24px;" 
+                                            attrs="{'invisible': ['&amp;', 
+                                                                    '|', ('state', '!=', 'object_write'), ('use_write', '!=', 'other'),
+                                                                    '|', ('state', '!=', 'object_create'), ('use_create', '!=', 'copy_other')]}">
+                                        <field name="ref_object" nolabel="1"
+                                                on_change="on_change_crud_config(state, use_create, use_write, ref_object, crud_model_id, model_id)"/>
+                                    </div>
+
+                                    <field name="crud_model_id"
+                                            on_change="on_change_crud_model_id(crud_model_id)"
+                                            attrs="{'invisible': ['|', ('state', '!=', 'object_create'), ('use_create', '!=', 'new_other')]}"/>
+                                    <field name="crud_model_name" invisible="1"/>
+
+                                    <label for="link_new_record" attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+                                    <div attrs="{'invisible': [('state', '!=', 'object_create')]}">
+                                        <field name="link_new_record" nolabel="1" style="display: inline-block;"/>
+                                        <p class="oe_grey oe_edit_only" style="display: inline-block; margin: 0px 0px 0px 8px;">
+                                            Check to attach the newly created record to the record on which the server action runs.
+                                        </p>
+                                        <group>
+                                            <field name="link_field_id"
+                                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                                    attrs="{'required': [('state', '=', 'object_create'), ('link_new_record', '=', True)],
+                                                            'invisible': ['|', ('state', '!=', 'object_create'), ('link_new_record', '=', False)]}"/>
                                         </group>
-                                    </form>
-                                </field>
-                                <field name="record_id" attrs="{'readonly':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
-                                <field name="write_id" attrs="{'readonly':[('state','!=','object_write')]}"/>
-                            </group>
-                            <label string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
-                        </page>
-                        <page string="Iteration Actions" attrs="{'invisible':[('state','!=','loop')]}">
-                            <group col="4">
-                                <field name="expression" attrs="{'required':[('state','=','loop')]}"/>
-                                <field name="loop_action" domain="[('state','!=','loop')]" attrs="{'required':[('state','=','loop')]}"/>
-                            </group>
-                        </page>
-                        <page string="Multi Actions" attrs="{'invisible':[('state','!=','other')]}">
-                            <field name="child_ids"/>
-                            <label string="Only one client action will be executed, last client action will be considered in case of multiple client actions." align="0.0"/>
-                        </page>
-                    </notebook>
-                    <field name="type" readonly="1"/>
+                                    </div>
+
+                                    <label for="link_new_record" attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}"/>
+                                    <div attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}">
+                                        <p class="oe_grey oe_edit_only" style="margin: 0px;">
+                                            Write a python expression, beginning with object, that gives the record to update. An expression builder is available in the help tab. Examples:
+                                        </p>
+                                        <ul class="oe_grey oe_edit_only">
+                                            <li>object.partner_id</li>
+                                            <li>object.partner_id.currency_id</li>
+                                        </ul>
+                                        <field name="write_expression"
+                                                on_change="on_change_write_expression(write_expression, model_id)"
+                                                attrs="{'required': [('state', '=', 'object_write'), ('use_write', '=', 'expression')]}"/>
+                                    </div>
+
+                                    <field name="fields_lines">
+                                        <tree string="Field Mappings" editable="top">
+                                            <field name="col1" domain="[('model_id', '=', parent.crud_model_id)]"/>
+                                            <field name="type"/>
+                                            <field name="value"/>
+                                        </tree>
+                                        <form string="Field Mapping" version="7.0">
+                                            <group >
+                                                <field name="col1" domain="[('model_id', '=', parent.crud_model_id)]"/>
+                                                <field name="type"/>
+                                                <field name="value"/>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+
+                            <page string="Execute several actions" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'multi')]}">
+                                <p class="oe_grey">
+                                    If several child actions return an action, only the last one will be executed.
+                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action.
+                                </p>
+                                <field name="child_ids"
+                                        domain="[('model_id', '=', model_id)]"/>
+                            </page>
+
+                            <page string="Help">
+                                <group>
+                                    <div style="margin-top: 4px;">
+                                        <h3>Help with Python expressions.</h3>
+                                        <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
+                                        <ul>
+                                            <li>self: ORM model of the record on which the action is triggered</li>
+                                            <li>object or obj: browse_record of the record on which the action is triggered</li>
+                                            <li>pool: ORM model pool (i.e. self.pool)</li>
+                                            <li>time: Python time module</li>
+                                            <li>cr: database cursor</li>
+                                            <li>uid: current user id</li>
+                                            <li>context: current context</li>
+                                        </ul>
+                                        <div>
+                                            <p>Example of condition expression using Python</p>
+                                            <ul>
+                                                <li>condition: True</li>
+                                                <li>condition: object.list_price > 5000</li>
+                                            </ul>
+                                        </div>
+                                        <div attrs="{'invisible': [('state', '!=', 'code')]}">
+                                            <p>Example of python code</p>
+                                            <code>
+                                                partner_name = obj.name + '_code'
+                                                self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context)  
+                                            </code>
+                                        </div>
+                                    </div>
+                                    <group>
+                                        <h3 colspan="2">Dynamic expression builder</h3>
+                                        <p colspan="2" attrs="{'invisible': [('model_id', '!=', False)]}">
+                                            Please set the Base Model of the action to enable the dynamic expression buidler.
+                                        </p>
+                                        <field name="model_object_field"
+                                                attrs="{'invisible': [('model_id', '=', False)]}"
+                                                domain="[('model_id', '=', model_id), ('ttype', '!=', 'one2many'), ('ttype', '!=', 'many2many')]"
+                                                on_change="onchange_sub_model_object_value_field(model_object_field)"/>
+                                        <field name="sub_object" readonly="1" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                                        <field name="sub_model_object_field"
+                                                domain="[('model_id', '=', sub_object), ('ttype', '!=', 'one2many'), ('ttype', '!=', 'many2many')]"
+                                                attrs="{'readonly':[('sub_object','=',False)],
+                                                        'required':[('sub_object','!=',False)],
+                                                        'invisible': [('model_id', '=', False)]}"
+                                                on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
+                                        <field name="copyvalue" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                                        <h3 colspan="2">Find the ID of a record in the database</h3>
+                                        <field name="id_object" on_change="onchange_id_object(id_object)"/>
+                                        <field name="id_value" />
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
