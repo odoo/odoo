@@ -141,7 +141,7 @@ class crm_phonecall(osv.osv):
             }
             new_id = self.create(cr, uid, vals, context=context)
             if action == 'log':
-                self.case_close(cr, uid, [new_id])
+                self.write(cr, uid, [new_id], {'state': 'done'}, context=context)
             phonecall_dict[call.id] = new_id
         return phonecall_dict
 
@@ -249,12 +249,11 @@ class crm_phonecall(osv.osv):
                             'email_from': default_contact and default_contact.email,
                         })
             vals = {
-                    'partner_id': partner_id,
-                    'opportunity_id' : opportunity_id,
+                'partner_id': partner_id,
+                'opportunity_id': opportunity_id,
+                'state': 'done',
             }
-            self.write(cr, uid, [call.id], vals)
-            self.case_close(cr, uid, [call.id])
-            opportunity.case_open(cr, uid, [opportunity_id])
+            self.write(cr, uid, [call.id], vals, context=context)
             opportunity_dict[call.id] = opportunity_id
         return opportunity_dict
 

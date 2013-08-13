@@ -465,7 +465,6 @@ class project_issue(osv.Model):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.case_set(cr, uid, ids, 'draft', data, context=context)
         return True
 
     # -------------------------------------------------------

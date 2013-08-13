@@ -50,14 +50,6 @@
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
                 <field name="state"/>
-                <button name="case_open" string="Confirm" type="object"
-                        states="draft,pending" icon="gtk-go-forward"/>
-                <button name="case_close" string="Held" type="object"
-                        states="open,pending" icon="gtk-jump-to"/>
-                <button name="case_cancel" string="Cancel" type="object"
-                        states="draft,open,pending" icon="gtk-cancel"/>
-                <button name="case_reset" string="Reset to Todo" type="object"
-                        states="cancel" icon="gtk-convert"/>
             </tree>
         </field>
     </record>
