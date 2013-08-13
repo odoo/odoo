@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 
 class invoice_directly(osv.osv_memory):
-    _inherit = 'stock.picking'
+    _inherit = 'stock.partial.picking'
 
     def do_partial(self, cr, uid, ids, context=None):
         """Launch Create invoice wizard if invoice state is To be Invoiced,
