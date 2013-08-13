@@ -92,8 +92,7 @@ class procurement_order(osv.osv):
 
     def get_phantom_bom_id(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.move_dest_id and procurement.move_dest_id.product_id.supply_method=='produce' \
-                 and procurement.move_dest_id.product_id.procure_method=='make_to_order':
+            if procurement.move_dest_id and procurement.move_dest_id.product_id.supply_method=='produce':
                     phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
                         ('product_id', '=', procurement.move_dest_id.product_id.id),
                         ('bom_id', '=', False),
