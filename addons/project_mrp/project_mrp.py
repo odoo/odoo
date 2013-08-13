@@ -32,7 +32,7 @@ class procurement_order(osv.osv):
     }
 
     def _is_procurement_task(self, cr, uid, procurement, context=None):
-        return procurement.product_id.type == 'service' and procurement.product_it.auto_create_task or False
+        return procurement.product_id.type == 'service' and procurement.product_id.auto_create_task or False
 
     def _assign(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
