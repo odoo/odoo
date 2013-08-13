@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import re
+
 from openerp.osv import osv, fields
 
 class res_partner(osv.Model):
@@ -98,6 +100,27 @@ class res_partner(Model):
 
     company_name = fields.Related('company_id', 'name')
 
+
+email_re = re.compile("^(.*) <(.*)>$")
+
+class field_inverse(Model):
+    _name = 'test_new_api.inverse'
+
+    name = fields.Char()
+    email = fields.Char()
+    full_name = fields.Char(store=False,
+                    compute='compute_full_name', inverse='inverse_full_name')
+
+    @one
+    @depends('name', 'email')
+    def compute_full_name(self):
+        self.full_name = "%s <%s>" % (self.name, self.email)
+
+    @one
+    def inverse_full_name(self):
+        self.name, self.email = email_re.match(self.full_name).groups()
+
+
 class on_change_test(Model):
     _name = 'test_new_api.on_change'
 
@@ -131,6 +154,7 @@ class on_change_test(Model):
     @one
     def whatever(self):
         self.trick = "wheeeeeld.null()eld.null"
+
 
 class defaults(Model):
     _name = 'test_new_api.defaults'

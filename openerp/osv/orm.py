@@ -1383,7 +1383,7 @@ class BaseModel(object):
             return
 
         # 5. delegate to field
-        field.compute_default(self)
+        field.determine_default(self)
 
     def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
@@ -2701,7 +2701,7 @@ class BaseModel(object):
         if default is None:
             record = self.new()
             field = self._fields[column_name]
-            field.compute_default(record)
+            field.determine_default(record)
             defaults = record.get_draft_values()
             if column_name in defaults:
                 default = field.convert_to_write(defaults[column_name])
@@ -3808,18 +3808,13 @@ class BaseModel(object):
     #
     # TODO: Validate
     #
-    def write(self, cr, user, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         """
-        Update records with given ids with the given field values
+        Update records in `self` with the given field values.
 
-        :param cr: database cursor
-        :param user: current user id
-        :type user: integer
-        :param ids: object id or list of object ids to update according to **vals**
         :param vals: field values to update, e.g {'field_name': new_field_value, ...}
         :type vals: dictionary
-        :param context: (optional) context arguments, e.g. {'lang': 'en_us', 'tz': 'UTC', ...}
-        :type context: dictionary
         :return: True
         :raise AccessError: * if user has no write rights on the requested object
                             * if user tries to bypass access rules for write on the requested object
@@ -3856,9 +3851,46 @@ class BaseModel(object):
             + For a reference field, use a string with the model name, a comma, and the target object id (example: ``'product.product, 5'``)
 
         """
+        if not self:
+            return True
+
+        cr, uid, context = scope_proxy.args
+        self._check_concurrency(cr, self._ids, context)
+        self.check_access_rights(cr, uid, 'write')
+
+        # No user-driven update of these columns
+        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+            vals.pop(field, None)
+
+        # split up fields into old-style and pure new-style ones
+        old_vals, new_vals = {}, {}
+        for key, val in vals.iteritems():
+            if key in self._columns:
+                old_vals[key] = val
+            else:
+                new_vals[key] = self._fields[key].convert_to_cache(val)
+
+        # write old-style fields with (low-level) method _write
+        if old_vals:
+            self._write(old_vals)
+
+        # put the values of pure new-style fields into cache, and inverse them
+        if new_vals:
+            for rec in self:
+                rec._record_cache.update(new_vals)
+            for key in new_vals:
+                self._fields[key].determine_inverse(self)
+
+        return True
+
+    def _write(self, cr, user, ids, vals, context=None):
+        # low-level implementation of write()
+        if not context:
+            context = {}
+
         readonly = None
         self.check_field_access_rights(cr, user, 'write', vals.keys())
-        for field in vals.copy():
+        for field in vals.keys():
             fobj = None
             if field in self._columns:
                 fobj = self._columns[field]
@@ -3883,27 +3915,11 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
 
-        if not context:
-            context = {}
-        if not ids:
-            return True
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
-        self._check_concurrency(cr, ids, context)
-        self.check_access_rights(cr, user, 'write')
-
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
         # for recomputing new-style fields
         recs = self.browse(ids)
         recs.modified(vals)
-
-        # No user-driven update of these columns
-        # FIXME: filtering of these columns should not be custom impl detail of
-        #        create/write
-        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
-            vals.pop(field, None)
 
         parents_changed = []
         parent_order = self._parent_order or self._order
@@ -4095,44 +4111,54 @@ class BaseModel(object):
     #
     # TODO: Should set perm to user.xxx
     #
+    @api.model
     @api.returns('self', lambda self, value: value.id)
-    def create(self, cr, user, vals, context=None):
+    def create(self, vals):
+        """ Create a new record for the model.
+
+            The values for the new record are initialized using the dictionary
+            `vals`, and if necessary the result of :meth:`default_get`.
+
+            :param vals: field values like ``{'field_name': field_value, ...}``,
+                see :meth:`write` for details about the values format
+            :return: new record created
+            :raise AccessError: * if user has no create rights on the requested object
+                                * if user tries to bypass access rules for create on the requested object
+            :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+            :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
-        Create a new record for the model.
+        self.check_access_rights('create')
 
-        The values for the new record are initialized using the ``vals``
-        argument, and if necessary the result of ``default_get()``.
+        # add missing defaults, and drop fields that may not be set by user
+        vals = self._add_missing_default_values(vals)
+        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+            vals.pop(field, None)
 
-        :param cr: database cursor
-        :param user: current user id
-        :type user: integer
-        :param vals: field values for new record, e.g {'field_name': field_value, ...}
-        :type vals: dictionary
-        :param context: optional context arguments, e.g. {'lang': 'en_us', 'tz': 'UTC', ...}
-        :type context: dictionary
-        :return: id of new record created
-        :raise AccessError: * if user has no create rights on the requested object
-                            * if user tries to bypass access rules for create on the requested object
-        :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
-        :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
+        # split up fields into old-style and pure new-style ones
+        old_vals, new_vals = {}, {}
+        for key, val in vals.iteritems():
+            if key in self._all_columns:
+                old_vals[key] = val
+            else:
+                new_vals[key] = self._fields[key].convert_to_cache(val)
 
-        **Note**: The type of field values to pass in ``vals`` for relationship fields is specific.
-        Please see the description of the :py:meth:`~osv.osv.osv.write` method for details about the possible values and how
-        to specify them.
+        # create record with old-style fields
+        record = self.browse(self._create(old_vals))
 
-        """
+        # put the values of pure new-style fields into cache, and inverse them
+        record._record_cache.update(new_vals)
+        for key in new_vals:
+            self._fields[key].determine_inverse(record)
+
+        return record
+
+    def _create(self, cr, user, vals, context=None):
+        # low-level implementation of create()
         if not context:
             context = {}
 
         if self.is_transient():
             self._transient_vacuum(cr, user)
-
-        self.check_access_rights(cr, user, 'create')
-
-        vals = self._add_missing_default_values(cr, user, vals, context)
-
-        # FIXME: filtering of these columns should be done somewhere else
-        for field in MAGIC_COLUMNS: vals.pop(field, None)
 
         tocreate = {}
         for v in self._inherits:
@@ -5402,7 +5428,8 @@ class BaseModel(object):
     def __eq__(self, other):
         """ Test whether two instances are equivalent (as sets). """
         if not isinstance(other, BaseModel):
-            _logger.warning("Comparing apples and oranges: %s == %s", self, other)
+            if other:
+                _logger.warning("Comparing apples and oranges: %s == %s", self, other)
             return False
         return self._name == other._name and self._refs == other._refs
 
@@ -5508,7 +5535,7 @@ class BaseModel(object):
                     self.add_default_value(name)
                 else:
                     # regular records: compute/read the field's value
-                    self._fields[name].compute_value(self)
+                    self._fields[name].determine_value(self)
 
         return record_cache[name]
 
@@ -5522,19 +5549,26 @@ class BaseModel(object):
 
         self = self[0]
         field = self._fields[name]
+        record_cache = self._record_cache
+
+        if record_cache.has_value(name) and record_cache[name] == value:
+            # If the value is unchanged, don't do anything. This avoids a loop
+            # when computing a field F with an inverse function: computing F's
+            # inverse does not re-write the original fields, which would
+            # invalidate F again.
+            return
 
         if self.draft:
             # draft records: simply invalidate other fields on self
             field.modified_draft(self)
 
-        elif field.store:
-            # store value in database
+        elif field.store or field.inverse:
+            # store value in database and/or inverse field
             with self._scope:
-                # FIXME: no fnct_inv
                 self.write({name: field.convert_to_write(value)})
 
-        # store value in cache (here because write() invalidates the cache!)
-        self._record_cache[name] = value
+        # store value in cache (here because write() may invalidate the cache!)
+        record_cache[name] = value
 
     #
     # Cache and recomputation management

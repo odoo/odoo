@@ -221,6 +221,10 @@ class RecordCache(MutableMapping):
     def __contains__(self, name):
         return name in self.data or name in self.special
 
+    def has_value(self, name):
+        """ Return whether `self` has a regular value for `name`. """
+        return name in self.data
+
     def __getitem__(self, name):
         try:
             return self.data[name]

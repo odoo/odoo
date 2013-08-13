@@ -38,11 +38,11 @@ _logger = logging.getLogger(__name__)
 
 def default(value):
     """ Return a compute function that provides a constant default value. """
-    def compute_default(field, records):
+    def compute(field, records):
         for record in records:
             record[field.name] = value
 
-    return compute_default
+    return compute
 
 
 def _invoke_model(func, model):
@@ -78,7 +78,7 @@ class CacheCompute(object):
 
     def get(self):
         field, record = self.args
-        field.call_compute(record)
+        field.compute_value(record)
         return record[field.name]
 
 
@@ -105,8 +105,9 @@ class Field(object):
     inverse_field = None        # inverse field (object), if it exists
 
     store = True                # whether the field is stored in database
-    compute = None              # name of model method that computes value
     depends = ()                # collection of field dependencies
+    compute = None              # name of model method that computes value
+    inverse = None              # name of model method that inverses field
 
     string = None               # field label
     help = None                 # field tooltip
@@ -231,7 +232,7 @@ class Field(object):
     # Management of the computation of field values.
     #
 
-    def call_compute(self, records):
+    def compute_value(self, records):
         """ Invoke the compute method on `records`. """
         if len(records) > 1:
             # In batch computing, a record may want to use another record's
@@ -293,27 +294,34 @@ class Field(object):
             if failed:
                 raise AccessError("Cannot read %s on %s." % (name, failed))
 
-    def compute_value(self, record):
+    def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
         if self.store:
             # recompute field on record if required
             recs_todo = scope.recomputation.todo(self)
             if record in recs_todo:
-                self.call_compute(recs_todo.exists())
+                self.compute_value(recs_todo.exists())
                 scope.recomputation.done(self, recs_todo)
             else:
                 self.read_value(record)
         else:
             # compute self for the records without value for self in their cache
             recs = record.browse(record._model_cache.without_field(self.name))
-            self.call_compute(recs)
+            self.compute_value(recs)
 
-    def compute_default(self, record):
-        """ assign the default value of field `self` to `record` """
+    def determine_default(self, record):
+        """ determine the default value of field `self` on `record` """
         if self.compute:
-            self.call_compute(record)
+            self.compute_value(record)
         else:
             record._record_cache.set_special(self.name, CacheMissing(self))
+
+    def determine_inverse(self, records):
+        """ Given the value of `self` on `records`, inverse the computation. """
+        if isinstance(self.inverse, basestring):
+            getattr(records, self.inverse)()
+        elif callable(self.inverse):
+            self.inverse(self, records)
 
     #
     # Management of the recomputation of computed fields.
@@ -709,8 +717,8 @@ class Many2one(_Relational):
     def convert_to_export(self, value):
         return bool(value) and value.name_get()[0][1]
 
-    def compute_default(self, record):
-        super(Many2one, self).compute_default(record)
+    def determine_default(self, record):
+        super(Many2one, self).determine_default(record)
         if self.inherits:
             # special case: fields that implement inheritance between models
             value = record[self.name]

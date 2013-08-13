@@ -127,6 +127,25 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(fanny.family_size, 1)
         self.assertEqual(gabriel.family_size, 1)
 
+    def test_13_inverse(self):
+        """ test inverse computation of fields """
+        model = self.registry('test_new_api.inverse')
+
+        joe = model.create({'name': 'Joe the plumber', 'email': 'joe@example.com'})
+        self.assertEqual(joe.name, 'Joe the plumber')
+        self.assertEqual(joe.email, 'joe@example.com')
+        self.assertEqual(joe.full_name, 'Joe the plumber <joe@example.com>')
+
+        joe.name = 'Joseph Singer'
+        self.assertEqual(joe.full_name, 'Joseph Singer <joe@example.com>')
+
+        joe.email = 'joe@openerp.com'
+        self.assertEqual(joe.full_name, 'Joseph Singer <joe@openerp.com>')
+
+        joe.full_name = 'Joe Bailey <joe.bailey@whisky.com>'
+        self.assertEqual(joe.name, 'Joe Bailey')
+        self.assertEqual(joe.email, 'joe.bailey@whisky.com')
+
     def test_20_float(self):
         """ test float fields """
         # find a partner
