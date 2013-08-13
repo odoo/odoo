@@ -44,6 +44,7 @@ class crm_phonecall(osv.osv):
         'state': fields.selection(
             [('open', 'Confirmed'),
              ('cancel', 'Cancelled'),
+             ('pending', 'Pending'),
              ('done', 'Held')
              ], string='Status', readonly=True, track_visibility='onchange',
             help='The status is set to Confirmed, when a case is created.\n'
@@ -89,27 +90,24 @@ class crm_phonecall(osv.osv):
             }
         return {'value': values}
 
-    def case_close(self, cr, uid, ids, context=None):
-        for phone in self.browse(cr, uid, ids, context=context):
-            data = {
-                'state': 'done',
-                'date_closed': fields.datetime.now(),
-            }
-            if phone.duration <= 0:
-                duration = datetime.now() - datetime.strptime(phone.date, DEFAULT_SERVER_DATETIME_FORMAT)
-                data['duration'] = duration.seconds/float(60)
-            self.write(cr, uid, [phone.id], data, context=context)
+    def write(self, cr, uid, ids, values, context=None):
+        """ Override to add case management: open/close dates """
+        if values.get('state'):
+            if values.get('state') == 'done':
+                values['date_closed'] = fields.datetime.now()
+                self.compute_duration(cr, uid, ids, context=context)
+            elif values.get('state') == 'open':
+                values['date_open'] = fields.datetime.now()
+                values['duration'] = 0.0
+        return super(crm_phonecall, self).write(cr, uid, ids, values, context=context)
+
+    def compute_duration(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            if phonecall.duration <= 0:
+                duration = datetime.now() - datetime.strptime(phonecall.date, DEFAULT_SERVER_DATETIME_FORMAT)
+                values = {'duration': duration.seconds/float(60)}
+                self.write(cr, uid, [phonecall.id], values, context=context)
         return True
-
-    def case_reset(self, cr, uid, ids, context=None):
-        data = {
-            'state': 'open',
-            'duration': 0.0,
-        }
-        return self.write(cr, uid, ids, data, context=context)
-
-    def case_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
                     user_id=False, section_id=False, categ_id=False, action='schedule', context=None):

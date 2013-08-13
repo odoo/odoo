@@ -69,13 +69,7 @@
         <field name="arch" type="xml">
             <form string="Phone Call" version="7.0">
                 <header>
-                    <button name="case_close" string="Call Done" type="object" class="oe_highlight"
-                            states="open,pending"/>
-                    <button name="case_reset" string="Reset to Todo" type="object"
-                            states="cancel"/>
-                    <button name="case_cancel" string="Cancel Call" type="object"
-                            states="draft,open,pending"/>
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
+                    <field name="state" nolabel="1" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Phone Call">
                     <div class="oe_right">
