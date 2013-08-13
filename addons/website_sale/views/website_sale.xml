@@ -22,7 +22,9 @@
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart
-                    <span class="badge badge-success" t-if="order.get_total_quantity()" t-esc="order.get_total_quantity()"/>
+                    <t t-if="order.get_total_quantity()">
+                        <span class="badge badge-success" t-esc="order.get_total_quantity()"/>
+                    </t>
                 </a>
             </li>
         </xpath>

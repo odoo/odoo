@@ -20,40 +20,40 @@
 
     <!-- Page --> 
 
-    <record id="aboutus" model="ir.ui.view">
-        <field name="name">aboutus</field>
-        <field name="type">qweb</field>
-        <field name="inherit_id" ref="website.aboutus"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@class='span8']" position="inside">
-                <h3>Our team</h3>
-                <div class="thumbnails">
-                    <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
-                        <div class="media thumbnail">
-                            <a class="pull-left" href="#">
-                                <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
-                            </a>
-                            <div class="media-body">
-                                <div t-if="editable" class="pull-right">
-                                    <a href="#" t-att-data-id="employee_id.id">
-                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Unpublish</span>
-                                        <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Publish</span>
-                                    </a>
-                                </div>
-                                <h5 class="media-heading" t-field="employee_id.name"/>
-                                <div t-field="employee_id.department_id"/>
-                                <div t-field="employee_id.job_id"/>
-                                <div t-field="employee_id.work_location"/>
-                                <div t-field="employee_id.work_phone"/>
-                                <div t-field="employee_id.work_email"/>
-                                <div t-field="employee_id.public_info"/>
+ 
+    <template id="aboutus" inherit_id="website.aboutus">
+        <xpath expr="//div[@class='span8']" position="inside">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_hr/static/src/js/website_hr.js"></script>
+                <t t-raw="head or ''"/>
+            </t>
+            <h3>Our team</h3>
+            <div class="thumbnails">
+                <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
+                    <div class="media thumbnail">
+                        <a class="pull-left" href="#">
+                            <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
+                        </a>
+                        <div class="media-body">
+                            <div t-if="editable" class="pull-right">
+                                <a href="#" t-att-data-id="employee_id.id">
+                                    <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Unpublish</span>
+                                    <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Publish</span>
+                                </a>
                             </div>
+                            <h5 class="media-heading" t-field="employee_id.name"/>
+                            <div t-field="employee_id.department_id"/>
+                            <div t-field="employee_id.job_id"/>
+                            <div t-field="employee_id.work_location"/>
+                            <div t-field="employee_id.work_phone"/>
+                            <div t-field="employee_id.work_email"/>
+                            <div t-field="employee_id.public_info"/>
                         </div>
                     </div>
                 </div>
-            </xpath>
-        </field>
-    </record>
+            </div>
+        </xpath>
+    </template>
 
  </data>
 </openerp>
