@@ -560,7 +560,6 @@ class task(osv.osv):
     }
 
     def _get_default_partner(self, cr, uid, context=None):
-        """ Override of base_stage to add project specific behavior """
         project_id = self._get_default_project_id(cr, uid, context)
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)

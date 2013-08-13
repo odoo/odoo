@@ -112,7 +112,7 @@ class crm_make_sale(osv.osv_memory):
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_post(body=message)
             if make.close:
-                case_obj.case_close(cr, uid, data)
+                case_obj.case_mark_won(cr, uid, data, context=context)
             if not new_ids:
                 return {'type': 'ir.actions.act_window_close'}
             if len(new_ids)<=1:
