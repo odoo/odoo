@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-today OpenERP SA (<http://openerp.com>)
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,22 +19,10 @@
 #
 ##############################################################################
 
-{
-    'name': 'State/Stage Management',
-    'version': '1.0',
-    'category': 'Hidden',
-    'description': """
-This module handles state. It is derived from the crm_base and crm_case classes from crm.
-==========================================================================================
+from openerp.addons.hr_holidays.tests import test_holidays_flow
 
-    * ``base_state``: state management
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'data': [],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
-}
+checks = [
+    test_holidays_flow,
+]
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
