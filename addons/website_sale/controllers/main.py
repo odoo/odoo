@@ -111,7 +111,7 @@ class Ecommerce(http.Controller):
         })
         return website.render("website_sale.mycart", values)
 
-    def add_product_to_cart(self, product_id=0, number=1):
+    def add_product_to_cart(self, product_id=0, number=1, set_number=-1):
         context = {}
 
         order_line_obj = request.registry.get('sale.order.line')
@@ -127,7 +127,10 @@ class Ecommerce(http.Controller):
         order_line_ids = order_line_obj.search(request.cr, openerp.SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
         if order_line_ids:
             order_line = order_line_obj.read(request.cr, openerp.SUPERUSER_ID, order_line_ids, [], context=context)[0]
-            quantity = order_line['product_uom_qty'] + number
+            if set_number >= 0:
+                quantity = set_number
+            else:
+                quantity = order_line['product_uom_qty'] + number
             if quantity <= 0:
                 order_line_obj.unlink(request.cr, openerp.SUPERUSER_ID, order_line_ids, context=context)
         else:
@@ -153,30 +156,29 @@ class Ecommerce(http.Controller):
         return quantity
 
     @http.route(['/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
-    def json_add_cart(self, path=None, product_id=0, remove=False):
-        self.add_product_to_cart(product_id, remove and -1 or 1)
+    def add_cart(self, path=None, product_id=0, remove=None):
+        self.add_product_to_cart(product_id, number=(remove and -1 or 1))
         if path:
             return werkzeug.utils.redirect("/shop/%s/" % path)
         else:
             return werkzeug.utils.redirect("/shop/")
 
     @http.route(['/shop/remove_cart/<product_id>/', '/shop/<path:path>/remove_cart/<product_id>/'], type='http', auth="public")
-    def json_remove_cart(self, path=None, product_id=0, remove=False):
-        return self.json_add_cart(path=path, product_id=product_id, remove=True)
+    def remove_cart(self, path=None, product_id=0):
+        return self.add_cart(product_id=product_id, path=path, remove=True)
 
-    @http.route(['/shop/remove_cart/'], type='http', auth="public")
-    def remove_cart(self, product_id=0):
-        return self.add_cart(product_id=product_id, remove=True)
+    @http.route(['/shop/set_cart/<product_id>/<set_number>/', '/shop/<path:path>/set_cart/<product_id>/<set_number>/'], type='http', auth="public")
+    def set_cart(self, path=None, product_id=0, set_number=0):
+        self.add_product_to_cart(product_id, set_number=set_number)
+        if path:
+            return werkzeug.utils.redirect("/shop/%s/" % path)
+        else:
+            return werkzeug.utils.redirect("/shop/")
 
     @http.route(['/shop/checkout/'], type='http', auth="public")
     def checkout(self, **post):
         website = request.registry['website']
 
-        values = website.get_rendering_context({
-            'partner': False,
-            'checkout': request.session.setdefault('checkout', {}),
-            'error': post.get("error") and dict.fromkeys(post.get("error").split(","), 1) or []
-        })
         order = get_current_order()
 
         if order.state != 'draft' or not order.order_line:
@@ -187,12 +189,27 @@ class Ecommerce(http.Controller):
         country_obj = request.registry.get('res.country')
         country_state_obj = request.registry.get('res.country.state')
 
+        values = website.get_rendering_context({
+            'shipping': post.get("shipping"),
+            'error': post.get("error") and dict.fromkeys(post.get("error").split(","), 'error') or {}
+        })
+
+        checkout = {}
         if request.uid != website.get_public_user().id:
-            values['partner'] = user_obj.browse(request.cr, request.uid, request.uid).partner_id
-            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", values['partner'].id), ('type', "=", 'delivery')])
-            values['shipping'] = None
+            partner = user_obj.browse(request.cr, request.uid, request.uid).partner_id
+            partner_id = partner.id
+            checkout = user_obj.read(request.cr, openerp.SUPERUSER_ID, [partner_id], [])[0]
+            checkout['company'] = partner.parent_id and partner.parent_id.name or ''
+
+            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')])
             if shipping_ids:
-                values['shipping'] = partner_obj.browse(request.cr, request.uid, shipping_ids[0])
+                for k,v in partner_obj.read(request.cr, request.uid, shipping_ids[0]).items():
+                    checkout['shipping_'+k] = v or ''
+
+        checkout.update(request.session.setdefault('checkout', {}))
+        for k,v in checkout.items():
+            checkout[k] = v or ''
+        values['checkout'] = checkout
 
         values['countries'] = country_obj.browse(request.cr, openerp.SUPERUSER_ID, country_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)]))
         values['states'] = country_state_obj.browse(request.cr, openerp.SUPERUSER_ID, country_state_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)]))
@@ -223,7 +240,7 @@ class Ecommerce(http.Controller):
             if post.get('shipping_different') and key != 'email' and not post.get("shipping_%s" % key):
                 error.append("shipping_%s" % key)
         if error:
-            return werkzeug.utils.redirect("/shop/checkout/?error=%s" % ",".join(error))
+            return werkzeug.utils.redirect("/shop/checkout/?error=%s&shipping=%s" % (",".join(error), post.get('shipping_different') and 'on' or ''))
 
         # search or create company
         company_id = None

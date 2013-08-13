@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('.oe_ecommerce').on('click', '.js_publish, .js_unpublish', function (e) {
+    $('.oe_website_sale').on('click', '.js_publish, .js_unpublish', function (e) {
         e.preventDefault();
         var $link = $(this).parent();
         $link.find('.js_publish, .js_unpublish').addClass("hidden");
@@ -17,9 +17,15 @@ $(document).ready(function () {
     });
 
 
-    var $checkout = $(".oe_ecommerce .oe_checkout");
-    $(".oe_ecommerce input[name='shipping_different']").change(function() {
-        $(".oe_ecommerce .js_shipping").toggle();
+    $(".oe_website_sale input[name='shipping_different']").change(function() {
+        $(".oe_website_sale .js_shipping").toggle();
     });
 
+    $(".oe_website_sale .oe_mycart input").change(function() {
+        var value = parseInt($(this).val());
+        if (!isNaN(value)) {
+            window.location.href = window.location.origin + window.location.pathname + 'set_cart/' + $(this).data('id') + '/' + value + '/';
+        }
+    });
+    
 });
