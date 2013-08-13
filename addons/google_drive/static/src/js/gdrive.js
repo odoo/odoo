@@ -29,19 +29,24 @@ openerp.google_drive = function (instance, m) {
                     ds.call('get_google_drive_config', [view.dataset.model, res_id, context]).done(function (r) {
                         if (!_.isEmpty(r)) {
                             _.each(r, function (res) {
-                                var g_item = _.indexOf(_.pluck(self.items.other, 'label'), res.name);
-                                if (g_item !== -1) {
-                                    self.items.other.splice(g_item, 1);
+                                var already_there = false;
+                                for (var i = 0;i < self.items.other.length;i++){
+                                    if (self.items.other[i].classname === "oe_share_gdoc" && self.items.other[i].label.indexOf(res.name) > -1){
+                                        already_there = true;
+                                        break;
+                                    }
                                 }
-                                self.add_items('other', [{
-                                        label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_drive/static/src/img/drive_icon.png"/>',
-                                        config_id: res.id,
-                                        res_id: res_id,
-                                        res_model: view.dataset.model,
-                                        callback: self.on_google_doc,
-                                        classname: 'oe_share_gdoc'
-                                    },
-                                ]);
+                                if (!already_there){
+                                    self.add_items('other', [{
+                                            label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_drive/static/src/img/drive_icon.png"/>',
+                                            config_id: res.id,
+                                            res_id: res_id,
+                                            res_model: view.dataset.model,
+                                            callback: self.on_google_doc,
+                                            classname: 'oe_share_gdoc'
+                                        },
+                                    ]);
+                                }
                             })
                         }
                     });
