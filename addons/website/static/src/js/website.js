@@ -97,7 +97,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 .not('.oe_snippet_editor')
                 .prop('contentEditable', true)
                 .addClass('oe_editable');
-        var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
+        var $rte_ables = $editables.not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
 
         // temporary fix until we fix ckeditor
