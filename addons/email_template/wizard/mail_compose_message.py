@@ -22,6 +22,7 @@
 from openerp import tools
 from openerp.osv import osv, fields
 
+
 def _reopen(self, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -34,7 +35,8 @@ def _reopen(self, res_id, model):
             'context': {
                 'default_model': model,
             },
-    }
+            }
+
 
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
@@ -58,7 +60,7 @@ class mail_compose_message(osv.TransientModel):
             context = {}
         wizard_context = dict(context)
         for wizard in self.browse(cr, uid, ids, context=context):
-            if wizard.template_id and not wizard.template_id.user_signature:
+            if wizard.template_id:
                 wizard_context['mail_notify_user_signature'] = False  # template user_signature is added when generating body_html
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
@@ -75,7 +77,7 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
             template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
@@ -95,7 +97,7 @@ class mail_compose_message(osv.TransientModel):
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids'], context=context)
+            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -150,7 +152,7 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments']
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments', 'mail_server_id']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
 
