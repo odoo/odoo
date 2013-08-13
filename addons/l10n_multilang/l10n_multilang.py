@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from openerp import tools
-from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+import os
 from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
@@ -153,48 +152,4 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
 wizard_multi_charts_accounts()
 
-
-class module(osv.osv):
-    _inherit = "ir.module.module"
-
-    _columns = {
-        'translation_folder': fields.char("Additional Translation Folder", size=256, help="Relative path name of a folder containing the translations for this module in addtion to i18n/.")
-    }
-
-    def get_values_from_terp(self, terp):
-        info = super(module, self).get_values_from_terp(terp)
-        info.update({'translation_folder': terp.get('translation_folder', False)})
-        return info
-
-
-class ir_translation(osv.osv):
-    _inherit = "ir.translation"
-
-    def load(self, cr, modules, langs, context=None):
-        res = super(ir_translation, self).load(cr, modules, context=context)
-        context = dict(context or {}) # local copy
-        module_ids = self.pool.get('ir.module.module').search(cr, SUPERUSER_ID, [('name', 'in', modules)], context=context)
-        for module in self.browse(cr, SUPERUSER_ID, module_ids, context=context):
-            
-            # Step 3: if additional translation folder is specified, load it as well
-            if module.translation_folder:
-                for lang in langs:
-                    lang_code = tools.get_iso_codes(lang)
-                    base_lang_code = None
-                    if '_' in lang_code:
-                        base_lang_code = lang_code.split('_')[0]
-
-                    module_name = module.name
-                    base_trans_file = openerp.modules.get_module_resource(module_name, module.translation_folder, base_lang_code + '.po')
-                    if base_trans_file:
-                        _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(cr, base_trans_file, lang, verbose=False, module_name=module_name, context=context)
-                        context['overwrite'] = True # make sure the requested translation will override the base terms later
-                    trans_file = openerp.modules.get_module_resource(module_name, module.translation_folder, lang_code + '.po')
-                    if trans_file:
-                        _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
-                        tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
-                    elif lang_code != 'en_US':
-                        _logger.warning('module %s: no translation for language %s', module_name, lang_code)
-
-        return res
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
