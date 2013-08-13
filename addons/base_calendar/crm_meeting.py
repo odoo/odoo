@@ -48,7 +48,7 @@ class crm_meeting(base_state, osv.Model):
     _order = "id desc"
     _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
     
-    def _check_status(self, cr, uid, meeting_id, context=None):
+    def _find_user_attendee(self, cr, uid, meeting_id, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for attendee in self.browse(cr,uid,meeting_id,context).attendee_ids:
@@ -56,22 +56,18 @@ class crm_meeting(base_state, osv.Model):
                 return attendee
         return False
 
-    def _check_attendee(self, cr, uid, ids, name, arg, context=None):
+    def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
         for meeting_id in ids:
-            res[meeting_id] = False
-            if self._check_status(cr, uid, meeting_id, context):
-                res[meeting_id] = True
+            res[meeting_id] = {}
+            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
+            for field in fields:
+                if field == 'is_attendee':
+                    res[meeting_id][field] = True if attendee else False
+                elif field == 'attendee_status':
+                    res[meeting_id][field] = attendee.state if attendee else 'needs-action'
         return res
-
-    def _compute_status(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for meeting_id in ids:
-            res[meeting_id] = 'needs-action'
-            attendee = self._check_status(cr, uid, meeting_id, context)
-            if attendee:
-                res[meeting_id] = attendee.state
-        return res
+            
 
     def _compute_time(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -109,21 +105,21 @@ class crm_meeting(base_state, osv.Model):
             'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                             'event_id', 'attendee_id', 'Invited People', states={'done': [('readonly', True)]}),
-        'is_attendee': fields.function(_check_attendee, string='Attendee', \
-                            type="boolean"),
-        'attendee_status': fields.function(_compute_status, string='Attendee Status', \
-                            type="selection"),
+        'is_attendee': fields.function(_compute, string='Attendee', \
+                            type="boolean",multi='attendee'),
+        'attendee_status': fields.function(_compute, string='Attendee Status', \
+                            type="selection",multi='attendee'),
         'event_time': fields.function(_compute_time, string='Event Time', type="char"),
     }
     _defaults = {
         'state': 'open',
     }
 
-    def message_get_subscription_data(self, cr, uid, ids, context=None):
+    def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
         res = {}
         for virtual_id in ids:
             real_id = base_calendar_id2real_id(virtual_id)
-            result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], context=context)
+            result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], user_pid=None, context=context)
             res[virtual_id] = result[real_id]
         return res
 
@@ -177,7 +173,7 @@ class crm_meeting(base_state, osv.Model):
     def do_decline(self, cr, uid, ids, context=None, *args):
         attendee_pool = self.pool.get('calendar.attendee')
         for meeting_id in ids:
-            attendee = self._check_status(cr, uid, meeting_id, context)
+            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
             if attendee:
                 if attendee.state != 'declined':
                     self.message_post(cr, uid, meeting_id, body=_(("%s has Declined Invitation") % (attendee.cn)), context=context)
@@ -187,7 +183,7 @@ class crm_meeting(base_state, osv.Model):
     def do_accept(self, cr, uid, ids, context=None, *args):
         attendee_pool = self.pool.get('calendar.attendee')
         for meeting_id in ids:
-            attendee = self._check_status(cr, uid, meeting_id, context)
+            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
             if attendee:
                 if attendee.state != 'accepted':
                     self.message_post(cr, uid, meeting_id, body=_(("%s has Accepted Invitation") % (attendee.cn)), context=context)
