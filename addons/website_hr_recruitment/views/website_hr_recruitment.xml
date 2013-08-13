@@ -20,33 +20,57 @@
                     <div class="page-header">
                         <h1>Job Position</h1>
                     </div>
-                    <t t-foreach="companies" t-as="company">
-                        <div class="page-header">
-                            <h1 class="text-center"><t t-esc="company.name"/></h1>
-                        </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Post Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="res_job" t-as="job">
-                                    <tr t-if="job.company_id.id==company.id">
-                                        <td>
-                                            <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
-                                            <b><span t-if="job.department_id" t-esc="job.department_id.name"/></b><br/>
-                                            <span><b>No of Position:</b> <t t-esc="int(job.no_of_recruitment)"/></span><br/> 
-                                            <span t-esc="job.write_date"/>
-                                        </td>
-                                        <td>
-                                            <span><b>Location:</b> <t t-esc="res_company.city+','"/> <t t-esc="res_company.state_id.name+','"/> <t t-esc="res_company.country_id.name+'.'"/></span><br/>
-                                            <span>&amp;#x2706; <t t-esc="res_company.phone+'.'"/></span>
-                                        </td>
+                    <t t-if="no_of_jobs &gt; 0">
+                        <t t-foreach="companies" t-as="company">
+                            <div class="page-header">
+                                <h2 class="text-center"><t t-field="company.name"/></h2>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><h4>Post Name</h4></th>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="res_job" t-as="job">
+                                        <tr t-if="job.company_id.id==company.id">
+                                            <td>
+                                                <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
+                                                <b><span t-if="job.department_id" t-esc="job.department_id.name"/></b><br/>
+                                                <span><t t-if="int(job.no_of_recruitment) &gt; 0"><b>No of Position:</b> <t t-esc="int(job.no_of_recruitment)"/></t><t t-if="int(job.no_of_recruitment) &lt; 1"><b>Right now no recruitment is going on.</b></t></span><br/><br/>
+                                                <span t-esc="job.write_date"/>
+                                                <span><t t-if="int(job.no_of_recruitment) &gt; 0"><b>Location:</b> <t t-esc="res_company.city+','"/> <t t-esc="res_company.state_id.name+','"/> <t t-esc="res_company.country_id.name"/><br/>
+                                                &amp;#x2706; <t t-esc="res_company.phone"/></t></span>
+                                                
+                                                <div t-if="int(job.no_of_recruitment) &lt; 1">
+                                                    <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
+                                                    Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
+                                                    <form action="/jobs/subscribe" method="POST" class="form-inline span8" t-if="not subscribe">
+                                                        <input placeholder="Email Address" type="email" name="email" class="input-medium"/>
+                                                        <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
+                                                    </form>
+                                                    <form class="span8" action="/jobs/unsubscribe" method="POST" t-if="subscribe">
+                                                        <div class="alert alert-success">
+                                                            <button type="button" class="close" data-dismiss="alert">×</button>
+                                                            <strong>Oh great!</strong> You are successfully subscribed email notifications for a <b><t t-esc="job.name"/></b> job.
+                                                        </div>
+                                                        <input type="hidden" name="email" t-att-value="subscribe"/>
+                                                        <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn label-important js_publish pull-right" name="publish">Publish</button>
+                                                <button type="submit" class="btn label label-success js_unpublish hidden" name="unpublish">Unpublish</button>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+                    <t t-if="no_of_jobs &lt; 1">
+                        <h3>"Thank you for your interest, but right now there is no job openings available in our company. Please check back after some time."</h3>
                     </t>
                 </div>
             </t>
@@ -67,7 +91,7 @@
                         <div class="span12">
                             <t t-if="job.description">
                                 <h3>Description</h3>
-                                <p t-if="job.description"><t t-esc="job.description"/></p>
+                                <p t-if="job.description"><t t-field="job.description"/></p>
                             </t>
                         </div>
                     </div>
@@ -113,7 +137,7 @@
                 <t t-set="title">Thank You!</t>
                 <div class="span4 pull-right">
                     <ul class="pager">
-                        <li><a t-att-href="'/job/detail/%%s' %% jobid">Back</a></li>
+                        <li><a t-att-href="'/job/detail/%%s' %% jobid">All Jobs</a></li>
                     </ul>
                 </div>
                 <section id="typography">
