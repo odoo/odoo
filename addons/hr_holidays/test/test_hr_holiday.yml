@@ -18,7 +18,7 @@
   I again set to draft and then confirm.
 -
   !python {model: hr.holidays}: |
-     self.set_to_draft(cr, uid, [ref('hr_holidays_employee1_cl')])
+     self.holidays_reset(cr, uid, [ref('hr_holidays_employee1_cl')])
      self.signal_confirm(cr, uid, [ref('hr_holidays_employee1_cl')])
 -
   I validate the holiday request by clicking on "To Approve" button.
