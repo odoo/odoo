@@ -11,32 +11,33 @@ import traceback
 
 _logger = logging.getLogger(__name__)
 
+BUILTINS = {
+    'False': False,
+    'None': None,
+    'True': True,
+    'abs': abs,
+    'bool': bool,
+    'dict': dict,
+    'filter': filter,
+    'len': len,
+    'list': list,
+    'map': map,
+    'max': max,
+    'min': min,
+    'reduce': reduce,
+    'repr': repr,
+    'round': round,
+    'set': set,
+    'str': str,
+    'tuple': tuple,
+}
+
 class QWebContext(dict):
     def __init__(self, data, undefined_handler=None):
         self.undefined_handler = undefined_handler
-        d = {
-            'True': True,
-            'False': False,
-            'None': None,
-            'str': str,
-            'globals': locals,
-            'locals': locals,
-            'bool': bool,
-            'dict': dict,
-            'list': list,
-            'tuple': tuple,
-            'map': map,
-            'abs': abs,
-            'min': min,
-            'max': max,
-            'reduce': reduce,
-            'filter': filter,
-            'round': round,
-            'len': len,
-            'set': set
-        }
-        d.update(data)
-        dict.__init__(self, d)
+        dic = BUILTINS.copy()
+        dic.update(data)
+        dict.__init__(self, dic)
         self['defined'] = lambda key: key in self
 
     def __getitem__(self, key):
@@ -338,5 +339,10 @@ class QWebXml(object):
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
         return self.render_element(e, t_att, g_att, v, str(inner))
+
+    def render_tag_debug(self, e, t_att, g_att, v):
+        debugger = t_att.get('debug', 'pdb')
+        __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
+        return self.render_element(e, t_att, g_att, v)
 
 # leave this, al.
