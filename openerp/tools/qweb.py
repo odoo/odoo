@@ -7,6 +7,7 @@ import types
 
 import xml   # FIXME use lxml
 import xml.dom.minidom
+import traceback
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ class QWebXml(object):
         try:
             return eval(expr, None, v)
         except Exception:
-            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'" % (expr, v.get('__template__')))
+            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), traceback.format_exc()))
 
     def eval_object(self, expr, v):
         return self.eval(expr, v)
