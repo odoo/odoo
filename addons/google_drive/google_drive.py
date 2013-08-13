@@ -54,58 +54,69 @@ class config(osv.osv):
             attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
             url = attachment.url
         else:
-            url = self.copy_doc(cr, uid, res_id, template_id, name_gdocs, model.model, context)
+            url = self.copy_doc(cr, uid, res_id, template_id, name_gdocs, model.model, context).get('url')
         return url
 
-    def copy_doc(self, cr, uid, res_id, template_id, name_gdocs, res_model, context=None):
+    def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
+        group_config = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
+        user = self.pool['res.users'].read(cr, uid, uid, "groups_id")
         if not google_drive_refresh_token:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            if group_config in user['groups_id']:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            else:
+                raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
-        google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
-
         #For Getting New Access Token With help of old Refresh Token
-        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
-        data = dict(client_id=google_drive_client_id,
-                    refresh_token=google_drive_refresh_token,
-                    client_secret=google_drive_client_secret,
-                    grant_type="refresh_token")
 
-        data = urllib.urlencode(data)
+        data = urllib.urlencode(dict(client_id=google_drive_client_id,
+                                     refresh_token=google_drive_refresh_token,
+                                     client_secret=google_drive_client_secret,
+                                     grant_type="refresh_token",
+                                     scope=scope or 'https://www.googleapis.com/auth/drive'))
+        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
         try:
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
             content = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            if group_config in user['groups_id']:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            else:
+                raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         content = json.loads(content)
+        return content.get('access_token')
 
+    def copy_doc(self, cr, uid, res_id, template_id, name_gdocs, res_model, context=None):
+        ir_config = self.pool['ir.config_parameter']
+        google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
+        access_token = self.get_access_token(cr, uid, context=context)
         # Copy template in to drive with help of new access token
-        if 'access_token' in content:
-            request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, content['access_token'])
-            try:
-                req = urllib2.Request(request_url, None, headers)
-                parents = urllib2.urlopen(req).read()
-            except urllib2.HTTPError:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("The Google Template cannot be found. Maybe it has been deleted."), context=context)
-            parents_dict = json.loads(parents)
+        request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, access_token)
+        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
+        try:
+            req = urllib2.Request(request_url, None, headers)
+            parents = urllib2.urlopen(req).read()
+        except urllib2.HTTPError:
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("The Google Template cannot be found. Maybe it has been deleted."), context=context)
+        parents_dict = json.loads(parents)
 
-            record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
-            data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
-            request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, content['access_token'])
-            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-            data_json = json.dumps(data)
-            # resp, content = Http().request(request_url, "POST", data_json, headers)
-            req = urllib2.Request(request_url, data_json, headers)
-            content = urllib2.urlopen(req).read()
-            content = json.loads(content)
-            res = False
-            if 'alternateLink' in content.keys():
-                attach_pool = self.pool.get("ir.attachment")
-                attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
-                attach_pool.create(cr, uid, attach_vals)
-                res = content['alternateLink']
+        record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
+        data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
+        request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, access_token)
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        data_json = json.dumps(data)
+        # resp, content = Http().request(request_url, "POST", data_json, headers)
+        req = urllib2.Request(request_url, data_json, headers)
+        content = urllib2.urlopen(req).read()
+        content = json.loads(content)
+        res = {}
+        if content.get('alternateLink'):
+            attach_pool = self.pool.get("ir.attachment")
+            attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
+            res['id'] = attach_pool.create(cr, uid, attach_vals)
+            res['url'] = content['alternateLink']
         return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
@@ -166,6 +177,7 @@ class config(osv.osv):
         'google_drive_resource_id': fields.function(_resource_get, type="char", string='Resource Id'),
         'google_drive_client_id': fields.function(_client_id_get, type="char", string='Google Client '),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
+        'active': fields.boolean('Active'),
     }
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
@@ -179,6 +191,7 @@ class config(osv.osv):
 
     _defaults = {
         'name_template': 'Document %(name)s',
+        'active': True,
     }
 
     def _check_model_id(self, cr, uid, ids, context=None):
@@ -191,6 +204,9 @@ class config(osv.osv):
         (_check_model_id, 'Model of selected filter is not matching with model of current template.', ['model_id', 'filter_id']),
     ]
 
+    def get_google_scope(self):
+        return 'https://www.googleapis.com/auth/drive'
+
 config()
 
 
@@ -202,7 +218,7 @@ class base_config_settings(osv.osv):
         'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
     }
     _defaults = {
-        'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', context=c),
+        'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),
     }
 
     def set_google_authorization_code(self, cr, uid, ids, context=None):
