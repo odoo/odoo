@@ -66,16 +66,7 @@
     planned_hours: 20.0
     project_id: project_project_timesheetmanagement0
     remaining_hours: 20.0
-    state: draft
     user_id: res_users_hrmanager0
--
-  Open the task
--
-  !python {model: project.task}: |
-    self.do_open(cr, uid, [ref("project_task_getalltimesheetrecords0")], {"lang":
-      "en_US", "active_ids": [ref("project_project_timesheetmanagement0")], "tz":
-      False, "active_model": "project.project", "department_id": False, "project_id":
-      False, "active_id": ref("project_project_timesheetmanagement0"), })
 -
   Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
 -
