@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -11,17 +11,17 @@ def get_order(order_id=None):
     # check if order allready exists
     if order_id:
         try:
-            order = order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
+            order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
             order.pricelist_id
         except:
             order_id = None
     if not order_id:
         fields = [k for k, v in order_obj._columns.items()]
-        order_value = order_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields)
-        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id
-        order_value.update(order_obj.onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
-        order_id = order_obj.create(request.cr, openerp.SUPERUSER_ID, order_value)
-        order = order_obj.browse(request.cr, openerp.SUPERUSER_ID, order_id)
+        order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields)
+        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+        order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
+        order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
     return order
 
 def get_current_order():
@@ -46,8 +46,8 @@ class Ecommerce(http.Controller):
 
     def get_categories(self):
         category_obj = request.registry.get('pos.category')
-        category_ids = category_obj.search(request.cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
-        categories = category_obj.browse(request.cr, openerp.SUPERUSER_ID, category_ids)
+        category_ids = category_obj.search(request.cr, SUPERUSER_ID, [('parent_id', '=', False)])
+        categories = category_obj.browse(request.cr, SUPERUSER_ID, category_ids)
         return categories
 
     @http.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
@@ -57,7 +57,7 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.product')
 
         domain = [("sale_ok", "=", True)]
-        if openerp.SUPERUSER_ID != request.uid:
+        if SUPERUSER_ID != request.uid:
             domain += [('website_published', '=', True)]
 
         if cat_id:
@@ -102,7 +102,7 @@ class Ecommerce(http.Controller):
 
         if post.get('code'):
             pricelist_obj = request.registry.get('product.pricelist')
-            pricelist_ids = pricelist_obj.search(request.cr, openerp.SUPERUSER_ID, [('code', '=', post.get('code'))])
+            pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', post.get('code'))])
             if pricelist_ids:
                 order.write({'pricelist_id': pricelist_ids[0]})
         
@@ -124,18 +124,18 @@ class Ecommerce(http.Controller):
 
         # values initialisation
         values = {}
-        order_line_ids = order_line_obj.search(request.cr, openerp.SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
+        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
         if order_line_ids:
-            order_line = order_line_obj.read(request.cr, openerp.SUPERUSER_ID, order_line_ids, [], context=context)[0]
+            order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=context)[0]
             if set_number >= 0:
                 quantity = set_number
             else:
                 quantity = order_line['product_uom_qty'] + number
             if quantity <= 0:
-                order_line_obj.unlink(request.cr, openerp.SUPERUSER_ID, order_line_ids, context=context)
+                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=context)
         else:
             fields = [k for k, v in order_line_obj._columns.items()]
-            values = order_line_obj.default_get(request.cr, openerp.SUPERUSER_ID, fields, context=context)
+            values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=context)
             quantity = 1
         values['product_uom_qty'] = quantity
         values['product_id'] = product_id
@@ -144,13 +144,13 @@ class Ecommerce(http.Controller):
         # change and record value
         if quantity:
             pricelist_id = order.pricelist_id and order.pricelist_id.id or False
-            values.update(order_line_obj.product_id_change(request.cr, openerp.SUPERUSER_ID, [], pricelist_id, product_id,
-                partner_id=user_obj.browse(request.cr, openerp.SUPERUSER_ID, request.uid).partner_id.id,
+            values.update(order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
+                partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
                 context=context)['value'])
             if order_line_ids:
-                order_line_obj.write(request.cr, openerp.SUPERUSER_ID, order_line_ids, values, context=context)
+                order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=context)
             else:
-                order_line_id = order_line_obj.create(request.cr, openerp.SUPERUSER_ID, values, context=context)
+                order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=context)
                 order.write({'order_line': [(4, order_line_id)]}, context=context)
 
         return quantity
@@ -198,7 +198,7 @@ class Ecommerce(http.Controller):
         if request.uid != website.get_public_user().id:
             partner = user_obj.browse(request.cr, request.uid, request.uid).partner_id
             partner_id = partner.id
-            checkout = user_obj.read(request.cr, openerp.SUPERUSER_ID, [partner_id], [])[0]
+            checkout = user_obj.read(request.cr, SUPERUSER_ID, [partner_id], [])[0]
             checkout['company'] = partner.parent_id and partner.parent_id.name or ''
 
             shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')])
@@ -211,8 +211,8 @@ class Ecommerce(http.Controller):
             checkout[k] = v or ''
         values['checkout'] = checkout
 
-        values['countries'] = country_obj.browse(request.cr, openerp.SUPERUSER_ID, country_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)]))
-        values['states'] = country_state_obj.browse(request.cr, openerp.SUPERUSER_ID, country_state_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)]))
+        values['countries'] = country_obj.browse(request.cr, SUPERUSER_ID, country_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)]))
+        values['states'] = country_state_obj.browse(request.cr, SUPERUSER_ID, country_state_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)]))
 
         return website.render("website_sale.checkout", values)
 
@@ -245,10 +245,10 @@ class Ecommerce(http.Controller):
         # search or create company
         company_id = None
         if post['company']:
-            company_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [("name", "ilike", post['company']), ('is_company', '=', True)])
+            company_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("name", "ilike", post['company']), ('is_company', '=', True)])
             company_id = company_ids and company_ids[0] or None
             if not company_id:
-                company_id = partner_obj.create(request.cr, openerp.SUPERUSER_ID, {'name': post['company'], 'is_company': True})
+                company_id = partner_obj.create(request.cr, SUPERUSER_ID, {'name': post['company'], 'is_company': True})
 
         partner_value = {
             'fax': post['fax'],
@@ -266,7 +266,7 @@ class Ecommerce(http.Controller):
             partner_id = user_obj.browse(request.cr, request.uid, request.uid).partner_id.id
             partner_obj.write(request.cr, request.uid, [partner_id], partner_value)
         else:
-            partner_id = partner_obj.create(request.cr, openerp.SUPERUSER_ID, partner_value)
+            partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value)
 
         shipping_id = None
         if 'shipping_name' in post:
@@ -284,12 +284,12 @@ class Ecommerce(http.Controller):
             }
             domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and int(value) or value)
                 for key, value in shipping_value.items() if key in required_field + ["type", "parent_id"]]
-            shipping_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, domain)
+            shipping_ids = partner_obj.search(request.cr, SUPERUSER_ID, domain)
             if shipping_ids:
                 shipping_id = shipping_ids[0]
-                partner_obj.write(request.cr, openerp.SUPERUSER_ID, [shipping_id], shipping_value)
+                partner_obj.write(request.cr, SUPERUSER_ID, [shipping_id], shipping_value)
             else:
-                shipping_id = partner_obj.create(request.cr, openerp.SUPERUSER_ID, shipping_value)
+                shipping_id = partner_obj.create(request.cr, SUPERUSER_ID, shipping_value)
 
         order_value = {
             'state': 'progress',
@@ -297,7 +297,7 @@ class Ecommerce(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, openerp.SUPERUSER_ID, [], request.uid, context={})['value'])
+        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
         order.write(order_value)
 
         request.httprequest.session['ecommerce_order_id_old'] = order.id
@@ -319,10 +319,10 @@ class Ecommerce(http.Controller):
         })
 
         payment_obj = request.registry.get('portal.payment.acquirer')
-        payment_ids = payment_obj.search(request.cr, openerp.SUPERUSER_ID, [('visible', '=', True)])
-        values['payments'] = payment_obj.browse(request.cr, openerp.SUPERUSER_ID, payment_ids)
+        payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)])
+        values['payments'] = payment_obj.browse(request.cr, SUPERUSER_ID, payment_ids)
         for payment in values['payments']:
-            content = payment_obj.render(request.cr, openerp.SUPERUSER_ID, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
+            content = payment_obj.render(request.cr, SUPERUSER_ID, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
             payment._content = content
 
         return website.render("website_sale.payment", values)

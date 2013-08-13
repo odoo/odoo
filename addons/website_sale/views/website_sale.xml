@@ -186,7 +186,7 @@
                                 <th width="80">Product</th>
                                 <th></th>
                                 <th width="80">Price</th>
-                                <th width="140">Quantity</th>
+                                <th width="150">Quantity</th>
                             </tr>
                         </thead>
                         <tbody t-if="not order.order_line">
@@ -229,22 +229,6 @@
                 </div>
             </t>
         </t>
-    </template>
-
-    <!-- Total Shop my cart --> 
-
-    <template id="total">
-        <div class="row oe_total">
-            <div class="span4"> 
-                <div class="well">
-                    <table class='table-equalized' t-if="order.order_line">
-                        <tr> <td>Subtotal </td>      <td><t t-esc="order.amount_untaxed"/> €</td></tr>
-                        <tr> <td>Taxes </td>         <td><t t-esc="order.amount_tax"/> €</td></tr>
-                        <tr> <td><h4>Total</h4></td> <td><h4><t t-esc="order.amounttotal"/> €</h4></td></tr>
-                    </table>
-                </div>
-            </div>
-        </div>
     </template>
 
     <!-- Page confirm my cart -->

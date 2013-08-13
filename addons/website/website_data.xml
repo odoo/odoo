@@ -28,13 +28,15 @@
             </field>
         </record>
 
-        <menuitem id="website.menu" name="Website" sequence="510"/>
-        <menuitem id="website.submenu" name="Website" parent="website.menu" sequence="10"/>
-        <record id="mail_inboxfeeds" model="ir.ui.menu">
-            <field name="name">Go to Website</field>
-            <field name="sequence" eval="10"/>
-            <field name="action" ref="website.action_gotowebsite"/>
-            <field name="parent_id" ref="website.submenu"/>
+        <record id="action_website" model="ir.actions.act_url">
+            <field name="name">Website</field>
+            <field name="url">/</field>
+            <field name="target">self</field>
+        </record>
+        <record id="menu_website" model="ir.ui.menu">
+            <field name="name">Website</field>
+            <field name="sequence" eval="510"/>
+            <field name="action" ref="action_website"/>
         </record>
 
     </data>
