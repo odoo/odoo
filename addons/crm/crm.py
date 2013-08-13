@@ -144,9 +144,15 @@ class crm_case_section(osv.osv):
             if inner_groupby:
                 groupby_company = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
                 for groupby in groupby_company:
-                    company = self.pool.get('res.company').browse(cr, uid, groupby['__domain'][0][2], context=context)
+                    if inner_groupby[0] == 'company_id':
+                        company = self.pool.get('res.company').browse(cr, uid, groupby['__domain'][0][2], context=context)
+                        base_currency_id = company.currency_id.id
+                    elif inner_groupby[0] == 'pricelist_id':
+                        base_currency_id = self.pool.get('product.pricelist').browse(cr, uid, groupby['__domain'][0][2], context=context).currency_id.id
+                    else :
+                        base_currency_id = groupby['__domain'][0][2]
                     user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                    value = self.pool.get('res.currency').compute(cr, uid, company.currency_id.id, user.company_id.currency_id.id, groupby.get(value_field, 0))
+                    value = self.pool.get('res.currency').compute(cr, uid, base_currency_id, user.company_id.currency_id.id, groupby.get(value_field, 0))
                     section_result[month]['value'] = section_result[month]['value'] + value
         return section_result
 
