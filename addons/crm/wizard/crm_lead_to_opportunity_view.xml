@@ -10,6 +10,10 @@
                     <group name="name">
                         <field name="name" class="oe_inline"/>
                     </group>
+                    <group string="Assign opportunities to">
+                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, section_id, context)"/>
+                        <field name="section_id" class="oe_inline"/>
+                    </group>
                     <group string="Opportunities">
                         <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}" nolabel="1">
                             <tree>
@@ -56,6 +60,10 @@
                             attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
                             class="oe_inline"/>
                     </group>
+                    <group string="Assign opportunities to" attrs="{'invisible': [('name', '=', '')]}">
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
+                        <field name="user_ids" widget="many2many_tags"/>
+                    </group>
                     <group string="Select Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                         <field name="opportunity_ids" colspan="4" nolabel="1" attrs="{'invisible': [('name', '=', 'convert')]}">
                             <tree>
@@ -72,12 +80,6 @@
                             </tree>
                         </field>
                     </group>
-
-                    <group string="Assign opportunities to" attrs="{'invisible': [('name', '=', '')]}">
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
-                        <field name="user_ids" widget="many2many_tags"/>
-                    </group>
-
                     <footer>
                         <button name="mass_convert" string="Convert to Opportunities" type="object" class="oe_highlight"/>
                         or
