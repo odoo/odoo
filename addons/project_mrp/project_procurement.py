@@ -33,13 +33,13 @@ class procurement_order(osv.osv):
     def action_check_finished(self, cr, uid, ids):
         res = super(procurement_order, self).action_check_finished(cr, uid, ids)
         return res and self.check_task_done(cr, uid, ids)
-    
+
     def check_task_done(self, cr, uid, ids, context=None):
         """ Checks if task is done or not.
         @return: True or False.
         """
         for p in self.browse(cr, uid, ids, context=context):
-            if (p.product_id.type=='service') and (p.procure_method=='make_to_order') and p.task_id and (p.task_id.state not in ('done', 'cancelled')):
+            if (p.product_id.type == 'service') and (p.procure_method == 'make_to_order') and p.task_id and (p.task_id.stage_id and not p.task_id.stage_id.closed):
                 return False
         return True
 

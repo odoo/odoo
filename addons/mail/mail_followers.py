@@ -151,7 +151,7 @@ class mail_notification(osv.Model):
         return footer
 
     def _notify(self, cr, uid, msg_id, partners_to_notify=None, context=None,
-                    force_send=False, user_signature=True):
+                force_send=False, user_signature=True):
         """ Send by email the notification depending on the user preferences
 
             :param list partners_to_notify: optional list of partner ids restricting
