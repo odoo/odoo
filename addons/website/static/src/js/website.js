@@ -226,6 +226,9 @@ instance.website.RTE = instance.web.Widget.extend({
                 'magicline'
         ];
         return {
+            // Disable auto-generated titles
+            // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
+            title: false,
             removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
