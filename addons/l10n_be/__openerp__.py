@@ -75,6 +75,9 @@ Wizards provided by this module:
         'account_fiscal_position_tax_template.xml',
         'security/ir.model.access.csv',
     ],
+    'test': [
+        'l10n_be_wizard.yml',
+    ],
     'demo': [],
     'installable': True,
     'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],
