@@ -26,15 +26,6 @@ from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
 
-MAX_LEVEL = 15
-AVAILABLE_STATES = [
-    ('draft', 'New'),
-    ('cancel', 'Cancelled'),
-    ('open', 'In Progress'),
-    ('pending', 'Pending'),
-    ('done', 'Closed')
-]
-
 AVAILABLE_PRIORITIES = [
     ('1', 'Highest'),
     ('2', 'High'),
@@ -72,16 +63,13 @@ class crm_case_stage(osv.osv):
         'probability': fields.float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success"),
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
         'requirements': fields.text('Requirements'),
-        'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
+        'section_ids': fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'state': fields.selection(AVAILABLE_STATES, 'Related Status', required=True,
-            help="The status of your document will automatically change regarding the selected stage. " \
-                "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
         'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Fold by Default',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
-        'type': fields.selection([  ('lead','Lead'),
+        'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
                                     string='Type', size=16, required=True,
@@ -91,7 +79,7 @@ class crm_case_stage(osv.osv):
     _defaults = {
         'sequence': lambda *args: 1,
         'probability': lambda *args: 0.0,
-        'state': 'open',
+        'on_change': True,
         'fold': False,
         'type': 'both',
         'case_default': True,
@@ -222,17 +210,13 @@ class crm_case_section(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
-            alias_name = vals.pop('alias_name', None) or vals.get('name')  # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                    {'alias_name': alias_name},
-                    model_name="crm.lead",
-                    context=context)
-            vals['alias_id'] = alias_id
-        res = super(crm_case_section, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type': 'lead'}}, context)
-        return res
+        if context is None:
+            context = {}
+        create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
+        section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
+        section = self.browse(cr, uid, section_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_parent_thread_id': section_id, 'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
+        return section_id
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.

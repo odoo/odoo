@@ -191,6 +191,7 @@ class mail_message(osv.Model):
         'vote_user_ids': fields.many2many('res.users', 'mail_vote',
             'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
+        'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -394,15 +395,21 @@ class mail_message(osv.Model):
         has_voted = uid in [user.id for user in message.vote_user_ids]
 
         try:
-            body_html = html_email_clean(message.body)
+            if parent_id:
+                max_length = 300
+            else:
+                max_length = 100
+            body_short = html_email_clean(message.body, remove=False, shorten=True, max_length=max_length)
+
         except Exception:
-            body_html = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % message.id
+            body_short = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % message.id
             _logger.exception(Exception)
 
         return {'id': message.id,
                 'type': message.type,
                 'subtype': message.subtype_id.name if message.subtype_id else False,
-                'body': body_html,
+                'body': message.body,
+                'body_short': body_short,
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,
@@ -780,8 +787,8 @@ class mail_message(osv.Model):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, uid, newid, context=context,
-                        force_send=context.get('mail_notify_force_send', True),
-                        user_signature=context.get('mail_notify_user_signature', True))
+                     force_send=context.get('mail_notify_force_send', True),
+                     user_signature=context.get('mail_notify_user_signature', True))
         # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
         # Because starred will call set_message_starred, that looks for notifications.
         # When creating a new mail_message, it will create a notification to a message

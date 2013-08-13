@@ -44,7 +44,7 @@ account.""",
     'category': 'Accounting & Finance',
     'demo': [],
     'data': ['product_view.xml'],
-    'test': ['test/anglo_saxon.yml'],
+    'test': ['test/anglo_saxon.yml', 'test/anglo_saxon_avg_fifo.yml'],
     'auto_install': False,
     'installable': True,
 }
