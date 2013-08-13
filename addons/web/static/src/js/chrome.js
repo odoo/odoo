@@ -623,6 +623,19 @@ instance.web.Login =  instance.web.Widget.extend({
         if (this.params.login_successful) {
             this.on('login_successful', this, this.params.login_successful);
         }
+        // some cleanup to remove any trace of that last login feature
+        if (typeof(localStorage) != 'undefined') {
+            var toRemove = [];
+            _.each(_.range(localStorage.length), function(i) {
+                var key = localStorage.key(i);
+                if (key.match(/^.*?\|last_password$/)) {
+                    toRemove.push(key);
+                }
+            });
+            _.each(toRemove, function(k) {
+                localStorage.removeItem(k);
+            });
+        }
     },
     start: function() {
         var self = this;
@@ -647,9 +660,6 @@ instance.web.Login =  instance.web.Widget.extend({
                 .always(function() {
                     if (self.selected_db && self.has_local_storage && self.remember_credentials) {
                         self.$("[name=login]").val(localStorage.getItem(self.selected_db + '|last_login') || '');
-                        if (self.session.debug) {
-                            self.$("[name=password]").val(localStorage.getItem(self.selected_db + '|last_password') || '');
-                        }
                     }
                 });
         }
@@ -722,9 +732,6 @@ instance.web.Login =  instance.web.Widget.extend({
             self.remember_last_used_database(db);
             if (self.has_local_storage && self.remember_credentials) {
                 localStorage.setItem(db + '|last_login', login);
-                if (self.session.debug) {
-                    localStorage.setItem(db + '|last_password', password);
-                }
             }
             self.trigger('login_successful');
         }, function () {
