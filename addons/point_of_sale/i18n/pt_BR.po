@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-22 03:34+0000\n"
-"Last-Translator: Thiago Tognoli <Unknown>\n"
+"PO-Revision-Date: 2013-07-18 21:28+0000\n"
+"Last-Translator: Claudio de Araujo Santos <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:34+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-19 06:36+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -410,6 +410,8 @@ msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
 msgstr ""
+"Você não pode mudar o parceiro de uma ordem de POS para o qual já foi "
+"emitida uma factura."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -471,7 +473,7 @@ msgstr "Qtd Total"
 #: code:addons/point_of_sale/static/src/js/screens.js:874
 #, python-format
 msgid "Back"
-msgstr ""
+msgstr "De Volta"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
@@ -553,6 +555,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Image médias da categoria. Ele é automaticamente redimensionada como uma "
+"imagem de 128x128px, com relação de aspecto preservado. Utilize este campo "
+"em vista de formulário ou algumas vistas kanban."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -656,6 +661,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para iniciar uma nova sessão.\n"
+"              </ P>\n"
+"                Uma sessão é um período de tempo, geralmente um dia, durante "
+"o qual\n"
+"                você vende através do ponto de venda. O usuário tem que "
+"verificar o\n"
+"                moedas em sua caixa registradora no início e no final\n"
+"                de cada sessão.\n"
+"              </ P>\n"
+"                Observe que você deve melhor usar o <i> menu O Session </ "
+"i>\n"
+"                para abrir rapidamente uma nova sessão.\n"
+"              </ P>\n"
+"            "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:888
@@ -774,6 +794,9 @@ msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
 msgstr ""
+"Verifique se, este é um produto que você pode usar para tirar dinheiro de "
+"uma declaração para o ponto de venda de back-end, como por exemplo: dinheiro "
+"perdido, a transferência para o banco, etc"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -853,7 +876,7 @@ msgstr "Tel. :"
 #: code:addons/point_of_sale/static/src/js/widgets.js:981
 #, python-format
 msgid "Self-Checkout"
-msgstr ""
+msgstr "Self-checkout"
 
 #. module: point_of_sale
 #. openerp-web
@@ -915,6 +938,12 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment Methods\"."
 msgstr ""
+"Você tem que definir qual o método de pagamento deve estar disponível no "
+"ponto de venda através da reutilização de banco e dinheiro existente através "
+"de \"Contabilidade / Configurações / Revistas / Revistas\". Selecione um "
+"jornal e deixe o campo \"PoS Forma de Pagamento\" da aba \"Point of Sale\". "
+"Você também pode criar novos métodos de pagamento diretamente a partir do "
+"menu \"Pos Backend / Configurações / Métodos de pagamento\"."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.rouges_noyau_fruits
@@ -1245,7 +1274,7 @@ msgstr "Calculado usando as linhas de controle de caixa"
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
 msgid "St.Name"
-msgstr ""
+msgstr "St.Name"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
@@ -1264,7 +1293,7 @@ msgstr "ABC"
 #: code:addons/point_of_sale/static/src/js/screens.js:812
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
@@ -1387,6 +1416,8 @@ msgid ""
 "This sequence is automatically created by OpenERP but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"Esta seqüência é criado automaticamente pelo OpenERP mas você pode mudá-lo "
+"para personalizar os números de referência das suas ordens."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1615,6 +1646,8 @@ msgstr "Usuário"
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
 msgstr ""
+"O tipo de revista para o seu método de pagamento deve ser bancária ou "
+"dinheiro "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1659,7 +1692,7 @@ msgstr "Data"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
-msgstr ""
+msgstr "Pos as entradas de caixa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
@@ -1735,6 +1768,8 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
 msgstr ""
+"Não há nenhuma conta a receber definido para fazer o pagamento para o "
+"parceiro: \"% s\" (id:% d)."
 
 #. module: point_of_sale
 #: view:pos.config:0
@@ -1781,7 +1816,7 @@ msgstr "Pêssego"
 #: code:addons/point_of_sale/static/src/js/screens.js:772
 #, python-format
 msgid "Pay"
-msgstr ""
+msgstr "Pagar"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
@@ -1791,7 +1826,7 @@ msgstr "Timmermans Kriek 37.5cl"
 #. module: point_of_sale
 #: field:pos.config,sequence_id:0
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "Ordem IDs Sequence"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1806,7 +1841,7 @@ msgstr "Preço unitário"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:190
 #, python-format
 msgid "Product Weighting"
-msgstr ""
+msgstr "Ponderação produto"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1847,6 +1882,7 @@ msgstr "Caixa Registradoras"
 #: help:pos.session,cash_register_balance_end:0
 msgid "Computed with the initial cash control and the sum of all payments."
 msgstr ""
+"Calculado com o controlo de caixa inicial e a soma de todos os pagamentos."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1950,6 +1986,8 @@ msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed "
 "cash register or statement."
 msgstr ""
+"Gerar todos os lançamentos de venda para as ordens não faturadas ligados a "
+"uma caixa registradora fechada ou declaração."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
@@ -1980,6 +2018,8 @@ msgid ""
 "Check if, this is a product you can use to put cash into a statement for the "
 "point of sale backend."
 msgstr ""
+"Verifique se, este é um produto que você pode usar para colocar dinheiro em "
+"uma declaração para o ponto de venda backend."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
@@ -2017,7 +2057,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "POS ordenou criados durante o ano corrente"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
@@ -2138,7 +2178,7 @@ msgstr "Outros"
 #: code:addons/point_of_sale/static/src/js/screens.js:882
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_legumes_frais
@@ -2157,6 +2197,8 @@ msgstr "Nenhuma Caixa Registradora Definida!"
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
+"Nenhuma afirmação dinheiro encontrado para esta sessão. Incapaz de gravar "
+"dinheiro devolvido."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oignons_ail_echalotes
@@ -2250,7 +2292,7 @@ msgstr "Coca-Cola Zero 1L"
 #: code:addons/point_of_sale/static/src/js/screens.js:718
 #, python-format
 msgid "Help"
-msgstr ""
+msgstr "Ajudar"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2340,7 +2382,7 @@ msgstr "Origem"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #, python-format
 msgid "Admin Badge"
-msgstr ""
+msgstr "Emblema Administrador"
 
 #. module: point_of_sale
 #: field:pos.make.payment,journal_id:0
@@ -2416,7 +2458,7 @@ msgstr "Qtd de Produtos"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
 msgid "Golden Apples Perlim"
-msgstr ""
+msgstr "Maçãs Douradas Perlim"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:100
@@ -2588,12 +2630,12 @@ msgstr "Fechado"
 #. module: point_of_sale
 #: field:pos.config,iface_cashdrawer:0
 msgid "Cashdrawer Interface"
-msgstr ""
+msgstr "Interface de Cashdrawer"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN:"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.tomates
@@ -2718,7 +2760,7 @@ msgstr "Procurar Produtos"
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
-msgstr ""
+msgstr "NBR fatura"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal_incl:0
@@ -2737,6 +2779,9 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"O sistema irá abrir todas as caixas registadoras, de modo que você pode "
+"começar a pagamentos de gravação. Sugerimos que você controlar o equilíbrio "
+"de cada registro de abertura, usando o seu guia CashBox."
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2790,7 +2835,7 @@ msgstr "Com um"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.courgette_product_template
 msgid "Zucchini"
-msgstr ""
+msgstr "Abobrinha"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
@@ -2847,7 +2892,7 @@ msgstr "Vendas Mensais por Usuário"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Cashbox Lines"
-msgstr ""
+msgstr "Cashbox Lines"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
@@ -2965,7 +3010,7 @@ msgstr "Nome do Demonstrativo"
 #. module: point_of_sale
 #: field:pos.session,cash_register_total_entry_encoding:0
 msgid "Total Cash Transaction"
-msgstr ""
+msgstr "Transação de Caixa Total"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pommes_de_terre
@@ -3022,7 +3067,7 @@ msgstr "Detalhes do PDV"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:462
 #, python-format
 msgid "Client Badge"
-msgstr ""
+msgstr "Emblema do cliente"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -3117,6 +3162,8 @@ msgid ""
 "Person who uses the the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
+"A pessoa que usa a caixa registadora. Ele pode ser um apaziguador, um "
+"estudante ou um empregado interino."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
@@ -3232,7 +3279,7 @@ msgstr "Fanta Laranja Zero 1.5L"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boni_orange_product_template
 msgid "Boni Oranges"
-msgstr ""
+msgstr "Boni Laranjas"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:300
@@ -3724,7 +3771,7 @@ msgstr "Cerveja de Frutas"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "You can define another list of available currencies on the"
-msgstr ""
+msgstr "Você pode definir uma outra lista de moedas disponíveis no"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3736,12 +3783,12 @@ msgstr "Soda 33cl"
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_start:0
 msgid "Computed using the cash control at the opening."
-msgstr ""
+msgstr "Calculado usando o controle de caixa na abertura."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.raisins
 msgid "Grapes"
-msgstr ""
+msgstr "Uvas"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
@@ -3766,7 +3813,7 @@ msgstr "Imprimir Recibo"
 #: code:addons/point_of_sale/point_of_sale.py:420
 #, python-format
 msgid "Point of Sale Loss"
-msgstr ""
+msgstr "Ponto de Venda Loss"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
@@ -3781,7 +3828,7 @@ msgstr "Janeiro"
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Orders lines"
-msgstr ""
+msgstr "Ordens linhas POS"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_33cl_product_template
@@ -3900,7 +3947,7 @@ msgstr "Spa Reine 50cl"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
 msgid "Extra Flandria chicory"
-msgstr ""
+msgstr "Extra Flandria chicória"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_naturel_170g_product_template
@@ -3946,6 +3993,10 @@ msgid ""
 "maximum is reached, the user will have an error message at the closing of "
 "his session saying that he needs to contact his manager."
 msgstr ""
+"Este campo mostra a diferença máxima permitida entre o saldo final eo "
+"dinheiro teórico ao fechar a sessão, para os gestores não-POS. Se esta "
+"máxima for atingida, o usuário terá uma mensagem de erro no encerramento de "
+"sua sessão dizendo que ele precisa entrar em contato com o seu gerente."
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -3972,7 +4023,7 @@ msgstr "Maio"
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Sales lines"
-msgstr ""
+msgstr "Linhas de vendas"
 
 #. module: point_of_sale
 #: field:pos.order,note:0
@@ -3991,6 +4042,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Imagem de tamanho pequeno da categoria. Ele é automaticamente redimensionada "
+"como uma imagem 64x64px, com relação de aspecto preservado. Utilize este "
+"campo em qualquer lugar uma imagem pequena é necessária."
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
@@ -4018,6 +4072,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um método de pagamento.\n"
+"              </ P>\n"
+"                Métodos de pagamento são definidos pelas revistas de "
+"contabilidade com a\n"
+"                campo <i> PoS Forma de Pagamento </ i> marcada. Para ser "
+"utilizável\n"
+"                a partir da interface touchscreen, você deve definir o "
+"método de pagamento\n"
+"                no Ponto de Venda <i> </ i> de configuração.\n"
+"              </ P>\n"
+"            "
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -4049,7 +4115,7 @@ msgstr "Marque para Ativar"
 #. module: point_of_sale
 #: view:pos.category:0
 msgid "Product PoS Categories"
-msgstr ""
+msgstr "Produto PoS Categorias"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -4082,7 +4148,7 @@ msgstr "Desconto:"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
 msgid "Sales by User Monthly margin"
-msgstr ""
+msgstr "Vendas por margem Mensal Usuário"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_9_33cl_product_template
@@ -4095,6 +4161,8 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
 msgstr ""
+"Marque esta caixa se esta revista definir um método de pagamento que pode "
+"ser usado no ponto de venda."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4106,7 +4174,7 @@ msgstr "Mozilla Firefox"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
 msgid "Black Grapes"
-msgstr ""
+msgstr "Uvas Pretas"
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0
@@ -4128,14 +4196,14 @@ msgstr "Erro! Você não pode criar categorias recursivas."
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
 msgid "Sales User Today"
-msgstr ""
+msgstr "Vendas do usuário Hoje"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:818
 #, python-format
 msgid "Next Order"
-msgstr ""
+msgstr "Próxima Ordem"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:98
@@ -4148,7 +4216,7 @@ msgstr "Abrindo Controle"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Month of order date"
-msgstr ""
+msgstr "Mês da data do pedido"
 
 #. module: point_of_sale
 #: view:report.pos.order:0

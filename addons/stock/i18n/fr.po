@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-10 14:40+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2013-07-14 02:11+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-11 06:32+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-15 05:13+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -496,6 +497,8 @@ msgid ""
 "Forbidden operation: it is not allowed to scrap products from a virtual "
 "location."
 msgstr ""
+"Opération interdite : vous ne pouvez pas mettre au rebut des produits "
+"provenant d'un emplacement virtuel."
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -795,7 +798,7 @@ msgstr "Nom de l'emplacement"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Posted Inventory"
-msgstr "Inventaire comptabilisé"
+msgstr "Inventaire validé"
 
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
@@ -1075,7 +1078,7 @@ msgstr "Bons de réception"
 #: help:stock.picking.in,date:0
 #: help:stock.picking.out,date:0
 msgid "Creation date, usually the time of the order."
-msgstr ""
+msgstr "Date de création, habituellement la date de la commande."
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1972,7 +1975,7 @@ msgstr "Compte de valorisation des stocks (sortant)"
 #. module: stock
 #: view:stock.return.picking.memory:0
 msgid "Return Picking Memory"
-msgstr ""
+msgstr "Retour du colisage"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -2135,6 +2138,24 @@ msgid ""
 "\n"
 "            * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"\n"
+"            * Brouillon : pas encore confirmé et ne sera pas planifié tant "
+"qu'il n'est pas confirmé.\n"
+"\n"
+"            * En attente d'une autre opération : en attente de l'exécution "
+"d'une autre opération pour devenir automatiquement disponible (par ex. flux "
+"de production à la demande).\n"
+"\n"
+"            * Attente de disponibilité : encore en attente de la "
+"disponibilité des articles.\n"
+"\n"
+"            * Prêt à transférer : les articles sont réservés, simplement en "
+"attente d'une confirmation.\n"
+"\n"
+"            * Transféré : a été exécuté, ne peut plus être modifié ou "
+"annulé.\n"
+"\n"
+"            * Annulé : a été annulé, ne peut plus être confirmé."
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2199,6 +2220,23 @@ msgid ""
 "\n"
 "                 * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Brouillon : pas encore confirmé et ne sera pas planifié tant qu'il n'est "
+"pas confirmé.\n"
+"\n"
+"            * En attente d'une autre opération : en attente de l'exécution "
+"d'une autre opération pour devenir automatiquement disponible (par ex. flux "
+"de production à la demande).\n"
+"\n"
+"            * Attente de disponibilité : encore en attente de la "
+"disponibilité des articles.\n"
+"\n"
+"            * Prêt à transférer : les articles sont réservés, simplement en "
+"attente d'une confirmation.\n"
+"\n"
+"            * Transféré : a été exécuté, ne peut plus être modifié ou "
+"annulé.\n"
+"\n"
+"            * Annulé : a été annulé, ne peut plus être confirmé."
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -2441,7 +2479,7 @@ msgstr "Gérer des variantes multiples d'articles  "
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
-msgstr "Lignes d'inventaire de stock"
+msgstr "Lignes d'inventaire"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -3540,7 +3578,7 @@ msgstr "À facturer"
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
-msgstr "Date de fin"
+msgstr "Date de clôture"
 
 #. module: stock
 #: code:addons/stock/stock.py:1121
@@ -3706,6 +3744,7 @@ msgstr "Mouvements internes non assignés"
 #, python-format
 msgid "You cannot process picking without stock moves."
 msgstr ""
+"Vous ne pouvez pas effectuer un bon de transfert sans mouvement de stock."
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
@@ -3971,6 +4010,22 @@ msgid ""
 "\n"
 "                 * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Brouillon : pas encore confirmé et ne sera pas planifié avant d'être "
+"confirmé\n"
+"\n"
+"            * En attente d'une autre opération : en attente d'un autre "
+"mouvement à traiter avant de devenir automatiquement disponible (ex dans un "
+"flux production à la commande)\n"
+"\n"
+"            * En attente de disponibilités : toujours en attente de la "
+"disponibilité des articles\n"
+"\n"
+"            * Prêt pour transfert : articles réservés, simplement en attente "
+"de confirmation.\n"
+"\n"
+"            * Transféré : a été traité, ne peut plus être modifié ou annulé\n"
+"\n"
+"            * Annulé : a été annulé, ne peut plus être confirmé"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -4262,7 +4317,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Serial Number Revisions"
-msgstr ""
+msgstr "Révisions des numéros de série"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -4509,7 +4564,7 @@ msgstr "Validation Automatique"
 #: code:addons/stock/stock.py:1821
 #, python-format
 msgid "Insufficient Stock for Serial Number !"
-msgstr ""
+msgstr "Stock insuffisant pour le n° de série!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4877,6 +4932,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour ajouter un bon de livraison pour cet article.\n"
+"              </p><p>\n"
+"                Ici vous trouverez l'historique de toutes les livraisons "
+"passées\n"
+"                associées à cet article, ainsi que tous les articles que "
+"vous devez\n"
+"                livrer à des clients.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -4914,7 +4979,7 @@ msgstr "Préfixe"
 #: view:stock.move:0
 #: view:stock.move.split:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "Diviser en numéros de série"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -4924,6 +4989,11 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Quand vous faites de la valorisation d'inventaire en temps réel, les "
+"écritures comptables de contrepartie pour toutes les entrées en stock seront "
+"faites dans ce compte, à moins qu'il y ait un compte de valorisation "
+"spécifique défini sur l'emplacement source. Quand il n'est pas défini sur "
+"l'article, celui de la catégorie est utilisé."
 
 #. module: stock
 #: view:stock.move:0
@@ -5107,6 +5177,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour ajouter un numéro de série.\n"
+"              </p><p>\n"
+"                Ceci est la liste de tous les lots de production que vous "
+"avez\n"
+"                enregistrés. Quand vous sélectionnez un lot, vous pouvez\n"
+"                voir la traçabilité en amont ou en aval des articles "
+"contenus\n"
+"                dans le lot. Par défaut, la liste est filtrée sur les lots "
+"qui sont\n"
+"                disponibles dans votre entrepôt mais vous pouvez dé-cocher\n"
+"                le bouton \"Disponible\" pour voir tous les lots que vous "
+"avez\n"
+"                produits, reçus ou livrés à vos clients.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.picking.in:0
@@ -5171,6 +5257,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un bon de livraison.  \n"
+"              </p><p>\n"
+"                Ceci est la liste de tous les bons de livraison que vous\n"
+"                avez à préparer, en fonction de vos différentes commandes\n"
+"                de vente et de vos règles logistiques.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.tracking,name:0
@@ -5178,6 +5272,8 @@ msgid ""
 "By default, the pack reference is generated following the sscc standard. "
 "(Serial number + 1 check digit)"
 msgstr ""
+"Par défaut, la référence du colis est générée en suivant le standard SSCC. "
+"(numéro de série + 1 chiffre)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory

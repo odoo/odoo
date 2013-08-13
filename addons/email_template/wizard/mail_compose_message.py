@@ -147,8 +147,9 @@ class mail_compose_message(osv.TransientModel):
         # transform email_to, email_cc into partner_ids
         partner_ids = set()
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
+        ctx = dict((k, v) for k, v in (context or {}).items() if not k.startswith('default_'))
         for mail in mails:
-            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=ctx)
             partner_ids.add(partner_id)
         email_recipients = values.pop('email_recipients', '')
         if email_recipients:

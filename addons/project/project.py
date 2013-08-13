@@ -584,6 +584,15 @@ class task(base_stage, osv.osv):
         },
     }
 
+    def _get_default_partner(self, cr, uid, context=None):
+        """ Override of base_stage to add project specific behavior """
+        project_id = self._get_default_project_id(cr, uid, context)
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return project.partner_id.id
+        return super(task, self)._get_default_partner(cr, uid, context=context)
+
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
         return (self._resolve_project_id_from_context(cr, uid, context=context) or False)
@@ -598,7 +607,8 @@ class task(base_stage, osv.osv):
             context key, or None if it cannot be resolved to a single
             project.
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
         if type(context.get('default_project_id')) in (int, long):
             return context['default_project_id']
         if isinstance(context.get('default_project_id'), basestring):
@@ -679,13 +689,11 @@ class task(base_stage, osv.osv):
     def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
-    def onchange_project(self, cr, uid, id, project_id):
-        if not project_id:
-            return {}
-        data = self.pool.get('project.project').browse(cr, uid, [project_id])
-        partner_id=data and data[0].partner_id
-        if partner_id:
-            return {'value':{'partner_id':partner_id.id}}
+    def onchange_project(self, cr, uid, id, project_id, context=None):
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return {'value': {'partner_id': project.partner_id.id}}
         return {}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
@@ -760,7 +768,8 @@ class task(base_stage, osv.osv):
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
                                          readonly=True, required=False),
-        'create_date': fields.datetime('Create Date', readonly=True,select=True),
+        'create_date': fields.datetime('Create Date', readonly=True, select=True),
+        'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
@@ -808,8 +817,9 @@ class task(base_stage, osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'user_id': lambda obj, cr, uid, context: uid,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c),
+        'user_id': lambda obj, cr, uid, ctx=None: uid,
+        'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
+        'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
     _order = "priority, sequence, date_start, name, id"
 
@@ -1103,11 +1113,9 @@ class task(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('project_id'):
-                ctx['default_project_id'] = vals['project_id']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        if vals.get('project_id') and not context.get('default_project_id'):
+            context['default_project_id'] = vals.get('project_id')
+
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         task_id = super(task, self).create(cr, uid, vals, context=create_context)
@@ -1119,11 +1127,6 @@ class task(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('project_id'):
-            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
-            if project_id:
-                vals.setdefault('message_follower_ids', [])
-                vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in project_id.message_follower_ids]
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')

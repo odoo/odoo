@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-02-17 03:05+0000\n"
-"Last-Translator: Ahmad Khayyat <Unknown>\n"
+"PO-Revision-Date: 2013-07-15 22:30+0000\n"
+"Last-Translator: Emad Sherbini <emad@estc.com.sa>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:13+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-17 07:24+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -26,7 +26,7 @@ msgstr "مدفوعات النظام"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "يمكن  تعريف وضع الحساب المالي مرة واحدة فقط."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -34,13 +34,13 @@ msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
 msgstr ""
-"تحديد ترتيب العرض التقرير ’الحسابات/التقارير/ التقارير العمومية/الضرائب/ "
-"تقرير الضرائب’"
+"تحديد ترتيب عرض التقرير 'الحسابات / التقارير / التقارير العمومية / الضرائب / "
+"تقرير الضرائب'"
 
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "الشركة الأم"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -92,7 +92,7 @@ msgstr "حساب غير صالح!"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Total Debit"
-msgstr "مجموع المدين"
+msgstr "أجمالى المدين"
 
 #. module: account
 #: constraint:account.account.template:0
@@ -101,7 +101,7 @@ msgid ""
 "You cannot create recursive account templates."
 msgstr ""
 "خطأ!\n"
-"لا يمكنك انشاء قوالب حساب متداخلة"
+"لا يمكنك انشاء قوالب حسابات متداخلة."
 
 #. module: account
 #. openerp-web
@@ -194,17 +194,17 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr "الفواتير التي تم أنشاءها خلال 15 يوما الماضية"
+msgstr "الفواتير التي تم إنشاؤها خلال 15 يوماً الماضية"
 
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr "عمود الأسماء"
+msgstr "اسم العمود"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr "عدد الأرقام التي يتم استخدامها لرمز الحساب"
+msgstr "عدد الخانات في رمز الحساب"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -213,8 +213,8 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"يعطي نوع من تحليل اليومية. عندما يحتاج لوثيقة (مثل : فاتورة) لإنشاء مدخلات "
-"تحليلية، نظام  OpenERP سوف يبحث عن يومية مطابقة من نفس النوع."
+"يحدد نوع اليومية التحليلية. عند الحاجة لوثيقة (مثل: فاتورة) لإنشاء مدخلات "
+"تحليلية، سيقوم OpenERP بالبحث عن يومية مطابقة من نفس النوع."
 
 #. module: account
 #: help:account.tax,account_analytic_collected_id:0
@@ -223,6 +223,9 @@ msgid ""
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"حدد الحساب التحليلي الذي سيستخدم بشكل افتراضي على خطوط الفاتورة الضريبية "
+"للفواتير. اتركه فارغاً إذا كنت لا ترغب في استخدام حساب تحليلي على خطوط "
+"الفاتورة الضريبية بشكل افتراضي."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -443,7 +446,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "المنشئ لمعلومات المستفيد"
 
 #. module: account
 #. openerp-web
@@ -997,6 +1000,8 @@ msgid ""
 "                                                  opening/closing fiscal "
 "year process."
 msgstr ""
+"لا يمكنك إلغاء تسوية مدخلات اليوميات التي تم إنشاؤها عن طريق عملية فتح/إغلاق "
+"السنة المالية."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new

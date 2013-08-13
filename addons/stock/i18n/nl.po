@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-08 10:11+0000\n"
+"PO-Revision-Date: 2013-07-08 13:04+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-09 06:17+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-11 06:23+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -85,7 +85,7 @@ msgstr "In nieuwe verpakking plaatsen"
 #: view:stock.tracking:0
 #, python-format
 msgid "Upstream Traceability"
-msgstr "Vooruit traceren"
+msgstr "Terug traceren"
 
 #. module: stock
 #: field:stock.picking,date_done:0
@@ -171,7 +171,7 @@ msgstr "Verzamellijst"
 #. module: stock
 #: view:stock.inventory:0
 msgid "e.g. Annual inventory"
-msgstr "Bijv. Jaarlijkse vororaadtelling"
+msgstr "Bijv. Jaarlijkse voorraadtelling"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -290,7 +290,7 @@ msgstr "Afwijkende referentie of partijnummer"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Origin"
-msgstr "Oorsprong"
+msgstr "Bron"
 
 #. module: stock
 #: view:board.board:0
@@ -309,7 +309,7 @@ msgstr "Geen vrd"
 #: view:stock.tracking:0
 #, python-format
 msgid "Downstream Traceability"
-msgstr "Terug traceren"
+msgstr "Vooruit traceren"
 
 #. module: stock
 #: view:stock.move:0
@@ -700,7 +700,7 @@ msgstr "Mutatiehistorie (onderliggende mutaties)"
 #: field:stock.picking.in,move_lines:0
 #: field:stock.picking.out,move_lines:0
 msgid "Internal Moves"
-msgstr "Interne leveringen"
+msgstr "Interne mutaties"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -1328,9 +1328,9 @@ msgstr ""
 "corrigeren\n"
 "                       \n"
 "* Verwerving: Virtuele locatie die dient als tijdelijke tegenhanger voor "
-"verwervingsactiviteiten, wanneer de oorsprong  (leverancier of productie) "
-"nog niet bekend is. Deze locatie moet leeg zijn als de planner voor "
-"verwerving klaar is.\n"
+"verwervingsactiviteiten, wanneer de bron (leverancier of productie) nog niet "
+"bekend is. Deze locatie moet leeg zijn als de planner voor verwerving klaar "
+"is.\n"
 "                       \n"
 "* Productie: virtuele locatie die dient als tijdelijke tegenhanger voor "
 "productieactiviteiten: deze locatie verbruikt de grondstoffen en levert "
@@ -1807,7 +1807,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3
 msgid "Downstream traceability"
-msgstr "Terug traceren"
+msgstr "Vooruit traceren"
 
 #. module: stock
 #: view:stock.picking.in:0
@@ -2011,7 +2011,7 @@ msgstr "Productcategorieën"
 #. module: stock
 #: view:stock.move:0
 msgid "Cancel Availability"
-msgstr "Annuleer beschikbaarheid"
+msgstr "Beschikbaarheid annuleren"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_location_product.py:49
@@ -2090,7 +2090,7 @@ msgid ""
 "location for stock moves generated when you do an inventory."
 msgstr ""
 "Deze voorraadlocatie zal worden gebruikt, in plaats van de standaardlocatie, "
-"als bronlocatie voor voorraadmutaties gegenereerd door een vororaadtelling"
+"als bronlocatie voor voorraadmutaties gegenereerd door een voorraadtelling"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -2140,10 +2140,10 @@ msgstr ""
 "worden, voordat deze automatisch beschikbaar komt (bijv. bij \"Maak op "
 "bestelling\")\n"
 "\n"
-"            * Wachten beschikbaarheid: Nog wachtend op de beschikbaarheid "
+"            * Wachten op beschikbaarheid: Nog wachtend op de beschikbaarheid "
 "van de producten\n"
 "\n"
-"            * Beschikbaar: Producten zijn ontvangen, wachtend op "
+"            * Gereed voor leveren: Producten zijn gereserveerd, wachtend op "
 "bevestiging\n"
 "\n"
 "            * Verwerkt: Is verwerkt, kan niet meer worden aangepast of "
@@ -2221,10 +2221,10 @@ msgstr ""
 "worden, voordat deze automatisch beschikbaar komt (bijv. bij \"Maak op "
 "bestelling\")\n"
 "\n"
-"            * Wachten beschikbaarheid: Nog wachtend op de beschikbaarheid "
+"            * Wachten op beschikbaarheid: Nog wachtend op de beschikbaarheid "
 "van de producten\n"
 "\n"
-"            * Beschikbaar: Producten zijn ontvangen, wachtend op "
+"            * Gereed om te leveren: Producten zijn gereserveerd, wachtend op "
 "bevestiging\n"
 "\n"
 "            * Verwerkt: Is verwerkt, kan niet meer worden aangepast of "
@@ -3165,7 +3165,7 @@ msgstr "Levering"
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
 #, python-format
 msgid "Deliver Products"
-msgstr "Producten leveren"
+msgstr "Uitgaande producten"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -4007,8 +4007,8 @@ msgstr ""
 "            * Wachten beschikbaarheid: Nog wachtend op de beschikbaarheid "
 "van de producten\n"
 "\n"
-"            * Beschikbaar: Producten zijn ontvangen, wachtend op "
-"bevestiging\n"
+"            * Gereed om te ontvangen: Producten zijn gereserveerd, wachtend "
+"op bevestiging\n"
 "\n"
 "            * Verwerkt: Is verwerkt, kan niet meer worden aangepast of "
 "worden geannuleerd \n"
@@ -4832,7 +4832,7 @@ msgstr "Gekoppeld bedrijf"
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Check Availability"
-msgstr "Beschikbaarheid controleren"
+msgstr "Controleer beschikbaarheid"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -5090,7 +5090,7 @@ msgstr "Import huidige voorraad"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action5
 msgid "Upstream traceability"
-msgstr "Vooruit traceren"
+msgstr "Terug traceren"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all

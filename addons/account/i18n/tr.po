@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-06-16 20:54+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"PO-Revision-Date: 2013-07-12 09:01+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: OpenERP Türkiye Yerelleştirmesi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-17 06:20+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-13 06:35+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 "Language: tr\n"
 
 #. module: account
@@ -174,8 +174,8 @@ msgid ""
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
 msgstr ""
-"'Açılış Maddelerini Oluştur' dan açılış girişlerini oluşturduktan sonra bu "
-"Mali Yıl için 'Yıl Sonu Kayıtları Yevmiyesini ayarlamalısınız."
+"'Açılış Girişlerini Oluştur' dan açılış girişlerini oluşturduktan sonra bu "
+"Mali Yıl için 'Yıl Sonu Kayıtları Yevmiyesini' ayarlamalısınız."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -194,13 +194,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\\\"oe_view_nocontent_create\\\">\\n\n"
-"                Bir mali dönem eklemek için tıklayın.\\n\n"
-"              </p><p>\\n\n"
-"                Bir hesap dönemi genel olarak bir ay ya da üç aylıktır. Bu\\"
-"n\n"
-"                genelde vergi beyanı dönemlerine rastlar.\\n\n"
-"              </p>\\n\n"
+"<p class=\\\"oe_view_nocontent_create\\\">\n"
+"                Bir mali dönem eklemek için tıklayın.\n"
+"              </p><p>\n"
+"                Bir hesap dönemi genel olarak bir ay ya da üç aylıktır. Bu\n"
+"                genelde vergi beyanı dönemlerine rastlar.\n"
+"              </p>\n"
 "            "
 
 #. module: account
@@ -254,7 +253,7 @@ msgstr "Hareket kalemi uzlaştırmasını seç"
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Muhasebe kayıtları uzlaştırmanın girdileridir."
+msgstr "Muhasebe kayıtları uzlaştırmanın bir girdisidir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -328,16 +327,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\\\"oe_view_nocontent_create\\\">\\n\n"
-"                Müşteri iadesi oluşturmak için tıklayın. \\n\n"
+"<p class=\\\"oe_view_nocontent_create\\\">\n"
+"                Müşteri iadesi oluşturmak için tıklayın. \n"
 "              </p><p>\\n\n"
 "                İade bir faturayı kısmi ya da tamamen alacak olarak müşteri "
-"hesabına kaydeder.\\n\n"
-"              </p><p>\\n\n"
-"                Elle bir müşteri iadesi oluşturmak yerine\\n\n"
+"hesabına kaydeder.\n"
+"              </p><p>\n"
+"                Elle bir müşteri iadesi oluşturmak yerine\n"
 "                ilgili müşteri faturalarından da doğrudan "
-"oluşturabilirsiniz.\\n\n"
-"              </p>\\n\n"
+"oluşturabilirsiniz.\n"
+"              </p>\n"
 "            "
 
 #. module: account
@@ -743,6 +742,12 @@ msgid ""
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
 msgstr ""
+"İş Ortağı hesaplarının en son tam olarak uzlaştırıldığı tarih. Bu tarih, bu "
+"iş ortağı için uzlaştırmanın yapıldığı son tarihten farklıdır, bu tarihte "
+"uzlaştırılacak başka bir şey olmadığı gerçeğini belirtiriz. Bu, 2 farklı "
+"şekilde elde edilebilir: hem bu iş ortağı için uzlaşması kaldırılan son "
+"borç/alacak kaydının uzlaştırılması hem de kullanıcının elle uzlaştırma "
+"işlemi sırasında \"Uzlaştırılacak bir şey yok\" düğmesine basmasıyla."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -5007,7 +5012,7 @@ msgstr "Paypal Hesabı"
 #. module: account
 #: view:account.entries.report:0
 msgid "Acc.Type"
-msgstr "Acc.Type"
+msgstr "Hes.Türü"
 
 #. module: account
 #: selection:account.journal,type:0

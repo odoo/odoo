@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-04-22 03:12+0000\n"
-"Last-Translator: Thiago Tognoli <Unknown>\n"
+"PO-Revision-Date: 2013-07-18 19:35+0000\n"
+"Last-Translator: Claudio de Araujo Santos <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:19+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-19 06:35+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -42,7 +42,7 @@ msgstr ""
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "Companhia Relacionada"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -749,6 +749,13 @@ msgid ""
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
 msgstr ""
+"Data em que os lançamentos contábeis foram totalmente reconciliados pela "
+"última vez. É diferente da última data em que ocorreu a reconciliação para "
+"este parceiro, pois aqui apesar de que nada mais foi reconciliado nesta "
+"data. Isto pode ser obtido de 2 maneiras: ou o último débito/crédito não "
+"conciliado para este parceiro foi reconciliado, ou a última vez que o "
+"usuário clicou em \"Nada mais a reconciliar\"durante o processo de "
+"reconciliação manual."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -803,6 +810,8 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
 msgstr ""
+"O valor expresso na moeda secundária precisa ser positivo quando o item do "
+"diário for um débito e negativo quando for um crédito."
 
 #. module: account
 #: constraint:account.move:0
@@ -1030,7 +1039,7 @@ msgstr "Setembro"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Latest Manual Reconciliation Processed:"
-msgstr ""
+msgstr "Última Reconciliação Manual Processada:"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -1833,7 +1842,7 @@ msgstr "Recorrente"
 #. module: account
 #: report:account.invoice:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN :"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -4597,7 +4606,7 @@ msgstr "Um conjunto completo de impostos"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "Data da Última Reconciliação Completa"
 
 #. module: account
 #: field:account.account,name:0
@@ -5495,7 +5504,7 @@ msgstr "DIVER"
 #. module: account
 #: view:res.partner:0
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "Configurações relacionadas a Contabilidade são controladas em"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -6616,6 +6625,7 @@ msgstr "Março"
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
+"Você não pode re-abrir um período que pertence a um ano fiscal já fechado"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -10632,7 +10642,7 @@ msgstr "Faturas Provisórias"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "Nada mais a reconciliar"
 
 #. module: account
 #: view:cash.box.in:0

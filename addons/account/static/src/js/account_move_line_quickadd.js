@@ -84,7 +84,7 @@ openerp.account.quickadd = function (instance) {
         },
         search_by_journal_period: function() {
             var self = this;
-            var domain = [];
+            var domain = ['|',['debit', '!=', 0], ['credit', '!=', 0]];
             if (self.current_journal !== null) domain.push(["journal_id", "=", self.current_journal]);
             if (self.current_period !== null) domain.push(["period_id", "=", self.current_period]);
             self.last_context["journal_id"] = self.current_journal === null ? false : self.current_journal;

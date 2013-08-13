@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-04-22 20:44+0000\n"
-"Last-Translator: omer pines <omerpines@gmail.com>\n"
+"PO-Revision-Date: 2013-07-04 15:57+0000\n"
+"Last-Translator: Johny Raid <j@johnyraid.co.il>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:15+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-11 05:40+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -26,7 +26,7 @@ msgstr "מערכת תשלומים"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "מצב הפיסקלי של החשבון יכול להיות מוגדר רק פעם אחת באותם חשבונות."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -38,12 +38,12 @@ msgstr ""
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "חברת אב"
 
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr ""
+msgstr "השלמת רישום ביומן"
 
 #. module: account
 #: view:account.account:0
@@ -76,7 +76,7 @@ msgstr "גיול חייבים עד היום"
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr ""
+msgstr "ייבוא מחשבונית או תשלום"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1058
@@ -110,7 +110,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "סטטוס אישור"
+msgstr "מכנה משותף"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -122,7 +122,7 @@ msgstr "סטטוס אישור"
 #: xsl:account.transfer:0
 #: field:cash.box.in,ref:0
 msgid "Reference"
-msgstr "ייחוס"
+msgstr "הפניה"
 
 #. module: account
 #: help:account.payment.term,active:0
@@ -159,7 +159,7 @@ msgstr "אזהרה!"
 #: code:addons/account/account.py:3197
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "יומן מעורב"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -198,12 +198,12 @@ msgstr "חשבוניות שנוצרו במהלך 15 הימים האחרונים"
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr ""
+msgstr "תוית עמודה"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "מספר ספרות לשימוש בקוד החשבון"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -225,12 +225,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
-msgstr ""
+msgstr "תבנית מיסוי"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr ""
+msgstr "העבירו קו לסימון מכנה משותף"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
@@ -240,17 +240,17 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr ""
+msgstr "דוחות בלגיים"
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "בתוקף"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "צפיה בהכנסות"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -259,11 +259,13 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
+"סוג החשבון משמש למטרה מידע, כדי להפיק דוחות משפטיים ספציפיים לכל מדינה, "
+"ולהגדיר את הכללים לסגירת שנת כספים וליצור ערכי פתיחה."
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "מספר הודעת זיכוי הבא"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -272,16 +274,19 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"זה כולל את כל הדרישות הבסיסיות של ערכים שובר לבנק, מזומן, מכירות, רכש, "
+"הוצאה, קונטרה, וכו '\n"
+"                 זה מתקין account_voucher מודול."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
 msgid "Manual Recurring"
-msgstr ""
+msgstr "החזרה ידינית"
 
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr ""
+msgstr "אפשר מחיקה"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -303,6 +308,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                לחץ כדי ליצור החזר ללקוח.\n"
+"              </ p>\n"
+"                החזר הוא מסמך המזכה את החשבונית באופן מלא או\n"
+"                באופן חלקי.\n"
+"              </ p>\n"
+"                במקום ליצור החזר ללקוח באופן ידני, אתה\n"
+"                יכול לייצר אותו ישירות מחשבונית ללקוח בנושא.\n"
+"              </ p>\n"
+"            "
 
 #. module: account
 #: help:account.installer,charts:0
@@ -310,21 +325,23 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
+"התקנה של טבלאות חשבונאות הדומות ככל האפשר לצרכי החשבונאות במדינה בה החברה "
+"מבוססת"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr ""
+msgstr "חשבון שלא שולם"
 
 #. module: account
 #: field:account.config.settings,module_account_budget:0
 msgid "Budget management"
-msgstr ""
+msgstr "ניהול תקציבים"
 
 #. module: account
 #: view:product.template:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "הגרות רכישה"
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -333,17 +350,19 @@ msgid ""
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
 msgstr ""
+"באפרשותך להגדיר פורמט הצגת רישום. במידה ותשאיר פירמוט אוטומטי החישוב יהיה "
+"מבוסס על דוחות כספים ועל היררכיית ברירת מחדל."
 
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "אפשר ריבוי מטבעות"
 
 #. module: account
 #: code:addons/account/account_invoice.py:77
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr ""
+msgstr "הינך חייב להגדיר יומן אנליטי עבור סוג '%s'!"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -352,18 +371,18 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr ""
+msgstr "יוני"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "עליך לבחור חשבונות לתשלום."
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr ""
+msgstr "מאפשר לך להשתמש חשבונות אנליטיים."
 
 #. module: account
 #: view:account.invoice:0
@@ -371,13 +390,13 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "איש מכירות"
 
 #. module: account
 #: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
-msgstr ""
+msgstr "אחראי"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -388,38 +407,38 @@ msgstr ""
 #: field:account.move.line,date_created:0
 #: field:account.move.reconcile,create_date:0
 msgid "Creation date"
-msgstr ""
+msgstr "תאריך היצירה"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Cancel Invoice"
-msgstr ""
+msgstr "בטל חשבונית"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr ""
+msgstr "זיכוי רכישה"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr ""
+msgstr "מצב פתיחה\\סגירה"
 
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "מטבע לשימוש בחשבוניות"
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr ""
+msgstr "חשבון הפקדה ברירת מחדל"
 
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Total Credit"
-msgstr ""
+msgstr "סה\"כ אשראי"
 
 #. module: account
 #: help:account.config.settings,module_account_asset:0

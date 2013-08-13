@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-03-07 06:14+0000\n"
+"PO-Revision-Date: 2013-08-05 16:30+0000\n"
 "Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:20+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-08-06 05:04+0000\n"
+"X-Generator: Launchpad (build 16718)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -26,7 +26,7 @@ msgstr "系统支付"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr "在一个科目上只能设置一个应税设定"
+msgstr "在一个科目上只能设置一个替换规则。"
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -38,7 +38,7 @@ msgstr "确定以下报表的显示顺序：”会计-报表-通用报表-税务
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "父公司"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -366,7 +366,7 @@ msgstr "你必须定义一个类型为 '%s'的成本凭证簿！"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr "6"
+msgstr "6月"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
@@ -453,7 +453,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "发起人到受益人的信息"
 
 #. module: account
 #. openerp-web
@@ -473,7 +473,7 @@ msgstr "科目一览表模板"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "修改：创建退款，核销并创建一个新的发票草稿"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -539,7 +539,7 @@ msgstr "允许比较"
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
-msgstr "账簿"
+msgstr "凭证"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
@@ -559,7 +559,7 @@ msgstr "显示发票的时候给出明细编号。"
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "这账簿上的科目"
+msgstr "凭证上的科目"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -632,7 +632,7 @@ msgstr "所有"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr "日记帐分录小数精度"
+msgstr "凭证分录小数精度"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -840,7 +840,7 @@ msgstr "不能 %s 已经核销的发票, 发票必须被首先反核销.。只�
 #. module: account
 #: view:account.account:0
 msgid "Account code"
-msgstr ""
+msgstr "科目代码"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -972,7 +972,7 @@ msgstr "九月"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Latest Manual Reconciliation Processed:"
-msgstr ""
+msgstr "最后的手工核销处理"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -1564,7 +1564,7 @@ msgstr "发票状态"
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Closing Entries"
-msgstr ""
+msgstr "取消已经结账的分录"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1686,7 +1686,7 @@ msgstr "# 分录 "
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "如不勾选该项，可以隐藏而不删除此应税条件"
+msgstr "如不勾选该项，可以隐藏而不删除此替换规则。"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -1737,7 +1737,7 @@ msgstr "定期分录"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "财务结构模板"
+msgstr "替换规则模板"
 
 #. module: account
 #: view:account.subscription:0
@@ -1747,7 +1747,7 @@ msgstr "定期"
 #. module: account
 #: report:account.invoice:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN:"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -2284,7 +2284,7 @@ msgstr "流水帐"
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "同样的税 上面一次只能定义一个财务结构。"
+msgstr "同样的税上面一次只能定义一个税务替换规则。"
 
 #. module: account
 #: view:account.tax:0
@@ -2678,7 +2678,7 @@ msgstr "付款条款"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "财务结构"
+msgstr "替换规则"
 
 #. module: account
 #: code:addons/account/account_move_line.py:579
@@ -2807,7 +2807,7 @@ msgstr "银行信息"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cancel CashBox"
-msgstr ""
+msgstr "取消钱箱"
 
 #. module: account
 #: help:account.invoice,payment_term:0
@@ -3290,7 +3290,7 @@ msgstr "盈利或亏损"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "财务结构"
+msgstr "替换规则"
 
 #. module: account
 #: code:addons/account/account_invoice.py:823
@@ -5983,7 +5983,7 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "财务结构模板"
+msgstr "替换规则模版"
 
 #. module: account
 #: view:account.invoice:0
@@ -6323,7 +6323,7 @@ msgstr "报表"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "税务的模板"
+msgstr "税务替换规则的模板"
 
 #. module: account
 #: help:account.tax,name:0
@@ -6382,7 +6382,7 @@ msgstr "生成循环分录"
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "财务状况备注:"
+msgstr "替换规则备注:"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -7263,7 +7263,7 @@ msgstr "科目核销"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "税负"
+msgstr "税负替换规则"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -8549,7 +8549,7 @@ msgstr "已调整的余额"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "财务结构模板"
+msgstr "替换规则模板"
 
 #. module: account
 #: view:account.entries.report:0
@@ -8835,7 +8835,7 @@ msgstr "到期日期"
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
-msgstr "供应商列表"
+msgstr "供应商"
 
 #. module: account
 #: view:account.journal:0
@@ -10525,7 +10525,7 @@ msgstr "销售科目的报表"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "财务结构"
+msgstr "替换规则"
 
 #. module: account
 #: report:account.invoice:0
@@ -10838,7 +10838,7 @@ msgstr "使凭证行生效"
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "替换规则将决定合作伙伴说使用的税和科目"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0

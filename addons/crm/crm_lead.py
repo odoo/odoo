@@ -89,13 +89,11 @@ class crm_lead(base_stage, format_address, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('section_id'):
-                ctx['default_section_id'] = vals['section_id']
-            if vals.get('type'):
-                ctx['default_type'] = vals['type']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        if vals.get('type') and not context.get('default_type'):
+            context['default_type'] = vals.get('type')
+        if vals.get('section_id') and not context.get('default_section_id'):
+            context['default_section_id'] = vals.get('section_id')
+
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         return super(crm_lead, self).create(cr, uid, vals, context=create_context)
@@ -362,12 +360,11 @@ class crm_lead(base_stage, format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = False
         if user_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
-                section_id = section_ids[0]
-        return {'value': {'section_id': section_id}}
+                return {'value': {'section_id': section_ids[0]}}
+        return {'value': {}}
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.

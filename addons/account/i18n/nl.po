@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-06-12 13:19+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"PO-Revision-Date: 2013-08-01 18:08+0000\n"
+"Last-Translator: Stefan Rijnhart (Therp) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:14+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-08-02 05:58+0000\n"
+"X-Generator: Launchpad (build 16718)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -264,7 +264,7 @@ msgstr "Belgische overzichten"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr "Gevalideerd"
+msgstr "Bevestigd"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -520,15 +520,16 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
-"Als u 'Afronden per regel' selecteert: voor elke BTW rekening wordt het BTW "
-"bedrag eerst berekend en afgerond voor elke  factuurregel. Vervolgens worden "
-"deze afgeronde bedragen opgeteld, wat leidt tot het totale bedrag voor deze "
-"belasting. Als u 'Globaal afronden' selecteert: voor elke BTW rekening wordt "
-"het BTW bedrag berekend voor elke factuurregel. Vervolgens zullen deze "
-"bedragen worden opgeteld en uiteindelijk wordt dit totale BTW bedrag "
-"afgerond. Als u verkoopt met BTW inbegrepen, moet u kiezen voor 'afronden "
-"per regel', omdat u zeker wilt zijn dat de subtotalen van uw (BTW "
-"inbegrepen) regels gelijk zijn aan het totale bedrag met BTW."
+"* Afronden per regel: voor elke BTW rekening wordt het BTW bedrag eerst "
+"berekend en afgerond voor elke  factuurregel. Vervolgens worden deze "
+"afgeronde bedragen opgeteld, wat leidt tot het totale bedrag voor deze "
+"belasting. \r\n"
+"* Globaal afronden: voor elke BTW rekening wordt het BTW bedrag berekend "
+"voor elke factuurregel. Vervolgens zullen deze bedragen worden opgeteld en "
+"uiteindelijk wordt dit totale BTW bedrag afgerond. Als u verkoopt met "
+"prijzen inclusief BTW, moet u kiezen voor 'afronden per regel', omdat u "
+"zeker wilt zijn dat de subtotalen van uw (BTW inbegrepen) regels gelijk zijn "
+"aan het totale bedrag met BTW."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -1610,7 +1611,7 @@ msgstr "Beginbalans"
 #. module: account
 #: view:account.invoice:0
 msgid "Reset to Draft"
-msgstr "Terugzetten naar Concept"
+msgstr "Terugzetten naar concept"
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -2155,7 +2156,7 @@ msgstr "Voorlopige overzicht"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Factuur gevalideerd"
+msgstr "Factuur bevestigd"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -4170,7 +4171,7 @@ msgid ""
 "                                    your supplier/customer."
 msgstr ""
 "U heeft de mogelijkheid om deze credit factuur\n"
-"                                    direct de bewerken en te valideren of "
+"                                    direct de bewerken en te bevestigen of "
 "deze\n"
 "                                    in concept te laten staan en te wachten "
 "totdat u\n"
@@ -4183,8 +4184,8 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Alle geselecteerde boekingen worden gevalideerd en geboekt. Daarmee kunnen "
-"de financiële gegevens ervan niet meer gewijzigd worden."
+"Alle geselecteerde boekingen worden bevestigd en geboekt. Daarmee kunnen de "
+"financiële gegevens ervan niet meer gewijzigd worden."
 
 #. module: account
 #: code:addons/account/account_move_line.py:98
@@ -4204,7 +4205,7 @@ msgstr "Transfers"
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr "Dit bedrijf heeft zijnerven grootboekschema"
+msgstr "Dit bedrijf heeft zijn eigen grootboekschema"
 
 #. module: account
 #: view:account.chart:0
@@ -4775,7 +4776,7 @@ msgstr "titel"
 #: view:account.invoice:0
 #: view:account.subscription:0
 msgid "Set to Draft"
-msgstr "Naar Concept"
+msgstr "Zet op concept"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
@@ -5132,7 +5133,7 @@ msgstr ""
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Alle mutaties"
+msgstr "Alle geboekte boekingen"
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -5863,7 +5864,7 @@ msgstr "Kostenplaats balans -"
 #: field:account.vat.declaration,target_move:0
 #: field:accounting.report,target_move:0
 msgid "Target Moves"
-msgstr "Doelrekening"
+msgstr "Welke boekingen"
 
 #. module: account
 #: code:addons/account/account.py:1454
@@ -6643,7 +6644,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.journal:0
 msgid "Account n°"
-msgstr "Rekening n°"
+msgstr "Rekeningnr."
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
@@ -6813,7 +6814,7 @@ msgstr "Belasting rekening"
 #: model:ir.actions.act_window,name:account.action_account_general_journal
 #: model:ir.model,name:account.model_account_general_journal
 msgid "Account General Journal"
-msgstr "Algemeen grootboek"
+msgstr "Dagboek totalen"
 
 #. module: account
 #: help:account.move,state:0
@@ -6842,7 +6843,7 @@ msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"."
 msgstr ""
-"U kunt deze boeking niet valideren omdat rekening \"%s\" niet tot het "
+"U kunt deze boeking niet bevestigen omdat rekening \"%s\" niet tot het "
 "rekeningschema \"%s\" behoort."
 
 #. module: account
@@ -7808,7 +7809,7 @@ msgstr "Geef grootboekrekening rapport weer met één relatie per pagina"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "JRNL"
-msgstr "DGBK"
+msgstr "DB"
 
 #. module: account
 #: view:account.state.open:0
@@ -8122,7 +8123,7 @@ msgstr "Maandelijkse omzet"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Analytic Lines"
-msgstr "Kostenplaats regels"
+msgstr "Kostenplaatsregels"
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0
@@ -10398,7 +10399,7 @@ msgstr "Datum / periode"
 #. module: account
 #: report:account.central.journal:0
 msgid "A/C No."
-msgstr "Rek. Nr."
+msgstr "Reknr."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -11660,7 +11661,7 @@ msgstr "Installeer meer grootboekrekening sjablonen"
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr "Algemeen dagboek"
+msgstr "Dagboek totalen"
 
 #. module: account
 #: view:account.invoice:0

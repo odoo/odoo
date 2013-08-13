@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-13 17:59+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"PO-Revision-Date: 2013-08-04 16:33+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:25+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-08-05 06:30+0000\n"
+"X-Generator: Launchpad (build 16718)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -77,7 +77,7 @@ msgstr "Departmen"
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr "Tahsis İstekleri Onaylayacak"
+msgstr "Onaylanacak Tahsis İstekleri"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
@@ -110,6 +110,8 @@ msgid ""
 "The default duration interval between the start date and the end date is 8 "
 "hours.  Feel free to adapt it to your needs."
 msgstr ""
+"başlangıç ​​tarihi ve bitiş tarihi arasındaki varsayılan süre aralığı8 saat "
+"ise. İhtiyaçlarınıza uyarlamak için çekinmeden."
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
@@ -124,7 +126,7 @@ msgstr "Tahsis"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "ye"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -134,7 +136,7 @@ msgstr "Açık Mavi"
 #. module: hr_holidays
 #: constraint:hr.holidays:0
 msgid "You can not have 2 leaves that overlaps on same day!"
-msgstr ""
+msgstr "Aynı günle örtüşen 2 izin olmaz!"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -163,12 +165,12 @@ msgstr "Onaylanmış"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Search Leave"
-msgstr ""
+msgstr "İzin Ara"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Refuse"
-msgstr "Reddetme"
+msgstr "Reddet"
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -244,6 +246,7 @@ msgstr ""
 #: help:hr.holidays,manager_id:0
 msgid "This area is automatically filled by the user who validate the leave"
 msgstr ""
+"Bu alan otomatik olarak izin doğrulama kullanıcısı tarafından doldurulur"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -262,6 +265,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet kanban "
+"görünümlerine eklenmek üzere doğrudan html biçimindedir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:249
@@ -287,7 +292,7 @@ msgstr "İzin Toplantıs"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2013"
-msgstr ""
+msgstr "Yasal 2013 İzinleri"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -394,12 +399,19 @@ msgid ""
 "   \n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"bir izin isteği oluşturulduğunda, durumu 'gönderim' olarak ayarlanır.        "
+"    \n"
+"bir izin isteği oluşturulduğunda, kullanıcı durumu 'onaylanma' olarak "
+"ayarlanır.            \n"
+"The status is 'Refused', when holiday request is refused by manager.         "
+"   \n"
+"The status is 'Approved', when holiday request is approved by manager."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
 msgid "Number of Days"
-msgstr "Günlerin Sayısı"
+msgstr "Gün Sayısı"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:482
@@ -451,6 +463,12 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p>\n"
+"               Sen, her bir çalışan için kalan Yasal İzinler atayabilirsin, "
+"OpenERP\n"
+"               otomatik olarak oluşturur ve tahsis taleplerini doğrular.\n"
+"             </p>\n"
+"           "
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -495,7 +513,7 @@ msgstr "İzin İstekleri"
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to Override Limit"
-msgstr ""
+msgstr "Limit Aşımı İzni"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -533,11 +551,9 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Yeni bir izin isteği oluşturmak için tıklayın.\n"
 "              </p><p>\n"
-"                izin isteği kayıtedildikten sonra, gönderilecek\n"
-"                doğrulama için Yöneticisine.İzni ayarlamak için emin olun\n"
-"                türü (iyileşme, resmi tatil, hastalık) ve kesin\n"
-"                number of open days related to your leave.\n"
-"              </p>\n"
+"                izin isteği kayıt edildikten sonra, Yöneticisine\n"
+"                doğrulama için gönderilecek.\n"
+"                </p>\n"
 "            "
 
 #. module: hr_holidays
@@ -659,7 +675,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Add a reason..."
-msgstr ""
+msgstr "Bir neden Ekle ..."
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -727,7 +743,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Çeşitli"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
@@ -754,7 +770,7 @@ msgstr "İptal"
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
 msgid "Request created and waiting confirmation"
-msgstr ""
+msgstr "İstek oluşturuldu ve onay bekliyor"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -765,7 +781,7 @@ msgstr "Doğrulanmış"
 #: code:addons/hr_holidays/hr_holidays.py:249
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
-msgstr ""
+msgstr "%s durumda bir izini silemezsiniz."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -783,7 +799,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr "İzin Ayrıntısı"
+msgstr "İzin Detayları"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
@@ -849,7 +865,7 @@ msgstr "Kalan Yasal İzinler"
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
-msgstr ""
+msgstr "Personel Etiketi"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -917,18 +933,18 @@ msgstr ""
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Approved and Confirmed"
-msgstr ""
+msgstr "Onaylandı ve Doğrulandı"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:451
 #, python-format
 msgid "Request approved, waiting second validation."
-msgstr ""
+msgstr "İstek onayladı, ikinci doğrulama bekliyor."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
-msgstr "Onay"
+msgstr "Onayla"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_ids:0
@@ -946,7 +962,7 @@ msgstr "Başlangıç ​​tarihi bitiş tarihinden anterior olmalıdır."
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr ""
+msgstr "Analiz"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
