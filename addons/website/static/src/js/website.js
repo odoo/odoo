@@ -379,17 +379,4 @@ $(function(){
     }
 });
 
-instance.web.ActionRedirect = function(parent, action) {
-    var url = $.deparam(window.location.href).url;
-    if (url) {
-        window.location.href = url;
-    }
-};
-instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
-
-instance.web.GoToWebsite = function(parent, action) {
-    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
-};
-instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
-
 };
