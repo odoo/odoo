@@ -61,9 +61,10 @@ class Ecommerce(http.Controller):
             domain += [('website_published', '=', True)]
 
         if post.get("search"):
-            domain += ['|', '|',
+            domain += ['|', '|', '|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
+                ('description_website', 'ilike', "%%%s%%" % post.get("search")),
                 ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
@@ -71,7 +72,7 @@ class Ecommerce(http.Controller):
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))
-        pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7)
+        pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
         product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
 

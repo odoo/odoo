@@ -70,7 +70,7 @@ class website(osv.osv):
         }
         return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values, context=context)
 
-    def pager(self, url, total, page=1, step=30, scope=5):
+    def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
         d = {}
         d["page_count"] = int(math.ceil(float(total) / step))
@@ -86,13 +86,18 @@ class website(osv.osv):
         if pmax - pmin < scope:
             pmin = pmax - scope > 0 and pmax - scope or 1
 
+        def get_url(page):
+            _url = "%spage/%s/" % (url, page)
+            if url_args:
+                _url = "%s?%s" % (_url, urllib.urlencode(url_args))
+            return _url
 
-        d["page"] = {'url': "%spage/%s/" % (url, page), 'num': page}
-        d["page_start"] = {'url': "%spage/%s/" % (url, pmin), 'num': pmin}
-        d["page_end"] = {'url': "%spage/%s/" % (url, min(pmax, page+1)), 'num': min(pmax, page+1)}
+        d["page"] = {'url': get_url(page), 'num': page}
+        d["page_start"] = {'url': get_url(pmin), 'num': pmin}
+        d["page_end"] = {'url': get_url(min(pmax, page+1)), 'num': min(pmax, page+1)}
         d["pages"] = []
         for page in range(pmin, pmax+1):
-            d["pages"].append({'url': "%spage/%s/" % (url, page), 'num': page})
+            d["pages"].append({'url': get_url(page), 'num': page})
 
         return d
 
