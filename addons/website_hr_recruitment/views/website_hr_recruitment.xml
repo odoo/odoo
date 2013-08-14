@@ -32,8 +32,8 @@
                                                 <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
                                                 <span t-if="job.department_id" t-esc="job.department_id.name"/><br/>
                                                 <i class="icon-time"></i> <span t-esc="job.write_date"/><br/>
-                                                <span><t t-if="job.no_of_recruitment &gt; 0">No of Position: <t t-esc="job.no_of_recruitment"/></t><t t-if="job.no_of_recruitment &lt; 1">Right now no recruitment is going on.</t></span><br/>
-                                                <span><t t-if="job.no_of_recruitment &gt; 0">Location: <t t-esc="res_company.city+','"/> <t t-esc="res_company.state_id.name+','"/> <t t-esc="res_company.country_id.name"/><br/>
+                                                <span><t t-if="job.no_of_recruitment &gt; 0"><i class="icon-group"></i> <t t-esc="job.no_of_recruitment"/></t><t t-if="job.no_of_recruitment &lt; 1">Right now no recruitment is going on.</t></span><br/>
+                                                <span><t t-if="job.no_of_recruitment &gt; 0"><i class="icon-map-marker"></i> <t t-esc="res_company.city"/> <t t-esc="res_company.state_id.name"/> <t t-esc="res_company.country_id.name"/><br/>
                                                 &amp;#x2706; <t t-esc="res_company.phone"/></t></span>
                                                 <div t-if="job.no_of_recruitment &lt; 1">
                                                     <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
