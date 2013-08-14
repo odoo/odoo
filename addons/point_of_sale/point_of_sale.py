@@ -109,7 +109,8 @@ class pos_config(osv.osv):
         return result
 
     def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
     def _default_shop(self, cr, uid, context=None):
