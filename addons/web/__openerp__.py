@@ -47,7 +47,6 @@ This module provides the core of the OpenERP Web Client.
         "static/src/js/testing.js",
         "static/src/js/pyeval.js",
         "static/src/js/core.js",
-        "static/src/js/dates.js",
         "static/src/js/formats.js",
         "static/src/js/chrome.js",
         "static/src/js/views.js",
