@@ -62,7 +62,7 @@ define(["openerp", "underscore", "require", "jquery",
 
     var ERROR_DELAY = 5000;
 
-    livesupport.ChatButton = openerp.Widget.$extend({
+    livesupport.ChatButton = openerp.Widget.extend({
         className: "openerp_style oe_chat_button",
         events: {
             "click": "click"
@@ -98,7 +98,7 @@ define(["openerp", "underscore", "require", "jquery",
             var self = this;
             if (this.manager.conversations.length > 0)
                 return;
-            connection.getModel("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
+            connection.model("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
                 if (! user_id) {
                     notification("None of our collaborators seems to be available, please try again later.");
                     return;
@@ -114,7 +114,7 @@ define(["openerp", "underscore", "require", "jquery",
         }
     });
 
-    livesupport.ImUser = openerp.Class.$extend(openerp.PropertiesMixin, {
+    livesupport.ImUser = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent, user_rec) {
             openerp.PropertiesMixin.init.call(this, parent);
             user_rec.image_url = require.toUrl("../img/avatar/avatar.jpeg");
@@ -139,7 +139,7 @@ define(["openerp", "underscore", "require", "jquery",
         }
     });
 
-    livesupport.ConversationManager = openerp.Class.$extend(openerp.PropertiesMixin, {
+    livesupport.ConversationManager = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent) {
             openerp.PropertiesMixin.init.call(this, parent);
             this.set("right_offset", 0);
@@ -177,10 +177,10 @@ define(["openerp", "underscore", "require", "jquery",
             }
             return def.then(function(uuid) {
                 localStorage["oe_livesupport_uuid"] = uuid;
-                return connection.getModel("im.user").call("get_by_user_id", [uuid]);
+                return connection.model("im.user").call("get_by_user_id", [uuid]);
             }).then(function(my_id) {
                 self.my_id = my_id["id"];
-                return connection.getModel("im.user").call("assign_name", [uuid, userName]);
+                return connection.model("im.user").call("assign_name", [uuid, userName]);
             }).then(function() {
                 return self.ensure_users([self.my_id]);
             }).then(function() {
@@ -200,7 +200,7 @@ define(["openerp", "underscore", "require", "jquery",
             });
         },
         unload: function() {
-            connection.getModel("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
+            connection.model("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
         },
         ensure_users: function(user_ids) {
             var no_cache = {};
@@ -212,7 +212,7 @@ define(["openerp", "underscore", "require", "jquery",
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return connection.getModel("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
+                return connection.model("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
                     self.add_to_user_cache(users);
                 });
         },
@@ -327,7 +327,7 @@ define(["openerp", "underscore", "require", "jquery",
         }
     });
 
-    livesupport.Conversation = openerp.Widget.$extend({
+    livesupport.Conversation = openerp.Widget.extend({
         className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "send_message",
@@ -401,7 +401,7 @@ define(["openerp", "underscore", "require", "jquery",
             }
             this.$("input").val("");
             var send_it = _.bind(function() {
-                var model = connection.getModel("im.message");
+                var model = connection.model("im.message");
                 return model.call("post", [mes, this.user.get('id')], {uuid: this.me.get("uuid"), context: {}});
             }, this);
             var tries = 0;
