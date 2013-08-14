@@ -124,14 +124,8 @@
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.picking}: |
-    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001"))
-    for pick in order.picking_ids:
-      self.pool.get('stock.pack.operation').create(cr, uid, {
-                   'picking_id': pick.id,
-                   'product_qty': 1
-      })
-      pick.do_partial(context=context)
-
+    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001")).picking_ids[0]
+    order.do_partial(context=context)
 -
   I check the Stock Interim account (Received) is credited successfully.
 -
@@ -223,10 +217,6 @@
 -
   !python {model: stock.picking}: |
     pick_order = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001"))
-    self.pool.get('stock.pack.operation').create(cr, uid, {
-                  'picking_id': pick_order.id,
-                  'product_qty': 1
-        })
     pick_order.do_partial(context=context)
 - 
   I check Stock Interim account (Delivery) is debited successfully.
