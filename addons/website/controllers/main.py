@@ -2,20 +2,28 @@
 import base64
 import json
 import logging
-import urllib
 import cStringIO
 
-from PIL import Image, ImageOps
+from PIL import Image
 
 import openerp
 from openerp.addons.web import http
-from openerp.addons.web.controllers.main import manifest_list
 from openerp.addons.web.http import request
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
 
 logger = logging.getLogger(__name__)
+
+
+def auth_method_public():
+    registry = openerp.modules.registry.RegistryManager.get(request.db)
+    if not request.session.uid:
+        request.uid = registry['website'].get_public_user().id
+    else:
+        request.uid = request.session.uid
+http.auth_methods['public'] = auth_method_public
+
 
 class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth="admin")
@@ -145,5 +153,16 @@ class Website(openerp.addons.web.controllers.main.Home):
         image.save(response.stream, image.format)
 
         return response
+
+    @http.route(['/website/publish/'], type='http', auth="public")
+    def publish(self, **post):
+        _id = int(post['id'])
+        _object = request.registry[post['object']]
+
+        obj = _object.browse(request.cr, request.uid, _id)
+        _object.write(request.cr, request.uid, [_id], {'website_published': not obj.website_published})
+        obj = _object.browse(request.cr, request.uid, _id)
+
+        return obj.website_published and "1" or "0"
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

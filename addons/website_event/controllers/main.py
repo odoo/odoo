@@ -149,15 +149,3 @@ class website_event(http.Controller):
         if not _values:
             return werkzeug.utils.redirect("/event/%s/" % event_id)
         return werkzeug.utils.redirect("/shop/checkout")
-
-    @http.route(['/event/publish'], type='http', auth="public")
-    def publish(self, **post):
-        obj_id = int(post['id'])
-        data_obj = request.registry['event.event']
-
-        obj = data_obj.browse(request.cr, request.uid, obj_id)
-        data_obj.write(request.cr, request.uid, [obj_id], {'website_published': not obj.website_published})
-        obj = data_obj.browse(request.cr, request.uid, obj_id)
-
-        return obj.website_published and "1" or "0"
-

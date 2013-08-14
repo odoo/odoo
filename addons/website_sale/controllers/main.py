@@ -327,15 +327,4 @@ class Ecommerce(http.Controller):
 
         return website.render("website_sale.payment", values)
 
-    @http.route(['/shop/publish/'], type='http', auth="public")
-    def publish(self, **post):
-        product_id = int(post['id'])
-        product_obj = request.registry['product.product']
-
-        product = product_obj.browse(request.cr, request.uid, product_id)
-        product_obj.write(request.cr, request.uid, [product_id], {'website_published': not product.website_published})
-        product = product_obj.browse(request.cr, request.uid, product_id)
-
-        return product.website_published and "1" or "0"
-
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

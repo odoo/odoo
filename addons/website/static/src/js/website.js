@@ -389,15 +389,7 @@ $(function () {
         $link.find('.js_publish, .js_unpublish').addClass("hidden");
         var $unp = $link.find(".js_unpublish");
         var $p = $link.find(".js_publish");
-
-        var paths = document.location.pathname.split('/');
-        var url = '/' + paths[1];
-        if (paths[1] === 'page') {
-            url += '/' + paths[2];
-        }
-        url += '/publish';
-
-        $.post(url, {'id': $link.data('id')}, function (result) {
+        $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
             if (+result) {
                 $p.addClass("hidden");
                 $unp.removeClass("hidden");

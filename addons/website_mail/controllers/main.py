@@ -67,17 +67,6 @@ class website_mail(http.Controller):
         comment_ids = request.registry['mail.group'].get_public_message_ids(request.cr, request.uid, domain=safe_eval(post.get('domain')), order="create_date asc", limit=None)
         return simplejson.dumps(request.registry['mail.message'].read(request.cr, request.uid, comment_ids, ['website_published', 'subject', 'res_id']))
 
-    @http.route(['/blog/publish'], type='http', auth="public")
-    def publish(self, **post):
-        message_id = int(post['id'])
-        message_obj = request.registry['mail.message']
-
-        blog = message_obj.browse(request.cr, request.uid, message_id)
-        message_obj.write(request.cr, request.uid, [message_id], {'website_published': not blog.website_published})
-        blog = message_obj.browse(request.cr, request.uid, message_id)
-
-        return blog.website_published and "1" or "0"
-
     @http.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="public")
     def blog_post(self, mail_group_id=None, blog_id=None, **post):
         website = request.registry['website']
