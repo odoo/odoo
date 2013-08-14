@@ -49,6 +49,33 @@
 .mb0
     margin-bottom: 0px !important
 
+/* Grid of unequally tall elements */
+.grid > [class*="span"]
+    display: inline-block
+    float: none
+    vertical-align: top
+    margin-right: -4px
+    box-sizing: border-box
+    &.grid-align-top > [class*="span"]
+        vertical-align: top
+    &.grid-align-middle > [class*="span"]
+        vertical-align: middle
+    &.grid-align-bottom > [class*="span"]
+        vertical-align: bottom
+
+/* Table with two collumns aligned on the center */
+.table-equalized
+    width: 100%
+    td:first-child
+        width: 50%
+        text-align: right
+        padding-right: 1em
+        vertical-align: bottom
+    td:last-child
+        width: 50%
+        text-align: left
+        vertical-align: bottom
+
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
 html,body

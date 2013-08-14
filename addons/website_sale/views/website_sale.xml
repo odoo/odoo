@@ -100,10 +100,21 @@
                 </div>
                 <div class="span8">
                     <div class='row grid grid-align-top'>
-                        <t t-foreach="products" t-as="product">
-                            <t t-set="quantity" t-value="1"/>
-                            <t t-call="website_sale.product_card"/>
-                        </t>
+                        <div t-foreach="products" t-as="product" class="oe_product span2 mb16 thumbnail text-center">
+                            <a t-att-href="'/shop/product/%%s/' %% product.id">
+                                <h5  t-field="product.name"> </h5>
+                            </a>
+                            <a t-att-href="'/shop/product/%%s/' %% product.id">
+                                <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
+                            </a>
+                            <div>
+                                <div t-field="product.description_sale"></div>
+                                <div><span t-field="product.list_price"></span>€</div>
+                                <div class="mb8 mt8">
+                                    <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="span8 offset4 text-center">
@@ -111,24 +122,6 @@
                 </div>
             </t>
         </t>
-    </template>
-
-    <template id="product_card">
-        <div class="oe_product span2 mb16 thumbnail text-center">
-            <a t-att-href="'/shop/product/%%s/' %% product.id">
-                <h5  t-field="product.name"> </h5>
-            </a>
-            <a t-att-href="'/shop/product/%%s/' %% product.id">
-                <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
-            </a>
-            <div>
-                <div t-field="product.description_sale"></div>
-                <div><span t-field="product.list_price"></span>€</div>
-                <div class="mb8 mt8">
-                    <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
-                </div>
-            </div>
-        </div>
     </template>
 
     <!-- product --> 
