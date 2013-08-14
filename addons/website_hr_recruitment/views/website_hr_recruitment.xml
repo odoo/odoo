@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="footer_website_hr_recruitment" model="ir.ui.view">
-            <field name="name">footer_website_hr_recruitment</field>
-            <field name="inherit_id" ref="website.footer"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//a[@href='/page/website.contactus']" position="after">
-                        <li><a href="/jobs">Jobs</a></li>
-                    </xpath>
-               </data>
-            </field>
-        </record>
+        <template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
+            <xpath expr="//body/footer//h5[@name='info_title']" position="after">
+                <a href="/jobs">Jobs</a>
+            </xpath>
+        </template>
         
-        <template id="jobs">
+        <template id="index" name="Jobs">
             <t t-call="website.layout">
                 <t t-set="title">Jobs</t>
                 <div class="container">
@@ -36,13 +30,12 @@
                                         <tr t-if="job.company_id.id==company.id">
                                             <td>
                                                 <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
-                                                <b><span t-if="job.department_id" t-esc="job.department_id.name"/></b><br/>
-                                                <span><t t-if="int(job.no_of_recruitment) &gt; 0"><b>No of Position:</b> <t t-esc="int(job.no_of_recruitment)"/></t><t t-if="int(job.no_of_recruitment) &lt; 1"><b>Right now no recruitment is going on.</b></t></span><br/><br/>
-                                                <span t-esc="job.write_date"/>
-                                                <span><t t-if="int(job.no_of_recruitment) &gt; 0"><b>Location:</b> <t t-esc="res_company.city+','"/> <t t-esc="res_company.state_id.name+','"/> <t t-esc="res_company.country_id.name"/><br/>
+                                                <span t-if="job.department_id" t-esc="job.department_id.name"/><br/>
+                                                <i class="icon-time"></i> <span t-esc="job.write_date"/><br/>
+                                                <span><t t-if="job.no_of_recruitment &gt; 0">No of Position: <t t-esc="job.no_of_recruitment"/></t><t t-if="job.no_of_recruitment &lt; 1">Right now no recruitment is going on.</t></span><br/>
+                                                <span><t t-if="job.no_of_recruitment &gt; 0">Location: <t t-esc="res_company.city+','"/> <t t-esc="res_company.state_id.name+','"/> <t t-esc="res_company.country_id.name"/><br/>
                                                 &amp;#x2706; <t t-esc="res_company.phone"/></t></span>
-                                                
-                                                <div t-if="int(job.no_of_recruitment) &lt; 1">
+                                                <div t-if="job.no_of_recruitment &lt; 1">
                                                     <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
                                                     Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
                                                     <form action="/jobs/subscribe" method="POST" class="form-inline span8" t-if="not subscribe">
@@ -60,8 +53,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <button type="submit" class="btn label-important js_publish pull-right" name="publish">Publish</button>
-                                                <button type="submit" class="btn label label-success js_unpublish hidden" name="unpublish">Unpublish</button>
+                                                <!-- <t t-call="website.publish"><t t-set="object" t-value="job_id"/></t> -->
                                             </td>
                                         </tr>
                                     </t>

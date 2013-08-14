@@ -35,11 +35,10 @@ class website_hr_recruitment(http.Controller):
         if job_id:
             values['job_id'] = hr_job_obj.browse(request.cr, request.uid, job_id)
 
-        html = website.render("website_hr_recruitment.jobs", values)
-        return html
+        return website.render("website_hr_recruitment.index", values)
 
     @http.route(['/jobs/subscribe'], type='http', auth="public")
-    def subscribe(self, mail_group_id=None, **post):
+    def subscribe(self, mail_group_id=None, job_id=None, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
         group_obj = request.registry['mail.group']
@@ -55,10 +54,10 @@ class website_hr_recruitment(http.Controller):
             group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
             group_obj.message_subscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
 
-        return self.jobs(mail_group_id=mail_group_id, subscribe=post.get('email'))
+        return self.jobs(mail_group_id=mail_group_id, job_id=job_id, subscribe=post.get('email'))
 
     @http.route(['/jobs/unsubscribe'], type='http', auth="public")
-    def unsubscribe(self, mail_group_id=None, **post):
+    def unsubscribe(self, mail_group_id=None, job_id=None, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
         group_obj = request.registry['mail.group']
@@ -72,7 +71,7 @@ class website_hr_recruitment(http.Controller):
             group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
             group_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
 
-        return self.jobs(mail_group_id=mail_group_id, subscribe=None)
+        return self.jobs(mail_group_id=mail_group_id, job_id=job_id, subscribe=None)
 
     @http.route(['/job/detail/<id>'], type='http', auth="public")
     def detail(self, id=0):
@@ -81,8 +80,7 @@ class website_hr_recruitment(http.Controller):
         values = website.get_rendering_context({
             'job': request.registry['hr.job'].browse(request.cr, request.uid, id)
         })
-        html = website.render("website_hr_recruitment.detail", values)
-        return html
+        return website.render("website_hr_recruitment.detail", values)
 
     @http.route(['/job/success'], type='http', auth="admin")
     def success(self, **post):
@@ -101,6 +99,5 @@ class website_hr_recruitment(http.Controller):
         values = website.get_rendering_context({
                 'jobid': post['job_id']
            })
-        html = website.render("website_hr_recruitment.thankyou", values)
-        return html
+        return website.render("website_hr_recruitment.thankyou", values)
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
