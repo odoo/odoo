@@ -45,7 +45,7 @@
 
     <!-- Page Shop --> 
 
-    <template id="layout_categories">
+    <template id="layout" name="Products Layout">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
@@ -55,18 +55,27 @@
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
-                    <div class="span4">
-                        <ul class="nav nav-list">
-                            <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
-                        <t t-foreach="categories" t-as="category">
-                            <t t-call="website_sale.categories_recursive"/>
-                        </t>
-                        </ul>
+                    <div class="span12" id="shop_content">
+                        <t t-raw="shop_content" />
                     </div>
-                    <t t-raw="shop_content" />
                 </div>
             </div>
         </t>
+    </template>
+    <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Products Categories">
+        <xpath expr="//div[@id='shop_content']" position="before">
+            <div class="span4">
+                <ul class="nav nav-list">
+                    <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
+                <t t-foreach="categories" t-as="category">
+                    <t t-call="website_sale.categories_recursive"/>
+                </t>
+                </ul>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='shop_content']" position="attributes">
+            <attribute name="class">span8</attribute>
+        </xpath>
     </template>
 
     <!-- List of categories -->
@@ -85,10 +94,10 @@
     <!-- Product list --> 
 
     <template id="products">
-        <t t-call="website_sale.layout_categories">
+        <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class='span8 navbar navbar-inverse'>
+                <div class='navbar navbar-inverse'>
                     <div class='navbar-inner'>
                         <t t-call="website.pager" >
                             <t t-set="classname">pull-left</t>
@@ -98,26 +107,24 @@
                         </form>
                     </div>
                 </div>
-                <div class="span8">
-                    <div class='row grid grid-align-top'>
-                        <div t-foreach="products" t-as="product" class="oe_product span2 mb16 thumbnail text-center">
-                            <a t-att-href="'/shop/product/%%s/' %% product.id">
-                                <h5  t-field="product.name"> </h5>
-                            </a>
-                            <a t-att-href="'/shop/product/%%s/' %% product.id">
-                                <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
-                            </a>
-                            <div>
-                                <div t-field="product.description_sale"></div>
-                                <div><span t-field="product.list_price"></span>€</div>
-                                <div class="mb8 mt8">
-                                    <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
-                                </div>
+                <div class='row grid grid-align-top'>
+                    <div t-foreach="products" t-as="product" class="oe_product span2 mb16 thumbnail text-center">
+                        <a t-att-href="'/shop/product/%%s/' %% product.id">
+                            <h5  t-field="product.name"> </h5>
+                        </a>
+                        <a t-att-href="'/shop/product/%%s/' %% product.id">
+                            <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
+                        </a>
+                        <div>
+                            <div t-field="product.description_sale"></div>
+                            <div><span t-field="product.list_price"></span>€</div>
+                            <div class="mb8 mt8">
+                                <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="span8 offset4 text-center">
+                <div class="text-center">
                     <t t-call="website.pager" />
                 </div>
             </t>
@@ -127,10 +134,10 @@
     <!-- product --> 
 
     <template id="product" name="Product">
-        <t t-call="website_sale.layout_categories">
+        <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class="oe_product_detail span8" id="product_detail">
+                <div class="oe_product_detail" id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
 
@@ -167,7 +174,7 @@
     <!-- Page Shop my cart --> 
 
     <template id="mycart">
-        <t t-call="website_sale.layout_categories">
+        <t t-call="website_sale.layout">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">
                 <div class="span8 oe_mycart">
