@@ -382,6 +382,36 @@
                 </t>
         </template>
 
+        <template id="500">
+            <t t-call="website.layout">
+                <div class="container">
+                    <h1 class="mt32">500: Internal Server Error!</h1>
+                    <pre t-esc="traceback"/>
+                </div>
+            </t>
+        </template>
+
+        <template id="401">
+            <t t-call="website.layout">
+                <div class="container">
+                    <h1 class="mt32">401: Unauthorized Access!</h1>
+                    <p>
+                        The page you were looking for could not be
+                        authorized.
+                    </p><p>
+                        Maybe you were looking for one of these
+                        popular pages ?
+                    </p>
+                    <pre class="hidden" t-esc="error"/>
+                    <ul>
+                        <li><a href="/">Homepage</a></li>
+                        <li><a href="/">Contact Us</a></li>
+                    </ul>
+                </div>
+            </t>
+        </template>
+
+
         <template id="contactus" name="Contact us">
             <t t-call="website.layout">
                 <t t-set="title">Contact us - <t t-raw="res_company.name"/></t>
