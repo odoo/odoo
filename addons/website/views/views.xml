@@ -20,10 +20,13 @@
 
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
-                <html t-att-data-view-xmlid="__stack__[0]">
+                <html t-att-data-view-xmlid="__stack__[0]" t-att-data-editable="'1' if editable else '0'">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
+                        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                        <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
                         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
                         <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
                         <script type="text/javascript">
@@ -34,11 +37,15 @@
                         </script>
 
                         <t t-if="editable">
-                            <t t-raw="css"/>
-                            <t t-raw="script"/>
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                            <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
+                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+
+                            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+                            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
                         </t>
+
+                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
                         <t t-raw="head or ''"/>
                         <t t-call="website.theme"/>
 

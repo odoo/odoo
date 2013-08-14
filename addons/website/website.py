@@ -46,11 +46,16 @@ class website(osv.osv):
 
     def get_rendering_context(self, additional_values=None):
         debug = 'debug' in request.params
+        is_logged = True
+        try:
+            request.session.check_security()
+        except: # TODO fme: check correct exception
+            is_logged = False
         is_public_user = request.uid == self.get_public_user().id
         values = {
             'debug': debug,
             'is_public_user': is_public_user,
-            'editable': not is_public_user,
+            'editable': is_logged and not is_public_user,
             'request': request,
             'registry': request.registry,
             'cr': request.cr,
@@ -59,11 +64,6 @@ class website(osv.osv):
             'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
             'json': simplejson,
         }
-        if values['editable']:
-            values.update({
-                'script': "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db, debug=debug)]),
-                'css': "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db, debug=debug))
-            })
         if additional_values:
             values.update(additional_values)
         return values
