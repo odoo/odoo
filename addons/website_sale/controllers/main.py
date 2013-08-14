@@ -60,9 +60,14 @@ class Ecommerce(http.Controller):
         if SUPERUSER_ID != request.uid:
             domain += [('website_published', '=', True)]
 
+        if post.get("search"):
+            domain += ['|', '|',
+                ('name', 'ilike', "%%%s%%" % post.get("search")), 
+                ('description', 'ilike', "%%%s%%" % post.get("search")),
+                ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
-            domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
+            domain += [('pos_categ_id.id', 'child_of', cat_id)] + domain
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))

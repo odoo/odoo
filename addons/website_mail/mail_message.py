@@ -38,6 +38,6 @@ class mail_group(osv.Model):
                     ("parent_id", "=", False),
                     ("model", "=", 'mail.group'), ("res_id", "in", mail_group_ids)]
 
-    def get_public_message_ids(self, cr, uid, domain=[], order="create_date desc", limit=None, offset=0, context=None):
+    def get_public_message_ids(self, cr, uid, domain=None, order="create_date desc", limit=None, offset=0, context=None):
         domain += self.get_domain_public_blog(cr, uid, context=context)
         return self.pool.get('mail.message').search(cr, uid, domain, order=order, limit=limit, offset=offset, context=context)
