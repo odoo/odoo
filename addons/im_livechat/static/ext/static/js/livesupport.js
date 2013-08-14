@@ -1,11 +1,15 @@
 
 define(["openerp", "underscore", "require", "jquery",
         "jquery.achtung"], function(openerp, _, require, $) {
-    /*
+    /* jshint es3: true */
+    "use strict";
+    
     var livesupport = {};
 
-    var templateEngine = new nova.TemplateEngine();
-    templateEngine.extendEnvironment({"toUrl": _.bind(require.toUrl, require)});
+    _.extend(openerp.qweb.default_dict, {
+        'toUrl': _.bind(require.toUrl, require)
+    });
+
     var connection;
 
     var defaultInputPlaceholder;
@@ -19,26 +23,20 @@ define(["openerp", "underscore", "require", "jquery",
             inputPlaceholder: "How may I help you?",
             defaultMessage: null,
             auto: false,
-            userName: "Anonymous",
+            userName: "Anonymous"
         });
         defaultInputPlaceholder = options.inputPlaceholder;
         userName = options.userName;
-        defs.push($.ajax({
-            url: require.toUrl("./livesupport_templates.js"),
-            jsonp: false,
-            jsonpCallback: "oe_livesupport_templates_callback",
-            dataType: "jsonp",
-            cache: true,
-        }).then(function(content) {
-            return templateEngine.loadFileContent(content);
-        }));
+        // TODO : load QwebTemplates
         defs.push(add_css("../css/livesupport.css"));
         defs.push(add_css("./jquery.achtung.css"));
 
         $.when.apply($, defs).then(function() {
             console.log("starting live support customer app");
-            connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            connection.connector.call("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
+            connection = new openerp.Session(null, server_url, { override_session: true });
+            return connection.session_authenticate(db, login, password);
+        }).then(function() {
+            connection.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                 if (! activated & ! options.auto)
                     return;
                 var button = new livesupport.ChatButton(null, channel, options);
@@ -64,13 +62,13 @@ define(["openerp", "underscore", "require", "jquery",
 
     var ERROR_DELAY = 5000;
 
-    livesupport.ChatButton = nova.Widget.$extend({
+    livesupport.ChatButton = openerp.Widget.$extend({
         className: "openerp_style oe_chat_button",
         events: {
-            "click": "click",
+            "click": "click"
         },
-        __init__: function(parent, channel, options) {
-            this.$super(parent);
+        init: function(parent, channel, options) {
+            this._super(parent);
             this.channel = channel;
             this.options = options;
             this.text = options.buttonText;
@@ -109,17 +107,16 @@ define(["openerp", "underscore", "require", "jquery",
                     var conv = self.manager.activate_user(self.manager.get_user(user_id), true);
                     if (self.options.defaultMessage) {
                         conv.received_message({message: self.options.defaultMessage, 
-                            date: oeclient.datetime_to_str(new Date())});
+                            date: openerp.datetime_to_str(new Date())});
                     }
                 });
             });
-        },
+        }
     });
 
-    livesupport.ImUser = nova.Class.$extend({
-        __include__: [nova.DynamicProperties],
-        __init__: function(parent, user_rec) {
-            nova.DynamicProperties.__init__.call(this, parent);
+    livesupport.ImUser = openerp.Class.$extend(openerp.PropertiesMixin, {
+        init: function(parent, user_rec) {
+            openerp.PropertiesMixin.init.call(this, parent);
             user_rec.image_url = require.toUrl("../img/avatar/avatar.jpeg");
             if (user_rec.image)
                 user_rec.image_url = "data:image/png;base64," + user_rec.image;
@@ -132,20 +129,19 @@ define(["openerp", "underscore", "require", "jquery",
         },
         destroy: function() {
             this.trigger("destroyed");
-            nova.DynamicProperties.destroy.call(this);
+            openerp.PropertiesMixin.destroy.call(this);
         },
         add_watcher: function() {
             this.set("watcher_count", this.get("watcher_count") + 1);
         },
         remove_watcher: function() {
             this.set("watcher_count", this.get("watcher_count") - 1);
-        },
+        }
     });
 
-    livesupport.ConversationManager = nova.Class.$extend({
-        __include__: [nova.DynamicProperties],
-        __init__: function(parent) {
-            nova.DynamicProperties.__init__.call(this, parent);
+    livesupport.ConversationManager = openerp.Class.$extend(openerp.PropertiesMixin, {
+        init: function(parent) {
+            openerp.PropertiesMixin.init.call(this, parent);
             this.set("right_offset", 0);
             this.conversations = [];
             this.users = {};
@@ -186,7 +182,7 @@ define(["openerp", "underscore", "require", "jquery",
                 self.my_id = my_id["id"];
                 return connection.getModel("im.user").call("assign_name", [uuid, userName]);
             }).then(function() {
-                return self.ensure_users([self.my_id])
+                return self.ensure_users([self.my_id]);
             }).then(function() {
                 var me = self.users_cache[self.my_id];
                 delete self.users_cache[self.my_id];
@@ -246,7 +242,7 @@ define(["openerp", "underscore", "require", "jquery",
                 db: connection.database,
                 uid: connection.userId,
                 password: connection.password,
-                uuid: self.me.get("uuid"),
+                uuid: self.me.get("uuid")
             }).then(function(result) {
                 _.each(result.users_status, function(el) {
                     if (self.get_user(el.id))
@@ -327,19 +323,19 @@ define(["openerp", "underscore", "require", "jquery",
             $(window).off("unload", this.unload_event_handler);
             $(window).unbind("blur", this.blur_hdl);
             $(window).unbind("focus", this.focus_hdl);
-            nova.DynamicProperties.destroy.call(this);
-        },
+            openerp.PropertiesMixin.destroy.call(this);
+        }
     });
 
-    livesupport.Conversation = nova.Widget.$extend({
+    livesupport.Conversation = openerp.Widget.$extend({
         className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "send_message",
             "click .oe_im_chatview_close": "destroy",
-            "click .oe_im_chatview_header": "show_hide",
+            "click .oe_im_chatview_header": "show_hide"
         },
-        __init__: function(parent, user, me) {
-            this.$super(parent);
+        init: function(parent, user, me) {
+            this._super(parent);
             this.me = me;
             this.user = user;
             this.user.add_watcher();
@@ -372,11 +368,11 @@ define(["openerp", "underscore", "require", "jquery",
         show_hide: function() {
             if (this.shown) {
                 this.$().animate({
-                    height: this.$(".oe_im_chatview_header").outerHeight(),
+                    height: this.$(".oe_im_chatview_header").outerHeight()
                 });
             } else {
                 this.$().animate({
-                    height: this.full_height,
+                    height: this.full_height
                 });
             }
             this.shown = ! this.shown;
@@ -393,7 +389,7 @@ define(["openerp", "underscore", "require", "jquery",
             } else {
                 this.set("pending", this.get("pending") + 1);
             }
-            this._add_bubble(this.user, message.message, oeclient.str_to_datetime(message.date));
+            this._add_bubble(this.user, message.message, openerp.str_to_datetime(message.date));
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -444,12 +440,11 @@ define(["openerp", "underscore", "require", "jquery",
         destroy: function() {
             this.user.remove_watcher();
             this.trigger("destroyed");
-            return this.$super();
-        },
+            return this._super();
+        }
     });
 
 
 
-    return livesupport;*/
-    console.log("loaded live chat");
+    return livesupport;
 });
