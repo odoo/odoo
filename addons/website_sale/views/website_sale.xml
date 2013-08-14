@@ -113,7 +113,7 @@
                             <h5  t-field="product.name"> </h5>
                         </a>
                         <a t-att-href="'/shop/product/%%s/' %% product.id">
-                            <img class="img-rounded" t-att-src="'data:image/png;base64,' + product.image"/>
+                            <img class="img-rounded" t-att-src="product.img('image_small')"/>
                         </a>
                         <div>
                             <div t-field="product.description_sale"></div>
@@ -144,7 +144,7 @@
                     <div class="oe_button_cart">
                         <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
                     </div>
-                    <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
+                    <img class="media-object" t-att-src="product.img('image')"/>
                     <div t-field="product.description_website"></div>
                     <div class="oe_website_sale_price"><t t-field="product.list_price" />€</div>
                 </div>
@@ -160,7 +160,7 @@
                     <div class='span2 thumbnail'>
                         <a t-att-href="'/shop/product/%%s/' %% product.id">
                             <div class='mt16 text-center'>
-                                <img t-att-src="'data:image/png;base64,' + product.image"/>
+                                <img t-att-src="product.img('image_small')"/>
                                 <h5 t-field='product.name'></h5>
                             </div>
                         </a>
@@ -195,7 +195,7 @@
                             <t t-foreach="order.order_line" t-as="line">
                                 <tr>
                                     <td>
-                                        <a t-att-href="'/shop/product/%%s/' %% line.product_id"><img class="img-rounded" t-att-src="'data:image/png;base64,' + line.product_id.image"/></a>
+                                        <a t-att-href="'/shop/product/%%s/' %% line.product_id"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
                                     <td>
                                         <a t-att-href="'/shop/product/%%s/' %% line.product_id"><span t-field="line.product_id.name"/></a><br/>

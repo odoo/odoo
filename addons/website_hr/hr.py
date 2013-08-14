@@ -9,3 +9,5 @@ class hr(osv.osv):
         'website_published': fields.boolean('Available in the website'),
     }
 
+    def img(self, cr, uid, ids, field='image_small', context=None):
+        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])

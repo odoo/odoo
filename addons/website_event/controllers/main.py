@@ -103,7 +103,6 @@ class website_event(http.Controller):
         event = request.registry['event.event'].browse(request.cr, request.uid, event_id, {'show_address': 1})
         values = website.get_rendering_context({
             'event_id': event,
-            'google_map_url': "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=12&size=298x298" % urllib.quote_plus('%s, %s %s, %s' % (event.street, event.city, event.zip, event.country_id and event.country_id.name_get()[0][1] or ''))
         })
         return website.render("website_event.detail", values)
 

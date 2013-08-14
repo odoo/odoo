@@ -32,7 +32,7 @@
                 <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
                     <div class="media thumbnail">
                         <a class="pull-left" href="#">
-                            <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
+                            <img class="media-object" t-att-src="employee_id.img('image_small')"/>
                         </a>
                         <div class="media-body">
                             <t t-call="website.publish"><t t-set="object" t-value="employee_id"/></t>

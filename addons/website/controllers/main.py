@@ -12,6 +12,8 @@ from openerp.addons.web.http import request
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
+import hashlib
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -153,6 +155,50 @@ class Website(openerp.addons.web.controllers.main.Home):
         image.save(response.stream, image.format)
 
         return response
+
+    @http.route('/website/image', type='http', auth="public")
+    def image(self, model, id, field, **kw):
+        last_update = '__last_update'
+        Model = request.registry[model]
+        headers = [('Content-Type', 'image/png')]
+        etag = request.httprequest.headers.get('If-None-Match')
+        hashed_session = hashlib.md5(request.session_id).hexdigest()
+        retag = hashed_session
+
+        print Model.search(request.cr, request.uid, [(1,'=',1)])
+
+        try:
+            if etag:
+                date = Model.read(request.cr, request.uid, [id], [last_update], request.context)[0].get(last_update)
+                if hashlib.md5(date).hexdigest() == etag:
+                    return werkzeug.wrappers.Response(status=304)
+
+            res = Model.read(request.cr, request.uid, [id], [last_update, field], request.context)[0]
+            retag = hashlib.md5(res.get(last_update)).hexdigest()
+            image_base64 = res.get(field)
+
+            if kw.get('resize'):
+                resize = kw.get('resize').split(',')
+                if len(resize) == 2 and int(resize[0]) and int(resize[1]):
+                    width = int(resize[0])
+                    height = int(resize[1])
+                    # resize maximum 500*500
+                    if width > 500: width = 500
+                    if height > 500: height = 500
+                    image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
+
+            image_data = base64.b64decode(image_base64)
+        except Exception:
+            image_data = open(os.path.join(http.addons_manifest['web']['addons_path'], 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+
+        headers.append(('ETag', retag))
+        headers.append(('Content-Length', len(image_data)))
+        try:
+            ncache = int(kw.get('cache'))
+            headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
+        except:
+            pass
+        return request.make_response(image_data, headers)
 
     @http.route(['/website/publish/'], type='http', auth="public")
     def publish(self, **post):
