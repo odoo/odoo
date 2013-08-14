@@ -102,7 +102,6 @@ class stock_location_path(osv.osv):
                 'date_expected': newdate,
                 'picking_id': False,
                 'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context),
                 'rule_id': rule.id,
                 'propagate': rule.propagate, 
             })

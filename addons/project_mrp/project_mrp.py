@@ -32,7 +32,7 @@ class procurement_order(osv.osv):
     }
 
     def _is_procurement_task(self, cr, uid, procurement, context=None):
-        return procurement.product_id.type == 'service' and procurement.product_it.auto_create_task or False
+        return procurement.product_id.type == 'service' and procurement.product_id.auto_create_task or False
 
     def _assign(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
@@ -123,9 +123,9 @@ class product_product(osv.osv):
 class sale_order(osv.osv):
     _inherit = 'sale.order'
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
-                uid, order, line, move_id, date_planned, context=context)
+                uid, order, line, group_id = group_id, context=context)
         proc_data['sale_line_id'] = line.id
         return proc_data
 

@@ -452,6 +452,25 @@ class mrp_production(osv.osv):
                 result[mrp_production.id] = done / mrp_production.product_qty * 100
         return result
 
+    def _moves_assigned(self, cr, uid, ids, name, arg, context=None):
+        """ Test whether all the consume lines are assigned """
+        res = True
+        for production in self.browse(cr, uid, ids, context=context):
+            states = [x.state != 'assigned' for x in production.move_lines if x]
+            if any(states) or len(states) == 0:
+                return False
+        return res
+
+
+    def _mrp_from_move(self, cr, uid, ids, context=None):
+        """ Return mrp"""
+        res = []
+        for move in self.browse(cr, uid, ids, context=context):
+            res += self.pool.get("mrp.production").search(cr, uid, [('move_lines', 'in', move.id)], context=context)
+        return res
+        
+        
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
@@ -510,6 +529,8 @@ class mrp_production(osv.osv):
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id':fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True),
+        'ready_production': fields.function(_moves_assigned, type='boolean', store={'stock.move': (_mrp_from_move, ['state'], 10)}),
+        
     }
     _defaults = {
         'priority': lambda *a: '1',
@@ -554,7 +575,6 @@ class mrp_production(osv.osv):
             'move_created_ids2' : [],
             'product_lines' : [],
             'move_prod_id' : False,
-            'picking_id' : False
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
