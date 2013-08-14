@@ -8,6 +8,7 @@ import types
 import xml   # FIXME use lxml
 import xml.dom.minidom
 import traceback
+from openerp.osv import osv, orm
 
 _logger = logging.getLogger(__name__)
 
@@ -111,6 +112,8 @@ class QWebXml(object):
     def eval(self, expr, v):
         try:
             return eval(expr, None, v)
+        except (osv.except_osv, orm.except_orm), err:
+            raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
         except Exception:
             raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), traceback.format_exc()))
 
