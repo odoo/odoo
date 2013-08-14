@@ -12,57 +12,33 @@
 
     <!-- Layout add nav and footer -->
 
-    <record id="header_website_mail" model="ir.ui.view">
-        <field name="name">header_website_mail</field>
-        <field name="inherit_id" ref="website.header"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//li[last()]" position="after">
-                    <li class="pull-right"><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
-                </xpath>
-           </data>
-        </field>
-    </record>
-    <record id="footer_website_mail" model="ir.ui.view">
-        <field name="name">footer_website_mail</field>
-        <field name="inherit_id" ref="website.footer"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//a[@href='/page/website.news']" position="replace">
-                    <a href="/blog/%(website_mail.website_mail_blog)d/">News</a>
-                </xpath>
-           </data>
-        </field>
-    </record>
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+            <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
+        </xpath>
+        <xpath expr="//body/footer//h5[@name='info_title']" position="after">
+            <ul class='unstyled'>
+                <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
+            </ul>
+        </xpath>
+    </template>
 
     <!-- Page --> 
 
-    <template id="index">
+    <template id="index" name="Blogs">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
                 <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
-                <t t-raw="head"/>
+                <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Blog</t>
             <div class="container mt48 js_website_mail">
                 <div class="row">
-                    <div class="span4">
-                        <ul class="nav nav-list">
-                            <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
-                            <li class="nav-header"><a t-att-href="'/blog/%%s/' %% mail_group_id">BLOG ARCHIVE</a></li>
-                            <!-- TODO: check qweb iteration -->
-                            <li t-foreach="nav_list" t-as="year" class="js_nav_year">
-                                <t t-set="year" t-value="nav_list[year]"/>
-                                <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
-                                <ul class="nav nav-list css_nav_month">
-                                    <t t-foreach="year['months']">
-                                        <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
-                                            <ul class="nav nav-list"/>
-                                        </li>
-                                    </t>
-                                </ul>
-                            </li>
+                    <div class="span4" id="left_column">
+                        <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
+
+                        <div id="blog_subscribe">
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
                                 <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="is_public_user"/>
                                 <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
@@ -71,15 +47,12 @@
                                 <input type="hidden" name="email" t-att-value="subscribe"/>
                                 <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
                             </form>
-                        </ul>
+                        </div>
                     </div>
                     <div class="span8" t-if="blog_id">
                         <div class="media">
                             <div class="media-body well">
-                                <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
-                                    <span t-att-class="'label label-success js_unpublish %%s' %% (not blog_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                    <span t-att-class="'label label-important js_publish %%s' %% (blog_id.website_published and 'hidden' or '')">Click to Publish</span>
-                                </a>
+                                <t t-call="website.publish"><t t-set="object" t-value="blog_id"/></t>
                                 <h3 t-field="blog_id.subject"/>
                                 <div t-field="blog_id.body"/>
                                 <small class="pull-right muted text-right">
@@ -90,10 +63,7 @@
                             <ul class="media-list" id="comment">
                                 <li t-foreach="blog_id.child_ids" t-as="comment" class="media">
                                     <div class="media-body">
-                                        <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
-                                            <span t-att-class="'label label-success js_unpublish %%s' %% (not comment.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                            <span t-att-class="'label label-important js_publish %%s' %% (comment.website_published and 'hidden' or '')">Click to Publish</span>
-                                        </a>
+                                        <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
                                         <t t-raw="comment.body"/>
                                         <small class="pull-right muted text-right">
                                             <div t-field="comment.author_id"/>
@@ -108,14 +78,12 @@
                             </ul>
                         </div>
                     </div>
+
                     <div class="span8" t-if="not blog_id and blog_ids">
                         <ul class="media-list">
                             <li t-foreach="blog_ids" t-as="blog" class="media well">
                                 <div t-att-class="'media-body %%s' %% (blog.website_published and 'css_published' or '')">
-                                    <a href="#" t-att-data-id="blog.id" class="pull-right" t-if="editable">
-                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not blog.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                        <span t-att-class="'label label-important js_publish %%s' %% (blog.website_published and 'hidden' or '')">Click to Publish</span>
-                                    </a>
+                                    <t t-call="website.publish"><t t-set="object" t-value="blog"/></t>
                                     <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)" t-field="blog.subject"></a></h4>
                                     <div class="media">
                                         <div t-field="blog.body"/>
@@ -131,18 +99,33 @@
                                 </div>
                             </li>
                         </ul>
-                        <ul class="pager">
-                            <li t-if="next_date" class="previous">
-                                <a t-att-href="'?date=%%s' %% (next_date)">&amp;larr; Older</a>
-                            </li>
-                            <li t-if="prev_date" class="next">
-                                <a t-att-href="'?date=%%s' %% (prev_date)">Newer &amp;rarr;</a>
-                            </li>
-                        </ul>
+                        <div class="text-center">
+                            <t t-call="website.pager" />
+                        </div>
                     </div>
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="blog_history" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="History">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <ul class="nav nav-list">    
+                <li class="nav-header"><a t-att-href="'/blog/%%s/' %% mail_group_id">BLOG ARCHIVE</a></li>
+                <!-- TODO: check qweb iteration -->
+                <li t-foreach="nav_list" t-as="year" class="js_nav_year">
+                    <t t-set="year" t-value="nav_list[year]"/>
+                    <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
+                    <ul class="nav nav-list css_nav_month">
+                        <t t-foreach="year['months']">
+                            <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
+                                <ul class="nav nav-list"/>
+                            </li>
+                        </t>
+                    </ul>
+                </li>
+            </ul>
+        </xpath>
     </template>
  </data>
 </openerp>

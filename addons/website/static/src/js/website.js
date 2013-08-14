@@ -27,18 +27,49 @@ instance.website.EditorBar = instance.web.Widget.extend({
         this._super.apply(this, arguments);
         this.saving_mutex = new $.Mutex();
     },
+    customize_setup: function() {
+        var self = this;
+        var view_name = $('html').data('view-xmlid');
+        var menu = $('#customize-menu');
+        this.$('#customize-menu-button').click(function(event) {
+            menu.empty();
+            self.rpc('/website/customize_template_get', { 'xml_id': view_name }).then(
+                function(result) {
+                    _.each(result, function (item) {
+                        if (item.header) {
+                            menu.append('<li class="nav-header">' + item.name + '</li>');
+                        } else {
+                            menu.append(_.str.sprintf('<li><a href="#" data-view-id="%s"><strong class="icon-check%s"></strong> %s</a></li>',
+                                item.id, item.active ? '' : '-empty', item.name));
+                        }
+                    });
+                }
+            );
+        });
+        menu.on('click', 'a', function (event) {
+            var view_id = $(event.target).data('view-id');
+            self.rpc('/website/customize_template_toggle', {
+                'view_id': view_id
+            }).then( function(result) {
+                window.location.reload();
+            });
+        });
+    },
     start: function() {
         var self = this;
 
-        this.$('button[data-action]').prop('disabled', true)
-            .parent().hide();
+        this.$('#website-top-edit').hide();
+        this.$('#website-top-view').show();
+
+        $('.dropdown-toggle').dropdown();
+        this.customize_setup();
+
         this.$buttons = {
             edit: this.$('button[data-action=edit]'),
             save: this.$('button[data-action=save]'),
             cancel: this.$('button[data-action=cancel]'),
             snippet: this.$('button[data-action=snippet]'),
         };
-        this.$buttons.edit.prop('disabled', false).parent().show();
 
         self.snippet_start();
 
@@ -51,10 +82,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
         );
     },
     edit: function () {
-        this.$buttons.edit.prop('disabled', true).parent().hide();
-        this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
-            .add(this.$buttons.save)
-            .parent().show();
+        this.$buttons.edit.prop('disabled', true);
+        this.$('#website-top-view').hide();
+        this.$('#website-top-edit').show();
+
+        // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
+        //     .add(this.$buttons.save)
+        //     .parent().show();
+        //
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
                 .not('link, script')
@@ -62,7 +97,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 .not('.oe_snippet_editor')
                 .prop('contentEditable', true)
                 .addClass('oe_editable');
-        var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
+        var $rte_ables = $editables.not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
 
         // temporary fix until we fix ckeditor
@@ -191,6 +226,9 @@ instance.website.RTE = instance.web.Widget.extend({
                 'magicline'
         ];
         return {
+            // Disable auto-generated titles
+            // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
+            title: false,
             removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
@@ -205,14 +243,22 @@ instance.website.RTE = instance.web.Widget.extend({
             // Place toolbar in controlled location
             sharedSpaces: { top: 'oe_rte_toolbar' },
             toolbar: [
-                {name: 'items', items: [
+                {name: 'basicstyles', items: [
                     "Bold", "Italic", "Underline", "Strike", "Subscript",
-                    "Superscript", "TextColor", "BGColor", "RemoveFormat",
+                    "Superscript", "TextColor", "BGColor", "RemoveFormat"
+                ]},{
+                name: 'span', items: [
                     "Link", "Unlink", "Blockquote", "BulletedList",
-                    "NumberedList", "Image", "Indent", "Outdent",
-                    "JustifyLeft", "JustifyCenter", "JustifyRight",
-                    "JustifyBlock", "Table", "Font", "FontSize", "Format",
-                    "Styles"
+                    "NumberedList", "Indent", "Outdent",
+                ]},{
+                name: 'justify', items: [
+                    "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
+                ]},{
+                name: 'special', items: [
+                    "Image", "Table"
+                ]},{
+                name: 'styles', items: [
+                    "Format", "Styles"
                 ]}
             ],
             // styles dropdown in toolbar
@@ -232,7 +278,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         $('.carousel .js_carousel_options .label').on('click', function (e) {
             e.preventDefault();
-            var $button = $(e.currentTarget)
+            var $button = $(e.currentTarget);
             var $c = $button.parents(".carousel:first");
 
             if($button.hasClass("js_add")) {
@@ -307,6 +353,12 @@ $(function(){
         });
     }
 
+    function customier_option_get(event){
+
+
+        event.preventDefault();
+    }
+
     function append_snippet(event){
         console.log('click',this,event.button);
         if(event.button === 0){
@@ -330,17 +382,23 @@ $(function(){
     }
 });
 
-instance.web.ActionRedirect = function(parent, action) {
-    var url = $.deparam(window.location.href).url;
-    if (url) {
-        window.location.href = url;
-    }
-};
-instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
-
-instance.web.GoToWebsite = function(parent, action) {
-    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
-};
-instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
+$(function () {
+    $(document).on('click', '.js_publish, .js_unpublish', function (e) {
+        e.preventDefault();
+        var $link = $(this).parent();
+        $link.find('.js_publish, .js_unpublish').addClass("hidden");
+        var $unp = $link.find(".js_unpublish");
+        var $p = $link.find(".js_publish");
+        $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
+            if (+result) {
+                $p.addClass("hidden");
+                $unp.removeClass("hidden");
+            } else {
+                $p.removeClass("hidden");
+                $unp.addClass("hidden");
+            }
+        });
+    });
+});
 
 };

@@ -3,12 +3,43 @@
 -->
 <templates id="template" xml:space="preserve">
 <t t-name="Website.EditorBar">
-    <ul class="oe_website_editorbar openerp">
-        <li><button data-action="edit">Edit</button></li>
-        <li><button data-action="save">Save</button></li>
-        <li><button data-action="cancel">Cancel</button></li>
-        <li class="oe_right"><button data-action="snippet">Building Blocks</button></li>
-    </ul>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner" id="website-top-view">
+            <form class="navbar-form pull-left">
+                <button data-action="edit" class="btn btn-primary">Edit</button>
+            </form>
+            <ul class="nav pull-right">
+                <li class="active"><a href="#"><span class="icon-desktop"/></a></li>
+                <li><a href="#"><span class="icon-mobile-phone"/></a></li>
+                <li class="divider-vertical"></li>
+                <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
+                <li><a href="#">Translate</a></li>
+                <li class="dropdown">
+                    <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
+                    <div class="dropdown-menu">
+                        <ul class="nav nav-list" id="customize-menu">
+                            <!-- filled in JS -->
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="/admin#action=website.action_module_website">Apps</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="navbar-inner" id="website-top-edit">
+            <form class="navbar-form pull-left">
+                <button data-action="save" class="btn btn-primary">Save</button>
+                <button data-action="cancel" class="btn">Cancel</button>
+            </form>
+            <ul class="nav pull-right">
+                <li><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
+            </ul>
+        </div>
+    </div>
+
+
 </t>
 <t t-name="Website.ActionGroup">
     <div class="dropdown">

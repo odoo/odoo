@@ -1,6 +1,7 @@
 {
-    'name': 'Website Event',
-    'category': 'mail',
+    'name': 'Online Events',
+    'category': 'Website',
+    'summary': 'Schedule, Promote and Sell Events Online',
     'version': '1.0',
     'description': """
 OpenERP Blog
@@ -16,5 +17,4 @@ OpenERP Blog
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
-    'auto_install': True,
 }

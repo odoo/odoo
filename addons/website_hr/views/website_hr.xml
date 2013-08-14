@@ -2,56 +2,53 @@
 <openerp>
 <data>
 
+    <!-- Mail group for the company's jobs -->
+
+    <record id="website_mail_job" model="mail.group">
+        <field name="name">Job</field>
+        <field name="public">public</field>
+        <field name="description">Job offer displayed on your website</field>
+    </record>
+
     <!-- Layout add nav and footer -->
 
-    <record id="footer_website_hr" model="ir.ui.view">
-        <field name="name">footer_website_hr</field>
-        <field name="inherit_id" ref="website.footer"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//a[@href='/page/website.contactus']" position="after">
-                    <li><a href="/hr">Team</a></li>
-                </xpath>
-           </data>
-        </field>
-    </record>
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
+            <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
+        </xpath>
+    </template>
 
     <!-- Page --> 
 
-    <template id="index">
-        <t t-call="website.layout">
+ 
+    <template id="aboutus" inherit_id="website.aboutus">
+        <xpath expr="//div[@class='span8']" position="inside">
             <t t-set="head">
-                <script type="text/javascript" src="/website_hr/static/src/js/hr.js"></script>
-                <t t-raw="head"/>
+                <script type="text/javascript" src="/website_hr/static/src/js/website_hr.js"></script>
+                <t t-raw="head or ''"/>
             </t>
-            <t t-set="title">Team</t>
-            <div class="container">
-                <div class="thumbnails">
-                    <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
-                        <div class="media thumbnail">
-                            <a class="pull-left" href="#">
-                                <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
-                            </a>
-                            <div class="media-body">
-                                <div t-if="editable" class="pull-right">
-                                    <a href="#" t-att-data-id="employee_id.id">
-                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not employee_id.website_published and 'hidden' or '')">Click to Unpublish</span>
-                                        <span t-att-class="'label label-important js_publish %%s' %% (employee_id.website_published and 'hidden' or '')">Click to Publish</span>
-                                    </a>
-                                </div>
-                                <h5 class="media-heading" t-field="employee_id.name"/>
-                                <div t-field="employee_id.department_id"/>
-                                <div t-field="employee_id.job_id"/>
-                                <div t-field="employee_id.work_location"/>
-                                <div t-field="employee_id.work_phone"/>
-                                <div t-field="employee_id.work_email"/>
-                                <div t-field="employee_id.public_info"/>
-                            </div>
+            <h3>Our team</h3>
+            <div class="thumbnails">
+                <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
+                    <div class="media thumbnail">
+                        <a class="pull-left" href="#">
+                            <img class="media-object" t-att-src="'data:image/png;base64,%%s' %% employee_id.image_small"/>
+                        </a>
+                        <div class="media-body">
+                            <t t-call="website.publish"><t t-set="object" t-value="employee_id"/></t>
+                            <h5 class="media-heading" t-field="employee_id.name"/>
+                            <div t-field="employee_id.department_id"/>
+                            <div t-field="employee_id.job_id"/>
+                            <div t-field="employee_id.work_location"/>
+                            <div t-field="employee_id.work_phone"/>
+                            <div t-field="employee_id.work_email"/>
+                            <div t-field="employee_id.public_info"/>
                         </div>
                     </div>
                 </div>
             </div>
-        </t>
+        </xpath>
     </template>
+
  </data>
 </openerp>
