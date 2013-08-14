@@ -13,8 +13,9 @@ _months = {1:_("January"), 2:_("February"), 3:_("March"), 4:_("April"), 5:_("May
 
 class website_mail(http.Controller):
 
-    @http.route(['/blog', '/blog/<int:mail_group_id>/', '/blog/<int:mail_group_id>/<int:blog_id>/'], type='http', auth="public")
-    def blog(self, mail_group_id=None, blog_id=None, **post):
+    @http.route(['/blog/', '/blog/<int:mail_group_id>/', '/blog/<int:mail_group_id>/<int:blog_id>/',
+                '/blog/page/<int:page>/', '/blog/<int:mail_group_id>/page/<int:page>/', '/blog/<int:mail_group_id>/<int:blog_id>/page/<int:page>/'], type='http', auth="public")
+    def blog(self, mail_group_id=None, blog_id=None, page=0, **post):
         website = request.registry['website']
         group_obj = request.registry['mail.group']
         message_obj = request.registry['mail.message']
@@ -24,8 +25,6 @@ class website_mail(http.Controller):
             'blog_ids': None,
             'blog_id': None,
             'nav_list': dict(),
-            'prev_date': None,
-            'next_date': None,
             'mail_group_id': mail_group_id,
             'subscribe': post.get('subscribe'),
             'website': website,
@@ -38,27 +37,22 @@ class website_mail(http.Controller):
 
         domain = mail_group_id and [("res_id", "=", mail_group_id)] or []
 
-        for group in message_obj.read_group(request.cr, request.uid, domain + group_obj.get_public_blog(request.cr, request.uid), ['subject', 'date'], groupby="date", orderby="create_date asc"):
+        for group in message_obj.read_group(request.cr, request.uid, domain + group_obj.get_domain_public_blog(request.cr, request.uid), ['subject', 'date'], groupby="date", orderby="create_date asc"):
             year = group['date'].split(" ")[1]
             if not values['nav_list'].get(year):
                 values['nav_list'][year] = {'name': year, 'date_count': 0, 'months': []}
             values['nav_list'][year]['date_count'] += group['date_count']
             values['nav_list'][year]['months'].append(group)
 
-        if post.get('date'):
-            ids = group_obj.get_public_message_ids(request.cr, request.uid, domain=domain + [("date", ">", post.get('date'))], order="create_date asc", limit=10)
-            if ids:
-                values['prev_date'] = message_obj.browse(request.cr, request.uid, ids.pop()).date
-            domain += [("date", "<=", post.get('date'))]
-
-        message_ids = group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc", limit=11)
-        if message_ids:
-            values['blog_ids'] = message_obj.browse(request.cr, request.uid, message_ids)
-            if len(message_ids) > 10:
-                values['next_date'] = values['blog_ids'].pop().date
-
         if blog_id:
             values['blog_id'] = message_obj.browse(request.cr, request.uid, blog_id)
+        else:
+            step = 20
+            message_count = len(group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc"))
+            pager = website.pager(url="/blog/%s/" % mail_group_id, total=message_count, page=page, step=step, scope=7)
+            message_ids = group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc", limit=step, offset=pager['offset'])
+            values['pager'] = pager
+            values['blog_ids'] = message_obj.browse(request.cr, request.uid, message_ids)
 
         return website.render("website_mail.index", values)
 

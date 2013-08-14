@@ -73,7 +73,7 @@ class website(osv.osv):
     def pager(self, url, total, page=1, step=30, scope=5):
         # Compute Pager
         d = {}
-        d["page_count"] = int(math.ceil(total / step))
+        d["page_count"] = int(math.ceil(float(total) / step))
 
         page = max(1, min(int(page), d["page_count"]))
 
