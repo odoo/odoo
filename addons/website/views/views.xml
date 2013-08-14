@@ -454,5 +454,12 @@
             </div>
         </template>
 
+        <template id="publish">
+            <a href="#" t-att-data-id="object.id" class="pull-right" t-if="editable">
+                <span t-att-class="'label label-success js_unpublish %%s' %% (not object.website_published and 'hidden' or '')">Unpublish</span>
+                <span t-att-class="'label label-important js_publish %%s' %% (object.website_published and 'hidden' or '')">Publish</span>
+            </a>
+        </template>
+
      </data>
 </openerp>

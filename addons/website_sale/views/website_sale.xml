@@ -138,10 +138,7 @@
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <div class="oe_product_detail span8" id="product_detail">
-                    <a href="#" t-att-data-id="product.id" class="pull-right" t-if="editable">
-                        <span t-att-class="'label label-success js_unpublish %%s' %% (not product.website_published and 'hidden' or '')">Unpublish</span>
-                        <span t-att-class="'label label-important js_publish %%s' %% (product.website_published and 'hidden' or '')">Publish</span>
-                    </a>
+                    <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
 
                     <div class="oe_button_cart">

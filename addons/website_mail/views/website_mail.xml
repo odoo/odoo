@@ -52,10 +52,7 @@
                     <div class="span8" t-if="blog_id">
                         <div class="media">
                             <div class="media-body well">
-                                <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
-                                    <span t-att-class="'label label-success js_unpublish %%s' %% (not blog_id.website_published and 'hidden' or '')">Unpublish</span>
-                                    <span t-att-class="'label label-important js_publish %%s' %% (blog_id.website_published and 'hidden' or '')">Publish</span>
-                                </a>
+                                <t t-call="website.publish"><t t-set="object" t-value="blog_id"/></t>
                                 <h3 t-field="blog_id.subject"/>
                                 <div t-field="blog_id.body"/>
                                 <small class="pull-right muted text-right">
@@ -66,10 +63,7 @@
                             <ul class="media-list" id="comment">
                                 <li t-foreach="blog_id.child_ids" t-as="comment" class="media">
                                     <div class="media-body">
-                                        <a href="#" t-att-data-id="blog_id.id" class="pull-right" t-if="editable">
-                                            <span t-att-class="'label label-success js_unpublish %%s' %% (not comment.website_published and 'hidden' or '')">Unpublish</span>
-                                            <span t-att-class="'label label-important js_publish %%s' %% (comment.website_published and 'hidden' or '')">Publish</span>
-                                        </a>
+                                        <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
                                         <t t-raw="comment.body"/>
                                         <small class="pull-right muted text-right">
                                             <div t-field="comment.author_id"/>
@@ -88,10 +82,7 @@
                         <ul class="media-list">
                             <li t-foreach="blog_ids" t-as="blog" class="media well">
                                 <div t-att-class="'media-body %%s' %% (blog.website_published and 'css_published' or '')">
-                                    <a href="#" t-att-data-id="blog.id" class="pull-right" t-if="editable">
-                                        <span t-att-class="'label label-success js_unpublish %%s' %% (not blog.website_published and 'hidden' or '')">Unpublish</span>
-                                        <span t-att-class="'label label-important js_publish %%s' %% (blog.website_published and 'hidden' or '')">Publish</span>
-                                    </a>
+                                    <t t-call="website.publish"><t t-set="object" t-value="blog"/></t>
                                     <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)" t-field="blog.subject"></a></h4>
                                     <div class="media">
                                         <div t-field="blog.body"/>
