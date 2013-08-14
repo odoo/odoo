@@ -168,6 +168,8 @@ class crm_meeting(base_state, osv.Model):
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
+        if context.get('default_date'):
+            del context['default_date']
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
     def do_decline(self, cr, uid, ids, context=None, *args):
