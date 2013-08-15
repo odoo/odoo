@@ -168,6 +168,7 @@ class account_analytic_line(osv.osv):
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         product_uom_obj = self.pool.get('product.uom')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        res_partner_obj = self.pool.get('res.partner')
         invoices = []
         if context is None:
             context = {}
@@ -184,9 +185,20 @@ class account_analytic_line(osv.osv):
         for journal_type, account_ids in journal_types.items():
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
+
                 if (not partner) or not (account.pricelist_id):
                     raise osv.except_osv(_('Analytic Account Incomplete!'),
                             _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
+                context2 = context.copy()
+                context2['lang'] = account.partner_id.lang
+                # set company_id in context, so the correct default journal will be selected
+                # when creating the invoice
+                context2['company_id'] = account.company_id.id
+                # set force_company in context so the correct properties are selected
+                # (eg. income account, receivable account)
+                context2['force_company'] = account.company_id.id
+
+                partner = res_partner_obj.browse(cr, uid, account.partner_id.id, context=context2)
 
                 date_due = False
                 if partner.property_payment_term:
@@ -208,12 +220,6 @@ class account_analytic_line(osv.osv):
                     'date_due': date_due,
                     'fiscal_position': account.partner_id.property_account_position.id
                 }
-                context2 = context.copy()
-                context2['lang'] = partner.lang
-                # set company_id in context, so the correct default journal will be selected
-                context2['force_company'] = curr_invoice['company_id']
-                # set force_company in context so the correct product properties are selected (eg. income account)
-                context2['company_id'] = curr_invoice['company_id']
 
                 last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
                 invoices.append(last_invoice)
