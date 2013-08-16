@@ -1,5 +1,11 @@
 - 
-  Create new delivery order from output -> customers
+  Create new global procurement rule from Stock -> Output
+- 
+  !record {model: procurement.rule, ref:}
+    location_id: stock
+    location_dest_id: output 
+- 
+  Create Delivery Order from Output -> Customer 
 - 
   !record {model: stock.picking, ref:}
 - 
