@@ -57,6 +57,8 @@ class product_product(osv.osv):
         product_ids = self.search(cr, uid, [("id", "in", product_ids)])
         return self.browse(cr, uid, product_ids)
 
+    def img(self, cr, uid, ids, field='image_small', context=None):
+        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
 
 class sale_order(osv.osv):
     _inherit = "sale.order"

@@ -1,20 +1,36 @@
-openerp.website = function(instance) {
+// Ugly. I'll clean this monday
+$(function () { if ($('html').attr('data-editable') !== '1') return;
 
-instance.web.ActionManager.include({
-    // Temporary fix until un-webclientization of the editorbar
-    ir_actions_client: function (action) {
-        if (instance.web.client_actions.get_object(action.tag)) {
-            return this._super.apply(this, arguments);
-        } else {
-            console.warn("Action '%s' not found in registry", action.tag);
-            return $.when();
-        }
-    }
-});
+// TODO fme: put everything in openerp.website scope and load templates on
+// next tick or document ready
+// Also check with xmo if jquery.keypress.js is still needed.
 
-var _lt = instance.web._lt;
-var QWeb = instance.web.qweb;
-instance.website.EditorBar = instance.web.Widget.extend({
+var doc_ready = $.Deferred();
+$(doc_ready.resolve);
+
+var templates = [
+    '/website/static/src/xml/website.xml'
+];
+
+function loadTemplates(templates) {
+    var def = $.Deferred();
+    var count = templates.length;
+    templates.forEach(function(t) {
+        openerp.qweb.add_template(t, function(err) {
+            if (err) {
+                def.reject();
+            } else {
+                count--;
+                if (count < 1) {
+                    def.resolve();
+                }
+            }
+        });
+    });
+    return def;
+}
+
+var EditorBar = openerp.Widget.extend({
     template: 'Website.EditorBar',
     events: {
         'click button[data-action=edit]': 'edit',
@@ -23,17 +39,13 @@ instance.website.EditorBar = instance.web.Widget.extend({
         'click button[data-action=snippet]': 'snippet',
     },
     container: 'body',
-    init: function () {
-        this._super.apply(this, arguments);
-        this.saving_mutex = new $.Mutex();
-    },
     customize_setup: function() {
         var self = this;
         var view_name = $('html').data('view-xmlid');
         var menu = $('#customize-menu');
         this.$('#customize-menu-button').click(function(event) {
             menu.empty();
-            self.rpc('/website/customize_template_get', { 'xml_id': view_name }).then(
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
                 function(result) {
                     _.each(result, function (item) {
                         if (item.header) {
@@ -48,7 +60,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         });
         menu.on('click', 'a', function (event) {
             var view_id = $(event.target).data('view-id');
-            self.rpc('/website/customize_template_toggle', {
+            openerp.jsonRpc('/website/customize_template_toggle', 'call', {
                 'view_id': view_id
             }).then( function(result) {
                 window.location.reload();
@@ -57,6 +69,8 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
+
+        this.saving_mutex = new openerp.Mutex();
 
         this.$('#website-top-edit').hide();
         this.$('#website-top-view').show();
@@ -73,7 +87,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
 
         self.snippet_start();
 
-        this.rte = new instance.website.RTE(this);
+        this.rte = new RTE(this);
         this.rte.on('change', this, this.proxy('rte_changed'));
 
         return $.when(
@@ -156,7 +170,11 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 .prop('contentEditable', false);
             html = $w.wrap('<div>').parent().html();
         }
-        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
+        return openerp.jsonRpc('/web/dataset/call', 'call', {
+            model: 'ir.ui.view',
+            method: 'save',
+            args: [data.oeModel, data.oeId, data.oeField, html, xpath]
+        });
     },
     cancel: function () {
         window.location.reload();
@@ -194,7 +212,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
 });
 
-instance.website.RTE = instance.web.Widget.extend({
+var RTE = openerp.Widget.extend({
     tagName: 'li',
     id: 'oe_rte_toolbar',
     className: 'oe_right oe_rte_toolbar',
@@ -297,7 +315,12 @@ instance.website.RTE = instance.web.Widget.extend({
     }
 });
 
-$(function(){
+$.when(doc_ready, loadTemplates(templates)).then(function() {
+    var editor = new EditorBar();
+    editor.prependTo($('body'));
+    $('body').css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
+
+    // TODO: Create an openerp.Widget out of this
 
     function make_static(){
         $('.oe_snippet_demo').removeClass('oe_new');
@@ -382,6 +405,10 @@ $(function(){
     }
 });
 
+});
+// }());   I'll clean this monday
+
+
 $(function () {
     $(document).on('click', '.js_publish, .js_unpublish', function (e) {
         e.preventDefault();
@@ -401,4 +428,3 @@ $(function () {
     });
 });
 
-};

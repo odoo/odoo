@@ -44,6 +44,7 @@
                     <div class="span8">
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event_id" class="media thumbnail">
+                                <t t-esc="event_id"/>
                                 <div class="media-body">
                                     <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
                                     <t t-if="event_id.event_ticket_ids">
@@ -112,14 +113,16 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
-                <t t-raw="head"/>
+                <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Events</t>
             <div class="container mt48">
                 <div class="row">
                     <div class="span4 css_noprint">
                         <h4>When &amp; Where</h4>
-                        <img t-att-src="google_map_url"/>
+                        <a t-att-href="event_id.google_map_link()" target="_BLANK">
+                            <img class="thumbnail" t-att-src="event_id.google_map_img()"/>
+                        </a>
                         <address>
                             <pre t-field="event_id.address_id"/>
                             <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span><br/>
