@@ -207,7 +207,7 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
                 for procurement in line.procurement_ids:
-                    if procurement.state != 'done':
+                    if procurement.state == 'done':
                         write_done_ids.append(line.id)
                     else:
                         finished = False
