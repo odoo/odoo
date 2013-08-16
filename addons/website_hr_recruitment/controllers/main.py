@@ -13,8 +13,12 @@ class website_hr_recruitment(http.Controller):
         hr_job_obj = request.registry['hr.job']
         group_obj = request.registry['mail.group']
         user_obj = request.registry['res.users']
+
+        domain = [(1, '=', 1)] or [('website_published', '=', True)]
+        search = [("state", 'in', ['recruit', 'open'])]
+        domain += search 
         
-        jobpost_ids = hr_job_obj.search(request.cr, request.uid, [("state", 'in', ['recruit', 'open'])])
+        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain)
         request.cr.execute("select distinct(com.id) from hr_job job, res_company com where com.id=job.company_id")
         ids = []
         for i in request.cr.fetchall():
