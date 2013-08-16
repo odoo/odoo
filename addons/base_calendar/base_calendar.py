@@ -411,6 +411,9 @@ property or property parameter."),
         @return: True
         """
         mail_id = []
+        data_pool = self.pool.get('ir.model.data')
+        mail_pool = self.pool.get('mail.mail')
+        template_pool = self.pool.get('email.template')
         local_context = context.copy()
         color = {
                  'needs-action' : 'grey',
@@ -418,16 +421,15 @@ property or property parameter."),
                  'tentative' :'#FFFF00',
                  'declined':'red',
                  'delegated':'grey'
-                 }
+        }
         for attendee in self.browse(cr, uid, ids, context=context):
             res_obj = attendee.ref
-            data_pool = self.pool.get('ir.model.data')
             if res_obj:
                 model,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "crm_email_template_meeting_invitation")
                 model,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")
                 action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)
                 base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-                body = self.pool.get('email.template').browse(cr, uid, template_id, context=context).body_html
+                body = template_pool.browse(cr, uid, template_id, context=context).body_html
                 if attendee.email and email_from:
                     ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
                     local_context['att_obj'] = attendee
@@ -435,13 +437,13 @@ property or property parameter."),
                     local_context['action_id'] = action_id[0]
                     local_context['dbname'] = cr.dbname
                     local_context['base_url'] = base_url
-                    vals = self.pool.get('email.template').generate_email(cr, uid, template_id, res_obj.id, context=local_context)
+                    vals = template_pool.generate_email(cr, uid, template_id, res_obj.id, context=local_context)
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                     'datas_fname': 'invitation.ics',
                                                     'datas': str(ics_file).encode('base64')})]
-                    mail_id.append(self.pool.get('mail.mail').create(cr, uid, vals, context=context))
-        self.pool.get('mail.mail').send(cr, uid, mail_id, context=context)
+                    mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+        mail_pool.send(cr, uid, mail_id, context=context)
         return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -506,7 +508,7 @@ property or property parameter."),
             context = {}
         meeting_obj = self.pool.get('crm.meeting')
         for vals in self.browse(cr, uid, ids, context=context):
-            meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
+            meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)], context=context)
             if meeting_id and vals.state != 'declined':
                 meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Declined Invitation") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'declined'}, context)

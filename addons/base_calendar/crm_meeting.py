@@ -75,9 +75,11 @@ class crm_meeting(base_state, osv.Model):
         """
             Return date and time (from to from) based on duration with timezone in string :
             eg.
-            1) if user add duration for 2 hours return : August-23-2013 at ( 04-30 To 06-30) (Europe/Brussels)
-            2) if event all day return : AllDay , July-31-2013
+            1) if user add duration for 2 hours, return : August-23-2013 at ( 04-30 To 06-30) (Europe/Brussels)
+            2) if event all day ,return : AllDay, July-31-2013
         """
+        if context is None:
+            context = {}
         tz = context.get('tz', pytz.timezone('UTC'))
         meeting = self.browse(cr, uid, meeting_id, context=context)
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -111,10 +113,10 @@ class crm_meeting(base_state, osv.Model):
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                             'event_id', 'attendee_id', 'Invited People', states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_compute, string='Attendee', \
-                            type="boolean",multi='attendee'),
+                            type="boolean", multi='attendee'),
         'attendee_status': fields.function(_compute, string='Attendee Status', \
-                            type="selection",multi='attendee'),
-        'event_time': fields.function(_compute, string='Event Time', type="char",multi='attendee'),
+                            type="selection", multi='attendee'),
+        'event_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
     }
     _defaults = {
         'state': 'open',
