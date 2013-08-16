@@ -44,7 +44,6 @@
                     <div class="span8">
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event_id" class="media thumbnail">
-                                <t t-esc="event_id"/>
                                 <div class="media-body">
                                     <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
                                     <t t-if="event_id.event_ticket_ids">
