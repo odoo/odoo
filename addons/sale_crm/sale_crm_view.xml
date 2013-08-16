@@ -236,7 +236,7 @@
             <field name="res_model">account.invoice.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="domain">[('state','=','paid'),('section_id', '=', active_id)]</field>
+            <field name="domain">[('section_id', '=', active_id)]</field>
             <field name="context">{'search_default_month':1}</field>
             <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
         </record>
