@@ -205,16 +205,20 @@ class sale_order(osv.osv):
         write_done_ids = []
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
+            #TODO: Need to rethink what happens when cancelling
             for line in order.order_line:
-                for procurement in line.procurement_ids:
-                    if procurement.state == 'done':
-                        write_done_ids.append(line.id)
-                    else:
-                        finished = False
-                    if (procurement.state == 'cancel'):
-                        canceled = True
-                        if line.state != 'exception':
+                states =  [x.state for x in line.procurement_ids]
+                cancel = all([x == 'cancel' for x in states])
+                doneorcancel = all([x in ('done', 'cancel') for x in states])
+                if cancel:
+                    canceled = True
+                    if line.state != 'exception':
                             write_cancel_ids.append(line.id)
+                if not doneorcancel:
+                    finished = False 
+                if doneorcancel and not cancel:
+                    write_done_ids.append(line.id)
+
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
@@ -256,8 +260,7 @@ class sale_order(osv.osv):
         res = []
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
-                if line.procurement_id:
-                    res.append(line.procurement_id.id)
+                res += [x.id for x in line.procurement_ids]
         return res
 
 class sale_order_line(osv.osv):
