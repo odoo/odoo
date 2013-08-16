@@ -66,27 +66,32 @@ class crm_meeting(base_state, osv.Model):
                     res[meeting_id][field] = True if attendee else False
                 elif field == 'attendee_status':
                     res[meeting_id][field] = attendee.state if attendee else 'needs-action'
+                elif field == 'event_time':
+                    res[meeting_id][field] = self._compute_time(cr, uid, meeting_id, context=context)
         return res
             
 
-    def _compute_time(self, cr, uid, ids, name, arg, context=None):
-        res = {}
+    def _compute_time(self, cr, uid, meeting_id, context=None):
+        """
+            Return date and time (from to from) based on duration with timezone in string :
+            eg.
+            1) if user add duration for 2 hours return : August-23-2013 at ( 04-30 To 06-30) (Europe/Brussels)
+            2) if event all day return : AllDay , July-31-2013
+        """
         tz = context.get('tz', pytz.timezone('UTC'))
-        for meeting in self.browse(cr, uid, ids, context=context):
-            date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-            date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-            event_date = date.strftime('%B-%d-%Y')
-            event_time = date.strftime('%H-%M')
-            res[meeting.id] = False
-            if meeting.allday:
-                time =  _("AllDay , %s") % (date_event)
-            elif meeting.duration < 24:
-                duration =  date + timedelta(hours= meeting.duration)
-                time = ("%s at ( %s To %s) (%s)") % (str(event_date), str(event_time), str(duration.strftime('%H-%M')), str(tz))
-            else :
-                time = ("%s at %s To\n %s at %s (%s)") % (event_date, event_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
-            res[meeting.id] = time
-        return res
+        meeting = self.browse(cr, uid, meeting_id, context=context)
+        date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+        date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+        event_date = date.strftime('%B-%d-%Y')
+        event_time = date.strftime('%H-%M')
+        if meeting.allday:
+            time =  _("AllDay , %s") % (event_date)
+        elif meeting.duration < 24:
+            duration =  date + timedelta(hours= meeting.duration)
+            time = ("%s at ( %s To %s) (%s)") % (event_date, event_time, duration.strftime('%H-%M'), tz)
+        else :
+            time = ("%s at %s To\n %s at %s (%s)") % (event_date, event_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
+        return time
 
     _columns = {
         # base_state required fields
@@ -109,7 +114,7 @@ class crm_meeting(base_state, osv.Model):
                             type="boolean",multi='attendee'),
         'attendee_status': fields.function(_compute, string='Attendee Status', \
                             type="selection",multi='attendee'),
-        'event_time': fields.function(_compute_time, string='Event Time', type="char"),
+        'event_time': fields.function(_compute, string='Event Time', type="char",multi='attendee'),
     }
     _defaults = {
         'state': 'open',
@@ -172,7 +177,7 @@ class crm_meeting(base_state, osv.Model):
             del context['default_date']
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
-    def do_decline(self, cr, uid, ids, context=None, *args):
+    def do_decline(self, cr, uid, ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
         for meeting_id in ids:
             attendee = self._find_user_attendee(cr, uid, meeting_id, context)
@@ -182,7 +187,7 @@ class crm_meeting(base_state, osv.Model):
                 attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
         return True
 
-    def do_accept(self, cr, uid, ids, context=None, *args):
+    def do_accept(self, cr, uid, ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
         for meeting_id in ids:
             attendee = self._find_user_attendee(cr, uid, meeting_id, context)
