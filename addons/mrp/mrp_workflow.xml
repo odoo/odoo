@@ -43,7 +43,7 @@
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="flow_stop">True</field>
             <field name="kind">function</field>
-            <field name="action">action_production_end()</field>            
+            <field name="action">action_production_end()</field>
             <field name="name">done</field>
         </record>
         <record id="prod_act_cancel" model="workflow.activity">
@@ -70,7 +70,7 @@
             <field name="act_from" ref="prod_act_picking"/>
             <field name="act_to" ref="prod_act_ready"/>
             <field name="signal"></field>
-            <field name="condition">picking_id and picking_id.state=='done'</field>
+            <field name="condition">ready_production</field>
         </record>
         <record id="prod_trans_ready_in_production" model="workflow.transition">
             <field name="act_from" ref="prod_act_ready"/>

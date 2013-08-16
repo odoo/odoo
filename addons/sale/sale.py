@@ -633,7 +633,6 @@ class sale_order(osv.osv):
             'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
             'product_uos': (line.product_uos and line.product_uos.id) or line.product_uom.id,
             'company_id': order.company_id.id,
-            'note': line.name,
             'group_id': group_id,
             'invoice_state': (order.order_policy=='picking') and '2binvoiced' or 'none',
             'sale_line_id': line.id

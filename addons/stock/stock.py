@@ -140,7 +140,8 @@ class stock_quant(osv.osv):
         """
         res = {}
         for q in self.browse(cr, uid, ids, context=context):
-            res[q.id] = q.product_id.code
+
+            res[q.id] = q.product_id.code or ''
             if q.lot_id:
                 res[q.id] = q.lot_id.name 
             res[q.id] += ': '+  str(q.qty) + q.product_id.uom_id.name
@@ -1508,16 +1509,6 @@ class stock_move(osv.osv):
             'reserved_quant_ids': []
         }, context=context)
         return new_move
-
-    def get_type_from_usage(self, cr, uid, location, location_dest, context=None):
-        '''
-            Returns the type to be chosen based on the usages of the locations
-        '''
-        if location.usage == 'internal' and location_dest.usage in ['supplier', 'customer']:
-            return 'out'
-        if location.usage in ['supplier', 'customer'] and location_dest.usage == 'internal' :
-            return 'in'
-        return 'internal'
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"

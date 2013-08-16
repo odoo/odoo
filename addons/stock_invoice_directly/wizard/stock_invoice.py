@@ -21,29 +21,29 @@
 
 from openerp.osv import fields, osv
 
-class invoice_directly(osv.osv_memory):
-    _inherit = 'stock.partial.picking'
-
-    def do_partial(self, cr, uid, ids, context=None):
-        """Launch Create invoice wizard if invoice state is To be Invoiced,
-           after processing the partial picking.
-        """
-        if context is None: context = {}
-        result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
-        partial = self.browse(cr, uid, ids[0], context)
-        context.update(active_model='stock.picking',
-                       active_ids=[partial.picking_id.id])
-        if partial.picking_id.invoice_state == '2binvoiced':
-            return {
-                'name': 'Create Invoice',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.invoice.onshipping',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': context
-            }
-        return {'type': 'ir.actions.act_window_close'}
+# class invoice_directly(osv.osv_memory):
+#     _inherit = 'stock.partial.picking'
+# 
+#     def do_partial(self, cr, uid, ids, context=None):
+#         """Launch Create invoice wizard if invoice state is To be Invoiced,
+#            after processing the partial picking.
+#         """
+#         if context is None: context = {}
+#         result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
+#         partial = self.browse(cr, uid, ids[0], context)
+#         context.update(active_model='stock.picking',
+#                        active_ids=[partial.picking_id.id])
+#         if partial.picking_id.invoice_state == '2binvoiced':
+#             return {
+#                 'name': 'Create Invoice',
+#                 'view_type': 'form',
+#                 'view_mode': 'form',
+#                 'res_model': 'stock.invoice.onshipping',
+#                 'type': 'ir.actions.act_window',
+#                 'target': 'new',
+#                 'context': context
+#             }
+#         return {'type': 'ir.actions.act_window_close'}
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
