@@ -14,8 +14,8 @@ import werkzeug
 
 class website_event(http.Controller):
 
-    @http.route(['/event'], type='http', auth="public")
-    def events(self, **searches):
+    @http.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
+    def events(self, page=1, **searches):
         website = request.registry['website']
         event_obj = request.registry['event.event']
 
@@ -80,13 +80,17 @@ class website_event(http.Controller):
         countries = event_obj.read_group(request.cr, request.uid, domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
         countries.insert(0, {'country_id_count': event_obj.search(request.cr, request.uid, domain, count=True), 'country_id': ("all", _("All Countries"))})
 
+        step = 5
+        event_count = event_obj.search(request.cr, request.uid, dom_without("none"), count=True)
+        pager = website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
+        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), limit=step, offset=pager['offset'], order="date_begin DESC")
 
-        obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), order="date_begin DESC")
         values = website.get_rendering_context({
             'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
             'types': types,
             'countries': countries,
+            'pager': pager,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
         })
@@ -99,24 +103,48 @@ class website_event(http.Controller):
         event = request.registry['event.event'].browse(request.cr, request.uid, event_id, {'show_address': 1})
         values = website.get_rendering_context({
             'event_id': event,
-            'google_map_url': "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=12&size=298x298" % urllib.quote_plus('%s, %s %s, %s' % (event.street, event.city, event.zip, event.country_id and event.country_id.name_get()[0][1] or ''))
         })
         return website.render("website_event.detail", values)
 
     @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
     def add_cart(self, event_id=None, **post):
-        if not post:
+        order_line_obj = request.registry.get('sale.order.line')
+        ticket_obj = request.registry.get('event.event.ticket')
+
+        order = request.registry['website'].get_rendering_context()['order']
+        partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+
+        context = {}
+
+        fields = [k for k, v in order_line_obj._columns.items()]
+        values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=context)
+
+        _values = None
+        for key, value in post.items():
+            quantity = int(value)
+            ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
+            if not ticket_id or not quantity:
+                continue
+            ticket = ticket_obj.browse(request.cr, request.uid, ticket_id)
+
+            values['product_id'] = ticket.product_id.id
+            values['event_id'] = ticket.event_id.id
+            values['event_ticket_id'] = ticket.id
+            values['product_uom_qty'] = quantity
+            values['price_unit'] = ticket.price
+            values['order_id'] = order.id
+            values['name'] = "%s: %s" % (ticket.event_id.name, ticket.name)
+
+            ticket.check_registration_limits_before(quantity)
+
+            # change and record value
+            pricelist_id = order.pricelist_id and order.pricelist_id.id or False
+            _values = order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, ticket.product_id.id, partner_id=partner_id, context=context)['value']
+            _values.update(values)
+
+            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, _values, context=context)
+            order.write({'order_line': [(4, order_line_id)]}, context=context)
+
+        if not _values:
             return werkzeug.utils.redirect("/event/%s/" % event_id)
-
         return werkzeug.utils.redirect("/shop/checkout")
-
-    @http.route(['/event/publish'], type='http', auth="public")
-    def publish(self, **post):
-        obj_id = int(post['id'])
-        data_obj = request.registry['event.event']
-
-        obj = data_obj.browse(request.cr, request.uid, obj_id)
-        data_obj.write(request.cr, request.uid, [obj_id], {'website_published': not obj.website_published})
-        obj = data_obj.browse(request.cr, request.uid, obj_id)
-
-        return obj.website_published and "1" or "0"

@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -112,17 +113,6 @@
   vertical-align: bottom;
 }
 
-/* Theming pagination inside navbar */
-.navbar-inner > .pagination {
-  margin: 6px 0;
-}
-.navbar-inner > .pagination ul {
-  position: relative;
-  top: 2px;
-  border: solid 2px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-}
-
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 html, body {
   height: 100%;
@@ -141,42 +131,10 @@ html, body {
 
 footer {
   box-sizing: border-box;
-  height: 300px;
+  height: 380px;
   background: #eff8f8;
-  padding-top: 64px;
-  padding-bottom: 64px;
-}
-
-/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
-.subheader {
-  letter-spacing: 3px;
-  font-weight: 300;
-}
-
-header.navbar-fixed-top {
-  position: static;
-}
-
-.dark {
-  background: #eff8f8;
-  padding: 64px;
-}
-
-h5 {
-  font-weight: bold;
-}
-
-#myCarousel .item {
-  min-height: 300px;
-  color: white;
-}
-
-.nav > .pull-right {
-  float: right !important;
-}
-
-.thumbnail {
-  background: white;
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -188,14 +146,16 @@ h5 {
   text-shadow: none;
 }
 
-.navbar .nav > li a {
-  float: none;
-  padding: 15px 15px 15px;
-  color: white;
-  text-decoration: none;
-  text-shadow: 0 1px 0 #2c3e50;
-}
-
 .nav > li a {
   display: block;
+}
+
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
+header.navbar-fixed-top {
+  position: static;
+}
+
+#myCarousel .item {
+  min-height: 300px;
+  color: white;
 }

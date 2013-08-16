@@ -1,21 +1,4 @@
 $(document).ready(function () {
-    $('.js_website_mail').on('click', '.js_publish, .js_unpublish', function (e) {
-        e.preventDefault();
-        var $link = $(this).parent();
-        $link.find('.js_publish, .js_unpublish').addClass("hidden");
-        var $unp = $link.find(".js_unpublish");
-        var $p = $link.find(".js_publish");
-        $.post('/blog/publish', {'id': $link.data('id')}, function (result) {
-            if (+result) {
-                $p.addClass("hidden");
-                $unp.removeClass("hidden");
-            } else {
-                $p.removeClass("hidden");
-                $unp.addClass("hidden");
-            }
-        });
-    });
-
     $form = $('.js_nav_year a:first').on('click', function (e) {
         e.preventDefault();
         $(this).next("ul").toggle();

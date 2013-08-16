@@ -1,6 +1,7 @@
 {
-    'name': 'Website Contact Form',
-    'category': 'CRM',
+    'name': 'Contact Form',
+    'category': 'Website',
+    'summary': 'Generate Leads From Contact Form',
     'version': '1.0',
     'description': """
 OpenERP Contact Form
@@ -15,5 +16,4 @@ OpenERP Contact Form
     'js': ['static/src/js/ecommerce.js'],
     'css': ['static/src/css/ecommerce.css'],
     'installable': True,
-    'auto_install': True,
 }

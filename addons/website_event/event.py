@@ -1,36 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
-
-class event(osv.osv):
-    _inherit = 'event.event'
-    _columns = {
-        'website_published': fields.boolean('Available in the website'),
-        'description_website': fields.html('Description for the website'),
-        'event_product_ids': fields.one2many('event.event.product', "event_id", "Event"),
-        'organizer_id': fields.many2one('res.partner', "Orgonizer"),
-        'phone': fields.related('orgonizer_id', 'phone', type='char', string='Phone'),
-        'email': fields.related('orgonizer_id', 'email', type='char', string='Email'),
-    }
-
-
-class event_product(osv.osv):
-    _name = 'event.event.product'
-    _columns = {
-        'deadline': fields.date("Sales End"),
-        'event_id': fields.many2one('event.event', "Event"),
-        'product_id': fields.many2one('product.product', 'Product', domain=[("event_type_id", "!=", False)]),
-        'price': fields.float('Price'),
-        'qty': fields.integer('Current Registrations', readonly=True),
-        'max_qty': fields.integer('Maximum Registrations'),
-    }
-    def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
-        return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
-
-
+# defined for access rules
 class product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'event_product_ids': fields.one2many('event.event.product', 'product_id', 'Linked event product'),
+        'event_ticket_ids': fields.one2many('event.event.ticket', 'product_id', 'Event Tickets'),
     }
+
+
+class event_event(osv.osv):
+    _inherit = "event.event"
+
+    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
+        partner = self.browse(cr, uid, ids[0], context=context)
+        if partner.address_id:
+            return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_img()
+
+    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+        partner = self.browse(cr, uid, ids[0], context=context)
+        if partner.address_id:
+            return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()

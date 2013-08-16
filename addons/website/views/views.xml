@@ -3,80 +3,68 @@
 -->
 <openerp>
     <data>
-        <template id="header">
-            <div class="container">
-                <a href='/page/website.homepage' class='brand'>
-                    <em>Open</em><b>ERP</b>
-                    <!--<img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>-->
-                </a>
-                <ul class="nav pull-right">
-                    <li class='pull-right'><a href="/admin">Sign in</a></li>
-                    <li class='pull-right'><a href="/page/website.contactus">Contact us</a></li>
-                </ul>
-            </div>
+        <!--
+            Files used in the generic theme, mostly bootstrap and a few OpenERP tags
+        -->
+        <template id="theme" name="Theme">
+            <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
+            <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="span4" name="product">
-                            <h5>Product and services</h5>
-                            <ul class='unstyled'>
-                                <li><a href="https://www.openerp.com/start?download">Download</a></li>
-                                <li><a href="https://launchpad.net/openobject">Launchpad</a></li>
-                                <li><a href="http://runbot.openerp.com">Automated Tests</a></li>
-                            </ul>
-                        </div>
-                        <div class="span4" name="social">
-                            <h5>Social</h5>
-                            <ul class='unstyled'>
-                                <li><a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i>Twitter</a></li>
-                                <li><a href="http://www.facebook.com/OpenERP"><i class="icon-facebook-sign"></i>Facebook</a></li>
-                                <li><a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i>Google+</a></li>
-                            </ul>
-                        </div>
-                        <div class="span4" name="about_us">
-                            <h5 t-field="res_company.name">Company name</h5>
-                            <ul class='unstyled'>
-                                <li><a href="/page/website.contactus">Contact us</a></li>
-                                <li><a href="/page/website.news">News</a></li>
-                                <li><a href="/page/website.contactus">About us</a></li>
-                                <li><a href='#'>&amp;#x2706; <span t-field="res_company.phone"/></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        <template id="theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
+            <xpath expr="//link[@id='bootstrap_css']" position="replace">
+                <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
+                <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
+            </xpath>
         </template>
 
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
-                <html>
+                <html t-att-data-view-xmlid="__stack__[0]" t-att-data-editable="'1' if editable else '0'">
                     <head>
-                        <title t-raw="title"><t t-esc="res_company.name"/></title>
+                        <title><t t-esc="title or res_company.name"/></title>
+                        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                        <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
                         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
                         <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
                         <script type="text/javascript">
                             CKEDITOR.disableAutoInline = true;
-                            CKEDITOR.dtd.$editable.li = 1;
+                            // EDIT ALL THE THINGS
+                            CKEDITOR.dtd.$editable = $.extend(
+                                {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
                         </script>
 
                         <t t-if="editable">
-                            <t t-raw="css"/>
-                            <t t-raw="script"/>
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                            <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
+                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+
+                            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+                            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
                         </t>
-                        <t t-raw="head"/>
-                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css'/>
+
+                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+                        <t t-raw="head or ''"/>
+                        <t t-call="website.theme"/>
+
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <link rel='stylesheet' href='/website/static/src/css/website.css'/>
                         <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
-                        <header class='navbar navbar-fixed-top'>
+                        <header class='navbar navbar-static-top'>
                             <div class='navbar-inner'>
-                                <t t-call="website.header"/>
+                                <div class="container">
+                                    <a href='/page/website.homepage' class='brand'>
+                                        <em>Open</em><b>ERP</b>
+                                        <!--<img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>-->
+                                    </a>
+                                    <ul class="nav pull-right" id="top_menu">
+                                        <li><a href="/page/website.contactus">Contact us</a></li>
+                                        <li><a href="/admin">Sign in</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </header>
                         <div t-raw="0" id="wrap">
@@ -85,8 +73,53 @@
                             </div>
                         </div>
                         <footer>
-                            <t t-call="website.footer"/>
-                            <p class="text-center">&amp;copy; <span t-field="res_company.name">Company name</span>.</p>
+                            <div class="container" id="footer_container">
+                                <div class="row">
+                                    <div class="span3" name="product">
+                                        <h5>Our products</h5>
+                                        <ul class='unstyled' name="products">
+                                            <li><a href="/">Home</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="span3" name="info">
+                                        <h5 name="info_title">Connect with us</h5>
+                                        <ul class='unstyled'>
+                                            <li><a href="/page/website.aboutus">About us</a></li>
+                                            <li><a href="/page/website.contactus">Contact us</a></li>
+                                        </ul>
+                                        <ul class='unstyled'>
+                                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"/></li>
+                                            <li><i class="icon-envelope"></i> <span t-field="res_company.email"></span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="span5 offset1" name="about_us">
+                                        <h5 t-field="res_company.name">About us</h5>
+                                        <p>
+                                            We are a team of passionated people whose goal
+                                            is to improve everyone's life through
+                                            disruptive products. We build great products to
+                                            solve your business problems.
+                                        </p><p>
+                                            Our products are designed for small to medium
+                                            companies willing to optimize their
+                                            performance.
+                                        </p>
+                                        <h1 style="padding: 12px 24px">
+                                            <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
+                                            <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
+                                            <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container mt16">
+                                <div class="pull-right" t-ignore="1">
+                                    Create a <a href="http://openerp.com/apps/website">free website</a> with <a class="label label-important" href="https://openerp.com/apps/website">OpenERP</a>
+                                </div>
+                                <div class="pull-left muted">
+                                    Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
+                                </div>
+                            </div>
                         </footer>
 
                         <div class='oe_snippet_editor' style="display: none;">
@@ -194,6 +227,12 @@
                 </html>
         </template>
 
+        <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
+            <xpath expr="//div[@id='footer_container']" position="attributes">
+                <attribute name="style">display: none</attribute>
+            </xpath>
+        </template>
+
         <template id="homepage">
             <t t-call="website.layout">
 
@@ -207,15 +246,16 @@
                         <div class="carousel-inner">
                             <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;" >
                                 <div class='container'>
-                                    <h1 class='mt64'>A Nice Bidule</h1>
-                                    <h2>A convincing subtitle</h2>
-                                    <a href='#' class='btn btn-success btn-large mt16'>And a <em>Call To Action</em></a>
+                                    <div class="mt64"> </div>
+                                    <h1>Create Awesome Websites</h1>
+                                    <h3>Super easy, fully flexible</h3>
+                                    <a href='/page/website.contactus' class='btn btn-success btn-large mt16'>Contact us</a>
                                 </div>
                             </div>
                         </div>
                         <!-- Carousel nav -->
-                        <a class="carousel-control left" href="#myCarousel" data-slide="prev">&amp;lsaquo;</a>
-                        <a class="carousel-control right" href="#myCarousel" data-slide="next">&amp;rsaquo;</a>
+                        <a class="carousel-control left" href="#myCarousel" data-slide="prev" t-ignore="1">&amp;lsaquo;</a>
+                        <a class="carousel-control right" href="#myCarousel" data-slide="next" t-ignore="1">&amp;rsaquo;</a>
                     </div>
                 </section>
 
@@ -315,38 +355,73 @@
 
         <template id="404">
                 <t t-call="website.layout">
+                    <div class="container" t-if="editable">
+                        <div class="well mt32">
+                            <p>
+                                This page does not exists, but you can create
+                                it as you are administrator of this site.
+                            </p>
+                            <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a> <span class="muted"> or </span> <a href="/sitemap">Search a Page</a>
+                        </div>
+
+                        <div class="text-center muted">
+                            Edit the content bellow this line to adapt the default "page not found" page.
+                        </div>
+                    </div>
+                    <hr/>
                     <div class="container">
-                        <div class="row">
-                            <div class="span12">
-                                <h1>404: Page not found!</h1>
-                                <p>
-                                    The page you were looking for could not be
-                                    found; it is possible you have typed the
-                                    address incorrectly, but it has most
-                                    probably been removed due to the recent
-                                    website reorganisation.
-                                </p><p>
-                                    Maybe you were looking for one of these
-                                    popular pages ?
-                                </p>
-                                <ul>
-                                    <li><a href="/">Homepage</a></li>
-                                    <li><a href="/">Contact Us</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="span12 mt32">
-                                <a class="btn btn-primary" t-att-href="'/pagenew/'+path" t-if="editable">Create Page</a>
-                            </div>
-                        </div>
+                        <h1 class="mt32">404: Page not found!</h1>
+                        <p>
+                            The page you were looking for could not be
+                            found; it is possible you have typed the
+                            address incorrectly, but it has most
+                            probably been removed due to the recent
+                            website reorganisation.
+                        </p><p>
+                            Maybe you were looking for one of these
+                            popular pages ?
+                        </p>
+                        <ul>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/">Contact Us</a></li>
+                        </ul>
                     </div>
                 </t>
         </template>
 
-        <template id="contactus">
+        <template id="500">
             <t t-call="website.layout">
-                <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                <div class="container">
+                    <h1 class="mt32">500: Internal Server Error!</h1>
+                    <pre t-esc="traceback"/>
+                </div>
+            </t>
+        </template>
+
+        <template id="401">
+            <t t-call="website.layout">
+                <div class="container">
+                    <h1 class="mt32">401: Unauthorized Access!</h1>
+                    <p>
+                        The page you were looking for could not be
+                        authorized.
+                    </p><p>
+                        Maybe you were looking for one of these
+                        popular pages ?
+                    </p>
+                    <pre class="hidden" t-esc="error"/>
+                    <ul>
+                        <li><a href="/">Homepage</a></li>
+                        <li><a href="/">Contact Us</a></li>
+                    </ul>
+                </div>
+            </t>
+        </template>
+
+
+        <template id="contactus" name="Contact us">
+            <t t-call="website.layout">
+                <t t-set="title">Contact us - <t t-raw="res_company.name"/></t>
                 <div class="container">
                     <h2>Contact us</h2>
                     <div class="row">
@@ -363,18 +438,66 @@
                         <div class="span4">
                             <address>
                                 <strong t-field="res_company.name">Name</strong><br/>
-                                <span t-field="res_company.street"/><br/>
-                                <span t-field="res_company.city"/>, <span t-field="res_company.zip"/><br/>
+                                <span t-field="res_company.street"/> <span t-field="res_company.state_id"/><br/>
+                                <span t-field="res_company.zip"/> <span t-field="res_company.city"/><br/>
                                 <span t-field="res_company.country_id"> </span><br/>
                                 <br/>
                                 <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br/>
                                 <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
                             </address>
-                            <img class="thumbnail" t-att-src="google_map_url"/>
+                            <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
+                                <img class="thumbnail" t-att-src="res_company.partner_id.google_map_img()"/>
+                            </a>
                         </div>
                     </div>
                 </div>
             </t>
+        </template>
+
+        <template id="aboutus">
+            <t t-call="website.layout">
+                <t t-set="title">About us - <t t-raw="res_company.name"/></t>
+                <div class="container">
+                    <h2>About us</h2>
+                    <div class="row">
+                        <div class="span4">
+                            <h3>Our vision</h3>
+                            <p>
+                                Contact us about anything related to our company or services.
+                            </p><p>
+                                We'll do our best to get back to you as soon as possible.
+                            </p>
+                        </div>
+                        <div class="span8">
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="pager">
+            <div t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
+                <ul>
+                    <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' " >
+                        <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
+                    </li>
+                    <t t-foreach="pager['pages']">
+                        <li t-att-class=" 'active' if num == pager['page']['num'] else '' ">
+                            <a t-att-href="url" t-raw="num"></a>
+                        </li>
+                    </t>
+                    <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' " >
+                        <a t-att-href=" pager['page_end']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </template>
+
+        <template id="publish">
+            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
+                <span t-att-class="'label label-success js_unpublish %%s' %% (not object.website_published and 'hidden' or '')">Unpublish</span>
+                <span t-att-class="'label label-important js_publish %%s' %% (object.website_published and 'hidden' or '')">Publish</span>
+            </a>
         </template>
 
      </data>

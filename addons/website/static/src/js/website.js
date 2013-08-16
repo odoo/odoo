@@ -1,20 +1,36 @@
-openerp.website = function(instance) {
+// Ugly. I'll clean this monday
+$(function () { if ($('html').attr('data-editable') !== '1') return;
 
-instance.web.ActionManager.include({
-    // Temporary fix until un-webclientization of the editorbar
-    ir_actions_client: function (action) {
-        if (instance.web.client_actions.get_object(action.tag)) {
-            return this._super.apply(this, arguments);
-        } else {
-            console.warn("Action '%s' not found in registry", action.tag);
-            return $.when();
-        }
-    }
-});
+// TODO fme: put everything in openerp.website scope and load templates on
+// next tick or document ready
+// Also check with xmo if jquery.keypress.js is still needed.
 
-var _lt = instance.web._lt;
-var QWeb = instance.web.qweb;
-instance.website.EditorBar = instance.web.Widget.extend({
+var doc_ready = $.Deferred();
+$(doc_ready.resolve);
+
+var templates = [
+    '/website/static/src/xml/website.xml'
+];
+
+function loadTemplates(templates) {
+    var def = $.Deferred();
+    var count = templates.length;
+    templates.forEach(function(t) {
+        openerp.qweb.add_template(t, function(err) {
+            if (err) {
+                def.reject();
+            } else {
+                count--;
+                if (count < 1) {
+                    def.resolve();
+                }
+            }
+        });
+    });
+    return def;
+}
+
+var EditorBar = openerp.Widget.extend({
     template: 'Website.EditorBar',
     events: {
         'click button[data-action=edit]': 'edit',
@@ -23,26 +39,55 @@ instance.website.EditorBar = instance.web.Widget.extend({
         'click button[data-action=snippet]': 'snippet',
     },
     container: 'body',
-    init: function () {
-        this._super.apply(this, arguments);
-        this.saving_mutex = new $.Mutex();
+    customize_setup: function() {
+        var self = this;
+        var view_name = $('html').data('view-xmlid');
+        var menu = $('#customize-menu');
+        this.$('#customize-menu-button').click(function(event) {
+            menu.empty();
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
+                function(result) {
+                    _.each(result, function (item) {
+                        if (item.header) {
+                            menu.append('<li class="nav-header">' + item.name + '</li>');
+                        } else {
+                            menu.append(_.str.sprintf('<li><a href="#" data-view-id="%s"><strong class="icon-check%s"></strong> %s</a></li>',
+                                item.id, item.active ? '' : '-empty', item.name));
+                        }
+                    });
+                }
+            );
+        });
+        menu.on('click', 'a', function (event) {
+            var view_id = $(event.target).data('view-id');
+            openerp.jsonRpc('/website/customize_template_toggle', 'call', {
+                'view_id': view_id
+            }).then( function(result) {
+                window.location.reload();
+            });
+        });
     },
     start: function() {
         var self = this;
 
-        this.$('button[data-action]').prop('disabled', true)
-            .parent().hide();
+        this.saving_mutex = new openerp.Mutex();
+
+        this.$('#website-top-edit').hide();
+        this.$('#website-top-view').show();
+
+        $('.dropdown-toggle').dropdown();
+        this.customize_setup();
+
         this.$buttons = {
             edit: this.$('button[data-action=edit]'),
             save: this.$('button[data-action=save]'),
             cancel: this.$('button[data-action=cancel]'),
             snippet: this.$('button[data-action=snippet]'),
         };
-        this.$buttons.edit.prop('disabled', false).parent().show();
 
         self.snippet_start();
 
-        this.rte = new instance.website.RTE(this);
+        this.rte = new RTE(this);
         this.rte.on('change', this, this.proxy('rte_changed'));
 
         return $.when(
@@ -51,10 +96,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
         );
     },
     edit: function () {
-        this.$buttons.edit.prop('disabled', true).parent().hide();
-        this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
-            .add(this.$buttons.save)
-            .parent().show();
+        this.$buttons.edit.prop('disabled', true);
+        this.$('#website-top-view').hide();
+        this.$('#website-top-edit').show();
+
+        // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
+        //     .add(this.$buttons.save)
+        //     .parent().show();
+        //
         // TODO: span edition changing edition state (save button)
         var $editables = $('[data-oe-model]')
                 .not('link, script')
@@ -62,7 +111,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 .not('.oe_snippet_editor')
                 .prop('contentEditable', true)
                 .addClass('oe_editable');
-        var $rte_ables = $editables.filter('div, p, li, section, header, footer').not('[data-oe-type]');
+        var $rte_ables = $editables.not('[data-oe-type]');
         var $raw_editables = $editables.not($rte_ables);
 
         // temporary fix until we fix ckeditor
@@ -121,7 +170,11 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 .prop('contentEditable', false);
             html = $w.wrap('<div>').parent().html();
         }
-        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
+        return openerp.jsonRpc('/web/dataset/call', 'call', {
+            model: 'ir.ui.view',
+            method: 'save',
+            args: [data.oeModel, data.oeId, data.oeField, html, xpath]
+        });
     },
     cancel: function () {
         window.location.reload();
@@ -159,7 +212,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
 });
 
-instance.website.RTE = instance.web.Widget.extend({
+var RTE = openerp.Widget.extend({
     tagName: 'li',
     id: 'oe_rte_toolbar',
     className: 'oe_right oe_rte_toolbar',
@@ -191,6 +244,9 @@ instance.website.RTE = instance.web.Widget.extend({
                 'magicline'
         ];
         return {
+            // Disable auto-generated titles
+            // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
+            title: false,
             removePlugins: removed_plugins.join(','),
             uiColor: '',
             // Ensure no config file is loaded
@@ -205,14 +261,22 @@ instance.website.RTE = instance.web.Widget.extend({
             // Place toolbar in controlled location
             sharedSpaces: { top: 'oe_rte_toolbar' },
             toolbar: [
-                {name: 'items', items: [
+                {name: 'basicstyles', items: [
                     "Bold", "Italic", "Underline", "Strike", "Subscript",
-                    "Superscript", "TextColor", "BGColor", "RemoveFormat",
+                    "Superscript", "TextColor", "BGColor", "RemoveFormat"
+                ]},{
+                name: 'span', items: [
                     "Link", "Unlink", "Blockquote", "BulletedList",
-                    "NumberedList", "Image", "Indent", "Outdent",
-                    "JustifyLeft", "JustifyCenter", "JustifyRight",
-                    "JustifyBlock", "Table", "Font", "FontSize", "Format",
-                    "Styles"
+                    "NumberedList", "Indent", "Outdent",
+                ]},{
+                name: 'justify', items: [
+                    "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
+                ]},{
+                name: 'special', items: [
+                    "Image", "Table"
+                ]},{
+                name: 'styles', items: [
+                    "Format", "Styles"
                 ]}
             ],
             // styles dropdown in toolbar
@@ -232,7 +296,7 @@ instance.website.RTE = instance.web.Widget.extend({
         var self = this;
         $('.carousel .js_carousel_options .label').on('click', function (e) {
             e.preventDefault();
-            var $button = $(e.currentTarget)
+            var $button = $(e.currentTarget);
             var $c = $button.parents(".carousel:first");
 
             if($button.hasClass("js_add")) {
@@ -251,7 +315,12 @@ instance.website.RTE = instance.web.Widget.extend({
     }
 });
 
-$(function(){
+$.when(doc_ready, loadTemplates(templates)).then(function() {
+    var editor = new EditorBar();
+    editor.prependTo($('body'));
+    $('body').css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
+
+    // TODO: Create an openerp.Widget out of this
 
     function make_static(){
         $('.oe_snippet_demo').removeClass('oe_new');
@@ -307,6 +376,12 @@ $(function(){
         });
     }
 
+    function customier_option_get(event){
+
+
+        event.preventDefault();
+    }
+
     function append_snippet(event){
         console.log('click',this,event.button);
         if(event.button === 0){
@@ -330,17 +405,26 @@ $(function(){
     }
 });
 
-instance.web.ActionRedirect = function(parent, action) {
-    var url = $.deparam(window.location.href).url;
-    if (url) {
-        window.location.href = url;
-    }
-};
-instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
+});
+// }());   I'll clean this monday
 
-instance.web.GoToWebsite = function(parent, action) {
-    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
-};
-instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
 
-};
+$(function () {
+    $(document).on('click', '.js_publish, .js_unpublish', function (e) {
+        e.preventDefault();
+        var $link = $(this).parent();
+        $link.find('.js_publish, .js_unpublish').addClass("hidden");
+        var $unp = $link.find(".js_unpublish");
+        var $p = $link.find(".js_publish");
+        $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
+            if (+result) {
+                $p.addClass("hidden");
+                $unp.removeClass("hidden");
+            } else {
+                $p.removeClass("hidden");
+                $unp.addClass("hidden");
+            }
+        });
+    });
+});
+
