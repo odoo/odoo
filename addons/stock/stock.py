@@ -61,7 +61,7 @@ class stock_location(osv.osv):
     _order = 'parent_left'
     def name_get(self, cr, uid, ids, context=None):
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
-        return res.items()
+        return res.items() 
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         """ Forms complete name of location from parent location to child location.
@@ -432,7 +432,7 @@ class stock_picking(osv.osv):
                 res[pick.id] = 'done'
                 continue
 
-            order = {'confirmed':0, 'auto':1, 'assigned':2}
+            order = {'confirmed':0, 'waiting':1, 'assigned':2}
             order_inv = dict(zip(order.values(),order.keys()))
             lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel','done')]
             if pick.move_lines == 'one':
@@ -467,7 +467,7 @@ class stock_picking(osv.osv):
             'stock.move': (_get_pickings, ['state', 'picking_id'], 20)}, selection = [
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
-            ('auto', 'Waiting Another Operation'),
+            ('waiting', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
@@ -1199,7 +1199,7 @@ class stock_move(osv.osv):
                 ('group_id', '=', move.group_id.id),
                 ('location_id', '=', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
-                ('state', 'in', ['confirmed', 'auto'])], context=context)
+                ('state', 'in', ['confirmed', 'waiting'])], context=context)
         if picks:
             pick = picks[0]
         else:
