@@ -6,7 +6,7 @@
     <!-- Layout add nav and footer -->
 
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+        <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
             <li><a href="/references/">References</a></li>
         </xpath>
     </template>
@@ -17,6 +17,18 @@
         <t t-call="website.layout">
             <t t-set="title">References</t>
             <div class="container">
+                <div class="thumbnails">
+                    <div t-foreach="partner_ids" t-as="partner_id" class="span4 mt16">
+                        <div class="media thumbnail">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" t-att-src="partner_id.img('image_small')"/>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="media-heading" t-field="partner_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </t>
     </template>
