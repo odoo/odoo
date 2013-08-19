@@ -214,7 +214,7 @@ class hr_applicant(osv.Model):
         'emp_id': fields.many2one('hr.employee', string='Employee',
             help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
-        'previous_stage_id': fields.many2one ('hr.recruitment.stage', 'Previous Stage'),
+        'last_stage_id': fields.many2one ('hr.recruitment.stage', 'Last Stage'),
     }
 
     _defaults = {
@@ -393,17 +393,20 @@ class hr_applicant(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        # stage change: update date_last_stage_update
-        if 'stage_id' in vals:
-            vals['date_last_stage_update'] = fields.datetime.now()
-            for data in self.browse(cr, uid, ids, context=context):
-                vals['previous_stage_id'] = data.stage_id.id
 
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
 
-        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+        if 'stage_id' not in vals:
+            return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+
+        for data in self.browse(cr, uid, ids, context=context):
+            # stage change: update date_last_stage_update
+            vals['date_last_stage_update'] = fields.datetime.now()
+            vals['last_stage_id'] = data.stage_id.id
+            super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+        return True
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
         """ Create an hr.employee from the hr.applicants """

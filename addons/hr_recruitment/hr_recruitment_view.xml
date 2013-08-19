@@ -41,7 +41,7 @@
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:message_unread==True">
                 <field name="message_unread" invisible="1"/>
-                <field name="previous_stage_id" invisible="1"/>
+                <field name="last_stage_id" invisible="1"/>
                 <field name="create_date"/>
                 <field name="date_last_stage_update" invisible="1"/>
                 <field name="name" string="Subject"/>
@@ -195,7 +195,7 @@
                     <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Availability" domain="[]" context="{'group_by':'availability'}"/>
                     <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
-                    <filter string="Previous Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'previous_stage_id'}"/>
+                    <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                     <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
