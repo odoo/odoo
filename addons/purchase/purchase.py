@@ -1226,7 +1226,7 @@ class procurement_order(osv.osv):
             res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
             if not partner: 
-                procurement.write({'message': _('There is no supplier associated to product %s') % (procurement.product_id.name)})
+                procurement.write({'message': _('There is no supplier associated to product %s') % (procurement.product_id.name), 'state': 'exception'})
             else:
                 seller_qty = procurement.product_id.seller_qty
                 partner_id = partner.id
