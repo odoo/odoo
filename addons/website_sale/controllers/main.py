@@ -77,10 +77,18 @@ class Ecommerce(http.Controller):
 
         product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
 
+        products = product_obj.browse(request.cr, request.uid, product_ids)
+        tmpl_ids = []
+        product_tmpl_ids = []
+        for product in products:
+            if product.product_tmpl_id.id not in tmpl_ids:
+                tmpl_ids.append(product.product_tmpl_id.id)
+                product_tmpl_ids.append(product)
+
         values = website.get_rendering_context({
             'categories': self.get_categories(),
             'current_category': cat_id,
-            'products': product_obj.browse(request.cr, request.uid, product_ids),
+            'products': product_tmpl_ids,
             'search': post.get("search"),
             'pager': pager,
         })
@@ -96,9 +104,11 @@ class Ecommerce(http.Controller):
 
         line = [line for line in order.order_line if line.product_id.id == product_id]
 
+        product = product_obj.browse(request.cr, request.uid, product_id)
         values = website.get_rendering_context({
             'categories': self.get_categories(),
-            'product': product_obj.browse(request.cr, request.uid, product_id),
+            'product': product,
+            'product_variants': product.product_tmpl_id.product_ids,
         })
         return website.render("website_sale.product", values)
 
@@ -174,7 +184,7 @@ class Ecommerce(http.Controller):
 
         return quantity
 
-    @http.route(['/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
+    @http.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/', '/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
     def add_cart(self, path=None, product_id=0, remove=None):
         self.add_product_to_cart(product_id, number=(remove and -1 or 1))
         if path:

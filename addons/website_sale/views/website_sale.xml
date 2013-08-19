@@ -140,7 +140,15 @@
                 <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
-                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success pull-right">Add to cart</a>
+                    <a t-if="not product_variants" t-attf-href="/shop/add_cart/#{ product.id }/" class="btn btn-small btn-success pull-right">Add to cart</a>
+                    <form t-if="product_variants" action="/shop/add_cart/" class="pull-right">
+                        <select name="product_id">
+                            <t t-foreach="product_variants" t-as="product">
+                            <option t-att-value="product.id"><t t-esc="product.variants"/></option>
+                            </t>
+                        </select><br/>
+                        <button class="btn btn-small btn-success">Add to cart</button>
+                    </form>
                     <img class="media-object" t-att-src="product.img('image')"/>
                     <div t-field="product.description_website"></div>
                     <div><t t-field="product.list_price" />€</div>
@@ -200,7 +208,9 @@
                                         <a t-attf-href="/shop/product/#{ line.product_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
                                     <td>
-                                        <a t-attf-href="/shop/product/#{ line.product_id.id }/"><span t-field="line.product_id.name"/></a><br/>
+                                        <a t-attf-href="/shop/product/#{ line.product_id.id }/">
+                                            <span t-field="line.product_id.name"/> <t t-if="line.product_id.variants">(<small t-field="line.product_id.variants"/>)</t>
+                                        </a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
@@ -325,7 +335,7 @@
                             <tbody t-if="order.order_line">
                                 <t t-foreach="order.order_line" t-as="line">
                                     <tr>
-                                        <td><t t-esc="line.name"/></td>
+                                        <td><t t-esc="line.name"/> <t t-if="line.product_id.variants">(<small t-field="line.product_id.variants"/>)</t></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
                                         <td><t t-esc="line.product_id.list_price"/>€</td>
                                     </tr>

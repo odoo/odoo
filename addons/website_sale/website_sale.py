@@ -49,14 +49,14 @@ class product_product(osv.osv):
             AND         sol.product_id not in (%s)
             GROUP BY    sol.product_id
             ORDER BY    COUNT(sol.order_id) DESC
-            LIMIT 8
+            LIMIT 10
         """
         cr.execute(query, (id, id))
         for p in cr.fetchall():
             product_ids.append(p[0])
 
         # search to apply access rules
-        product_ids = self.search(cr, uid, [("id", "in", product_ids)])
+        product_ids = self.search(cr, uid, [("id", "in", product_ids)], limit=3)
         return self.browse(cr, uid, product_ids)
 
     def img(self, cr, uid, ids, field='image_small', context=None):

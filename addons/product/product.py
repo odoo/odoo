@@ -328,6 +328,7 @@ class product_template(osv.osv):
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
+        'product_ids': fields.one2many('product.product', 'product_tmpl_id', 'Product Variants'),
     }
 
     def _get_uom_id(self, cr, uid, *args):
