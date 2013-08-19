@@ -2,6 +2,7 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 import base64
+import simplejson
 
 from urllib import quote_plus
 
@@ -16,7 +17,7 @@ class website_hr_recruitment(http.Controller):
 
         domain = [(1, '=', 1)] or [('website_published', '=', True)]
         search = [("state", 'in', ['recruit', 'open'])]
-        domain += search 
+        domain += search
         
         jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain)
         request.cr.execute("select distinct(com.id) from hr_job job, res_company com where com.id=job.company_id")
@@ -24,9 +25,13 @@ class website_hr_recruitment(http.Controller):
         for i in request.cr.fetchall():
             ids.append(i[0])
         companies = request.registry['res.company'].browse(request.cr, request.uid, ids)
+        vals = {}
+        for rec in hr_job_obj.browse(request.cr, request.uid, jobpost_ids):
+            vals[rec.id] = {'count': int(rec.no_of_recruitment), 'date_recruitment': rec.write_date.split(' ')[0]}
         values = website.get_rendering_context({
             'companies': companies,
             'res_job': hr_job_obj.browse(request.cr, request.uid, jobpost_ids),
+            'vals': vals,
             'subscribe': post.get('subscribe'),
             'job_id': None,
             'no_of_jobs': len(hr_job_obj.browse(request.cr, request.uid, jobpost_ids)),
@@ -104,4 +109,25 @@ class website_hr_recruitment(http.Controller):
                 'jobid': post['job_id']
            })
         return website.render("website_hr_recruitment.thankyou", values)
+
+    @http.route(['/recruitment/published'], type='http', auth="admin")
+    def published (self, **post):
+        hr_job = request.registry['hr.job']
+        id = int(post['id'])
+        rec = hr_job.browse(request.cr, request.uid, id)
+        vals = {}
+
+        vals['website_published'] = not rec.website_published
+        if vals['website_published']:
+            vals['state'] = 'recruit'
+            if rec.no_of_recruitment == 0.0:
+                vals ['no_of_recruitment'] = 1.0
+        else:
+            vals['state'] = 'open'
+            vals ['no_of_recruitment'] = 0.0
+
+        res  = hr_job.write(request.cr, request.uid, [rec.id], vals)
+        obj = hr_job.browse(request.cr, request.uid, id)
+        return obj.website_published and "1" or "0"
+
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -13,9 +13,6 @@ OpenERP Contact Form
         'views/website_hr_recruitment.xml',
         'security/website_hr_recruitment_security.xml',
     ],
-    'js':[
-          'static/src/js/*.js',
-      ],
     'css':[
        'static/src/css/*.css'
       ],
