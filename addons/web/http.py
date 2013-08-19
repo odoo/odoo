@@ -617,8 +617,13 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
 
         if uid is None:
-            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password,
-                request.httprequest.environ])
+            wsgienv = request.httprequest.environ
+            env = dict(
+                base_location=request.httprequest.url_root.rstrip('/'),
+                HTTP_HOST=wsgienv['HTTP_HOST'],
+                REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            )
+            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
         self.db = db
