@@ -29,12 +29,11 @@ require.config({
 })(["livesupport", "jquery"], function(livesupport, jQuery) {
     jQuery.noConflict();
     console.log("loaded live support");
-    /*
     livesupport.main({{url | json}}, {{db | json}}, "anonymous", "anonymous", {{channel | json}}, {
         buttonText: {{buttonText | json}},
         inputPlaceholder: {{inputPlaceholder | json}},
         defaultMessage: {{(defaultMessage or None) | json}},
         auto: window.oe_im_livechat_auto || false,
         userName: {{userName | json}} || undefined,
-    });*/
+    });
 });

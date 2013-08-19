@@ -3,6 +3,8 @@ define(["openerp", "underscore", "require", "jquery",
         "jquery.achtung"], function(openerp, _, require, $) {
     /* jshint es3: true */
     "use strict";
+
+    var _t = openerp._t;
     
     var livesupport = {};
 
@@ -19,24 +21,28 @@ define(["openerp", "underscore", "require", "jquery",
         var defs = [];
         options = options || {};
         _.defaults(options, {
-            buttonText: "Chat with one of our collaborators",
-            inputPlaceholder: "How may I help you?",
+            buttonText: _t("Chat with one of our collaborators"),
+            inputPlaceholder: _t("How may I help you?"),
             defaultMessage: null,
             auto: false,
-            userName: "Anonymous"
+            userName: _t("Anonymous")
         });
         defaultInputPlaceholder = options.inputPlaceholder;
         userName = options.userName;
         // TODO : load QwebTemplates
-        defs.push(add_css("../css/livesupport.css"));
-        defs.push(add_css("./jquery.achtung.css"));
+        defs.push(add_css("im_livechat/static/ext/static/css/livesupport.css"));
+        defs.push(add_css("im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung.css"));
 
-        $.when.apply($, defs).then(function() {
+        return $.when.apply($, defs).then(function() {
             console.log("starting live support customer app");
             connection = new openerp.Session(null, server_url, { override_session: true });
             return connection.session_authenticate(db, login, password);
         }).then(function() {
-            connection.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
+            return connection.rpc('/web/proxy/load', {path: '/im_livechat/static/ext/static/js/livesupport_templates.xml'}).then(function(xml) {
+                openerp.qweb.add_template(xml);
+            });
+        }).then(function() {
+            return connection.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                 if (! activated & ! options.auto)
                     return;
                 var button = new livesupport.ChatButton(null, channel, options);
@@ -74,7 +80,7 @@ define(["openerp", "underscore", "require", "jquery",
             this.text = options.buttonText;
         },
         render: function() {
-            this.$().append(templateEngine.chatButton({widget: this}));
+            this.$().append(openerp.qweb.render("chatButton", {widget: this}));
         },
         click: function() {
             if (! this.manager) {
@@ -91,7 +97,7 @@ define(["openerp", "underscore", "require", "jquery",
                 def.reject();
             }, 5000);
             def.then(_.bind(this.chat, this), function() {
-                notification("It seems the connection to the server is encountering problems, please try again later.");
+                notification(_t("It seems the connection to the server is encountering problems, please try again later."));
             });
         },
         chat: function() {
@@ -100,7 +106,7 @@ define(["openerp", "underscore", "require", "jquery",
                 return;
             connection.model("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
                 if (! user_id) {
-                    notification("None of our collaborators seems to be available, please try again later.");
+                    notification(_t("None of our collaborators seems to be available, please try again later."));
                     return;
                 }
                 self.manager.ensure_users([user_id]).then(function() {
@@ -173,7 +179,7 @@ define(["openerp", "underscore", "require", "jquery",
             var def = $.when(uuid);
 
             if (! uuid) {
-                def = connection.connector.call("/longpolling/im/gen_uuid", {});
+                def = connection.rpc("/longpolling/im/gen_uuid", {});
             }
             return def.then(function(uuid) {
                 localStorage["oe_livesupport_uuid"] = uuid;
@@ -188,7 +194,7 @@ define(["openerp", "underscore", "require", "jquery",
                 delete self.users_cache[self.my_id];
                 self.me = me;
                 me.set("name", "You");
-                return connection.connector.call("/longpolling/im/activated", {});
+                return connection.rpc("/longpolling/im/activated", {});
             }).then(function(activated) {
                 if (activated) {
                     self.activated = true;
@@ -236,7 +242,7 @@ define(["openerp", "underscore", "require", "jquery",
             var user_ids = _.map(this.users_cache, function(el) {
                 return el.get("id");
             });
-            connection.connector.call("/longpolling/im/poll", {
+            connection.rpc("/longpolling/im/poll", {
                 last: this.last,
                 users_watch: user_ids,
                 db: connection.database,
@@ -345,7 +351,7 @@ define(["openerp", "underscore", "require", "jquery",
             this.inputPlaceholder = defaultInputPlaceholder;
         },
         render: function() {
-            this.$().append(templateEngine.conversation({widget: this}));
+            this.$().append(openerp.qweb.render("conversation", {widget: this}));
             var change_status = function() {
                 this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
                 this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
@@ -427,7 +433,7 @@ define(["openerp", "underscore", "require", "jquery",
             };
             date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
             
-            this.last_bubble = $(templateEngine.conversation_bubble({"items": items, "user": user, "time": date}));
+            this.last_bubble = $(openerp.qweb.render("conversation_bubble", {"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();
         },
