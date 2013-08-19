@@ -79,7 +79,7 @@ define(["openerp", "underscore", "require", "jquery",
             this.options = options;
             this.text = options.buttonText;
         },
-        render: function() {
+        start: function() {
             this.$().append(openerp.qweb.render("chatButton", {widget: this}));
         },
         click: function() {
@@ -350,7 +350,7 @@ define(["openerp", "underscore", "require", "jquery",
             this.set("pending", 0);
             this.inputPlaceholder = defaultInputPlaceholder;
         },
-        render: function() {
+        start: function() {
             this.$().append(openerp.qweb.render("conversation", {widget: this}));
             var change_status = function() {
                 this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
