@@ -20,6 +20,25 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import re
+
+_select_font=[ ('DejaVu Sans',"DejaVu Sans"),
+        ('DejaVu Sans Bold',"DejaVu Sans Bold"),
+        ('DejaVu Sans Oblique',"DejaVu Sans Oblique"),
+        ('DejaVu Sans BoldOblique',"DejaVu Sans BoldOblique"),
+        ('Liberation Serif',"Liberation Serif"),
+        ('Liberation Serif Bold',"Liberation Serif Bold"),
+        ('Liberation Serif Italic',"Liberation Serif Italic"),
+        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
+        ('Liberation Serif',"Liberation Serif"),
+        ('Liberation Serif Bold',"Liberation Serif Bold"),
+        ('Liberation Serif Italic',"Liberation Serif Italic"),
+        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
+        ('FreeMono',"FreeMono"),
+        ('FreeMono Bold',"FreeMono Bold"),
+        ('FreeMono Oblique',"FreeMono Oblique"),
+        ('FreeMono BoldOblique',"FreeMono BoldOblique"),
+]
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
@@ -38,8 +57,8 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
+        'font': fields.selection(_select_font, "Select Font",help="Set your favorite font into company header"),
     }
-
     def open_company(self, cr, uid, ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
@@ -52,6 +71,19 @@ class base_config_settings(osv.osv_memory):
             'target': 'current',
         }
 
+    def _change_header(self, header,font):
+        """ Replace default fontname use in header and setfont tag """
+        
+        default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
+        return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+
+    def set_base_defaults(self, cr, uid, ids, context=None):
+        ir_model_data = self.pool.get('ir.model.data')
+        wizard = self.browse(cr, uid, ids)[0]
+        if wizard.font:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            user.company_id.write({'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
+        return {}
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
 # plugin_outlook and plugin_thunderbird.
