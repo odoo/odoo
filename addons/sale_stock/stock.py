@@ -123,6 +123,7 @@ class stock_picking(osv.osv):
                     'company_id': sale.company_id.id,
                     'currency_id': sale.pricelist_id.currency_id.id,
                     'journal_id': journal_id,
+                    'comment': sale.note
                 }, context=context)
                 invoices[key] = invoice_id
 
