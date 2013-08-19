@@ -348,7 +348,7 @@
 
         <template id="404">
                 <t t-call="website.layout">
-                    <div class="container" t-if="editable">
+                    <div class="container" t-if="editable and path">
                         <div class="well mt32">
                             <p>
                                 This page does not exists, but you can create

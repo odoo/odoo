@@ -78,9 +78,9 @@ class website(osv.osv):
             logger.error(err)
             values['error'] = err[1]
             return self.render('website.401', values)
-        except ValueError:
-            logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
-            return self.render('website.404', values)
+        # except ValueError:
+        #     logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
+        #     return self.render('website.404', values)
         except Exception:
             logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
             if values['editable']:

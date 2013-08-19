@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+
+    <!-- Layout add nav and footer -->
+
+    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+            <li><a href="/projects/">Projects</a></li>
+        </xpath>
+    </template>
+
+    <!-- Page --> 
+
+    <template id="index" name="Projects">
+        <t t-call="website.layout">
+            <t t-set="title">Blog</t>
+            <div class="container">
+                <div t-foreach="project_ids" t-as="project_id">
+                    <h4 t-field="project_id.name"/>
+                    <div t-foreach="project_id.tasks" t-as="task">
+                        <a t-attf-href="/admin#view_type=form&amp;model=project.task&amp;id=#{task.id}"><span t-field="task.name"/></a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+ </data>
+</openerp>
