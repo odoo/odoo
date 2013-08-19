@@ -17,10 +17,14 @@ var _t = openerp.web._t;
             setTimeout(function () {
                 var value = _.pluck(self.field.value, 'value');
                 var tooltips = _.pluck(self.field.value, 'tooltip');
+                var currency_symbol = "";
+                if (self.getParent()){
+                    currency_symbol = self.getParent().record.currency_symbol.raw_value;
+                };
                 self.$el.sparkline(value, {
                     type: 'bar',
                     barWidth: 5,
-                    tooltipFormat: _.str.sprintf("{{offset:offset}}: {{value}} %s",self.$el.closest("div[class='oe_salesteams_leads']").attr('class') ? _t('Lead(s)') : self.getParent().record.currency_symbol.raw_value),
+                    tooltipFormat: _.str.sprintf("{{offset:offset}}: {{value}} %s",self.$el.closest("div[class='oe_salesteams_leads']").attr('class') ? _t('Lead(s)') : currency_symbol),
                     tooltipValueLookups: {
                         'offset': tooltips
                     },
