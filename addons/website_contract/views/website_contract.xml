@@ -7,7 +7,7 @@
 
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
         <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
-            <li><a href="/projects/">Projects</a></li>
+            <li><a href="/references/">References</a></li>
         </xpath>
     </template>
 
@@ -15,14 +15,8 @@
 
     <template id="index" name="Projects">
         <t t-call="website.layout">
-            <t t-set="title">Projects</t>
+            <t t-set="title">References</t>
             <div class="container">
-                <div t-foreach="project_ids" t-as="project_id">
-                    <h4 t-field="project_id.name"/>
-                    <div t-foreach="project_id.tasks" t-as="task">
-                        <a t-attf-href="/admin#view_type=form&amp;model=project.task&amp;id=#{task.id}"><span t-field="task.name"/></a>
-                    </div>
-                </div>
             </div>
         </t>
     </template>
