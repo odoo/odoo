@@ -31,12 +31,6 @@ require.config({
         "jquery.achtung": {
             deps: ['jquery'],
         },
-        im_common: {
-            deps: ['jquery', 'openerp', 'underscore', 'qweb2'],
-            init: function() {
-                return im_common.no_conflict();
-            }
-        },
     },
 })(["livesupport", "jquery"], function(livesupport, jQuery) {
     jQuery.noConflict();

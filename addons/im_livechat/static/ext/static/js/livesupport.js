@@ -35,6 +35,10 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
             im_common.connection = new openerp.Session(null, server_url, { override_session: true });
             return im_common.connection.session_authenticate(db, login, password);
         }).then(function() {
+            return im_common.connection.rpc('/web/proxy/load', {path: '/im_livechat/static/ext/static/js/livechat.xml'}).then(function(xml) {
+                openerp.qweb.add_template(xml);
+            });
+        }).then(function() {
             return im_common.connection.rpc('/web/proxy/load', {path: '/im/static/src/xml/im_common.xml'}).then(function(xml) {
                 openerp.qweb.add_template(xml);
             });
@@ -62,6 +66,58 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
     var notification = function(message) {
         $.achtung({message: message, timeout: 0, showEffects: false, hideEffects: false});
     };
+
+    im_common.ChatButton = openerp.Widget.extend({
+        className: "openerp_style oe_chat_button",
+        events: {
+            "click": "click"
+        },
+        init: function(parent, channel, options) {
+            this._super(parent);
+            this.channel = channel;
+            this.options = options;
+            this.text = options.buttonText;
+        },
+        start: function() {
+            this.$().append(openerp.qweb.render("chatButton", {widget: this}));
+        },
+        click: function() {
+            if (! this.manager) {
+                this.manager = new im_common.ConversationManager(null);
+                this.activated_def = this.manager.start_polling();
+            }
+            var def = $.Deferred();
+            $.when(this.activated_def).then(function() {
+                def.resolve();
+            }, function() {
+                def.reject();
+            });
+            setTimeout(function() {
+                def.reject();
+            }, 5000);
+            def.then(_.bind(this.chat, this), function() {
+                im_common.notification(_t("It seems the connection to the server is encountering problems, please try again later."));
+            });
+        },
+        chat: function() {
+            var self = this;
+            if (this.manager.conversations.length > 0)
+                return;
+            im_common.connection.model("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
+                if (! user_id) {
+                    im_common.notification(_t("None of our collaborators seems to be available, please try again later."));
+                    return;
+                }
+                self.manager.ensure_users([user_id]).then(function() {
+                    var conv = self.manager.activate_user(self.manager.get_user(user_id), true);
+                    if (self.options.defaultMessage) {
+                        conv.received_message({message: self.options.defaultMessage, 
+                            date: openerp.datetime_to_str(new Date())});
+                    }
+                });
+            });
+        }
+    });
 
     return livesupport;
 });
