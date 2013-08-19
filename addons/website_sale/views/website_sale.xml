@@ -49,7 +49,6 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
@@ -66,7 +65,7 @@
         <xpath expr="//div[@id='shop_content']" position="before">
             <div class="span4">
                 <ul class="nav nav-list">
-                    <li t-att-class=" '' if current_category else 'active' " class='active'><a href='/shop/'>All Products</a></li>
+                    <li t-att-class=" '' if current_category else 'active' " class='active'><a href="/shop/">All Products</a></li>
                 <t t-foreach="categories" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
                 </t>
@@ -82,7 +81,7 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == current_category and 'active' or ''">
-            <a t-att-href="'/shop/category/%%s/' %% category.id" t-field="category.name"></a>
+            <a t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-list">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -108,18 +107,18 @@
                     </div>
                 </div>
                 <div class='row grid grid-align-top'>
-                    <div t-foreach="products" t-as="product" class="oe_product span2 mb16 thumbnail text-center">
-                        <a t-att-href="'/shop/product/%%s/' %% product.id">
+                    <div t-foreach="products" t-as="product" class="span2 mb16 thumbnail text-center">
+                        <a t-attf-href="/shop/product/#{ product.id }/ ">
                             <h5  t-field="product.name"> </h5>
                         </a>
-                        <a t-att-href="'/shop/product/%%s/' %% product.id">
+                        <a t-attf-href="/shop/product/#{ product.id }/">
                             <img class="img-rounded" t-att-src="product.img('image_small')"/>
                         </a>
                         <div>
                             <div t-field="product.description_sale"></div>
                             <div><span t-field="product.list_price"></span>€</div>
                             <div class="mb8 mt8">
-                                <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
+                                <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">Add to cart</a>
                             </div>
                         </div>
                     </div>
@@ -137,16 +136,13 @@
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class="oe_product_detail" id="product_detail">
+                <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
-
-                    <div class="oe_button_cart">
-                        <a t-att-href="'./add_cart/%s/' % product.id" class="btn btn-small btn-success">Add to cart</a>
-                    </div>
+                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success pull-right">Add to cart</a>
                     <img class="media-object" t-att-src="product.img('image')"/>
                     <div t-field="product.description_website"></div>
-                    <div class="oe_website_sale_price"><t t-field="product.list_price" />€</div>
+                    <div><t t-field="product.list_price" />€</div>
                 </div>
             </t>
         </t>
@@ -158,7 +154,7 @@
                 <div class='row mt16'>
                 <t t-foreach="product.recommended_products()" t-as="product">
                     <div class='span2 thumbnail'>
-                        <a t-att-href="'/shop/product/%%s/' %% product.id">
+                        <a t-attf-href="/shop/product/#{ product.id }/">
                             <div class='mt16 text-center'>
                                 <img t-att-src="product.img('image_small')"/>
                                 <h5 t-field='product.name'></h5>
@@ -195,10 +191,10 @@
                             <t t-foreach="order.order_line" t-as="line">
                                 <tr>
                                     <td>
-                                        <a t-att-href="'/shop/product/%%s/' %% line.product_id"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
+                                        <a t-attf-href="/shop/product/#{ line.product_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
                                     <td>
-                                        <a t-att-href="'/shop/product/%%s/' %% line.product_id"><span t-field="line.product_id.name"/></a><br/>
+                                        <a t-attf-href="/shop/product/#{ line.product_id.id }/"><span t-field="line.product_id.name"/></a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
@@ -241,7 +237,7 @@
             <t t-set="title">Shop - Checkout</t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
-                    <div class="span4 oe_total">
+                    <div class="span4">
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -255,7 +251,7 @@
                                     <tr>
                                         <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
-                                        <td class="css_alignright"><t t-esc="line.product_id.list_price"/>€</td>
+                                        <td><t t-esc="line.product_id.list_price"/>€</td>
                                     </tr>
                                 </t>
                             </tbody>
@@ -423,7 +419,7 @@
             <t t-set="title">Shop - Payment</t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
-                    <div class="span4 oe_total">
+                    <div class="span4">
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -437,7 +433,7 @@
                                     <tr>
                                         <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
-                                        <td class="css_alignright"><t t-esc="line.product_id.list_price"/>€</td>
+                                        <td><t t-esc="line.product_id.list_price"/>€</td>
                                     </tr>
                                 </t>
                             </tbody>
@@ -449,7 +445,7 @@
                         </table>
                     </div>
                     <div class="span8">
-                        <div class="js_payments row">
+                        <div class="row">
                             <h3 class="span8">Click on your payment method</h3>
                             <t t-foreach="payments or []" t-as="payment">
                                 <div t-att-title="payment.name">

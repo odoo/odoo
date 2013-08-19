@@ -2,12 +2,16 @@
 import simplejson
 
 import openerp
-from openerp.osv import osv
+from openerp.osv import osv, orm
 from openerp.addons.web import http
 from openerp.addons.web.controllers import main
 from openerp.addons.web.http import request
 import urllib
 import math
+import traceback
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 def auth_method_public():
@@ -42,11 +46,16 @@ class website(osv.osv):
 
     def get_rendering_context(self, additional_values=None):
         debug = 'debug' in request.params
+        is_logged = True
+        try:
+            request.session.check_security()
+        except: # TODO fme: check correct exception
+            is_logged = False
         is_public_user = request.uid == self.get_public_user().id
         values = {
             'debug': debug,
             'is_public_user': is_public_user,
-            'editable': not is_public_user,
+            'editable': is_logged and not is_public_user,
             'request': request,
             'registry': request.registry,
             'cr': request.cr,
@@ -55,11 +64,6 @@ class website(osv.osv):
             'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
             'json': simplejson,
         }
-        if values['editable']:
-            values.update({
-                'script': "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in main.manifest_list('js', db=request.db, debug=debug)]),
-                'css': "\n".join('<link rel="stylesheet" href="%s">' % i for i in main.manifest_list('css', db=request.db, debug=debug))
-            })
         if additional_values:
             values.update(additional_values)
         return values
@@ -68,7 +72,22 @@ class website(osv.osv):
         context = {
             'inherit_branding': values.get('editable', False),
         }
-        return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values, context=context)
+        try:
+            return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values, context=context)
+        except (osv.except_osv, orm.except_orm), err:
+            logger.error(err)
+            values['error'] = err[1]
+            return self.render('website.401', values)
+        except ValueError:
+            logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
+            return self.render('website.404', values)
+        except Exception:
+            logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
+            if values['editable']:
+                values['traceback'] = traceback.format_exc()
+                return self.render('website.500', values)
+            else:
+                return self.render('website.404', values)
 
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager

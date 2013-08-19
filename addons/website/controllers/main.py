@@ -164,9 +164,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         etag = request.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(request.session_id).hexdigest()
         retag = hashed_session
-
-        print Model.search(request.cr, request.uid, [(1,'=',1)])
-
         try:
             if etag:
                 date = Model.read(request.cr, request.uid, [id], [last_update], request.context)[0].get(last_update)
