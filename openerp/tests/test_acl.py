@@ -96,9 +96,10 @@ class TestACL(common.TransactionCase):
             # accessing fields must no raise exceptions...
             part.name
             # ... except they are restricted
-            with self.assertRaises(AttributeError):
+            with self.assertRaises(openerp.osv.orm.except_orm) as cm:
                 part.email
 
+            self.assertEqual(cm.exception.args[0], 'Access Denied')
         finally:
             self.res_partner._columns['email'].groups = False
 
