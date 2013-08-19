@@ -6,12 +6,12 @@
         <!--
             Files used in the generic theme, mostly bootstrap and a few OpenERP tags
         -->
-        <template id="theme" name="Theme">
+        <template id="website.theme" name="Theme">
             <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
+        <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
             <xpath expr="//link[@id='bootstrap_css']" position="replace">
                 <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
                 <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
@@ -29,8 +29,7 @@
                         <script type="text/javascript">
                             CKEDITOR.disableAutoInline = true;
                             // EDIT ALL THE THINGS
-                            CKEDITOR.dtd.$editable = $.extend(
-                                {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+                            CKEDITOR.dtd.$editable = $.extend( {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
                         </script>
 
                         <t t-if="editable">
@@ -115,107 +114,6 @@
                             </div>
                         </footer>
 
-                        <div class='oe_snippet_editor' style="display: none;">
-                            <div class='oe_snippet_list'>
-
-                            <div class='oe_snippet' name='Picture' data-selector='[class*="span"]'>
-                                <div class="span6">
-                                    <img class="img-rounded" src="/website/static/src/img/volcano.jpg"/>
-                                </div>
-                            </div>
-
-                            <div class='oe_snippet' name='Introduction' data-selector=".container">
-                                <section class="container">
-                                    <div class="row mt32 text-center">
-                                        <h2>Wildlife Analysis</h2>
-                                        <h3>In a beautiful place out in the country</h3>
-                                    </div>
-                                    <div class="row mt32">
-                                        <div class="span6">
-                                            <img class='img-rounded' src="/website/static/src/img/china.jpg"/>
-                                        </div>
-                                        <div class="span6">
-                                            <p class='mt16'>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                            </p>
-                                            <p>
-                                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                                deserunt mollit anim id est laborum
-                                            </p>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class='oe_snippet' name='Three Columns' data-selector=".container">
-                                <section class="container">
-                                    <div class="row mt32">
-                                        <div class="span4">
-                                            <h4>Niagara</h4>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                            </p>
-                                        </div>
-                                        <div class="span4">
-                                            <h4>Whitewater</h4>
-                                            <p>
-                                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                                deserunt mollit anim id est laborum
-                                            </p>
-                                        </div>
-                                        <div class="span4">
-                                            <h4>Red Moss</h4>
-                                            <p>
-                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
-                                                quae ab illo inventore veritatis et quasi architecto beatae vitae
-                                                dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
-                                            </p>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class='oe_snippet' name='Introduction' data-selector=".container">
-                                <section class="container">
-                                    <div class="row mt32">
-                                        <div class="span6">
-                                            <h2>Wildlife Analysis</h2>
-                                            <h3>In a beautiful place out in the country</h3>
-                                            <p class='mt16'>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                            </p>
-                                            <p>
-                                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                                deserunt mollit anim id est laborum
-                                            </p>
-                                        </div>
-                                        <div class="span6">
-                                            <img class='img-rounded' src="/website/static/src/img/greenfields.jpg"/>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class='oe_snippet oe_new' name='New Snippet'> 
-                            </div>
-                            </div>
-                        </div>
                     </body>
                 </html>
         </template>
@@ -461,6 +359,17 @@
                 <span t-att-class="'label label-success js_unpublish %%s' %% (not object.website_published and 'hidden' or '')">Unpublish</span>
                 <span t-att-class="'label label-important js_publish %%s' %% (object.website_published and 'hidden' or '')">Publish</span>
             </a>
+        </template>
+
+        <template id="snippets">
+            <div class='oe_snippet' name='FooBar'>
+                <div class='oe_snippet_thumbnail'>
+                    foobar
+                </div>
+                <div class='oe_snippet_body' data-selector-siblings='[class*="span"]' data-selector-childs=''>
+                    FOOBAR
+                </div>
+            </div>
         </template>
 
      </data>

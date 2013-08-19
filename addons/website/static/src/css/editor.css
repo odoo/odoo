@@ -1,4 +1,7 @@
-@charset "utf-8";
+.oe_hidden {
+  display: none !important;
+}
+
 .oe_website_editorbar {
   position: fixed;
   top: 0;
@@ -52,5 +55,28 @@
   position: absolute;
   white-space: nowrap;
   z-index: 1;
+  display: none;
+}
+
+.oe_snippets {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  height: 120px;
+  background: black;
+}
+.oe_snippets .oe_snippet {
+  display: inline;
+}
+.oe_snippets .oe_snippet .oe_snippet_thumbnail {
+  display: inline-block;
+  background: red;
+  width: 100px;
+  height: 100px;
+  border-radius: 3px;
+  margin: 10px;
+}
+.oe_snippets .oe_snippet .oe_snippet_body {
   display: none;
 }
