@@ -9,7 +9,7 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'project'],
+    'depends': ['website', 'sale'],
     'data': [
         'views/website_contract.xml',
     ],
