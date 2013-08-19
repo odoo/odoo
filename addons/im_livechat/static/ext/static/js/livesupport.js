@@ -1,4 +1,8 @@
 
+/*
+    This file must compile in EcmaScript 3 and work in IE7.
+*/
+
 define(["openerp", "underscore", "require", "jquery",
         "jquery.achtung"], function(openerp, _, require, $) {
     /* jshint es3: true */
