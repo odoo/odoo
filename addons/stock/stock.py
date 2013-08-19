@@ -1212,6 +1212,7 @@ class stock_move(osv.osv):
                 'state': 'confirmed',
                 'group_id': move.group_id and move.group_id.id or False,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
+                'move_lines': [(6, 0, [move.id])]
             }
             pick = pick_obj.create(cr, uid, values, context=context)
         move.write({'picking_id': pick})
