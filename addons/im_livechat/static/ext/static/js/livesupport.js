@@ -123,7 +123,7 @@ define(["openerp", "underscore", "require", "jquery",
     livesupport.ImUser = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent, user_rec) {
             openerp.PropertiesMixin.init.call(this, parent);
-            user_rec.image_url = require.toUrl("../img/avatar/avatar.jpeg");
+            user_rec.image_url = require.toUrl("im_livechat/static/ext/static/img/avatar/avatar.jpeg");
             if (user_rec.image)
                 user_rec.image_url = "data:image/png;base64," + user_rec.image;
             this.set(user_rec);
@@ -276,8 +276,8 @@ define(["openerp", "underscore", "require", "jquery",
                 return;
             }
             this.ting = new Audio(new Audio().canPlayType("audio/ogg; codecs=vorbis") ?
-                require.toUrl("../audio/Ting.ogg") :
-                require.toUrl("../audio/Ting.mp3")
+                require.toUrl("im_livechat/static/ext/static/audio/Ting.ogg") :
+                require.toUrl("im_livechat/static/ext/static/audio/Ting.mp3")
             );
         },
         window_focus_change: function() {
