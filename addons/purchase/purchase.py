@@ -1115,7 +1115,7 @@ class procurement_order(osv.osv):
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             #make a purchase order for the procurement
-            return self.make_po(cr, uid, [procurement.id], context=context)
+            return self.make_po(cr, uid, [procurement.id], context=context)[procurement.id]
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
@@ -1226,7 +1226,8 @@ class procurement_order(osv.osv):
             res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
             if not partner: 
-                procurement.write({'message': _('There is no supplier associated to product %s') % (procurement.product_id.name), 'state': 'exception'})
+                self.message_post(cr, uid, [procurement.id],_('There is no supplier associated to product %s') % (procurement.product_id.name))
+                res[procurement.id] = False
             else:
                 seller_qty = procurement.product_id.seller_qty
                 partner_id = partner.id
@@ -1276,7 +1277,7 @@ class procurement_order(osv.osv):
                     'payment_term_id': partner.property_supplier_payment_term.id or False,
                 }
                 res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
-                self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
+                self.write(cr, uid, [procurement.id], {'purchase_id': res[procurement.id]})
                 pass_ids += [procurement.id]
         if pass_ids:
             self.message_post(cr, uid, pass_ids, body=_("Draft Purchase Order created"), context=context)
