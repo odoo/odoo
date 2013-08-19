@@ -4,6 +4,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+import random
 import werkzeug
 
 def get_order(order_id=None):
@@ -105,15 +106,27 @@ class Ecommerce(http.Controller):
     def mycart(self, **post):
         order = get_current_order()
         website = request.registry['website']
+        prod_obj = request.registry.get('product.product')
 
         if post.get('code'):
             pricelist_obj = request.registry.get('product.pricelist')
             pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', post.get('code'))])
             if pricelist_ids:
                 order.write({'pricelist_id': pricelist_ids[0]})
-        
+
+        suggested_ids = []
+        for line in order.order_line:
+            suggested_ids += [p.id for p in line.product_id.suggested_product_ids for line in order.order_line]
+        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)])
+        # select 3 random products
+        suggested_products = []
+        while len(suggested_products) < 3 and suggested_ids:
+            index = random.randrange(0, len(suggested_ids))
+            suggested_products.append(suggested_ids.pop(index))
+
         values = website.get_rendering_context({
             'categories': self.get_categories(),
+            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products),
         })
         return website.render("website_sale.mycart", values)
 

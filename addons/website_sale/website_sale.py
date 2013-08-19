@@ -33,6 +33,8 @@ class product_product(osv.osv):
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'description_website': fields.html('Description for the website'),
+        'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
+        'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
     }
 
     def recommended_products(self, cr, uid, ids, context=None):
