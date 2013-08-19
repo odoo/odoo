@@ -231,12 +231,6 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def write(self, cr, uid, ids, vals, context=None):
-        for data in self.browse(cr, uid, ids, context=context):
-            if vals.get('stage_id'):
-                vals['previous_stage_id'] = data.stage_id.id
-        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
-
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
@@ -402,6 +396,9 @@ class hr_applicant(osv.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            for data in self.browse(cr, uid, ids, context=context):
+                vals['previous_stage_id'] = data.stage_id.id
+
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
