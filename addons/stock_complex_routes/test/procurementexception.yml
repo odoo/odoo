@@ -1,0 +1,37 @@
+- 
+  Create product with no seller_ids
+-
+  
+- 
+  Create a sales order with 1 piece for that product and route crossdock
+- 
+  !record{sale.order}
+- 
+  Confirm sales order
+- 
+  !python {
+- 
+  Check there is a procurement in exception that has the procurement group of the sales order
+- 
+  !python {
+    assert 
+- 
+  Adjust the product that it has at least one seller_id
+- 
+  !record{id: model: product.product) or in !python
+-  
+  Run the Scheduler
+- 
+  !python
+- 
+  Check the status changed there is no procurement order in exception any more from that procurement group
+- 
+  !python{model: procurement.order}
+    search procurement from 
+- 
+  Check a purchase quotation was created
+- 
+  
+  
+
+
