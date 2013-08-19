@@ -17,14 +17,16 @@
         <t t-call="website.layout">
             <t t-set="title">References</t>
             <div class="container">
-                <div class="thumbnails">
-                    <div t-foreach="partner_ids" t-as="partner_id" class="span4 mt16">
+                <div class="thumbnails grid grid-align-top">
+                    <div t-foreach="partner_ids" t-as="partner_id" class="span6">
                         <div class="media thumbnail">
                             <a class="pull-left" href="#">
                                 <img class="media-object" t-att-src="partner_id.img('image_small')"/>
                             </a>
                             <div class="media-body">
+                                <t t-call="website.publish"><t t-set="object" t-value="partner_id"/></t>
                                 <h5 class="media-heading" t-field="partner_id.name"/>
+                                <pre t-field="partner_id.website_testimonial"/>
                             </div>
                         </div>
                     </div>
