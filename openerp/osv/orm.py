@@ -5319,14 +5319,14 @@ class BaseModel(object):
     def _update_cache(self, values):
         """ Update the cache of record `self[0]` with `values`. """
         for name, value in values.iteritems():
-            self._record_cache.set_waiting(name)
+            self._record_cache.set_busy(name)
             self[name] = value
 
     def _prepare_update_cache(self, names):
         """ Prepare records in `self` to update field `names` in cache only. """
         for cache in self._caches:
             for name in names:
-                cache.set_waiting(name)
+                cache.set_busy(name)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """

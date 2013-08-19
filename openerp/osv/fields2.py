@@ -212,15 +212,10 @@ class Field(object):
 
     def compute_value(self, records):
         """ Invoke the compute method on `records`. """
+        batch = len(records) > 1
         recompute = bool(records & scope.recomputation.todo(self))
-        if len(records) > 1:
-            # In batch computing, a record may want to use another record's
-            # value for the field. In that case, compute record per record.
-            for cache in records._caches:
-                cache.set_batch_waiting(self.name, recompute)
-        else:
-            for cache in records._caches:
-                cache.set_waiting(self.name, recompute)
+        for cache in records._caches:
+            cache.set_busy(self.name, batch=batch, recompute=recompute)
 
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
@@ -290,10 +285,9 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
+        record._record_cache.set_null(self.name)
         if self.compute:
             self.compute_value(record)
-        else:
-            record._record_cache.set_null(self.name)
 
     def determine_inverse(self, records):
         """ Given the value of `self` on `records`, inverse the computation. """

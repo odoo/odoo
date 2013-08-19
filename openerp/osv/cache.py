@@ -33,78 +33,87 @@
 # field, and that slot manages how to get/set that field in the cache.
 #
 
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from pprint import pformat
 
+#
+# getter and setter functions for slots
+#
 
-class Slot(object):
-    """ Empty cache slot for a field in a record's cache. """
-    def get(self, cache, name):
-        record = cache.record
-        if cache.id:
-            record._fields[name].determine_value(record)
-        else:
-            record.add_default_value(name)
-        return cache[name]
+def get_value(cache, name):
+    """ Generic getter: read/compute value or get default. """
+    record = cache.record
+    if cache.id:
+        record._fields[name].determine_value(record)
+    else:
+        record.add_default_value(name)
+    return cache[name]
 
-    def set(self, cache, name, value):
-        record = cache.record
-        field = record._fields[name]
-        if not cache.id:
-            field.modified_draft(record)
-        elif field.store or field.inverse:
-            record.write({name: field.convert_to_write(value)})
-        cache.data[name] = ValueSlot(value)
+def get_null(cache, name):
+    """ Getter for an implicit null value. """
+    return cache.record._fields[name].null()
 
+def get_busy(cache, name):
+    """ Getter for a field being computed. """
+    raise Warning("No value for field %s on %s" % (name, cache.record))
+
+def get_batch(cache, name):
+    """ Getter for a field being computed in batch. """
+    record = cache.record
+    record._fields[name].compute_value(record)
+    return cache[name]
+
+def set_value(cache, name, value):
+    """ Generic setter: write value and store it into the cache. """
+    record = cache.record
+    field = record._fields[name]
+    if not cache.id:
+        field.modified_draft(record)
+    elif field.store or field.inverse:
+        record.write({name: field.convert_to_write(value)})
+    cache.data[name] = ValueSlot.make(value)
+
+def set_cache(cache, name, value):
+    """ Cache setter: only store in cache. """
+    cache.data[name] = ValueSlot.make(value)
+
+# the Slot type encapsulates getter and setter functions
+Slot = namedtuple('Slot', ('get', 'set'))
+
+# empty slot
+EmptySlot = Slot(get_value, set_value)
+default_slot = lambda: EmptySlot
+
+# slot implicitly containing null
+NullSlot = Slot(get_null, set_value)
+
+# slots for non-stored fields being computed
+BusySlot = Slot(get_busy, set_cache)
+BatchSlot = Slot(get_batch, set_cache)
+
+# slots for stored fields being recomputed
+BusyRecomputeSlot = Slot(get_busy, set_value)
+BatchRecomputeSlot = Slot(get_batch, set_value)
 
 class ValueSlot(Slot):
-    """ Slot that contains a value. """
-    def __init__(self, value):
-        self.value = value
-
-    def get(self, cache, name):
-        return self.value
-
-
-class NullSlot(Slot):
-    """ Slot for an implicit null value. """
-    def get(self, cache, name):
-        record = cache.record
-        field = record._fields[name]
-        return field.null()
-
-
-class WaitingSlot(Slot):
-    """ Slot waiting to be set, for a field being read/computed. """
-    def __init__(self, recompute):
-        self.recompute = recompute
-
-    def get(self, cache, name):
-        raise Warning("No value for field %s on %s" % (name, cache.record))
-
-    def set(self, cache, name, value):
-        if self.recompute:
-            Slot.set(self, cache, name, value)
-        else:
-            cache.data[name] = ValueSlot(value)
-
-
-class BatchWaitingSlot(WaitingSlot):
-    """ Slot for a field being computed in batch. """
-    def get(self, cache, name):
-        record = cache.record
-        field = record._fields[name]        
-        field.compute_value(record)
-        return cache[name]
+    """ Slot storing a value. """
+    @classmethod
+    def make(cls, value):
+        return ValueSlot(lambda cache, name: value, set_value)
 
 
 class RecordCache(object):
     """ Cache for the fields of a record in a given scope. """
+
+    #
+    # Note. RecordCache does not inherit collections.MutableMapping because
+    # equality is not structural: cache1 == cache2 only if cache1 is cache2!
+    #
     
     def __init__(self, model_cache, id):
         self.model_name = model_cache.name
         self.fields = model_cache.fields
-        self.data = defaultdict(Slot)
+        self.data = defaultdict(default_slot)
         self.id = id
 
     @property
@@ -123,17 +132,19 @@ class RecordCache(object):
         self.fields.add(name)
 
     def set_null(self, name):
-        self.data[name] = NullSlot()
+        """ Set implicit value of `name` being null. """
+        self.data[name] = NullSlot
 
-    def set_waiting(self, name, recompute=False):
-        self.data[name] = WaitingSlot(recompute)
-
-    def set_batch_waiting(self, name, recompute=False):
-        self.data[name] = BatchWaitingSlot(recompute)
+    def set_busy(self, name, batch=False, recompute=False):
+        """ Set the cache busy for field `name` when it is read/computed. """
+        if batch:
+            self.data[name] = BatchRecomputeSlot if recompute else BatchSlot
+        else:
+            self.data[name] = BusyRecomputeSlot if recompute else BusySlot
 
     def pop(self, name, default=None):
         slot = self.data.pop(name, None)
-        return slot.value if isinstance(slot, ValueSlot) else default
+        return slot.get(self, name) if isinstance(slot, ValueSlot) else default
 
     def clear(self):
         self.data.clear()
@@ -146,7 +157,7 @@ class RecordCache(object):
     def iteritems(self):
         for name, slot in self.data.iteritems():
             if isinstance(slot, ValueSlot):
-                yield name, slot.value
+                yield name, slot.get(self, name)
 
     def __len__(self):
         return len(self.data)
