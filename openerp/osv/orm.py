@@ -3363,22 +3363,18 @@ class BaseModel(object):
         select = self.browse(ids)
         result = select._read_flat(list(old_fields), load=load)
 
-        # associate field names to their corresponding field
-        old_fields = [(f, self._fields[f]) for f in old_fields]
-        new_fields = [(f, self._fields[f]) for f in new_fields]
-
         # update record caches with old-style fields
-        model_cache = select._model_cache
+        select._prepare_update_cache(old_fields)
         for values in result:
             record = self.browse(values['id'])
-            for f, field in old_fields:
-                record._record_cache[f] = field.convert_to_cache(values[f])
+            for name in old_fields:
+                record[name] = values[name]
 
         # read new-style fields on records
         for values in result:
             record = self.browse(values['id'])
-            for f, field in new_fields:
-                values[f] = field.convert_to_read(record[f])
+            for name in new_fields:
+                values[name] = self._fields[name].convert_to_read(record[name])
 
         return result if isinstance(ids, list) else (bool(result) and result[0])
 
@@ -3498,7 +3494,7 @@ class BaseModel(object):
 
         readonly = None
         for vals in res:
-            for field in vals.copy():
+            for field in vals.keys():
                 fobj = None
                 if field in self._columns:
                     fobj = self._columns[field]
@@ -3868,7 +3864,7 @@ class BaseModel(object):
             if key in self._columns:
                 old_vals[key] = val
             else:
-                new_vals[key] = self._fields[key].convert_to_cache(val)
+                new_vals[key] = val
 
         # write old-style fields with (low-level) method _write
         if old_vals:
@@ -3876,8 +3872,8 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
-            for rec in self:
-                rec._record_cache.update(new_vals)
+            for record in self:
+                record._update_cache(new_vals)
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
 
@@ -4140,13 +4136,13 @@ class BaseModel(object):
             if key in self._all_columns:
                 old_vals[key] = val
             else:
-                new_vals[key] = self._fields[key].convert_to_cache(val)
+                new_vals[key] = val
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
 
         # put the values of pure new-style fields into cache, and inverse them
-        record._record_cache.update(new_vals)
+        record._update_cache(new_vals)
         for key in new_vals:
             self._fields[key].determine_inverse(record)
 
@@ -4219,7 +4215,7 @@ class BaseModel(object):
             if bool_field not in vals:
                 vals[bool_field] = False
         #End
-        for field in vals.copy():
+        for field in vals.keys():
             fobj = None
             if field in self._columns:
                 fobj = self._columns[field]
@@ -5253,12 +5249,12 @@ class BaseModel(object):
     @property
     def _id(self):
         """ Return the 'id' of record `self` or ``False``. """
-        return bool(self._caches) and self._caches[0]['id']
+        return bool(self._caches) and self._caches[0].id
 
     @property
     def _ids(self):
         """ Return the 'id' of all records in `self`. """
-        return (cache['id'] for cache in self._caches)
+        return (cache.id for cache in self._caches)
 
     @property
     def _refs(self):
@@ -5266,7 +5262,7 @@ class BaseModel(object):
             comparing instances. The result is similar to `_ids`, but uses other
             values for identifying new records, since they do not have an 'id'.
         """
-        return set(cache['id'] or (id(cache),) for cache in self._caches)
+        return set(cache.id or (id(cache),) for cache in self._caches)
 
     @tools.lazy_property
     def _model_cache(self):
@@ -5317,18 +5313,39 @@ class BaseModel(object):
         )
 
     #
+    # Record/cache updates
+    #
+
+    def _update_cache(self, values):
+        """ Update the cache of record `self[0]` with `values`. """
+        for name, value in values.iteritems():
+            self._record_cache.set_waiting(name)
+            self[name] = value
+
+    def _prepare_update_cache(self, names):
+        """ Prepare records in `self` to update field `names` in cache only. """
+        for cache in self._caches:
+            for name in names:
+                cache.set_waiting(name)
+
+    def update(self, values):
+        """ Update record `self[0]` with `values`. """
+        for name, value in values.iteritems():
+            self[name] = value
+
+    #
     # Draft records - records on which the field setters only affect the cache
     #
 
     @property
     def draft(self):
         """ Return whether ``self[0]`` is a draft record. """
-        return bool(self._caches) and self._caches[0].draft
+        return not self._id
 
-    @draft.setter
-    def draft(self, value):
-        """ Set whether ``self[0]`` is a draft record. """
-        self._caches[0].draft = value
+    # @draft.setter
+    # def draft(self, value):
+    #     """ Set whether ``self[0]`` is a draft record. """
+    #     self._caches[0].draft = value
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
@@ -5336,10 +5353,10 @@ class BaseModel(object):
         """
         if self._id:
             _logger.warning("%s.get_draft_values() non optimal", self[0])
-        return dict(item
-            for item in self._record_cache.iteritems()
-            if item[0] not in MAGIC_COLUMNS
-        )
+        result = self._record_cache.dump()
+        for name in MAGIC_COLUMNS:
+            result.pop(name, None)
+        return result
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5354,12 +5371,9 @@ class BaseModel(object):
         assert 'id' not in values, "New records do not have an 'id'."
         scope = scope_proxy.current
         record_cache = scope.cache[self._name][False]
-        record_cache.update(
-            (name, self._fields[name].convert_to_cache(value))
-            for name, value in values.iteritems()
-        )
         record = self._instance(scope, (record_cache,))
-        record.draft = True
+        record._update_cache(values)
+        # record.draft = True
         return record
 
     #
@@ -5514,63 +5528,6 @@ class BaseModel(object):
             raise AttributeError("%r object has no attribute %r" % (type(self).__name__, name))
 
     #
-    # Field access/assignment
-    #
-
-    def _get_field(self, name):
-        """ read the field with the given `name` on a record instance """
-        # null instances: return null values
-        if not self:
-            with self._scope:
-                return self._fields[name].null()
-
-        self = self[0]
-        record_cache = self._record_cache
-
-        # check the record's cache
-        if name not in record_cache:
-            with self._scope:
-                if not record_cache['id']:
-                    # new records: retrieve default values
-                    self.add_default_value(name)
-                else:
-                    # regular records: compute/read the field's value
-                    self._fields[name].determine_value(self)
-
-        return record_cache[name]
-
-    def _set_field(self, name, value):
-        """ Assign the field `name` of `self` to `value`.
-            The value is assigned in the records cache, and if the field is
-            stored, the value is also written to the database.
-        """
-        if not self:
-            return
-
-        self = self[0]
-        field = self._fields[name]
-        record_cache = self._record_cache
-
-        if record_cache.has_value(name) and record_cache[name] == value:
-            # If the value is unchanged, don't do anything. This avoids a loop
-            # when computing a field F with an inverse function: computing F's
-            # inverse does not re-write the original fields, which would
-            # invalidate F again.
-            return
-
-        if self.draft:
-            # draft records: simply invalidate other fields on self
-            field.modified_draft(self)
-
-        elif field.store or field.inverse:
-            # store value in database and/or inverse field
-            with self._scope:
-                self.write({name: field.convert_to_write(value)})
-
-        # store value in cache (here because write() may invalidate the cache!)
-        record_cache[name] = value
-
-    #
     # Cache and recomputation management
     #
 
@@ -5646,7 +5603,7 @@ class BaseModel(object):
         record = self.new(values)
 
         # get a copy of the values in the cache
-        record_values = dict(record._record_cache)
+        record_values = record._record_cache.dump()
 
         # simply assign the modified field to trigger invalidations, etc.
         # TODO: call record.onchange_XXX() instead, if it exists

@@ -24,12 +24,6 @@
     objects. The object :obj:`proxy` is a proxy object to the current scope.
 """
 
-__all__ = [
-    'Scope', 'proxy', 'Cache',
-]
-
-from collections import defaultdict, MutableMapping
-from pprint import pformat
 from werkzeug.local import Local, release_local
 
 # werkzeug "context" variable to store the stack of scopes
@@ -206,155 +200,6 @@ class Scope(object):
 
 
 #
-# Records cache
-#
-
-class RecordCache(MutableMapping):
-    """ Cache for the fields of a record in a given scope. """
-    draft = False
-
-    def __init__(self, fields, id):
-        self.fields = fields            # set of fields present in model cache
-        self.data = {'id': id}
-        self.special = {}
-
-    def __contains__(self, name):
-        return name in self.data or name in self.special
-
-    def has_value(self, name):
-        """ Return whether `self` has a regular value for `name`. """
-        return name in self.data
-
-    def __getitem__(self, name):
-        try:
-            return self.data[name]
-        except KeyError:
-            return self.special[name].get()
-
-    def __setitem__(self, name, value):
-        self.data[name] = value
-        self.special.pop(name, None)
-        self.fields.add(name)
-
-    def set_special(self, name, special):
-        """ assign a value container to key `name` in the cache """
-        self.data.pop(name, None)
-        self.special[name] = special
-
-    def __delitem__(self, name):
-        assert name != 'id', "RecordCache cannot drop 'id' field."
-        del self.data[name]
-
-    def pop(self, *args):
-        return self.data.pop(*args) or self.special.pop(*args)
-
-    def __iter__(self):
-        return iter(self.data)
-
-    def __len__(self):
-        return len(self.data)
-
-    def clear(self):
-        self.data = {'id': self.data['id']}
-        self.special.clear()
-
-    def dump(self):
-        """ Return a "dump" of the record cache. """
-        return dict(() if self.draft else self.iteritems())
-
-
-class ModelCache(defaultdict):
-    """ Cache for the records of a given model in a given scope. It contains the
-        caches of the records that have a non-null 'id'; caches for non-existing
-        records are not retained.
-    """
-    def __init__(self):
-        super(ModelCache, self).__init__()
-        self.fields = set()             # set of fields present in self
-
-    def __missing__(self, id):
-        record_cache = RecordCache(self.fields, id)
-        if id:
-            self[id] = record_cache
-        return record_cache
-
-    def without_field(self, name):
-        """ Return the ids of the records that do not have field `name` in their
-            cache.
-        """
-        return iter(id for id, cache in self.iteritems() if name not in cache)
-
-    def dump(self):
-        """ Return a "dump" of the model cache. """
-        return dict(
-            (record_id, record_cache.dump())
-            for record_id, record_cache in self.iteritems()
-        )
-
-
-class Cache(defaultdict):
-    """ Cache for records in a given scope. The cache is a set of nested
-        dictionaries indexed by model name, record id, and field name (in that
-        order)::
-
-            # access the value of a field of a given record
-            value = cache[model_name][record_id][field_name]
-    """
-    def __init__(self):
-        super(Cache, self).__init__(ModelCache)
-
-    def invalidate(self, model_name, field_name, ids=None):
-        """ Invalidate a field for the given record ids. """
-        model_cache = self[model_name]
-        if field_name in model_cache.fields:
-            if ids is None:
-                model_cache.fields.discard(field_name)
-                for record_cache in model_cache.itervalues():
-                    record_cache.pop(field_name, None)
-            else:
-                for id in ids:
-                    model_cache[id].pop(field_name, None)
-
-    def invalidate_all(self):
-        """ Invalidate the whole cache. """
-        # Note that record caches cannot be dropped from the cache, since they
-        # are memoized in model instances.
-        for model_cache in self.itervalues():
-            model_cache.fields.clear()
-            for record_cache in model_cache.itervalues():
-                record_cache.clear()
-
-    def dump(self):
-        """ Return a "dump" of the cache. """
-        return dict(
-            (model_name, model_cache.dump())
-            for model_name, model_cache in self.iteritems()
-        )
-
-    def check(self):
-        """ self-check for validating the cache """
-        assert proxy.cache is self
-
-        # make a full copy of the cache, and invalidate it
-        cache_dump = self.dump()
-        self.invalidate_all()
-
-        # re-fetch the records, and compare with their former cache
-        invalids = []
-        for model_name, model_dump in cache_dump.iteritems():
-            model = proxy.model(model_name)
-            records = model.browse(model_dump)
-            for record, record_dump in zip(records, model_dump.itervalues()):
-                for field, value in record_dump.iteritems():
-                    if record[field] != value:
-                        info = {'cached': value, 'fetched': record[field]}
-                        invalids.append((record, field, info))
-
-        if invalids:
-            raise Warning('Invalid cache for records\n' + pformat(invalids))
-
-
-#
 # Recomputation manager - stores the field/record to recompute
 #
 
@@ -406,6 +251,6 @@ class Recomputation(object):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning
+from openerp.osv.cache import Cache
 from openerp.osv.orm import BaseModel
 from openerp.modules.registry import RegistryManager

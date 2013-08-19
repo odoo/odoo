@@ -53,35 +53,6 @@ def _invoke_model(func, model):
         return func(model, *scope.args)
 
 
-class CacheMissing(object):
-    """ Special value in cache that represents a missing value. """
-    def __init__(self, field):
-        self.field = field
-
-    def get(self):
-        return self.field.null()
-
-
-class CacheBusy(object):
-    """ Special value in cache to detect access cycle when computing a field. """
-    def __init__(self, field, record):
-        self.args = field, record
-
-    def get(self):
-        raise Warning("No value for field %s on %s" % self.args)
-
-
-class CacheCompute(object):
-    """ Special value in cache to compute a field one record at a time. """
-    def __init__(self, field, record):
-        self.args = field, record
-
-    def get(self):
-        field, record = self.args
-        field.compute_value(record)
-        return record[field.name]
-
-
 class MetaField(type):
     """ Metaclass for field classes. """
     _class_by_type = {}
@@ -191,15 +162,22 @@ class Field(object):
         if instance is None:
             return self         # the field is accessed through the class owner
         assert instance._name == self.model_name
-        return instance._get_field(self.name)
+
+        with instance._scope:
+            if instance:
+                # non-null records: get value through their cache
+                return instance._record_cache[self.name]
+            else:
+                # null records: return null value
+                return self.null()
 
     def __set__(self, instance, value):
         """ set the value of field `self` for the record `instance` """
         assert instance._name == self.model_name
-        # adapt value to the cache level (must be in record's scope!)
         with instance._scope:
+            # adapt value to the cache level, and set it through the cache
             value = self.convert_to_cache(value)
-        return instance._set_field(self.name, value)
+            instance._record_cache[self.name] = value
 
     def null(self):
         """ return the null value for this field """
@@ -234,14 +212,15 @@ class Field(object):
 
     def compute_value(self, records):
         """ Invoke the compute method on `records`. """
+        recompute = bool(records & scope.recomputation.todo(self))
         if len(records) > 1:
             # In batch computing, a record may want to use another record's
             # value for the field. In that case, compute record per record.
-            for record in records:
-                record._record_cache.set_special(self.name, CacheCompute(self, record))
+            for cache in records._caches:
+                cache.set_batch_waiting(self.name, recompute)
         else:
-            for record in records:
-                record._record_cache.set_special(self.name, CacheBusy(self, record))
+            for cache in records._caches:
+                cache.set_waiting(self.name, recompute)
 
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
@@ -284,7 +263,7 @@ class Field(object):
         if any(name not in record._record_cache for record in records):
             for data in result:
                 record = records.browse(data['id'])
-                record._record_cache[name] = self.convert_to_cache(data[name])
+                record._update_cache({name: data[name]})
 
             failed = records.browse()
             for record in records:
@@ -314,7 +293,7 @@ class Field(object):
         if self.compute:
             self.compute_value(record)
         else:
-            record._record_cache.set_special(self.name, CacheMissing(self))
+            record._record_cache.set_null(self.name)
 
     def determine_inverse(self, records):
         """ Given the value of `self` on `records`, inverse the computation. """
