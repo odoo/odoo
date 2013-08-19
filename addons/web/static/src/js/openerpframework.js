@@ -761,6 +761,8 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
      * @returns {jQuery} selector match
      */
     $: function(selector) {
+        if (selector === undefined)
+            return this.$el;
         return this.$el.find(selector);
     },
     /**
