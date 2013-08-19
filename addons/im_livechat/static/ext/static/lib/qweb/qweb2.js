@@ -25,6 +25,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // TODO: line number -> https://bugzilla.mozilla.org/show_bug.cgi?id=618650
 // TODO: templates orverwritten could be called by t-call="__super__" ?
 // TODO: t-set + t-value + children node == scoped variable ?
+
+(function() {
+
 var QWeb2 = {
     expressions_cache: {},
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
@@ -726,4 +729,8 @@ QWeb2.Element = (function() {
         }
     });
     return Element;
+})();
+
+window.QWeb2 = QWeb2;
+
 })();

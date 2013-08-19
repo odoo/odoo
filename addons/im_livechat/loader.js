@@ -1,4 +1,8 @@
 
+(function() {
+
+var tmpQWeb2 = window.QWeb2;
+
 require.config({
     context: "oelivesupport",
     baseUrl: {{url | json}},
@@ -18,7 +22,8 @@ require.config({
         },
         qweb2: {
             init: function() {
-                // TODO: better solution to avoid contamination of global namespace
+                var QWeb2 = window.QWeb2;
+                window.QWeb2 = tmpQWeb2;
                 return QWeb2;
             },
         },
@@ -37,3 +42,5 @@ require.config({
         userName: {{userName | json}} || undefined,
     });
 });
+
+})();
