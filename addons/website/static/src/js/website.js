@@ -1,17 +1,19 @@
-$(function(){
+(function() {
+    "use strict";
 
-    // Ugly. I'll clean this monday
-    if ($('html').attr('data-editable') !== '1'){
-        return;
-    }
+    var website = {};
+    // The following line can be removed in 2017
+    openerp.website = website;
 
-    // TODO fme: put everything in openerp.website scope and load templates on
-    // next tick or document ready
-    // Also check with xmo if jquery.keypress.js is still needed.
+    var templates = [
+        '/website/static/src/xml/website.xml'
+    ];
 
     /* ----- TEMPLATE LOADING ---- */
-
-    function loadTemplates(templates) {
+    website.add_template = function(template) {
+        templates.push(template);
+    };
+    website.load_templates = function(templates) {
         var def = $.Deferred();
         var count = templates.length;
         templates.forEach(function(t) {
@@ -27,41 +29,16 @@ $(function(){
             });
         });
         return def;
-    }
+    };
 
-    var templates = [
-        '/website/static/src/xml/website.xml'
-    ];
-
-    loadTemplates(templates).then(function(){
-        var editor = new EditorBar();
+    website.init_editor = function () {
+        var editor = new website.EditorBar();
         editor.prependTo($('body'));
         $('body').css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
-        // TODO: Create an openerp.Widget out of this
-    });
-
-    /* ----- PUBLISHING STUFF ---- */
-
-    $(document).on('click', '.js_publish, .js_unpublish', function (e) {
-        e.preventDefault();
-        var $link = $(this).parent();
-        $link.find('.js_publish, .js_unpublish').addClass("hidden");
-        var $unp = $link.find(".js_unpublish");
-        var $p = $link.find(".js_publish");
-        $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
-            if (+result) {
-                $p.addClass("hidden");
-                $unp.removeClass("hidden");
-            } else {
-                $p.removeClass("hidden");
-                $unp.addClass("hidden");
-            }
-        });
-    });
+    };
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
-
-    var EditorBar = openerp.Widget.extend({
+    website.EditorBar = openerp.Widget.extend({
         template: 'Website.EditorBar',
         events: {
             'click button[data-action=edit]': 'edit',
@@ -116,10 +93,10 @@ $(function(){
                 snippet: this.$('button[data-action=snippet]'),
             };
 
-            this.rte = new RTE(this);
+            this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
 
-            this.snippets = new Snippets();
+            this.snippets = new website.Snippets();
             this.snippets.appendTo($("body"));
             window.snippets = this.snippets;
 
@@ -218,8 +195,7 @@ $(function(){
     });
 
     /* ----- RICH TEXT EDITOR ---- */
-
-    var RTE = openerp.Widget.extend({
+    website.RTE = openerp.Widget.extend({
         tagName: 'li',
         id: 'oe_rte_toolbar',
         className: 'oe_right oe_rte_toolbar',
@@ -323,8 +299,7 @@ $(function(){
     });
 
     /* ----- SNIPPET SELECTOR ---- */
-
-    var Snippets = openerp.Widget.extend({
+    website.Snippets = openerp.Widget.extend({
         template: 'website.snippets',
         init: function () {
             this._super.apply(this, arguments);
@@ -464,5 +439,51 @@ $(function(){
         },
     });
 
-});
+    var all_ready = null;
+    var dom_ready = $.Deferred();
+    $(dom_ready.resolve);
+
+    /**
+     * Returns a deferred resolved when the templates are loaded
+     * and the Widgets can be instanciated.
+     */
+    website.ready = function() {
+        if (!all_ready) {
+            all_ready = dom_ready.then(function () {
+                // TODO: load translations
+                return website.load_templates(templates);
+            });
+        }
+        return all_ready;
+    };
+
+    dom_ready.then(function () {
+        website.is_editable = $('html').attr('data-editable') === '1';
+
+        if (website.is_editable) {
+            website.ready().then(website.init_editor);
+        }
+
+        /* ----- PUBLISHING STUFF ---- */
+        $(document).on('click', '.js_publish, .js_unpublish', function (e) {
+            e.preventDefault();
+            var $link = $(this).parent();
+            $link.find('.js_publish, .js_unpublish').addClass("hidden");
+            var $unp = $link.find(".js_unpublish");
+            var $p = $link.find(".js_publish");
+            $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
+                if (+result) {
+                    $p.addClass("hidden");
+                    $unp.removeClass("hidden");
+                } else {
+                    $p.removeClass("hidden");
+                    $unp.addClass("hidden");
+                }
+            });
+        });
+
+    });
+
+    return website;
+})();
 
