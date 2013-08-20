@@ -126,7 +126,7 @@ function declare($, _, openerp) {
                 });
             }
 
-            auth_def.then(function() {
+            return auth_def.then(function() {
                 self.my_id = user_id;
                 return self.ensure_users([self.my_id]);
             }).then(function() {

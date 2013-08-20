@@ -2,7 +2,6 @@
 openerp.im = function(instance) {
 
     var USERS_LIMIT = 20;
-    var ERROR_DELAY = 5000;
 
     var _t = instance.web._t;
     var QWeb = instance.web.qweb;
