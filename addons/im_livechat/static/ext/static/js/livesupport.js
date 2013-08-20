@@ -24,17 +24,13 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
         });
 
         im_common.notification = notification;
-        //im_common.to_url = require.toUrl;
 
         console.log("starting live support customer app");
         im_common.connection = new openerp.Session(null, server_url, { override_session: true });
         return im_common.connection.session_authenticate(db, login, password).then(function() {
-            im_common.to_url = function(file) {
-                return im_common.connection.url("/" + file);
-            };
             var defs = [];
-            defs.push(add_css("im/static/src/css/im_common.css"));
-            defs.push(add_css("im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung.css"));
+            defs.push(add_css("/im/static/src/css/im_common.css"));
+            defs.push(add_css("/im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung.css"));
             defs.push(im_common.connection.rpc('/web/proxy/load', {path: '/im_livechat/static/ext/static/js/livechat.xml'}).then(function(xml) {
                 openerp.qweb.add_template(xml);
             }));
@@ -56,7 +52,7 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
 
     var add_css = function(relative_file_name) {
         var css_def = $.Deferred();
-        $('<link rel="stylesheet" href="' + im_common.to_url(relative_file_name) + '"></link>')
+        $('<link rel="stylesheet" href="' + im_common.connection.url(relative_file_name) + '"></link>')
                 .appendTo($("head")).ready(function() {
             css_def.resolve();
         });

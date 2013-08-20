@@ -19,9 +19,6 @@ function declare($, _, openerp) {
         All of this must be defined to use this module
     */
     _.extend(im_common, {
-        to_url: function(file) {
-            throw new Error("Not implemented");
-        },
         notification: function(message) {
             throw new Error("Not implemented");
         },
@@ -37,7 +34,7 @@ function declare($, _, openerp) {
     im_common.ImUser = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent, user_rec) {
             openerp.PropertiesMixin.init.call(this, parent);
-            user_rec.image_url = im_common.to_url("im/static/src/img/avatar/avatar.jpeg");
+            user_rec.image_url = im_common.connection.url("/im/static/src/img/avatar/avatar.jpeg");
 
             // TODO : check it works correctly
             if (user_rec.user)
@@ -215,8 +212,8 @@ function declare($, _, openerp) {
                 return;
             }
             var kitten = jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
-            this.ting = new Audio(im_common.to_url(
-                "im/static/src/audio/" +
+            this.ting = new Audio(im_common.connection.url(
+                "/im/static/src/audio/" +
                 (kitten ? "purr" : "Ting") +
                 (new Audio().canPlayType("audio/ogg; codecs=vorbis") ? ".ogg": ".mp3")
             ));
@@ -293,7 +290,7 @@ function declare($, _, openerp) {
             this.inputPlaceholder = this.options.defaultInputPlaceholder;
         },
         start: function() {
-            this.$().append(openerp.qweb.render("im_common.conversation", {widget: this, to_url: im_common.to_url}));
+            this.$().append(openerp.qweb.render("im_common.conversation", {widget: this, to_url: _.bind(im_common.connection.url, im_common.connection)}));
             var change_status = function() {
                 this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
                 this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);

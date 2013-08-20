@@ -13,9 +13,6 @@ openerp.im = function(instance) {
                 im_common.notification = function(message) {
                     instance.client.do_warn(message);
                 };
-                im_common.to_url = function(file) {
-                    return "/" + file;
-                };
                 im_common.connection = openerp.session;
 
                 var im = new instance.im.InstantMessaging(self);
