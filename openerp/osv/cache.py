@@ -19,22 +19,42 @@
 #
 ##############################################################################
 
-""" This module provides the implementation of the records cache. """
+""" This module provides the implementation of the records cache.
 
-#
-# Records cache - mapping associating values to field names
-#
-# The record cache is a read-through write-through cache: getting an element may
-# trigger a read(), and setting an element may trigger a write(). Other
-# behaviors are possible: getting an element may trigger an error while that
-# element is being computed, etc.
-#
-# The design behind the cache is pretty simple: the cache has a "slot" for each
-# field, and that slot manages how to get/set that field in the cache.
-#
+    The cache is structured as a set of nested dictionaries indexed by model
+    name, record id, and field name (in that order)::
+
+        # access the value of a field of a given record
+        value = cache[model_name][record_id][field_name]
+
+    The cache of a given record is a mapping associating values to field names.
+    That cache is not a simple dictionary: it is a read-through write-through
+    cache: getting an element may issue a read(), and setting an element may
+    issue a write()::
+
+        # retrieve the cache of a given record
+        record_cache = cache[model_name][record_id]
+
+        # this statement may issue a read() to retrieve the value
+        value = record_cache[field_name]
+
+        # this statement may issue a write() to store the value in the database
+        record_cache[field_name] = value
+
+    Other behaviors are possible: getting an element may trigger an error while
+    that element is being computed, etc.
+
+"""
+
 
 from collections import defaultdict, namedtuple
 from pprint import pformat
+
+#
+# The design of the record cache is pretty simple. The cache does not store
+# values directly, instead it has a "slot" for each field. That slot may contain
+# a value and manages how to get/set that field in the cache.
+#
 
 #
 # getter and setter functions for slots
@@ -197,13 +217,7 @@ class ModelCache(defaultdict):
 
 
 class Cache(defaultdict):
-    """ Cache for records in a given scope. The cache is a set of nested
-        dictionaries indexed by model name, record id, and field name (in that
-        order)::
-
-            # access the value of a field of a given record
-            value = cache[model_name][record_id][field_name]
-    """
+    """ Cache for records in a given scope. """
     def __init__(self):
         super(Cache, self).__init__()
 

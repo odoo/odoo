@@ -3364,7 +3364,7 @@ class BaseModel(object):
         result = select._read_flat(list(old_fields), load=load)
 
         # update record caches with old-style fields
-        select._prepare_update_cache(old_fields)
+        select._prepare_cache(old_fields)
         for values in result:
             record = self.browse(values['id'])
             for name in old_fields:
@@ -5317,12 +5317,14 @@ class BaseModel(object):
     #
 
     def _update_cache(self, values):
-        """ Update the cache of record `self[0]` with `values`. """
+        """ Update the cache of record `self[0]` with `values`. Only the cache
+            is be updated, no side effect happens.
+        """
         for name, value in values.iteritems():
             self._record_cache.set_busy(name)
             self[name] = value
 
-    def _prepare_update_cache(self, names):
+    def _prepare_cache(self, names):
         """ Prepare records in `self` to update field `names` in cache only. """
         for cache in self._caches:
             for name in names:
