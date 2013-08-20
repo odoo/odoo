@@ -406,8 +406,9 @@ $(function(){
             $('.oe_snippets .oe_drop_zone').remove();   // no zone in the snippet selector ...
             $('#website-top-view .oe_drop_zone').remove();   // no zone in the top bars ...
             $('#website-top-edit .oe_drop_zone').remove();
+            var count;
             do {
-                var count = 0;
+                count = 0;
                 var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
                 count += $zones.length;
                 $zones.remove();
@@ -419,7 +420,7 @@ $(function(){
 
             // Cleaning up zones placed between floating or inline elements
             var $zones = $('.oe_drop_zone');
-            for( i = 0, len = $zones.length; i < len; i++ ){
+            for( var i = 0, len = $zones.length; i < len; i++ ){
                 var zone = $zones.eq(i);
                 var prev = zone.prev();
                 var next = zone.next();
