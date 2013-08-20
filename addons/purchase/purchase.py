@@ -290,6 +290,7 @@ class purchase_order(osv.osv):
             return {}
         return {'value': {'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id}}
 
+   #Destination address is used when dropshipping 
     def onchange_dest_address_id(self, cr, uid, ids, address_id):
         if not address_id:
             return {}

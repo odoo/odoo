@@ -251,14 +251,15 @@ class stock_move(osv.osv):
 
     def _push_apply(self, cr, uid, moves, context):
         for move in moves:
-            for route in move.product_id.route_ids:
-                found = False
-                for rule in route.push_ids:
-                    if rule.location_from_id.id == move.location_dest_id.id:
-                        self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
-                        found = True
-                        break
-                if found: break
+            if not move.move_dest_id:
+                for route in move.product_id.route_ids:
+                    found = False
+                    for rule in route.push_ids:
+                        if rule.location_from_id.id == move.location_dest_id.id:
+                            self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
+                            found = True
+                            break
+                    if found: break
         return True
 
     # Create the stock.move.putaway records
