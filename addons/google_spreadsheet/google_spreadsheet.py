@@ -19,13 +19,16 @@
 ##############################################################################
 
 import simplejson
+import logging
 from lxml import etree
 import re
-import requests
+import urllib
+import urllib2
 
 from openerp.osv import osv
 from openerp import SUPERUSER_ID
 
+_logger = logging.getLogger(__name__)
 
 class config(osv.osv):
     _inherit = 'google.drive.config'
@@ -83,7 +86,14 @@ class config(osv.osv):
   </entry>
 </feed>''' % (spreadsheet_key, spreadsheet_key, spreadsheet_key, formula.replace('"', '&quot;'), spreadsheet_key, spreadsheet_key, config_formula.replace('"', '&quot;'))
 
-        requests.post('https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?v=3&access_token=%s' % (spreadsheet_key, access_token), data=request, headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
+        try:
+            req = urllib2.Request(
+                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, urllib.urlencode({'v': 3, 'access_token': access_token})),
+                data=request,
+                headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
+            urllib2.urlopen(req)
+        except (urllib2.HTTPError, urllib2.URLError):
+            _logger.warning("An error occured while writting the formula on the Google Spreadsheet.")
 
         description = '''
         formula: %s

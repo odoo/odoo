@@ -1,10 +1,21 @@
 
-define(["nova", "underscore", "oeclient", "require", "jquery",
-        "jquery.achtung"], function(nova, _, oeclient, require, $) {
+/*
+    This file must compile in EcmaScript 3 and work in IE7.
+*/
+
+define(["openerp", "underscore", "require", "jquery",
+        "jquery.achtung"], function(openerp, _, require, $) {
+    /* jshint es3: true */
+    "use strict";
+
+    var _t = openerp._t;
+    
     var livesupport = {};
 
-    var templateEngine = new nova.TemplateEngine();
-    templateEngine.extendEnvironment({"toUrl": _.bind(require.toUrl, require)});
+    _.extend(openerp.qweb.default_dict, {
+        'toUrl': _.bind(require.toUrl, require)
+    });
+
     var connection;
 
     var defaultInputPlaceholder;
@@ -14,30 +25,28 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
         var defs = [];
         options = options || {};
         _.defaults(options, {
-            buttonText: "Chat with one of our collaborators",
-            inputPlaceholder: "How may I help you?",
+            buttonText: _t("Chat with one of our collaborators"),
+            inputPlaceholder: _t("How may I help you?"),
             defaultMessage: null,
             auto: false,
-            userName: "Anonymous",
+            userName: _t("Anonymous")
         });
         defaultInputPlaceholder = options.inputPlaceholder;
         userName = options.userName;
-        defs.push($.ajax({
-            url: require.toUrl("./livesupport_templates.js"),
-            jsonp: false,
-            jsonpCallback: "oe_livesupport_templates_callback",
-            dataType: "jsonp",
-            cache: true,
-        }).then(function(content) {
-            return templateEngine.loadFileContent(content);
-        }));
-        defs.push(add_css("../css/livesupport.css"));
-        defs.push(add_css("./jquery.achtung.css"));
+        // TODO : load QwebTemplates
+        defs.push(add_css("im_livechat/static/ext/static/css/livesupport.css"));
+        defs.push(add_css("im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung.css"));
 
-        $.when.apply($, defs).then(function() {
+        return $.when.apply($, defs).then(function() {
             console.log("starting live support customer app");
-            connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            connection.connector.call("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
+            connection = new openerp.Session(null, server_url, { override_session: true });
+            return connection.session_authenticate(db, login, password);
+        }).then(function() {
+            return connection.rpc('/web/proxy/load', {path: '/im_livechat/static/ext/static/js/livesupport_templates.xml'}).then(function(xml) {
+                openerp.qweb.add_template(xml);
+            });
+        }).then(function() {
+            return connection.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                 if (! activated & ! options.auto)
                     return;
                 var button = new livesupport.ChatButton(null, channel, options);
@@ -63,19 +72,19 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
 
     var ERROR_DELAY = 5000;
 
-    livesupport.ChatButton = nova.Widget.$extend({
+    livesupport.ChatButton = openerp.Widget.extend({
         className: "openerp_style oe_chat_button",
         events: {
-            "click": "click",
+            "click": "click"
         },
-        __init__: function(parent, channel, options) {
-            this.$super(parent);
+        init: function(parent, channel, options) {
+            this._super(parent);
             this.channel = channel;
             this.options = options;
             this.text = options.buttonText;
         },
-        render: function() {
-            this.$().append(templateEngine.chatButton({widget: this}));
+        start: function() {
+            this.$().append(openerp.qweb.render("chatButton", {widget: this}));
         },
         click: function() {
             if (! this.manager) {
@@ -92,34 +101,33 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
                 def.reject();
             }, 5000);
             def.then(_.bind(this.chat, this), function() {
-                notification("It seems the connection to the server is encountering problems, please try again later.");
+                notification(_t("It seems the connection to the server is encountering problems, please try again later."));
             });
         },
         chat: function() {
             var self = this;
             if (this.manager.conversations.length > 0)
                 return;
-            connection.getModel("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
+            connection.model("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
                 if (! user_id) {
-                    notification("None of our collaborators seems to be available, please try again later.");
+                    notification(_t("None of our collaborators seems to be available, please try again later."));
                     return;
                 }
                 self.manager.ensure_users([user_id]).then(function() {
                     var conv = self.manager.activate_user(self.manager.get_user(user_id), true);
                     if (self.options.defaultMessage) {
                         conv.received_message({message: self.options.defaultMessage, 
-                            date: oeclient.datetime_to_str(new Date())});
+                            date: openerp.datetime_to_str(new Date())});
                     }
                 });
             });
-        },
+        }
     });
 
-    livesupport.ImUser = nova.Class.$extend({
-        __include__: [nova.DynamicProperties],
-        __init__: function(parent, user_rec) {
-            nova.DynamicProperties.__init__.call(this, parent);
-            user_rec.image_url = require.toUrl("../img/avatar/avatar.jpeg");
+    livesupport.ImUser = openerp.Class.extend(openerp.PropertiesMixin, {
+        init: function(parent, user_rec) {
+            openerp.PropertiesMixin.init.call(this, parent);
+            user_rec.image_url = require.toUrl("im_livechat/static/ext/static/img/avatar/avatar.jpeg");
             if (user_rec.image)
                 user_rec.image_url = "data:image/png;base64," + user_rec.image;
             this.set(user_rec);
@@ -131,20 +139,19 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
         },
         destroy: function() {
             this.trigger("destroyed");
-            nova.DynamicProperties.destroy.call(this);
+            openerp.PropertiesMixin.destroy.call(this);
         },
         add_watcher: function() {
             this.set("watcher_count", this.get("watcher_count") + 1);
         },
         remove_watcher: function() {
             this.set("watcher_count", this.get("watcher_count") - 1);
-        },
+        }
     });
 
-    livesupport.ConversationManager = nova.Class.$extend({
-        __include__: [nova.DynamicProperties],
-        __init__: function(parent) {
-            nova.DynamicProperties.__init__.call(this, parent);
+    livesupport.ConversationManager = openerp.Class.extend(openerp.PropertiesMixin, {
+        init: function(parent) {
+            openerp.PropertiesMixin.init.call(this, parent);
             this.set("right_offset", 0);
             this.conversations = [];
             this.users = {};
@@ -176,22 +183,22 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             var def = $.when(uuid);
 
             if (! uuid) {
-                def = connection.connector.call("/longpolling/im/gen_uuid", {});
+                def = connection.rpc("/longpolling/im/gen_uuid", {});
             }
             return def.then(function(uuid) {
                 localStorage["oe_livesupport_uuid"] = uuid;
-                return connection.getModel("im.user").call("get_by_user_id", [uuid]);
+                return connection.model("im.user").call("get_by_user_id", [uuid]);
             }).then(function(my_id) {
                 self.my_id = my_id["id"];
-                return connection.getModel("im.user").call("assign_name", [uuid, userName]);
+                return connection.model("im.user").call("assign_name", [uuid, userName]);
             }).then(function() {
-                return self.ensure_users([self.my_id])
+                return self.ensure_users([self.my_id]);
             }).then(function() {
                 var me = self.users_cache[self.my_id];
                 delete self.users_cache[self.my_id];
                 self.me = me;
                 me.set("name", "You");
-                return connection.connector.call("/longpolling/im/activated", {});
+                return connection.rpc("/longpolling/im/activated", {});
             }).then(function(activated) {
                 if (activated) {
                     self.activated = true;
@@ -203,7 +210,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             });
         },
         unload: function() {
-            connection.getModel("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
+            connection.model("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
         },
         ensure_users: function(user_ids) {
             var no_cache = {};
@@ -215,7 +222,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return connection.getModel("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
+                return connection.model("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
                     self.add_to_user_cache(users);
                 });
         },
@@ -239,13 +246,13 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             var user_ids = _.map(this.users_cache, function(el) {
                 return el.get("id");
             });
-            connection.connector.call("/longpolling/im/poll", {
+            connection.rpc("/longpolling/im/poll", {
                 last: this.last,
                 users_watch: user_ids,
                 db: connection.database,
                 uid: connection.userId,
                 password: connection.password,
-                uuid: self.me.get("uuid"),
+                uuid: self.me.get("uuid")
             }).then(function(result) {
                 _.each(result.users_status, function(el) {
                     if (self.get_user(el.id))
@@ -273,8 +280,8 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
                 return;
             }
             this.ting = new Audio(new Audio().canPlayType("audio/ogg; codecs=vorbis") ?
-                require.toUrl("../audio/Ting.ogg") :
-                require.toUrl("../audio/Ting.mp3")
+                require.toUrl("im_livechat/static/ext/static/audio/Ting.ogg") :
+                require.toUrl("im_livechat/static/ext/static/audio/Ting.mp3")
             );
         },
         window_focus_change: function() {
@@ -283,10 +290,10 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             }
         },
         messages_change: function() {
-            /*if (! instance.webclient.set_title_part)
-                return;
-            instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
-                _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));*/
+            //if (! instance.webclient.set_title_part)
+            //    return;
+            //instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
+            //    _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
         activate_user: function(user, focus) {
             var conv = this.users[user.get('id')];
@@ -326,19 +333,19 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             $(window).off("unload", this.unload_event_handler);
             $(window).unbind("blur", this.blur_hdl);
             $(window).unbind("focus", this.focus_hdl);
-            nova.DynamicProperties.destroy.call(this);
-        },
+            openerp.PropertiesMixin.destroy.call(this);
+        }
     });
 
-    livesupport.Conversation = nova.Widget.$extend({
+    livesupport.Conversation = openerp.Widget.extend({
         className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "send_message",
             "click .oe_im_chatview_close": "destroy",
-            "click .oe_im_chatview_header": "show_hide",
+            "click .oe_im_chatview_header": "show_hide"
         },
-        __init__: function(parent, user, me) {
-            this.$super(parent);
+        init: function(parent, user, me) {
+            this._super(parent);
             this.me = me;
             this.user = user;
             this.user.add_watcher();
@@ -347,8 +354,8 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             this.set("pending", 0);
             this.inputPlaceholder = defaultInputPlaceholder;
         },
-        render: function() {
-            this.$().append(templateEngine.conversation({widget: this}));
+        start: function() {
+            this.$().append(openerp.qweb.render("conversation", {widget: this}));
             var change_status = function() {
                 this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
                 this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
@@ -371,11 +378,11 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
         show_hide: function() {
             if (this.shown) {
                 this.$().animate({
-                    height: this.$(".oe_im_chatview_header").outerHeight(),
+                    height: this.$(".oe_im_chatview_header").outerHeight()
                 });
             } else {
                 this.$().animate({
-                    height: this.full_height,
+                    height: this.full_height
                 });
             }
             this.shown = ! this.shown;
@@ -392,7 +399,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             } else {
                 this.set("pending", this.get("pending") + 1);
             }
-            this._add_bubble(this.user, message.message, oeclient.str_to_datetime(message.date));
+            this._add_bubble(this.user, message.message, openerp.str_to_datetime(message.date));
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -404,7 +411,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             }
             this.$("input").val("");
             var send_it = _.bind(function() {
-                var model = connection.getModel("im.message");
+                var model = connection.model("im.message");
                 return model.call("post", [mes, this.user.get('id')], {uuid: this.me.get("uuid"), context: {}});
             }, this);
             var tries = 0;
@@ -430,7 +437,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             };
             date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
             
-            this.last_bubble = $(templateEngine.conversation_bubble({"items": items, "user": user, "time": date}));
+            this.last_bubble = $(openerp.qweb.render("conversation_bubble", {"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();
         },
@@ -443,8 +450,8 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
         destroy: function() {
             this.user.remove_watcher();
             this.trigger("destroyed");
-            return this.$super();
-        },
+            return this._super();
+        }
     });
 
 
