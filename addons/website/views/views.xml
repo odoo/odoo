@@ -399,14 +399,25 @@
         </template>
 
         <template id="snippets">
-            <div class='oe_snippet' name='FooBar'>
+
+            <div class='oe_snippet' name='FooBar' data-selector-siblings='p,h1,h2,h3,h4,h5'>
                 <div class='oe_snippet_thumbnail'>
                     foobar
                 </div>
-                <div class='oe_snippet_body' data-selector-siblings='[class*="span"]' data-selector-childs=''>
+                <div class='oe_snippet_body'>
                     FOOBAR
                 </div>
             </div>
+
+            <div class='oe_snippet' name='BarFoo' data-selector-childs='.container'>
+                <div class='oe_snippet_thumbnail'>
+                    barfoo
+                </div>
+                <div class='oe_snippet_body'>
+                    BARFOO
+                </div>
+            </div>
+
         </template>
 
      </data>

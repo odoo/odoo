@@ -121,6 +121,7 @@ $(function(){
 
             this.snippets = new Snippets();
             this.snippets.appendTo($("body"));
+            window.snippets = this.snippets;
 
             return $.when(
                 this._super.apply(this, arguments),
@@ -335,31 +336,113 @@ $(function(){
                 type: "GET",
                 url:  "/page/website.snippets",
                 dataType: "text",
-                success: function(text){
-                    self.$el.html(text);
+                success: function(snippets){
+                    self.$el.html(snippets);
+                    self.start_snippets();
                 },
             });
 
-            // load snippets
-            // /page/website.snippets
         },
-        setup_droppable: function () {
+        // setup widget and drag and drop
+        start_snippets: function(){
             var self = this;
-            $('.oe_snippet_drop').remove();
-            var droppable = '<div class="oe_snippet_drop"></div>';
-            var $zone = $(':not(.oe_snippet) > .container');
-            $zone.after(droppable);//.after(droppable);
+            
+            this.$('.oe_snippet').draggable({
+                helper: 'clone',
+                start: function(){
+                    var snippet = $(this);
+                 
+                    self.activate_drop_zones({
+                        siblings: snippet.data('selector-siblings'),
+                        childs:   snippet.data('selector-childs')
+                    });
 
-            $(".oe_snippet_drop").droppable({
-                hoverClass: 'oe_accepting',
-                drop: function( event, ui ) {
-                    console.log(event, ui, "DROP");
-
-                    $(event.target).replaceWith($(ui.draggable).html());
-                    $('.oe_selected').remove();
-                    $('.oe_snippet_drop').remove();
+                    $('.oe_drop_zone').droppable({
+                        hoverClass: "oe_hover",
+                        drop:   function(event,ui){
+                            $(this).replaceWith(snippet.find('.oe_snippet_body').clone());
+                        },
+                    });
+                },
+                stop: function(){
+                    self.deactivate_drop_zones();
                 }
             });
+        },
+        // A generic drop zone generator. two css selectors can be provided
+        // selector.childs -> will insert drop zones as direct child of the selected elements
+        //   in case the selected elements have children themselves, dropzones will be interleaved
+        //   with them.
+        // selector.siblings -> will insert drop zones after and before selected elements
+        activate_drop_zones: function(selector){
+            var self = this;
+            var child_selector   =  selector.childs   || '';
+            var sibling_selector =  selector.siblings || '';
+            var zone_template = "<div class='oe_drop_zone'></div>";
+            
+            $('.oe_drop_zone').remove();
+
+            if(child_selector){
+                var $zones = $(child_selector);
+                for( var i = 0, len = $zones.length; i < len; i++ ){
+                    $zones.eq(i).find('> *:not(.oe_drop_zone)').after(zone_template);
+                    $zones.eq(i).prepend(zone_template);
+                }
+            }
+            
+            if(sibling_selector){
+                var $zones = $(sibling_selector);
+                for( var i = 0, len = $zones.length; i < len; i++ ){
+                    if($zones.eq(i).prev('.oe_drop_zone').length === 0){
+                        $zones.eq(i).before(zone_template);
+                    }
+                    if($zones.eq(i).next('.oe_drop_zone').length === 0){
+                        $zones.eq(i).after(zone_template);
+                    }
+                }
+            }
+
+            // Cleaning up unnecessary zones
+            $('.oe_snippets .oe_drop_zone').remove();   // no zone in the snippet selector ...
+            $('#website-top-view .oe_drop_zone').remove();   // no zone in the top bars ...
+            $('#website-top-edit .oe_drop_zone').remove();
+            do {
+                var count = 0;
+                var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
+                count += $zones.length;
+                $zones.remove();
+
+                $zones = $('.oe_drop_zone > .oe_drop_zone').remove();   // no recusrive zones
+                count += $zones.length;
+                $zones.remove();
+            }while(count > 0);
+
+            // Cleaning up zones placed between floating or inline elements
+            var $zones = $('.oe_drop_zone');
+            for( i = 0, len = $zones.length; i < len; i++ ){
+                var zone = $zones.eq(i);
+                var prev = zone.prev();
+                var next = zone.next();
+                var float_prev = zone.prev().css('float')   || 'none';
+                var float_next = zone.next().css('float')   || 'none';
+                var disp_prev  = zone.prev().css('display') ||  null;
+                var disp_next  = zone.next().css('display') ||  null;
+                if(     (float_prev === 'left' || float_prev === 'right')
+                    &&  (float_next === 'left' || float_next === 'right')  ){
+                    zone.remove();
+                    continue;
+                }else if( !(    disp_prev === null
+                             || disp_next === null
+                             || disp_prev === 'block'
+                             || disp_next === 'block'
+                            ) ){
+                    zone.remove();
+                    continue;
+                }
+            }
+        },
+        deactivate_drop_zones: function(){
+            $('.oe_drop_zone').remove();
         },
         toggle: function(){
             if(this.$el.hasClass('oe_hidden')){
