@@ -69,25 +69,27 @@ class website(osv.osv):
         return values
 
     def render(self, template, values={}):
+        view = request.registry.get("ir.ui.view")
         context = {
             'inherit_branding': values.get('editable', False),
         }
         try:
-            return request.registry.get("ir.ui.view").render(request.cr, request.uid, template, values, context=context)
+            return view.render(request.cr, request.uid, template, values, context=context)
         except (osv.except_osv, orm.except_orm), err:
             logger.error(err)
             values['error'] = err[1]
             return self.render('website.401', values)
-        except ValueError:
-            logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
-            return self.render('website.404', values)
+        # except ValueError:
+        #     logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
+        #     return self.render('website.404', values)
         except Exception:
-            logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
+            trace = traceback.format_exc()
+            logger.error("Website Rendering Error.\n\n%s" % trace)
             if values['editable']:
-                values['traceback'] = traceback.format_exc()
-                return self.render('website.500', values)
+                values['traceback'] = trace
+                return view.render(request.cr, request.uid, 'website.500', values, context=context)
             else:
-                return self.render('website.404', values)
+                return view.render(request.cr, request.uid, 'website.404', values, context=context)
 
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
