@@ -79,6 +79,7 @@ class Field(object):
     depends = ()                # collection of field dependencies
     compute = None              # name of model method that computes value
     inverse = None              # name of model method that inverses field
+    search = None               # name of model method that searches on field
 
     string = None               # field label
     help = None                 # field tooltip
@@ -295,6 +296,15 @@ class Field(object):
             getattr(records, self.inverse)()
         elif callable(self.inverse):
             self.inverse(self, records)
+
+    def determine_domain(self, operator, value):
+        """ Return a domain representing a condition on `self`. """
+        if isinstance(self.search, basestring):
+            return getattr(self.model.browse(), self.search)(operator, value)
+        elif callable(self.search):
+            return self.search(self, operator, value)
+        else:
+            return [(self.name, operator, value)]
 
     #
     # Management of the recomputation of computed fields.

@@ -3,6 +3,7 @@
 #
 
 from datetime import date, datetime
+from collections import defaultdict
 
 from openerp import scope
 from openerp.tests import common
@@ -145,6 +146,26 @@ class TestNewFields(common.TransactionCase):
         joe.full_name = 'Joe Bailey <joe.bailey@whisky.com>'
         self.assertEqual(joe.name, 'Joe Bailey')
         self.assertEqual(joe.email, 'joe.bailey@whisky.com')
+
+    def test_14_search(self):
+        """ test search on computed fields """
+        all_ps = self.Partner.search([])
+
+        # partition all partners based on their name size
+        partners_by_size = defaultdict(self.Partner.browse)
+        for p in all_ps:
+            partners_by_size[p.name_size] += p
+
+        max_size = max(partners_by_size)
+        for size in xrange(max_size + 1):
+            ps = self.Partner.search([('name_size', '=', size)])
+            self.assertEqual(ps, partners_by_size[size])
+
+        # check other comparisons
+        ps = self.Partner.search([('name_size', '>=', 6), ('name_size', '<', 12)])
+        qs = sum((p for p in all_ps if p.name_size >= 6 and p.name_size < 12),
+                 self.Partner.browse())
+        self.assertEqual(ps, qs)
 
     def test_20_float(self):
         """ test float fields """

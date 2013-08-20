@@ -52,9 +52,10 @@ class res_partner(Model):
     some_float_field = fields.Float(digits=(10,2))
     some_reference_field = fields.Reference(selection='_references_models')
 
-    name_size = fields.Integer(compute='compute_name_size', store=False)
+    name_size = fields.Integer(store=False,
+        compute='compute_name_size', search='search_name_size')
     children_count = fields.Integer(compute='compute_children_count', store=True)
-    has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
+    has_sibling = fields.Boolean(compute='compute_has_sibling', store=True)
     family_size = fields.Integer(compute='compute_family_size', store=False)
 
     @one
@@ -69,6 +70,18 @@ class res_partner(Model):
     @depends('name')
     def compute_name_size(self):
         self.name_size = len(self.name or '')
+
+    @model
+    def search_name_size(self, operator, value):
+        assert operator in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in')
+        assert isinstance(value, (int, long))
+        # retrieve all the partners that match with a specific SQL query
+        query = """SELECT id FROM "%s" WHERE char_length("name") %s %%s""" % \
+                (self._table, operator)
+        cr = scope.cr
+        cr.execute(query, (value,))
+        ids = [t[0] for t in cr.fetchall()]
+        return [('id', 'in', ids)]
 
     @one
     @depends('child_ids')
