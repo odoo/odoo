@@ -4,6 +4,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+import random
 import werkzeug
 
 def get_order(order_id=None):
@@ -54,7 +55,7 @@ class Ecommerce(http.Controller):
     def category(self, cat_id=0, page=0, **post):
 
         website = request.registry['website']
-        product_obj = request.registry.get('product.product')
+        product_obj = request.registry.get('product.template')
 
         domain = [("sale_ok", "=", True)]
         if SUPERUSER_ID != request.uid:
@@ -65,20 +66,20 @@ class Ecommerce(http.Controller):
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('description_website', 'ilike', "%%%s%%" % post.get("search")),
-                ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+                ('product_variant_ids.pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
-            domain += [('pos_categ_id.id', 'child_of', cat_id)] + domain
+            domain += [('product_variant_ids.pos_categ_id.id', 'child_of', cat_id)] + domain
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))
         pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], order="website_published,name")
 
         values = website.get_rendering_context({
             'categories': self.get_categories(),
-            'current_category': cat_id,
+            'category_id': cat_id,
             'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
             'pager': pager,
@@ -86,18 +87,18 @@ class Ecommerce(http.Controller):
         return website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<product_id>/'], type='http', auth="public")
-    def product(self, cat_id=0, product_id=0):
+    def product(self, cat_id=0, product_id=0, **post):
         website = request.registry['website']
-        order = get_current_order()
 
         product_id = product_id and int(product_id) or 0
-        product_obj = request.registry.get('product.product')
+        product_obj = request.registry.get('product.template')
 
-        line = [line for line in order.order_line if line.product_id.id == product_id]
-
+        product = product_obj.browse(request.cr, request.uid, product_id)
         values = website.get_rendering_context({
+            'category_id': post.get('category_id') and int(post.get('category_id')) or None,
+            'search': post.get("search"),
             'categories': self.get_categories(),
-            'product': product_obj.browse(request.cr, request.uid, product_id),
+            'product': product,
         })
         return website.render("website_sale.product", values)
 
@@ -105,15 +106,27 @@ class Ecommerce(http.Controller):
     def mycart(self, **post):
         order = get_current_order()
         website = request.registry['website']
+        prod_obj = request.registry.get('product.product')
 
         if post.get('code'):
             pricelist_obj = request.registry.get('product.pricelist')
             pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', post.get('code'))])
             if pricelist_ids:
                 order.write({'pricelist_id': pricelist_ids[0]})
-        
+
+        suggested_ids = []
+        for line in order.order_line:
+            suggested_ids += [p.id for p in line.product_id.suggested_product_ids for line in order.order_line]
+        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)])
+        # select 3 random products
+        suggested_products = []
+        while len(suggested_products) < 3 and suggested_ids:
+            index = random.randrange(0, len(suggested_ids))
+            suggested_products.append(suggested_ids.pop(index))
+
         values = website.get_rendering_context({
             'categories': self.get_categories(),
+            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products),
         })
         return website.render("website_sale.mycart", values)
 
@@ -161,7 +174,7 @@ class Ecommerce(http.Controller):
 
         return quantity
 
-    @http.route(['/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
+    @http.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/', '/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
     def add_cart(self, path=None, product_id=0, remove=None):
         self.add_product_to_cart(product_id, number=(remove and -1 or 1))
         if path:
