@@ -25,7 +25,7 @@ from urlparse import urljoin
 
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.safe_eval import safe_eval
+from ast import literal_eval
 from openerp.tools.translate import _
 
 class SignupError(Exception):
@@ -217,12 +217,12 @@ class res_users(osv.Model):
     def _signup_create_user(self, cr, uid, values, context=None):
         """ create a new user from the template user """
         ir_config_parameter = self.pool.get('ir.config_parameter')
-        template_user_id = safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
+        template_user_id = literal_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
         assert template_user_id and self.exists(cr, uid, template_user_id, context=context), 'Signup: invalid template user'
 
         # check that uninvited users may sign up
         if 'partner_id' not in values:
-            if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
+            if not literal_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
                 raise SignupError('Signup is not allowed for uninvited users')
 
         assert values.get('login'), "Signup: no login given for new user"
