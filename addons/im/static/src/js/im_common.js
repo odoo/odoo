@@ -38,8 +38,13 @@ function declare($, _, openerp) {
         init: function(parent, user_rec) {
             openerp.PropertiesMixin.init.call(this, parent);
             user_rec.image_url = im_common.to_url("im/static/src/img/avatar/avatar.jpeg");
-            if (user_rec.image)
-                user_rec.image_url = "data:image/png;base64," + user_rec.image;
+
+            // TODO : check it works correctly
+            if (user_rec.user)
+                user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
+            /*if (user_rec.image)
+                user_rec.image_url = "data:image/png;base64," + user_rec.image;*/
+
             this.set(user_rec);
             this.set("watcher_count", 0);
             this.on("change:watcher_count", this, function() {
@@ -62,7 +67,13 @@ function declare($, _, openerp) {
     im_common.ConversationManager = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent, options) {
             openerp.PropertiesMixin.init.call(this, parent);
-            this.options = options;
+            this.options = _.clone(options) || {};
+            _.defaults(this.options, {
+                inputPlaceholder: _t("Say something..."),
+                defaultMessage: null,
+                userName: _t("Anonymous"),
+                anonymous_mode: false
+            });
             this.set("right_offset", 0);
             this.conversations = [];
             this.users = {};
@@ -90,26 +101,40 @@ function declare($, _, openerp) {
         start_polling: function() {
             var self = this;
 
-            var uuid = localStorage["oe_livesupport_uuid"];
-            var def = $.when(uuid);
+            var auth_def = null;
+            var user_id = null;
 
-            if (! uuid) {
-                def = im_common.connection.rpc("/longpolling/im/gen_uuid", {});
+            if (this.options.anonymous_mode) {
+                var uuid = localStorage["oe_livesupport_uuid"];
+                var def = $.when(uuid);
+
+                if (! uuid) {
+                    def = im_common.connection.rpc("/longpolling/im/gen_uuid", {});
+                }
+                var anonymous_user_id = null;
+                auth_def = def.then(function(uuid) {
+                    localStorage["oe_livesupport_uuid"] = uuid;
+                    return im_common.connection.model("im.user").call("get_by_user_id", [uuid]);
+                }).then(function(my_id) {
+                    user_id = my_id["id"];
+                    return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
+                });
+            } else {
+                auth_def = im_common.connection.model("im.user").call("get_by_user_id",
+                        [im_common.connection.uid]).then(function(my_id) {
+                    user_id = my_id["id"];
+                });
             }
-            return def.then(function(uuid) {
-                localStorage["oe_livesupport_uuid"] = uuid;
-                return im_common.connection.model("im.user").call("get_by_user_id", [uuid]);
-            }).then(function(my_id) {
-                self.my_id = my_id["id"];
-                return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
-            }).then(function() {
+
+            auth_def.then(function() {
+                self.my_id = user_id;
                 return self.ensure_users([self.my_id]);
             }).then(function() {
                 var me = self.users_cache[self.my_id];
                 delete self.users_cache[self.my_id];
                 self.me = me;
-                me.set("name", "You");
-                return im_common.connection.rpc("/longpolling/im/activated", {});
+                me.set("name", _t("You"));
+                return im_common.connection.rpc("/longpolling/im/activated", {}, {shadow: true});
             }).then(function(activated) {
                 if (activated) {
                     self.activated = true;
@@ -118,10 +143,12 @@ function declare($, _, openerp) {
                 } else {
                     return $.Deferred().reject();
                 }
+            }, function(a, e) {
+                e.preventDefault();
             });
         },
         unload: function() {
-            im_common.connection.model("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
+            return im_common.connection.model("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
         },
         ensure_users: function(user_ids) {
             var no_cache = {};
@@ -152,7 +179,6 @@ function declare($, _, openerp) {
             return this.users_cache[user_id];
         },
         poll: function() {
-            console.debug("live support beggin polling");
             var self = this;
             var user_ids = _.map(this.users_cache, function(el) {
                 return el.get("id");
@@ -160,11 +186,8 @@ function declare($, _, openerp) {
             im_common.connection.rpc("/longpolling/im/poll", {
                 last: this.last,
                 users_watch: user_ids,
-                db: im_common.connection.database,
-                uid: im_common.connection.userId,
-                password: im_common.connection.password,
                 uuid: self.me.get("uuid")
-            }).then(function(result) {
+            }, {shadow: true}).then(function(result) {
                 _.each(result.users_status, function(el) {
                     if (self.get_user(el.id))
                         self.get_user(el.id).set(el);
@@ -178,7 +201,8 @@ function declare($, _, openerp) {
                     });
                     self.poll();
                 });
-            }, function() {
+            }, function(unused, e) {
+                e.preventDefault();
                 setTimeout(_.bind(self.poll, self), ERROR_DELAY);
             });
         },
@@ -190,10 +214,12 @@ function declare($, _, openerp) {
                 this.ting = {play: function() {}};
                 return;
             }
-            this.ting = new Audio(new Audio().canPlayType("audio/ogg; codecs=vorbis") ?
-                im_common.to_url("im/static/src/audio/Ting.ogg") :
-                im_common.to_url("im/static/src/audio/Ting.mp3")
-            );
+            var kitten = jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
+            this.ting = new Audio(im_common.to_url(
+                "im/static/src/audio/" +
+                (kitten ? "purr" : "Ting") +
+                (new Audio().canPlayType("audio/ogg; codecs=vorbis") ? ".ogg": ".mp3")
+            ));
         },
         window_focus_change: function() {
             if (this.get("window_focus")) {
@@ -201,10 +227,10 @@ function declare($, _, openerp) {
             }
         },
         messages_change: function() {
-            //if (! instance.webclient.set_title_part)
-            //    return;
-            //instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
-            //    _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
+            if (! openerp.webclient || !openerp.webclient.set_title_part)
+                return;
+            openerp.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
+                _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
         activate_user: function(user, focus) {
             var conv = this.users[user.get('id')];
@@ -330,6 +356,7 @@ function declare($, _, openerp) {
             send_it().then(_.bind(function() {
                 this._add_bubble(this.me, mes, new Date());
             }, this), function(error, e) {
+                e.preventDefault();
                 tries += 1;
                 if (tries < 3)
                     return send_it();
@@ -358,6 +385,8 @@ function declare($, _, openerp) {
         },
         focus: function() {
             this.$(".oe_im_chatview_input").focus();
+            if (! this.shown)
+                this.show_hide();
         },
         destroy: function() {
             this.user.remove_watcher();
@@ -369,7 +398,7 @@ function declare($, _, openerp) {
     return im_common;
 }
 
-if (typeof(define) !== undefined) {
+if (typeof(define) !== "undefined") {
     define(["jquery", "underscore", "openerp"], declare);
 } else {
     window.im_common = declare($, _, openerp);

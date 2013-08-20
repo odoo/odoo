@@ -20,7 +20,8 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
             inputPlaceholder: _t("How may I help you?"),
             defaultMessage: null,
             auto: false,
-            userName: _t("Anonymous")
+            userName: _t("Anonymous"),
+            anonymous_mode: true
         });
 
         im_common.notification = notification;
