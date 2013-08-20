@@ -80,6 +80,7 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
         click: function() {
             if (! this.manager) {
                 this.manager = new im_common.ConversationManager(this, this.options);
+                this.manager.set("bottom_offset", 37);
                 this.activated_def = this.manager.start_polling();
             }
             var def = $.Deferred();

@@ -72,9 +72,11 @@ function declare($, _, openerp) {
                 anonymous_mode: false
             });
             this.set("right_offset", 0);
+            this.set("bottom_offset", 0);
             this.conversations = [];
             this.users = {};
             this.on("change:right_offset", this, this.calc_positions);
+            this.on("change:bottom_offset", this, this.calc_positions);
             this.set("window_focus", true);
             this.set("waiting_messages", 0);
             this.focus_hdl = _.bind(function() {
@@ -259,6 +261,7 @@ function declare($, _, openerp) {
         calc_positions: function() {
             var current = this.get("right_offset");
             _.each(_.range(this.conversations.length), function(i) {
+                this.conversations[i].set("bottom_position", this.get("bottom_offset"));
                 this.conversations[i].set("right_position", current);
                 current += this.conversations[i].$().outerWidth(true);
             }, this);
@@ -285,6 +288,7 @@ function declare($, _, openerp) {
             this.user = user;
             this.user.add_watcher();
             this.set("right_position", 0);
+            this.set("bottom_position", 0);
             this.shown = true;
             this.set("pending", 0);
             this.inputPlaceholder = this.options.defaultInputPlaceholder;
@@ -300,6 +304,7 @@ function declare($, _, openerp) {
             change_status.call(this);
 
             this.on("change:right_position", this, this.calc_pos);
+            this.on("change:bottom_position", this, this.calc_pos);
             this.full_height = this.$().height();
             this.calc_pos();
             this.on("change:pending", this, _.bind(function() {
@@ -327,6 +332,7 @@ function declare($, _, openerp) {
         },
         calc_pos: function() {
             this.$().css("right", this.get("right_position"));
+            this.$().css("bottom", this.get("bottom_position"));
         },
         received_message: function(message) {
             if (this.shown) {
