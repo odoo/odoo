@@ -1,5 +1,10 @@
 
-openerp.im = function(instance) {
+(function() {
+    "use strict";
+
+    var instance = openerp;
+
+    openerp.im = {};
 
     var USERS_LIMIT = 20;
 
@@ -151,4 +156,4 @@ openerp.im = function(instance) {
         },
     });
 
-}
+})();

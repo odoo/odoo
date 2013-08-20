@@ -26,8 +26,6 @@ function declare($, _, openerp) {
     });
 
     var _t = openerp._t;
-    
-    var im_common = {};
 
     var ERROR_DELAY = 5000;
 
@@ -283,7 +281,7 @@ function declare($, _, openerp) {
         },
         init: function(parent, user, me, options) {
             this._super(parent);
-            this.options = options
+            this.options = options;
             this.me = me;
             this.user = user;
             this.user.add_watcher();
