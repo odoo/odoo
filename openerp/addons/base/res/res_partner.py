@@ -208,6 +208,8 @@ class res_partner(osv.osv, format_address):
         return result
 
     def _display_name_compute(self, cr, uid, ids, name, args, context=None):
+        context = dict(context or {})
+        context.pop('show_address', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     # indirections to avoid passing a copy of the overridable method when declaring the function field
