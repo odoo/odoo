@@ -55,7 +55,7 @@ class Ecommerce(http.Controller):
     def category(self, cat_id=0, page=0, **post):
 
         website = request.registry['website']
-        product_obj = request.registry.get('product.product')
+        product_obj = request.registry.get('product.template')
 
         domain = [("sale_ok", "=", True)]
         if SUPERUSER_ID != request.uid:
@@ -66,49 +66,39 @@ class Ecommerce(http.Controller):
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('description_website', 'ilike', "%%%s%%" % post.get("search")),
-                ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+                ('product_variant_ids.pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
-            domain += [('pos_categ_id.id', 'child_of', cat_id)] + domain
+            domain += [('product_variant_ids.pos_categ_id.id', 'child_of', cat_id)] + domain
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))
         pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
-
-        products = product_obj.browse(request.cr, request.uid, product_ids)
-        tmpl_ids = []
-        product_tmpl_ids = []
-        for product in products:
-            if product.product_tmpl_id.id not in tmpl_ids:
-                tmpl_ids.append(product.product_tmpl_id.id)
-                product_tmpl_ids.append(product)
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], order="website_published,name")
 
         values = website.get_rendering_context({
             'categories': self.get_categories(),
-            'current_category': cat_id,
-            'products': product_tmpl_ids,
+            'category_id': cat_id,
+            'products': product_obj.browse(request.cr, request.uid, product_ids),
             'search': post.get("search"),
             'pager': pager,
         })
         return website.render("website_sale.products", values)
 
     @http.route(['/shop/product/<product_id>/'], type='http', auth="public")
-    def product(self, cat_id=0, product_id=0):
+    def product(self, cat_id=0, product_id=0, **post):
         website = request.registry['website']
-        order = get_current_order()
 
         product_id = product_id and int(product_id) or 0
-        product_obj = request.registry.get('product.product')
-
-        line = [line for line in order.order_line if line.product_id.id == product_id]
+        product_obj = request.registry.get('product.template')
 
         product = product_obj.browse(request.cr, request.uid, product_id)
         values = website.get_rendering_context({
+            'category_id': post.get('category_id') and int(post.get('category_id')) or None,
+            'search': post.get("search"),
             'categories': self.get_categories(),
             'product': product,
-            'product_variants': product.product_tmpl_id.product_ids,
         })
         return website.render("website_sale.product", values)
 

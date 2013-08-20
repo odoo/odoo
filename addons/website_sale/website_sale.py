@@ -29,7 +29,7 @@ class product_pricelist(osv.osv):
     }
 
 class product_product(osv.osv):
-    _inherit = "product.product"
+    _inherit = "product.template"
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'description_website': fields.html('Description for the website'),
