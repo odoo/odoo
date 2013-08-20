@@ -12,13 +12,15 @@ class website_contract(http.Controller):
         partner_obj = request.registry['res.partner']
         account_obj = request.registry['account.analytic.account']
 
+        # public partner profile
         project_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_testimonial', "!=", False), ('website_published', '=', True)])
 
         if request.uid != website.get_public_user().id:
             contract_ids = account_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)])
-            for contract in account_obj.browse(request.cr, openerp.SUPERUSER_ID, contract_ids):
-                if contract.partner_id:
-                    project_ids.append(contract.partner_id.id)
+            contract_project_ids = [contract.partner_id.id 
+                for contract in account_obj.browse(request.cr, openerp.SUPERUSER_ID, contract_ids) if contract.partner_id]
+            # search for check access rules
+            project_ids += partner_obj.search(request.cr, request.uid, [('id', "in", contract_project_ids)])
             project_ids = list(set(project_ids))
 
         values = website.get_rendering_context({
