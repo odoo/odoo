@@ -13,6 +13,7 @@ require.config({
         openerp: "web/static/src/js/openerpframework",
         "jquery.achtung": "im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung",
         livesupport: "im_livechat/static/ext/static/js/livesupport",
+        im_common: "im/static/src/js/im_common"
     },
     shim: {
         underscore: {
