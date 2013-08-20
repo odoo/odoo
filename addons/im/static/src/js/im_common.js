@@ -25,8 +25,6 @@ function declare($, _, openerp) {
         notification: function(message) {
             throw new Error("Not implemented");
         },
-        defaultInputPlaceholder: null,
-        userName: null,
         connection: null
     });
 
@@ -62,8 +60,9 @@ function declare($, _, openerp) {
     });
 
     im_common.ConversationManager = openerp.Class.extend(openerp.PropertiesMixin, {
-        init: function(parent) {
+        init: function(parent, options) {
             openerp.PropertiesMixin.init.call(this, parent);
+            this.options = options;
             this.set("right_offset", 0);
             this.conversations = [];
             this.users = {};
@@ -102,7 +101,7 @@ function declare($, _, openerp) {
                 return im_common.connection.model("im.user").call("get_by_user_id", [uuid]);
             }).then(function(my_id) {
                 self.my_id = my_id["id"];
-                return im_common.connection.model("im.user").call("assign_name", [uuid, im_common.userName]);
+                return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
             }).then(function() {
                 return self.ensure_users([self.my_id]);
             }).then(function() {
@@ -210,7 +209,7 @@ function declare($, _, openerp) {
         activate_user: function(user, focus) {
             var conv = this.users[user.get('id')];
             if (! conv) {
-                conv = new im_common.Conversation(this, user, this.me);
+                conv = new im_common.Conversation(this, user, this.me, this.options);
                 conv.appendTo($("body"));
                 conv.on("destroyed", this, function() {
                     this.conversations = _.without(this.conversations, conv);
@@ -256,18 +255,19 @@ function declare($, _, openerp) {
             "click .oe_im_chatview_close": "destroy",
             "click .oe_im_chatview_header": "show_hide"
         },
-        init: function(parent, user, me) {
+        init: function(parent, user, me, options) {
             this._super(parent);
+            this.options = options
             this.me = me;
             this.user = user;
             this.user.add_watcher();
             this.set("right_position", 0);
             this.shown = true;
             this.set("pending", 0);
-            this.inputPlaceholder = im_common.defaultInputPlaceholder;
+            this.inputPlaceholder = this.options.defaultInputPlaceholder;
         },
         start: function() {
-            this.$().append(openerp.qweb.render("conversation", {widget: this, to_url: im_common.to_url}));
+            this.$().append(openerp.qweb.render("im_common.conversation", {widget: this, to_url: im_common.to_url}));
             var change_status = function() {
                 this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
                 this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
@@ -349,7 +349,7 @@ function declare($, _, openerp) {
             };
             date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
             
-            this.last_bubble = $(openerp.qweb.render("conversation_bubble", {"items": items, "user": user, "time": date}));
+            this.last_bubble = $(openerp.qweb.render("im_common.conversation_bubble", {"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();
         },

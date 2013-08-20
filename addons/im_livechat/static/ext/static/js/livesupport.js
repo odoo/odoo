@@ -25,8 +25,6 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
 
         im_common.notification = notification;
         im_common.to_url = require.toUrl;
-        im_common.defaultInputPlaceholder = options.inputPlaceholder;
-        im_common.userName = options.userName;
         defs.push(add_css("im/static/src/css/im_common.css"));
         defs.push(add_css("im_livechat/static/ext/static/lib/jquery-achtung/src/ui.achtung.css"));
 
@@ -83,7 +81,7 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
         },
         click: function() {
             if (! this.manager) {
-                this.manager = new im_common.ConversationManager(null);
+                this.manager = new im_common.ConversationManager(this, this.options);
                 this.activated_def = this.manager.start_polling();
             }
             var def = $.Deferred();
