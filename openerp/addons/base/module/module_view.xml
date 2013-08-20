@@ -70,7 +70,8 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form create="0" edit="0" string="Module" version="7.0" class='oe_styling_v8'>
+                <form create="0" edit="0" string="Module" version="7.0">
+                    <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
                     <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
                     <div class="oe_title">
@@ -127,9 +128,8 @@
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>
+                    <field name="description_html" class='oe_styling_v8'/>
                     </sheet>
-                    <field name="description_html" class='oe_app_description oe_styling_v8'/>
-                    <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight oe_center"/>
                 </form>
             </field>
         </record>

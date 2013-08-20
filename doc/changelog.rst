@@ -6,6 +6,8 @@ Changelog
 `trunk`
 -------
 
+- Improved ``html_email_clean`` in tools: better quote and signature finding,
+  added shortening.
 - Cleaned and slightly refactored ``ir.actions.server``. The ``loop``, ``sms``
   and ``dummy`` server actions have been removed; ``object_create`` and
   ``object_copy`` have been merged into ``object_create``; ``other`` is now ``multi``
