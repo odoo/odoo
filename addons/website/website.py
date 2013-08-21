@@ -120,6 +120,29 @@ class website(osv.osv):
 
         return d
 
+    def list_pages(self, cr, uid, context=None):
+        """ Available pages in the website/CMS. This is mostly used for links
+        generation and can be overridden by modules setting up new HTML
+        controllers for dynamic pages (e.g. blog).
+
+        By default, returns template views marked as pages.
+
+        :returns: a list of mappings with two keys: ``name`` is the displayable
+                  name of the resource (page), ``url`` is the absolute URL
+                  of the same.
+        :rtype: list({name: str, url: str})
+        """
+        View = self.pool['ir.ui.view']
+        views = View.search_read(cr, uid, [['page', '=', True]],
+                                 fields=['name'], order='name', context=context)
+        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
+
+        return [
+            {'name': view['name'], 'url': '/page/' + xids[view['id']]}
+            for view in views
+            if xids[view['id']]
+        ]
+
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
