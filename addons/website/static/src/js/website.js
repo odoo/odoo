@@ -273,7 +273,7 @@ $(function(){
                     ]},{
                     name: 'span', items: [
                         "Link", "Unlink", "Blockquote", "BulletedList",
-                        "NumberedList", "Indent", "Outdent",
+                        "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
                         "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
@@ -380,5 +380,97 @@ $(function(){
         },
     });
 
+    function noop() {}
+    var alter_dialog = {
+        image: function (definition) {
+            definition.removeContents('Link');
+            definition.removeContents('advanced');
+
+            var upload = definition.getContents('Upload');
+            upload.add({
+                type: 'select',
+                label: 'Existing attachments',
+                id: 'ir_attachment',
+                items: [['']],
+                /**
+                 * On dialog load, fetch all attachments (on ir.ui.view =>
+                 * previously uploaded images) and add them to the select's
+                 * options (items array & add method)
+                 */
+                onLoad: function () {
+                    var field = this;
+
+                    // FIXME: fuck this garbage, also fuck openerp.Model
+                    return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                        model: 'ir.attachment',
+                        method: 'search_read',
+                        args: [],
+                        kwargs: {
+                            fields: ['name'],
+                            domain: [['res_model', '=', 'ir.ui.view']],
+                            order: 'name',
+                        }
+                    }).then(function (results) {
+                        _(results).each(function (result) {
+                            field.add(result.name, result.id);
+                        });
+                    });
+                },
+                /**
+                 * The image widgets uses "txtUrl" to do most of its stuff.
+                 * Synchronize select & txtUrl by generating the correct URL
+                 * and setting it there
+                 */
+                onChange: function () {
+                    var id = this.getValue();
+                    var url = this.getDialog().getContentElement('info', 'txtUrl');
+                    if (!id) {
+                        url.setValue('');
+                        return;
+                    }
+
+                    url.setValue('/website/attachment/' + id);
+                },
+            });
+            // Override uploadButton to send its information to the select
+            // created above instead of directly to txtUrl. The select will
+            // propagate to txtUrl
+            upload.get('uploadButton').filebrowser = {
+                onSelect: function (url) {
+                    var id = url.split('/').pop();
+                    var attachments = this.getDialog().getContentElement('Upload', 'ir_attachment');
+                    // TODO: return supplementary info to get image/attachment name?
+                    attachments.add(id, id);
+                    attachments.setValue(id);
+                }
+            };
+
+            var old_show = definition.onShow;
+            definition.onShow = function () {
+                // CKEDITOR does not *override* onShow, is smashes the existing
+                // one instead, so override "by hand"
+                if (old_show) {
+                    old_show.call(this);
+                }
+                // Assloads of code in the image plugin just go and tear into
+                // the info tab without a care, so can't just remove the tab or
+                // its content. Hide the tab instead, the effect is roughly the
+                // same.
+                this.hidePage('info');
+                // Force the dialog to always and only display the Upload tab
+                this.selectPage('Upload');
+                this.on('selectPage', function (e) {
+                    setTimeout(function () {
+                        if (e.data.page !== 'Upload') {
+                            this.selectPage('Upload');
+                        }
+                    }.bind(this), 0);
+                });
+            }
+        }
+    };
+    CKEDITOR.on('dialogDefinition', function (ev) {
+        (alter_dialog[ev.data.name] || noop)(ev.data.definition);
+    })
 });
 

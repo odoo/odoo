@@ -27,6 +27,10 @@ def auth_method_public():
 http.auth_methods['public'] = auth_method_public
 
 
+# PIL images have a type flag, but no MIME. Reverse type flag to MIME.
+PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }
+# Completely arbitrary limits
+MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth="admin")
     def index(self, **kw):
@@ -145,15 +149,20 @@ class Website(openerp.addons.web.controllers.main.Home):
         buf = cStringIO.StringIO(base64.decodestring(attachment.datas))
 
         image = Image.open(buf)
-        image.thumbnail((1024, 768), Image.ANTIALIAS)
+        mime = PIL_MIME_MAPPING[image.format]
 
-        response = werkzeug.wrappers.Response(status=200, mimetype={
-            'PNG': 'image/png',
-            'JPEG': 'image/jpeg',
-            'GIF': 'image/gif',
-        }[image.format])
+        w, h = image.size
+        resized = w > MAX_IMAGE_WIDTH or h > MAX_IMAGE_HEIGHT
+
+        # If saving unnecessary, just send the image buffer, don't go through
+        # Image.save() (especially as it breaks animated gifs)
+        if not resized:
+            buf.seek(0)
+            return werkzeug.wrappers.Response(buf, status=200, mimetype=mime)
+
+        image.thumbnail(IMAGE_LIMITS, Image.ANTIALIAS)
+        response = werkzeug.wrappers.Response(status=200, mimetype=mime)
         image.save(response.stream, image.format)
-
         return response
 
     @http.route('/website/image', type='http', auth="public")
