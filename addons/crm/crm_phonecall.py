@@ -58,7 +58,7 @@ class crm_phonecall(base_state, osv.osv):
         # phonecall fields
         'name': fields.char('Call Summary', size=64, required=True),
         'active': fields.boolean('Active', required=False),
-        'duration': fields.float('Duration', help="Duration in Minutes"),
+        'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"),

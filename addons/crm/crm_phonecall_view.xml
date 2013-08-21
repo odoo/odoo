@@ -102,7 +102,10 @@
                     <group col="4">
                         <field name="date"/>
                         <field name="user_id"/>
-                        <field name="duration" widget="float_time"/>
+                        <label for="duration"/>
+                        <div>
+                        	<field name="duration" widget="float_time" class="oe_inline" style="vertical-align:baseline"/> <b> min(s)</b>
+                        </div>
                         <field name="section_id" colspan="1" widget="selection"
                                 groups="base.group_multi_salesteams"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
