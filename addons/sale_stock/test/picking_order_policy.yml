@@ -38,7 +38,7 @@
         assert procurement.product_id.id == order_line.product_id.id, "Product is not correspond."
         assert procurement.product_qty == order_line.product_uom_qty, "Qty is not correspond."
         assert procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
-        assert procurement.move_dest_id.procure_method == order_line.type, "Procurement method is not correspond."
+        assert procurement.move_ids[0].procure_method == order_line.type, "Procurement method is not correspond."
 -
   I run the scheduler.
 -
@@ -66,8 +66,7 @@
       output_id = sale_order.warehouse_id.lot_output_id.id
       for move in picking.move_lines:
          order_line = move.procurement_id.sale_line_id
-         sale_order_date = self.date_to_datetime(cr, uid, sale_order.date_order, context)
-         date_planned = datetime.strptime(sale_order_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+         date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
          date_planned = (date_planned - timedelta(days=sale_order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
          assert datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) == datetime.strptime(date_planned, DEFAULT_SERVER_DATETIME_FORMAT), "Excepted Date is not correspond with Planned Date."
          assert move.product_id.id == order_line.product_id.id,"Product is not correspond."
