@@ -393,6 +393,8 @@ class project_issue(osv.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            if 'kanban_state' not in vals:
+                vals['kanban_state'] = 'normal'
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
