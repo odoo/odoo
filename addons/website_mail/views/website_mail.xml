@@ -16,10 +16,8 @@
         <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
             <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
         </xpath>
-        <xpath expr="//body/footer//h5[@name='info_title']" position="after">
-            <ul class='unstyled'>
-                <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
-            </ul>
+        <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
+            <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
         </xpath>
     </template>
 

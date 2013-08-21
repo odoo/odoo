@@ -6,27 +6,51 @@
     <!-- Layout add nav and footer -->
 
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
-            <li><a href="/projects/">Projects</a></li>
+        <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
+            <li t-foreach="project_ids" t-as="project_id"><a t-attf-href="/project/#{ project_id.id }/"><t t-esc="project_id.name"/></a></li>
         </xpath>
     </template>
 
     <!-- Page --> 
 
-    <template id="index" name="Projects">
+    <template id="index" name="Project">
         <t t-call="website.layout">
-            <t t-set="title">Projects</t>
+            <t t-set="title">Project</t>
             <div class="container">
-                <div t-foreach="project_ids" t-as="project_id">
-                    <h4 t-field="project_id.name"/>
-                    <div t-foreach="project_id.tasks" t-as="task">
-                        <a t-attf-href="/admin#view_type=form&amp;model=project.task&amp;id=#{task.id}"><span t-field="task.name"/></a>
-                    </div>
-                </div>
+                <h4 t-field="project_id.name"/>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th t-foreach="stages" t-as="stage">
+                                <span t-field="stage_id.name"/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td t-foreach="stages" t-as="stage">
+                                <div t-foreach="task_ids" t-as="task_id" class="thumbnail">
+                                    <a t-attf-href="/task/#{ task_id.id }/"><span t-field="task_id.name"/></a>
+                                    <div>
+                                        Assigned to <span t-field="task_id.user_id"/>
+                                    </div>
+                                    <div>
+                                        <span t-foreach="task_id.categ_ids" t-as="categ_id" class="label">
+                                            <t t-esc="categ_id.name"/>
+                                        </span>
+                                    </div>
+                                    <small>
+                                        <i class="icon-time"></i> <span t-field="task_id.date_start"/><br/>
+                                        <t t-if="task_id.date_end">Ending Date: <span t-field="task_id.date_end"/></t>
+                                    </small>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </t>
     </template>
-
 
  </data>
 </openerp>
