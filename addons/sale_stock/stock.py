@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     def __get_invoice_state(self, cr, uid, ids, name, arg, context=None):
@@ -45,16 +46,24 @@ class stock_picking(osv.osv):
                     result[move.picking_id.id] = True
         return result.keys()
 
+    def __get_picking_move(self, cr, uid, ids, context={}):
+        res = []
+        for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+            if move.picking_id: 
+                res.append(move.picking_id.id)
+        return res
+
     _columns = {
         'invoice_state': fields.function(__get_invoice_state, type='selection', selection=[
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-          ], string="Invoice Control", required=True,
-          store={
-            'procurement.order': (__get_picking_procurement, ['invoice_state'], 10),
-            'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10)
-          },
+          ], string="Invoice Control", required=True, 
+        store={
+          'procurement.order': (__get_picking_procurement, ['invoice_state'], 10),
+          'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
+          'stock.move': (__get_picking_move, ['picking_id'], 10),
+        },
         ),
     }
     _defaults = {

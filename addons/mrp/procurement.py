@@ -44,7 +44,7 @@ class procurement_order(osv.osv):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
-            if procurement.product_id.supply_method == 'manufacture' and self.check_bom_exists(cr, uid, [procurement.id], context=context):
+            if procurement.product_id.supply_method == 'manufacture':
                 rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)], context=context)
                 rule_id = rule_id and rule_id[0] or False
         return rule_id
@@ -52,7 +52,7 @@ class procurement_order(osv.osv):
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'manufacture':
             #make a manufacturing order for the procurement
-            return self.make_mo(cr, uid, [procurement.id], context=context)
+            return self.make_mo(cr, uid, [procurement.id], context=context)[procurement.id]
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
@@ -119,32 +119,36 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
-            res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
-            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
-            newdate = newdate - relativedelta(days=company.manufacturing_lead)
-            produce_id = production_obj.create(cr, uid, {
-                'origin': procurement.origin,
-                'product_id': procurement.product_id.id,
-                'product_qty': procurement.product_qty,
-                'product_uom': procurement.product_uom.id,
-                'product_uos_qty': procurement.product_uos and procurement.product_uos_qty or False,
-                'product_uos': procurement.product_uos and procurement.product_uos.id or False,
-                'location_src_id': procurement.location_id.id,
-                'location_dest_id': procurement.location_id.id,
-                'bom_id': procurement.bom_id and procurement.bom_id.id or False,
-                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
-                'move_prod_id': res_id,
-                'company_id': procurement.company_id.id,
-            })
-            
-            res[procurement.id] = produce_id
-            self.write(cr, uid, [procurement.id], {'state': 'running', 'production_id': produce_id})   
-            bom_result = production_obj.action_compute(cr, uid,
-                    [produce_id], properties=[x.id for x in procurement.property_ids])
-            production_obj.signal_button_confirm(cr, uid, [produce_id])
-            if res_id:
-                move_obj.write(cr, uid, [res_id],
-                        {'location_id': procurement.location_id.id})
+            if self.check_bom_exists(cr, uid, [procurement.id], context=context):
+                res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
+                newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
+                newdate = newdate - relativedelta(days=company.manufacturing_lead)
+                produce_id = production_obj.create(cr, uid, {
+                    'origin': procurement.origin,
+                    'product_id': procurement.product_id.id,
+                    'product_qty': procurement.product_qty,
+                    'product_uom': procurement.product_uom.id,
+                    'product_uos_qty': procurement.product_uos and procurement.product_uos_qty or False,
+                    'product_uos': procurement.product_uos and procurement.product_uos.id or False,
+                    'location_src_id': procurement.location_id.id,
+                    'location_dest_id': procurement.location_id.id,
+                    'bom_id': procurement.bom_id and procurement.bom_id.id or False,
+                    'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                    'move_prod_id': res_id,
+                    'company_id': procurement.company_id.id,
+                })
+                
+                res[procurement.id] = produce_id
+                self.write(cr, uid, [procurement.id], {'production_id': produce_id})   
+                bom_result = production_obj.action_compute(cr, uid,
+                        [produce_id], properties=[x.id for x in procurement.property_ids])
+                production_obj.signal_button_confirm(cr, uid, [produce_id])
+                if res_id:
+                    move_obj.write(cr, uid, [res_id],
+                            {'location_id': procurement.location_id.id})
+            else:
+                res[procurement.id] = False
+                self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)
         self.production_order_create_note(cr, uid, ids, context=context)
         return res
 
