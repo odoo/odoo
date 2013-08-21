@@ -167,6 +167,17 @@ class TestNewFields(common.TransactionCase):
                  self.Partner.browse())
         self.assertEqual(ps, qs)
 
+    def test_15_constraint(self):
+        """ test new-style Python constraints """
+        model = self.registry('test_new_api.inverse')
+        record = model.create({'name': 'Joe the plumber', 'email': 'joe@example.com'})
+
+        with self.assertRaises(Exception):
+            record.name = "Joe @ home"
+
+        with self.assertRaises(Exception):
+            record.email = "joe.the.plumber"
+
     def test_20_float(self):
         """ test float fields """
         # find a partner

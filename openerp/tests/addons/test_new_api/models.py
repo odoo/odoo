@@ -43,7 +43,7 @@ class res_partner(osv.Model):
 
 
 from openerp import Model, fields
-from openerp import depends, model, multi, one, scope
+from openerp import constrains, depends, model, multi, one, scope
 
 class res_partner(Model):
     _inherit = 'res.partner'
@@ -123,6 +123,14 @@ class field_inverse(Model):
     email = fields.Char()
     full_name = fields.Char(store=False,
                     compute='compute_full_name', inverse='inverse_full_name')
+
+    @one
+    @constrains('name', 'email')
+    def _check_name_email(self):
+        if '@' in (self.name or ''):
+            raise ValueError("Name may not contain '@': %r" % self.name)
+        if self.email and '@' not in self.email:
+            raise ValueError("Email must contain '@': %r" % self.email)
 
     @one
     @depends('name', 'email')

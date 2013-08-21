@@ -437,7 +437,6 @@ class BaseModel(object):
     _all_columns = {}
 
     _table = None
-    _invalids = set()
     _log_create = False
     _sql_constraints = []
 
@@ -824,6 +823,13 @@ class BaseModel(object):
         # store sql constraint error messages
         for (key, _, msg) in cls._sql_constraints:
             pool._sql_error[cls._table + '_' + key] = msg
+
+        # collect constraint methods
+        cls._constraint_methods = []
+        for attr in dir(cls):
+            value = getattr(cls, attr)
+            if callable(value) and hasattr(value, '_constrains'):
+                cls._constraint_methods.append(value)
 
         # Load manual fields
 
@@ -1287,38 +1293,37 @@ class BaseModel(object):
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
-    def get_invalid_fields(self, cr, uid):
-        return list(self._invalids)
+    @api.multi
+    def _validate_fields(self, field_names):
+        field_names = set(field_names)
 
-    def _validate(self, cr, uid, ids, context=None):
-        context = context or {}
-        lng = context.get('lang')
-        trans = self.pool.get('ir.translation')
-        error_msgs = []
-        for constraint in self._constraints:
-            fun, msg, fields = constraint
-            # We don't pass around the context here: validation code
-            # must always yield the same results.
-            if not fun(self, cr, uid, ids):
-                # Check presence of __call__ directly instead of using
-                # callable() because it will be deprecated as of Python 3.0
-                if hasattr(msg, '__call__'):
-                    tmp_msg = msg(self, cr, uid, ids, context=context)
-                    if isinstance(tmp_msg, tuple):
-                        tmp_msg, params = tmp_msg
-                        translated_msg = tmp_msg % params
-                    else:
-                        translated_msg = tmp_msg
+        # old-style constraint methods
+        trans = scope_proxy.model('ir.translation')
+        cr, uid, context = scope_proxy.args
+        lang = scope_proxy.lang
+        ids = self.unbrowse()
+        errors = []
+        for fun, msg, names in self._constraints:
+            # validation must be context-independent; call `fun` without context
+            if set(names) & field_names and not fun(self, cr, uid, ids):
+                if callable(msg):
+                    res_msg = msg(self, cr, uid, ids, context=context)
+                    if isinstance(res_msg, tuple):
+                        template, params = res_msg
+                        res_msg = template % params
                 else:
-                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
-                error_msgs.append(
-                        _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
+                    res_msg = trans._get_source(self._name, 'constraint', lang, msg)
+                errors.append(
+                    _("Field(s) `%s` failed against a constraint: %s") %
+                        (', '.join(names), res_msg)
                 )
-                self._invalids.update(fields)
-        if error_msgs:
-            raise except_orm('ValidateError', '\n'.join(error_msgs))
-        else:
-            self._invalids.clear()
+        if errors:
+            raise except_orm('ValidateError', '\n'.join(errors))
+
+        # new-style constraint methods
+        for check in self._constraint_methods:
+            if set(check._constrains) & field_names:
+                check(self)
 
     def default_get(self, cr, uid, fields_list, context=None):
         """ Return default values for the fields in `fields_list`. Default
@@ -4021,7 +4026,9 @@ class BaseModel(object):
             _logger.warning(
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
-        self._validate(cr, user, ids, context)
+
+        # check Python constraints
+        recs._validate_fields(vals)
 
         # TODO: use _order to set dest at the right position and not first node of parent
         # We can't defer parent_store computation because the stored function
@@ -4311,7 +4318,10 @@ class BaseModel(object):
         result = []
         for field in upd_todo:
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
-        self._validate(cr, user, [id_new], context)
+
+        # check Python constraints
+        recs = self.browse(id_new)
+        recs._validate_fields(vals)
 
         if not context.get('no_store_function', False):
             result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
@@ -4323,7 +4333,6 @@ class BaseModel(object):
                     done.append((model_name, ids, fields2))
 
             # recompute new-style fields
-            recs = self.browse(id_new)
             recs.modified(vals)
             if self._log_access:
                 recs.modified(('create_uid', 'create_date', 'write_uid', 'write_date'))

@@ -55,7 +55,7 @@ __all__ = [
     'model', 'multi', 'one',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
-    'depends', 'returns',
+    'constrains', 'depends', 'returns',
 ]
 
 from functools import wraps
@@ -68,6 +68,7 @@ _logger = logging.getLogger(__name__)
 #
 # The following attributes are used, and reflected on wrapping methods:
 #  - method._api: decorator function, used for re-applying decorator
+#  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
 #  - method._returns: set by @returns, specifies return model
 #  - method.clear_cache: set by @ormcache, used to clear the cache
@@ -76,7 +77,7 @@ _logger = logging.getLogger(__name__)
 #  - method._orig: original method
 #
 
-_WRAPPED_ATTRS = ('_api', '_depends', '_returns', 'clear_cache')
+_WRAPPED_ATTRS = ('_api', '_constrains', '_depends', '_returns', 'clear_cache')
 
 
 class Meta(type):
@@ -104,6 +105,17 @@ class Meta(type):
                 attrs[key] = value
 
         return type.__new__(meta, name, bases, attrs)
+
+
+def constrains(*args):
+    """ Return a decorator that specifies the field dependencies of a method
+        implementing a constraint checker. Each argument must be a field name.
+    """
+    def decorate(method):
+        method._constrains = args
+        return method
+
+    return decorate
 
 
 def depends(*args):
