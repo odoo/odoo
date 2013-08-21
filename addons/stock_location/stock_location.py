@@ -251,14 +251,15 @@ class stock_move(osv.osv):
 
     def _push_apply(self, cr, uid, moves, context):
         for move in moves:
-            for route in move.product_id.route_ids:
-                found = False
-                for rule in route.push_ids:
-                    if rule.location_from_id.id == move.location_dest_id.id:
-                        self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
-                        found = True
-                        break
-                if found: break
+            if not move.move_dest_id:
+                for route in move.product_id.route_ids:
+                    found = False
+                    for rule in route.push_ids:
+                        if rule.location_from_id.id == move.location_dest_id.id:
+                            self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
+                            found = True
+                            break
+                    if found: break
         return True
 
     # Create the stock.move.putaway records
@@ -269,22 +270,24 @@ class stock_move(osv.osv):
             if putaway:
                 # Should call different methods here in later versions
                 # TODO: take care of lots
-                if putaway.method == 'fixed' and putaway.location_id:
+                if putaway.method == 'fixed' and putaway.location_spec_id:
                     moveputaway_obj.create(cr, uid, {'move_id': move.id,
-                                                     'location_id': putaway.location_id.id,
+                                                     'location_id': putaway.location_spec_id.id,
                                                      'quantity': move.product_uom_qty}, context=context)
         return True
 
     def action_assign(self, cr, uid, ids, context=None):
-       result = super(stock_move, self).action_assign(cr, uid, ids, context=context)
-       self._putaway_apply(cr, uid, ids, context=context)
-       return result
+        result = super(stock_move, self).action_assign(cr, uid, ids, context=context)
+        self._putaway_apply(cr, uid, ids, context=context)
+        return result
 
     def action_confirm(self, cr, uid, ids, context=None):
         result = super(stock_move, self).action_confirm(cr, uid, ids, context)
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
         return result
+
+
 
     def _create_procurement(self, cr, uid, move, context=None):
         """

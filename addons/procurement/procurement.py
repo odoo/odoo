@@ -157,8 +157,11 @@ class procurement_order(osv.osv):
             if procurement.state not in ("running", "done"):
                 if self._assign(cr, uid, procurement, context=context):
                     procurement.refresh()
-                    self._run(cr, uid, procurement, context=context or {})
-                    self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                    res = self._run(cr, uid, procurement, context=context or {})
+                    if res:
+                        self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                    else:
+                        self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
                 else:
                     self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
                     self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
