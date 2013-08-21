@@ -68,7 +68,7 @@ from openerp.osv import fields2 as fields
 
 # api module and decorators
 from openerp.osv import api
-from openerp.osv.api import model, multi, one, returns, depends
+from openerp.osv.api import model, multi, one, depends, returns
 
 # scope proxy
 from openerp.osv.scope import proxy as scope

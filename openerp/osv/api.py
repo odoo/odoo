@@ -66,11 +66,18 @@ _logger = logging.getLogger(__name__)
 
 
 #
-# The following attributes are used on methods:
-#    method._api: decorator function, both on original and wrapping method
-#    method._returns: set by @returns, both on original and wrapping method
-#    method._orig: original method, on wrapping method only
+# The following attributes are used, and reflected on wrapping methods:
+#  - method._api: decorator function, used for re-applying decorator
+#  - method._depends: set by @depends, specifies compute dependencies
+#  - method._returns: set by @returns, specifies return model
+#  - method.clear_cache: set by @ormcache, used to clear the cache
 #
+# On wrapping method only:
+#  - method._orig: original method
+#
+
+_WRAPPED_ATTRS = ('_api', '_depends', '_returns', 'clear_cache')
+
 
 class Meta(type):
     """ Metaclass that automatically decorates traditional-style methods by
@@ -228,7 +235,7 @@ def _make_wrapper(method, old_api, new_api):
             return new_api(self, *args, **kwargs)
 
     # propagate some openerp attributes to the wrapper
-    for attr in ('_api', '_depends', '_returns', 'clear_cache'):
+    for attr in _WRAPPED_ATTRS:
         if hasattr(method, attr):
             setattr(wrapper, attr, getattr(method, attr))
     wrapper._orig = method
