@@ -467,6 +467,53 @@ $(function(){
                     }.bind(this), 0);
                 });
             }
+        },
+        link: function (definition) {
+            definition.removeContents('target');
+            definition.removeContents('advanced');
+
+            var info = definition.getContents('info');
+            info.remove('linkType');
+            info.remove('anchorOptions');
+            info.remove('emailOptions');
+
+            info.get('urlOptions').children[0].widths = [ '0%', '100%' ];
+            info.get('protocol').style = 'display: none';
+            // TODO: sync edition of url to website_pages?
+            info.add({
+                type: 'select',
+                label: "Existing page",
+                id: 'website_pages',
+                items: [['']],
+                /**
+                 * onload fetch all the pages existing in the website, then
+                 * display that.
+                 */
+                onLoad: function () {
+                    var field = this;
+
+                    return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                        model: 'website',
+                        method: 'list_pages',
+                        args: [],
+                        kwargs: {}
+                    }).then(function (results) {
+                        _(results).each(function (result) {
+                            field.add(result.name, result.url);
+                        });
+                    });
+                },
+                onChange: function () {
+                    var url = this.getValue();
+                    var url_field = this.getDialog().getContentElement('info', 'url');
+                    if (!url) {
+                        url_field.setValue('');
+                        return;
+                    }
+
+                    url_field.setValue(url);
+                }
+            })
         }
     };
     CKEDITOR.on('dialogDefinition', function (ev) {
