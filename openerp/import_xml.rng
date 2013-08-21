@@ -207,13 +207,17 @@
             <rng:optional><rng:attribute name="id"/></rng:optional>
             <rng:optional><rng:attribute name="t-name"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
-            <rng:optional><rng:attribute name="inherit_id"/></rng:optional>
-            <rng:optional><rng:attribute name="inherit_option_id"/></rng:optional>
             <rng:optional><rng:attribute name="forcecreate"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
-            <rng:optional>
-                <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>
-            </rng:optional>
+            <rng:choice>
+                <rng:group>
+                    <rng:optional><rng:attribute name="inherit_id"/></rng:optional>
+                    <rng:optional><rng:attribute name="inherit_option_id"/></rng:optional>
+                </rng:group>
+                <rng:optional>
+                    <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>
+                </rng:optional>
+            </rng:choice>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
