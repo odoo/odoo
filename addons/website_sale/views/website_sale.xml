@@ -356,7 +356,7 @@
                     </div>
                     <form class="span8 form-horizontal" action="/shop/confirm_order/" method="post">
                         <div class=" row">
-                            <a t-if="not partner" t-att-href="'/admin#action=redirect&amp;url=%%s/shop/checkout/' %% host_url" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="span8">Billing Information</h3>
                              <div t-attf-class="control-group #{error.get('name', '')}">
                                 <label class="control-label" for="contact_name">Name and firstname</label>
