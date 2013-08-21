@@ -109,7 +109,7 @@ class _date_format(str, _format):
         if self.val:
             if getattr(self,'name', None):
                 date = datetime.strptime(self.name[:get_date_length()], DEFAULT_SERVER_DATE_FORMAT)
-                return date.strftime(str(self.lang_obj.date_format))
+                return date.strftime(self.lang_obj.date_format.encode('utf-8'))
         return self.val
 
 class _dttime_format(str, _format):
@@ -120,8 +120,8 @@ class _dttime_format(str, _format):
     def __str__(self):
         if self.val and getattr(self,'name', None):
             return datetime.strptime(self.name, DEFAULT_SERVER_DATETIME_FORMAT)\
-                   .strftime("%s %s"%(str(self.lang_obj.date_format),
-                                      str(self.lang_obj.time_format)))
+                   .strftime("%s %s"%((self.lang_obj.date_format).encode('utf-8'),
+                                      (self.lang_obj.time_format).encode('utf-8')))
         return self.val
 
 
@@ -313,7 +313,7 @@ class rml_parse(object):
                 date = datetime_field.context_timestamp(self.cr, self.uid,
                                                         timestamp=date,
                                                         context=self.localcontext)
-            return date.strftime(date_format)
+            return date.strftime(date_format.encode('utf-8'))
 
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
         if currency_obj:
