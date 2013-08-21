@@ -19,21 +19,19 @@
 #
 ##############################################################################
 
-from openerp.addons.base_status.base_state import base_state
 import crm
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
-class crm_phonecall(base_state, osv.osv):
+class crm_phonecall(osv.osv):
     """ Model for CRM phonecalls """
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
     _inherit = ['mail.thread']
     _columns = {
-        # base_state required fields
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'create_date': fields.datetime('Creation Date' , readonly=True),
@@ -43,16 +41,15 @@ class crm_phonecall(base_state, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Contact'),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([ ('draft', 'Draft'),
-                                    ('open', 'Confirmed'),
-                                    ('pending', 'Not Held'),
-                                    ('cancel', 'Cancelled'),
-                                    ('done', 'Held'),],
-                        string='Status', size=16, readonly=True, track_visibility='onchange',
-                        help='The status is set to \'Todo\', when a case is created.\
-                                If the case is in progress the status is set to \'Open\'.\
-                                When the call is over, the status is set to \'Held\'.\
-                                If the call needs to be done then the status is set to \'Not Held\'.'),
+        'state': fields.selection(
+            [('open', 'Confirmed'),
+             ('cancel', 'Cancelled'),
+             ('pending', 'Pending'),
+             ('done', 'Held')
+             ], string='Status', readonly=True, track_visibility='onchange',
+            help='The status is set to Confirmed, when a case is created.\n'
+                 'When the call is over, the status is set to Held.\n'
+                 'If the callis not applicable anymore, the status can be set to Cancelled.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
@@ -71,7 +68,7 @@ class crm_phonecall(base_state, osv.osv):
     }
 
     def _get_default_state(self, cr, uid, context=None):
-        if context and context.get('default_state', False):
+        if context and context.get('default_state'):
             return context.get('default_state')
         return 'open'
 
@@ -79,29 +76,38 @@ class crm_phonecall(base_state, osv.osv):
         'date': fields.datetime.now,
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'state':  _get_default_state,
-        'user_id': lambda self,cr,uid,ctx: uid,
+        'user_id': lambda self, cr, uid, ctx: uid,
         'active': 1
     }
 
-    def case_close(self, cr, uid, ids, context=None):
-        """ Overrides close for crm_case for setting duration """
-        res = True
-        for phone in self.browse(cr, uid, ids, context=context):
-            phone_id = phone.id
-            data = {}
-            if phone.duration <=0:
-                duration = datetime.now() - datetime.strptime(phone.date, DEFAULT_SERVER_DATETIME_FORMAT)
-                data['duration'] = duration.seconds/float(60)
-            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context=context)
-            self.write(cr, uid, [phone_id], data, context=context)
-        return res
+    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
+        values = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'partner_phone': partner.phone,
+                'partner_mobile': partner.mobile,
+            }
+        return {'value': values}
 
-    def case_reset(self, cr, uid, ids, context=None):
-        """Resets case as Todo
-        """
-        res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'}, context=context)
-        return res
+    def write(self, cr, uid, ids, values, context=None):
+        """ Override to add case management: open/close dates """
+        if values.get('state'):
+            if values.get('state') == 'done':
+                values['date_closed'] = fields.datetime.now()
+                self.compute_duration(cr, uid, ids, context=context)
+            elif values.get('state') == 'open':
+                values['date_open'] = fields.datetime.now()
+                values['duration'] = 0.0
+        return super(crm_phonecall, self).write(cr, uid, ids, values, context=context)
+
+    def compute_duration(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            if phonecall.duration <= 0:
+                duration = datetime.now() - datetime.strptime(phonecall.date, DEFAULT_SERVER_DATETIME_FORMAT)
+                values = {'duration': duration.seconds/float(60)}
+                self.write(cr, uid, [phonecall.id], values, context=context)
+        return True
 
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
                     user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
@@ -135,7 +141,7 @@ class crm_phonecall(base_state, osv.osv):
             }
             new_id = self.create(cr, uid, vals, context=context)
             if action == 'log':
-                self.case_close(cr, uid, [new_id])
+                self.write(cr, uid, [new_id], {'state': 'done'}, context=context)
             phonecall_dict[call.id] = new_id
         return phonecall_dict
 
@@ -243,12 +249,11 @@ class crm_phonecall(base_state, osv.osv):
                             'email_from': default_contact and default_contact.email,
                         })
             vals = {
-                    'partner_id': partner_id,
-                    'opportunity_id' : opportunity_id,
+                'partner_id': partner_id,
+                'opportunity_id': opportunity_id,
+                'state': 'done',
             }
-            self.write(cr, uid, [call.id], vals)
-            self.case_close(cr, uid, [call.id])
-            opportunity.case_open(cr, uid, [opportunity_id])
+            self.write(cr, uid, [call.id], vals, context=context)
             opportunity_dict[call.id] = opportunity_id
         return opportunity_dict
 
