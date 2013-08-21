@@ -24,7 +24,8 @@ models = [
     ('datetime', fields.datetime()),
     ('text', fields.text()),
     ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
-    ('selection.function', fields.selection(selection_fn)),
+    # here use size=-1 to store the values as integers instead of strings
+    ('selection.function', fields.selection(selection_fn, size=-1)),
     # just relate to an integer
     ('many2one', fields.many2one('export.integer')),
     ('one2many', fields.one2many('export.one2many.child', 'parent_id')),

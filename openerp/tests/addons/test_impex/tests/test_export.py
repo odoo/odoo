@@ -271,10 +271,10 @@ class test_selection_function(CreatorCase):
         # FIXME: selection functions export the *value* itself
         self.assertEqual(
             self.export(1),
-            [[u'1']])
+            [[1]])
         self.assertEqual(
             self.export(3),
-            [[u'3']])
+            [[3]])
         # fucking hell
         self.assertEqual(
             self.export(0),

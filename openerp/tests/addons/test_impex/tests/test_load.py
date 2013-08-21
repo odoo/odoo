@@ -521,7 +521,7 @@ class test_selection_function(ImporterCase):
         self.assertEqual(len(result['ids']), 2)
         self.assertFalse(result['messages'])
         self.assertEqual(
-            ['3', '1'],
+            [3, 1],
             values(self.read()))
 
     def test_translated(self):
@@ -536,7 +536,7 @@ class test_selection_function(ImporterCase):
         ], context={'lang': 'fr_FR'})
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 2)
-        self.assertEqual(values(self.read()), ['1', '2'])
+        self.assertEqual(values(self.read()), [1, 2])
 
         result = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
         self.assertFalse(result['messages'])

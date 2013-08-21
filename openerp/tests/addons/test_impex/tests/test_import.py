@@ -446,7 +446,7 @@ class test_selection_function(ImporterCase):
             ]),
             ok(2))
         self.assertEqual(
-            ['3', '1'],
+            [3, 1],
             values(self.read()))
 
     def test_translated(self):
