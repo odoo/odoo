@@ -218,4 +218,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return obj.website_published and "1" or "0"
 
+    @http.route(['/website/kanban/'], type='http', auth="public")
+    def kanban(self, **post):
+        return request.registry['website'].kanban_col(**post)
+
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

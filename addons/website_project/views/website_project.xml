@@ -13,41 +13,34 @@
 
     <!-- Page --> 
 
+
+    <template id="kanban_card" name="Project">
+        <a t-attf-href="/task/#{ object_id.id }/"><span t-field="object_id.name"/></a>
+        <div>
+            Assigned to <span t-field="object_id.user_id"/>
+        </div>
+        <div>
+            <span t-foreach="object_id.categ_ids" t-as="categ_id" class="label">
+                <t t-esc="categ_id.name"/>
+            </span>
+        </div>
+        <small>
+            <i class="icon-time"></i> <span t-field="object_id.date_start"/><br/>
+            <t t-if="object_id.date_end">Ending Date: <span t-field="object_id.date_end"/></t>
+        </small>
+    </template>
+
     <template id="index" name="Project">
         <t t-call="website.layout">
             <t t-set="title">Project</t>
             <div class="container">
                 <h4 t-field="project_id.name"/>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th t-foreach="stages">
-                                <span t-field="stage_id.name"/>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td t-foreach="stages" t-as="stage">
-                                <div t-foreach="stage['task_ids']" t-as="task" class="thumbnail">
-                                    <a t-attf-href="/task/#{ task.id }/"><span t-field="task.name"/></a>
-                                    <div>
-                                        Assigned to <span t-field="task.user_id"/>
-                                    </div>
-                                    <div>
-                                        <span t-foreach="task.categ_ids" t-as="categ" class="label">
-                                            <t t-esc="categ.name"/>
-                                        </span>
-                                    </div>
-                                    <small>
-                                        <i class="icon-time"></i> <span t-field="task.date_start"/><br/>
-                                        <t t-if="task.date_end">Ending Date: <span t-field="task.date_end"/></t>
-                                    </small>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <t t-call="website.kanban">
+                    <t t-set="model">project.task</t>
+                    <t t-set="domain" t-value="[('project_id', '=', project_id.id)]"/>
+                    <t t-set="column">stage_id</t>
+                    <t t-set="content">website_project.kanban_card</t>
+                </t>
             </div>
         </t>
     </template>

@@ -421,5 +421,125 @@
 
         </template>
 
+
+        <template id="kanban">
+            <t t-set="step"><t t-esc="step or 0"/></t>
+            <t t-set="scope"><t t-esc="scope or 0"/></t>
+            <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
+            <t t-raw="snipped['kanban'](model, domain, column, content, step=step, scope=scope, orderby=orderby)"/>
+        </template>
+
+        <template id="kanban_contain">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <t t-set="width" t-value="'%%s%%%%' % (100/len(objects))"/>
+                        <t t-foreach="objects">
+                        <th t-att-width="width">
+                            <div t-field="column_id.name" class="text-center"/>
+                        </th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <t t-foreach="objects">
+
+                        <t t-set="pager">
+                            <div t-if="1 != page_end" class="pagination pagination-centered">
+                                <ul>
+                                    <li t-attf-class="prev #{'active' if page == 1 else '' }" >
+                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a>
+                                    </li>
+                                    <t t-foreach="range(page_start, page_end+1)" t-as="p">
+                                    <li t-att-class=" 'active' if page == p else '' ">
+                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"/>
+                                    </li>
+                                    </t>
+                                    <li t-attf-class="next #{'active' if page == page_end else '' }" >
+                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </t>
+
+                        <td class="js_kanban_col"
+                                t-att-data-content="content"
+                                t-att-data-domain="domain"
+                                t-att-data-page_count="page_count"
+                                t-att-data-model="model"
+                                t-att-data-step="step"
+                                t-att-data-orderby="orderby">
+                            <t t-raw="pager"/>
+                            <div t-foreach="object_ids" t-as="object_id" class="thumbnail">
+                                <t t-call="website_project.kanban_card"/>
+                            </div>
+                            <t t-raw="pager"/>
+                        </td>
+
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+<script>
+
+$('.js_kanban_col').each(function () {
+    var $col = $(this);
+    var $pagination = $('.pagination', $col);
+    if(!$pagination.size()) {
+        return;
+    }
+    
+    var page_count =  $col.data('page_count');
+    var scope = $pagination.first().find("li").size()-2;
+    var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
+
+    var data = {
+        'domain': $col.data('domain'),
+        'model': $col.data('model'),
+        'content': $col.data('content'),
+        'step': $col.data('step'),
+        'orderby': $col.data('orderby')
+    };
+
+    $pagination.on('click', 'a', function (ev) {
+        ev.preventDefault();
+        var $a = $(ev.target);
+        if($a.hasClass('active')) {
+            return;
+        }
+
+        var page = +$a.attr("href").split(",").pop().split('-')[1];
+        data['page'] = page;
+
+        $.post('/website/kanban/', data, function (col) {
+            $col.find("&gt; .thumbnail").remove();
+            $pagination.first().after('<div class="thumbnail">'+col+'</div>');
+        });
+
+        var page_start = page - parseInt(Math.floor((scope-1)/2));
+        if (page_start &lt; 1 ) page_start = 1;
+        var page_end = page_start + (scope-1);
+        if (page_end &gt; page_count ) page_end = page_count;
+
+        if (page_end - page_start &lt; scope) {
+            page_start = page_end - scope &gt; 0 ? page_end - scope : 1;
+        }
+
+        $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
+        $pagination.find('li.next a').attr("href", kanban_url_col+(page+1));
+        for(var i=0; i &lt; scope; i++) {
+            $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
+        }
+        $pagination.find('li.active').removeClass('active');
+        $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
+
+    });
+
+});
+</script>
+        </template>
+
+
      </data>
 </openerp>

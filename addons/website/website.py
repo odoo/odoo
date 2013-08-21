@@ -9,6 +9,7 @@ from openerp.addons.web.http import request
 import urllib
 import math
 import traceback
+from openerp.tools.safe_eval import safe_eval
 
 import logging
 logger = logging.getLogger(__name__)
@@ -63,6 +64,9 @@ class website(osv.osv):
             'host_url': request.httprequest.host_url,
             'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
             'json': simplejson,
+            'snipped': {
+                'kanban': self.kanban
+            }
         }
         if additional_values:
             values.update(additional_values)
@@ -75,10 +79,10 @@ class website(osv.osv):
         }
         try:
             return view.render(request.cr, request.uid, template, values, context=context)
-        except (osv.except_osv, orm.except_orm), err:
-            logger.error(err)
-            values['error'] = err[1]
-            return self.render('website.401', values)
+        # except (osv.except_osv, orm.except_orm), err:
+        #     logger.error(err)
+        #     values['error'] = err[1]
+        #     return self.render('website.401', values)
         # except ValueError:
         #     logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
         #     return self.render('website.404', values)
@@ -146,6 +150,77 @@ class website(osv.osv):
             if xids[view['id']]
         ]
 
+    def kanban(self, model, domain, column, content, step=None, scope=None, orderby=None):
+        step = step and int(step) or 10
+        scope = scope and int(scope) or 5
+        orderby = orderby or "name"
+
+        get_args = dict(request.httprequest.args or {})
+        model_obj = request.registry[model]
+        relation = model_obj._columns.get(column)._obj
+        relation_obj = request.registry[relation]
+
+        get_args.setdefault('kanban', "")
+        kanban = get_args.pop('kanban')
+        kanban_url = "?%s&kanban=" % urllib.urlencode(get_args)
+
+        pages = {}
+        for col in kanban.split(","):
+            if col:
+                col = col.split("-")
+                pages[int(col[0])] = int(col[1])
+
+        objects = []
+        for group in model_obj.read_group(request.cr, request.uid, domain, ["id", column], groupby=column):
+            obj = {}
+
+            # browse column
+            relation_id = group[column][0]
+            obj['column_id'] = relation_obj.browse(request.cr, request.uid, relation_id)
+
+            obj['kanban_url'] = kanban_url
+            for k, v in pages.items():
+                if k != relation_id:
+                    obj['kanban_url'] += "%s-%s" % (k, v)
+
+            # pager
+            number = model_obj.search(request.cr, request.uid, group['__domain'], count=True)
+            obj['page'] = pages.get(relation_id) or 1
+            obj['page_count'] = int(math.ceil(float(number) / step))
+            offset = (obj['page']-1) * step
+            obj['page_start'] = max(obj['page'] - int(math.floor((scope-1)/2)), 1)
+            obj['page_end'] = min(obj['page_start'] + (scope-1), obj['page_count'])
+
+            # view data
+            obj['domain'] = group['__domain']
+            obj['model'] = model
+            obj['step'] = step
+            obj['orderby'] = orderby
+
+            # browse objects
+            object_ids = model_obj.search(request.cr, request.uid, group['__domain'], limit=step, offset=offset, order=orderby)
+            obj['object_ids'] = model_obj.browse(request.cr, request.uid, object_ids)
+
+            objects.append(obj)
+
+        values = self.get_rendering_context({
+            'objects': objects,
+            'range': range,
+            'content': content,
+        })
+        return self.render("website.kanban_contain", values)
+
+    def kanban_col(self, model, domain, page, content, step, orderby):
+        html = ""
+        model_obj = request.registry[model]
+        domain = safe_eval(domain)
+        step = int(step)
+        offset = (int(page)-1) * step
+        object_ids = model_obj.search(request.cr, request.uid, domain, limit=step, offset=offset, order=orderby)
+        object_ids = model_obj.browse(request.cr, request.uid, object_ids)
+        for object_id in object_ids:
+            html += self.render(content, self.get_rendering_context({'object_id': object_id}))
+        return html
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
