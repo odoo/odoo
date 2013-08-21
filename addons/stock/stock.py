@@ -697,7 +697,8 @@ class stock_picking(osv.osv):
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
             for op in picking.pack_operation_ids:
-                if op.package_id:
+                #TODO: op.package_id can not work as quants_get is not defined on quant package => gives traceback
+                if op.package_id: 
                     for quant in quant_package_obj.quants_get(cr, uid, op.package_id, context=context):
                         self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=context)
                     op.package_id.write(cr, uid, {
@@ -705,12 +706,14 @@ class stock_picking(osv.osv):
                     }, context=context)
                 elif op.product_id:
                     moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
+                    
                     quants = []
                     for m in moves:
                         for quant in m.quant_ids:
                             quants.append(quant.id)
                     quant_obj.write(cr, uid, quants, {
                         'package_id': op.result_package_id.id
+                        
                     }, context=context)
 
             self._create_backorder(cr, uid, picking, context=context)
@@ -1507,7 +1510,7 @@ class stock_move(osv.osv):
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
             'product_uos_qty': move.product_uos_qty - uos_qty,
-            'reserved_quant_ids': []
+            'reserved_quant_ids': [(6,0,[])]
         }, context=context)
         return new_move
 
@@ -1933,7 +1936,6 @@ class stock_pack_operation(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'), 
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
-        #'lot_id': fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
         #'update_cost': fields.boolean('Need cost update'),
         'cost': fields.float("Cost", help="Unit Cost for this product line"),
         'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
