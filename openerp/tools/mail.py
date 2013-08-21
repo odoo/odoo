@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2012-2013 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -44,7 +44,7 @@ tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "if
 tags_to_remove = ['html', 'body', 'font']
 
 
-def html_sanitize(src):
+def html_sanitize(src, silent=True):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -52,18 +52,38 @@ def html_sanitize(src):
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
-    
-    # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
+
+    kwargs = {
+        'page_structure': True,
+        'style': False,             # do not remove style attributes
+        'forms': True,              # remove form tags
+    }
+    if etree.LXML_VERSION >= (2, 3, 1):
+        # kill_tags attribute has been added in version 2.3.1
+        kwargs.update({
+            'kill_tags': tags_to_kill,
+            'remove_tags': tags_to_remove,
+        })
+    else:
+        kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+
+    if etree.LXML_VERSION >= (3, 1, 0):
+        kwargs.update({
+            'safe_attrs_only': True,
+            'safe_attrs': clean.defs.safe_attrs | set(['style']),
+        })
+    else:
+        # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attribute in order to keep "style"
+        kwargs['safe_attrs_only'] = False
+
     try:
-        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
+        # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
+        cleaner = clean.Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
-    except TypeError, e:
-        # lxml.clean version < 2.3.1 does not have a kill_tags attribute
-        # to remove in 2014
-        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill+tags_to_remove)
-        cleaned = cleaner.clean_html(src)
-    except:
-        _logger.warning('html_sanitize failed to parse %s' % (src))
+    except Exception:
+        if not silent:
+            raise
+        _logger.warning('html_sanitize failed to parse %r', src, exc_info=True)
         cleaned = '<p>Impossible to parse</p>'
     return cleaned
 
