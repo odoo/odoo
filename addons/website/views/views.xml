@@ -401,22 +401,92 @@
 
         <template id="snippets">
 
-            <div class='oe_snippet' name='FooBar' data-selector-siblings='p,h1,h2,h3,h4,h5'>
-                <div class='oe_snippet_thumbnail'>
-                    foobar
-                </div>
-                <div class='oe_snippet_body'>
-                    FOOBAR
-                </div>
+            <div class='oe_snippet' name='Spacer' data-selector-siblings='#wrap .container'>
+                <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
+                <div class="oe_snippet_body container mt32"></div>
             </div>
 
-            <div class='oe_snippet' name='BarFoo' data-selector-childs='.container'>
-                <div class='oe_snippet_thumbnail'>
-                    barfoo
+            <div class='oe_snippet' name='FooBar' data-selector-siblings='#wrap .container'>
+                <div class='oe_snippet_thumbnail oe_label'>
+                    Main Title
                 </div>
-                <div class='oe_snippet_body'>
-                    BARFOO
-                </div>
+                <section class="oe_snippet_body container">
+                    <div class="row">
+                        <div class="span12 text-center">
+                            <h1 class='mt64'>Welcome To Your New Homepage,</h1>
+                            <h2 class='mt32 subheader'>where <b><em>everything</em></b> can be customized </h2>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class='oe_snippet' name='BarFoo' data-selector-siblings='#wrap .container'>
+                <section class="oe_snippet_body container">
+                    <div class="row">
+                        <div class="span12 text-center">
+                            <h2 class='mt48'>Ut enim ad minim veniam</h2>
+                        </div>
+                    </div>
+                    <div class="row mt32">
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/china_thumb.jpg"/>
+                            <h4 class='mt16'>Cillum Dolore</h4>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna 
+                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            </p>
+                        </div>
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/desert_thumb.jpg"/>
+                            <h4 class='mt16'>Mollit Anim</h4>
+                            <p>
+                                Duis aute irure dolor in reprehenderit in voluptate velit 
+                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                                occaecat cupidatat non proident, sunt in culpa qui officia 
+                                deserunt mollit anim id est laborum
+                            </p>
+                        </div>
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/deers_thumb.jpg"/>
+                            <h4 class='mt16'>Nemo Enim Ipsam</h4>
+                            <p>
+                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
+                                quae ab illo inventore veritatis et quasi architecto beatae vitae
+                                dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class='oe_snippet' name='Header' data-selector-siblings='#wrap .container'>
+                <section class="container oe_snippet_body">
+                    <div class="row">
+                        <div class="span5">
+                            <img class='img-rounded' src="/website/static/src/img/island.jpg"/>
+                        </div>
+                        <div class="span6 offset1">
+                            <p class='mt16'>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna 
+                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            </p>
+                            <p>
+                                Duis aute irure dolor in reprehenderit in voluptate velit 
+                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                                occaecat cupidatat non proident, sunt in culpa qui officia 
+                                deserunt mollit anim id est laborum
+                            </p>
+                            <div class="text-center">
+                                <a href="http://www.openerp.com/start" class="btn mt16 btn-large btn-primary">Call To  <em>Action</em></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
 
         </template>

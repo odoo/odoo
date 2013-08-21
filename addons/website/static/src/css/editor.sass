@@ -56,43 +56,76 @@
     left: 0px
     right: 0px
     bottom: 0px
+    max-height: 280px
+    min-height: 140px
+    background: rgb(40,40,40)
+    box-shadow: 0px 10px 10px -10px black inset
+    overflow-y: auto
+
+.oe_snippet
+    display: inline-block
+    vertical-align: top
+    background: white
+    width: 120px
     height: 120px
-    background: black
+    border-radius: 3px
+    margin: 10px
+    margin-right: 0px
+    cursor: move 
+    position: relative
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.2)
+    overflow: hidden
+    -webkit-user-select: none
+    user-select: none
 
-    .oe_snippet
-        display: inline
-        .oe_snippet_thumbnail
-            display: inline-block
-            background: red
-            width: 100px
-            height: 100px
-            border-radius: 3px
-            margin: 10px
-            cursor: move
+    .oe_snippet_thumbnail.oe_label
+        text-align: center
+        background: rgb(116, 116, 116)
+        background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
+        height: 100%
+        line-height: 120px
+        color: white
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95)
 
-        .oe_snippet_body
-            display: none
+    .oe_snippet_body
+        display: none
+    & > *
+        pointer-events: none
+
+    & > *:first-child:not(.oe_snippet_thumbnail)
+        display: block
+        -webkit-transform-origin-x: 5px
+        -webkit-transform-origin-y: 10px
+        -webkit-transform: scale(0.095)
+               
 
 .oe_drop_zone
     display: block
-    background: rgba(255,0,0,0.25)
-    border: solid 1px rgba(255,0,0,0.5)
-    height: 30px
+    background: rgba(153, 0, 255, 0.17)
+    border-radius: 3px
+    height: 32px
     margin: -16px 0px
-    &.oe_inline
-        display: inline
-        height: auto
-        width: 30px
-        margin: 0px -16px
-    &.oe_float_left
-        float: left
-    &.oe_float_right
-        float: right
-    &:hover
-        background: rgba(255,0,0,0.5)
-        border: solid 1px red
+    -webkit-transition: margin 250ms linear
+    &:first-child:not(:last-child)
+        margin-top: -8px
+        margin-bottom: -24px
+    &:last-child:not(:first-child)
+        margin-top: -24px
+        margin-bottom: -8px
     &.oe_hover
-        background: rgba(0,255,0,0.5)
-        border: solid 1px green
+        background: rgba(0, 255, 133, 0.22)
+        z-index: 100000
+    &:before
+        content: ""
+        display: block
+        border-top: dashed 2px rgba(209, 178, 255, 0.72)
+        position: relative
+        top: 16px
+    &:first-child:not(:last-child):before
+        top: 8px
+    &:last-child:not(:first-child):before
+        top: 24px
+    &.oe_hover:before
+        border-top: dashed 2px rgba(116, 255, 161, 0.72)
 
 
