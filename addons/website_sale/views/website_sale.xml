@@ -93,7 +93,7 @@
 
     <!-- Product list --> 
 
-    <template id="products">
+    <template id="products" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
@@ -184,7 +184,7 @@
 
     <!-- Page Shop my cart --> 
 
-    <template id="mycart" name="My cart">
+    <template id="mycart" name="My cart" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">
@@ -269,18 +269,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="suggested_products" t-as="product_id">
+                    <t t-foreach="suggested_products" t-as="product">
                         <tr>
                             <td>
-                                <a t-attf-href="/shop/product/#{ product_id.id }/"><span t-field="product_id.name"/></a><br/>
-                                <small t-field="product_id.description_sale"/>
+                                <a t-attf-href="/shop/product/#{ product.id }/"><span t-field="product.name"/></a><br/>
+                                <small t-field="product.description_sale"/>
                             </td>
                             <td>
-                               <span t-field="product_id.list_price"></span>€
+                               <span t-field="product.list_price"></span>€
                             </td>
                             <td>
                                 <div class="pull-right">
-                                    <a t-attf-href="./add_cart/#{ product_id.id }/" class="btn btn-small btn-success">+</a>
+                                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">+</a>
                                 </div>
                             </td>
                         </tr>
@@ -356,7 +356,7 @@
                     </div>
                     <form class="span8 form-horizontal" action="/shop/confirm_order/" method="post">
                         <div class=" row">
-                            <a t-if="not partner" t-att-href="'/admin#action=redirect&amp;url=%%s/shop/checkout/' %% host_url" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="span8">Billing Information</h3>
                              <div t-attf-class="control-group #{error.get('name', '')}">
                                 <label class="control-label" for="contact_name">Name and firstname</label>

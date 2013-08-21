@@ -23,7 +23,7 @@
 
     <!-- Page --> 
 
-    <template id="index" name="Blogs">
+    <template id="index" name="Blogs" page="True">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
@@ -34,7 +34,7 @@
             <div class="container mt48 js_website_mail">
                 <div class="row">
                     <div class="span4" id="left_column">
-                        <a t-if="mail_group_id and editable" t-att-href="'/blog/%%s/new' %% mail_group_id" class="btn">Add a new Blog</a>
+                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn">Add a new Blog</a>
 
                         <div id="blog_subscribe">
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
@@ -69,7 +69,7 @@
                                         </small>
                                     </div>
                                 </li>
-                                <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
+                                <form id="post" t-attf-action="/blog/#{ blog_id.res_id }/#{ blog_id.id }/post#post" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
                                     <textarea rows="4" placeholder="Your comment" class="span7"> </textarea>
                                     <button type="submit" class="btn">Post your comment</button>
                                 </form>
@@ -80,14 +80,14 @@
                     <div class="span8" t-if="not blog_id and blog_ids">
                         <ul class="media-list">
                             <li t-foreach="blog_ids" t-as="blog" class="media well">
-                                <div t-att-class="'media-body %%s' %% (blog.website_published and 'css_published' or '')">
+                                <div t-attf-class="media-body #{ 'css_published' if blog.website_published else '' }">
                                     <t t-call="website.publish"><t t-set="object" t-value="blog"/></t>
-                                    <h4 class="media-heading" ><a t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)" t-field="blog.subject"></a></h4>
+                                    <h4 class="media-heading" ><a t-attf-href="/blog/#{ blog.res_id }/#{ blog.id }#comment" t-field="blog.subject"></a></h4>
                                     <div class="media">
                                         <div t-field="blog.body"/>
                                         <small class="pull-left muted text-right" t-if="len(blog.child_ids)">
-                                            <a t-if="len(blog.child_ids) &lt;= 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Comment</a>
-                                            <a t-if="len(blog.child_ids) > 1" t-att-href="'/blog/%%s/%%s#comment' %% (blog.res_id, blog.id)"><t t-esc="len(blog.child_ids)"/> Comments</a>
+                                            <a t-if="len(blog.child_ids) &lt;= 1" t-attf-href="/blog/#{ blog.res_id }/#{ blog.id }#comment"><t t-esc="len(blog.child_ids)"/> Comment</a>
+                                            <a t-if="len(blog.child_ids) > 1" t-attf-href="/blog/#{ blog.res_id }/#{ blog.id }#comment"><t t-esc="len(blog.child_ids)"/> Comments</a>
                                         </small>
                                         <small class="pull-right muted text-right">
                                             <div t-field="blog.author_id"/>
@@ -109,7 +109,7 @@
     <template id="blog_history" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="History">
         <xpath expr="//div[@id='left_column']" position="inside">
             <ul class="nav nav-list">    
-                <li class="nav-header"><a t-att-href="'/blog/%%s/' %% mail_group_id">BLOG ARCHIVE</a></li>
+                <li class="nav-header"><a t-attf-href="/blog/#{ mail_group_id }/">BLOG ARCHIVE</a></li>
                 <!-- TODO: check qweb iteration -->
                 <li t-foreach="nav_list" t-as="year" class="js_nav_year">
                     <t t-set="year" t-value="nav_list[year]"/>
