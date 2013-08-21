@@ -132,7 +132,7 @@
 
     <!-- product --> 
 
-    <template id="product" name="Product" page="True">
+    <template id="product" name="Product">
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
@@ -228,7 +228,7 @@
 
     <!-- Page confirm my cart -->
 
-    <template id="checkout" page="True">
+    <template id="checkout">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
@@ -414,7 +414,7 @@
         </t>
     </template>
 
-    <template id="payment" page="True">
+    <template id="payment">
         <t t-call="website.layout">
             <t t-set="title">Shop - Payment</t>
             <div class="container mt48 oe_website_sale">
