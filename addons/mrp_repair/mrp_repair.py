@@ -513,7 +513,6 @@ class mrp_repair(osv.osv):
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': move.location_id.id,
                     'location_dest_id': move.location_dest_id.id,
-                    'tracking_id': False,
                     'state': 'done',
                 })
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
@@ -536,7 +535,6 @@ class mrp_repair(osv.osv):
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': repair.location_id.id,
                     'location_dest_id': repair.location_dest_id.id,
-                    'tracking_id': False,
                     'state': 'assigned',
                 })
                 pick_obj.signal_button_confirm(cr, uid, [picking])

@@ -52,9 +52,6 @@ class stock_location_path(osv.osv):
         'name': fields.char('Operation', size=64),
         'company_id': fields.many2one('res.company', 'Company'),
         'route_id': fields.many2one('stock.location.route', 'Route'),
-
-        'product_id' : fields.many2one('product.product', 'Products', ondelete='cascade', select=1),
-
         'location_from_id' : fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
         'location_dest_id' : fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
@@ -62,7 +59,7 @@ class stock_location_path(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
-            required=True,),
+            required=True,), 
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This is the picking type associated with the different pickings"), 
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
@@ -102,7 +99,6 @@ class stock_location_path(osv.osv):
                 'date_expected': newdate,
                 'picking_id': False,
                 'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context),
                 'rule_id': rule.id,
                 'propagate': rule.propagate, 
             })
@@ -255,14 +251,15 @@ class stock_move(osv.osv):
 
     def _push_apply(self, cr, uid, moves, context):
         for move in moves:
-            for route in move.product_id.route_ids:
-                found = False
-                for rule in route.push_ids:
-                    if rule.location_from_id.id == move.location_dest_id.id:
-                        self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
-                        found = True
-                        break
-                if found: break
+            if not move.move_dest_id:
+                for route in move.product_id.route_ids:
+                    found = False
+                    for rule in route.push_ids:
+                        if rule.location_from_id.id == move.location_dest_id.id:
+                            self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
+                            found = True
+                            break
+                    if found: break
         return True
 
     # Create the stock.move.putaway records
@@ -273,22 +270,24 @@ class stock_move(osv.osv):
             if putaway:
                 # Should call different methods here in later versions
                 # TODO: take care of lots
-                if putaway.method == 'fixed' and putaway.location_id:
+                if putaway.method == 'fixed' and putaway.location_spec_id:
                     moveputaway_obj.create(cr, uid, {'move_id': move.id,
-                                                     'location_id': putaway.location_id.id,
+                                                     'location_id': putaway.location_spec_id.id,
                                                      'quantity': move.product_uom_qty}, context=context)
         return True
 
     def action_assign(self, cr, uid, ids, context=None):
-       result = super(stock_move, self).action_assign(cr, uid, ids, context=context)
-       self._putaway_apply(cr, uid, ids, context=context)
-       return result
+        result = super(stock_move, self).action_assign(cr, uid, ids, context=context)
+        self._putaway_apply(cr, uid, ids, context=context)
+        return result
 
     def action_confirm(self, cr, uid, ids, context=None):
         result = super(stock_move, self).action_confirm(cr, uid, ids, context)
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
         return result
+
+
 
     def _create_procurement(self, cr, uid, move, context=None):
         """

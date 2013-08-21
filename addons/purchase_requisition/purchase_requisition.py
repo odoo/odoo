@@ -391,7 +391,7 @@ class procurement_order(osv.osv):
                 'date_end': procurement.date_planned,
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'company_id': procurement.company_id.id,
-                'move_dest_id': procurement.move_id.id,
+                'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
                 'line_ids': [(0, 0, {
                     'product_id': procurement.product_id.id,
                     'product_uom_id': procurement.product_uom.id,
