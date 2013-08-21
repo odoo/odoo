@@ -641,14 +641,14 @@ class mail_message(osv.Model):
                 - no model, no res_id, I create a private message OR
                 - pid in message_follower_ids if model, res_id OR
                 - mail_notification (parent_id.id, pid) exists, uid has been notified of the parent, OR
-                - uid have write access on the related document if model, res_id, OR
+                - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
                 - author_id == pid, uid is the author, OR
-                - uid has write access on the related document if model, res_id
+                - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
             - unlink: if
-                - uid has write access on the related document if model, res_id
+                - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
         """
         def _generate_model_record_ids(msg_val, msg_ids=[]):
@@ -722,8 +722,12 @@ class mail_message(osv.Model):
             model_obj = self.pool.get(model)
             mids = model_obj.exists(cr, uid, doc_dict.keys())
             if operation in ['create', 'write', 'unlink']:
-                model_obj.check_access_rights(cr, uid, 'write')
-                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+                if not model_obj.check_access_rights(cr, uid, 'write', raise_exception=False):
+                    model_obj.check_access_rights(cr, uid, 'create')
+                try:
+                    model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+                except orm.except_orm, e:
+                    model_obj.check_access_rule(cr, uid, mids, 'create', context=context)
             else:
                 model_obj.check_access_rights(cr, uid, operation)
                 model_obj.check_access_rule(cr, uid, mids, operation, context=context)
