@@ -1356,7 +1356,16 @@ specify a view id for each type of view supported, exactly like the action's
 .. code-block:: xml
 
     <field name="order_line" colspan="4" nolabel="1"
-           context="{'form_view_ref' : 'module.view_id', 'tree_view_ref' : 'model.view_id'}"/>
+           context="{'form_view_ref' : 'module.view_id',
+           'tree_view_ref' : 'module.view_id'}"/>
+
+.. note::
+
+   You have to put the module name in xml id of the view, because this
+   is evaluated when the view is displayed, and not when the XML file
+   is parsed, so the module name information is not available. Failing
+   to do so will result in the default view being selected (see
+   below). 
 
 If you don't specify the views, OpenERP will choose one in this order :
 
