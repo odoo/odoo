@@ -110,7 +110,7 @@ class website_hr_recruitment(http.Controller):
            })
         return website.render("website_hr_recruitment.thankyou", values)
 
-    @http.route(['/recruitment/published'], type='http', auth="admin")
+    @http.route('/recruitment/published', type='json', auth="admin")
     def published (self, **post):
         hr_job = request.registry['hr.job']
         id = int(post['id'])
@@ -126,8 +126,8 @@ class website_hr_recruitment(http.Controller):
             vals['state'] = 'open'
             vals ['no_of_recruitment'] = 0.0
 
-        res  = hr_job.write(request.cr, request.uid, [rec.id], vals)
+        res = hr_job.write(request.cr, request.uid, [rec.id], vals)
         obj = hr_job.browse(request.cr, request.uid, id)
-        return obj.website_published and "1" or "0"
+        return { 'published': obj.website_published and "1" or "0", 'count': obj.no_of_recruitment }
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -31,24 +31,27 @@
                                 </thead>
                                 <tbody>
                                     <t t-foreach="res_job" t-as="job">
-                                        <tr t-if="job.company_id.id==company.id">
+                                        <tr t-if="job.company_id.id==company.id" t-att-id="job.id">
                                             <td>
                                                 <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
                                                 <t t-if="job.department_id">
                                                     <span t-field="job.department_id.name"></span>
                                                 </t><br/>
                                                 <i class="icon-time"></i> <t t-esc="vals[job.id]['date_recruitment']"/><br/>
-                                                <t t-if="job.no_of_recruitment &gt; 0">
-                                                    <i class="icon-group"></i> No.of Post:
-                                                    <span id='counting'>
-                                                        <t t-esc="vals[job.id]['count']"></t>
-                                                    </span>
-                                                </t>
-                                                <t t-if="job.no_of_recruitment &lt; 1">
-                                                    <span id="norecruit">
+                                                <span id='counting'>
+                                                    <t t-if="job.no_of_recruitment &gt; 0">
+                                                        <i class="icon-group"></i> No.of Post:
+                                                        <span id='counting_num'>
+                                                            <t t-esc="vals[job.id]['count']"></t>
+                                                        </span>
+                                                    </t>
+                                                </span>
+                                                <span id="norecruit">
+                                                    <t t-if="job.no_of_recruitment &lt; 1">
                                                         Right now no recruitment is going on.
-                                                    </span>
-                                                </t><br/>
+                                                    </t>
+                                                </span>
+                                                <br/>
                                                 <span><i class="icon-map-marker"></i> <t t-field="res_company.city"/> 
                                                 <t t-if="res_company.state_id">
                                                     <span t-field="res_company.state_id.name"></span>
