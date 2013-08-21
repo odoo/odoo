@@ -96,7 +96,7 @@ class QWebXml(object):
         else:
             dom = xml.dom.minidom.parse(x)
         for n in dom.documentElement.childNodes:
-            if n.getAttribute('t-name'):
+            if n.nodeType == 1 and n.getAttribute('t-name'):
                 self._t[str(n.getAttribute("t-name"))] = n
 
     def get_template(self, name):
