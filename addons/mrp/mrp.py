@@ -272,6 +272,13 @@ class mrp_bom(osv.osv):
             return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': prod.uos_id.id and prod.uos_coeff or False, 'product_uos': prod.uos_id.id}}
         return {}
 
+    def onchange_product_qty_change(self, cr, uid, ids, product_id, qty=0, context=None):
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            if prod.uos_id:
+                return {'value': {'product_uos': prod.uos_id.id, 'product_uos_qty': qty * prod.uos_coeff}}
+        return {}
+
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
         res = {'value':{}}
         if not product_uom or not product_id:
@@ -582,6 +589,13 @@ class mrp_production(osv.osv):
             'product_uos': product_uos_id
         }
         return {'value': result}
+
+    def onchange_product_qty_change(self, cr, uid, ids, product_id, qty=0, context=None):
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            if prod.uos_id:
+                return {'value': {'product_uos': prod.uos_id.id, 'product_uos_qty': qty * prod.uos_coeff}}
+        return {}
 
     def bom_id_change(self, cr, uid, ids, bom_id, context=None):
         """ Finds routing for changed BoM.
