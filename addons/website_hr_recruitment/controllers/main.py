@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.addons.web import http
+from openerp import SUPERUSER_ID
 from openerp.addons.web.http import request
 import base64
 import simplejson
@@ -43,7 +44,6 @@ class website_hr_recruitment(http.Controller):
         
         if job_id:
             values['job_id'] = hr_job_obj.browse(request.cr, request.uid, job_id)
-
         return website.render("website_hr_recruitment.index", values)
 
     @http.route(['/jobs/subscribe'], type='http', auth="public")
@@ -129,5 +129,23 @@ class website_hr_recruitment(http.Controller):
         res = hr_job.write(request.cr, request.uid, [rec.id], vals)
         obj = hr_job.browse(request.cr, request.uid, id)
         return { 'published': obj.website_published and "1" or "0", 'count': obj.no_of_recruitment }
+
+    @http.route('/recruitment/message_get_subscribed', type='json', auth="admin")
+    def message_get_subscribed(self, email, id):
+        hr_job = request.registry['hr.job']
+        partner_obj = request.registry['res.partner']
+        partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)])
+        if not partner_ids:
+            partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": email, "name": "Subscribe: %s" % email})]
+        hr_job.write(request.cr, request.uid, [id], {'message_follower_ids': partner_ids})
+        return 1
+
+    @http.route('/recruitment/message_get_unsubscribed', type='json', auth="admin")
+    def message_get_unsubscribed(self, email, id):
+        hr_job = request.registry['hr.job']
+        partner_obj = request.registry['res.partner']
+        partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)])
+        hr_job.write(request.cr, request.uid, [id], {'message_follower_ids': []})
+        return 1
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
