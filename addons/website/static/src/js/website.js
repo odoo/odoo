@@ -118,7 +118,7 @@
             var $editables = $('[data-oe-model]')
                     .not('link, script')
                     // FIXME: propagation should make "meta" blocks non-editable in the first place...
-                    .not('.oe_snippet_editor')
+                    .not('.oe_snippets,.oe_snippet, .oe_snippet *')
                     .prop('contentEditable', true)
                     .addClass('oe_editable');
             var $rte_ables = $editables.not('[data-oe-type]');
@@ -324,6 +324,7 @@
             
             this.$('.oe_snippet').draggable({
                 helper: 'clone',
+                appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
                  
@@ -333,15 +334,25 @@
                     });
 
                     $('.oe_drop_zone').droppable({
-                        hoverClass: "oe_hover",
-                        drop:   function(event,ui){
-                            $(this).replaceWith(snippet.find('.oe_snippet_body').clone());
+                        over:   function(){
+                            // FIXME: stupid hack to prevent multiple droppable to activate at once ... 
+                            // it's not even working properly but it's better than nothing.
+                            $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
+                            $(this).addClass("oe_hover");
+                        },
+                        out:    function(){
+                            $(this).removeClass("oe_hover");
+                        },
+                        drop:   function(){
+                            $(".oe_drop_zone.oe_hover")
+                                .replaceWith(snippet.find('.oe_snippet_body').clone())
+                                .removeClass('oe_snippet_body');
                         },
                     });
                 },
                 stop: function(){
                     self.deactivate_drop_zones();
-                }
+                },
             });
         },
         // A generic drop zone generator. two css selectors can be provided
