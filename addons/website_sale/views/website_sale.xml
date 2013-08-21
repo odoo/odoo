@@ -93,7 +93,7 @@
 
     <!-- Product list --> 
 
-    <template id="products">
+    <template id="products" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
@@ -184,7 +184,7 @@
 
     <!-- Page Shop my cart --> 
 
-    <template id="mycart" name="My cart">
+    <template id="mycart" name="My cart" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">

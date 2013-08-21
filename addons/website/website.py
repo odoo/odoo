@@ -93,19 +93,16 @@ class website(osv.osv):
 
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
-        d = {}
-        d["page_count"] = int(math.ceil(float(total) / step))
+        page_count = int(math.ceil(float(total) / step))
 
-        page = max(1, min(int(page), d["page_count"]))
-
-        d["offset"] = (page-1) * step
+        page = max(1, min(int(page), page_count))
         scope -= 1
 
         pmin = max(page - int(math.floor(scope/2)), 1)
-        pmax = min(pmin + scope, d["page_count"])
+        pmax = min(pmin + scope, page_count)
 
         if pmax - pmin < scope:
-            pmin = pmax - scope > 0 and pmax - scope or 1
+            pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
             _url = "%spage/%s/" % (url, page)
@@ -113,14 +110,41 @@ class website(osv.osv):
                 _url = "%s?%s" % (_url, urllib.urlencode(url_args))
             return _url
 
-        d["page"] = {'url': get_url(page), 'num': page}
-        d["page_start"] = {'url': get_url(pmin), 'num': pmin}
-        d["page_end"] = {'url': get_url(min(pmax, page+1)), 'num': min(pmax, page+1)}
-        d["pages"] = []
-        for page in range(pmin, pmax+1):
-            d["pages"].append({'url': get_url(page), 'num': page})
+        return {
+            "page_count": page_count,
+            "offset": (page - 1) * step,
+            "page": {'url': get_url(page), 'num': page},
+            "page_start": {'url': get_url(pmin), 'num': pmin},
+            "page_end": {'url': get_url(min(pmax, page + 1)),
+                         'num': min(pmax, page + 1)},
+            "pages": [
+                {'url': get_url(page), 'num': page}
+                for page in xrange(pmin, pmax+1)
+            ]
+        }
 
-        return d
+    def list_pages(self, cr, uid, context=None):
+        """ Available pages in the website/CMS. This is mostly used for links
+        generation and can be overridden by modules setting up new HTML
+        controllers for dynamic pages (e.g. blog).
+
+        By default, returns template views marked as pages.
+
+        :returns: a list of mappings with two keys: ``name`` is the displayable
+                  name of the resource (page), ``url`` is the absolute URL
+                  of the same.
+        :rtype: list({name: str, url: str})
+        """
+        View = self.pool['ir.ui.view']
+        views = View.search_read(cr, uid, [['page', '=', True]],
+                                 fields=['name'], order='name', context=context)
+        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
+
+        return [
+            {'name': view['name'], 'url': '/page/' + xids[view['id']]}
+            for view in views
+            if xids[view['id']]
+        ]
 
 
 class res_partner(osv.osv):

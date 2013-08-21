@@ -132,7 +132,7 @@
             </xpath>
         </template>
 
-        <template id="homepage">
+        <template id="homepage" page="True">
             <t t-call="website.layout">
 
                 <section>
@@ -318,7 +318,7 @@
         </template>
 
 
-        <template id="contactus" name="Contact us">
+        <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
                 <t t-set="title">Contact us - <t t-raw="res_company.name"/></t>
                 <div class="container">
@@ -353,7 +353,7 @@
             </t>
         </template>
 
-        <template id="aboutus">
+        <template id="aboutus" page="True">
             <t t-call="website.layout">
                 <t t-set="title">About us - <t t-raw="res_company.name"/></t>
                 <div class="container">
