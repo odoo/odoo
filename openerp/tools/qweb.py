@@ -185,6 +185,10 @@ class QWebXml(object):
                         t_att[an[2:]] = av
                 else:
                     g_att += ' %s="%s"' % (an, cgi.escape(av, 1))
+
+            if 'debug' in t_att:
+                debugger = t_att.get('debug', 'pdb')
+                __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
             if t_render:
                 if t_render in self._render_tag:
                     r = self._render_tag[t_render](self, e, t_att, g_att, v)
@@ -256,9 +260,7 @@ class QWebXml(object):
             var = t_att.get('as', expr).replace('.', '_')
             d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
-            if isinstance(enum, types.ListType):
-                size = len(enum)
-            elif isinstance(enum, types.TupleType):
+            if isinstance(enum, (types.ListType, types.TupleType)):
                 size = len(enum)
             elif hasattr(enum, 'count'):
                 size = enum.count()
@@ -277,15 +279,15 @@ class QWebXml(object):
                     d["%s_parity" % var] = 'odd'
                 else:
                     d["%s_parity" % var] = 'even'
-                if isinstance(i, types.DictType):
-                    d.update(i)
-                else:
+                if 'as' in t_att:
                     d[var] = i
+                elif isinstance(i, types.DictType):
+                    d.update(i)
                 ru.append(self.render_element(e, t_att, g_att, d))
                 index += 1
             return "".join(ru)
         else:
-            return "qweb: t-foreach %s not found." % expr
+            raise NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, v.get('__template__')))
 
     def render_tag_if(self, e, t_att, g_att, v):
         if self.eval_bool(t_att["if"], v):
@@ -342,10 +344,5 @@ class QWebXml(object):
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
         return self.render_element(e, t_att, g_att, v, str(inner))
-
-    def render_tag_debug(self, e, t_att, g_att, v):
-        debugger = t_att.get('debug', 'pdb')
-        __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
-        return self.render_element(e, t_att, g_att, v)
 
 # leave this, al.
