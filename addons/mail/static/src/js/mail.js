@@ -2,7 +2,7 @@ openerp.mail = function (session) {
     var _t = session.web._t,
        _lt = session.web._lt;
 
-    var mail = session.mail = {};
+    var mail = session.mail;
 
     openerp_mail_followers(session, mail);          // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
@@ -225,6 +225,7 @@ openerp.mail = function (session) {
             this.name = datasets.name ||  false,
             this.record_name = datasets.record_name ||  false,
             this.body = datasets.body || '',
+            this.body_short = datasets.body_short || '',
             this.vote_nb = datasets.vote_nb || 0,
             this.has_voted = datasets.has_voted ||  false,
             this.is_favorite = datasets.is_favorite ||  false,
@@ -944,7 +945,6 @@ openerp.mail = function (session) {
         
         start: function () {
             this._super.apply(this, arguments);
-            this.expender();
             this.bind_events();
             if(this.thread_level < this.options.display_indented_thread) {
                 this.create_thread();
@@ -967,6 +967,8 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_expand').on('click', this.on_expand);
+            this.$('.oe_mail_reduce').on('click', this.on_expand);
             this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
         },
 
@@ -995,15 +997,11 @@ openerp.mail = function (session) {
             return false;
         },
 
-        expender: function () {
-            this.$('.oe_msg_body:first').expander({
-                slicePoint: this.options.truncate_limit,
-                expandText: _t('read more'),
-                userCollapseText: _t('read less'),
-                detailClass: 'oe_msg_tail',
-                moreClass: 'oe_mail_expand',
-                lessClass: 'oe_mail_reduce',
-                });
+        on_expand: function (event) {
+            event.stopPropagation();
+            this.$('.oe_msg_body_short:first').toggle();
+            this.$('.oe_msg_body_long:first').toggle();
+            return false;
         },
 
         /**
