@@ -49,7 +49,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         newview = view.browse(request.cr, request.uid, newview_id, context={})
         newview.write({
             'arch': newview.arch.replace("website.default_page", path),
-            'name': "page/%s" % path
+            'name': "page/%s" % path,
+            'page': True,
         })
         if '.' in path:
             module, idname = path.split('.')

@@ -92,7 +92,7 @@
 
     <!-- Product list --> 
 
-    <template id="products">
+    <template id="products" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
@@ -132,7 +132,7 @@
 
     <!-- product --> 
 
-    <template id="product" name="Product">
+    <template id="product" name="Product" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
@@ -169,7 +169,7 @@
 
     <!-- Page Shop my cart --> 
 
-    <template id="mycart">
+    <template id="mycart" page="True">
         <t t-call="website_sale.layout">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">
@@ -228,7 +228,7 @@
 
     <!-- Page confirm my cart -->
 
-    <template id="checkout">
+    <template id="checkout" page="True">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
@@ -414,7 +414,7 @@
         </t>
     </template>
 
-    <template id="payment">
+    <template id="payment" page="True">
         <t t-call="website.layout">
             <t t-set="title">Shop - Payment</t>
             <div class="container mt48 oe_website_sale">

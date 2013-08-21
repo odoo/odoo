@@ -15,7 +15,7 @@
 
     <!-- Page --> 
  
-    <template id="index" name="Events">
+    <template id="index" name="Events" page="True">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_hr/static/src/js/website_hr.js"></script>
@@ -108,7 +108,7 @@
         </xpath>
     </template>
 
-    <template id="detail">
+    <template id="detail" page="True">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
