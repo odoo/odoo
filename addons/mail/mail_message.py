@@ -724,10 +724,7 @@ class mail_message(osv.Model):
             if operation in ['create', 'write', 'unlink']:
                 if not model_obj.check_access_rights(cr, uid, 'write', raise_exception=False):
                     model_obj.check_access_rights(cr, uid, 'create')
-                try:
-                    model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
-                except orm.except_orm, e:
-                    model_obj.check_access_rule(cr, uid, mids, 'create', context=context)
+                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
             else:
                 model_obj.check_access_rights(cr, uid, operation)
                 model_obj.check_access_rule(cr, uid, mids, operation, context=context)
