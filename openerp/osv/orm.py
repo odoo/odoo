@@ -2201,7 +2201,8 @@ class BaseModel(object):
 
         sql_res = False
         parent_view_model = None
-        view_ref = context.get(view_type + '_view_ref')
+        view_ref_key = view_type + '_view_ref'
+        view_ref = context.get(view_ref_key)
         # Search for a root (i.e. without any parent) view.
         while True:
             if view_ref and not view_id:
@@ -2211,6 +2212,10 @@ class BaseModel(object):
                     view_ref_res = cr.fetchone()
                     if view_ref_res:
                         view_id = view_ref_res[0]
+                else:
+                    _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
+                        'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
+                        self._name)
 
             if view_id:
                 cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
