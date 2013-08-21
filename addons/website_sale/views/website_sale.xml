@@ -269,18 +269,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="suggested_products" t-as="product_id">
+                    <t t-foreach="suggested_products" t-as="product">
                         <tr>
                             <td>
-                                <a t-attf-href="/shop/product/#{ product_id.id }/"><span t-field="product_id.name"/></a><br/>
-                                <small t-field="product_id.description_sale"/>
+                                <a t-attf-href="/shop/product/#{ product.id }/"><span t-field="product.name"/></a><br/>
+                                <small t-field="product.description_sale"/>
                             </td>
                             <td>
-                               <span t-field="product_id.list_price"></span>€
+                               <span t-field="product.list_price"></span>€
                             </td>
                             <td>
                                 <div class="pull-right">
-                                    <a t-attf-href="./add_cart/#{ product_id.id }/" class="btn btn-small btn-success">+</a>
+                                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">+</a>
                                 </div>
                             </td>
                         </tr>

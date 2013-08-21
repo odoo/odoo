@@ -29,20 +29,20 @@
             </t>
             <h3>Our team</h3>
             <div class="thumbnails">
-                <div t-foreach="employee_ids" t-as="employee_id" class="span4 mt16">
+                <div t-foreach="employee_ids" t-as="employee" class="span4 mt16">
                     <div class="media thumbnail">
                         <a class="pull-left" href="#">
-                            <img class="media-object" t-att-src="employee_id.img('image_small')"/>
+                            <img class="media-object" t-att-src="employee.img('image_small')"/>
                         </a>
                         <div class="media-body">
-                            <t t-call="website.publish"><t t-set="object" t-value="employee_id"/></t>
-                            <h5 class="media-heading" t-field="employee_id.name"/>
-                            <div t-field="employee_id.department_id"/>
-                            <div t-field="employee_id.job_id"/>
-                            <div t-field="employee_id.work_location"/>
-                            <div t-field="employee_id.work_phone"/>
-                            <div t-field="employee_id.work_email"/>
-                            <div t-field="employee_id.public_info"/>
+                            <t t-call="website.publish"><t t-set="object" t-value="employee"/></t>
+                            <h5 class="media-heading" t-field="employee.name"/>
+                            <div t-field="employee.department_id"/>
+                            <div t-field="employee.job_id"/>
+                            <div t-field="employee.work_location"/>
+                            <div t-field="employee.work_phone"/>
+                            <div t-field="employee.work_email"/>
+                            <div t-field="employee.public_info"/>
                         </div>
                     </div>
                 </div>

@@ -43,33 +43,33 @@
                     </div>
                     <div class="span8">
                         <ul class="media-list">
-                            <li t-foreach="event_ids" t-as="event_id" class="media thumbnail">
+                            <li t-foreach="event_ids" t-as="event" class="media thumbnail">
                                 <div class="media-body">
-                                    <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
-                                    <t t-if="event_id.event_ticket_ids">
-                                        <span t-if="event_id.register_avail == 9999" class="label pull-right label-info">Tickets availables.</span>
-                                        <span t-if="not event_id.register_avail" class="label pull-right">No ticket available.</span>
-                                        <span t-if="event_id.register_avail and event_id.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event_id.register_avail &lt;= 10 and 'warning' or 'info')">
-                                            <t t-if="event_id.register_avail &lt;= 10">Only</t>
-                                            <t t-esc="event_id.register_avail"/>
-                                            <t t-if="event_id.register_avail &gt; 1">tickets </t>
-                                            <t t-if="event_id.register_avail == 1">ticket </t>
+                                    <span t-if="not event.event_ticket_ids" class="label pull-right">No tickets needed.</span>
+                                    <t t-if="event.event_ticket_ids">
+                                        <span t-if="event.register_avail == 9999" class="label pull-right label-info">Tickets availables.</span>
+                                        <span t-if="not event.register_avail" class="label pull-right">No ticket available.</span>
+                                        <span t-if="event.register_avail and event.register_avail != 9999" t-att-class="'label pull-right label-%%s' %% (event.register_avail &lt;= 10 and 'warning' or 'info')">
+                                            <t t-if="event.register_avail &lt;= 10">Only</t>
+                                            <t t-esc="event.register_avail"/>
+                                            <t t-if="event.register_avail &gt; 1">tickets</t>
+                                            <t t-if="event.register_avail == 1">ticket</t>
                                             available.
                                         </span>
                                     </t>
-                                    <h4 class="media-heading"><a t-att-href="'/event/%%s/' %% event_id.id"><span t-field="event_id.name"> </span></a></h4>
-                                    <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
+                                    <h4 class="media-heading"><a t-att-href="'/event/%%s/' %% event.id"><span t-field="event.name"> </span></a></h4>
+                                    <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
                                     <div>
-                                        <span t-field="event_id.type">: </span>
-                                        <t t-if="event_id.user_id">
-                                            Organized by: <span t-field="event_id.user_id"> </span>
+                                        <span t-field="event.type">: </span>
+                                        <t t-if="event.user_id">
+                                            Organized by: <span t-field="event.user_id"> </span>
                                         </t>
                                     </div>
                                     <div>
-                                        <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span> <i>to</i> <span t-field="event_id.date_end"> </span>
+                                        <i class="icon-time"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
                                     </div>
-                                    <div t-if="event_id.country_id">
-                                        <i class="icon-map-marker"></i> <span t-field="event_id.city"> </span>  <span t-field="event_id.zip"> </span>, <span t-field="event_id.country_id"> </span>
+                                    <div t-if="event.country_id">
+                                        <i class="icon-map-marker"></i> <span t-field="event.city"> </span>  <span t-field="event.zip"> </span>, <span t-field="event.country_id"> </span>
                                     </div>
                                 </div>
                             </li>
