@@ -74,6 +74,11 @@ class base_action_rule(osv.osv):
             "trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
+        'trg_date_calendar_id': fields.many2one(
+            'resource.calendar', 'Use Calendar',
+            help='When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.',
+            ondelete='set null',
+        ),
         'act_user_id': fields.many2one('res.users', 'Set Responsible'),
         'act_followers': fields.many2many("res.partner", string="Add Followers"),
         'server_action_ids': fields.many2many('ir.actions.server', string='Server Actions',
@@ -268,7 +273,14 @@ class base_action_rule(osv.osv):
                 record_dt = get_record_dt(record)
                 if not record_dt:
                     continue
-                action_dt = get_datetime(record_dt) + delay
+                if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
+                    start_dt = get_datetime(record_dt)
+                    action_dt = self.pool['resource.calendar'].schedule_days(
+                        cr, uid, action.trg_date_calendar_id.id, action.trg_date_range,
+                        date=start_dt, compute_leaves=True
+                    )
+                else:
+                    action_dt = get_datetime(record_dt) + delay
                 if last_run and (last_run <= action_dt < now) or (action_dt < now):
                     try:
                         self._process(cr, uid, action, [record.id], context=context)
