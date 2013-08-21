@@ -130,7 +130,7 @@ class LongPollingController(http.Controller):
         return "%s" % uuid.uuid1()
 
 def assert_uuid(uuid):
-    if not isinstance(uuid, (str, unicode, type(None))):
+    if not isinstance(uuid, (str, unicode, type(None))) and uuid != False:
         raise Exception("%s is not a uuid" % uuid)
 
 
