@@ -122,6 +122,13 @@ class res_users(osv.Model):
         'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
     }
 
+    def __init__(self, pool, cr):
+        init_res = super(res_users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
+        return init_res
+
 
 class sale_crm_lead(osv.Model):
     _inherit = 'crm.lead'
