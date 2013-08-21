@@ -61,7 +61,7 @@ class stock_location(osv.osv):
     _order = 'parent_left'
     def name_get(self, cr, uid, ids, context=None):
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
-        return res.items()
+        return res.items() 
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         """ Forms complete name of location from parent location to child location.
@@ -432,7 +432,7 @@ class stock_picking(osv.osv):
                 res[pick.id] = 'done'
                 continue
 
-            order = {'confirmed':0, 'auto':1, 'assigned':2}
+            order = {'confirmed':0, 'waiting':1, 'assigned':2}
             order_inv = dict(zip(order.values(),order.keys()))
             lst = [order[x.state] for x in pick.move_lines if x.state not in ('cancel','done')]
             if pick.move_lines == 'one':
@@ -467,7 +467,7 @@ class stock_picking(osv.osv):
             'stock.move': (_get_pickings, ['state', 'picking_id'], 20)}, selection = [
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
-            ('auto', 'Waiting Another Operation'),
+            ('waiting', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
@@ -697,7 +697,8 @@ class stock_picking(osv.osv):
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
             for op in picking.pack_operation_ids:
-                if op.package_id:
+                #TODO: op.package_id can not work as quants_get is not defined on quant package => gives traceback
+                if op.package_id: 
                     for quant in quant_package_obj.quants_get(cr, uid, op.package_id, context=context):
                         self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=context)
                     op.package_id.write(cr, uid, {
@@ -705,12 +706,14 @@ class stock_picking(osv.osv):
                     }, context=context)
                 elif op.product_id:
                     moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
+                    
                     quants = []
                     for m in moves:
                         for quant in m.quant_ids:
                             quants.append(quant.id)
                     quant_obj.write(cr, uid, quants, {
                         'package_id': op.result_package_id.id
+                        
                     }, context=context)
 
             self._create_backorder(cr, uid, picking, context=context)
@@ -1199,7 +1202,7 @@ class stock_move(osv.osv):
                 ('group_id', '=', move.group_id.id),
                 ('location_id', '=', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
-                ('state', 'in', ['confirmed', 'auto'])], context=context)
+                ('state', 'in', ['confirmed', 'waiting'])], context=context)
         if picks:
             pick = picks[0]
         else:
@@ -1506,7 +1509,7 @@ class stock_move(osv.osv):
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
             'product_uos_qty': move.product_uos_qty - uos_qty,
-            'reserved_quant_ids': []
+            'reserved_quant_ids': [(6,0,[])]
         }, context=context)
         return new_move
 
@@ -1932,7 +1935,6 @@ class stock_pack_operation(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'), 
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
-        #'lot_id': fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
         #'update_cost': fields.boolean('Need cost update'),
         'cost': fields.float("Cost", help="Unit Cost for this product line"),
         'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),

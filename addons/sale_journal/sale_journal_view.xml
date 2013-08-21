@@ -128,7 +128,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//group/filter[@string='Journal']" position="after">
+                <xpath expr="//group/filter[@string='Picking Type']" position="after">
                     <filter string="Invoice Type" domain="[]" context="{'group_by':'invoice_type_id'}"/>
                 </xpath>
             </field>
