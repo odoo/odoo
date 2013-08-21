@@ -16,19 +16,34 @@
         <field name="parent_id" ref="vat_code_balance_net_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_receivable_tps_fr">
+    <record model="account.tax.code.template" id="vat_code_receivable_gst_fr">
         <field name="name">TPS payée</field>
         <field name="parent_id" ref="vat_code_receivable_tva_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_receivable_tvp_fr">
+    <record model="account.tax.code.template" id="vat_code_receivable_pst_fr">
         <field name="name">TVP/TVQ payée</field>
         <field name="parent_id" ref="vat_code_receivable_tva_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_receivable_tvh_fr">
+    <record model="account.tax.code.template" id="vat_code_receivable_hst_fr">
         <field name="name">TVH payée</field>
         <field name="parent_id" ref="vat_code_receivable_tva_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_receivable_hst13_fr">
+        <field name="name">TVH payée - 13%</field>
+        <field name="parent_id" ref="vat_code_receivable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_receivable_hst14_fr">
+        <field name="name">TVH payée - 14%</field>
+        <field name="parent_id" ref="vat_code_receivable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_receivable_hst15_fr">
+        <field name="name">TVH payée - 15%</field>
+        <field name="parent_id" ref="vat_code_receivable_hst_fr"/>
     </record>
 
     <record model="account.tax.code.template" id="vat_code_payable_fr">
@@ -36,19 +51,34 @@
         <field name="parent_id" ref="vat_code_balance_net_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_payable_tps_fr">
+    <record model="account.tax.code.template" id="vat_code_payable_gst_fr">
         <field name="name">TPS reçue</field>
         <field name="parent_id" ref="vat_code_payable_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_payable_tvp_fr">
+    <record model="account.tax.code.template" id="vat_code_payable_pst_fr">
         <field name="name">TVP/TVQ reçue</field>
         <field name="parent_id" ref="vat_code_payable_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_payable_tvh_fr">
+    <record model="account.tax.code.template" id="vat_code_payable_hst_fr">
         <field name="name">TVH reçue</field>
         <field name="parent_id" ref="vat_code_payable_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_payable_hst13_fr">
+        <field name="name">TVH reçue - 13%</field>
+        <field name="parent_id" ref="vat_code_payable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_payable_hst14_fr">
+        <field name="name">TVH reçue - 14%</field>
+        <field name="parent_id" ref="vat_code_payable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_payable_hst15_fr">
+        <field name="name">TVH reçue - 15%</field>
+        <field name="parent_id" ref="vat_code_payable_hst_fr"/>
     </record>
 
     <record model="account.tax.code.template" id="vat_code_base_net_fr">
@@ -61,19 +91,34 @@
         <field name="parent_id" ref="vat_code_base_net_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_base_receivable_tps_fr">
+    <record model="account.tax.code.template" id="vat_code_base_receivable_gst_fr">
         <field name="name">Base de la TPS pour les ventes</field>
         <field name="parent_id" ref="vat_code_base_receivable_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_base_receivable_tvp_fr">
+    <record model="account.tax.code.template" id="vat_code_base_receivable_pst_fr">
         <field name="name">Base de la TVP/TVQ pour les ventes</field>
         <field name="parent_id" ref="vat_code_base_receivable_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_base_receivable_tvh_fr">
+    <record model="account.tax.code.template" id="vat_code_base_receivable_hst_fr">
         <field name="name">Base de la TVH pour les ventes</field>
         <field name="parent_id" ref="vat_code_base_receivable_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_base_receivable_hst13_fr">
+        <field name="name">Base de la TVH pour les ventes - 13%</field>
+        <field name="parent_id" ref="vat_code_base_receivable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_base_receivable_hst14_fr">
+        <field name="name">Base de la TVH pour les ventes - 14%</field>
+        <field name="parent_id" ref="vat_code_base_receivable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_base_receivable_hst15_fr">
+        <field name="name">Base de la TVH pour les ventes - 15%</field>
+        <field name="parent_id" ref="vat_code_base_receivable_hst_fr"/>
     </record>
 
     <record model="account.tax.code.template" id="vat_code_base_payable_fr">
@@ -81,19 +126,34 @@
         <field name="parent_id" ref="vat_code_base_net_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_base_payable_tps_fr">
+    <record model="account.tax.code.template" id="vat_code_base_payable_gst_fr">
         <field name="name">Base de la TPS pour les achats</field>
         <field name="parent_id" ref="vat_code_base_payable_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_base_payable_tvp_fr">
+    <record model="account.tax.code.template" id="vat_code_base_payable_pst_fr">
         <field name="name">Base de la TVP/TVQ pour les achats</field>
         <field name="parent_id" ref="vat_code_base_payable_fr"/>
     </record>
 
-    <record model="account.tax.code.template" id="vat_code_base_payable_tvh_fr">
+    <record model="account.tax.code.template" id="vat_code_base_payable_hst_fr">
         <field name="name">Base de la TVH pour les achats</field>
         <field name="parent_id" ref="vat_code_base_payable_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_base_payable_hst13_fr">
+        <field name="name">Base de la TVH pour les achats - 13%</field>
+        <field name="parent_id" ref="vat_code_base_payable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_base_payable_hst14_fr">
+        <field name="name">Base de la TVH pour les achats - 14%</field>
+        <field name="parent_id" ref="vat_code_base_payable_hst_fr"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_base_payable_hst15_fr">
+        <field name="name">Base de la TVH pour les achats - 15%</field>
+        <field name="parent_id" ref="vat_code_base_payable_hst_fr"/>
     </record>
 
     </data>
