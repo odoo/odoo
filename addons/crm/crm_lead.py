@@ -22,14 +22,13 @@
 import crm
 from datetime import datetime
 from operator import itemgetter
-from openerp.osv import fields, osv, orm
-import time
+
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.tools.translate import _
-from openerp.tools import html2plaintext
-
 from openerp.addons.base.res.res_partner import format_address
+from openerp.osv import fields, osv, orm
+from openerp.tools import html2plaintext
+from openerp.tools.translate import _
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -61,11 +60,7 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'email_from',
     'email_cc',
     'partner_name']
-CRM_LEAD_PENDING_STATES = (
-    crm.AVAILABLE_STATES[2][0], # Cancelled
-    crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
-)
+
 
 class crm_lead(format_address, osv.osv):
     """ CRM Lead Case """
@@ -75,13 +70,11 @@ class crm_lead(format_address, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
-        'state': {
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
-        },
         'stage_id': {
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'cancel', 'done'],
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence == 1,
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: (obj.stage_id and obj.stage_id.sequence != 1) and obj.probability < 100,
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.probability == 100 and obj.stage_id and obj.stage_id.on_change,
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence != 1,
         },
     }
 
@@ -99,7 +92,7 @@ class crm_lead(format_address, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('sequence', '=', '1')], context=context)
 
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
@@ -150,7 +143,7 @@ class crm_lead(format_address, osv.osv):
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -158,7 +151,7 @@ class crm_lead(format_address, osv.osv):
         return result, fold
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(crm_lead,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
         return res
@@ -220,17 +213,6 @@ class crm_lead(format_address, osv.osv):
                 res[lead.id][field] = abs(int(duration))
         return res
 
-    def _history_search(self, cr, uid, obj, name, args, context=None):
-        res = []
-        msg_obj = self.pool.get('mail.message')
-        message_ids = msg_obj.search(cr, uid, [('email_from','!=',False), ('subject', args[0][1], args[0][2])], context=context)
-        lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
-
-        if lead_ids:
-            return [('id', 'in', lead_ids)]
-        else:
-            return [('id', '=', '0')]
-
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
@@ -243,10 +225,10 @@ class crm_lead(format_address, osv.osv):
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team',
                         select=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.'),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
-        'write_date': fields.datetime('Update Date' , readonly=True),
+        'write_date': fields.datetime('Update Date', readonly=True),
         'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
@@ -264,17 +246,15 @@ class crm_lead(format_address, osv.osv):
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
-        'date_open': fields.datetime('Opened', readonly=True),
+        'date_open': fields.datetime('Assigned', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The Status is set to \'Draft\', when a case is created. If the case is in progress the Status is set to \'Open\'. When the case is over, the Status is set to \'Done\'. If the case needs to be reviewed then the Status is  set to \'Pending\'.'),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Only used for type opportunity
-        'probability': fields.float('Success Rate (%)',group_operator="avg"),
+        'probability': fields.float('Success Rate (%)', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -316,6 +296,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
+        'date_last_stage_update': fields.datetime.now(),
     }
 
     _sql_constraints = [
@@ -325,7 +306,7 @@ class crm_lead(format_address, osv.osv):
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value': {}}
-        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
         if not stage.on_change:
             return {'value': {}}
         return {'value': {'probability': stage.probability}}
@@ -358,22 +339,6 @@ class crm_lead(format_address, osv.osv):
                 section_id = section_ids[0]
         return {'value': {'section_id': section_id}}
 
-    def _check(self, cr, uid, ids=False, context=None):
-        """ Override of the base.stage method.
-            Function called by the scheduler to process cases for date actions
-            Only works on not done and cancelled cases
-        """
-        cr.execute('select * from crm_case \
-                where (date_action_last<%s or date_action_last is null) \
-                and (date_action_next<=%s or date_action_next is null) \
-                and state not in (\'cancel\',\'done\')',
-                (time.strftime("%Y-%m-%d %H:%M:%S"),
-                    time.strftime('%Y-%m-%d %H:%M:%S')))
-
-        ids2 = map(lambda x: x[0], cr.fetchall() or [])
-        cases = self.browse(cr, uid, ids2, context=context)
-        return self._action(cr, uid, cases, False, context=context)
-
     def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
@@ -385,16 +350,16 @@ class crm_lead(format_address, osv.osv):
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
         # collect all section_ids
-        section_ids = []
+        section_ids = set()
         types = ['both']
         if not cases:
-            type = context.get('default_type')
-            types += [type]
+            ctx_type = context.get('default_type')
+            types += [ctx_type]
         if section_id:
-            section_ids.append(section_id)
+            section_ids.add(section_id)
         for lead in cases:
             if lead.section_id:
-                section_ids.append(lead.section_id.id)
+                section_ids.add(lead.section_id.id)
             if lead.type not in types:
                 types.append(lead.type)
         # OR all section_ids and OR with case_default
@@ -403,8 +368,7 @@ class crm_lead(format_address, osv.osv):
             search_domain += [('|')] * len(section_ids)
             for section_id in section_ids:
                 search_domain.append(('section_ids', '=', section_id))
-        else:
-            search_domain.append(('case_default', '=', True))
+        search_domain.append(('case_default', '=', True))
         # AND with cases types
         search_domain.append(('type', 'in', types))
         # AND with the domain in parameter
@@ -415,27 +379,29 @@ class crm_lead(format_address, osv.osv):
             return stage_ids[0]
         return False
 
-    def stage_set(self, cr, uid, ids, stage_id, context=None):
-        """ Set the new stage. Now just writes the stage.
-            TDE TODO: remove me when removing state
-        """
-        return self.write(cr, uid, ids, {'stage_id': stage_id}, context=context)
-
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0 """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0),('on_change','=',True)], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
             if stage_id:
-                self.stage_set(cr, uid, [lead.id], stage_id, context=context)
-        return True
+                return self.write(cr, uid, [lead.id], {'stage_id': stage_id}, context=context)
+            else:
+                raise osv.except_osv(_('Warning!'),
+                    _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
+                        'probability = 0 %, select "Change Probability Automatically".\n'
+                        'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
 
     def case_mark_won(self, cr, uid, ids, context=None):
         """ Mark the case as won: state=done and probability=100 """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0),('on_change','=',True)], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
             if stage_id:
-                self.stage_set(cr, uid, [lead.id], stage_id, context=context)
-        return True
+                return self.write(cr, uid, [lead.id], {'stage_id': stage_id}, context=context)
+            else:
+                raise osv.except_osv(_('Warning!'),
+                    _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
+                        'probability = 100 % and select "Change Probability Automatically".\n'
+                        'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
 
     def case_escalate(self, cr, uid, ids, context=None):
         """ Escalates case to parent level """
@@ -451,20 +417,20 @@ class crm_lead(format_address, osv.osv):
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, context=None):
         """ Set lead priority
         """
-        return self.write(cr, uid, ids, {'priority' : priority})
+        return self.write(cr, uid, ids, {'priority': priority}, context=context)
 
     def set_high_priority(self, cr, uid, ids, context=None):
         """ Set lead priority to high
         """
-        return self.set_priority(cr, uid, ids, '1')
+        return self.set_priority(cr, uid, ids, '1', context=context)
 
     def set_normal_priority(self, cr, uid, ids, context=None):
         """ Set lead priority to normal
         """
-        return self.set_priority(cr, uid, ids, '3')
+        return self.set_priority(cr, uid, ids, '3', context=context)
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
@@ -640,7 +606,8 @@ class crm_lead(format_address, osv.osv):
         sequenced_opps = []
         for opportunity in opportunities:
             sequence = -1
-            if opportunity.stage_id and opportunity.stage_id.state != 'cancel':
+            # TDE: was "if opportunity.stage_id and opportunity.stage_id.state != 'cancel':"
+            if opportunity.probability == 0 and opportunity.stage_id and opportunity.stage_id.sequence != 1 and opportunity.stage_id.fold:
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
@@ -701,7 +668,7 @@ class crm_lead(format_address, osv.osv):
             'phone': customer and customer.phone or lead.phone,
         }
         if not lead.stage_id or lead.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('state', '=', 'draft'),('type', 'in', ('opportunity','both'))], context=context)
+            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('sequence', '=', '1'), ('type', 'in', ('opportunity','both'))], context=context)
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
@@ -710,7 +677,8 @@ class crm_lead(format_address, osv.osv):
             partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
-            if lead.state in ('done', 'cancel'):
+            # TDE: was if lead.state in ('done', 'cancel'):
+            if (lead.probability == '100') or (lead.probability == '0' and lead.stage_id.sequence != '1'):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
@@ -940,6 +908,10 @@ class crm_lead(format_address, osv.osv):
         return super(crm_lead, self).create(cr, uid, vals, context=create_context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        # stage change: update date_last_stage_update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.datetime.now()
+        # stage change with new stage: update probability
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)

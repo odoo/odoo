@@ -130,7 +130,7 @@
 		<field name="parent_id" ref="chart118_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_asset"/>
-		<field name="reconcile" eval="True"/>
+		<field name="reconcile" eval="False"/>
 		<field name="name">TPS à recevoir</field>
 	</record>
 
@@ -139,17 +139,43 @@
 		<field name="parent_id" ref="chart118_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_asset"/>
-		<field name="reconcile" eval="True"/>
+		<field name="reconcile" eval="False"/>
 		<field name="name">TVP/TVQ à recevoir</field>
 	</record>
 
 	<record id="chart1183_fr" model="account.account.template">
 		<field name="code">1183</field>
 		<field name="parent_id" ref="chart118_fr"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="account.data_account_type_view"/>
+		<field name="name">TVH à recevoir</field>
+	</record>
+
+	<record id="chart11831_fr" model="account.account.template">
+		<field name="code">11831</field>
+		<field name="parent_id" ref="chart1183_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_asset"/>
-		<field name="reconcile" eval="True"/>
-		<field name="name">TVH à recevoir</field>
+		<field name="reconcile" eval="False"/>
+		<field name="name">TVH à recevoir - 13%</field>
+	</record>
+
+	<record id="chart11832_fr" model="account.account.template">
+		<field name="code">11832</field>
+		<field name="parent_id" ref="chart1183_fr"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_asset"/>
+		<field name="reconcile" eval="False"/>
+		<field name="name">TVH à recevoir - 14%</field>
+	</record>
+
+	<record id="chart11833_fr" model="account.account.template">
+		<field name="code">11833</field>
+		<field name="parent_id" ref="chart1183_fr"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_asset"/>
+		<field name="reconcile" eval="False"/>
+		<field name="name">TVH à recevoir - 15%</field>
 	</record>
 
 	<record id="chart15_fr" model="account.account.template">
@@ -256,7 +282,7 @@
 		<field name="parent_id" ref="chart213_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_liability"/>
-		<field name="reconcile" eval="True"/>
+		<field name="reconcile" eval="False"/>
 		<field name="name">TPS à payer</field>
 	</record>
 
@@ -265,17 +291,43 @@
 		<field name="parent_id" ref="chart213_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_liability"/>
-		<field name="reconcile" eval="True"/>
+		<field name="reconcile" eval="False"/>
 		<field name="name">TVP/TVQ à payer</field>
 	</record>
 
 	<record id="chart2133_fr" model="account.account.template">
 		<field name="code">2133</field>
 		<field name="parent_id" ref="chart213_fr"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="account.data_account_type_view"/>
+		<field name="name">TVH à payer</field>
+	</record>
+
+	<record id="chart21331_fr" model="account.account.template">
+		<field name="code">21331</field>
+		<field name="parent_id" ref="chart2133_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_liability"/>
-		<field name="reconcile" eval="True"/>
-		<field name="name">TVH à payer</field>
+		<field name="reconcile" eval="False"/>
+		<field name="name">TVH à payer - 13%</field>
+	</record>
+
+	<record id="chart21332_fr" model="account.account.template">
+		<field name="code">21332</field>
+		<field name="parent_id" ref="chart2133_fr"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_liability"/>
+		<field name="reconcile" eval="False"/>
+		<field name="name">TVH à payer - 14%</field>
+	</record>
+
+	<record id="chart21333_fr" model="account.account.template">
+		<field name="code">21333</field>
+		<field name="parent_id" ref="chart2133_fr"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_liability"/>
+		<field name="reconcile" eval="False"/>
+		<field name="name">TVH à payer - 15%</field>
 	</record>
 
         <record id="chart214_fr" model="account.account.template">
@@ -672,7 +724,7 @@
 		<field name="code">5112</field>
 		<field name="parent_id" ref="chart511_fr"/>
 		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_income"/>
+		<field name="user_type" ref="account.data_account_type_expense"/>
 		<field name="name">Achats dans des provinces harmonisées</field>
 	</record>
 	
@@ -680,7 +732,7 @@
 		<field name="code">5113</field>
 		<field name="parent_id" ref="chart511_fr"/>
 		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_income"/>
+		<field name="user_type" ref="account.data_account_type_expense"/>
 		<field name="name">Achats dans des provinces non-harmonisées</field>
 	</record>
 
@@ -688,7 +740,7 @@
 		<field name="code">5114</field>
 		<field name="parent_id" ref="chart511_fr"/>
 		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_income"/>
+		<field name="user_type" ref="account.data_account_type_expense"/>
 		<field name="name">Achats à l'étranger</field>
 	</record>
 
