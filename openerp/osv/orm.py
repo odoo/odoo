@@ -4886,17 +4886,16 @@ class BaseModel(object):
         :rtype: List of dictionaries.
 
         """
-        record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
+        record_ids = self.search(cr, uid, domain or [], offset=offset, limit=limit, order=order, context=context)
         if not record_ids:
             return []
-        result = self.read(cr, uid, record_ids, fields or [], context or {})
+        result = self.read(cr, uid, record_ids, fields=fields, context=context)
+        if len(result) <= 1:
+            return result
+
         # reorder read
-        if len(result) >= 1:
-            index = {}
-            for r in result:
-                index[r['id']] = r
-            result = [index[x] for x in record_ids if x in index]
-        return result
+        index = dict((r['id'], r) for r in result)
+        return [index[x] for x in record_ids if x in index]
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
