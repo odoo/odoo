@@ -363,10 +363,8 @@ class hr_applicant(osv.Model):
         """
         if custom_values is None: custom_values = {}
         val = msg.get('from').split('<')[0]
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'partner_name':val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),

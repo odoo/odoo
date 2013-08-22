@@ -29,21 +29,10 @@
             <field name="arch" type="xml">
                 <form string="Helpdesk Support" version="7.0">
                 <header>
-                    <button name="case_open" string="Open" type="object" class="oe_highlight"
-                            states="draft,pending"/>
-                    <button name="case_close" string="Close Case" type="object" states="draft,pending"/>
-                    <button name="case_close" string="Close Case" type="object" states="open" class="oe_highlight"/>
-                    <button name="case_pending" string="Pending" type="object"
-                            states="draft"/>
-                    <button name="case_pending" string="Pending" type="object" 
-                            states="open"/>
-                    <button name="case_reset" string="Reset to Draft" type="object" 
-                            states="cancel,done"/>
                     <button name="case_escalate" string="Escalate" type="object" 
                             states="open,draft,pending"/>
-                    <button name="case_cancel" string="Cancel Case" type="object"
-                            states="draft,open,pending"/>
-                    <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    <field name="state" nolabel="1" widget="statusbar" clickable="True"
+                            statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet string="Helpdesk Support">
                     <group col="4" class="oe_header">
@@ -58,8 +47,7 @@
                             <group>
                                 <group string="Communication">
                                     <field name="partner_id"
-                                        on_change="onchange_partner_id(partner_id, email_from)"
-                                        />
+                                        on_change="on_change_partner_id(partner_id)"/>
                                     <field name="email_from"/>
                                 </group>
                                 <group string="Categorization">
