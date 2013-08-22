@@ -283,6 +283,7 @@ class mrp_bom(osv.osv):
             res['value']['product_uos'] = prod.uos_id.id
         else:
             res['value']['product_uos_qty'] = 0
+            res['value']['product_uos'] = False
         return res
 
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
@@ -592,6 +593,7 @@ class mrp_production(osv.osv):
             result['value']['product_uos'] = product.uos_id.id
         else:
             result['value']['product_uos_qty'] = 0
+            result['value']['product_uos'] = False
         result['value']['product_uom'] = product_uom_id
         result['value']['bom_id'] = bom_id
         result['value']['routing_id'] = routing_id
