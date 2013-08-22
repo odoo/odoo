@@ -60,22 +60,24 @@
                                                     <span t-field="res_company.country_id.name"></span>
                                                 </t><br/>
                                                 <t t-if="res_company.phone">&amp;#x2706; <t t-field="res_company.phone"/></t></span>
-                                                <div t-if="job.no_of_recruitment &lt; 1" t-att-id="job.id">
-                                                    <div class="subscribedetails">
-                                                        <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
-                                                        Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
-                                                        <input placeholder="Email Address" type="email" name="email" class="input-medium"/>
-                                                        <button class="btn btn-primary" name="subscribe">Subscribe</button>
-                                                        <input type="hidden" name="recid" t-att-value="job.id"/>
-                                                    </div>
-                                                    <div class="hidden">
-                                                        <div class="alert alert-success">
-                                                            <button type="button" class="close" data-dismiss="alert">×</button>
-                                                            <strong>Oh great!</strong> You are successfully subscribed email notifications for a <b><t t-esc="job.name"/></b> job.
+                                                <div t-att-id="job.id">
+                                                    <t t-if="job.no_of_recruitment &lt; 1">
+                                                        <div class="subscribedetails">
+                                                            <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
+                                                            Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
+                                                            <input placeholder="Email Address" type="email" name="email" class="input-medium"/>
+                                                            <button class="btn btn-primary" name="subscribe">Subscribe</button>
+                                                            <input type="hidden" name="recid" t-att-value="job.id"/>
                                                         </div>
-                                                        <input type="hidden" name="email" t-att-value="subscribe"/>
-                                                        <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
-                                                    </div>
+                                                        <div class="hidden">
+                                                            <div class="alert alert-success">
+                                                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                                                <strong>Oh great!</strong> You are successfully subscribed email notifications for a <b><t t-esc="job.name"/></b> job.
+                                                            </div>
+                                                            <input type="hidden" name="email"/>
+                                                            <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
+                                                        </div>
+                                                    </t>
                                                 </div>
                                             </td>
                                             <td>

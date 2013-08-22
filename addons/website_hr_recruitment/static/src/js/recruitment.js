@@ -3,9 +3,11 @@ $(function () {
         div = $(this).parent();
         parent = $(this).parent().parent();
         id = $(this).parent().parent().attr('id');
-        openerp.jsonRpc('/recruitment/message_get_subscribed', 'call', {'email': $(this).siblings('input[name=email]').val(), 'id': id}).then(function (result) {
+        email = $(this).siblings('input[name=email]').val();
+        openerp.jsonRpc('/recruitment/message_get_subscribed', 'call', {'email': email, 'id': id}).then(function (result) {
             if (result == 1) {
                 div.hide();
+                parent.find('.hidden').find('input[type=hidden]').val(email);
                 parent.find('.hidden').removeClass('hidden');
             }
         });
@@ -39,6 +41,7 @@ $(function () {
                 } else {
                     $('tr[id='+$link.data('id')+']').find('span#counting').find('span#counting_num').html(result['count']);
                 }
+                $('tr[id='+$link.data('id')+']').find('div[id='+$link.data('id')+']').addClass('hidden');
             } else {
                 $p.removeClass("hidden");
                 $unp.addClass("hidden");
@@ -47,6 +50,18 @@ $(function () {
                 if ($.trim($('tr[id='+$link.data('id')+']').find('span#norecruit').html()).length == 0) {
                     $('tr[id='+$link.data('id')+']').find('span#norecruit').html("Right now no recruitment is going on.")
                 }
+                $('tr[id='+$link.data('id')+']').find('div[id='+$link.data('id')+']').removeClass('hidden');
+                if ($.trim($('tr[id='+$link.data('id')+']').find('div[id='+$link.data('id')+']').html()).length == 0) {
+                    htmlcon = "<div class='subscribedetails'><strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>"
+                    htmlcon += "Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>"
+                    htmlcon += "<input placeholder='Email Address' type='email' name='email' class='input-medium'/>"
+                    htmlcon += "<button class='btn btn-primary' name='subscribe'>Subscribe</button>"
+                    htmlcon += "<input type='hidden' name='recid' t-att-value='job.id'/> </div>"
+                    $('tr[id='+$link.data('id')+']').find('div[id='+$link.data('id')+']').html(htmlcon);
+                }else{
+                    $('tr[id='+$link.data('id')+']').find('div[id='+$link.data('id')+']').removeClass('hidden');
+                }
+                
             }
         });
     });
