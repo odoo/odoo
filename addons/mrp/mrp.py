@@ -71,8 +71,6 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
-
-
 class mrp_routing(osv.osv):
     """
     For specifying the routings of Work Centers.
@@ -267,23 +265,13 @@ class mrp_bom(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        res={'value':{}}
-        if not product_id:
-            return {'value': {
-                'product_uom': False,
-                'name': False,
-                'product_uos_qty': False, 
-                'product_uos': False
-            }}
-        prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-        res['value']['name'] = prod.name
-        res['value']['product_uom'] = prod.uom_id.id
-        if prod.uos_id.id:
-            res['value']['product_uos_qty'] = product_qty * prod.uos_coeff
-            res['value']['product_uos'] = prod.uos_id.id
-        else:
-            res['value']['product_uos_qty'] = 0
-            res['value']['product_uos'] = False
+        res={}
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            res['value'] = {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': 0, 'product_uos': False}
+            if prod.uos_id.id:
+                res['value']['product_uos_qty'] = product_qty * prod.uos_coeff
+                res['value']['product_uos'] = prod.uos_id.id
         return res
 
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
@@ -570,12 +558,13 @@ class mrp_production(osv.osv):
         @param product_id: Id of changed product.
         @return: Dictionary of values.
         """
+        result={}
         if not product_id:
             return {'value': {
                 'product_uom': False,
                 'bom_id': False,
                 'routing_id': False,
-                'product_uos_qty': False, 
+                'product_uos_qty': 0, 
                 'product_uos': False
             }}
         bom_obj = self.pool.get('mrp.bom')
@@ -587,19 +576,12 @@ class mrp_production(osv.osv):
             routing_id = bom_point.routing_id.id or False
         product_uom_id = product.uom_id and product.uom_id.id or False
         product_uos_id = product.uos_id and product.uos_id.id or False
-        result={'value': {}}
+        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id}
         if product.uos_id.id:
             result['value']['product_uos_qty'] = product_qty * product.uos_coeff
             result['value']['product_uos'] = product.uos_id.id
-        else:
-            result['value']['product_uos_qty'] = 0
-            result['value']['product_uos'] = False
-        result['value']['product_uom'] = product_uom_id
-        result['value']['bom_id'] = bom_id
-        result['value']['routing_id'] = routing_id
         return result
 
-    
     def bom_id_change(self, cr, uid, ids, bom_id, context=None):
         """ Finds routing for changed BoM.
         @param product: Id of product.
