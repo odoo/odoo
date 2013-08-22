@@ -697,19 +697,19 @@ class stock_picking(osv.osv):
                 quant_obj.quants_unreserve(cr, uid, move, context=context)
 #             if picking.location_id.usage != 'internal' and picking.location_dest_id.usage == 'internal': #When to create the pickings?
             ops_list = [(x.id, x.product_uom_qty) for x in picking.pack_operation_ids]
-            while ops_list:
-                ops = ops_list.pop()
+            for ops in picking.pack_operation_ids:
                 #Find moves that correspond
-                if ops[0].product_id:
-                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops[0].product_id), ('remaining_qty', '>', 0.0)], context=context)
-                    for move in move_obj.browse(cr, uid, move_ids, context=context):
-                        if move.remaining_qty > ops[1]:
-                            qty = ops[1]
+                if ops.product_id:
+                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops.product_id), ('remaining_qty', '>', 0.0)], context=context)
+                    qty_to_do = ops.product_uom_qty
+                    while qty_to_do > 0 and move_ids:
+                        move = move_obj.browse(cr, uid, move_ids.pop(), context=context)
+                        if move.remaining_qty > qty_to_do: 
+                            qty = qty_to_do
+                            qty_to_do = 0
                         else:
                             qty = move.remaining_qty
-                            # Add remaining quantity to the list 
-                            if ops[1] - qty > 0: 
-                                ops_list.append((ops[0] , ops[1] - qty),)
+                            qty_to_do -= move.remaining_qty
                         
                         if create and move.location_id != 'internal':
                             # Create quants
@@ -733,9 +733,12 @@ class stock_picking(osv.osv):
                             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                 elif ops[0].package_id:
-                    lines = ops.package_id.quant_ids #_get_package_lines
+                    lines = ops[0].package_id.quant_ids #_get_package_lines
                     to_reserve = [(x.id, x.product_uom_qty) for x in lines if not x.reservation_id]
-                    quant_obj.quants_reserve(cr,uid, to_reserve, context=context)
+                    for reserve in to_reserve:
+                        move_ids = move_obj.search(cr, uid, [('picking_id', '=', picking.id), ('product_id', '=', reserve.product_id)])
+                    quant_obj.quants_reserve(cr, uid, to_reserve, context=context)
+                    
                     #Need to check on which move
 #                     for line in lines:
 #                         if not line.reservation_id:
@@ -983,6 +986,14 @@ class stock_move(osv.osv):
                 res[move.id] = min(move.product_qty, availability)
         return res
 
+
+    def _get_move(self, cr, uid, ids, context=None):
+        res = set()
+        for quant in self.browse(cr, uid, ids, context=context):
+            if quant.reservation_id:
+                res.add(quant.reservation_id.id)
+        return list(res)
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1048,7 +1059,9 @@ class stock_move(osv.osv):
 
         'quant_ids': fields.many2many('stock.quant',  'stock_quant_move_rel', 'move_id', 'quant_id', 'Quants'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
-        'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
+        'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', 
+                                         digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]},
+                                         store = {'stock.quant': (_get_move, ['reservation_id'], 10)}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.related('procurement_id', 'group_id', type='many2one', relation="procurement.group", string='Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),

@@ -14,6 +14,20 @@
                 </data>
            </field>
         </record>
+        
+        <record id="view_order_form_inherit3" model="ir.ui.view">
+            <field name="name">sale.order.line.form.sale.stock.location.open</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale."/>
+            <field name="arch" type="xml">
+                <data>
+                   <xpath expr="//field[@name='price_unit']" position="before">
+                       <field name="route_id"/>
+                   </xpath>
+                </data>
+           </field>
+        </record>
+        
         <record id="view_order_line_tree_inherit" model="ir.ui.view">
             <field name="name">sale.order.line.tree.sale.stock.location</field>
             <field name="inherit_id" ref="sale.view_order_line_tree"/>
