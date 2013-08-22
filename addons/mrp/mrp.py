@@ -566,7 +566,6 @@ class mrp_production(osv.osv):
         return {}
 
     def product_id_change(self, cr, uid, ids, product_id, product_qty=0, context=None):
-        print 'product_id_change>>>>>>>>>>\n\n\n'
         """ Finds UoM of changed product.
         @param product_id: Id of changed product.
         @return: Dictionary of values.
@@ -586,7 +585,6 @@ class mrp_production(osv.osv):
         if bom_id:
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
-
         product_uom_id = product.uom_id and product.uom_id.id or False
         product_uos_id = product.uos_id and product.uos_id.id or False
         result={'value': {}}
@@ -595,7 +593,6 @@ class mrp_production(osv.osv):
             result['value']['product_uos'] = product.uos_id.id
         else:
             result['value']['product_uos_qty'] = 0
-        
         result['value']['product_uom'] = product_uom_id
         result['value']['bom_id'] = bom_id
         result['value']['routing_id'] = routing_id
