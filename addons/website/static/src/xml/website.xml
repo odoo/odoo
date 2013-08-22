@@ -9,8 +9,7 @@
                 <button data-action="edit" class="btn btn-primary">Edit</button>
             </form>
             <ul class="nav pull-right">
-                <li class="active"><a href="#"><span class="icon-desktop"/></a></li>
-                <li><a href="#"><span class="icon-mobile-phone"/></a></li>
+                <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                 <li class="divider-vertical"></li>
                 <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
                 <li><a href="#">Translate</a></li>
@@ -39,6 +38,17 @@
         </div>
     </div>
 
+    <div id="mobile-preview" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mobilePreview" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="mobilePreview">Mobile preview</h3>
+        </div>
+        <div class="modal-body">
+            <div class="oe_mobile_preview">
+                <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+            </div>
+        </div>
+    </div>
 
 </t>
 <t t-name="Website.ActionGroup">

@@ -45,6 +45,7 @@
             'click button[data-action=save]': 'save',
             'click button[data-action=cancel]': 'cancel',
             'click button[data-action=snippet]': 'snippet',
+            'click a[data-action=show-mobile-preview]': 'mobilePreview',
         },
         container: 'body',
         customize_setup: function() {
@@ -73,6 +74,9 @@
                 }).then( function(result) {
                     window.location.reload();
                 });
+            });
+            $('#mobile-preview').on('hidden', function () {
+                $('body').removeClass('oe_stop_scrolling');
             });
         },
         start: function() {
@@ -191,6 +195,13 @@
         },
         snippet: function (ev) {
             this.snippets.toggle();
+        },
+        mobilePreview: function () {
+            $('body').addClass('oe_stop_scrolling');
+            // Firefox hack: document.getElementById("mobile-viewport").src = window.location.href + "?";
+            // TODO: disable scrollbar in iframe instead of forbidding scrolling
+            var iframeBody = $("#mobile-viewport").contents().find("body");
+            //iframeBody.css("overflow-y", "hidden");
         },
     });
 
