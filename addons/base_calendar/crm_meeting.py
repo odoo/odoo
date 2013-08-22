@@ -64,6 +64,15 @@ class crm_meeting(osv.Model):
         'state': 'open',
     }
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        res = super(crm_meeting, self).create(cr, uid, vals, context=context)
+        obj = self.browse(cr, uid, res, context=context)
+        if 'active_model' in context and context['active_model'] == 'hr.applicant':
+            self.pool.get('hr.applicant').log_meeting_in_parent(cr, uid, context['active_ids'], vals['name'], vals['date'], vals['duration'], context=context)
+        return res
+
     def message_get_subscription_data(self, cr, uid, ids, context=None):
         res = {}
         for virtual_id in ids:

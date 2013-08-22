@@ -281,7 +281,7 @@ class hr_applicant(osv.Model):
             return stage_ids[0]
         return False
 
-    def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
+    def log_meeting_in_parent(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
          if not duration:
              message = _("Meeting scheduled at '%s'<br> Subject: %s") % (meeting_date, meeting_subject)
          else:
@@ -517,13 +517,5 @@ class applicant_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
-
-class crm_meeting(osv.Model):
-    _inherit = 'crm.meeting'
-
-    def create(self, cr, uid, vals, context=None):
-        if 'active_ids' in context and 'active_model' in context and context['active_model'] == 'hr.applicant':
-            self.pool.get('hr.applicant').log_meeting(cr, uid, context['active_ids'], vals['name'], vals['date'], vals['duration'], context=context)
-        return super(crm_meeting, self).create(cr, uid, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -14,3 +14,5 @@ Changelog
   - ``hr.recruitment.stage``: removed ``state`` field.
 
 - Removed ``hired.employee`` wizard.
+
+- Add new method ``log_meeting_in_parent``.
