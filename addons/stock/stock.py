@@ -687,21 +687,21 @@ class stock_picking(osv.osv):
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
             This will unreserve all products and reserve the quants from the operations
+            :return: dictionary with quantities of quant operation and product that can not be matched with moves
         """
         quant_obj = self.pool.get("stock.quant")
         move_obj = self.pool.get("stock.move")
         op_obj = self.pool.get("stock.pack.operation")
+        res = {}
         for picking in self.browse(cr, uid, picking_ids, context=context):
             # unreserve everything
             for move in picking.move_lines: 
                 quant_obj.quants_unreserve(cr, uid, move, context=context)
-#             if picking.location_id.usage != 'internal' and picking.location_dest_id.usage == 'internal': #When to create the pickings?
-            ops_list = [(x.id, x.product_uom_qty) for x in picking.pack_operation_ids]
             for ops in picking.pack_operation_ids:
                 #Find moves that correspond
                 if ops.product_id:
-                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops.product_id), ('remaining_qty', '>', 0.0)], context=context)
-                    qty_to_do = ops.product_uom_qty
+                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops.product_id.id), ('remaining_qty', '>', 0.0)], context=context)
+                    qty_to_do = ops.product_qty
                     while qty_to_do > 0 and move_ids:
                         move = move_obj.browse(cr, uid, move_ids.pop(), context=context)
                         if move.remaining_qty > qty_to_do: 
@@ -721,24 +721,35 @@ class stock_picking(osv.osv):
                                 'history_ids': [(4, move.id)],
                                 'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                                 'company_id': move.company_id.id,
-                                'lot_id': ops[0].lot_id and ops.lot_id.id or False, 
+                                'lot_id': ops.lot_id and ops.lot_id.id or False, 
                                 'reservation_id': move.id, #Reserve at once
-                                'package_id': ops[0].result_package_id and ops[0].result_package_id.id or False, 
+                                'package_id': ops.result_package_id and ops.result_package_id.id or False, 
                             }
                             quant_id = quant_obj.create(cr, uid, vals, context=context)
                         else:
                             #Quants get
                             domain = [('reservation_id', '=', False)]
-                            prefered_order = op_obj._get_preferred_order(cr, uid, ops[0].id, context=context)
+                            prefered_order = op_obj._get_preferred_order(cr, uid, ops.id, context=context)
                             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
-                elif ops[0].package_id:
-                    lines = ops[0].package_id.quant_ids #_get_package_lines
-                    to_reserve = [(x.id, x.product_uom_qty) for x in lines if not x.reservation_id]
-                    for reserve in to_reserve:
-                        move_ids = move_obj.search(cr, uid, [('picking_id', '=', picking.id), ('product_id', '=', reserve.product_id)])
-                    quant_obj.quants_reserve(cr, uid, to_reserve, context=context)
-                    
+                    res[ops.id] = {}
+                    res[ops.id][ops.product_id.id] = qty_to_do
+                elif ops.package_id:
+                    quants = ops.package_id.quant_ids #_get_package_lines
+                    for quant in quants:
+                        move_ids = move_obj.search(cr, uid, [('picking_id', '=', picking.id), ('product_id', '=', quant.product_id.id), ('remaining_qty', '>', 0.0)])
+                        qty_to_do = quant.qty
+                        while qty_to_do > 0 and move_ids:
+                            move = move_obj.browse(cr, uid, move_ids.pop(), context=context)
+                            if move.remaining_qty > qty_to_do:
+                                qty = qty_to_do
+                                qty_to_do = 0
+                            else:
+                                qty = move.remaining_qty
+                                qty_to_do -= move.remaining_qty
+                            quant_obj.quants_reserve(cr, uid, [(quant.id, qty)], move, context=context)
+                            
+                    #quant_obj.quants_reserve(cr, uid, to_reserve, context=context)
                     #Need to check on which move
 #                     for line in lines:
 #                         if not line.reservation_id:
@@ -945,21 +956,29 @@ class stock_move(osv.osv):
             res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id)
         return res
 
-    def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
-        #TODO: this function assumes that there aren't several stock move in the same picking with the same product. what should we do in that case?
-        #TODO take care of the quant on stock moves too
-        res = dict.fromkeys(ids, False)
-        for move in self.browse(cr, uid, ids, context=context):
-            res[move.id] = move.product_qty
-            if move.picking_id:
-                for op in move.picking_id.pack_operation_ids:
-                    if op.product_id == move.product_id or (op.quant_id and op.quant_id.product_id == move.product_id):
-                        res[move.id] -= op.product_qty
-                    if op.package_id:
-                        #find the product qty recursively
-                        res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
-        return res
+#     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
+#         #TODO: this function assumes that there aren't several stock move in the same picking with the same product. what should we do in that case?
+#         #TODO take care of the quant on stock moves too
+#         res = dict.fromkeys(ids, False)
+#         for move in self.browse(cr, uid, ids, context=context):
+#             res[move.id] = move.product_qty
+#             if move.picking_id:
+#                 for op in move.picking_id.pack_operation_ids:
+#                     if op.product_id == move.product_id or (op.quant_id and op.quant_id.product_id == move.product_id):
+#                         res[move.id] -= op.product_qty
+#                     if op.package_id:
+#                         #find the product qty recursively
+#                         res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
+#         return res
 
+    def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            res[move.id] = move.product_uom_qty
+            for quant in move.reserved_quant_ids:
+                res[move.id] -= quant.qty
+        return res
+    
 
     
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
