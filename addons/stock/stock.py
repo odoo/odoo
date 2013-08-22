@@ -687,16 +687,20 @@ class stock_picking(osv.osv):
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
             This will unreserve all products and reserve the quants from the operations
-            :return: dictionary with quantities of quant operation and product that can not be matched with moves
+            :return: tuple of dictionary with quantities of quant operation and product that can not be matched between ops and moves
+            and dictionary with remaining values on moves
+            
         """
         quant_obj = self.pool.get("stock.quant")
         move_obj = self.pool.get("stock.move")
         op_obj = self.pool.get("stock.pack.operation")
         res = {}
+        res2 = {} #what is left from moves
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            # unreserve everything
-            for move in picking.move_lines: 
+            # unreserve everything and initialize res2
+            for move in picking.move_lines:
                 quant_obj.quants_unreserve(cr, uid, move, context=context)
+                res2[move.id] = move.product_qty
             for ops in picking.pack_operation_ids:
                 #Find moves that correspond
                 if ops.product_id:
@@ -732,6 +736,7 @@ class stock_picking(osv.osv):
                             prefered_order = op_obj._get_preferred_order(cr, uid, ops.id, context=context)
                             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+                        res2[move.id] -= qty
                     res[ops.id] = {}
                     res[ops.id][ops.product_id.id] = qty_to_do
                 elif ops.package_id:
@@ -743,19 +748,15 @@ class stock_picking(osv.osv):
                             move = move_obj.browse(cr, uid, move_ids.pop(), context=context)
                             if move.remaining_qty > qty_to_do:
                                 qty = qty_to_do
-                                qty_to_do = 0
+                                qty_to_do = 0.0
                             else:
                                 qty = move.remaining_qty
                                 qty_to_do -= move.remaining_qty
                             quant_obj.quants_reserve(cr, uid, [(quant.id, qty)], move, context=context)
-                            
-                    #quant_obj.quants_reserve(cr, uid, to_reserve, context=context)
-                    #Need to check on which move
-#                     for line in lines:
-#                         if not line.reservation_id:
-#                             quant_obj.quants_reserve(cr, uid, [(line.id, line.product_uom_qty)], context=context)
-                    
-            
+                            res2[move.id] -= qty
+                        res.setdefault(ops.id, {}).setdefault(quant.product_id.id, 0.0)
+                        res[ops.id][quant.product_id.id] += qty_to_do
+        return (res, res2)
 
 
     def do_partial(self, cr, uid, picking_ids, context=None):
@@ -766,27 +767,58 @@ class stock_picking(osv.osv):
         #TODO: this variable should be in argument
         quant_obj = self.pool.get('stock.quant')
         quant_package_obj = self.pool.get('stock.quant.package')
+        stock_move_obj = self.pool.get('stock.move')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if not picking.pack_operation_ids:
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
-            for op in picking.pack_operation_ids:
+            else:
+                #First thing that needs to happen is rereserving the quants
+                res = self.rereserve(cr, uid, [picking.id], create = True, context = context) #This time, quants need to be created
+                orig_moves = picking.move_lines
+                #Add moves that operations need extra
+                for ops in res[0].keys():
+                    for prod in res[0][ops].keys():
+                        product = self.pool.get('product.product').browse(cr, uid, prod, context=context)
+                        qty = res[0][ops][prod]
+                        if qty > 0:
+                            #TODO: Maybe should try to reserve quants?
+                            quant = False
+                            move_id = stock_move_obj.create(cr, uid, {
+                                            'name': product.name,
+                                            'product_id': product.id,
+                                            'product_uom_qty': qty,
+                                            'product_uom': product.uom_id.id,
+                                            'location_id': picking.location_id.id,
+                                            'location_dest_id': picking.location_dest_id.id,
+                                            'picking_id': picking.id,
+                                            'reserved_quant_ids': quant and [(4, quant.id)] or [],
+                                            'picking_type_id': picking.picking_type_id.id
+                                        }, context=context)
+                res2 = res[1]
+                for move in res2.keys():
+                    if res2[move] > 0:
+                        mov = stock_move_obj.browse(cr, uid, move, context=context)
+                        newmove_id = stock_move_obj.split(cr, uid, mov, res2[move], context=context)
+                
+                for move in orig_moves: 
+                    stock_move_obj.action_done(cr, uid, [move.id], context=context)
                 #TODO: op.package_id can not work as quants_get is not defined on quant package => gives traceback
-                if op.package_id: 
-                    for quant in quant_package_obj.browse(cr, uid, op.package_id.id, context=context).quant_ids:
-                        self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=context)
-                    op.package_id.write(cr, uid, {
-                        'parent_id': op.result_package_id.id
-                    }, context=context)
-                elif op.product_id:
-                    moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
-                    quants = []
-                    for m in moves:
-                        for quant in m.quant_ids:
-                            quants.append(quant.id)
-                    quant_obj.write(cr, uid, quants, {
-                        'package_id': op.result_package_id.id
-                    }, context=context)
+#                 if op.package_id: 
+#                     for quant in quant_package_obj.browse(cr, uid, op.package_id.id, context=context).quant_ids:
+#                         self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=context)
+#                     op.package_id.write(cr, uid, {
+#                         'parent_id': op.result_package_id.id
+#                     }, context=context)
+#                 elif op.product_id:
+#                     moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
+#                     quants = []
+#                     for m in moves:
+#                         for quant in m.quant_ids:
+#                             quants.append(quant.id)
+#                     quant_obj.write(cr, uid, quants, {
+#                         'package_id': op.result_package_id.id
+#                     }, context=context)
 
             self._create_backorder(cr, uid, picking, context=context)
         return True
@@ -1607,7 +1639,7 @@ class stock_move(osv.osv):
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
             'product_uos_qty': move.product_uos_qty - uos_qty,
-            'reserved_quant_ids': [(6,0,[])]
+#             'reserved_quant_ids': [(6,0,[])]  SHOULD NOT CHANGE as it has been reserved already
         }, context=context)
         return new_move
 
