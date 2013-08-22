@@ -467,7 +467,6 @@ class project_issue(osv.Model):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.case_set(cr, uid, ids, 'draft', data, context=context)
         return True
 
     # -------------------------------------------------------
@@ -496,21 +495,19 @@ class project_issue(osv.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
-        if context is None: context = {}
+        if custom_values is None:
+            custom_values = {}
+        if context is None:
+            context = {}
         context['state_to'] = 'draft'
-
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
-
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
-        if  msg.get('priority'):
+        if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
 
         defaults.update(custom_values)

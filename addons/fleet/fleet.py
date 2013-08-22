@@ -351,7 +351,7 @@ class fleet_vehicle(osv.Model):
         'fuel_type': fields.selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('electric', 'Electric'), ('hybrid', 'Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle'),
         'horsepower': fields.integer('Horsepower'),
         'horsepower_tax': fields.float('Horsepower Taxation'),
-        'power': fields.integer('Power (kW)', help='Power in kW of the vehicle'),
+        'power': fields.integer('Power', help='Power in kW of the vehicle'),
         'co2': fields.float('CO2 Emissions', help='CO2 emissions of the vehicle'),
         'image': fields.related('model_id', 'image', type="binary", string="Logo"),
         'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo"),
@@ -392,9 +392,12 @@ class fleet_vehicle(osv.Model):
         }
 
     def create(self, cr, uid, data, context=None):
+        if not context:
+            context = {}
+        context.update({'mail_create_nolog': True})
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         vehicle = self.browse(cr, uid, vehicle_id, context=context)
-        self.message_post(cr, uid, [vehicle_id], body=_('Vehicle %s has been added to the fleet!') % (vehicle.license_plate), context=context)
+        self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name,vehicle.license_plate), context=context)
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):

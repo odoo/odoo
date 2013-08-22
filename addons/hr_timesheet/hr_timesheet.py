@@ -29,7 +29,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _inherit = "hr.employee"
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
+        'product_id': fields.many2one('product.product', 'Product', help="If you want to reinvoice working time of employees, link this employee to a service to determinate the cost price of the job."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'uom_id': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Unit of Measure', store=True, readonly=True)
     }
