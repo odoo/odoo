@@ -157,7 +157,8 @@ class mail_compose_message(osv.TransientModel):
         values['body'] = values.pop('body_html', '')
 
         # transform email_to, email_cc into partner_ids
-        partner_ids = self._get_or_create_partners_from_values(cr, uid, values, context=context)
+        ctx = dict((k, v) for k, v in (context or {}).items() if not k.startswith('default_'))
+        partner_ids = self._get_or_create_partners_from_values(cr, uid, values, context=ctx)
         # legacy template behavior: void values do not erase existing values and the
         # related key is removed from the values dict
         if partner_ids:
