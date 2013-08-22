@@ -2,8 +2,7 @@
 
 from openerp.osv import osv, fields
 
-
-class hr(osv.osv):
+class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'website_published': fields.boolean('Available in the website'),

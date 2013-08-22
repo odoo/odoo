@@ -28,7 +28,7 @@ class product_pricelist(osv.osv):
         'code': fields.char('Promotionnal Code', size=64, translate=True),
     }
 
-class product_product(osv.osv):
+class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
         'website_published': fields.boolean('Available in the website'),
@@ -58,6 +58,12 @@ class product_product(osv.osv):
         # search to apply access rules
         product_ids = self.search(cr, uid, [("id", "in", product_ids)], limit=3)
         return self.browse(cr, uid, product_ids)
+
+    def img(self, cr, uid, ids, field='image_small', context=None):
+        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+
+class product_product(osv.osv):
+    _inherit = "product.product"
 
     def img(self, cr, uid, ids, field='image_small', context=None):
         return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])

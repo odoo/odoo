@@ -152,12 +152,18 @@
                         <label class="radio" t-foreach="product.product_variant_ids" t-as="product">
                             <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
                             <t t-esc="product.variants or ''">Standard</t>
+                            <span class="badge" t-if="product.price_extra"><t t-esc="product.price_extra > 0 and '+' or ''"/><t t-esc="product.price_extra"/> €</span>
                         </label><br/>
                         <button class="btn btn-small btn-success">Add to cart</button>
                     </form>
                     <img class="media-object" t-att-src="product.img('image')"/>
                     <div t-field="product.description_website"></div>
-                    <div><t t-field="product.list_price" />€</div>
+                    <div>
+                        <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                        <h5 class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</h5>
+                        </t>
+                        <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
+                    </div>
                 </div>
             </t>
         </t>
@@ -211,20 +217,23 @@
                             <t t-foreach="order.order_line" t-as="line">
                                 <tr>
                                     <td>
-                                        <a t-attf-href="/shop/product/#{ line.product_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
+                                        <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
                                     <td>
-                                        <a t-attf-href="/shop/product/#{ line.product_id.id }/">
+                                        <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/">
                                             <span t-field="line.product_id.name"/> <t t-if="line.product_id.variants">(<small t-field="line.product_id.variants"/>)</t>
                                         </a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
-                                       <span t-field="line.product_id.list_price"></span>€
+                                        <t t-if="line.product_id.lst_price != line.product_id.price">
+                                        <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
+                                        </t>
+                                       <span t-field="line.product_id.price"></span> €
                                     </td>
                                     <td>
                                         <div class="mb8 mt8 pull-right">
-                                            <input type="text" class="input-mini" t-att-data-id="line.product_id.id" t-att-value="line.product_uom_qty"/>
+                                            <input type="text" class="js_quantity input-mini" t-att-data-id="line.product_id.id" t-att-value="line.product_uom_qty"/>
                                             <a t-attf-href="./remove_cart/#{ line.product_id.id }/" class="btn mb8 btn-small btn-inverse">-</a>
                                             <a t-attf-href="./add_cart/#{ line.product_id.id }/" class="btn mb8 btn-small btn-success">+</a>
                                         </div>
@@ -233,7 +242,6 @@
                             </t>
                         </tbody>
                     </table>
-
                     <table class='table table-hover table-condensed' id="mycart_total">
                         <colgroup>
                             <col width="80"/>
@@ -311,7 +319,7 @@
     <template id="reduction_code" inherit_option_id="website_sale.mycart" name="Reduction Code">
         <xpath expr="//table[@id='mycart_total']" position="after">
             <form t-if="order.order_line" class="well form-search" action="/shop/mycart/" method="post">
-                <input name="code" class='input' type="text" placeholder="Reduction Code..."/>
+                <input name="code" class='input' type="text" placeholder="Reduction Code..." t-att-value="order.pricelist_id.code"/>
                 <button class="btn">Apply Code</button>
             </form>
         </xpath>

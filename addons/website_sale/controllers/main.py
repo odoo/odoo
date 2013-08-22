@@ -10,6 +10,7 @@ import werkzeug
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
     # check if order allready exists
+    context = {}
     if order_id:
         try:
             order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
@@ -23,7 +24,12 @@ def get_order(order_id=None):
         order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
         order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
-    return order
+
+    context = {
+        'pricelist': order.pricelist_id.id,
+        'partner': order.partner_id.id,
+    }
+    return order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=context)
 
 def get_current_order():
     order = get_order(request.httprequest.session.get('ecommerce_order_id'))
@@ -93,7 +99,9 @@ class Ecommerce(http.Controller):
         product_id = product_id and int(product_id) or 0
         product_obj = request.registry.get('product.template')
 
-        product = product_obj.browse(request.cr, request.uid, product_id)
+        context = get_current_order()._context
+
+        product = product_obj.browse(request.cr, request.uid, product_id, context=context)
         values = website.get_rendering_context({
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
             'search': post.get("search"),
@@ -161,7 +169,7 @@ class Ecommerce(http.Controller):
         values['order_id'] = order.id
 
         # change and record value
-        if quantity:
+        if quantity > 0:
             pricelist_id = order.pricelist_id and order.pricelist_id.id or False
             values.update(order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
                 partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
