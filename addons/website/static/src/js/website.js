@@ -614,7 +614,7 @@
             }
             
             var page_count =  $col.data('page_count');
-            var scope = $pagination.first().find("li").size()-2;
+            var scope = $pagination.last().find("li").size()-2;
             var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
 
             var data = {
@@ -637,7 +637,7 @@
 
                 $.post('/website/kanban/', data, function (col) {
                     $col.find("> .thumbnail").remove();
-                    $pagination.first().after('<div class="thumbnail">'+col+'</div>');
+                    $pagination.last().before('<div class="thumbnail">'+col+'</div>');
                 });
 
                 var page_start = page - parseInt(Math.floor((scope-1)/2));
