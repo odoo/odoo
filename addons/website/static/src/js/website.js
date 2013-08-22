@@ -605,6 +605,63 @@
     var dom_ready = $.Deferred();
     $(dom_ready.resolve);
 
+    website.init_kanban = function ($kanban) {
+        $('.js_kanban_col', $kanban).each(function () {
+            var $col = $(this);
+            var $pagination = $('.pagination', $col);
+            if(!$pagination.size()) {
+                return;
+            }
+            
+            var page_count =  $col.data('page_count');
+            var scope = $pagination.first().find("li").size()-2;
+            var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
+
+            var data = {
+                'domain': $col.data('domain'),
+                'model': $col.data('model'),
+                'template': $col.data('template'),
+                'step': $col.data('step'),
+                'orderby': $col.data('orderby')
+            };
+
+            $pagination.on('click', 'a', function (ev) {
+                ev.preventDefault();
+                var $a = $(ev.target);
+                if($a.hasClass('active')) {
+                    return;
+                }
+
+                var page = +$a.attr("href").split(",").pop().split('-')[1];
+                data['page'] = page;
+
+                $.post('/website/kanban/', data, function (col) {
+                    $col.find("&gt; .thumbnail").remove();
+                    $pagination.first().after('<div class="thumbnail">'+col+'</div>');
+                });
+
+                var page_start = page - parseInt(Math.floor((scope-1)/2));
+                if (page_start &lt; 1 ) page_start = 1;
+                var page_end = page_start + (scope-1);
+                if (page_end &gt; page_count ) page_end = page_count;
+
+                if (page_end - page_start &lt; scope) {
+                    page_start = page_end - scope &gt; 0 ? page_end - scope : 1;
+                }
+
+                $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
+                $pagination.find('li.next a').attr("href", kanban_url_col+(page+1));
+                for(var i=0; i &lt; scope; i++) {
+                    $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
+                }
+                $pagination.find('li.active').removeClass('active');
+                $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
+
+            });
+
+        });
+    };
+
     /**
      * Returns a deferred resolved when the templates are loaded
      * and the Widgets can be instanciated.
@@ -642,6 +699,11 @@
                     $unp.addClass("hidden");
                 }
             });
+        });
+
+        /* ----- KANBAN WEBSITE ---- */
+        $('.js_kanban', $kanban).each(function () {
+            website.init_kanban(this);
         });
 
     });

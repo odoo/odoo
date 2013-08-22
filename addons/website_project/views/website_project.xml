@@ -39,7 +39,9 @@
                     <t t-set="model">project.task</t>
                     <t t-set="domain" t-value="[('project_id', '=', project_id.id)]"/>
                     <t t-set="column">stage_id</t>
-                    <t t-set="content">website_project.kanban_card</t>
+                    <t t-set="template">website_project.kanban_card</t>
+                    <t t-set="step">10</t>
+                    <t t-set="scope">3</t>
                 </t>
             </div>
         </t>
