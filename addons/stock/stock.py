@@ -201,7 +201,6 @@ class stock_quant(osv.osv):
         else:
             self._quant_split(cr, uid, quant, qty, context=context)
         # FP Note: improve this using preferred locations
-        location_to = move.location_dest_id
         location_to = self.check_preferred_location(cr, uid, move, context=context)
         self.write(cr, uid, [quant.id], {
             'location_id': location_to.id,
@@ -239,7 +238,7 @@ class stock_quant(osv.osv):
     # Create a negative quant in the source location if it's an internal location
     # Reconcile a positive quant with a negative is possible
     #
-    def _quant_create(self, cr, uid, qty, move, context=None):
+    def _quant_create(self, cr, uid, qty, move, lot_id = False, context=None):
         # FP Note: TODO: compute the right price according to the move, with currency convert
         # QTY is normally already converted to main product's UoM
         price_unit = move.price_unit
@@ -251,6 +250,7 @@ class stock_quant(osv.osv):
             'history_ids': [(4, move.id)],
             'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'company_id': move.company_id.id,
+            'lot_id': lot_id, 
         }
 
         negative_quant_id = False
@@ -649,7 +649,7 @@ class stock_picking(osv.osv):
                         'cost': move.product_id.standard_price,
                     }, context=context)
 
-    def _do_partial_product_move(self, cr, uid, picking, product, qty, quant=False, context=None):
+    def _do_partial_product_move(self, cr, uid, picking, product, qty, pack_id = False, lot_id = False,  quant=False, context=None):
         moves = []
         stock_move_obj = self.pool.get('stock.move')
         for move in picking.move_lines:
@@ -684,6 +684,66 @@ class stock_picking(osv.osv):
             moves.append(move)
         return moves
 
+    def rereserve(self, cr, uid, picking_ids, create=False, context=None):
+        """
+            This will unreserve all products and reserve the quants from the operations
+        """
+        quant_obj = self.pool.get("stock.quant")
+        move_obj = self.pool.get("stock.move")
+        op_obj = self.pool.get("stock.pack.operation")
+        for picking in self.browse(cr, uid, picking_ids, context=context):
+            # unreserve everything
+            for move in picking.move_lines: 
+                quant_obj.quants_unreserve(cr, uid, move, context=context)
+#             if picking.location_id.usage != 'internal' and picking.location_dest_id.usage == 'internal': #When to create the pickings?
+            ops_list = [(x.id, x.product_uom_qty) for x in picking.pack_operation_ids]
+            while ops_list:
+                ops = ops_list.pop()
+                #Find moves that correspond
+                if ops[0].product_id:
+                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops[0].product_id), ('remaining_qty', '>', 0.0)], context=context)
+                    for move in move_obj.browse(cr, uid, move_ids, context=context):
+                        if move.remaining_qty > ops[1]:
+                            qty = ops[1]
+                        else:
+                            qty = move.remaining_qty
+                            # Add remaining quantity to the list 
+                            if ops[1] - qty > 0: 
+                                ops_list.append((ops[0] , ops[1] - qty),)
+                        
+                        if create and move.location_id != 'internal':
+                            # Create quants
+                            vals = {
+                                'product_id': move.product_id.id,
+                                'location_id': move.location_id.id,
+                                'qty': qty,
+                                #'cost': price_unit,
+                                'history_ids': [(4, move.id)],
+                                'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                                'company_id': move.company_id.id,
+                                'lot_id': ops[0].lot_id and ops.lot_id.id or False, 
+                                'reservation_id': move.id, #Reserve at once
+                                'package_id': ops[0].result_package_id and ops[0].result_package_id.id or False, 
+                            }
+                            quant_id = quant_obj.create(cr, uid, vals, context=context)
+                        else:
+                            #Quants get
+                            domain = [('reservation_id', '=', False)]
+                            prefered_order = op_obj._get_preferred_order(cr, uid, ops[0].id, context=context)
+                            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
+                            quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+                elif ops[0].package_id:
+                    lines = ops.package_id.quant_ids #_get_package_lines
+                    to_reserve = [(x.id, x.product_uom_qty) for x in lines if not x.reservation_id]
+                    quant_obj.quants_reserve(cr,uid, to_reserve, context=context)
+                    #Need to check on which move
+#                     for line in lines:
+#                         if not line.reservation_id:
+#                             quant_obj.quants_reserve(cr, uid, [(line.id, line.product_uom_qty)], context=context)
+                    
+            
+
+
     def do_partial(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we close the whole move
@@ -699,21 +759,19 @@ class stock_picking(osv.osv):
             for op in picking.pack_operation_ids:
                 #TODO: op.package_id can not work as quants_get is not defined on quant package => gives traceback
                 if op.package_id: 
-                    for quant in quant_package_obj.quants_get(cr, uid, op.package_id, context=context):
+                    for quant in quant_package_obj.browse(cr, uid, op.package_id.id, context=context).quant_ids:
                         self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=context)
                     op.package_id.write(cr, uid, {
                         'parent_id': op.result_package_id.id
                     }, context=context)
                 elif op.product_id:
                     moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
-                    
                     quants = []
                     for m in moves:
                         for quant in m.quant_ids:
                             quants.append(quant.id)
                     quant_obj.write(cr, uid, quants, {
                         'package_id': op.result_package_id.id
-                        
                     }, context=context)
 
             self._create_backorder(cr, uid, picking, context=context)
@@ -899,6 +957,8 @@ class stock_move(osv.osv):
                         res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
         return res
 
+
+    
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
         res = dict.fromkeys(ids, False)
         for move in self.browse(cr, uid, ids, context=context):
@@ -1352,7 +1412,13 @@ class stock_move(osv.osv):
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
             domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
-            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = 'reservation_id<>'+str(move.id),  context=context)
+            prefered_order = 'reservation_id<>' + str(move.id)
+#             if lot_id: 
+#                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
+#             if pack_id: 
+#                 prefered_order = 'pack_id<>' + pack_id + ", " + prefered_order
+            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = prefered_order, context=context)
+            
             #Will move all quants_get and as such create negative quants
             quant_obj.quants_move(cr, uid, quants, move, context=context)
             quant_obj.quants_unreserve(cr, uid, move, context=context)
@@ -1943,6 +2009,19 @@ class stock_pack_operation(osv.osv):
     _defaults = {
         'date': fields.date.context_today,
     }
+
+    def _get_preferred_order(self, cr, uid, id, context=None):
+        pack = self.browse(cr, uid, id, context=context)
+        res = ""
+        if pack.package_id:
+            res += "package_id <> " + pack.package_id.id
+        if pack.lot_id:
+            if res:
+                res += ", lot_id <> " + pack.lot_id.id
+            else:
+                res += "lot_id <> " + pack.lot_id.id
+        return res
+
 
     #TODO: this function can be refactored
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
