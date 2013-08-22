@@ -38,7 +38,7 @@ This adds a route on the sales order and sales order line (mini module)
     'init_xml': [],
     'update_xml': ['stock_complex_routes.xml'],
     'demo_xml': [],
-    'test': [],
+    'test': ['lifo_price.yml'],
     'installable': True,
     'auto_install': True,
 }
