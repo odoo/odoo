@@ -261,16 +261,23 @@ class mrp_bom(osv.osv):
         (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
     ]
 
-    def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, name, product_qty=0, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
+        res={'value':{}}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': prod.uos_id.id and prod.uos_coeff or False, 'product_uos': prod.uos_id.id}}
-        return {}
+            res['value']['name'] = prod.name
+            res['value']['product_uom'] = prod.uom_id.id
+            if prod.uos_id.id:
+                #res['value']['product_uos_qty'] = product_qty * prod.uos_coeff
+                res['value']['product_uos'] = prod.uos_id.id
+            else:
+                res['value']['product_uos_qty'] = 0
+        return res
 
     def onchange_product_qty_change(self, cr, uid, ids, product_id, qty=0, context=None):
         if product_id:
@@ -558,7 +565,8 @@ class mrp_production(osv.osv):
             return {'value': {'location_dest_id': src}}
         return {}
 
-    def product_id_change(self, cr, uid, ids, product_id, context=None):
+    def product_id_change(self, cr, uid, ids, product_id, product_qty=0, context=None):
+        print 'product_id_change>>>>>>>>>>\n\n\n'
         """ Finds UoM of changed product.
         @param product_id: Id of changed product.
         @return: Dictionary of values.
@@ -581,14 +589,17 @@ class mrp_production(osv.osv):
 
         product_uom_id = product.uom_id and product.uom_id.id or False
         product_uos_id = product.uos_id and product.uos_id.id or False
-        result = {
-            'product_uom': product_uom_id,
-            'bom_id': bom_id,
-            'routing_id': routing_id,
-            'product_uos_qty': product_uos_id and product.uos_coeff or False, 
-            'product_uos': product_uos_id
-        }
-        return {'value': result}
+        result={'value': {}}
+        if product.uos_id.id:
+            result['value']['product_uos_qty'] = product_qty * product.uos_coeff
+            result['value']['product_uos'] = product.uos_id.id
+        else:
+            result['value']['product_uos_qty'] = 0
+        
+        result['value']['product_uom'] = product_uom_id
+        result['value']['bom_id'] = bom_id
+        result['value']['routing_id'] = routing_id
+        return result
 
     def onchange_product_qty_change(self, cr, uid, ids, product_id, qty=0, context=None):
         if product_id:

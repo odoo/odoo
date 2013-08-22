@@ -347,10 +347,10 @@
                 <form string="Bill of Material" version="7.0">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="onchange_product_qty_change(product_id, product_qty, context)"/>
+                                <field name="product_qty" class="oe_inline" on_change="onchange_product_id(product_id, name, product_qty, context)"/>
                                 <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
@@ -634,10 +634,10 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','!=',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context='{"default_supply_method":"produce", "default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context='{"default_supply_method":"produce", "default_type": "product"}'/>
                             <label for="product_qty"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="onchange_product_qty_change(product_id, product_qty, context)"/>
+                                <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
