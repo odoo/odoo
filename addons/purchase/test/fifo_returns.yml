@@ -46,10 +46,9 @@
 - 
   Process the reception of purchase order 1
 -
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet1")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+  !python {model: stock.picking}: |
+    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet1")).picking_ids[0]
+    order.do_partial(context=context)
 - 
   Check the standard price of the product (fifo icecream)
 - 
@@ -62,10 +61,9 @@
 - 
   Process the reception of purchase order 2
 - 
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet2")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+  !python {model: stock.picking}: |
+    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet2")).picking_ids[0]
+    order.do_partial(context=context)
 - 
   Return the goods of purchase order 2
 - 
@@ -73,10 +71,6 @@
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet2")).picking_ids
     return_id = self.create(cr, uid, {}, context={'active_model':'stock.picking', 'active_id': pick_ids[0].id})
     res = self.create_returns(cr, uid, [return_id], context={'active_id': pick_ids[0].id})
-    return_move_id = self.pool.get("stock.move").search(cr, uid, [('move_returned_from','=', pick_ids[0].move_lines[0].id)])
-    movepick_obj = self.pool.get("stock.partial.move")
-    movepick_id = movepick_obj.create(cr, uid, {}, context={'active_model': 'stock.move', 'active_ids': return_move_id})
-    movepick_obj.do_partial(cr, uid, [movepick_id])
 - 
   Check the standard price of the product (fifo return icecream) changed to 70.0
 - 
