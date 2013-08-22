@@ -273,7 +273,7 @@ class mrp_bom(osv.osv):
             res['value']['name'] = prod.name
             res['value']['product_uom'] = prod.uom_id.id
             if prod.uos_id.id:
-                #res['value']['product_uos_qty'] = product_qty * prod.uos_coeff
+                res['value']['product_uos_qty'] = product_qty * prod.uos_coeff
                 res['value']['product_uos'] = prod.uos_id.id
             else:
                 res['value']['product_uos_qty'] = 0
