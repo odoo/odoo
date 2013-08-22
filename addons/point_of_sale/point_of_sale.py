@@ -124,15 +124,10 @@ class pos_config(osv.osv):
         res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
         return res and res[0] or False
 
-    def _default_payment_methods(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('journal_user','=', True)], context=context)
-        return res or []
-
-    _defaults = {
+        _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
         'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
-        'journal_ids': _default_payment_methods,
         'group_by' : True,
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
