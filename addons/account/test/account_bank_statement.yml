@@ -67,9 +67,10 @@
   Then I cancel Bank Statements and verifies that it raises a warning
 -
   !python {model: account.bank.statement}: |
+    from openerp.osv import osv
     try:
       self.button_cancel(cr, uid, [ref("account_bank_statement_0")])
       assert False, "An exception should have been raised, the journal should not let us cancel moves!" 
-    except Exception:
+    except osv.except_osv:
       # exception was raised as expected, as the journal does not allow cancelling moves
       pass

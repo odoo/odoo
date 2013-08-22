@@ -26,6 +26,8 @@ class res_partner(osv.Model):
     _order = 'display_name'
 
     def _display_name_compute(self, cr, uid, ids, name, args, context=None):
+        context = dict(context or {})
+        context.pop('show_address', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     _display_name_store_triggers = {
