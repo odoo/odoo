@@ -405,7 +405,7 @@ class hr_applicant(osv.Model):
             # stage change: update date_last_stage_update
             vals['date_last_stage_update'] = fields.datetime.now()
             vals['last_stage_id'] = data.stage_id.id
-            super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+            super(hr_applicant, self).write(cr, uid, data.id, vals, context=context)
         return True
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
