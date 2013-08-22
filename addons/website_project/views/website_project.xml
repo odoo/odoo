@@ -15,19 +15,21 @@
 
 
     <template id="kanban_card" name="Project">
-        <a t-attf-href="/task/#{ object_id.id }/"><span t-field="object_id.name"/></a>
-        <div>
-            Assigned to <span t-field="object_id.user_id"/>
+        <div class="thumbnail">
+            <a t-attf-href="/task/#{ object_id.id }/"><span t-field="object_id.name"/></a>
+            <div>
+                Assigned to <span t-field="object_id.user_id"/>
+            </div>
+            <div>
+                <span t-foreach="object_id.categ_ids" t-as="categ_id" class="label">
+                    <t t-esc="categ_id.name"/>
+                </span>
+            </div>
+            <small>
+                <i class="icon-time"></i> <span t-field="object_id.date_start"/><br/>
+                <t t-if="object_id.date_end">Ending Date: <span t-field="object_id.date_end"/></t>
+            </small>
         </div>
-        <div>
-            <span t-foreach="object_id.categ_ids" t-as="categ_id" class="label">
-                <t t-esc="categ_id.name"/>
-            </span>
-        </div>
-        <small>
-            <i class="icon-time"></i> <span t-field="object_id.date_start"/><br/>
-            <t t-if="object_id.date_end">Ending Date: <span t-field="object_id.date_end"/></t>
-        </small>
     </template>
 
     <template id="index" name="Project">

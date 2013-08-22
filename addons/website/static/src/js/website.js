@@ -637,7 +637,7 @@
 
                 $.post('/website/kanban/', data, function (col) {
                     $col.find("> .thumbnail").remove();
-                    $pagination.last().before('<div class="thumbnail">'+col+'</div>');
+                    $pagination.last().before(col);
                 });
 
                 var page_start = page - parseInt(Math.floor((scope-1)/2));

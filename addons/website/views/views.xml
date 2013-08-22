@@ -515,7 +515,18 @@
                     <tr>
                         <t t-foreach="objects">
 
-                        <t t-set="pager">
+                        <td class="js_kanban_col"
+                                t-att-data-template="template"
+                                t-att-data-domain="domain"
+                                t-att-data-page_count="page_count"
+                                t-att-data-model="model"
+                                t-att-data-step="step"
+                                t-att-data-orderby="orderby">
+                            <t t-foreach="object_ids" t-as="object_id">
+                                <t t-call="#{ template }"/>
+                            </t>
+
+                            <!-- pager -->
                             <div t-if="1 != page_end" class="pagination pagination-centered">
                                 <ul>
                                     <li t-attf-class="prev #{'active' if page == 1 else '' }" >
@@ -531,20 +542,6 @@
                                     </li>
                                 </ul>
                             </div>
-                        </t>
-
-                        <td class="js_kanban_col"
-                                t-att-data-template="template"
-                                t-att-data-domain="domain"
-                                t-att-data-page_count="page_count"
-                                t-att-data-model="model"
-                                t-att-data-step="step"
-                                t-att-data-orderby="orderby">
-                            <!--t t-raw="pager"/-->
-                            <div t-foreach="object_ids" t-as="object_id" class="thumbnail">
-                                <t t-call="#{ template }"/>
-                            </div>
-                            <t t-raw="pager"/>
                         </td>
 
                         </t>
