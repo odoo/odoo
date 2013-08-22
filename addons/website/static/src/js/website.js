@@ -628,7 +628,7 @@
             $pagination.on('click', 'a', function (ev) {
                 ev.preventDefault();
                 var $a = $(ev.target);
-                if($a.hasClass('active')) {
+                if($a.parent().hasClass('active')) {
                     return;
                 }
 
@@ -636,22 +636,22 @@
                 data['page'] = page;
 
                 $.post('/website/kanban/', data, function (col) {
-                    $col.find("&gt; .thumbnail").remove();
+                    $col.find("> .thumbnail").remove();
                     $pagination.first().after('<div class="thumbnail">'+col+'</div>');
                 });
 
                 var page_start = page - parseInt(Math.floor((scope-1)/2));
-                if (page_start &lt; 1 ) page_start = 1;
+                if (page_start < 1 ) page_start = 1;
                 var page_end = page_start + (scope-1);
-                if (page_end &gt; page_count ) page_end = page_count;
+                if (page_end > page_count ) page_end = page_count;
 
-                if (page_end - page_start &lt; scope) {
-                    page_start = page_end - scope &gt; 0 ? page_end - scope : 1;
+                if (page_end - page_start < scope) {
+                    page_start = page_end - scope > 0 ? page_end - scope : 1;
                 }
 
                 $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
-                $pagination.find('li.next a').attr("href", kanban_url_col+(page+1));
-                for(var i=0; i &lt; scope; i++) {
+                $pagination.find('li.next a').attr("href", kanban_url_col+(page < page_end ? page+1 : page_end));
+                for(var i=0; i < scope; i++) {
                     $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
                 }
                 $pagination.find('li.active').removeClass('active');
@@ -702,7 +702,7 @@
         });
 
         /* ----- KANBAN WEBSITE ---- */
-        $('.js_kanban', $kanban).each(function () {
+        $('.js_kanban').each(function () {
             website.init_kanban(this);
         });
 
