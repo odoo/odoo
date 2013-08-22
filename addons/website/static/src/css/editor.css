@@ -1,4 +1,7 @@
-@charset "utf-8";
+.oe_hidden {
+  display: none !important;
+}
+
 .oe_website_editorbar {
   position: fixed;
   top: 0;
@@ -53,4 +56,91 @@
   white-space: nowrap;
   z-index: 1;
   display: none;
+}
+
+.oe_snippets {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  max-height: 280px;
+  min-height: 140px;
+  background: #282828;
+  box-shadow: 0px 10px 10px -10px black inset;
+  overflow-y: auto;
+}
+
+.oe_snippet {
+  display: inline-block;
+  vertical-align: top;
+  background: white;
+  width: 120px;
+  height: 120px;
+  border-radius: 3px;
+  margin: 10px;
+  margin-right: 0px;
+  cursor: move;
+  position: relative;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.oe_snippet .oe_snippet_thumbnail.oe_label {
+  text-align: center;
+  background: #747474;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  height: 100%;
+  line-height: 120px;
+  color: white;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95);
+}
+.oe_snippet .oe_snippet_body {
+  display: none;
+}
+.oe_snippet > * {
+  pointer-events: none;
+}
+.oe_snippet > *:first-child:not(.oe_snippet_thumbnail) {
+  display: block;
+  -webkit-transform-origin-x: 5px;
+  -webkit-transform-origin-y: 10px;
+  -webkit-transform: scale(0.095);
+}
+
+.oe_drop_zone {
+  display: block;
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
+  height: 32px;
+  margin: -16px 0px;
+  -webkit-transition: margin 250ms linear;
+}
+.oe_drop_zone:first-child:not(:last-child) {
+  margin-top: -8px;
+  margin-bottom: -24px;
+}
+.oe_drop_zone:last-child:not(:first-child) {
+  margin-top: -24px;
+  margin-bottom: -8px;
+}
+.oe_drop_zone.oe_hover {
+  background: rgba(0, 255, 133, 0.22);
+  z-index: 100000;
+}
+.oe_drop_zone:before {
+  content: "";
+  display: block;
+  border-top: dashed 2px rgba(209, 178, 255, 0.72);
+  position: relative;
+  top: 16px;
+}
+.oe_drop_zone:first-child:not(:last-child):before {
+  top: 8px;
+}
+.oe_drop_zone:last-child:not(:first-child):before {
+  top: 24px;
+}
+.oe_drop_zone.oe_hover:before {
+  border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }

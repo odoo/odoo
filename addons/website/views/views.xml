@@ -6,12 +6,12 @@
         <!--
             Files used in the generic theme, mostly bootstrap and a few OpenERP tags
         -->
-        <template id="theme" name="Theme">
+        <template id="website.theme" name="Theme">
             <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
+        <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
             <xpath expr="//link[@id='bootstrap_css']" position="replace">
                 <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
                 <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
@@ -27,22 +27,22 @@
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
                         <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
-                        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
-                        <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
-                        <script type="text/javascript">
-                            CKEDITOR.disableAutoInline = true;
-                            // EDIT ALL THE THINGS
-                            CKEDITOR.dtd.$editable = $.extend(
-                                {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
-                        </script>
+
+                        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+                        <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
                         <t t-if="editable">
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
                             <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
 
+                            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
+                            <script type="text/javascript">
+                                CKEDITOR.disableAutoInline = true;
+                                // EDIT ALL THE THINGS
+                                CKEDITOR.dtd.$editable = $.extend( {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+                            </script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-                            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-                            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
                         </t>
 
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
@@ -122,107 +122,6 @@
                             </div>
                         </footer>
 
-                        <div class='oe_snippet_editor' style="display: none;">
-                            <div class='oe_snippet_list'>
-
-                            <div class='oe_snippet' name='Picture' data-selector='[class*="span"]'>
-                                <div class="span6">
-                                    <img class="img-rounded" src="/website/static/src/img/volcano.jpg"/>
-                                </div>
-                            </div>
-
-                            <div class='oe_snippet' name='Introduction' data-selector=".container">
-                                <section class="container">
-                                    <div class="row mt32 text-center">
-                                        <h2>Wildlife Analysis</h2>
-                                        <h3>In a beautiful place out in the country</h3>
-                                    </div>
-                                    <div class="row mt32">
-                                        <div class="span6">
-                                            <img class='img-rounded' src="/website/static/src/img/china.jpg"/>
-                                        </div>
-                                        <div class="span6">
-                                            <p class='mt16'>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                            </p>
-                                            <p>
-                                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                                deserunt mollit anim id est laborum
-                                            </p>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class='oe_snippet' name='Three Columns' data-selector=".container">
-                                <section class="container">
-                                    <div class="row mt32">
-                                        <div class="span4">
-                                            <h4>Niagara</h4>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                            </p>
-                                        </div>
-                                        <div class="span4">
-                                            <h4>Whitewater</h4>
-                                            <p>
-                                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                                deserunt mollit anim id est laborum
-                                            </p>
-                                        </div>
-                                        <div class="span4">
-                                            <h4>Red Moss</h4>
-                                            <p>
-                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
-                                                quae ab illo inventore veritatis et quasi architecto beatae vitae
-                                                dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
-                                            </p>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class='oe_snippet' name='Introduction' data-selector=".container">
-                                <section class="container">
-                                    <div class="row mt32">
-                                        <div class="span6">
-                                            <h2>Wildlife Analysis</h2>
-                                            <h3>In a beautiful place out in the country</h3>
-                                            <p class='mt16'>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                            </p>
-                                            <p>
-                                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                                deserunt mollit anim id est laborum
-                                            </p>
-                                        </div>
-                                        <div class="span6">
-                                            <img class='img-rounded' src="/website/static/src/img/greenfields.jpg"/>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class='oe_snippet oe_new' name='New Snippet'> 
-                            </div>
-                            </div>
-                        </div>
                     </body>
                 </html>
         </template>
@@ -233,7 +132,7 @@
             </xpath>
         </template>
 
-        <template id="homepage">
+        <template id="homepage" page="True">
             <t t-call="website.layout">
 
                 <section>
@@ -355,7 +254,7 @@
 
         <template id="404">
                 <t t-call="website.layout">
-                    <div class="container" t-if="editable">
+                    <div class="container" t-if="editable and path">
                         <div class="well mt32">
                             <p>
                                 This page does not exists, but you can create
@@ -419,7 +318,7 @@
         </template>
 
 
-        <template id="contactus" name="Contact us">
+        <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
                 <t t-set="title">Contact us - <t t-raw="res_company.name"/></t>
                 <div class="container">
@@ -454,7 +353,7 @@
             </t>
         </template>
 
-        <template id="aboutus">
+        <template id="aboutus" page="True">
             <t t-call="website.layout">
                 <t t-set="title">About us - <t t-raw="res_company.name"/></t>
                 <div class="container">
@@ -481,9 +380,9 @@
                     <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' " >
                         <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
                     </li>
-                    <t t-foreach="pager['pages']">
-                        <li t-att-class=" 'active' if num == pager['page']['num'] else '' ">
-                            <a t-att-href="url" t-raw="num"></a>
+                    <t t-foreach="pager['pages']" t-as="page">
+                        <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' ">
+                            <a t-att-href="page['url']" t-raw="page['num']"></a>
                         </li>
                     </t>
                     <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' " >
@@ -495,10 +394,222 @@
 
         <template id="publish">
             <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
-                <span t-att-class="'label label-success js_unpublish %%s' %% (not object.website_published and 'hidden' or '')">Unpublish</span>
-                <span t-att-class="'label label-important js_publish %%s' %% (object.website_published and 'hidden' or '')">Publish</span>
+                <span t-attf-class="label label-success js_unpublish #{ '' if object.website_published else 'hidden' }">Unpublish</span>
+                <span t-attf-class="label label-important js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
             </a>
         </template>
+
+        <template id="snippets">
+
+            <div class='oe_snippet' name='Spacer' data-selector-siblings='#wrap .container'>
+                <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
+                <div class="oe_snippet_body container mt32"></div>
+            </div>
+
+            <div class='oe_snippet' name='FooBar' data-selector-siblings='#wrap .container'>
+                <div class='oe_snippet_thumbnail oe_label'>
+                    Main Title
+                </div>
+                <section class="oe_snippet_body container">
+                    <div class="row">
+                        <div class="span12 text-center">
+                            <h1 class='mt64'>Welcome To Your New Homepage,</h1>
+                            <h2 class='mt32 subheader'>where <b><em>everything</em></b> can be customized </h2>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class='oe_snippet' name='BarFoo' data-selector-siblings='#wrap .container'>
+                <section class="oe_snippet_body container">
+                    <div class="row">
+                        <div class="span12 text-center">
+                            <h2 class='mt48'>Ut enim ad minim veniam</h2>
+                        </div>
+                    </div>
+                    <div class="row mt32">
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/china_thumb.jpg"/>
+                            <h4 class='mt16'>Cillum Dolore</h4>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna 
+                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            </p>
+                        </div>
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/desert_thumb.jpg"/>
+                            <h4 class='mt16'>Mollit Anim</h4>
+                            <p>
+                                Duis aute irure dolor in reprehenderit in voluptate velit 
+                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                                occaecat cupidatat non proident, sunt in culpa qui officia 
+                                deserunt mollit anim id est laborum
+                            </p>
+                        </div>
+                        <div class="span4">
+                            <img class='img-rounded' src="/website/static/src/img/deers_thumb.jpg"/>
+                            <h4 class='mt16'>Nemo Enim Ipsam</h4>
+                            <p>
+                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
+                                quae ab illo inventore veritatis et quasi architecto beatae vitae
+                                dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class='oe_snippet' name='Header' data-selector-siblings='#wrap .container'>
+                <section class="container oe_snippet_body">
+                    <div class="row">
+                        <div class="span5">
+                            <img class='img-rounded' src="/website/static/src/img/island.jpg"/>
+                        </div>
+                        <div class="span6 offset1">
+                            <p class='mt16'>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna 
+                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            </p>
+                            <p>
+                                Duis aute irure dolor in reprehenderit in voluptate velit 
+                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                                occaecat cupidatat non proident, sunt in culpa qui officia 
+                                deserunt mollit anim id est laborum
+                            </p>
+                            <div class="text-center">
+                                <a href="http://www.openerp.com/start" class="btn mt16 btn-large btn-primary">Call To  <em>Action</em></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </template>
+
+
+        <template id="kanban">
+            <t t-set="step"><t t-esc="step or 0"/></t>
+            <t t-set="scope"><t t-esc="scope or 0"/></t>
+            <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
+            <t t-raw="snipped['kanban'](model, domain, column, content, step=step, scope=scope, orderby=orderby)"/>
+        </template>
+
+        <template id="kanban_contain">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <t t-set="width" t-value="'%%s%%%%' % (100/len(objects))"/>
+                        <t t-foreach="objects">
+                        <th t-att-width="width">
+                            <div t-field="column_id.name" class="text-center"/>
+                        </th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <t t-foreach="objects">
+
+                        <t t-set="pager">
+                            <div t-if="1 != page_end" class="pagination pagination-centered">
+                                <ul>
+                                    <li t-attf-class="prev #{'active' if page == 1 else '' }" >
+                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a>
+                                    </li>
+                                    <t t-foreach="range(page_start, page_end+1)" t-as="p">
+                                    <li t-att-class=" 'active' if page == p else '' ">
+                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"/>
+                                    </li>
+                                    </t>
+                                    <li t-attf-class="next #{'active' if page == page_end else '' }" >
+                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </t>
+
+                        <td class="js_kanban_col"
+                                t-att-data-content="content"
+                                t-att-data-domain="domain"
+                                t-att-data-page_count="page_count"
+                                t-att-data-model="model"
+                                t-att-data-step="step"
+                                t-att-data-orderby="orderby">
+                            <t t-raw="pager"/>
+                            <div t-foreach="object_ids" t-as="object_id" class="thumbnail">
+                                <t t-call="website_project.kanban_card"/>
+                            </div>
+                            <t t-raw="pager"/>
+                        </td>
+
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+<script>
+
+$('.js_kanban_col').each(function () {
+    var $col = $(this);
+    var $pagination = $('.pagination', $col);
+    if(!$pagination.size()) {
+        return;
+    }
+    
+    var page_count =  $col.data('page_count');
+    var scope = $pagination.first().find("li").size()-2;
+    var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
+
+    var data = {
+        'domain': $col.data('domain'),
+        'model': $col.data('model'),
+        'content': $col.data('content'),
+        'step': $col.data('step'),
+        'orderby': $col.data('orderby')
+    };
+
+    $pagination.on('click', 'a', function (ev) {
+        ev.preventDefault();
+        var $a = $(ev.target);
+        if($a.hasClass('active')) {
+            return;
+        }
+
+        var page = +$a.attr("href").split(",").pop().split('-')[1];
+        data['page'] = page;
+
+        $.post('/website/kanban/', data, function (col) {
+            $col.find("&gt; .thumbnail").remove();
+            $pagination.first().after('<div class="thumbnail">'+col+'</div>');
+        });
+
+        var page_start = page - parseInt(Math.floor((scope-1)/2));
+        if (page_start &lt; 1 ) page_start = 1;
+        var page_end = page_start + (scope-1);
+        if (page_end &gt; page_count ) page_end = page_count;
+
+        if (page_end - page_start &lt; scope) {
+            page_start = page_end - scope &gt; 0 ? page_end - scope : 1;
+        }
+
+        $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
+        $pagination.find('li.next a').attr("href", kanban_url_col+(page+1));
+        for(var i=0; i &lt; scope; i++) {
+            $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
+        }
+        $pagination.find('li.active').removeClass('active');
+        $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
+
+    });
+
+});
+</script>
+        </template>
+
 
      </data>
 </openerp>

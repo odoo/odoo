@@ -29,10 +29,12 @@ class product_pricelist(osv.osv):
     }
 
 class product_product(osv.osv):
-    _inherit = "product.product"
+    _inherit = "product.template"
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'description_website': fields.html('Description for the website'),
+        'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
+        'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
     }
 
     def recommended_products(self, cr, uid, ids, context=None):
@@ -47,14 +49,14 @@ class product_product(osv.osv):
             AND         sol.product_id not in (%s)
             GROUP BY    sol.product_id
             ORDER BY    COUNT(sol.order_id) DESC
-            LIMIT 8
+            LIMIT 10
         """
         cr.execute(query, (id, id))
         for p in cr.fetchall():
             product_ids.append(p[0])
 
         # search to apply access rules
-        product_ids = self.search(cr, uid, [("id", "in", product_ids)])
+        product_ids = self.search(cr, uid, [("id", "in", product_ids)], limit=3)
         return self.browse(cr, uid, product_ids)
 
     def img(self, cr, uid, ids, field='image_small', context=None):
