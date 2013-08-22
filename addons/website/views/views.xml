@@ -503,7 +503,7 @@
             <table class="table js_kanban">
                 <thead>
                     <tr>
-                        <t t-set="width" t-value="'%s%%%%' % (100/len(objects))"/>
+                        <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
                         <t t-foreach="objects">
                         <th t-att-width="width">
                             <div t-field="column_id.name" class="text-center"/>
