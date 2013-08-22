@@ -26,7 +26,7 @@
 -
   Now I begin communication and schedule a phone call with the customer.
 -
-  !python {model: crm.opportunity2phonecall}: |
+  !python {model: crm.phonecall}: |
     import time
     context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_3')]})
     call_id = self.create(cr, uid, {'date': time.strftime('%Y-%m-%d %H:%M:%S'),

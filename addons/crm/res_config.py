@@ -65,6 +65,9 @@ class crm_configuration(osv.TransientModel):
         'group_multi_salesteams': fields.boolean("Organize Sales activities into multiple Sales Teams",
             implied_group='base.group_multi_salesteams',
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
+        'group_scheduled_calls_menu': fields.boolean("Hide Scheduled Calls Menu",
+            implied_group='crm.group_scheduled_calls_menu',
+            help="""Allows to hide Scheduled Calls Menu in Sales/Phone Calls Menu""")
     }
 
 

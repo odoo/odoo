@@ -103,9 +103,9 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button string="Schedule/Log Call" 
-                                name="%(opportunity2phonecall_act)d"
-                                type="action"/>
+                        <button class="oe_inline" type="action" string="Calls" 
+                            name="%(crm.crm_case_categ_phone_incoming0)d" 
+                            context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -277,7 +277,7 @@
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
-                                        <li><a name="%(opportunity2phonecall_act)d" type="action">Schedule/Log Call</a></li>
+                                        <li><a type="action" name="%(crm.crm_case_categ_phone_incoming0)d" >Calls</a></li>
                                         <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -387,10 +387,11 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button string="Schedule/Log Call" type="action"
-                                name="%(opportunity2phonecall_act)d"/>
-                            <button string="Meeting" type="object"
-                                name="action_makeMeeting"
+                            <button class="oe_inline" type="action" string="Calls" 
+                                name="%(crm.crm_case_categ_phone_incoming0)d" 
+                                context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
+                            <button string="Schedule Meeting" type="action"
+                                name="%(base_calendar.action_crm_meeting)d"
                                 context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
                         </div>
                         <div class="oe_title">
