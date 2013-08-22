@@ -830,9 +830,9 @@ class crm_lead(format_address, osv.osv):
                 'priority': lead.priority,
             }
             new_id = phonecall.create(cr, uid, vals, context=context)
-            phonecall.case_open(cr, uid, [new_id], context=context)
+            phonecall.write(cr, uid, [new_id], {'state': 'open'}, context=context)
             if action == 'log':
-                phonecall.case_close(cr, uid, [new_id], context=context)
+                phonecall.write(cr, uid, [new_id], {'state': 'done'}, context=context)
             phonecall_dict[lead.id] = new_id
             self.schedule_phonecall_send_note(cr, uid, [lead.id], new_id, action, context=context)
         return phonecall_dict
