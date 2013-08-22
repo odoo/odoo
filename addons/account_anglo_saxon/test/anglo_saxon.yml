@@ -109,7 +109,7 @@
 -
   !record {model: purchase.order, id: purchase_order_001}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_3
+    location_id: stock.stock_location_stock
     pricelist_id: 1
     order_line:
       - product_id: product.product_product_3
@@ -128,12 +128,12 @@
     partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 -
-  I check the Stock Interim account (Received) is credit successfully.
+  I check the Stock Interim account (Received) is credited successfully.
 -
   !assert {model: account.account, id : account_anglo_stock_input, string : Stock Interim account (Received) is not credited successfully.}:
     - credit == 9
 -
-  I check the Stock valuation account is debit sucessfully.
+  I check the Stock valuation account is debited sucessfully.
 -
   !assert {model: account.account, id : account_anglo_stock_valuation, string : Stock valuation account is not debited successfully.}:
     - debit == 9
@@ -192,7 +192,7 @@
     invoice_state: 2binvoiced
     move_lines:
       - company_id: base.main_company
-        location_id: stock.stock_location_3
+        location_id: stock.stock_location_stock
         product_id: product.product_product_3
         product_qty: 1.0
         product_uom: product.product_uom_unit

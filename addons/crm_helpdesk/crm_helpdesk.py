@@ -19,21 +19,14 @@
 #
 ##############################################################################
 
-from openerp.addons.base_status.base_state import base_state
-from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-CRM_HELPDESK_STATES = (
-    crm.AVAILABLE_STATES[2][0], # Cancelled
-    crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
-)
 
-class crm_helpdesk(base_state, base_stage, osv.osv):
+class crm_helpdesk(osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
@@ -71,7 +64,12 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
+            'state': fields.selection(
+                [('draft', 'New'),
+                 ('open', 'In Progress'),
+                 ('pending', 'Pending'),
+                 ('done', 'Closed'),
+                 ('cancel', 'Cancelled')], 'Status', size=16, readonly=True, track_visibility='onchange',
                                   help='The status is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the status is set to \'Open\'.\
                                   \nWhen the case is over, the status is set to \'Done\'.\
@@ -80,14 +78,44 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
-        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'user_id': lambda s, cr, uid, c: uid,
         'state': lambda *a: 'draft',
         'date': lambda *a: fields.datetime.now(),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
+
+    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
+        values = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'email_from': partner.email,
+            }
+        return {'value': values}
+
+    def write(self, cr, uid, ids, values, context=None):
+        """ Override to add case management: open/close dates """
+        if values.get('state'):
+            if values.get('state') in ['draft', 'open'] and not values.get('date_open'):
+                values['date_open'] = fields.datetime.now()
+            elif values.get('state') == 'close' and not values.get('date_closed'):
+                values['date_closed'] = fields.datetime.now()
+        return super(crm_helpdesk, self).write(cr, uid, ids, values, context=context)
+
+    def case_escalate(self, cr, uid, ids, context=None):
+        """ Escalates case to parent level """
+        data = {'active': True}
+        for case in self.browse(cr, uid, ids, context=context):
+            if case.section_id and case.section_id.parent_id:
+                parent_id = case.section_id.parent_id
+                data['section_id'] = parent_id.id
+                if parent_id.change_responsible and parent_id.user_id:
+                    data['user_id'] = parent_id.user_id.id
+            else:
+                raise osv.except_osv(_('Error!'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+            self.write(cr, uid, [case.id], data, context=context)
+        return True
 
     # -------------------------------------------------------
     # Mail gateway

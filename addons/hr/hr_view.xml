@@ -348,12 +348,10 @@
                             <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
-                            <group>
+                            <group name="job_data">
                                 <field name="no_of_employee" groups="base.group_user"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                                 <field name="expected_employees" groups="base.group_user"/>
-                            </group>
-                            <group>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 <field name="department_id"/>
                             </group>
@@ -382,10 +380,9 @@
                 <tree string="Job">
                     <field name="name"/>
                     <field name="department_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="expected_employees"/>
                     <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
+                    <field name="expected_employees"/>
                     <field name="state"/>
                 </tree>
             </field>

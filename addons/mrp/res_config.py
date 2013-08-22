@@ -36,7 +36,7 @@ class mrp_config_settings(osv.osv_memory):
                     * Repair quotation report
                     * Notes for the technician and for the final customer.
                 This installs the module mrp_repair."""),
-        'module_mrp_operations': fields.boolean("Allow detailed planning of work order",
+        'module_mrp_operations': fields.boolean("Allow detailed planning of work orders",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
         'module_mrp_byproduct': fields.boolean("Produce several products from one manufacturing order",
@@ -60,7 +60,7 @@ class mrp_config_settings(osv.osv_memory):
             help="""Routings allow you to create and manage the manufacturing operations that should be followed
                 within your work centers in order to produce a product. They are attached to bills of materials
                 that will define the required raw materials."""),
-        'group_mrp_properties': fields.boolean("Allow several bill of materials per products using properties",
+        'group_mrp_properties': fields.boolean("Allow several bill of materials per product using properties",
             implied_group='product.group_mrp_properties',
             help="""The selection of the right Bill of Material to use will depend on the properties specified on the sales order and the Bill of Material."""),
         'module_product_manufacturer': fields.boolean("Define manufacturers on products ",

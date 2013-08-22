@@ -5,71 +5,57 @@
         <!-- Crm stages -->
         <record model="crm.case.stage" id="stage_lead1">
             <field name="name">New</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">draft</field>
-            <field eval="0" name="probability"/>
-            <field eval="10" name="sequence"/>
+            <field name="case_default">1</field>
+            <field name="probability">0</field>
+            <field name="on_change">1</field>
+            <field name="sequence">1</field>
             <field name="type">both</field>
         </record>
         <record model="crm.case.stage" id="stage_lead2">
-            <field name="name">Opportunity</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="20" name="probability"/>
-            <field eval="20" name="sequence"/>
-            <field name="type">lead</field>
-        </record>
-        <record model="crm.case.stage" id="stage_lead7">
             <field name="name">Dead</field>
-            <field eval="1" name="case_default"/>
-            <field eval="False" name="fold"/>
-            <field name="state">cancel</field>
-            <field eval="0" name="probability"/>
-            <field eval="30" name="sequence"/>
+            <field name="case_default">1</field>
+            <field name="probability">0</field>
+            <field name="on_change">1</field>
+            <field name="sequence">30</field>
             <field name="type">lead</field>
         </record>
         <record model="crm.case.stage" id="stage_lead3">
             <field name="name">Qualification</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="20" name="probability"/>
-            <field eval="100" name="sequence"/>
+            <field name="case_default">1</field>
+            <field name="probability">20</field>
+            <field name="on_change">1</field>
+            <field name="sequence">40</field>
             <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead4">
             <field name="name">Proposition</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="40" name="probability"/>
-            <field eval="110" name="sequence"/>
+            <field name="case_default">1</field>
+            <field name="probability">40</field>
+            <field name="sequence">50</field>
             <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead5">
             <field name="name">Negotiation</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="60" name="probability"/>
-            <field eval="120" name="sequence"/>
+            <field name="case_default">1</field>
+            <field name="probability">60</field>
+            <field name="sequence">60</field>
             <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead6">
             <field name="name">Won</field>
-            <field eval="True" name="fold"/>
-            <field eval="1" name="case_default"/>
-            <field name="state">done</field>
-            <field eval="100" name="probability"/>
-            <field eval="130" name="sequence"/>
-            <field eval="1" name="on_change"/>
+            <field name="case_default">1</field>
+            <field name="probability">100</field>
+            <field name="on_change">1</field>
+            <field name="sequence">70</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead8">
+        <record model="crm.case.stage" id="stage_lead7">
             <field name="name">Lost</field>
-            <field eval="1" name="case_default"/>
-            <field eval="True" name="fold"/>
-            <field eval="1" name="on_change"/>
-            <field name="state">cancel</field>
-            <field eval="0" name="probability"/>
-            <field eval="140" name="sequence"/>
+            <field name="case_default">1</field>
+            <field name="fold">1</field>
+            <field name="probability">0</field>
+            <field name="on_change">1</field>
+            <field name="sequence">80</field>
             <field name="type">opportunity</field>
         </record>
         
@@ -77,7 +63,7 @@
             <field name="stage_ids" eval="[ (4, ref('stage_lead1')), (4, ref('stage_lead2')),
                                             (4, ref('stage_lead3')), (4, ref('stage_lead4')),
                                             (4, ref('stage_lead5')), (4, ref('stage_lead6')),
-                                            (4, ref('stage_lead7')), (4, ref('stage_lead8'))]"/>
+                                            (4, ref('stage_lead7'))]"/>
         </record>
 
         <!-- Crm campain -->
@@ -161,13 +147,7 @@
             <field name="name">Lead Created</field>
             <field name="res_model">crm.lead</field>
             <field name="default" eval="False"/>
-            <field name="description">Opportunity created</field>
-        </record>
-        <record id="mt_lead_convert_to_opportunity" model="mail.message.subtype">
-            <field name="name">Lead to Opportunity</field>
-            <field name="res_model">crm.lead</field>
-            <field name="default" eval="False"/>
-            <field name="description">Lead converted into an opportunity</field>
+            <field name="description">Lead created</field>
         </record>
         <record id="mt_lead_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
@@ -193,13 +173,6 @@
             <field name="res_model">crm.case.section</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_create')"/>
-            <field name="relation_field">section_id</field>
-        </record>
-        <record id="mt_salesteam_lead_opportunity" model="mail.message.subtype">
-            <field name="name">Lead to Opportunity</field>
-            <field name="default" eval="False"/>
-            <field name="res_model">crm.case.section</field>
-            <field name="parent_id" eval="ref('mt_lead_convert_to_opportunity')"/>
             <field name="relation_field">section_id</field>
         </record>
         <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
@@ -232,6 +205,20 @@
             <field name="partner_to">${object.partner_id != False and object.partner_id.id}</field>
             <field name="email_to">${not object.partner_id and object.email_from}</field>
             <field name="body_html"></field>
+        </record>
+        <record id="email_template_opportunity_reminder_mail" model="email.template">
+            <field name="name">Reminder to User</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_from">admin@example.com</field>
+            <field name="email_to">${object.user_id != False and object.user_id.email}</field>
+            <field name="subject">Reminder on Lead: ${object.id} from ${object.partner_id != False and object.partner_id.name or object.contact_name}</field>
+            <field name="body_html"><![CDATA[<p>This opportunity did not have any activity since at least 5 days. Here are some details:</p>
+<ul>
+<li>Name: ${object.name}</li>
+<li>ID: ${object.id}</li>
+<li>Description: ${object.description}</field></li>
+</ul>]]></field>
         </record>
 
     </data>

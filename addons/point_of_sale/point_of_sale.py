@@ -63,6 +63,7 @@ class pos_config(osv.osv):
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
+        'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
@@ -110,7 +111,8 @@ class pos_config(osv.osv):
         return result
 
     def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
     def _default_warehouse(self, cr, uid, context=None):
@@ -127,7 +129,8 @@ class pos_config(osv.osv):
         'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
         'group_by' : True,
-        'pricelist_id': _default_pricelist
+        'pricelist_id': _default_pricelist,
+        'iface_invoicing': True,
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -492,13 +495,17 @@ class pos_order(osv.osv):
         #_logger.info("orders: %r", orders)
         order_ids = []
         for tmp_order in orders:
+            to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
+
+
             order_id = self.create(cr, uid, {
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
                 'lines': order['lines'],
-                'pos_reference':order['name']
+                'pos_reference':order['name'],
+                'partner_id': order['partner_id'] or False
             }, context)
 
             for payments in order['statement_ids']:
@@ -529,6 +536,12 @@ class pos_order(osv.osv):
                 }, context=context)
             order_ids.append(order_id)
             self.signal_paid(cr, uid, [order_id])
+
+            if to_invoice:
+                self.action_invoice(cr, uid, [order_id], context)
+                order_obj = self.browse(cr, uid, order_id, context)
+                self.pool['account.invoice'].signal_invoice_open(cr, uid, [order_obj.invoice_id.id])
+
         return order_ids
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -881,6 +894,7 @@ class pos_order(osv.osv):
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
             self.signal_invoice(cr, uid, [order.id])
+            inv_ref.signal_validate(cr, uid, [inv_id])
 
         if not inv_ids: return {}
 
@@ -975,11 +989,11 @@ class pos_order(osv.osv):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], values['product_id'])
+                    key = ('product', values['partner_id'], values['product_id'], values['debit'] > 0)
                 elif data_type == 'tax':
-                    key = ('tax', values['partner_id'], values['tax_code_id'],)
+                    key = ('tax', values['partner_id'], values['tax_code_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
-                    key = ('counter_part', values['partner_id'], values['account_id'])
+                    key = ('counter_part', values['partner_id'], values['account_id'], values['debit'] > 0)
                 else:
                     return
 
@@ -1338,7 +1352,7 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
-            help="The Point of Sale Category this products belongs to. Those categories are used to group similar products and are specific to the Point of Sale."),
+            help="These products belong to those categories that are used to group similar products and are specific to the Point of Sale."),
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 

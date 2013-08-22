@@ -2,7 +2,7 @@ openerp.mail = function (session) {
     var _t = session.web._t,
        _lt = session.web._lt;
 
-    var mail = session.mail = {};
+    var mail = session.mail;
 
     openerp_mail_followers(session, mail);          // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
@@ -225,6 +225,7 @@ openerp.mail = function (session) {
             this.name = datasets.name ||  false,
             this.record_name = datasets.record_name ||  false,
             this.body = datasets.body || '',
+            this.body_short = datasets.body_short || '',
             this.vote_nb = datasets.vote_nb || 0,
             this.has_voted = datasets.has_voted ||  false,
             this.is_favorite = datasets.is_favorite ||  false,
@@ -632,10 +633,7 @@ openerp.mail = function (session) {
             // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
             var find_done = $.Deferred();
             if (names_to_find.length > 0) {
-                var values = {
-                    'res_id': this.context.default_res_id,
-                }
-                find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find], values);
+                find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [this.context.default_res_id, names_to_find]);
             }
             else {
                 find_done.resolve([]);
@@ -681,11 +679,7 @@ openerp.mail = function (session) {
                     var new_names_to_find = _.difference(names_to_find, names_to_remove);
                     find_done = $.Deferred();
                     if (new_names_to_find.length > 0) {
-                        var values = {
-                            'link_mail': true,
-                            'res_id': self.context.default_res_id,
-                        }
-                        find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find], values);
+                        find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [self.context.default_res_id, new_names_to_find, true]);
                     }
                     else {
                         find_done.resolve([]);
@@ -951,7 +945,6 @@ openerp.mail = function (session) {
         
         start: function () {
             this._super.apply(this, arguments);
-            this.expender();
             this.bind_events();
             if(this.thread_level < this.options.display_indented_thread) {
                 this.create_thread();
@@ -974,6 +967,26 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_expand').on('click', this.on_expand);
+            this.$('.oe_mail_reduce').on('click', this.on_expand);
+            this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
+        },
+
+        on_record_clicked: function  (event) {
+            event.stopPropagation();
+            var state = {
+                'model': this.model,
+                'id': this.res_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
+            this.do_action({
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'form']]
+            });
+            return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -984,15 +997,11 @@ openerp.mail = function (session) {
             return false;
         },
 
-        expender: function () {
-            this.$('.oe_msg_body:first').expander({
-                slicePoint: this.options.truncate_limit,
-                expandText: _t('read more'),
-                userCollapseText: _t('read less'),
-                detailClass: 'oe_msg_tail',
-                moreClass: 'oe_mail_expand',
-                lessClass: 'oe_mail_reduce',
-                });
+        on_expand: function (event) {
+            event.stopPropagation();
+            this.$('.oe_msg_body_short:first').toggle();
+            this.$('.oe_msg_body_long:first').toggle();
+            return false;
         },
 
         /**

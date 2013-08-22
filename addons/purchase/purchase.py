@@ -162,9 +162,9 @@ class purchase_order(osv.osv):
     ]
     _track = {
         'state': {
-            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
-            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
-            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirmed',
+            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'approved',
+            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
         },
     }
     _columns = {
@@ -199,9 +199,9 @@ class purchase_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,
             readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
-            help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
+            help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
-                "Bases on incoming shipments: let you create an invoice when receptions are validated."
+                "Based on incoming shipments: let you create an invoice when receptions are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -468,6 +468,20 @@ class purchase_order(osv.osv):
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
 
+    def _choose_account_from_po_line(self, cr, uid, po_line, context=None):
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        property_obj = self.pool.get('ir.property')
+        if po_line.product_id:
+            acc_id = po_line.product_id.property_account_expense.id
+            if not acc_id:
+                acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
+            if not acc_id:
+                raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+        else:
+            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
+        fpos = po_line.order_id.fiscal_position or False
+        return fiscal_obj.map_account(cr, uid, fpos, acc_id)
+
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line
         for that purchase order line
@@ -485,6 +499,7 @@ class purchase_order(osv.osv):
             'uos_id': order_line.product_uom.id or False,
             'invoice_line_tax_id': [(6, 0, [x.id for x in order_line.taxes_id])],
             'account_analytic_id': order_line.account_analytic_id.id or False,
+            'purchase_line_id': order_line.id,
         }
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
@@ -508,8 +523,6 @@ class purchase_order(osv.osv):
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
-        fiscal_obj = self.pool.get('account.fiscal.position')
-        property_obj = self.pool.get('ir.property')
 
         for order in self.browse(cr, uid, ids, context=context):
             pay_acc_id = order.partner_id.property_account_payable.id
@@ -521,17 +534,7 @@ class purchase_order(osv.osv):
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
-                if po_line.product_id:
-                    acc_id = po_line.product_id.property_account_expense.id
-                    if not acc_id:
-                        acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
-                    if not acc_id:
-                        raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
-                else:
-                    acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
-                fpos = order.fiscal_position or False
-                acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
-
+                acc_id = self._choose_account_from_po_line(cr, uid, po_line, context=context)
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
@@ -633,6 +636,7 @@ class purchase_order(osv.osv):
         }
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
+        ''' prepare the stock move data from the PO line '''
         return {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
@@ -869,7 +873,7 @@ class purchase_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
-        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
+        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
 
     }
     _defaults = {
@@ -1246,5 +1250,13 @@ class account_invoice(osv.Model):
             purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
         return res
 
+class account_invoice_line(osv.Model):
+    """ Override account_invoice_line to add the link to the purchase order line it is related to"""
+    _inherit = 'account.invoice.line'
+    _columns = {
+        'purchase_line_id': fields.many2one('purchase.order.line',
+            'Purchase Order Line', ondelete='set null', select=True,
+            readonly=True),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

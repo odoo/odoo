@@ -18,7 +18,10 @@ chat in real time. It support several chats in parallel.
         'security/im_security.xml',
     ],
     'depends' : ['base', 'web'],
-    'js': ['static/src/js/*.js'],
+    'js': [
+        'static/src/js/im_common.js',
+        'static/src/js/im.js',
+    ],
     'css': ['static/src/css/*.css'],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
