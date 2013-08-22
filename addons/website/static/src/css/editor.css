@@ -152,17 +152,24 @@
 }
 
 #mobile-preview.modal {
-  height: 617px;
+  height: 660px;
+  background-color: black;
+  border: 2px solid;
+  border-radius: 10px;
   margin: auto;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  max-width: 325px;
-  width: 325px;
+  max-width: 330px;
 }
 
+#mobile-preview .modal-header {
+  border-bottom: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
 #mobile-preview .modal-body {
   max-height: 600px;
   padding: 0;
@@ -172,4 +179,14 @@
 .oe_mobile_viewport {
   width: 320px;
   height: 568px;
+  padding: 5px;
+  border: none;
+}
+
+.oe_mobile_preview_header .close {
+  color: lightgrey;
+  opacity: 1;
+}
+.oe_mobile_preview_header .close:hover {
+  color: darkgrey;
 }
