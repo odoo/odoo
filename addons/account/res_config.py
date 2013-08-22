@@ -25,7 +25,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from os.path import join as opj
 
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT as DF
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp import tools

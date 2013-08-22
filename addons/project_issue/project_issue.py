@@ -393,6 +393,8 @@ class project_issue(osv.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            if 'kanban_state' not in vals:
+                vals['kanban_state'] = 'normal'
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
@@ -465,7 +467,6 @@ class project_issue(osv.Model):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.case_set(cr, uid, ids, 'draft', data, context=context)
         return True
 
     # -------------------------------------------------------
