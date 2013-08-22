@@ -25,7 +25,7 @@ from openerp.osv import osv, fields
 class product_pricelist(osv.osv):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotionnal Code', size=64, required=True, translate=True),
+        'code': fields.char('Promotionnal Code', size=64, translate=True),
     }
 
 class product_product(osv.osv):
