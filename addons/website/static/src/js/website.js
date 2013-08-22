@@ -198,10 +198,8 @@
         },
         mobilePreview: function () {
             $('body').addClass('oe_stop_scrolling');
-            // Firefox hack: document.getElementById("mobile-viewport").src = window.location.href + "?";
-            // TODO: disable scrollbar in iframe instead of forbidding scrolling
-            var iframeBody = $("#mobile-viewport").contents().find("body");
-            //iframeBody.css("overflow-y", "hidden");
+            document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
+
         },
     });
 
@@ -332,13 +330,13 @@
         // setup widget and drag and drop
         start_snippets: function(){
             var self = this;
-            
+
             this.$('.oe_snippet').draggable({
                 helper: 'clone',
                 appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
-                 
+
                     self.activate_drop_zones({
                         siblings: snippet.data('selector-siblings'),
                         childs:   snippet.data('selector-childs')
@@ -346,7 +344,7 @@
 
                     $('.oe_drop_zone').droppable({
                         over:   function(){
-                            // FIXME: stupid hack to prevent multiple droppable to activate at once ... 
+                            // FIXME: stupid hack to prevent multiple droppable to activate at once ...
                             // it's not even working properly but it's better than nothing.
                             $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
                             $(this).addClass("oe_hover");
@@ -376,7 +374,7 @@
             var child_selector   =  selector.childs   || '';
             var sibling_selector =  selector.siblings || '';
             var zone_template = "<div class='oe_drop_zone'></div>";
-            
+
             $('.oe_drop_zone').remove();
 
             if(child_selector){
@@ -386,7 +384,7 @@
                     $zones.eq(i).prepend(zone_template);
                 }
             }
-            
+
             if(sibling_selector){
                 var $zones = $(sibling_selector);
                 for( var i = 0, len = $zones.length; i < len; i++ ){
@@ -612,7 +610,7 @@
             if(!$pagination.size()) {
                 return;
             }
-            
+
             var page_count =  $col.data('page_count');
             var scope = $pagination.last().find("li").size()-2;
             var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
@@ -679,7 +677,7 @@
     dom_ready.then(function () {
         website.is_editable = $('html').attr('data-editable') === '1';
 
-        if (website.is_editable) {
+        if (website.is_editable && $('body')[0].clientWidth >= 767) {
             website.ready().then(website.init_editor);
         }
 
