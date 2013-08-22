@@ -75,13 +75,13 @@ Dashboard for CRM will include:
 
         'crm_view.xml',
 
+        'crm_phonecall_view.xml',
+        'crm_phonecall_menu.xml',
+
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
         'crm_meeting_menu.xml',
-
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
 
         'report/crm_lead_report_view.xml',
         'report/crm_phonecall_report_view.xml',
