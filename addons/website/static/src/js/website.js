@@ -676,8 +676,9 @@
 
     dom_ready.then(function () {
         website.is_editable = $('html').attr('data-editable') === '1';
+        var is_smartphone = $('body')[0].clientWidth >= 767;
 
-        if (website.is_editable && $('body')[0].clientWidth >= 767) {
+        if (website.is_editable && is_smartphone) {
             website.ready().then(website.init_editor);
         }
 
