@@ -86,7 +86,7 @@ class procurement_order(osv.osv):
             'rule_id': procurement.rule_id.id,
             'origin': procurement.origin,
             'picking_type_id': procurement.rule_id.picking_type_id.id,
-            'price_unit': procurement.sale_line_id.product_id.standard_price
+            'price_unit': procurement.sale_line_id.product_id and procurement.sale_line_id.product_id.standard_price,
         }
 
     def _run(self, cr, uid, procurement, context=None):
