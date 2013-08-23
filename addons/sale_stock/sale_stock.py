@@ -306,6 +306,7 @@ class sale_order(osv.osv):
             'move_id': move_id,
             'company_id': order.company_id.id,
             'note': line.name,
+            'property_ids': [(6, 0, [x.id for x in line.property_ids])],
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
