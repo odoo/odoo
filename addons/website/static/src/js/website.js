@@ -293,7 +293,7 @@
 
                 if($button.hasClass("js_add")) {
                     var cycle = $c.find(".carousel-inner .item").size();
-                    $c.find(".carousel-inner").append(QWeb.render("website.carousel"));
+                    $c.find(".carousel-inner").append(openerp.qweb.render("website.carousel"));
                     $c.carousel(cycle);
                 }
                 else {
