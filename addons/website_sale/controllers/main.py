@@ -72,7 +72,7 @@ class Ecommerce(http.Controller):
             domain += ['|', '|', '|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
-                ('description_website', 'ilike', "%%%s%%" % post.get("search")),
+                ('website_description', 'ilike', "%%%s%%" % post.get("search")),
                 ('product_variant_ids.pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)

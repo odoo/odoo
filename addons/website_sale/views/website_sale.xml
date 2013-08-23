@@ -62,7 +62,7 @@
             </div>
         </t>
     </template>
-    <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Products Left Categories">
+    <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
             <div class="span4">
                 <ul class="nav nav-list">
@@ -162,7 +162,7 @@
                         <button class="btn btn-small btn-success">Add to cart</button>
                     </form>
                     <img class="media-object" t-att-src="product.img('image')"/>
-                    <div t-field="product.description_website"></div>
+                    <div t-field="product.website_description"></div>
                     <div>
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                         <h5 class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</h5>
