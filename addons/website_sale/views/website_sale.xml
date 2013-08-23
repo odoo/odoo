@@ -22,7 +22,7 @@
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart
-                    <t t-if="order.get_total_quantity()">
+                    <t t-if="order and order.get_total_quantity()">
                         <span class="badge badge-success" t-esc="order.get_total_quantity()"/>
                     </t>
                 </a>
@@ -62,7 +62,7 @@
             </div>
         </t>
     </template>
-    <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Products Left Categories">
+    <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
             <div class="span4">
                 <ul class="nav nav-list">
@@ -116,9 +116,14 @@
                         </a>
                         <div>
                             <div t-field="product.description_sale"></div>
-                            <div><span t-field="product.list_price"></span>€</div>
+                            <div>
+                                <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                                <small class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</small>
+                                </t>
+                                <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
+                            </div>
                             <div class="mb8 mt8">
-                                <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">Add to cart</a>
+                                <a t-if="product.website_published" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">Add to cart</a>
                             </div>
                         </div>
                     </div>
@@ -157,7 +162,7 @@
                         <button class="btn btn-small btn-success">Add to cart</button>
                     </form>
                     <img class="media-object" t-att-src="product.img('image')"/>
-                    <div t-field="product.description_website"></div>
+                    <div t-field="product.website_description"></div>
                     <div>
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                         <h5 class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</h5>
@@ -196,7 +201,7 @@
             <t t-set="shop_content">
                 <div class="span8 oe_mycart">
                     <h2>My Shopping Cart</h2>
-                    <table class='table table-hover' id="mycart_products">
+                    <table class='table' id="mycart_products">
                         <colgroup>
                             <col width="80"/>
                             <col/>
@@ -220,16 +225,14 @@
                                         <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
                                     <td>
-                                        <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/">
-                                            <span t-field="line.product_id.name"/> <t t-if="line.product_id.variants">(<small t-field="line.product_id.variants"/>)</t>
-                                        </a><br/>
+                                        <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><span t-field="line.name"/></a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
-                                        <t t-if="line.product_id.lst_price != line.product_id.price">
+                                        <t t-if="line.product_id.lst_price != line.price_unit">
                                         <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
                                         </t>
-                                       <span t-field="line.product_id.price"></span> €
+                                       <span t-field="line.price_unit"></span> €
                                     </td>
                                     <td>
                                         <div class="mb8 mt8 pull-right">
@@ -253,12 +256,9 @@
                             <tr> <th colspan="3">Subtotal </th>      <th><t t-esc="order.amount_untaxed"/> €</th></tr>
                             <tr> <th colspan="3">Taxes </th>         <th><t t-esc="order.amount_tax"/> €</th></tr>
                             <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="order.amount_total"/> €</h4></th></tr>
-                            <tr>
-                                <th colspan="4"><a t-if="order.order_line" href="/shop/checkout/" class="pull-right btn btn-success">Proceed To Payment</a></th>
-                            </tr>
                         </thead>
                     </table>
-
+                    <a t-if="order.order_line" href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
                 </div>
             </t>
         </t>
@@ -319,7 +319,7 @@
     <template id="reduction_code" inherit_option_id="website_sale.mycart" name="Reduction Code">
         <xpath expr="//table[@id='mycart_total']" position="after">
             <form t-if="order.order_line" class="well form-search" action="/shop/mycart/" method="post">
-                <input name="code" class='input' type="text" placeholder="Reduction Code..." t-att-value="order.pricelist_id.code"/>
+                <input name="promo" class='input' type="text" placeholder="Reduction Code..." t-att-value="order.pricelist_id.code or ''"/>
                 <button class="btn">Apply Code</button>
             </form>
         </xpath>
@@ -349,9 +349,9 @@
                             <tbody t-if="order.order_line">
                                 <t t-foreach="order.order_line" t-as="line">
                                     <tr>
-                                        <td><t t-esc="line.name"/> <t t-if="line.product_id.variants">(<small t-field="line.product_id.variants"/>)</t></td>
+                                        <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
-                                        <td><t t-esc="line.product_id.list_price"/>€</td>
+                                        <td><t t-esc="line.price_unit"/> €</td>
                                     </tr>
                                 </t>
                             </tbody>
@@ -516,6 +516,10 @@
 
     <template id="payment">
         <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                <t t-raw="head or ''"/>
+            </t>
             <t t-set="title">Shop - Payment</t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
@@ -533,7 +537,7 @@
                                     <tr>
                                         <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
-                                        <td><t t-esc="line.product_id.list_price"/>€</td>
+                                        <td><t t-esc="line.price_unit"/> €</td>
                                     </tr>
                                 </t>
                             </tbody>
@@ -545,13 +549,19 @@
                         </table>
                     </div>
                     <div class="span8">
-                        <div class="row">
+                        <div class="js_payment row">
                             <h3 class="span8">Click on your payment method</h3>
+                            <div class="span2">
+                                <t t-foreach="payments or []" t-as="payment">
+                                    <label>
+                                        <input t-att-value="payment.id" type="radio" name="payment_type"/> <t t-esc="payment.name"/>
+                                    </label>
+                                </t>
+                            </div>
                             <t t-foreach="payments or []" t-as="payment">
-                                <div t-att-title="payment.name">
-                                    <t t-raw="payment._content"/>
-                                </div>
+                                <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden span6"/>
                             </t>
+                            <a href="/shop/payment_validate/" class="hidden btn">I validate my payment</a>
                         </div>
                     </div>
                 </div>
