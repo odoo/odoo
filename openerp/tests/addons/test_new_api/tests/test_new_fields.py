@@ -354,7 +354,7 @@ class TestNewFields(common.TransactionCase):
 
         fields = ['name', 'description']
         defaults = self.registry('test_new_api.defaults').default_get(fields)
-        self.assertEqual(defaults, {'name': u"Bob the Builder"})
+        self.assertEqual(defaults.get('name'), u"Bob the Builder")
 
 class TestMagicalFields(common.TransactionCase):
 
