@@ -1,4 +1,3 @@
-@charset "utf-8";
 .oe_hidden {
   display: none !important;
 }
@@ -80,7 +79,6 @@
   border-radius: 3px;
   margin: 10px;
   margin-right: 0px;
-  cursor: move;
   position: relative;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -146,6 +144,16 @@
   border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }
 
+.oe_hover_zone {
+  position: absolute;
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
+}
+.oe_hover_zone.oe_hover {
+  background: rgba(0, 255, 133, 0.22);
+  z-index: 100000;
+}
+
 .oe_stop_scrolling {
   height: 100%;
   overflow: hidden;
@@ -157,7 +165,6 @@
   border: 2px solid;
   border-radius: 10px;
   margin: auto;
-  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;

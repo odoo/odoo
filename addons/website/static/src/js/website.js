@@ -307,6 +307,34 @@
         }
     });
 
+    website.mutations = {
+        darken: function($el){
+            if($el.parent().hasClass('dark')){
+                $el.parent().replaceWith($el);
+            }else{
+                $el.replaceWith($("<div class='dark'></div>").append($el.clone()));
+            }
+        },
+        vomify: function($el){
+            var hue=0; 
+            var beat = false;
+            var a = setInterval(function(){ 
+                $el.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
+            }, 10);
+            setTimeout(function(){
+                clearInterval(a);
+                setInterval(function(){ 
+                    var filter =  'hue-rotate('+hue+'deg)'+ (beat ? ' invert()' : '');
+                    $('html').css({'-webkit-filter': filter}); hue += 5;
+                    if(hue % 35 === 0){
+                        beat = !beat;
+                    }
+                }, 10);
+            },5000);
+            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo($el);
+        },
+    };
+
     /* ----- SNIPPET SELECTOR ---- */
     website.Snippets = openerp.Widget.extend({
         template: 'website.snippets',
@@ -327,11 +355,20 @@
             });
 
         },
+        path_eval: function(path){
+            var obj = window;
+            path = path.split('.');
+            do{
+                obj = obj[path.shift()];
+            }while(path.length && obj);
+            return obj;
+        },
+
         // setup widget and drag and drop
         start_snippets: function(){
             var self = this;
-
-            this.$('.oe_snippet').draggable({
+            
+            this.$('.oe_snippet[data-action="insert"]').draggable({
                 helper: 'clone',
                 appendTo: 'body',
                 start: function(){
@@ -361,6 +398,32 @@
                 },
                 stop: function(){
                     self.deactivate_drop_zones();
+                },
+            });
+
+            this.$('.oe_snippet[data-action="mutate"]').draggable({
+                helper: 'clone',
+                appendTo: 'body',
+                start: function(){
+                    var snippet = $(this);
+
+                    self.activate_hover_zones(snippet.data('selector'));
+
+                    $('.oe_hover_zone').droppable({
+                        over: function(){
+                            $(".oe_hover_zone.oe_hover").removeClass("oe_hover");
+                            $(this).addClass("oe_hover");
+                        },
+                        out: function(){
+                            $(this).removeClass("oe_hover");
+                        },
+                        drop: function(){
+                            self.path_eval(snippet.data('action-function'))( $(".oe_hover_zone.oe_hover").data('target') );
+                        },
+                    });
+                },
+                stop: function(){
+                    self.deactivate_hover_zones();
                 },
             });
         },
@@ -413,7 +476,7 @@
                 $zones.remove();
             }while(count > 0);
 
-            // Cleaning up zones placed between floating or inline elements
+            // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
             var $zones = $('.oe_drop_zone');
             for( var i = 0, len = $zones.length; i < len; i++ ){
                 var zone = $zones.eq(i);
@@ -427,11 +490,10 @@
                     &&  (float_next === 'left' || float_next === 'right')  ){
                     zone.remove();
                     continue;
-                }else if( !(    disp_prev === null
-                             || disp_next === null
-                             || disp_prev === 'block'
-                             || disp_next === 'block'
-                            ) ){
+                }else if( !( disp_prev === null
+                          || disp_next === null
+                          || disp_prev === 'block'
+                          || disp_next === 'block' )){
                     zone.remove();
                     continue;
                 }
@@ -440,22 +502,48 @@
         deactivate_drop_zones: function(){
             $('.oe_drop_zone').remove();
         },
+        activate_hover_zones: function(selector){
+            var $targets = $(selector);
+            
+            function is_visible($el){
+                return     $el.css('display')    != 'none'
+                        && $el.css('opacity')    != '0'
+                        && $el.css('visibility') != 'hidden';
+            }
+
+            // filter out invisible elements
+            $targets = $targets.filter(function(){ return is_visible($(this)); });
+
+            // filter out elements with invisible parents
+            $targets = $targets.filter(function(){
+                var parents = $(this).parents().filter(function(){ return !is_visible($(this)); });
+                return parents.length === 0;
+            });
+            
+            var zone_template = "<div class='oe_hover_zone'></div>";
+            $('.oe_hover_zone').remove();
+
+            for(var i = 0, len = $targets.length; i < len; i++){
+                var $target = $targets.eq(i);
+                var $zone = $(zone_template);
+                $zone.css({
+                        'width': $target.outerWidth(),
+                        'height': $target.outerHeight(),
+                });
+                $zone.css($target.offset());
+                $zone.appendTo('body');
+                $zone.data('target',$target);
+            }
+        },
+        deactivate_hover_zones: function(selector){
+            $('.oe_hover_zone').remove();
+        },
         toggle: function(){
             if(this.$el.hasClass('oe_hidden')){
                 this.$el.removeClass('oe_hidden');
             }else{
                 this.$el.addClass('oe_hidden');
             }
-        },
-        snippet_start: function () {
-            var self = this;
-            $('.oe_snippet').draggable().click(function(ev) {
-                self.setup_droppable();
-                $(".oe_snippet_drop").show();
-                $('.oe_selected').removeClass('oe_selected');
-                $(ev.currentTarget).addClass('oe_selected');
-            });
-
         },
     });
 
