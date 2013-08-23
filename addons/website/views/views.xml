@@ -110,7 +110,7 @@
                             <div class="container mt16">
                                 <div class="pull-right" t-ignore="1">
                                     Create a <a href="http://openerp.com/apps/website">free website</a> with
-                                    <a class="label label-important" href="https://openerp.com/apps/website">OpenERP</a>
+                                    <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                 </div>
                                 <div class="pull-left muted">
                                     Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
@@ -351,7 +351,7 @@
         <template id="publish">
             <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
                 <span t-attf-class="label label-success js_unpublish #{ '' if object.website_published else 'hidden' }">Unpublish</span>
-                <span t-attf-class="label label-important js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
+                <span t-attf-class="label label-danger js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
             </a>
         </template>
 
