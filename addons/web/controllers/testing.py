@@ -13,6 +13,8 @@ from openerp.modules import module
 from .main import module_topological_sort
 from .. import http
 
+from ..http import request
+
 NOMODULE_TEMPLATE = Template(u"""<!DOCTYPE html>
 <html>
     <head>
@@ -86,9 +88,8 @@ TESTING = Template(u"""<!DOCTYPE html>
 """, default_filters=['h'])
 
 class TestRunnerController(http.Controller):
-    _cp_path = '/web/tests'
 
-    @http.httprequest
+    @http.route('/web/tests', type='http', auth="none")
     def index(self, req, mod=None, **kwargs):
         ms = module.get_modules()
         manifests = dict(
@@ -163,3 +164,11 @@ class TestRunnerController(http.Controller):
             for path in glob.glob(normalized_pattern):
                 # replace OS path separators (from join & normpath) by URI ones
                 yield path[len(root):].replace(os.path.sep, '/')
+
+    @http.route('/web/tests/set_session_value', type='json', auth="none")
+    def set_session_value(self, value):
+        request.session.some_test_value = value
+
+    @http.route('/web/tests/get_session_value', type='json', auth="none")
+    def get_session_value(self):
+        return request.session.some_test_value

@@ -1,36 +1,3 @@
-openerp.testing.section('server-formats', {
-    dependencies: ['web.coresetup', 'web.dates']
-}, function (test) {
-    test('Parse server datetime', function (instance) {
-        var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
-        deepEqual(
-            [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
-             date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()],
-            [2009, 5 - 1, 4, 12, 34, 23]);
-        deepEqual(
-            [date.getFullYear(), date.getMonth(), date.getDate(),
-             date.getHours(), date.getMinutes(), date.getSeconds()],
-            [2009, 5 - 1, 4, 12 - (date.getTimezoneOffset() / 60), 34, 23]);
-
-        var date2 = instance.web.str_to_datetime('2011-12-10 00:00:00');
-        deepEqual(
-            [date2.getUTCFullYear(), date2.getUTCMonth(), date2.getUTCDate(),
-             date2.getUTCHours(), date2.getUTCMinutes(), date2.getUTCSeconds()],
-            [2011, 12 - 1, 10, 0, 0, 0]);
-    });
-    test('Parse server date', function (instance) {
-        var date = instance.web.str_to_date("2009-05-04");
-        deepEqual(
-            [date.getFullYear(), date.getMonth(), date.getDate()],
-            [2009, 5 - 1, 4]);
-    });
-    test('Parse server time', function (instance) {
-        var date = instance.web.str_to_time("12:34:23");
-        deepEqual(
-            [date.getHours(), date.getMinutes(), date.getSeconds()],
-            [12, 34, 23]);
-    });
-});
 openerp.testing.section('web-formats', {
     dependencies: ['web.formats']
 }, function (test) {
@@ -116,25 +83,37 @@ openerp.testing.section('web-formats', {
 //        equal(val.toString("HH:mm:ss"), res.toString("HH:mm:ss"));
 //    });
     test('parse_integer', function (instance) {
-        var val = instance.web.parse_value('123,456', {type: 'integer'});
-        equal(val, 123456);
-        instance.web._t.database.parameters.thousands_sep = '|';
-        var val2 = instance.web.parse_value('123|456', {type: 'integer'});
-        equal(val2, 123456);
+        var tmp = instance.web._t.database.parameters.thousands_sep;
+        try {
+            var val = instance.web.parse_value('123,456', {type: 'integer'});
+            equal(val, 123456);
+            instance.web._t.database.parameters.thousands_sep = '|';
+            var val2 = instance.web.parse_value('123|456', {type: 'integer'});
+            equal(val2, 123456);
+        } finally {
+            instance.web._t.database.parameters.thousands_sep = tmp;
+        }
     });
     test("parse_float", function (instance) {
-        var str = "134,112.1234";
-        var val = instance.web.parse_value(str, {type:"float"});
-        equal(val, 134112.1234);
-        var str = "-134,112.1234";
-        var val = instance.web.parse_value(str, {type:"float"});
-        equal(val, -134112.1234);
-        _.extend(instance.web._t.database.parameters, {
-            decimal_point: ',',
-            thousands_sep: '.'
-        });
-        var val3 = instance.web.parse_value('123.456,789', {type: 'float'});
-        equal(val3, 123456.789);
+        var tmp1 = instance.web._t.database.parameters.thousands_sep;
+        var tmp2 = instance.web._t.database.parameters.decimal_point;
+        try {
+            var str = "134,112.1234";
+            var val = instance.web.parse_value(str, {type:"float"});
+            equal(val, 134112.1234);
+            str = "-134,112.1234";
+            val = instance.web.parse_value(str, {type:"float"});
+            equal(val, -134112.1234);
+            _.extend(instance.web._t.database.parameters, {
+                decimal_point: ',',
+                thousands_sep: '.'
+            });
+            var val3 = instance.web.parse_value('123.456,789', {type: 'float'});
+            equal(val3, 123456.789);
+        } finally {
+            instance.web._t.database.parameters.thousands_sep = tmp1;
+            instance.web._t.database.parameters.decimal_point = tmp2;
+        }
     });
     test('intersperse', function (instance) {
         var g = instance.web.intersperse;

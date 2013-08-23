@@ -1,5 +1,5 @@
 openerp.testing.section('eval.types', {
-    dependencies: ['web.coresetup'],
+    dependencies: ['web.core'],
     setup: function (instance) {
         instance.session.uid = 42;
     }
@@ -9,9 +9,9 @@ openerp.testing.section('eval.types', {
         return function (expr, func, message) {
             // evaluate expr between two calls to new Date(), and check that
             // the result is between the transformed dates
-            var d0 = new Date;
+            var d0 = new Date();
             var result = py.eval(expr, context);
-            var d1 = new Date;
+            var d1 = new Date();
             ok(func(d0) <= result && result <= func(d1), message);
         };
     };
@@ -118,7 +118,7 @@ openerp.testing.section('eval.types', {
         // Issue #11576
         eq('td(999999999, 86399, 999999) - td(999999999, 86399, 999998)', 'td(0, 0, 1)');
         eq('td(999999999, 1, 1) - td(999999999, 1, 0)',
-           'td(0, 0, 1)')
+           'td(0, 0, 1)');
     });
     test('timedelta.test_basic_attributes', function (instance) {
         var ctx = instance.web.pyeval.context();
@@ -264,7 +264,7 @@ openerp.testing.section('eval.types', {
             py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
                     instance.web.pyeval.context()),
             "2012-02-14 23:59:59");
-    })
+    });
 });
 openerp.testing.section('eval.edc', {
     dependencies: ['web.data'],
@@ -562,7 +562,7 @@ openerp.testing.section('eval.edc.nonliterals', {
     });
 });
 openerp.testing.section('eval.contexts', {
-    dependencies: ['web.coresetup']
+    dependencies: ['web.core']
 }, function (test) {
     test('context_recursive', function (instance) {
         var context_to_eval = [{
@@ -704,9 +704,76 @@ openerp.testing.section('eval.contexts', {
         }]);
         deepEqual(result, {type: 'out_invoice'});
     });
+    test('return-input-value', function (instance) {
+        var result = instance.web.pyeval.eval('contexts', [{
+            __ref: 'compound_context',
+            __contexts: ["{'line_id': line_id , 'journal_id': journal_id }"],
+            __eval_context: {
+                __ref: 'compound_context',
+                __contexts: [{
+                    __ref: 'compound_context',
+                    __contexts: [
+                        {lang: 'en_US', tz: 'Europe/Paris', uid: 1},
+                        {lang: 'en_US', tz: 'Europe/Paris', uid: 1},
+                        {}
+                    ],
+                    __eval_context: null,
+                }, {
+                    active_id: false,
+                    active_ids: [],
+                    active_model: 'account.move',
+                    amount: 0,
+                    company_id: 1,
+                    date: '2013-06-21',
+                    id: false,
+                    journal_id: 14,
+                    line_id: [
+                        [0, false, {
+                            account_id: 55,
+                            amount_currency: 0,
+                            analytic_account_id: false,
+                            credit: 0,
+                            currency_id: false,
+                            date_maturity: false,
+                            debit: 0,
+                            name: "dscsd",
+                            partner_id: false,
+                            tax_amount: 0,
+                            tax_code_id: false,
+                        }]
+                    ],
+                    name: '/',
+                    narration: false,
+                    parent: {},
+                    partner_id: false,
+                    period_id: 6,
+                    ref: false,
+                    state: 'draft',
+                    to_check: false,
+                }],
+                __eval_context: null,
+            },
+        }]);
+        deepEqual(result, {
+            journal_id: 14,
+            line_id: [[0, false, {
+                account_id: 55,
+                amount_currency: 0,
+                analytic_account_id: false,
+                credit: 0,
+                currency_id: false,
+                date_maturity: false,
+                debit: 0,
+                name: "dscsd",
+                partner_id: false,
+                tax_amount: 0,
+                tax_code_id: false,
+            }]],
+        });
+    });
 });
 openerp.testing.section('eval.domains', {
-    dependencies: ['web.coresetup', 'web.dates']
+    dependencies: ['web.core', 'web.dates']
 }, function (test) {
     test('current_date', function (instance) {
         var current_date = instance.web.date_to_str(new Date());
@@ -735,7 +802,7 @@ openerp.testing.section('eval.domains', {
     });
 });
 openerp.testing.section('eval.groupbys', {
-    dependencies: ['web.coresetup']
+    dependencies: ['web.core']
 }, function (test) {
     test('groupbys_00', function (instance) {
         var result = instance.web.pyeval.eval('groupbys', [

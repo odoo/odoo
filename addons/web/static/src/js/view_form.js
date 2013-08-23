@@ -1,4 +1,6 @@
-openerp.web.form = function (instance) {
+(function() {
+
+var instance = openerp;
 var _t = instance.web._t,
    _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
@@ -91,6 +93,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     init: function(parent, dataset, view_id, options) {
         var self = this;
         this._super(parent);
+        this.ViewManager = parent;
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -212,9 +215,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
         //bounce effect on red button when click on statusbar.
-        this.$el.on('click', '.oe_form_field_status:not(.oe_form_status_clickable)', function (e) {
-            if(self.get("actual_mode") == "view") {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','margin-left':'3px','margin-right':'2px','white-space':'nowrap'});
+        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
+            if((self.get("actual_mode") == "view")) {
+                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
@@ -345,7 +348,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.on_form_changed();
             self.rendering_engine.init_fields();
             self.is_initialized.resolve();
-            self.do_update_pager(record.id == null);
+            self.do_update_pager(record.id === null || record.id === undefined);
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
             }
@@ -436,7 +439,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         var method = call[1];
         if (!_.str.trim(call[2])) {
-            return {method: method, args: []}
+            return {method: method, args: []};
         }
 
         var argument_replacement = {
@@ -464,7 +467,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             // form field
             if (self.fields[field]) {
                 var value_ = self.fields[field].get_value();
-                return value_ == null ? false : value_;
+                return value_ === null || value_ === undefined ? false : value_;
             }
             // parent field
             var splitted = field.split('.');
@@ -474,7 +477,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
                 var p_val = parent_fields[_.str.trim(splitted[1])];
                 if (p_val !== undefined) {
-                    return p_val == null ? false : p_val;
+                    return p_val === null || p_val === undefined ? false : p_val;
                 }
             }
             // string literal
@@ -620,7 +623,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     }
                     return $.when();
                 });
-            };
+            }
             return iterate();
         });
     },
@@ -720,6 +723,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.to_view_mode();
+        }).then(function(result) {
+            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
         });
     },
     on_button_cancel: function(event) {
@@ -775,7 +780,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             } else {
                 $.async_when().done(function () {
                     def.reject();
-                })
+                });
             }
         });
         return def.promise();
@@ -940,11 +945,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     reload: function() {
         var self = this;
         return this.reload_mutex.exec(function() {
-            if (self.dataset.index == null) {
+            if (self.dataset.index === null || self.dataset.index === undefined) {
                 self.trigger("previous_view");
                 return $.Deferred().reject().promise();
             }
-            if (self.dataset.index == null || self.dataset.index < 0) {
+            if (self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
                 var fields = _.keys(self.fields_view.fields);
@@ -1025,7 +1030,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return field.get_displayed();
             }
             return value;
-        }
+        };
         var fields = _.chain(this.fields)
             .map(function (field) {
                 var value = field.get_value();
@@ -1046,7 +1051,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
-                }
+                };
             })
             .compact()
             .sortBy(function (field) { return field.string; })
@@ -1060,7 +1065,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
-                }
+                };
             })
             .value();
 
@@ -1426,7 +1431,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 row_cols = cols;
             } else if (tagName==='group') {
                 // When <group> <group/><group/> </group>, we need a spacing between the two groups
-                $td.addClass('oe_group_right')
+                $td.addClass('oe_group_right');
             }
             row_cols -= colspan;
 
@@ -1711,7 +1716,7 @@ instance.web.form.compute_domain = function(expr, fields) {
 };
 
 instance.web.form.is_bin_size = function(v) {
-    return /^\d+(\.\d*)? \w+$/.test(v);
+    return (/^\d+(\.\d*)? \w+$/).test(v);
 };
 
 /**
@@ -1849,7 +1854,8 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                     return QWeb.render(template, {
                         debug: instance.session.debug,
                         widget: widget
-                })},
+                    });
+                },
                 gravity: $.fn.tipsy.autoBounds(50, 'nw'),
                 html: true,
                 opacity: 0.85,
@@ -2070,7 +2076,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
      * @param node
      */
     init: function(field_manager, node) {
-        var self = this
+        var self = this;
         this._super(field_manager, node);
         this.name = this.node.attrs.name;
         this.field = this.field_manager.get_field_desc(this.name);
@@ -2343,7 +2349,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value') || !this.is_syntax_valid()) {
-            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
+            this.do_warn(_t("E-mail Error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.get('value');
         }
@@ -2373,7 +2379,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value')) {
-            this.do_warn(_t("Resource error"), _t("This resource is empty"));
+            this.do_warn(_t("Resource Error"), _t("This resource is empty"));
         } else {
             var url = $.trim(this.get('value'));
             if(/^www\./i.test(url))
@@ -2645,7 +2651,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         if (! this.get("effective_readonly")) {
             var show_value = instance.web.format_value(this.get('value'), this, '');
             if (show_value === '') {
-                this.$textarea.css('height', parseInt(this.default_height)+"px");
+                this.$textarea.css('height', parseInt(this.default_height, 10)+"px");
             }
             this.$textarea.val(show_value);
             if (! this.auto_sized) {
@@ -2724,6 +2730,11 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                     self.internal_set_value(self.$textarea.val());
                 }
             });
+            if (this.field.translate) {
+                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
+                    .click(this.on_translate);
+                this.$cleditor.$toolbar.append($img);
+            }
         }
     },
     render_value: function() {
@@ -2907,7 +2918,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
             if (! _.isEqual(self.domain, domain)) {
                 self.domain = domain;
-                var ds = new instance.web.DataSet(self, self.field.relation);
+                var ds = new instance.web.DataSetStatic(self, self.field.relation, self.build_context());
                 ds.call('search', [self.domain])
                     .then(function (records) {
                         ds.name_get(records).then(function (records) {
@@ -2935,7 +2946,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     set_value: function (value_) {
         if (value_) {
             if (this.field.type == "selection") {
-                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_});
+                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
             }
             else if (!this.selection.length) {
                 this.selection = [value_];
@@ -2952,7 +2963,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
         this.$("input:checked").prop("checked", false);
         if (this.get_value()) {
-            this.$("input").filter(function () {return this.value == self.get_value()}).prop("checked", true);
+            this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
             this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
         }
     }
@@ -2992,8 +3003,11 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
 })();
 
 /**
- * A mixin containing some useful methods to handle completion inputs.
- */
+    A mixin containing some useful methods to handle completion inputs.
+    
+    The widget containing this option can have these arguments in its widget options:
+    - no_quick_create: if true, it will disable the quick create
+*/
 instance.web.form.CompletionFieldMixin = {
     init: function() {
         this.limit = 7;
@@ -3039,7 +3053,8 @@ instance.web.form.CompletionFieldMixin = {
             }
             // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];});
-            if (search_val.length > 0 && !_.include(raw_result, search_val)) {
+            if (search_val.length > 0 && !_.include(raw_result, search_val) &&
+                ! (self.options && self.options.no_quick_create)) {
                 values.push({
                     label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
                         $('<span />').text(search_val).html()),
@@ -3088,7 +3103,7 @@ instance.web.form.CompletionFieldMixin = {
             self.field.relation,
             {
                 title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
-                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
+                initial_ids: ids ? _.map(ids, function(x) {return x[0];}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
             },
@@ -3157,6 +3172,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         instance.web.form.CompletionFieldMixin.init.call(this);
         this.set({'value': false});
         this.display_value = {};
+        this.display_value_backup = {};
         this.last_search = [];
         this.floating = false;
         this.current_display = null;
@@ -3240,8 +3256,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             );
             pop.on('write_completed', self, function(){
                 self.display_value = {};
+                self.display_value_backup = {};
                 self.render_value();
                 self.focus();
+                self.view.do_onchange(self);
             });
         });
 
@@ -3260,7 +3278,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$input.keydown(input_changed);
         this.$input.change(input_changed);
         this.$drop_down.click(function() {
-        	self.$input.focus();
+            self.$input.focus();
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
             } else {
@@ -3290,6 +3308,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 if (self.last_search.length > 0) {
                     if (self.last_search[0][0] != self.get("value")) {
                         self.display_value = {};
+                        self.display_value_backup = {};
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.reinit_value(self.last_search[0][0]);
                     } else {
@@ -3355,6 +3374,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 var item = ui.item;
                 if (item.id) {
                     self.display_value = {};
+                    self.display_value_backup = {};
                     self.display_value["" + item.id] = item.name;
                     self.reinit_value(item.id);
                 } else if (item.action) {
@@ -3400,6 +3420,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
+            }).fail( function (data, event) {
+                // avoid displaying crash errors as many2One should be name_get compliant
+                event.preventDefault();
+                self.display_value["" + self.get("value")] = self.display_value_backup["" + self.get("value")];
+                self.render_value(true);
             });
         }
     },
@@ -3443,8 +3468,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
+            this.display_value_backup = {};
             if (! this.options.always_reload) {
                 this.display_value["" + value_[0]] = value_[1];
+            }
+            else {
+                this.display_value_backup["" + value_[0]] = value_[1];
             }
             value_ = value_[0];
         }
@@ -3456,6 +3485,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     add_id: function(id) {
         this.display_value = {};
+        this.display_value_backup = {};
         this.reinit_value(id);
     },
     is_false: function() {
@@ -3703,7 +3733,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                  });
                 controller.on('pager_action_executed',self,self.save_any_view);
             } else if (view_type == "graph") {
-                self.reload_current_view()
+                self.reload_current_view();
             }
             def.resolve();
         });
@@ -3723,7 +3753,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     reload_current_view: function() {
         var self = this;
-        return self.is_loaded = self.is_loaded.then(function() {
+        self.is_loaded = self.is_loaded.then(function() {
             var active_view = self.viewmanager.active_view;
             var view = self.viewmanager.views[active_view].controller;
             if(active_view === "list") {
@@ -3741,13 +3771,15 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 return view.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
         }, undefined);
+        return self.is_loaded;
     },
     set_value: function(value_) {
         value_ = value_ || [];
         var self = this;
         this.dataset.reset_ids([]);
+        var ids;
         if(value_.length >= 1 && value_[0] instanceof Array) {
-            var ids = [];
+            ids = [];
             _.each(value_, function(command) {
                 var obj = {values: command[2]};
                 switch (command[0]) {
@@ -3778,7 +3810,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this._super(ids);
             this.dataset.set_ids(ids);
         } else if (value_.length >= 1 && typeof(value_[0]) === "object") {
-            var ids = [];
+            ids = [];
             this.dataset.delete_all = true;
             _.each(value_, function(command) {
                 var obj = {values: command};
@@ -3833,7 +3865,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this.viewmanager.views[this.viewmanager.active_view].controller) {
             var view = this.viewmanager.views[this.viewmanager.active_view].controller;
             if (this.viewmanager.active_view === "form") {
-                if (!view.is_initialized.state() === 'resolved') {
+                if (view.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
                 return $.when(view.save());
@@ -3853,7 +3885,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 .invoke('is_valid')
                 .all(_.identity)
                 .value();
-            break;
         case 'list':
             return view.is_valid();
         }
@@ -3945,7 +3976,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var form = editor.form;
         // If no edition is pending, the listview can not be invalid (?)
         if (!editor.record) {
-            return true
+            return true;
         }
         // If the form has not been modified, the view can only be valid
         // NB: is_dirty will also be set on defaults/onchanges/whatever?
@@ -4150,7 +4181,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         if ($padding.length) {
             $padding.before($newrow);
         } else {
-            this.$current.append($newrow)
+            this.$current.append($newrow);
         }
     }
 });
@@ -4206,7 +4237,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             ext: {
                 autocomplete: {
                     selectFromDropdown: function() {
-                        $(this).trigger('hideDropdown');
+                        this.trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
                         if (data.id) {
@@ -4215,6 +4246,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                             ignore_blur = true;
                             data.action();
                         }
+                        this.trigger('setSuggestions', {result : []});
                     },
                 },
                 tags: {
@@ -4238,7 +4270,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 },
                 core: {
                     onSetInputData: function(e, data) {
-                        if (data == '') {
+                        if (data === '') {
                             this._plugins.autocomplete._suggestions = null;
                         }
                         this.input().val(data);
@@ -4560,8 +4592,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         if (type !== "form")
             return;
         var self = this;
+        var pop;
         if (this.dataset.index === null) {
-            var pop = new instance.web.form.SelectCreatePopup(this);
+            pop = new instance.web.form.SelectCreatePopup(this);
             pop.select_element(
                 this.field.relation,
                 {
@@ -4581,7 +4614,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             });
         } else {
             var id = self.dataset.ids[self.dataset.index];
-            var pop = new instance.web.form.FormOpenPopup(this);
+            pop = new instance.web.form.FormOpenPopup(this);
             pop.show_element(self.field.relation, id, self.build_context(), {
                 title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
@@ -4751,13 +4784,13 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.dataset.index = null;
         }
         var options = _.clone(self.options.form_view_options) || {};
+        if (this.row_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : "edit";
+        }
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
         this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
-        if (this.row_id !== null) {
-            options.initial_mode = this.options.readonly ? "view" : this.view_form.options.initial_mode;
-        }
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
@@ -4917,7 +4950,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.select_elements(self.selected_ids);
                     self.destroy();
                 });
-                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
+                $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
                 $cbutton.click(function() {
                     self.new_object();
                 });
@@ -4949,7 +4982,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.searchview.hide();
         }
         if (this.view_list) {
-            this.view_list.$el.hide();
+            this.view_list.do_hide();
         }
         this.setup_form_view();
     },
@@ -5002,8 +5035,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.appendTo(this.$(".oe_form_view_reference_selection"));
         this.selection
-            .on('focused', null, function () {self.trigger('focused')})
-            .on('blurred', null, function () {self.trigger('blurred')});
+            .on('focused', null, function () {self.trigger('focused');})
+            .on('blurred', null, function () {self.trigger('blurred');});
 
         this.m2o = new instance.web.form.FieldMany2One(fm, { attrs: {
             name: 'm2o',
@@ -5012,8 +5045,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));
         this.m2o
-            .on('focused', null, function () {self.trigger('focused')})
-            .on('blurred', null, function () {self.trigger('blurred')});
+            .on('focused', null, function () {self.trigger('focused');})
+            .on('blurred', null, function () {self.trigger('blurred');});
     },
     on_selection_changed: function() {
         if (this.reference_ready) {
@@ -5172,18 +5205,18 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         }
     },
     render_value: function() {
+        var show_value;
         if (!this.get("effective_readonly")) {
-            var show_value;
             if (this.node.attrs.filename) {
                 show_value = this.view.datarecord[this.node.attrs.filename] || '';
             } else {
-                show_value = (this.get('value') != null && this.get('value') !== false) ? this.get('value') : '';
+                show_value = (this.get('value') !== null && this.get('value') !== undefined && this.get('value') !== false) ? this.get('value') : '';
             }
             this.$el.find('input').eq(0).val(show_value);
         } else {
             this.$el.find('a').toggle(!!this.get('value'));
             if (this.get('value')) {
-                var show_value = _t("Download")
+                show_value = _t("Download");
                 if (this.view)
                     show_value += " " + (this.view.datarecord[this.node.attrs.filename] || '');
                 this.$el.find('a').text(show_value);
@@ -5379,7 +5412,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         }
 
         if (result.error || !result.id ) {
-            this.do_warn( _t('Uploading error'), result.error);
+            this.do_warn( _t('Uploading Error'), result.error);
             delete this.data[0];
         } else {
             if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {
@@ -5402,7 +5435,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
             values.push(result.id);
             this.set({'value': values});
         }
-        this.render_value()
+        this.render_value();
     },
     on_file_delete: function (event) {
         event.stopPropagation();
@@ -5456,7 +5489,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var content = QWeb.render("FieldStatus.content", {
             'widget': self, 
-            'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value')})
+            'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value');})
         });
         self.$el.html(content);
     },
@@ -5488,7 +5521,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                     return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
                         .read_slice(fields.fold ? ['fold'] : ['id'], {}).then(function (records) {
 
-                            var ids = _.map(records, function (val) {return val.id});
+                            var ids = _.map(records, function (val) {return val.id;});
                             return self.dataset.name_get(ids).then(function (records_name) {
                                 _.each(records, function (record) {
                                     var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
@@ -5498,7 +5531,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                                         selection_unfolded.push([record.id, name]);
                                     }
                                 });
-                            })
+                            });
                         });
                 });
             } else {
@@ -5530,12 +5563,18 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
-        })
+        });
     },
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
-        var val = parseInt($li.data("id"));
+        var val;
+        if (this.field.type == "many2one") {
+            val = parseInt($li.data("id"), 10);
+        }
+        else {
+            val = $li.data("id");
+        }
         if (val != self.get('value')) {
             this.view.recursive_save().done(function() {
                 var change = {};
@@ -5637,6 +5676,6 @@ instance.web.form.tags = new instance.web.Registry({
 instance.web.form.custom_widgets = new instance.web.Registry({
 });
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

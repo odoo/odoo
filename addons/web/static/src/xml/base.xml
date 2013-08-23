@@ -422,6 +422,7 @@
         <span class="oe_topbar_name"/>
         <ul class="oe_dropdown_menu">
             <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="account">My OpenERP.com account</a></li>
             <li><a href="#" data-menu="about">About OpenERP</a></li>
             <li><a href="#" data-menu="help">Help</a></li>
             <li><a href="#" data-menu="logout">Log out</a></li>
@@ -458,7 +459,7 @@
         <tr>
             <td class="oe_leftbar" valign="top">
                 <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}">
+                <a class="oe_logo" t-attf-href="/?#{debug}">
                     <span class="oe_logo_edit">Edit Company data</span>
                     <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
                 </a>
@@ -653,7 +654,7 @@
                             <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                             <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
                             <input type="hidden" name="id" t-att-value="widget.model_id"/>
-                            <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                            <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
                             <span>Add...</span>
                         </t>
                     </li>
@@ -739,7 +740,7 @@
             <td t-foreach="aggregate_columns" t-as="column" class="oe_list_footer oe_number"
                 t-att-data-field="column.id" t-att-title="column.label">
             </td>
-            <td t-if="options.deletable"/>
+            <td t-if="options.deletable" class="oe_list_record_delete"/>
         </tr>
     </tfoot>
 </table>
@@ -1319,7 +1320,7 @@
     <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
         <form class="oe_form_binary_form" t-att-target="fileupload_id"
             method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
-            <input type="hidden" name="session_id" value=""/>
+            <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="__content__"/>
             <input type="file" class="oe_form_binary_file" name="ufile" t-if="widget.widget!='image'"/>
@@ -1371,7 +1372,7 @@
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                 <input type="hidden" name="model" t-att-value="widget.view.model"/>
                 <input type="hidden" name="id" value="0"/>
-                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
             </t>
         </div>
     </div>
@@ -1831,7 +1832,7 @@
 <t t-name="ImportDataView">
 <form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
         class="oe_import oe_import_no_result">
-    <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+    <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
     <h2 class="separator horizontal">1. Import a .CSV file</h2>
     <p>Select a .CSV file to import. If you need a sample of file to import,
        you should use the export tool with the "Import Compatible" option.

@@ -6,32 +6,49 @@
 Welcome to OpenERP Web's documentation!
 =======================================
 
-Contents:
+Basics
+------
 
 .. toctree::
     :maxdepth: 1
 
     module
-    widget
+    changelog-7.0
 
+Server-Side Web Framework
+-------------------------
 
-    async
-    rpc
-    qweb
-    client_action
+.. toctree::
+    :maxdepth: 1
+
+    web_controllers
+
+Javascript
+----------
+
+.. toctree::
+    :maxdepth: 1
 
     guidelines
-
+    widget
+    rpc
+    async
+    qweb
+    client_action
     testing
+
+Views
+-----
+
+.. toctree::
+    :maxdepth: 1
 
     search_view
     list_view
     form_view
 
-    changelog-7.0
-
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

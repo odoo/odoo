@@ -265,10 +265,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
+                var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
-                return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
-                    .then(function (records) {
+                if (group.attributes.length >= 1) {
+                    def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
+                }
+                return def.then(function(records) {
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
@@ -591,8 +594,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
     },
     start: function() {
-        var self = this,
-            def = this._super();
+        var self = this;
         if (! self.view.group_by) {
             self.$el.addClass("oe_kanban_no_group");
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
@@ -649,7 +651,40 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             }
         });
         this.is_started = true;
-        return def;
+        var def_tooltip = this.fetch_tooltip();
+        return $.when(def_tooltip);
+    },
+    fetch_tooltip: function() {
+        if (! this.group)
+            return;
+        var field_name = this.view.group_by;
+        var field = this.view.group_by_field;
+        var field_desc = null;
+        var recurse = function(node) {
+            if (node.tag === "field" && node.attrs.name === field_name) {
+                field_desc = node;
+                return;
+            }
+            _.each(node.children, function(child) {
+                if (field_desc === null)
+                    recurse(child);
+            });
+        };
+        recurse(this.view.fields_view.arch);
+        if (! field_desc)
+            return;
+        var options = instance.web.py_eval(field_desc.attrs.options || '{}')
+        if (! options.tooltip_on_group_by)
+            return;
+
+        var self = this;
+        if (this.value) {
+            return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
+                    .filter([["id", "=", this.value]]).first().then(function(res) {
+                self.tooltip = res[options.tooltip_on_group_by];
+                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tipsy({html: true});
+            });
+        }
     },
     compute_cards_auto_height: function() {
         // oe_kanban_no_auto_height is an empty class used to disable this feature

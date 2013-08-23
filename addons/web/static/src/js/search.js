@@ -1,4 +1,9 @@
-openerp.web.search = function(instance) {
+
+(function() {
+
+var instance = openerp;
+openerp.web.search = {};
+
 var QWeb = instance.web.qweb,
       _t =  instance.web._t,
      _lt = instance.web._lt;
@@ -65,7 +70,7 @@ my.SearchQuery = B.Collection.extend({
         }, this);
     },
     add: function (values, options) {
-        options || (options = {});
+        options = options || {};
         if (!(values instanceof Array)) {
             values = [values];
         }
@@ -85,7 +90,7 @@ my.SearchQuery = B.Collection.extend({
         return this;
     },
     toggle: function (value, options) {
-        options || (options = {});
+        options = options || {};
 
         var facet = this.detect(function (facet) {
             return facet.get('category') === value.category
@@ -131,6 +136,7 @@ my.InputView = instance.web.Widget.extend({
         paste: 'onPaste',
     },
     getSelection: function () {
+        this.el.normalize();
         // get Text node
         var root = this.el.childNodes[0];
         if (!root || !root.textContent) {
@@ -139,6 +145,16 @@ my.InputView = instance.web.Widget.extend({
             return {start: 0, end: 0};
         }
         var range = window.getSelection().getRangeAt(0);
+        // In Firefox, depending on the way text is selected (drag, double- or
+        // triple-click) the range may start or end on the parent of the
+        // selected text node‽ Check for this condition and fixup the range
+        // note: apparently with C-a this can go even higher?
+        if (range.startContainer === this.el && range.startOffset === 0) {
+            range.setStart(root, 0);
+        }
+        if (range.endContainer === this.el && range.endOffset === 1) {
+            range.setEnd(root, root.length);
+        }
         assert(range.startContainer === root,
                "selection should be in the input view");
         assert(range.endContainer === root,
@@ -146,9 +162,10 @@ my.InputView = instance.web.Widget.extend({
         return {
             start: range.startOffset,
             end: range.endOffset
-        }
+        };
     },
     onKeydown: function (e) {
+        this.el.normalize();
         var sel;
         switch (e.which) {
         // Do not insert newline, but let it bubble so searchview can use it
@@ -186,6 +203,7 @@ my.InputView = instance.web.Widget.extend({
         }
     },
     setCursorAtEnd: function () {
+        this.el.normalize();
         var sel = window.getSelection();
         sel.removeAllRanges();
         var range = document.createRange();
@@ -196,13 +214,14 @@ my.InputView = instance.web.Widget.extend({
         // from about half the link to half the text, paste in search box then
         // hit the left arrow key, getSelection would blow up).
         //
-        // Explicitly selecting only the inner text node (only child node at
-        // this point, though maybe we should assert that) avoiids the issue
+        // Explicitly selecting only the inner text node (only child node
+        // since we've normalized the parent) avoids the issue
         range.selectNode(this.el.childNodes[0]);
         range.collapse(false);
         sel.addRange(range);
     },
     onPaste: function () {
+        this.el.normalize();
         // In MSIE and Webkit, it is possible to get various representations of
         // the clipboard data at this point e.g.
         // window.clipboardData.getData('Text') and
@@ -224,6 +243,7 @@ my.InputView = instance.web.Widget.extend({
             var data = this.$el.text();
             // paste raw text back in
             this.$el.empty().text(data);
+            this.el.normalize();
             // Set the cursor at the end of the text, so the cursor is not lost
             // in some kind of error-spawning limbo.
             this.setCursorAtEnd();
@@ -386,7 +406,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             });
 
             $.when(load_view).then(function (r) {
-                return self.search_view_loaded(r)
+                return self.search_view_loaded(r);
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
             });
@@ -449,11 +469,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
+            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0
+            delay: 0,
         }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
@@ -526,7 +547,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var val = this.$el.val();
         this.$el.val('');
         var complete = this.$el.data('autocomplete');
-        if ((val && complete.term === undefined) || complete.previous !== undefined) {
+        if ((val && complete.term === undefined) || complete.previous) {
             throw new Error("new jquery.ui version altering implementation" +
                             " details relied on");
         }
@@ -934,7 +955,7 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
      * @returns {jQuery.Deferred<null|Array>}
      */
     complete: function (value) {
-        return $.when(null)
+        return $.when(null);
     },
     /**
      * Returns a Facet instance for the provided defaults if they apply to
@@ -1057,7 +1078,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             icon: this.icon,
             values: values,
             field: this
-        }
+        };
     },
     make_value: function (filter) {
         return {
@@ -1091,7 +1112,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
 
         if (!contexts.length) { return; }
         if (contexts.length === 1) { return contexts[0]; }
-        return _.extend(new instance.web.CompoundContext, {
+        return _.extend(new instance.web.CompoundContext(), {
             __contexts: contexts
         });
     },
@@ -1158,9 +1179,9 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         return $.when(_.map(facet_values, function (facet_value) {
             return {
                 label: _.str.sprintf(self.completion_label.toString(),
-                                     facet_value.label),
+                                     _.escape(facet_value.label)),
                 facet: self.make_facet([facet_value])
-            }
+            };
         }));
     }
 });
@@ -1182,7 +1203,7 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
                 get_context: this.proxy('get_context'),
                 get_domain: this.proxy('get_domain'),
                 get_groupby: this.proxy('get_groupby')
-            }
+            };
         }
     },
     match_facet: function (facet) {
@@ -1260,7 +1281,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
 
         if (contexts.length === 1) { return contexts[0]; }
 
-        return _.extend(new instance.web.CompoundContext, {
+        return _.extend(new instance.web.CompoundContext(), {
             __contexts: contexts
         });
     },
@@ -1305,7 +1326,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
             domains.unshift(['|']);
         }
 
-        return _.extend(new instance.web.CompoundDomain, {
+        return _.extend(new instance.web.CompoundDomain(), {
             __domains: domains
         });
     }
@@ -1326,8 +1347,8 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
         if (_.isEmpty(value)) { return $.when(null); }
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s for: %(value)s")), {
-                field: '<em>' + this.attrs.string + '</em>',
-                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
+                value: '<strong>' + _.escape(value) + '</strong>'});
         return $.when([{
             label: label,
             facet: {
@@ -1344,8 +1365,8 @@ instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends in
         if (isNaN(val)) { return $.when(); }
         var label = _.str.sprintf(
             _t("Search %(field)s for: %(value)s"), {
-                field: '<em>' + this.attrs.string + '</em>',
-                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
+                value: '<strong>' + _.escape(value) + '</strong>'});
         return $.when([{
             label: label,
             facet: {
@@ -1433,13 +1454,13 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
             })
             .map(function (sel) {
                 return {
-                    label: sel[1],
+                    label: _.escape(sel[1]),
                     facet: facet_from(self, sel)
                 };
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
         return $.when.call(null, [{
-            label: this.attrs.string
+            label: _.escape(this.attrs.string)
         }].concat(results));
     },
     facet_for: function (value) {
@@ -1477,7 +1498,7 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
         var date_string = instance.web.format_value(d, this.attrs);
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
-                field: '<em>' + this.attrs.string + '</em>',
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
                 value: '<strong>' + date_string + '</strong>'});
         return $.when([{
             label: label,
@@ -1524,10 +1545,10 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             context: context
         }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
-            return [{label: self.attrs.string}].concat(
+            return [{label: _.escape(self.attrs.string)}].concat(
                 _(results).map(function (result) {
                     return {
-                        label: result[1],
+                        label: _.escape(result[1]),
                         facet: facet_from(self, result)
                     };
                 }));
@@ -1548,7 +1569,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return this.model.call('name_get', [value]).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
-        })
+        });
     },
     value_from: function (facetValue) {
         return facetValue.get('label');
@@ -1892,7 +1913,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .filter(function (field) { return !field.deprecated; })
+            .filter(function (field) { return !field.deprecated && (field.store === void 0 || field.store || field.fnct_search); })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
@@ -1903,7 +1924,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
     },
     changed: function() {
         var nval = this.$(".searchview_extended_prop_field").val();
-        if(this.attrs.selected == null || nval != this.attrs.selected.name) {
+        if(this.attrs.selected === null || this.attrs.selected === undefined || nval != this.attrs.selected.name) {
             this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
         }
     },
@@ -1925,13 +1946,13 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
      */
     select_field: function(field) {
         var self = this;
-        if(this.attrs.selected != null) {
+        if(this.attrs.selected !== null && this.attrs.selected !== undefined) {
             this.value.destroy();
             this.value = null;
             this.$('.searchview_extended_prop_op').html('');
         }
         this.attrs.selected = field;
-        if(field == null) {
+        if(field === null || field === undefined) {
             return;
         }
 
@@ -1951,7 +1972,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
 
     },
     get_proposition: function() {
-        if ( this.attrs.selected == null)
+        if (this.attrs.selected === null || this.attrs.selected === undefined)
             return null;
         var field = this.attrs.selected;
         var op_select = this.$('.searchview_extended_prop_op')[0];
@@ -2081,7 +2102,7 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
     get_value: function() {
         try {
             var val =this.$el.val();
-            return instance.web.parse_value(val == "" ? 0 : val, {'widget': 'integer'});
+            return instance.web.parse_value(val === "" ? 0 : val, {'widget': 'integer'});
         } catch (e) {
             return "";
         }
@@ -2108,7 +2129,7 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
     get_value: function() {
         try {
             var val =this.$el.val();
-            return instance.web.parse_value(val == "" ? 0.0 : val, {'widget': 'float'});
+            return instance.web.parse_value(val === "" ? 0.0 : val, {'widget': 'float'});
         } catch (e) {
             return "";
         }
@@ -2163,6 +2184,6 @@ instance.web.search.custom_filters = new instance.web.Registry({
     'id': 'instance.web.search.ExtendedSearchProposition.Id'
 });
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

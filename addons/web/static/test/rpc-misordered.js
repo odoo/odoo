@@ -113,7 +113,6 @@ openerp.testing.section('misordered resolution managemeng', {
 
         var done = $.Deferred();
         setTimeout(function () {
-            start();
             // d1 is failed
             ok(!done1);
             ok(fail1);
@@ -122,6 +121,6 @@ openerp.testing.section('misordered resolution managemeng', {
             ok(!fail2);
             done.resolve();
         }, 400);
-        return $.when(d1, d2, done)
+        return $.when(d1, d2, done);
     });
 });

@@ -18,16 +18,16 @@ openerp.testing.section('data.model.group_by', {
                       "should have single grouping field");
             return group_result;
         });
-        mock('/web/dataset/search_read', function (args) {
-            deepEqual(args.params.domain, [['bar', '=', 3]],
+        mock('foo:search_read', function (args, kwargs) {
+            deepEqual(kwargs.domain, [['bar', '=', 3]],
                       "should have domain matching that of group_by result");
-            return {records: [
+            return [
                 {bar: 3, id: 1},
                 {bar: 3, id: 2},
                 {bar: 3, id: 4},
                 {bar: 3, id: 8},
                 {bar: 3, id: 16}
-            ], length: 5};
+            ];
         });
 
         return m.query().group_by('bar')
@@ -38,7 +38,7 @@ openerp.testing.section('data.model.group_by', {
             ok(first.attributes.has_children, "should have children");
             return  first.query().all();
         }).done(function (first) {
-            equal(first.length, 5, "should have 5 records")
+            equal(first.length, 5, "should have 5 records");
         });
     });
     test('noleaf', {asserts: 5}, function (instance, $fix, mock) {
@@ -57,7 +57,7 @@ openerp.testing.section('data.model.group_by', {
             equal(groups.length, 3, "should have three results");
             ok(!groups[0].attributes.has_children,
                 "should not have children because no_leaf");
-        })
+        });
     });
     test('nogroup', {rpc: false}, function (instance, $f, mock) {
         var m = new instance.web.Model('foo');

@@ -1,10 +1,9 @@
-/*---------------------------------------------------------
- * OpenERP Web core
- *--------------------------------------------------------*/
-var console;
-if (!console) {
+
+(function() {
+
+if (typeof(console) === "undefined") {
     // Even IE9 only exposes console object if debug window opened
-    console = {};
+    window.console = {};
     ('log error debug info warn assert clear dir dirxml trace group'
         + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
         + ' exception').split(/\s+/).forEach(function(property) {
@@ -12,38 +11,237 @@ if (!console) {
     });
 }
 
-openerp.web.coresetup = function(instance) {
+// shim provided by mozilla for function.bind
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== "function") {
+      // closest thing possible to the ECMAScript 5 internal IsCallable function
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
 
-/** Session openerp specific RPC class */
-instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
+    var aArgs = Array.prototype.slice.call(arguments, 1), 
+        fToBind = this, 
+        fNOP = function () {},
+        fBound = function () {
+          return fToBind.apply(this instanceof fNOP && oThis
+                                 ? this
+                                 : oThis,
+                               aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+
+var instance = openerp;
+openerp.web.core = {};
+
+var ControllerMixin = {
+    /**
+     * Informs the action manager to do an action. This supposes that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
+     */
+    do_action: function() {
+        var parent = this.getParent();
+        if (parent) {
+            return parent.do_action.apply(parent, arguments);
+        }
+        return false;
+    },
+    do_notify: function() {
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
+        }
+        return false;
+    },
+    do_warn: function() {
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
+        }
+        return false;
+    },
+    rpc: function(url, data, options) {
+        return this.alive(openerp.session.rpc(url, data, options));
+    }
+};
+
+/**
+    A class containing common utility methods useful when working with OpenERP as well as the PropertiesMixin.
+*/
+openerp.web.Controller = openerp.web.Class.extend(openerp.web.PropertiesMixin, ControllerMixin, {
+    /**
+     * Constructs the object and sets its parent if a parent is given.
+     *
+     * @param {openerp.web.Controller} parent Binds the current instance to the given Controller instance.
+     * When that controller is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     */
+    init: function(parent) {
+        openerp.web.PropertiesMixin.init.call(this);
+        this.setParent(parent);
+        this.session = openerp.session;
+    },
+});
+
+openerp.web.Widget.include(_.extend({}, ControllerMixin, {
     init: function() {
         this._super.apply(this, arguments);
+        this.session = openerp.session;
+    },
+}));
+
+instance.web.Registry = instance.web.Class.extend({
+    /**
+     * Stores a mapping of arbitrary key (strings) to object paths (as strings
+     * as well).
+     *
+     * Resolves those paths at query time in order to always fetch the correct
+     * object, even if those objects have been overloaded/replaced after the
+     * registry was created.
+     *
+     * An object path is simply a dotted name from the instance root to the
+     * object pointed to (e.g. ``"instance.web.Session"`` for an OpenERP
+     * session object).
+     *
+     * @constructs instance.web.Registry
+     * @param {Object} mapping a mapping of keys to object-paths
+     */
+    init: function (mapping) {
+        this.parent = null;
+        this.map = mapping || {};
+    },
+    /**
+     * Retrieves the object matching the provided key string.
+     *
+     * @param {String} key the key to fetch the object for
+     * @param {Boolean} [silent_error=false] returns undefined if the key or object is not found, rather than throwing an exception
+     * @returns {Class} the stored class, to initialize or null if not found
+     */
+    get_object: function (key, silent_error) {
+        var path_string = this.map[key];
+        if (path_string === undefined) {
+            if (this.parent) {
+                return this.parent.get_object(key, silent_error);
+            }
+            if (silent_error) { return void 'nooo'; }
+            return null;
+        }
+
+        var object_match = instance;
+        var path = path_string.split('.');
+        // ignore first section
+        for(var i=1; i<path.length; ++i) {
+            object_match = object_match[path[i]];
+
+            if (object_match === undefined) {
+                if (silent_error) { return void 'noooooo'; }
+                return null;
+            }
+        }
+        return object_match;
+    },
+    /**
+     * Checks if the registry contains an object mapping for this key.
+     *
+     * @param {String} key key to look for
+     */
+    contains: function (key) {
+        if (key === undefined) { return false; }
+        if (key in this.map) {
+            return true;
+        }
+        if (this.parent) {
+            return this.parent.contains(key);
+        }
+        return false;
+    },
+    /**
+     * Tries a number of keys, and returns the first object matching one of
+     * the keys.
+     *
+     * @param {Array} keys a sequence of keys to fetch the object for
+     * @returns {Class} the first class found matching an object
+     */
+    get_any: function (keys) {
+        for (var i=0; i<keys.length; ++i) {
+            var key = keys[i];
+            if (!this.contains(key)) {
+                continue;
+            }
+
+            return this.get_object(key);
+        }
+        return null;
+    },
+    /**
+     * Adds a new key and value to the registry.
+     *
+     * This method can be chained.
+     *
+     * @param {String} key
+     * @param {String} object_path fully qualified dotted object path
+     * @returns {instance.web.Registry} itself
+     */
+    add: function (key, object_path) {
+        this.map[key] = object_path;
+        return this;
+    },
+    /**
+     * Creates and returns a copy of the current mapping, with the provided
+     * mapping argument added in (replacing existing keys if needed)
+     *
+     * Parent and child remain linked, a new key in the parent (which is not
+     * overwritten by the child) will appear in the child.
+     *
+     * @param {Object} [mapping={}] a mapping of keys to object-paths
+     */
+    extend: function (mapping) {
+        var child = new instance.web.Registry(mapping);
+        child.parent = this;
+        return child;
+    },
+    /**
+     * @deprecated use Registry#extend
+     */
+    clone: function (mapping) {
+        console.warn('Registry#clone is deprecated, use Registry#extend');
+        return this.extend(mapping);
+    }
+});
+
+instance.web.py_eval = function(expr, context) {
+    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
+};
+
+/*
+    Some retro-compatibility.
+*/
+instance.web.JsonRPC = instance.web.Session;
+
+/** Session openerp specific RPC class */
+instance.web.Session.include( /** @lends instance.web.Session# */{
+    init: function() {
+        this._super.apply(this, arguments);
+        this.debug = ($.deparam($.param.querystring()).debug !== undefined);
         // TODO: session store in cookie should be optional
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
-    },
-    rpc: function(url, params, options) {
-        params.session_id = this.session_id;
-        return this._super(url, params, options);
     },
     /**
      * Setup a sessionm
      */
     session_bind: function(origin) {
-        if (!_.isUndefined(this.origin)) {
-            if (this.origin === origin) {
-                return $.when();
-            }
-            throw new Error('Session already bound to ' + this.origin);
-        }
         var self = this;
         this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
-        this.session_id = false;
-        this.uid = false;
-        this.username = false;
+        this.uid = null;
+        this.username = null;
         this.user_context= {};
-        this.db = false;
+        this.db = null;
         this.module_list = instance._modules.slice();
         this.module_loaded = {};
         _(this.module_list).each(function (mod) {
@@ -57,8 +255,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     session_init: function () {
         var self = this;
-        // TODO: session store in cookie should be optional
-        this.session_id = this.get_cookie('session_id');
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
             var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
@@ -73,21 +269,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             );
         });
     },
-    /**
-     * (re)loads the content of a session: db name, username, user id, session
-     * context and status of the support contract
-     *
-     * @returns {$.Deferred} deferred indicating the session is done reloading
-     */
-    session_reload: function () {
-        var self = this;
-        return this.rpc("/web/session/get_session_info", {}).done(function(result) {
-            // If immediately follows a login (triggered by trying to restore
-            // an invalid session or no session at all), refresh session data
-            // (should not change, but just in case...)
-            _.extend(self, result);
-        });
-    },
     session_is_valid: function() {
         var db = $.deparam.querystring().db;
         if (db && this.db !== db) {
@@ -98,23 +279,13 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    session_authenticate: function(db, login, password, _volatile) {
+    session_authenticate: function() {
         var self = this;
-        var base_location = document.location.protocol + '//' + document.location.host;
-        var params = { db: db, login: login, password: password, base_location: base_location };
-        return this.rpc("/web/session/authenticate", params).then(function(result) {
-            if (!result.uid) {
-                return $.Deferred().reject();
-            }
-            _.extend(self, result);
-            if (!_volatile) {
-                self.set_cookie('session_id', self.session_id);
-            }
+        return $.when(this._super.apply(this, arguments)).then(function() {
             return self.load_modules();
         });
     },
     session_logout: function() {
-        this.set_cookie('session_id', '');
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },
@@ -189,10 +360,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         });
     },
     load_translations: function() {
-        var params = { mods: this.module_list, lang: this.user_context.lang };
-        return this.rpc('/web/webclient/translations', params).done(function(trans) {
-            instance.web._t.database.set_bundle(trans);
-        });
+        return instance.web._t.database.load_translations(this, this.module_list, this.user_context.lang);
     },
     load_css: function (files) {
         var self = this;
@@ -246,10 +414,15 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 continue;
             instance[mod] = {};
             // init module mod
-            if(instance._openerp[mod] != undefined) {
-                instance._openerp[mod](instance,instance[mod]);
-                this.module_loaded[mod] = true;
+            var fct = instance._openerp[mod];
+            if(typeof(fct) === "function") {
+                instance._openerp[mod] = {};
+                for (var k in fct) {
+                    instance._openerp[mod][k] = fct[k];
+                }
+                fct(instance, instance._openerp[mod]);
             }
+            this.module_loaded[mod] = true;
         }
     },
     /**
@@ -282,6 +455,16 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             cookie_name = 'fileToken', cookie_length = cookie_name.length,
             CHECK_INTERVAL = 1000, id = _.uniqueId('get_file_frame'),
             remove_form = false;
+
+
+        // iOS devices doesn't allow iframe use the way we do it,
+        // opening a new window seems the best way to workaround
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+            var params = _.extend({}, options.data || {}, {token: token});
+            var url = this.url(options.url, params);
+            instance.web.unblockUI();
+            return window.open(url);
+        }
 
         var $form, $form_data = $('<div>');
 
@@ -320,15 +503,16 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }).appendTo(document.body);
         }
 
-        _(_.extend({}, options.data || {},
-                   {session_id: this.session_id, token: token}))
-            .each(function (value, key) {
+        var hparams = _.extend({}, options.data || {}, {token: token});
+        if (this.override_session)
+            hparams.session_id = this.session_id;
+        _.each(hparams, function (value, key) {
                 var $input = $form.find('[name=' + key +']');
                 if (!$input.length) {
                     $input = $('<input type="hidden" name="' + key + '">')
                         .appendTo($form_data);
                 }
-                $input.val(value)
+                $input.val(value);
             });
 
         $form
@@ -389,61 +573,16 @@ instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, 
             });
         });
     }
-})
+});
 instance.web.bus = new instance.web.Bus();
 
-/** OpenERP Translations */
-instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
-    /**
-     * @constructs instance.web.TranslationDataBase
-     * @extends instance.web.Class
-     */
-    init: function() {
-        this.db = {};
-        this.parameters = {"direction": 'ltr',
-                        "date_format": '%m/%d/%Y',
-                        "time_format": '%H:%M:%S',
-                        "grouping": [],
-                        "decimal_point": ".",
-                        "thousands_sep": ","};
-    },
+instance.web.TranslationDataBase.include({
     set_bundle: function(translation_bundle) {
-        var self = this;
-        this.db = {};
-        var modules = _.keys(translation_bundle.modules);
-        modules.sort();
-        if (_.include(modules, "web")) {
-            modules = ["web"].concat(_.without(modules, "web"));
-        }
-        _.each(modules, function(name) {
-            self.add_module_translation(translation_bundle.modules[name]);
-        });
+        this._super(translation_bundle);
         if (translation_bundle.lang_parameters) {
-            this.parameters = translation_bundle.lang_parameters;
-            this.parameters.grouping = py.eval(
-                    this.parameters.grouping);
+            this.parameters.grouping = py.eval(this.parameters.grouping);
         }
     },
-    add_module_translation: function(mod) {
-        var self = this;
-        _.each(mod.messages, function(message) {
-            self.db[message.id] = message.string;
-        });
-    },
-    build_translation_function: function() {
-        var self = this;
-        var fcnt = function(str) {
-            var tmp = self.get(str);
-            return tmp === undefined ? str : tmp;
-        };
-        fcnt.database = this;
-        return fcnt;
-    },
-    get: function(key) {
-        if (this.db[key])
-            return this.db[key];
-        return undefined;
-    }
 });
 
 /** Custom jQuery plugins */
@@ -451,12 +590,12 @@ $.fn.getAttributes = function() {
     var o = {};
     if (this.length) {
         for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
-            attr = attrs.item(i)
+            attr = attrs.item(i);
             o[attr.nodeName] = attr.nodeValue;
         }
     }
     return o;
-}
+};
 $.fn.openerpClass = function(additionalClass) {
     // This plugin should be applied on top level elements
     additionalClass = additionalClass || '';
@@ -474,21 +613,7 @@ $.fn.openerpBounce = function() {
 };
 
 /** Jquery extentions */
-$.Mutex = (function() {
-    function Mutex() {
-        this.def = $.Deferred().resolve();
-    }
-    Mutex.prototype.exec = function(action) {
-        var current = this.def;
-        var next = this.def = $.Deferred();
-        return current.then(function() {
-            return $.when(action()).always(function() {
-                next.resolve();
-            });
-        });
-    };
-    return Mutex;
-})();
+$.Mutex = openerp.Mutex;
 
 $.async_when = function() {
     var async = false;
@@ -528,8 +653,6 @@ $.async_when = function() {
 /** Setup default session */
 instance.session = new instance.web.Session();
 
-/** Configure default qweb */
-instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template)
@@ -542,35 +665,31 @@ instance.web._t = new instance.web.TranslationDataBase().build_translation_funct
  * @returns {Object} lazy translation object
  */
 instance.web._lt = function (s) {
-    return {toString: function () { return instance.web._t(s); }}
+    return {toString: function () { return instance.web._t(s); }};
 };
-instance.web.qweb = new QWeb2.Engine();
 instance.web.qweb.debug = instance.session.debug;
-instance.web.qweb.default_dict = {
-    '_' : _,
-    '_t' : instance.web._t,
-    'JSON': JSON,
+_.extend(instance.web.qweb.default_dict, {
     '__debug__': instance.session.debug,
-};
+});
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
     switch (this.node.nodeType) {
-        case 3:
-        case 4:
+        case Node.TEXT_NODE:
+        case Node.CDATA_SECTION_NODE:
             // Text and CDATAs
             var translation = this.node.parentNode.attributes['t-translation'];
             if (translation && translation.value === 'off') {
                 return;
             }
-            var match = /^(\s*)(.+?)(\s*)$/.exec(this.node.data);
+            var match = /^(\s*)([\s\S]+?)(\s*)$/.exec(this.node.data);
             if (match) {
                 this.node.data = match[1] + instance.web._t(match[2]) + match[3];
             }
             break;
-        case 1:
+        case Node.ELEMENT_NODE:
             // Element
             var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
-            while (attr = attrs.pop()) {
+            while ((attr = attrs.pop())) {
                 if (this.attributes[attr]) {
                     this.attributes[attr] = instance.web._t(this.attributes[attr]);
                 }
@@ -677,19 +796,19 @@ instance.web.blockUI = function() {
     instance.web.Throbber.throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
     return tmp;
-}
+};
 instance.web.unblockUI = function() {
     _.each(instance.web.Throbber.throbbers, function(el) {
         el.destroy();
     });
     return $.unblockUI.apply($, arguments);
-}
+};
 
 /**
  * Registry for all the client actions key: tag value: widget
  */
 instance.web.client_actions = new instance.web.Registry();
 
-};
+})();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

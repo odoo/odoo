@@ -1,4 +1,7 @@
+(function() {
+
 openerp.test_support = {
+
     setup_session: function (session) {
         var origin = location.protocol+"//"+location.host;
         _.extend(session, {
@@ -73,6 +76,8 @@ openerp.test_support = {
                 return;
             }
             fn(e.data.name);
-        })
+        });
     }
 };
+
+})();

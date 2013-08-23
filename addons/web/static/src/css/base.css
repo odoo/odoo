@@ -579,6 +579,9 @@
 .openerp .oe_tags .text-wrap textarea {
   width: 100% !important;
 }
+.openerp .oe_tags .text-core {
+  min-height: 22px;
+}
 .openerp .oe_tags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
   font-style: italic;
   text-decoration: none;
@@ -698,7 +701,6 @@
   display: none;
   position: absolute;
   top: 26px;
-  left: 0;
   z-index: 3;
   margin: 0;
   padding: 0;
@@ -1695,14 +1697,14 @@
   top: 0;
   right: 18px;
   width: 15px;
-  height: 100%;
+  height: 24px;
   background: url(../img/search_reset.gif) center center no-repeat;
 }
 .openerp .oe_searchview .oe_searchview_unfold_drawer {
   position: absolute;
   top: 0;
   right: 0;
-  height: 100%;
+  height: 24px;
   padding: 0 7px 0 4px;
   color: #cccccc;
   cursor: pointer;
@@ -1751,7 +1753,7 @@
 }
 .openerp .oe_searchview .oe_searchview_facets {
   min-height: 22px;
-  margin-left: 15px;
+  margin: 0 35px 0 15px;
 }
 .openerp .oe_searchview .oe_searchview_facets * {
   vertical-align: top;
@@ -1759,7 +1761,6 @@
   line-height: 17px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
-  height: 18px;
   margin: 1px 0;
   font-size: 11px;
 }
@@ -1838,6 +1839,7 @@
   display: block;
 }
 .openerp .oe_searchview .oe_searchview_drawer {
+  cursor: default;
   position: absolute;
   z-index: 2;
   margin-top: 4px;
@@ -1990,7 +1992,6 @@
   padding: 0;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced li {
-  cursor: pointer;
   position: relative;
   list-style: none;
   margin: 0;
@@ -2147,13 +2148,12 @@
 .openerp .oe_form_readonly .oe_form .oe_form_field_date {
   width: auto;
 }
-.openerp .oe_form_readonly .oe_form_field_boolean .boolean{
+.openerp .oe_form_readonly .oe_form_field_boolean.boolean {
   position: relative;
-  top: -14px;
+  top: -20px;
   width: 14px;
   height: 14px;
-  z-index:10000;
-  /* IE needs a color in order for the layer to respond to mouse events */
+  z-index: 10000;
   backgroundColor: "#fff";
   opacity: 0;
 }
@@ -2395,6 +2395,9 @@
 .openerp .oe_form .oe_form_field_selection select {
   width: 100%;
 }
+.openerp .oe_form .oe_notebook_page .oe_form_field_text textarea {
+  min-height: 96px;
+}
 .openerp .oe_form .oe_form_field_text.oe_inline, .openerp .oe_form .oe_form_field_text.oe_inline > textarea {
   width: 500px;
 }
@@ -2508,6 +2511,10 @@
   margin-top: 32px;
   margin-bottom: 32px;
   text-align: justify;
+}
+.openerp .oe_form .oe_form_field_html .oe_input_icon {
+  float: right;
+  margin: 4px 7px;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_integer input {
   width: 6em;
@@ -2956,8 +2963,8 @@
   margin: 0 !important;
   padding: 0;
 }
-.openerp .oe_list .oe_form .oe_form_field_boolean {
-  padding: 1px 6px 3px;
+.openerp .oe_list .oe_form .oe_form_field_boolean input {
+  margin: 1px 0 0 10px !important;
 }
 .openerp .oe_list .oe_list_content .oe_group_header {
   background-color: #ededed;
@@ -2997,7 +3004,6 @@
   position: relative;
 }
 .openerp .oe_list_content th.oe_sortable div:after {
-  float: right;
   margin-right: 6px;
   content: "";
   margin-top: 7px;
@@ -3007,6 +3013,7 @@
   visibility: hidden;
 }
 .openerp .oe_list_content th.sortup div:after {
+  float: right;
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
@@ -3015,6 +3022,7 @@
   min-width: 70px;
 }
 .openerp .oe_list_content th.sortdown div:after {
+  float: right;
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;

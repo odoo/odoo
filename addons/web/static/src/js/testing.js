@@ -3,13 +3,12 @@ openerp.testing = {};
 (function (testing) {
     var dependencies = {
         pyeval: [],
-        corelib: ['pyeval'],
-        coresetup: ['corelib'],
-        data: ['corelib', 'coresetup'],
+        core: ['pyeval'],
+        data: ['core'],
         dates: [],
-        formats: ['coresetup', 'dates'],
-        chrome: ['corelib', 'coresetup'],
-        views: ['corelib', 'coresetup', 'data', 'chrome'],
+        formats: ['core', 'dates'],
+        chrome: ['core'],
+        views: ['core', 'data', 'chrome'],
         search: ['views', 'formats'],
         list: ['views', 'data'],
         form: ['data', 'views', 'list', 'formats'],
@@ -53,31 +52,34 @@ openerp.testing = {};
     testing.mockifyRPC = function (instance, responses) {
         var session = instance.session;
         session.responses = responses || {};
-        session.rpc_function = function (url, payload) {
+        session.rpc = function(url, rparams, options) {
+            if (_.isString(url)) {
+                url = {url: url};
+            }
             var fn, params;
-            var needle = payload.params.model + ':' + payload.params.method;
+            var needle = rparams.model + ':' + rparams.method;
             if (url.url === '/web/dataset/call_kw'
                 && needle in this.responses) {
                 fn = this.responses[needle];
                 params = [
-                    payload.params.args || [],
-                    payload.params.kwargs || {}
+                    rparams.args || [],
+                    rparams.kwargs || {}
                 ];
             } else {
                 fn = this.responses[url.url];
-                params = [payload];
+                params = [{params: rparams}];
             }
 
             if (!fn) {
                 return $.Deferred().reject({}, 'failed',
                     _.str.sprintf("Url %s not found in mock responses, with arguments %s",
-                                  url.url, JSON.stringify(payload.params))
+                                  url.url, JSON.stringify(rparams))
                 ).promise();
             }
             try {
                 return $.when(fn.apply(null, params)).then(function (result) {
                     // Wrap for RPC layer unwrapper thingy
-                    return {result: result};
+                    return result;
                 });
             } catch (e) {
                 // not sure why this looks like that
@@ -164,6 +166,8 @@ openerp.testing = {};
         });
     };
 
+    var openerp_inited = false;
+
     var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
@@ -193,8 +197,7 @@ openerp.testing = {};
             0, module_index + 1 || undefined);
 
         // Serialize options for this precise test case
-        // WARNING: typo is from jquery, do not fix!
-        var env = QUnit.config.currentModuleTestEnviroment;
+        var env = QUnit.config.currentModuleTestEnvironment;
         // section setup
         //     case setup
         //         test
@@ -240,40 +243,13 @@ openerp.testing = {};
         }
 
         QUnit.test(name, function () {
-            var instance;
-            if (!opts.dependencies) {
-                instance = openerp.init(module_deps);
-            } else {
-                // empty-but-specified dependencies actually allow running
-                // without loading any module into the instance
-
-                // TODO: clean up this mess
-                var d = opts.dependencies.slice();
-                // dependencies list should be in deps order, reverse to make
-                // loading order from last
-                d.reverse();
-                var di = 0;
-                while (di < d.length) {
-                    var m = /^web\.(\w+)$/.exec(d[di]);
-                    if (m) {
-                        d[di] = m[1];
-                    }
-                    d.splice.apply(d, [di+1, 0].concat(
-                        _(dependencies[d[di]]).reverse()));
-                    ++di;
-                }
-
-                instance = openerp.init(null);
-                _(d).chain()
-                    .reverse()
-                    .uniq()
-                    .each(function (module) {
-                        openerp.web[module](instance);
-                    });
+            var instance = openerp;
+            if (!openerp_inited) {
+                openerp.init(module_deps);
+                openerp_inited = true;
             }
-            if (instance.session) {
-                instance.session.uid = 42;
-            }
+            instance.session = new instance.web.Session();
+            instance.session.uid = 42;
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);
             }
@@ -359,7 +335,7 @@ openerp.testing = {};
 
                 return $.Deferred(function (d) {
                     $.when(result).then(function () {
-                        d.resolve.apply(d, arguments)
+                        d.resolve.apply(d, arguments);
                     }, function () {
                         d.reject.apply(d, arguments);
                     });

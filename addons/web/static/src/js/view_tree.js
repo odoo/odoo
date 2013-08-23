@@ -2,7 +2,10 @@
  * OpenERP web library
  *---------------------------------------------------------*/
 
-openerp.web.view_tree = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.view_tree = {};
 var QWeb = instance.web.qweb,
       _lt = instance.web._lt;
 
@@ -265,4 +268,4 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         this.hidden = true;
     }
 });
-};
+})();
