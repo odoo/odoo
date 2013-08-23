@@ -142,7 +142,7 @@
   border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }
 
-.oe_drop_zone.oe_mutate {
+.oe_drop_zone.oe_overlay {
   position: absolute;
   background: rgba(153, 0, 255, 0.17);
   border-radius: 3px;
@@ -155,6 +155,63 @@
 .oe_drop_zone.oe_hover {
   background: rgba(0, 255, 133, 0.22);
   z-index: 99;
+}
+
+/* ---- SNIPPET MANIPULATOR ---- */
+.oe_snippet_manipulator {
+  display: block;
+  position: absolute;
+  background: rgba(153, 0, 255, 0.1);
+  border-radius: 3px;
+  border: solid 1px rgba(153, 0, 255, 0.5);
+  opacity: 0;
+  transition: opacity 100ms linear;
+}
+.oe_snippet_manipulator > .oe_handle {
+  display: none;
+}
+.oe_snippet_manipulator:hover, .oe_snippet_manipulator.oe_hover {
+  opacity: 1;
+}
+.oe_snippet_manipulator:hover > .oe_handle, .oe_snippet_manipulator.oe_hover > .oe_handle {
+  display: block;
+}
+
+.oe_handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  background: white;
+  border: solid 1px rgba(153, 0, 255, 0.5);
+  box-sizing: border-box;
+  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+  margin: -8px;
+  cursor: move;
+  -webkit-transition: background 100ms linear;
+}
+.oe_handle:hover {
+  background: #9900ff;
+}
+
+.oe_handle.nw, .oe_handle.n, .oe_handle.ne {
+  top: 0px;
+}
+
+.oe_handle.ne, .oe_handle.e, .oe_handle.se {
+  left: auto;
+  right: 0px;
+}
+
+.oe_handle.sw, .oe_handle.s, .oe_handle.se {
+  top: auto;
+  bottom: 0px;
+}
+
+.oe_handle.nw, .oe_handle.w, .oe_handle.sw {
+  left: 0px;
 }
 
 /* ---- MOBILE PREVIEW ---- */
