@@ -1,15 +1,12 @@
--
-  For check product removal  create removal strategy "LIFO"
--   
-  !record {model: product.removal, id: product_removal_lifo}:
-    product_categ_id: product.product_category_1
-    method: lifo
-    location_id: stock.stock_location_stock
 - 
   Set product category removal strategy as LIFO 
 - 
-  !record {model: product.category, id: product.product_category_1}:
-    removal_strategy_ids: product_removal_lifo
+    !record {model: product.category, id: product.product_category_001}:
+    name : Lifo Category
+    removal_strategy_ids: 
+      - product_categ_id: product.product_category_1
+        method: lifo
+        location_id: stock.stock_location_stock
 -
   Set a product as using lifo price
 -
