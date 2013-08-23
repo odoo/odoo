@@ -79,7 +79,6 @@
   border-radius: 3px;
   margin: 10px;
   margin-right: 0px;
-  cursor: move;
   position: relative;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -153,4 +152,48 @@
 .oe_hover_zone.oe_hover {
   background: rgba(0, 255, 133, 0.22);
   z-index: 100000;
+}
+
+.oe_stop_scrolling {
+  height: 100%;
+  overflow: hidden;
+}
+
+#mobile-preview.modal {
+  height: 660px;
+  background-color: black;
+  border: 2px solid;
+  border-radius: 10px;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width: 330px;
+}
+
+#mobile-preview .modal-header {
+  border-bottom: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+#mobile-preview .modal-body {
+  max-height: 600px;
+  padding: 0;
+  margin: 0;
+}
+
+.oe_mobile_viewport {
+  width: 320px;
+  height: 568px;
+  padding: 5px;
+  border: none;
+}
+
+.oe_mobile_preview_header .close {
+  color: lightgrey;
+  opacity: 1;
+}
+.oe_mobile_preview_header .close:hover {
+  color: darkgrey;
 }

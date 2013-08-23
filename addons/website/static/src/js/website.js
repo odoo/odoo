@@ -45,6 +45,7 @@
             'click button[data-action=save]': 'save',
             'click button[data-action=cancel]': 'cancel',
             'click button[data-action=snippet]': 'snippet',
+            'click a[data-action=show-mobile-preview]': 'mobilePreview',
         },
         container: 'body',
         customize_setup: function() {
@@ -73,6 +74,9 @@
                 }).then( function(result) {
                     window.location.reload();
                 });
+            });
+            $('#mobile-preview').on('hidden', function () {
+                $('body').removeClass('oe_stop_scrolling');
             });
         },
         start: function() {
@@ -191,6 +195,11 @@
         },
         snippet: function (ev) {
             this.snippets.toggle();
+        },
+        mobilePreview: function () {
+            $('body').addClass('oe_stop_scrolling');
+            document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
+
         },
     });
 
@@ -364,7 +373,7 @@
                 appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
-                 
+
                     self.activate_drop_zones({
                         siblings: snippet.data('selector-siblings'),
                         childs:   snippet.data('selector-childs')
@@ -372,7 +381,7 @@
 
                     $('.oe_drop_zone').droppable({
                         over:   function(){
-                            // FIXME: stupid hack to prevent multiple droppable to activate at once ... 
+                            // FIXME: stupid hack to prevent multiple droppable to activate at once ...
                             // it's not even working properly but it's better than nothing.
                             $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
                             $(this).addClass("oe_hover");
@@ -428,7 +437,7 @@
             var child_selector   =  selector.childs   || '';
             var sibling_selector =  selector.siblings || '';
             var zone_template = "<div class='oe_drop_zone'></div>";
-            
+
             $('.oe_drop_zone').remove();
 
             if(child_selector){
@@ -438,7 +447,7 @@
                     $zones.eq(i).prepend(zone_template);
                 }
             }
-            
+
             if(sibling_selector){
                 var $zones = $(sibling_selector);
                 for( var i = 0, len = $zones.length; i < len; i++ ){
@@ -682,6 +691,63 @@
     var dom_ready = $.Deferred();
     $(dom_ready.resolve);
 
+    website.init_kanban = function ($kanban) {
+        $('.js_kanban_col', $kanban).each(function () {
+            var $col = $(this);
+            var $pagination = $('.pagination', $col);
+            if(!$pagination.size()) {
+                return;
+            }
+
+            var page_count =  $col.data('page_count');
+            var scope = $pagination.last().find("li").size()-2;
+            var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
+
+            var data = {
+                'domain': $col.data('domain'),
+                'model': $col.data('model'),
+                'template': $col.data('template'),
+                'step': $col.data('step'),
+                'orderby': $col.data('orderby')
+            };
+
+            $pagination.on('click', 'a', function (ev) {
+                ev.preventDefault();
+                var $a = $(ev.target);
+                if($a.parent().hasClass('active')) {
+                    return;
+                }
+
+                var page = +$a.attr("href").split(",").pop().split('-')[1];
+                data['page'] = page;
+
+                $.post('/website/kanban/', data, function (col) {
+                    $col.find("> .thumbnail").remove();
+                    $pagination.last().before(col);
+                });
+
+                var page_start = page - parseInt(Math.floor((scope-1)/2));
+                if (page_start < 1 ) page_start = 1;
+                var page_end = page_start + (scope-1);
+                if (page_end > page_count ) page_end = page_count;
+
+                if (page_end - page_start < scope) {
+                    page_start = page_end - scope > 0 ? page_end - scope : 1;
+                }
+
+                $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
+                $pagination.find('li.next a').attr("href", kanban_url_col+(page < page_end ? page+1 : page_end));
+                for(var i=0; i < scope; i++) {
+                    $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
+                }
+                $pagination.find('li.active').removeClass('active');
+                $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
+
+            });
+
+        });
+    };
+
     /**
      * Returns a deferred resolved when the templates are loaded
      * and the Widgets can be instanciated.
@@ -698,8 +764,9 @@
 
     dom_ready.then(function () {
         website.is_editable = $('html').attr('data-editable') === '1';
+        var is_smartphone = $('body')[0].clientWidth < 767;
 
-        if (website.is_editable) {
+        if (website.is_editable && !is_smartphone) {
             website.ready().then(website.init_editor);
         }
 
@@ -719,6 +786,11 @@
                     $unp.addClass("hidden");
                 }
             });
+        });
+
+        /* ----- KANBAN WEBSITE ---- */
+        $('.js_kanban').each(function () {
+            website.init_kanban(this);
         });
 
     });

@@ -150,7 +150,7 @@ class website(osv.osv):
             if xids[view['id']]
         ]
 
-    def kanban(self, model, domain, column, content, step=None, scope=None, orderby=None):
+    def kanban(self, model, domain, column, template, step=None, scope=None, orderby=None):
         step = step and int(step) or 10
         scope = scope and int(scope) or 5
         orderby = orderby or "name"
@@ -185,8 +185,10 @@ class website(osv.osv):
 
             # pager
             number = model_obj.search(request.cr, request.uid, group['__domain'], count=True)
-            obj['page'] = pages.get(relation_id) or 1
             obj['page_count'] = int(math.ceil(float(number) / step))
+            obj['page'] = pages.get(relation_id) or 1
+            if obj['page'] > obj['page_count']:
+                obj['page'] = obj['page_count']
             offset = (obj['page']-1) * step
             obj['page_start'] = max(obj['page'] - int(math.floor((scope-1)/2)), 1)
             obj['page_end'] = min(obj['page_start'] + (scope-1), obj['page_count'])
@@ -206,11 +208,11 @@ class website(osv.osv):
         values = self.get_rendering_context({
             'objects': objects,
             'range': range,
-            'content': content,
+            'template': template,
         })
         return self.render("website.kanban_contain", values)
 
-    def kanban_col(self, model, domain, page, content, step, orderby):
+    def kanban_col(self, model, domain, page, template, step, orderby):
         html = ""
         model_obj = request.registry[model]
         domain = safe_eval(domain)
@@ -219,7 +221,7 @@ class website(osv.osv):
         object_ids = model_obj.search(request.cr, request.uid, domain, limit=step, offset=offset, order=orderby)
         object_ids = model_obj.browse(request.cr, request.uid, object_ids)
         for object_id in object_ids:
-            html += self.render(content, self.get_rendering_context({'object_id': object_id}))
+            html += self.render(template, self.get_rendering_context({'object_id': object_id}))
         return html
 
 class res_partner(osv.osv):
