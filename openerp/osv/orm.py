@@ -5351,12 +5351,12 @@ class BaseModel(object):
     @property
     def draft(self):
         """ Return whether ``self[0]`` is a draft record. """
-        return not self._id
+        return self and self._record_cache.draft
 
-    # @draft.setter
-    # def draft(self, value):
-    #     """ Set whether ``self[0]`` is a draft record. """
-    #     self._caches[0].draft = value
+    @draft.setter
+    def draft(self, value):
+        """ Set whether ``self[0]`` is a draft record. """
+        self._record_cache.draft = bool(value)
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
@@ -5364,10 +5364,10 @@ class BaseModel(object):
         """
         if self._id:
             _logger.warning("%s.get_draft_values() non optimal", self[0])
-        result = self._record_cache.dump()
-        for name in MAGIC_COLUMNS:
-            result.pop(name, None)
-        return result
+        return dict(item
+            for item in self._record_cache.iteritems()
+            if item[0] not in MAGIC_COLUMNS
+        )
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5384,7 +5384,7 @@ class BaseModel(object):
         record_cache = scope.cache[self._name][False]
         record = self._instance(scope, (record_cache,))
         record._update_cache(values)
-        # record.draft = True
+        record.draft = True
         return record
 
     #
@@ -5608,22 +5608,33 @@ class BaseModel(object):
                     raise except_orm("Error",
                         "Recomputation of %s failed for %s" % (field, failed))
 
+    #
+    # Generic onchange method
+    #
+
     @api.multi
     def onchange(self, field_name, values):
-        # create a new record with the values
+        # create a new record with the values, except field_name
         record = self.new(values)
-
-        # get a copy of the values in the cache
         record_values = record._record_cache.dump()
+        record._record_cache.pop(field_name)
 
-        # simply assign the modified field to trigger invalidations, etc.
-        # TODO: call record.onchange_XXX() instead, if it exists
-        field_value = record._record_cache.pop(field_name)
-        record[field_name] = field_value
+        # check for a field-specific onchange method
+        method = getattr(record, 'onchange_' + field_name, None)
+        if method is None:
+            # apply the change on the record
+            record[field_name] = values[field_name]
+        else:
+            # invoke specific onchange method, which may return a result
+            result = method(values[field_name])
+            if result is not None:
+                return result
 
-        # compare record values, and return the ones that have changed
+        # determine result, and return it
         return self._convert_to_write(dict(
-            (k, record[k]) for k, v in record_values.iteritems() if record[k] != v
+            (k, record[k])
+            for k, v in record_values.iteritems()
+            if record[k] != v
         ))
 
 

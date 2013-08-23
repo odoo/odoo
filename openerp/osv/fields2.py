@@ -728,8 +728,7 @@ class _RelationalMulti(_Relational):
                 elif command[0] == 1:
                     record = self.comodel.browse(command[1])
                     record.draft = True
-                    for name, value in command[2].iteritems():
-                        record[name] = value
+                    record.update(command[2])
                     result += record
                 elif command[0] == 2:
                     pass

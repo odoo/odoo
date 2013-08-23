@@ -87,7 +87,7 @@ def set_value(cache, name, value):
     """ Generic setter: write value and store it into the cache. """
     record = cache.record
     field = record._fields[name]
-    if not cache.id:
+    if cache.draft:
         field.modified_draft(record)
     elif field.store or field.inverse:
         record.write({name: field.convert_to_write(value)})
@@ -133,8 +133,9 @@ class RecordCache(object):
     def __init__(self, model_cache, id):
         self.model_name = model_cache.name
         self.fields = model_cache.fields
-        self.data = defaultdict(default_slot)
         self.id = id
+        self.data = defaultdict(default_slot)
+        self.draft = False
 
     @property
     def record(self):
