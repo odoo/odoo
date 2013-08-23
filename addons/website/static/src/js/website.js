@@ -39,7 +39,7 @@
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
     website.EditorBar = openerp.Widget.extend({
-        template: 'Website.EditorBar',
+        template: 'website.editorbar',
         events: {
             'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
@@ -293,7 +293,7 @@
 
                 if($button.hasClass("js_add")) {
                     var cycle = $c.find(".carousel-inner .item").size();
-                    $c.find(".carousel-inner").append(QWeb.render("Website.Snipped.carousel"));
+                    $c.find(".carousel-inner").append(QWeb.render("website.carousel"));
                     $c.carousel(cycle);
                 }
                 else {
