@@ -171,7 +171,7 @@ class hr_applicant(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Subject / Application Name', size=128, required=True),
+        'name': fields.char('Subject', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
