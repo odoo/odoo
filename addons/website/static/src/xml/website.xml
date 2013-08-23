@@ -3,12 +3,13 @@
 -->
 <templates id="template" xml:space="preserve">
 <t t-name="Website.EditorBar">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-inner" id="website-top-view">
-            <form class="navbar-form pull-left">
+    <nav class="navbar navbar-inverse navbar-custom navbar-fixed-top" role="navigation">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="navbar-collapse navbar-ex1-collapse" id="website-top-view">
+            <form class="navbar-form navbar-left">
                 <button data-action="edit" class="btn btn-primary">Edit</button>
             </form>
-            <ul class="nav pull-right">
+            <ul class="nav navbar-nav navbar-right">
                 <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                 <li class="divider-vertical"></li>
                 <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
@@ -26,18 +27,17 @@
                 </li>
             </ul>
         </div>
-
         <div class="navbar-inner" id="website-top-edit">
-            <form class="navbar-form pull-left">
+            <form class="navbar-form navbar-left">
                 <button data-action="save" class="btn btn-primary">Save</button>
                 <button data-action="cancel" class="btn">Cancel</button>
             </form>
-            <ul class="nav pull-right">
+            <ul class="nav navbar-nav navbar-right">
                 <li><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
             </ul>
         </div>
-    </div>
-
+    <!-- /.navbar-collapse -->
+    </nav>
     <div id="mobile-preview" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
         <div class="modal-header oe_mobile_preview_header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
