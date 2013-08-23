@@ -368,17 +368,22 @@
         start_snippets: function(){
             var self = this;
             
-            this.$('.oe_snippet[data-action="insert"]').draggable({
+            this.$('.oe_snippe').draggable({
                 helper: 'clone',
                 zIndex: '1000',
                 appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
+                    var action  = snippet.data('action');
 
-                    self.activate_drop_zones({
-                        siblings: snippet.data('selector-siblings'),
-                        childs:   snippet.data('selector-childs')
-                    });
+                    if( action === 'insert'){
+                        self.activate_drop_zones({
+                            siblings: snippet.data('selector-siblings'),
+                            childs:   snippet.data('selector-childs')
+                        });
+                    }else if( action === 'mutate' ){
+                        self.activate_hover_zones(snippet.data('selector'));
+                    }
 
                     $('.oe_drop_zone').droppable({
                         over:   function(){
@@ -391,9 +396,13 @@
                             $(this).removeClass("oe_hover");
                         },
                         drop:   function(){
-                            $(".oe_drop_zone.oe_hover")
-                                .replaceWith(snippet.find('.oe_snippet_body').clone())
-                                .removeClass('oe_snippet_body');
+                            if( action === 'insert' ){
+                                $(".oe_drop_zone.oe_hover")
+                                    .replaceWith(snippet.find('.oe_snippet_body').clone())
+                                    .removeClass('oe_snippet_body');
+                            }else if( action === 'mutate' ){
+                                self.path_eval(snippet.data('action-function'))( $(".oe_drop_zone.oe_hover").data('target') );
+                            }
                         },
                     });
                 },
@@ -402,32 +411,6 @@
                 },
             });
 
-            this.$('.oe_snippet[data-action="mutate"]').draggable({
-                helper: 'clone',
-                zIndex: '1000',
-                appendTo: 'body',
-                start: function(){
-                    var snippet = $(this);
-
-                    self.activate_hover_zones(snippet.data('selector'));
-
-                    $('.oe_drop_zone').droppable({
-                        over: function(){
-                            $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
-                            $(this).addClass("oe_hover");
-                        },
-                        out: function(){
-                            $(this).removeClass("oe_hover");
-                        },
-                        drop: function(){
-                            self.path_eval(snippet.data('action-function'))( $(".oe_drop_zone.oe_hover").data('target') );
-                        },
-                    });
-                },
-                stop: function(){
-                    self.deactivate_drop_zones();
-                },
-            });
         },
         // A generic drop zone generator. two css selectors can be provided
         // selector.childs -> will insert drop zones as direct child of the selected elements
