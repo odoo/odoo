@@ -724,7 +724,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.trigger("save", result);
             self.to_view_mode();
         }).then(function(result) {
-            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
+            var parent = self.ViewManager.ActionManager.getParent();
+            if(parent){
+                parent.menu.do_reload_needaction();
+            }
         });
     },
     on_button_cancel: function(event) {
@@ -4057,7 +4060,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             else
                 return $.when();
         }).done(function () {
-            self.handle_button(name, id, callback);
+            if (!self.o2m.options.reload_on_button) {
+                self.handle_button(name, id, callback);
+            }else {
+                self.handle_button(name, id, function(){
+                    self.o2m.view.reload();
+                });
+            }
         });
     },
 
