@@ -51,6 +51,8 @@
     z-index: 1
     display: none
 
+/* ---- SNIPPET EDITOR ---- */
+
 .oe_snippets
     position: fixed
     left: 0px
@@ -61,6 +63,7 @@
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
+    z-index: 100
 
 .oe_snippet
     display: inline-block
@@ -76,6 +79,7 @@
     overflow: hidden
     -webkit-user-select: none
     user-select: none
+    cursor: move
 
     .oe_snippet_thumbnail.oe_label
         text-align: center
@@ -98,10 +102,11 @@
         -webkit-transform: scale(0.095)
 
 
-.oe_drop_zone
+/* ---- SNIPPETS DROP ZONES ---- */
+
+
+.oe_drop_zone.oe_insert
     display: block
-    background: rgba(153, 0, 255, 0.17)
-    border-radius: 3px
     height: 32px
     margin: -16px 0px
     -webkit-transition: margin 250ms linear
@@ -111,9 +116,6 @@
     &:last-child:not(:first-child)
         margin-top: -24px
         margin-bottom: -8px
-    &.oe_hover
-        background: rgba(0, 255, 133, 0.22)
-        z-index: 100000
     &:before
         content: ""
         display: block
@@ -127,14 +129,19 @@
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
 
-.oe_hover_zone
+.oe_drop_zone.oe_mutate
     position: absolute
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px
 
+.oe_drop_zone
+    background: rgba(153, 0, 255, 0.17)
+    border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
-        z-index: 100000
+        z-index: 99
+
+/* ---- MOBILE PREVIEW ---- */
 
 .oe_stop_scrolling
     height: 100%

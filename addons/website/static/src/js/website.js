@@ -370,6 +370,7 @@
             
             this.$('.oe_snippet[data-action="insert"]').draggable({
                 helper: 'clone',
+                zIndex: '1000',
                 appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
@@ -403,27 +404,28 @@
 
             this.$('.oe_snippet[data-action="mutate"]').draggable({
                 helper: 'clone',
+                zIndex: '1000',
                 appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
 
                     self.activate_hover_zones(snippet.data('selector'));
 
-                    $('.oe_hover_zone').droppable({
+                    $('.oe_drop_zone').droppable({
                         over: function(){
-                            $(".oe_hover_zone.oe_hover").removeClass("oe_hover");
+                            $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
                             $(this).addClass("oe_hover");
                         },
                         out: function(){
                             $(this).removeClass("oe_hover");
                         },
                         drop: function(){
-                            self.path_eval(snippet.data('action-function'))( $(".oe_hover_zone.oe_hover").data('target') );
+                            self.path_eval(snippet.data('action-function'))( $(".oe_drop_zone.oe_hover").data('target') );
                         },
                     });
                 },
                 stop: function(){
-                    self.deactivate_hover_zones();
+                    self.deactivate_drop_zones();
                 },
             });
         },
@@ -436,7 +438,7 @@
             var self = this;
             var child_selector   =  selector.childs   || '';
             var sibling_selector =  selector.siblings || '';
-            var zone_template = "<div class='oe_drop_zone'></div>";
+            var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             $('.oe_drop_zone').remove();
 
@@ -520,8 +522,8 @@
                 return parents.length === 0;
             });
             
-            var zone_template = "<div class='oe_hover_zone'></div>";
-            $('.oe_hover_zone').remove();
+            var zone_template = "<div class='oe_drop_zone oe_mutate'></div>";
+            $('.oe_drop_zone').remove();
 
             for(var i = 0, len = $targets.length; i < len; i++){
                 var $target = $targets.eq(i);
@@ -534,9 +536,6 @@
                 $zone.appendTo('body');
                 $zone.data('target',$target);
             }
-        },
-        deactivate_hover_zones: function(selector){
-            $('.oe_hover_zone').remove();
         },
         toggle: function(){
             if(this.$el.hasClass('oe_hidden')){
