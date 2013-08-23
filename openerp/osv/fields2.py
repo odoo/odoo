@@ -88,6 +88,7 @@ class Field(object):
     """ Base class of all fields. """
     __metaclass__ = MetaField
 
+    _ready = False              # whether the field has been completely set up
     interface = False           # whether the field is created by the ORM
 
     name = None                 # name of the field
@@ -157,6 +158,7 @@ class Field(object):
         self.search = search_related
 
         # copy attributes from field to self (readonly, required, etc.)
+        field.complete_setup()
         for attr in self._attrs:
             if not getattr(self, attr) and getattr(field, attr):
                 setattr(self, attr, getattr(field, attr))
@@ -367,20 +369,23 @@ class Field(object):
         """ Complete the setup of `self`: make it process its dependencies and
             store triggers on other fields to be recomputed.
         """
-        if self.related is not None:
-            # setup all attributes of related field
-            self.setup_related()
-        else:
-            # retrieve dependencies from compute method
-            if isinstance(self.compute, basestring):
-                method = getattr(type(self.model), self.compute)
-            else:
-                method = self.compute
-            self.depends = getattr(method, '_depends', ())
+        if not self._ready:
+            self._ready = True
 
-        # put invalidation/recomputation triggers on dependencies
-        for path in self.depends:
-            self._depends_on_model(self.model, [], path.split('.'))
+            if self.related is not None:
+                # setup all attributes of related field
+                self.setup_related()
+            else:
+                # retrieve dependencies from compute method
+                if isinstance(self.compute, basestring):
+                    method = getattr(type(self.model), self.compute)
+                else:
+                    method = self.compute
+                self.depends = getattr(method, '_depends', ())
+
+            # put invalidation/recomputation triggers on dependencies
+            for path in self.depends:
+                self._depends_on_model(self.model, [], path.split('.'))
 
     def _depends_on_model(self, model, path0, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
