@@ -22,15 +22,15 @@
 
  
     <template id="aboutus" inherit_id="website.aboutus">
-        <xpath expr="//div[@class='span8']" position="inside">
+        <xpath expr="//div[@class='col-md-8']" position="inside">
             <t t-set="head">
                 <script type="text/javascript" src="/website_hr/static/src/js/website_hr.js"></script>
                 <t t-raw="head or ''"/>
             </t>
             <h3>Our team</h3>
-            <div class="thumbnails">
-                <div t-foreach="employee_ids" t-as="employee" class="span4 mt16">
-                    <div class="media thumbnail">
+            <div class="thumbnail">
+                <div t-foreach="employee_ids" t-as="employee" class="col-md-4 mt16">
+                    <div class="media img-thumbnail">
                         <a class="pull-left" href="#">
                             <img class="media-object" t-att-src="employee.img('image_small')"/>
                         </a>
