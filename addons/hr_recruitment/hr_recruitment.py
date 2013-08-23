@@ -450,7 +450,7 @@ class hr_applicant(osv.Model):
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id or False,
-                                                     'address_id': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.id or False,
+                                                     'address_id': applicant.job_id and applicant.job_id.company_id and applicant.job_id.company_id.id or False,
                                                      'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                      'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
                                                      })
