@@ -3187,8 +3187,9 @@ class BaseModel(object):
         # interface columns and inherited fields with new-style fields
         new_fields = {}
         for parent_model, parent_field in cls._inherits.iteritems():
-            for attr in cls.pool[parent_model]._fields:
-                new_fields[attr] = Related(parent_field, attr, interface=True)
+            for attr, field in cls.pool[parent_model]._fields.iteritems():
+                new_fields[attr] = field.copy(
+                    related=(parent_field, attr), store=False, interface=True)
         for attr, column in cls._columns.iteritems():
             new_fields[attr] = Field.from_column(column)
 
@@ -3228,9 +3229,9 @@ class BaseModel(object):
 
     def after_create_instance(self):
         """ method called on all models after their creation """
-        # make each field manage its dependencies (to be recomputed)
+        # complete the initialization of all fields
         for field in self._fields.itervalues():
-            field.manage_dependencies()
+            field.complete_setup()
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -5755,6 +5756,6 @@ PGERROR_TO_OE = defaultdict(
 # keep those imports here to avoid dependency cycle errors
 import expression
 import fields2
-from fields2 import Field, Related
+from fields2 import Field
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

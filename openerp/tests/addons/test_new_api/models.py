@@ -111,7 +111,7 @@ class res_partner(Model):
         self.computed_company = self.company_id
         self.computed_companies = self.company_id
 
-    company_name = fields.Related('company_id', 'name')
+    company_name = fields.Char(related='company_id.name', store=False)
 
 
 email_re = re.compile("^(.*) <(.*)>$")

@@ -299,6 +299,16 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(partner.company_name, 'Bar')
         self.assertEqual(partner['company_name'], 'Bar')
 
+        # search on related field, and check result
+        search_on_related = self.Partner.search([('company_name', '=', 'Bar')])
+        search_on_regular = self.Partner.search([('company_id.name', '=', 'Bar')])
+        self.assertEqual(search_on_related, search_on_regular)
+
+        # check that field attributes are copied
+        partner_field = partner.fields_get(['company_name'])['company_name']
+        company_field = company.fields_get(['name'])['name']
+        self.assertEqual(partner_field['required'], company_field['required'])
+
     def test_26_inherited(self):
         """ test inherited fields. """
         # a bunch of fields are inherited from res_partner

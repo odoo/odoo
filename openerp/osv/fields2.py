@@ -45,6 +45,27 @@ def default(value):
     return compute
 
 
+def compute_related(field, records):
+    """ Compute the related `field` on `records`. """
+    for record in records:
+        value = record
+        for name in field.related:
+            value = value[name]
+        record[field.name] = value
+
+def inverse_related(field, records):
+    """ Inverse the related `field` on `records`. """
+    for record in records:
+        other = record
+        for name in field.related[:-1]:
+            other = other[name]
+        other[field.related[-1]] = record[field.name]
+
+def search_related(field, operator, value):
+    """ Determine the domain to search on `field`. """
+    return [('.'.join(field.related), operator, value)]
+
+
 def _invoke_model(func, model):
     """ hack for invoking a callable with a model in both API styles """
     try:
@@ -80,6 +101,7 @@ class Field(object):
     compute = None              # name of model method that computes value
     inverse = None              # name of model method that inverses field
     search = None               # name of model method that searches on field
+    related = None              # sequence of field names, for related fields
 
     string = None               # field label
     help = None                 # field tooltip
@@ -92,16 +114,18 @@ class Field(object):
 
     # attributes exported by get_description()
     _desc0 = ('type', 'store')
-    _desc1 = ('compute', 'depends', 'string', 'help', 'readonly', 'required', 'groups')
+    _desc1 = ('depends', 'related', 'string', 'help', 'readonly', 'required', 'groups')
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
-        for attr in kwargs:
-            setattr(self, attr, kwargs[attr])
+        for attr, value in kwargs.iteritems():
+            setattr(self, attr, value)
 
-    def copy(self):
-        """ make a copy of `self` (used for field inheritance among models) """
+    def copy(self, **kwargs):
+        """ make a copy of `self`, possibly modified with parameters `kwargs` """
         field = copy(self)
+        for attr, value in kwargs.iteritems():
+            setattr(field, attr, value)
         lazy_property.reset_all(field)      # reset all lazy properties on field
         return field
 
@@ -111,6 +135,31 @@ class Field(object):
         self.name = name
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
+
+    def setup_related(self):
+        """ Setup the attributes of the related field `self`. """
+        # fix the type of self.related if necessary
+        if isinstance(self.related, basestring):
+            self.related = tuple(self.related.split('.'))
+
+        # check type consistency
+        model = self.model
+        for name in self.related[:-1]:
+            model = model[name]
+        field = model._fields[self.related[-1]]
+        if self.type != field.type:
+            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
+
+        # determine dependencies, compute, inverse, and search
+        self.depends = ('.'.join(self.related),)
+        self.compute = compute_related
+        self.inverse = inverse_related
+        self.search = search_related
+
+        # copy attributes from field to self (readonly, required, etc.)
+        for attr in self._attrs:
+            if not getattr(self, attr) and getattr(field, attr):
+                setattr(self, attr, getattr(field, attr))
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -314,16 +363,20 @@ class Field(object):
     # recompute based on `path`. See method `modified` below for details.
     #
 
-    def manage_dependencies(self):
-        """ Make `self` process its own dependencies and store triggers on other
-            fields to be recomputed.
+    def complete_setup(self):
+        """ Complete the setup of `self`: make it process its dependencies and
+            store triggers on other fields to be recomputed.
         """
-        # retrieve dependencies from compute method
-        if isinstance(self.compute, basestring):
-            method = getattr(type(self.model), self.compute)
+        if self.related is not None:
+            # setup all attributes of related field
+            self.setup_related()
         else:
-            method = self.compute
-        self.depends = getattr(method, '_depends', ())
+            # retrieve dependencies from compute method
+            if isinstance(self.compute, basestring):
+                method = getattr(type(self.model), self.compute)
+            else:
+                method = self.compute
+            self.depends = getattr(method, '_depends', ())
 
         # put invalidation/recomputation triggers on dependencies
         for path in self.depends:
@@ -837,79 +890,6 @@ class Many2many(_RelationalMulti):
         kwargs['id2'] = self.column2
         kwargs['domain'] = self.domain or []
         return kwargs
-
-
-class Related(Field):
-    """ Related field. """
-    store = False               # by default related fields are not stored
-    related = None              # sequence of field names
-
-    def __init__(self, *args, **kwargs):
-        assert args, "Related field must be given a sequence of field names"
-        super(Related, self).__init__(related=args, **kwargs)
-        assert not self.store
-
-    @lazy_property
-    def related_field(self):
-        """ determine the related field corresponding to `self` """
-        rec = self.model
-        for name in self.related[:-1]:
-            rec = rec[name]
-        return rec._fields[self.related[-1]]
-
-    @lazy_property
-    def type(self):
-        return self.related_field.type
-
-    @lazy_property
-    def get_description(self):
-        return self.related_field.get_description
-
-    def __getattr__(self, name):
-        # delegate getattr on related field
-        return getattr(self.related_field, name)
-
-    @classmethod
-    def _from_column(cls, column):
-        raise NotImplementedError()
-
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-        # traverse the caches, and delegate to the last record
-        for name in self.related[:-1]:
-            instance = instance[name]
-        return instance[self.related[-1]]
-
-    def __set__(self, instance, value):
-        # traverse the caches, and delegate to the last record
-        for name in self.related[:-1]:
-            instance = instance[name]
-        instance[self.related[-1]] = value
-
-    @lazy_property
-    def null(self):
-        return self.related_field.null
-
-    @lazy_property
-    def convert_to_cache(self):
-        return self.related_field.convert_to_cache
-
-    @lazy_property
-    def convert_to_read(self):
-        return self.related_field.convert_to_read
-
-    @lazy_property
-    def convert_to_write(self):
-        return self.related_field.convert_to_write
-
-    @lazy_property
-    def convert_to_export(self):
-        return self.related_field.convert_to_export
-
-    def _add_trigger_for(self, field, path0, path1):
-        # special case: expand the path
-        field._depends_on_model(self.model, path0, list(self.related) + path1)
 
 
 class Id(Field):
