@@ -108,7 +108,7 @@ class partner_vat_intra(osv.osv_memory):
         # Get Company vat
         company_vat = data_company.partner_id.vat
         if not company_vat:
-            raise osv.except_osv(_('insufficient data!'),_('No VAT number associated with your company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with your company.'))
         company_vat = company_vat.replace(' ','').upper()
         issued_by = company_vat[:2]
 
@@ -120,7 +120,7 @@ class partner_vat_intra(osv.osv_memory):
 
         p_id_list = obj_partner.search(cr, uid, [('vat','!=',False)], context=context)
         if not p_id_list:
-            raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number asociated with him.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number associated with him.'))
 
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
@@ -202,11 +202,11 @@ class partner_vat_intra(osv.osv_memory):
                                         'vatnum': row['vat'][2:].replace(' ','').upper(),
                                         'vat': row['vat'],
                                         'country': row['vat'][:2],
-                                        'amount': amt,
+                                        'amount': round(amt,2),
                                         'intra_code': row['intra_code'],
                                         'code': intra_code})
 
-        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': amount_sum, 'partner_wo_vat': p_count})
+        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': round(amount_sum,2), 'partner_wo_vat': p_count})
         return xmldict
 
     def create_xml(self, cursor, user, ids, context=None):

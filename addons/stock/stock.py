@@ -25,7 +25,7 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
@@ -558,12 +558,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date='%s'
+                    date_expected='%s'
                 where
                     picking_id=%d """ % (value, pick.id)
-
             if pick.max_date:
-                sql_str += " and (date='" + pick.max_date + "' or date>'" + value + "')"
+                sql_str += " and (date_expected='" + pick.max_date + "')"
             cr.execute(sql_str)
         return True
 
@@ -580,11 +579,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date='%s'
+                    date_expected='%s'
                 where
                     picking_id=%s """ % (value, pick.id)
             if pick.min_date:
-                sql_str += " and (date='" + pick.min_date + "' or date<'" + value + "')"
+                sql_str += " and (date_expected='" + pick.min_date + "')"
             cr.execute(sql_str)
         return True
 
@@ -1110,7 +1109,7 @@ class stock_picking(osv.osv):
             if isinstance(partner, int):
                 partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
             if not partner:
-                raise osv.except_osv(_('Error, no partner !'),
+                raise osv.except_osv(_('Error, no partner!'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
 
             if not inv_type:
@@ -1637,7 +1636,7 @@ class stock_move(osv.osv):
                        "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
-        'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
+        'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Product Price'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order of", select=True),
@@ -1692,7 +1691,12 @@ class stock_move(osv.osv):
             elif picking_type == 'out':
                 location_xml_id = 'stock_location_customers'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
+
         return location_id
 
     def _default_location_source(self, cr, uid, context=None):
@@ -1721,7 +1725,12 @@ class stock_move(osv.osv):
             elif picking_type in ('out', 'internal'):
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
+
         return location_id
 
     def _default_destination_address(self, cr, uid, context=None):
@@ -1764,7 +1773,7 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
-                        raise osv.except_osv(_('Operation forbidden !'),
+                        raise osv.except_osv(_('Operation Forbidden!'),
                                              _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
@@ -1939,8 +1948,16 @@ class stock_move(osv.osv):
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
-        source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-        dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+        try:
+            source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+            self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            source_location = False
+        try:
+            dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+            self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
@@ -2192,7 +2209,7 @@ class stock_move(osv.osv):
                 if move.picking_id:
                     pickings.add(move.picking_id.id)
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
-                self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
+                self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
@@ -2412,8 +2429,8 @@ class stock_move(osv.osv):
         # or if it's the same as that of the secondary amount being posted.
         account_obj = self.pool.get('account.account')
         src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
-        src_main_currency_id = src_acct.currency_id and src_acct.currency_id.id or src_acct.company_id.currency_id.id
-        dest_main_currency_id = dest_acct.currency_id and dest_acct.currency_id.id or dest_acct.company_id.currency_id.id
+        src_main_currency_id = src_acct.company_id.currency_id.id
+        dest_main_currency_id = dest_acct.company_id.currency_id.id
         cur_obj = self.pool.get('res.currency')
         if reference_currency_id != src_main_currency_id:
             # fix credit line:
@@ -2870,8 +2887,12 @@ class stock_inventory_line(osv.osv):
     }
 
     def _default_stock_location(self, cr, uid, context=None):
-        stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return stock_location.id
+        try:
+            location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            location_id = False
+        return location_id
 
     _defaults = {
         'location_id': _default_stock_location

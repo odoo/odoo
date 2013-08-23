@@ -66,10 +66,13 @@ class res_partner_grade(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'name': fields.char('Grade Name', size=32)
+        'name': fields.char('Grade Name', size=32),
+        'partner_weight': fields.integer('Grade Weight',
+            help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
     _defaults = {
-        'active': lambda *args: 1
+        'active': lambda *args: 1,
+        'partner_weight':1
     }
 
 class res_partner_activation(osv.osv):
@@ -88,11 +91,11 @@ class res_partner(osv.osv):
         'partner_latitude': fields.float('Geo Latitude'),
         'partner_longitude': fields.float('Geo Longitude'),
         'date_localization': fields.date('Geo Localization Date'),
-        'partner_weight': fields.integer('Weight',
+        'partner_weight': fields.integer('Grade Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
         'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
             'Assigned Opportunities'),
-        'grade_id': fields.many2one('res.partner.grade', 'Partner Level'),
+        'grade_id': fields.many2one('res.partner.grade', 'Grade'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),
         'date_review' : fields.date('Latest Partner Review'),
@@ -101,6 +104,13 @@ class res_partner(osv.osv):
     _defaults = {
         'partner_weight': lambda *args: 0
     }
+    
+    def onchange_grade_id(self, cr, uid, ids, grade_id, context=None):
+        res = {'value' :{'partner_weight':0}}
+        if grade_id:
+            partner_grade = self.pool.get('res.partner.grade').browse(cr, uid, grade_id)
+            res['value']['partner_weight'] = partner_grade.partner_weight
+        return res
     def geo_localize(self, cr, uid, ids, context=None):
         # Don't pass context to browse()! We need country names in english below
         for partner in self.browse(cr, uid, ids):
@@ -124,7 +134,7 @@ class crm_lead(osv.osv):
     _columns = {
         'partner_latitude': fields.float('Geo Latitude'),
         'partner_longitude': fields.float('Geo Longitude'),
-        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
+        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
@@ -134,6 +144,7 @@ class crm_lead(osv.osv):
     def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context=None):
         """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
         """
+
         if not partner_assigned_id:
             return {'value':{'date_assign': False}}
         else:
@@ -261,4 +272,3 @@ class crm_lead(osv.osv):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

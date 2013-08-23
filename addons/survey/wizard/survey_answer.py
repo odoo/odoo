@@ -1038,6 +1038,7 @@ class survey_question_wiz(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'view_id': view_id,
+            'page_id': int(context.get('page_id',0)),
             'context': context
         }
 

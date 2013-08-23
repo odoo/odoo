@@ -22,6 +22,7 @@
 from openerp import tools
 from openerp.osv import osv, fields
 
+
 def _reopen(self, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -34,7 +35,8 @@ def _reopen(self, res_id, model):
             'context': {
                 'default_model': model,
             },
-    }
+            }
+
 
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
@@ -54,24 +56,28 @@ class mail_compose_message(osv.TransientModel):
             Indeed, basic mail.compose.message wizard duplicates attachments in mass
             mailing mode. But in 'single post' mode, attachments of an email template
             also have to be duplicated to avoid changing their ownership. """
+        if context is None:
+            context = {}
+        wizard_context = dict(context)
         for wizard in self.browse(cr, uid, ids, context=context):
+            if wizard.template_id:
+                wizard_context['mail_notify_user_signature'] = False  # template user_signature is added when generating body_html
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
-            template = self.pool.get('email.template').browse(cr, uid, wizard.template_id.id, context=context)
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
-                if attachment in template.attachment_ids:
+                if attachment in wizard.template_id.attachment_ids:
                     new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': 'mail.compose.message', 'res_id': wizard.id}, context=context))
                 else:
                     new_attachment_ids.append(attachment.id)
                 self.write(cr, uid, wizard.id, {'attachment_ids': [(6, 0, new_attachment_ids)]}, context=context)
-        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=wizard_context)
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
             template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
@@ -91,7 +97,7 @@ class mail_compose_message(osv.TransientModel):
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids'], context=context)
+            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -146,12 +152,13 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments']
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments', 'mail_server_id']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
 
         # transform email_to, email_cc into partner_ids
-        partner_ids = self._get_or_create_partners_from_values(cr, uid, values, context=context)
+        ctx = dict((k, v) for k, v in (context or {}).items() if not k.startswith('default_'))
+        partner_ids = self._get_or_create_partners_from_values(cr, uid, values, context=ctx)
         # legacy template behavior: void values do not erase existing values and the
         # related key is removed from the values dict
         if partner_ids:

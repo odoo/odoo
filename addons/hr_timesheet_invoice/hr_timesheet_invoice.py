@@ -173,6 +173,8 @@ class account_analytic_line(osv.osv):
             data = {}
 
         journal_types = {}
+
+        # prepare for iteration on journal and accounts
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
             if line.journal_id.type not in journal_types:
                 journal_types[line.journal_id.type] = set()
@@ -181,7 +183,7 @@ class account_analytic_line(osv.osv):
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Analytic Account incomplete !'),
+                    raise osv.except_osv(_('Analytic Account Incomplete!'),
                             _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
                 date_due = False
@@ -204,7 +206,6 @@ class account_analytic_line(osv.osv):
                     'date_due': date_due,
                     'fiscal_position': account.partner_id.property_account_position.id
                 }
-
                 context2 = context.copy()
                 context2['lang'] = partner.lang
                 # set company_id in context, so the correct default journal will be selected
@@ -215,47 +216,56 @@ class account_analytic_line(osv.osv):
                 last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
                 invoices.append(last_invoice)
 
-                cr.execute("""SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id
+                cr.execute("""SELECT product_id, user_id, to_invoice, sum(amount), sum(unit_amount), product_uom_id
                         FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
                         WHERE account_id = %s
                             AND line.id IN %s AND journal.type = %s AND to_invoice IS NOT NULL
                         GROUP BY product_id, user_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
 
-                for product_id, user_id, factor_id, qty, uom in cr.fetchall():
+                for product_id, user_id, factor_id, total_price, qty, uom in cr.fetchall():
+                    context2.update({'uom': uom})
+
                     if data.get('product'):
+                        # force product, use its public price
                         product_id = data['product'][0]
-                    product = product_obj.browse(cr, uid, product_id, context=context2)
-                    if not product:
-                        raise osv.except_osv(_('Error!'), _('There is no product defined. Please select one or force the product through the wizard.'))
+                        unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
+                    elif journal_type == 'general' and product_id:
+                        # timesheets, use sale price
+                        unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
+                    else:
+                        # expenses, using price from amount field
+                        unit_price = total_price*-1.0 / qty
+
                     factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
-                    factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
-                    if factor.customer_name:
-                        factor_name += ' - ' + factor.customer_name
-
-                    ctx =  context.copy()
-                    ctx.update({'uom':uom})
-
-                    price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
-
-                    general_account = product.property_account_income or product.categ_id.property_account_income_categ
-                    if not general_account:
-                        raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
-                    taxes = product.taxes_id or general_account.tax_ids
-                    tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                    # factor_name = factor.customer_name and line_name + ' - ' + factor.customer_name or line_name
+                    factor_name = factor.customer_name
                     curr_line = {
-                        'price_unit': price,
+                        'price_unit': unit_price,
                         'quantity': qty,
-                        'discount':factor.factor,
-                        'invoice_line_tax_id': [(6,0,tax )],
+                        'product_id': product_id or False,
+                        'discount': factor.factor,
                         'invoice_id': last_invoice,
                         'name': factor_name,
-                        'product_id': product_id,
-                        'invoice_line_tax_id': [(6,0,tax)],
                         'uos_id': uom,
-                        'account_id': general_account.id,
                         'account_analytic_id': account.id,
                     }
+                    product = product_obj.browse(cr, uid, product_id, context=context2)
+                    if product:
+                        factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
+                        if factor.customer_name:
+                            factor_name += ' - ' + factor.customer_name
 
+                        general_account = product.property_account_income or product.categ_id.property_account_income_categ
+                        if not general_account:
+                            raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
+                        taxes = product.taxes_id or general_account.tax_ids
+                        tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                        curr_line.update({
+                            'invoice_line_tax_id': [(6,0,tax )],
+                            'name': factor_name,
+                            'invoice_line_tax_id': [(6,0,tax)],
+                            'account_id': general_account.id,
+                        })
                     #
                     # Compute for lines
                     #
@@ -276,7 +286,6 @@ class account_analytic_line(osv.osv):
                         if data.get('name', False):
                             details.append(line['name'])
                         note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
-
                     if note:
                         curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)

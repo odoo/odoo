@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-    <!--Partner Activation -->
+        <!--Partner Activation -->
 
         <record model="ir.ui.view" id="res_partner_activation_form">
             <field name="name">openerp_custom.res.partner.activation.form</field>
@@ -134,44 +134,29 @@
                     <newline/>
 
                     <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
-                         <tree string="Assigned Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
+                         <tree string="Assigned Opportunities">
                              <field name="create_date"/>
                              <field name="name"/>
                              <field name="type"/>
                              <field name="stage_id"/>
-                             <button name="stage_previous" string="Previous"
-                                    states="open,pending" type="object" icon="gtk-go-back" />
-                             <button name="stage_next" string="Next"
-                                    states="open,pending" type="object"
-                                    icon="gtk-go-forward" />
                              <field name="section_id"
                                     invisible="context.get('invisible_section', True)"
                                     groups="base.group_multi_salesteams"/>
                              <field name="user_id" />
-                             <field name="state" />
-                             <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
-                             <button name="case_open" string="Open"
-                                    states="draft,pending" type="object"
-                                    icon="gtk-go-forward" />
-                             <button name="case_close" string="Close"
-                                    states="open,draft,pending" type="object"
-                                    icon="gtk-close" />
                              <button string="Convert to Opportunity"
                                     name="convert_opportunity"
-                                    states="draft,open,pending" icon="gtk-index"
-                                    type="object" attrs="{'invisible':[('type','=','opportunity')]}" />
+                                    type="object" 
+                                    attrs="{'invisible':[('type','=','opportunity'),('probability', '=', 100)]}" />
                              <button name="case_escalate" string="Escalate"
-                                    states="open,draft,pending" type="object"
-                                    icon="gtk-go-up" />
+                                    type="object"
+                                    icon="gtk-go-up" 
+                                    attrs="{'invisible':[('probability', '=', 100)]}" />
                          </tree>
                     </field>
                 </page>
             </xpath>
         </field>
     </record>
-
 
     </data>
 </openerp>

@@ -344,7 +344,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
     },
     load_data:function(){
         var board = new instance.web.Model('board.board');
-        return board.call('list');
+        return board.call('list', [board.context()]);
     },
     _x:function() {
         if (!instance.webclient) { return $.Deferred().reject(); }
@@ -380,6 +380,10 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
+
+        context.add({
+            group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
+        });
 
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {

@@ -44,7 +44,6 @@ class mail_mail(osv.Model):
 
     _columns = {
         'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
-        'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'state': fields.selection([
             ('outgoing', 'Outgoing'),
             ('sent', 'Sent'),
@@ -55,7 +54,6 @@ class mail_mail(osv.Model):
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients (emails)'),
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
@@ -67,16 +65,13 @@ class mail_mail(osv.Model):
     }
 
     def _get_default_from(self, cr, uid, context=None):
-        this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        if this.alias_domain:
-            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
-        elif this.email:
-            return '%s <%s>' % (this.name, this.email)
-        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
+        """ Kept for compatibility
+            TDE TODO: remove me in 8.0
+        """
+        return self.pool['mail.message']._get_default_from(cr, uid, context=context)
 
     _defaults = {
         'state': 'outgoing',
-        'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -93,19 +88,25 @@ class mail_mail(osv.Model):
         # if value specified: directly return it
         if values.get('reply_to'):
             return values.get('reply_to')
+        format_name = True  # whether to use a 'Followers of Pigs <pigs@openerp.com' format
+        email_reply_to = None
 
-        mailgateway = True  # tells whether the answer will go through the mailgateway, leading to the formatting of reply_to <Followers of ...>
         ir_config_parameter = self.pool.get("ir.config_parameter")
         catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
 
-        # model, res_id, email_from, reply_to: comes from values OR related message
-        message = None
+        # model, res_id, email_from: comes from values OR related message
+        model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
         if values.get('mail_message_id'):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
-        model = values.get('model', message and message.model or False)
-        res_id = values.get('res_id', message and message.res_id or False)
-        email_from = values.get('email_from', message and message.email_from or False)
-        email_reply_to = message and message.reply_to or False
+            if message.reply_to:
+                email_reply_to = message.reply_to
+                format_name = False
+            if not model:
+                model = message.model
+            if not res_id:
+                res_id = message.res_id
+            if not email_from:
+                email_from = message.email_from
 
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
         if not email_reply_to and model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
@@ -115,16 +116,16 @@ class mail_mail(osv.Model):
             catchall_alias = ir_config_parameter.get_param(cr, uid, "mail.catchall.alias", context=context)
             if catchall_domain and catchall_alias:
                 email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
-        # no alias reply_to -> reply_to will be the email_from, only the email part
+
+        # still no reply_to -> reply_to will be the email_from
         if not email_reply_to and email_from:
-            emails = tools.email_split(email_from)
-            if emails:
-                email_reply_to = emails[0]
-                if emails[0].split('@')[1] != catchall_domain:
-                    mailgateway = False
+            email_reply_to = email_from
 
         # format 'Document name <email_address>'
-        if email_reply_to and model and res_id and mailgateway:
+        if email_reply_to and model and res_id and format_name:
+            emails = tools.email_split(email_reply_to)
+            if emails:
+                email_reply_to = emails[0]
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
@@ -138,10 +139,16 @@ class mail_mail(osv.Model):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
+        mail_id = super(mail_mail, self).create(cr, uid, values, context=context)
+
         # reply_to: if not set, set with default values that require creation values
+        # but delegate after creation because of mail_message.message_id automatic
+        # creation using existence of reply_to
         if not values.get('reply_to'):
-            values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
-        return super(mail_mail, self).create(cr, uid, values, context=context)
+            reply_to = self._get_reply_to(cr, uid, values, context=context)
+            if reply_to:
+                self.write(cr, uid, [mail_id], {'reply_to': reply_to}, context=context)
+        return mail_id
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete the parent message for all mails that are not created for a notification
@@ -174,7 +181,7 @@ class mail_mail(osv.Model):
         if context is None:
             context = {}
         if not ids:
-            filters = ['&', ('state', '=', 'outgoing'), ('type', '=', 'email')]
+            filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
@@ -320,6 +327,7 @@ class mail_mail(osv.Model):
                     email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
+                res = None
                 for email in email_list:
                     msg = ir_mail_server.build_email(
                         email_from = mail.email_from,

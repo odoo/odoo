@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_idea_idea_kanban">
+            <field name="name">idea.idea.kanban</field>
+            <field name="model">idea.idea</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" default_group_by="state" class="oe_background_grey">
+                    <field name="color"/>
+                    <field name="user_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_idea_idea oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban"
+                                        groups="base.group_user">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4><field name="name"/></h4>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar" t-if="record.user_id.value"/>
+                                    </div>
+                                    <field name="category_ids"/>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_idea_idea_form">
+            <field name="name">idea.idea.form</field>
+            <field name="model">idea.idea</field>
+            <field name="arch" type="xml">
+                <form string="Idea" version="7.0">
+                    <header>
+                        <button name="idea_set_low_priority" string="Set Low Priority" class="oe_highlight"
+                                attrs="{'invisible': [('priority', '!=', 'normal')]}"/>
+                        <button name="idea_set_normal_priority" string="Set Normal Priority" class="oe_highlight"
+                                attrs="{'invisible': [('priority', 'not in', ['low', 'high'])]}"/>
+                        <button name="idea_set_high_priority" string="Set High Priority" class="oe_highlight"
+                                attrs="{'invisible': [('priority', '!=', 'normal')]}"/>
+                        <field name="state" widget="statusbar" clickable="True"/>
+                    </header>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="priority" readonly="True"/>
+                            <field name="category_ids" widget="many2many_tags"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_idea_idea_tree">
+            <field name="name">idea.idea.tree</field>
+            <field name="model">idea.idea</field>
+            <field name="arch" type="xml">
+            <tree colors="blue:state == 'draft';black:state in ('open', 'close'); gray:state == 'cancel'" string="Ideas">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="priority"/>
+                <field name="state"/>
+            </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_idea_idea_search">
+            <field name="name">idea.idea.search</field>
+            <field name="model">idea.idea</field>
+            <field name="arch" type="xml">
+                <search string="Ideas">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="category_ids"/>
+                    <filter string="New" domain="[('state', '=', 'draft')]"
+                            help="New Ideas"/>
+                    <filter string="In Progress" domain="[('state','=', 'open')]"
+                            help="Open Ideas"/>
+                    <filter string="Accepted" domain="[('state','=', 'close')]"
+                            help="Accepted Ideas" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Creator" help="By Responsible" context="{'group_by': 'user_id'}"/>
+                        <filter string="Status" help="By State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_idea_idea">
+            <field name="name">Ideas</field>
+            <field name="res_model">idea.idea</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_idea_idea_search"/>
+        </record>
+
+        <!-- MENUS
+                -->
+
+        <menuitem name="Ideas" parent="mail.mail_my_stuff"
+                id="menu_idea_idea" action="action_idea_idea" sequence="30"/>
+
+    </data>
+</openerp>

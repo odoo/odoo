@@ -585,7 +585,10 @@
                                     <field name="date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="['|',('parent_id','=',False),('is_company','=',True)]"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[
+                                        '&amp;',
+                                            '|',('parent_id','=',False),('is_company','=',True),
+                                            '|',('customer','=',True),('supplier','=',True)]"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
@@ -609,6 +612,13 @@
                             </field>
                         </page>
                     </notebook>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="balance_end" />
+                        </div>
+                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <div class="oe_clear"/>
                 </sheet>
                 </form>
             </field>
