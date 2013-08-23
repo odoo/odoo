@@ -19,10 +19,10 @@
             <div class="container">
                 <h1>Testimonial</h1>
                 <div class="thumbnails grid grid-align-top">
-                    <div t-foreach="partner_ids" t-as="partner" class="span6">
+                    <div t-foreach="partner_ids" t-as="partner" class="col-md-6">
                         <div class="media thumbnail">
                             <a class="pull-left" href="#">
-                                <img class="media-object" t-att-src="partner.img('image_small')"/>
+                            <img class="media-object img-responsive" t-att-src="partner.img('image_small')" />
                             </a>
                             <div class="media-body">
                                 <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
