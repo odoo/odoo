@@ -473,7 +473,8 @@ class mail_thread(osv.AbstractModel):
         if not model_obj:
             model_obj = self
         if operation in ['create', 'write', 'unlink']:
-            model_obj.check_access_rights(cr, uid, 'write')
+            if not model_obj.check_access_rights(cr, uid, 'write', raise_exception=False):
+                model_obj.check_access_rights(cr, uid, 'create')
             model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
         else:
             model_obj.check_access_rights(cr, uid, operation)
@@ -814,8 +815,10 @@ class mail_thread(osv.AbstractModel):
                 # text/plain -> <pre/>
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
-            alternative = (message.get_content_type() == 'multipart/alternative')
+            alternative = False
             for part in message.walk():
+                if part.get_content_type() == 'multipart/alternative':
+                    alternative = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 filename = part.get_filename()  # None if normal part
