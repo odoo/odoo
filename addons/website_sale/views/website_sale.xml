@@ -152,8 +152,8 @@
                 <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
-                    <a t-if="not product.product_variant_ids" t-attf-href="/shop/add_cart/#{ product.id }/" class="btn btn-small btn-success pull-right">Add to cart</a>
-                    <form t-if="len(product.product_variant_ids) > 1" action="/shop/add_cart/" class="pull-right">
+                    <a t-if="not product.product_variant_ids" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success pull-right">Add to cart</a>
+                    <form t-if="len(product.product_variant_ids) > 1" action="./add_cart/" class="pull-right">
                         <label class="radio" t-foreach="product.product_variant_ids" t-as="product">
                             <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
                             <t t-esc="product.variants or ''">Standard</t>
