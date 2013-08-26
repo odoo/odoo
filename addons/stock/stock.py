@@ -318,8 +318,22 @@ class stock_quant(osv.osv):
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        #We want to trigger the move with nothing on reserved_quant_ids for the store of the remaining quantity
+        if 'reservation_id' in vals:
+            reservation_ids = self.browse(cr, uid, ids, context=context)
+            moves_to_warn = set()
+            for reser in reservation_ids:
+                if reser.reservation_id:
+                    moves_to_warn.add(reser.reservation_id.id)
+            self.pool.get('stock.move').write(cr, uid, list(moves_to_warn), {'reserved_quant_ids': []}, context=context)
+        return super(stock_quant, self).write(cr, uid, ids, vals, context=context)
+
     def quants_unreserve(self, cr, uid, move, context=None):
-        cr.execute('update stock_quant set reservation_id=NULL where reservation_id=%s', (move.id,))
+        #cr.execute('update stock_quant set reservation_id=NULL where reservation_id=%s', (move.id,))
+        #need write for related store of remaining qty
+        related_quants = self.search(cr, uid, [('reservation_id', '=', move.id)], context=context)
+        self.write(cr, uid, related_quants, {'reservation_id': False}, context=context)
         return True
 
     #
@@ -684,6 +698,13 @@ class stock_picking(osv.osv):
             moves.append(move)
         return moves
 
+    def do_rereserve(self, cr, uid, picking_ids, context=None):
+        '''
+            Needed for parameter create
+        '''
+        self.rereserve(cr, uid, picking_ids, context=context)
+
+
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
             This will unreserve all products and reserve the quants from the operations
@@ -704,6 +725,7 @@ class stock_picking(osv.osv):
             for ops in picking.pack_operation_ids:
                 #Find moves that correspond
                 if ops.product_id:
+                    #TODO: Should have order such that things with lots and packings are searched first
                     move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops.product_id.id), ('remaining_qty', '>', 0.0)], context=context)
                     qty_to_do = ops.product_qty
                     while qty_to_do > 0 and move_ids:
@@ -1112,7 +1134,8 @@ class stock_move(osv.osv):
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', 
                                          digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]},
-                                         store = {'stock.quant': (_get_move, ['reservation_id'], 10)}),
+                                         store = {'stock.move': (lambda self, cr, uid, ids, c={}: ids , ['product_qty', 'product_uom', 'reserved_quant_ids'], 10), 
+                                                  'stock.quant': (_get_move, ['reservation_id'], 10)}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.related('procurement_id', 'group_id', type='many2one', relation="procurement.group", string='Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),
@@ -2075,15 +2098,15 @@ class stock_pack_operation(osv.osv):
     }
 
     def _get_preferred_order(self, cr, uid, id, context=None):
-        pack = self.browse(cr, uid, id, context=context)
+        ops = self.browse(cr, uid, id, context=context)
         res = ""
-        if pack.package_id:
-            res += "package_id <> " + pack.package_id.id
-        if pack.lot_id:
+        if ops.package_id:
+            res += "package_id <> " + str(ops.package_id.id)
+        if ops.lot_id:
             if res:
-                res += ", lot_id <> " + pack.lot_id.id
+                res += ", lot_id <> " + str(ops.lot_id.id)
             else:
-                res += "lot_id <> " + pack.lot_id.id
+                res += "lot_id <> " + str(ops.lot_id.id)
         return res
 
 
