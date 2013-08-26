@@ -89,10 +89,10 @@
                     <label for="partner_name" class="oe_edit_only"/>
                     <h2 style="display: inline-block;">
                         <field name="partner_name" class="oe_inline"/>
-                    </h2>
-                    <button string="Create Employee" name="create_employee_from_applicant" type="object"
+                        <button string="Create Employee" name="create_employee_from_applicant" type="object"
                                     class="oe_link oe_inline" style="margin-left: 8px;"
                                     attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
+                    </h2>
                 </div>
                 <group>
                     <group>
@@ -334,12 +334,12 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="expected_employees" version="7.0" position="after">
+            <group name="job_data" position="inside">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
                 </div>
-            </field>
+            </group>
             <xpath expr="//group[@name='job_data']" position="after">
                 <group name="group_alias"
                         attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -351,7 +351,6 @@
                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
                     </div>
-                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"/>
                 </group>
             </xpath>
             <div name="buttons" position="inside">
@@ -402,7 +401,7 @@
                                         <div class="oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value">
+                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
                                             <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                         </div>
                                         <div class="oe_job oe_department">
@@ -452,6 +451,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_in_recruitment': 1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create a new job or remove the filter on On Recruitment. Define job position profile and manage all your recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
+              </p>
+            </field>
         </record>
 
     <!-- Stage Tree View -->

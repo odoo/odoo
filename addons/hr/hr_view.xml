@@ -343,18 +343,20 @@
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <div class="oe_job_title_form">
-                            <label string="Job Name and Department" class="oe_edit_only" colspan="4"/>
-                            <h1><field name="name" class="oe_inline" nolabel="1" colspan="2"/>(<field name="department_id" class="oe_inline" nolabel="1" colspan="2"/>)</h1>
+                        <div class="oe_title">
+                            <label string="Job Name" class="oe_edit_only" colspan="4"/>
+                            <h1><field name="name" class="oe_inline" nolabel="1" colspan="2"/></h1>
                         </div>
                         <div class="oe_right oe_job_button_box" name="buttons"/>
                         <group>
                             <group colspan="4">
                                 <group name="job_data">
-                                    <field name="no_of_employee" groups="base.group_user"/>
-                                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                                    <field name="expected_employees" groups="base.group_user"/>
-                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="department_id"/>
+                                    <label for="no_of_recruitment"/>
+                                    <div>
+                                        <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)" class="oe_inline"/>
+                                        <p>Currently, <field name="no_of_employee" groups="base.group_user" colspan="0" class="oe_inline"/> employees</p>
+                                    </div>
                                 </group>
                             </group>
                             <div colspan="4">
