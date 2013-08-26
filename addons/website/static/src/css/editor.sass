@@ -51,6 +51,8 @@
     z-index: 1
     display: none
 
+/* ---- SNIPPET EDITOR ---- */
+
 .oe_snippets
     position: fixed
     left: 0px
@@ -61,6 +63,7 @@
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
+    z-index: 100
 
 .oe_snippet
     display: inline-block
@@ -76,6 +79,7 @@
     overflow: hidden
     -webkit-user-select: none
     user-select: none
+    cursor: move
 
     .oe_snippet_thumbnail.oe_label
         text-align: center
@@ -98,10 +102,11 @@
         -webkit-transform: scale(0.095)
 
 
-.oe_drop_zone
+/* ---- SNIPPETS DROP ZONES ---- */
+
+
+.oe_drop_zone.oe_insert
     display: block
-    background: rgba(153, 0, 255, 0.17)
-    border-radius: 3px
     height: 32px
     margin: -16px 0px
     -webkit-transition: margin 250ms linear
@@ -111,9 +116,6 @@
     &:last-child:not(:first-child)
         margin-top: -24px
         margin-bottom: -8px
-    &.oe_hover
-        background: rgba(0, 255, 133, 0.22)
-        z-index: 100000
     &:before
         content: ""
         display: block
@@ -127,14 +129,64 @@
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
 
-.oe_hover_zone
+.oe_drop_zone.oe_overlay
     position: absolute
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px
 
+.oe_drop_zone
+    background: rgba(153, 0, 255, 0.17)
+    border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
-        z-index: 100000
+        z-index: 99
+
+/* ---- SNIPPET MANIPULATOR ---- */
+
+.oe_snippet_manipulator
+    display: block
+    position: absolute
+    background: rgba(153, 0, 255, 0.1)
+    border-radius: 3px
+    border: solid 1px rgba(153, 0, 255, 0.5)
+    opacity: 0
+    transition: opacity 100ms linear
+    & > .oe_handle
+        display: none
+    &:hover,&.oe_hover
+        opacity: 1
+        & > .oe_handle
+            display: block
+
+.oe_handle
+    position: absolute
+    top: 50%
+    left: 50%
+    display: block
+    background: rgba(255, 255, 255, 1)
+    border: solid 1px rgba(153, 0, 255, 0.5)
+    box-sizing: border-box
+    border-radius: 2px
+    width: 16px
+    height: 16px
+    margin: -8px
+    cursor: move
+    -webkit-transition: background 100ms linear
+    &:hover
+        background: rgb(153, 0, 255)
+
+.oe_handle.nw,.oe_handle.n,.oe_handle.ne
+    top: 0px
+.oe_handle.ne,.oe_handle.e,.oe_handle.se
+    left: auto
+    right: 0px
+.oe_handle.sw,.oe_handle.s,.oe_handle.se
+    top: auto
+    bottom: 0px
+.oe_handle.nw,.oe_handle.w,.oe_handle.sw
+    left: 0px
+
+/* ---- MOBILE PREVIEW ---- */
 
 .oe_stop_scrolling
     height: 100%

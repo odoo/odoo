@@ -39,7 +39,7 @@
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
     website.EditorBar = openerp.Widget.extend({
-        template: 'Website.EditorBar',
+        template: 'website.editorbar',
         events: {
             'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
@@ -293,7 +293,7 @@
 
                 if($button.hasClass("js_add")) {
                     var cycle = $c.find(".carousel-inner .item").size();
-                    $c.find(".carousel-inner").append(QWeb.render("Website.Snipped.carousel"));
+                    $c.find(".carousel-inner").append(openerp.qweb.render("website.carousel"));
                     $c.carousel(cycle);
                 }
                 else {
@@ -368,16 +368,23 @@
         start_snippets: function(){
             var self = this;
             
-            this.$('.oe_snippet[data-action="insert"]').draggable({
+            this.$('.oe_snippet').draggable({
                 helper: 'clone',
+                zIndex: '1000',
                 appendTo: 'body',
                 start: function(){
                     var snippet = $(this);
+                    var action  = snippet.data('action');
 
-                    self.activate_drop_zones({
-                        siblings: snippet.data('selector-siblings'),
-                        childs:   snippet.data('selector-childs')
-                    });
+                    self.deactivate_snippet_manipulators();
+                    if( action === 'insert'){
+                        self.activate_insertion_zones({
+                            siblings: snippet.data('selector-siblings'),
+                            childs:   snippet.data('selector-childs')
+                        });
+                    }else if( action === 'mutate' ){
+                        self.activate_overlay_zones(snippet.data('selector'));
+                    }
 
                     $('.oe_drop_zone').droppable({
                         over:   function(){
@@ -390,53 +397,33 @@
                             $(this).removeClass("oe_hover");
                         },
                         drop:   function(){
-                            $(".oe_drop_zone.oe_hover")
-                                .replaceWith(snippet.find('.oe_snippet_body').clone())
-                                .removeClass('oe_snippet_body');
+                            if( action === 'insert' ){
+                                $(".oe_drop_zone.oe_hover")
+                                    .replaceWith(snippet.find('.oe_snippet_body').clone())
+                                    .removeClass('oe_snippet_body');
+                            }else if( action === 'mutate' ){
+                                self.path_eval(snippet.data('action-function'))( $(".oe_drop_zone.oe_hover").data('target') );
+                            }
                         },
                     });
                 },
                 stop: function(){
-                    self.deactivate_drop_zones();
+                    self.deactivate_zones();
+                    self.activate_snippet_manipulators();
                 },
             });
 
-            this.$('.oe_snippet[data-action="mutate"]').draggable({
-                helper: 'clone',
-                appendTo: 'body',
-                start: function(){
-                    var snippet = $(this);
-
-                    self.activate_hover_zones(snippet.data('selector'));
-
-                    $('.oe_hover_zone').droppable({
-                        over: function(){
-                            $(".oe_hover_zone.oe_hover").removeClass("oe_hover");
-                            $(this).addClass("oe_hover");
-                        },
-                        out: function(){
-                            $(this).removeClass("oe_hover");
-                        },
-                        drop: function(){
-                            self.path_eval(snippet.data('action-function'))( $(".oe_hover_zone.oe_hover").data('target') );
-                        },
-                    });
-                },
-                stop: function(){
-                    self.deactivate_hover_zones();
-                },
-            });
         },
-        // A generic drop zone generator. two css selectors can be provided
+        // Create element insertion drop zones. two css selectors can be provided
         // selector.childs -> will insert drop zones as direct child of the selected elements
         //   in case the selected elements have children themselves, dropzones will be interleaved
         //   with them.
         // selector.siblings -> will insert drop zones after and before selected elements
-        activate_drop_zones: function(selector){
+        activate_insertion_zones: function(selector){
             var self = this;
             var child_selector   =  selector.childs   || '';
             var sibling_selector =  selector.siblings || '';
-            var zone_template = "<div class='oe_drop_zone'></div>";
+            var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             $('.oe_drop_zone').remove();
 
@@ -499,10 +486,11 @@
                 }
             }
         },
-        deactivate_drop_zones: function(){
+        deactivate_zones: function(){
             $('.oe_drop_zone').remove();
         },
-        activate_hover_zones: function(selector){
+
+        activate_overlay_zones: function(selector){
             var $targets = $(selector);
             
             function is_visible($el){
@@ -520,29 +508,91 @@
                 return parents.length === 0;
             });
             
-            var zone_template = "<div class='oe_hover_zone'></div>";
-            $('.oe_hover_zone').remove();
+            var zone_template = "<div class='oe_drop_zone oe_overlay'></div>";
+            $('.oe_drop_zone').remove();
 
             for(var i = 0, len = $targets.length; i < len; i++){
                 var $target = $targets.eq(i);
                 var $zone = $(zone_template);
-                $zone.css({
-                        'width': $target.outerWidth(),
-                        'height': $target.outerHeight(),
-                });
-                $zone.css($target.offset());
+                this.cover_target($zone,$target);
                 $zone.appendTo('body');
                 $zone.data('target',$target);
             }
         },
-        deactivate_hover_zones: function(selector){
-            $('.oe_hover_zone').remove();
+        cover_target: function($el, $target){
+            $el.css({
+                'position': 'absolute',
+                'width': $target.outerWidth(),
+                'height': $target.outerHeight(),
+            });
+            $el.css($target.offset());
+        },
+        activate_snippet_manipulators: function(){
+            var self = this;
+            this.activate_overlay_zones('#wrap .container');
+            var $snippets = $('.oe_drop_zone');
+            
+            for(var i = 0, len = $snippets.length; i < len; i++){
+                var $snippet = $snippets.eq(i);
+                var $manipulator = $(openerp.qweb.render('website.snippet_manipulator'));
+                $manipulator.css({
+                    'top':    $snippet.css('top'),
+                    'left':   $snippet.css('left'),
+                    'width':  $snippet.css('width'),
+                    'height': $snippet.css('height'),
+                });
+                $manipulator.data('target',$snippet.data('target'));
+                $manipulator.appendTo('body');
+                $snippet.remove();
+
+                $manipulator.find('.oe_handle').mousedown(function(event){
+                    var $handle = $(this);
+                    var $manipulator = $handle.parent();
+                    var $snippet = $manipulator.data('target');
+                    var x = event.pageX;
+                    var y = event.pageY;
+
+                    var pt = $snippet.css('padding-top');
+                    var pb = $snippet.css('padding-bottom'); 
+                    pt = Number(pt.slice(0,pt.length - 2)) || 0; //FIXME something cleaner to remove 'px'
+                    pb = Number(pb.slice(0,pb.length - 2)) || 0;
+                    
+                    $manipulator.addClass('oe_hover');
+                    event.preventDefault();
+
+                    $('body').mousemove(function(event){
+                        var dx = event.pageX - x;
+                        var dy = event.pageY - y;
+                        event.preventDefault();
+                        if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
+                            $snippet.css('padding-top',pt-dy+'px');
+                            self.cover_target($manipulator,$snippet);
+                        }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
+    
+                            $snippet.css('padding-bottom',pb+dy+'px');
+                            self.cover_target($manipulator,$snippet);
+                        }
+                    });
+                    $('body').mouseup(function(){
+                        $('body').unbind('mousemove');
+                        $('body').unbind('mouseup');
+                        self.deactivate_snippet_manipulators();
+                        self.activate_snippet_manipulators();
+                    });
+                });
+                    
+            }
+        },
+        deactivate_snippet_manipulators: function(){
+            $('.oe_snippet_manipulator').remove();
         },
         toggle: function(){
             if(this.$el.hasClass('oe_hidden')){
                 this.$el.removeClass('oe_hidden');
+                this.activate_snippet_manipulators();
             }else{
                 this.$el.addClass('oe_hidden');
+                this.deactivate_snippet_manipulators();
             }
         },
     });
