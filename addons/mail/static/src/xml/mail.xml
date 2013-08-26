@@ -266,7 +266,13 @@
                         <t t-if="widget.subject" t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
-                        <t t-raw="widget.body"/>
+                        <t t-if="widget.body_short">
+                            <div class="oe_msg_body_short"><t t-raw="widget.body_short"/></div>
+                            <div class="oe_msg_body_long" style="display: none;"><t t-raw="widget.body"/><span class="oe_mail_reduce"><a href="#">read less</a></span></div>
+                        </t>
+                        <t t-if="! widget.body_short">
+                            <t t-raw="widget.body"/>
+                        </t>
                     </div>
                 </div>
                 <div class="oe_msg_footer">

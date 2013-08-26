@@ -45,6 +45,7 @@ class project_issue(osv.Model):
     _order = "priority, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    _mail_post_access = 'read'
     _track = {
         'stage_id': {
             'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
@@ -59,7 +60,6 @@ class project_issue(osv.Model):
     }
 
     def _get_default_partner(self, cr, uid, context=None):
-        """ Override of base_stage to add project specific behavior """
         project_id = self._get_default_project_id(cr, uid, context)
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -393,6 +393,8 @@ class project_issue(osv.Model):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            if 'kanban_state' not in vals:
+                vals['kanban_state'] = 'normal'
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
@@ -465,7 +467,6 @@ class project_issue(osv.Model):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.case_set(cr, uid, ids, 'draft', data, context=context)
         return True
 
     # -------------------------------------------------------
@@ -476,17 +477,6 @@ class project_issue(osv.Model):
         """ Override to get the reply_to of the parent project. """
         return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
-
-    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
-        """ mail.message document permission rule: can post a new message if can read
-            because of portal document. """
-        if not model_obj:
-            model_obj = self
-        if operation == 'create':
-            model_obj.check_access_rights(cr, uid, 'read')
-            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
-        else:
-            return super(project_issue, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
@@ -505,21 +495,19 @@ class project_issue(osv.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
-        if context is None: context = {}
+        if custom_values is None:
+            custom_values = {}
+        if context is None:
+            context = {}
         context['state_to'] = 'draft'
-
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
-
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
-        if  msg.get('priority'):
+        if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
 
         defaults.update(custom_values)
