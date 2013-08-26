@@ -10,6 +10,7 @@ import urllib
 import math
 import traceback
 from openerp.tools.safe_eval import safe_eval
+from openerp.exceptions import AccessError, AccessDenied
 
 import logging
 logger = logging.getLogger(__name__)
@@ -72,25 +73,36 @@ class website(osv.osv):
             values.update(additional_values)
         return values
 
-    def render(self, template, values={}):
+    def render(self, template, values=None):
         view = request.registry.get("ir.ui.view")
+        IMD = request.registry.get("ir.model.data")
+
+        if not values:
+            values = {}
         context = {
             'inherit_branding': values.get('editable', False),
         }
+
+        # check if xmlid of the template exists
+        try:
+            model, xmlid = template.split('.')
+            model, id = IMD.get_object_reference(request.cr, request.uid, model, xmlid)
+        except ValueError:
+            logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
+            return self.render('website.404', values)
+
+        # render template and catch error
         try:
             return view.render(request.cr, request.uid, template, values, context=context)
-        # except (osv.except_osv, orm.except_orm), err:
-        #     logger.error(err)
-        #     values['error'] = err[1]
-        #     return self.render('website.401', values)
-        # except ValueError:
-        #     logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
-        #     return self.render('website.404', values)
+        except (AccessError, AccessDenied), err:
+            logger.error(err)
+            values['error'] = err[1]
+            logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
+            return self.render('website.401', values)
         except Exception:
-            trace = traceback.format_exc()
-            logger.error("Website Rendering Error.\n\n%s" % trace)
+            values['traceback'] = traceback.format_exc()
+            logger.error("Website Rendering Error.\n\n%s" % values['traceback'])
             if values['editable']:
-                values['traceback'] = trace
                 return view.render(request.cr, request.uid, 'website.500', values, context=context)
             else:
                 return view.render(request.cr, request.uid, 'website.404', values, context=context)

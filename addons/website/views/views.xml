@@ -292,7 +292,7 @@
             <t t-call="website.layout">
                 <div class="container">
                     <h1 class="mt32">500: Internal Server Error!</h1>
-                    <pre t-esc="traceback"/>
+                    <pre t-if="editable" t-esc="traceback"/>
                 </div>
             </t>
         </template>
@@ -308,7 +308,7 @@
                         Maybe you were looking for one of these
                         popular pages ?
                     </p>
-                    <pre class="hidden" t-esc="error"/>
+                    <pre t-if="editable" t-esc="error"/>
                     <ul>
                         <li><a href="/">Homepage</a></li>
                         <li><a href="/">Contact Us</a></li>

@@ -32,7 +32,7 @@ class website_contract(http.Controller):
 
         step = 20
         pager = website.pager(url="/references/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
-        partner_ids = partner_obj.search(request.cr, request.uid, [('id', 'in', partner_ids)], limit=step, offset=pager['offset'])
+        partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)], limit=step, offset=pager['offset'])
 
         values = website.get_rendering_context({
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
@@ -45,8 +45,9 @@ class website_contract(http.Controller):
     def references_ref(self, ref_id=0, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
+        partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)])
         values = website.get_rendering_context({
-            'partner_id': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, ref_id, context={'show_address': True}),
+            'partner_id': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids[0], context={'show_address': True}),
         })
         return website.render("website_contract.details", values)
 
