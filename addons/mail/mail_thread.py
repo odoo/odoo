@@ -1039,8 +1039,10 @@ class mail_thread(osv.AbstractModel):
                 # text/plain -> <pre/>
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
-            alternative = (message.get_content_type() == 'multipart/alternative')
+            alternative = False
             for part in message.walk():
+                if part.get_content_type() == 'multipart/alternative':
+                    alternative = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 filename = part.get_filename()  # None if normal part
