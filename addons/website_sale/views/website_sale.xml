@@ -107,9 +107,9 @@
                         </form>
                     </div>
                 </nav>
-                <div class='row grid grid-align-top' style="margin-left: 16px !important;">
+                <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
-                    <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'alert alert-warning' or ''}" style="margin-right: 16px; width: 170px;">
+                    <div t-attf-class="span2 mb16 thumbnail text-center #{not product.website_published and 'alert alert-warning' or ''}">
                         <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
                             <h5  t-field="product.name"> </h5>
                             <img class="img-rounded" t-att-src="product.img('image_small')" />
