@@ -490,7 +490,7 @@ property or property parameter."),
         for vals in self.browse(cr, uid, ids, context=context):
             meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
             if meeting_id and vals.state != 'accepted':
-                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Accept Invitation") % (vals.cn)), context=context)
+                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has accepted invitation") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
         return True
 
