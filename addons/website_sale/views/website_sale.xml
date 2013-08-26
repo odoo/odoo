@@ -152,8 +152,8 @@
                 <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
-                    <a t-if="not product.product_variant_ids" t-attf-href="/shop/add_cart/#{ product.id }/" class="btn btn-default btn-small btn-success pull-right">Add to cart</a>
-                    <form t-if="len(product.product_variant_ids) > 1" action="/shop/add_cart/" class="pull-right">
+                    <a t-if="not product.product_variant_ids" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-default btn-small btn-success pull-right">Add to cart</a>
+                    <form t-if="len(product.product_variant_ids) > 1" action="./add_cart/" class="pull-right">
                         <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
                             <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None" />
                             <t t-esc="product.variants or ''">Standard</t>
@@ -161,7 +161,7 @@
                         </label></br>
                         <button class="btn btn-default btn-small btn-success">Add to cart</button>
                     </form>
-                    <img class="media-object" t-att-src="product.img('image')"/>
+                    <img class="media-object" t-att-src="product.img('image_medium')"/>
                     <div t-field="product.website_description"></div>
                     <div>
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
@@ -215,10 +215,10 @@
                                 <th>Quantity</th>
                             </tr>
                         </thead>
-                        <tbody t-if="not order.order_line">
+                        <tbody t-if="not order or not order.order_line">
                             <tr><td colspan="4"><h3>Your cart is empty</h3></td></tr>
                         </tbody>
-                        <tbody t-if="order.order_line">
+                        <tbody t-if="order and order.order_line">
                             <t t-foreach="order.order_line" t-as="line">
                                 <tr>
                                     <td>
@@ -253,12 +253,12 @@
                             <col width="160"/>
                         </colgroup>
                         <thead>
-                            <tr> <th colspan="3">Subtotal </th>      <th><t t-esc="order.amount_untaxed"/> €</th></tr>
-                            <tr> <th colspan="3">Taxes </th>         <th><t t-esc="order.amount_tax"/> €</th></tr>
-                            <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="order.amount_total"/> €</h4></th></tr>
+                            <tr> <th colspan="3">Subtotal </th>      <th><t t-esc="order and order.amount_untaxed or 0"/> €</th></tr>
+                            <tr> <th colspan="3">Taxes </th>         <th><t t-esc="order and order.amount_tax or 0"/> €</th></tr>
+                            <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="order and order.amount_total or 0"/> €</h4></th></tr>
                         </thead>
                     </table>
-                    <a t-if="order.order_line" href="/shop/checkout/" class="btn btn-default btn-success">Proceed To Payment</a>
+                    <a t-if="order and order.order_line" href="/shop/checkout/" class="btn btn-default btn-success">Proceed To Payment</a>
                 </div>
             </t>
         </t>
@@ -318,7 +318,7 @@
     </template>
     <template id="reduction_code" inherit_option_id="website_sale.mycart" name="Reduction Code">
         <xpath expr="//table[@id='mycart_total']" position="after">
-            <form t-if="order.order_line" class="well form-search" action="/shop/mycart/" method="post">
+            <form t-if="order and order.order_line" class="well form-search" action="/shop/mycart/" method="post">
                 <input name="promo" class='input' type="text" placeholder="Reduction Code..." t-att-value="order.pricelist_id.code or ''"/>
                 <button class="btn">Apply Code</button>
             </form>
@@ -525,7 +525,7 @@
             <div class="container mt48 oe_website_sale">
                 <div class="row">
                     <div class="col-md-4">
-                        <table class="table table-condensed">
+                        <table class="table table-condensed" t-if="order">
                             <thead>
                                 <tr>
                                     <th>Product</th>
