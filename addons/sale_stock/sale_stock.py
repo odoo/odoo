@@ -57,7 +57,7 @@ class sale_order(osv.osv):
 
     def _get_orders(self, cr, uid, ids, context=None):
         res = set()
-        for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.procurement_id and move.procurement_id.sale_line_id:
                 res.add(move.procurement_id.sale_line_id.order_id.id)
         return list(res)
