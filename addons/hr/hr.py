@@ -192,7 +192,7 @@ class hr_employee(osv.osv):
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
-        'job_id': fields.many2one('hr.job', 'Job'),
+        'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
