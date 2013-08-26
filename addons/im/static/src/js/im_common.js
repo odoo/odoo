@@ -32,13 +32,8 @@ function declare($, _, openerp) {
     im_common.ImUser = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent, user_rec) {
             openerp.PropertiesMixin.init.call(this, parent);
-            user_rec.image_url = im_common.connection.url("/im/static/src/img/avatar/avatar.jpeg");
-
-            // TODO : check it works correctly
-            if (user_rec.user_id)
-                user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user_id[0]});
-            /*if (user_rec.image)
-                user_rec.image_url = "data:image/png;base64," + user_rec.image;*/
+            
+            user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'im.user', field: 'image', id: user_rec.id});
 
             this.set(user_rec);
             this.set("watcher_count", 0);
