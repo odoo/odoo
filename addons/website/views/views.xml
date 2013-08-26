@@ -77,19 +77,19 @@
                                 <div class="row">
                                     <div class="col-md-3" name="product">
                                          <h5>Our products</h5>
-                                        <ul class="unstyled" name="products">
+                                        <ul class="list-unstyled" name="products">
                                             <li><a href="/">Home</a></li>
                                         </ul>
                                     </div>
                                     <div class="col-md-3" name="info">
                                          <h5 name="info_title">Connect with us</h5>
-                                        <ul class="unstyled">
+                                        <ul class="list-unstyled">
                                             <li><a href="/page/website.aboutus">About us</a></li>
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                         </ul>
-                                        <ul class="unstyled">
-                                            <li><i class="glyphicon glyphicon-sm"></i>  <span t-field="res_company.phone"></span></li>
-                                            <li><i class="glyphicon glyphicon-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                        <ul class="list-unstyled">
+                                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
+                                            <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
                                         </ul>
                                     </div>
                                     <div class="col-md-5 col-lg-offset-1" name="about_us">
@@ -100,9 +100,9 @@
                                         <p>Our products are designed for small to medium companies willing to optimize
                                             their performance.</p>
                                         <h1 style="padding: 12px 24px;">
-                                            <a href="http://twitter.com/openerp"><i class="glyphicon glyphicon-twitter-sign"></i></a>
-                                            <a href="http://facebook.com/OpenERP"><i class="glyphicon glyphicon-facebook-sign"></i></a>
-                                            <a href="https://plus.google.com/+openerp/posts"><i class="glyphicon glyphicon-google-plus-sign"></i></a>
+                                            <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
+                                            <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
+                                            <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
                                         </h1>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                             <div class="container mt16">
                                 <div class="pull-right" t-ignore="1">
                                     Create a <a href="http://openerp.com/apps/website">free website</a> with
-                                    <a class="label label-important" href="https://openerp.com/apps/website">OpenERP</a>
+                                    <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                 </div>
                                 <div class="pull-left muted">
                                     Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
@@ -132,17 +132,17 @@
                 <section>
                     <div id="myCarousel" class="carousel slide" data-interval="1000000">
                         <div class="oe_carousel_options js_carousel_options" t-ignore="1" t-if="editable">
-                            <span class="label label-default js_add"><i class="glyphicon glyphicon-plus-sign"></i></span>
-                            <span class="label label-default js_remove"><i class="glyphicon glyphicon-minus-sign"></i></span>
+                            <span class="label label-default js_add"><i class="icon-plus-sign"></i></span>
+                            <span class="label label-default js_remove"><i class="icon-minus-sign"></i></span>
                         </div>
                         <!-- Carousel items -->
                         <div class="carousel-inner">
                             <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
                                 <div class="container">
                                     <div class="mt64"></div>
-                                     <h1>Create Awesome Websites</h1>
-                                     <h3>Super easy, fully flexible</h3>
-                                     <a href="/page/website.contactus" class="btn btn-success btn-lg mt16">Contact us</a>
+                                    <h1>Create Awesome Websites</h1>
+                                    <h3>Super easy, fully flexible</h3>
+                                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
                                 </div>
                             </div>
                         </div>
@@ -304,7 +304,7 @@
                                 <span t-field="res_company.country_id"> </span><br />
                                 <br />
                                 <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
-                                <i class="glyphicon glyphicon-envelope"></i> <span t-field="res_company.email"></span>
+                                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
                             </address>
                              <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
                                 <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
@@ -335,7 +335,7 @@
         </template>
 
         <template id="pager">
-            <div t-if="t-if" page_count="page_count">1" t-attf-class="#{ classname or '' } pagination"
+            <div t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
                 <ul>
                     <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' "> <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a></li>
                     <t t-foreach="pager['pages']" t-as="page">
@@ -351,7 +351,7 @@
         <template id="publish">
             <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
                 <span t-attf-class="label label-success js_unpublish #{ '' if object.website_published else 'hidden' }">Unpublish</span>
-                <span t-attf-class="label label-important js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
+                <span t-attf-class="label label-danger js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
             </a>
         </template>
 
