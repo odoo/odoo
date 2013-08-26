@@ -786,9 +786,6 @@ class stock_picking(osv.osv):
             If no pack operation, we close the whole move
             Otherwise, do the pack operations
         """
-        #TODO: this variable should be in argument
-        quant_obj = self.pool.get('stock.quant')
-        quant_package_obj = self.pool.get('stock.quant.package')
         stock_move_obj = self.pool.get('stock.move')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if not picking.pack_operation_ids:
@@ -799,6 +796,7 @@ class stock_picking(osv.osv):
                 res = self.rereserve(cr, uid, [picking.id], create = True, context = context) #This time, quants need to be created
                 orig_moves = picking.move_lines
                 #Add moves that operations need extra
+                extra_moves = []
                 for ops in res[0].keys():
                     for prod in res[0][ops].keys():
                         product = self.pool.get('product.product').browse(cr, uid, prod, context=context)
@@ -817,31 +815,15 @@ class stock_picking(osv.osv):
                                             'reserved_quant_ids': quant and [(4, quant.id)] or [],
                                             'picking_type_id': picking.picking_type_id.id
                                         }, context=context)
+                            extra_moves.append(move_id)
                 res2 = res[1]
                 for move in res2.keys():
                     if res2[move] > 0:
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
                         newmove_id = stock_move_obj.split(cr, uid, mov, res2[move], context=context)
-                
-                for move in orig_moves: 
-                    stock_move_obj.action_done(cr, uid, [move.id], context=context)
-                #TODO: op.package_id can not work as quants_get is not defined on quant package => gives traceback
-#                 if op.package_id: 
-#                     for quant in quant_package_obj.browse(cr, uid, op.package_id.id, context=context).quant_ids:
-#                         self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=context)
-#                     op.package_id.write(cr, uid, {
-#                         'parent_id': op.result_package_id.id
-#                     }, context=context)
-#                 elif op.product_id:
-#                     moves = self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=context)
-#                     quants = []
-#                     for m in moves:
-#                         for quant in m.quant_ids:
-#                             quants.append(quant.id)
-#                     quant_obj.write(cr, uid, quants, {
-#                         'package_id': op.result_package_id.id
-#                     }, context=context)
 
+                stock_move_obj.action_done(cr, uid, extra_moves + [x.id for x in orig_moves], context=context)
+            picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
         return True
 
@@ -1482,7 +1464,6 @@ class stock_move(osv.osv):
         """
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
-        picking_obj = self.pool.get('stock.picking')
 
         todo = [move.id for move in self.browse(cr, uid, ids, context=context) if move.state == "draft"]
         if todo:
