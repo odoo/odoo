@@ -102,9 +102,11 @@ function declare($, _, openerp) {
                     def = im_common.connection.rpc("/longpolling/im/gen_uuid", {}).then(function(my_uuid) {
                         uuid = my_uuid;
                         localStorage["oe_livesupport_uuid"] = uuid;
-                        return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
                     });
                 }
+                def = def.then(function() {
+                    return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
+                });
             }
 
             return def.then(function() {
