@@ -47,8 +47,8 @@
   Process the reception of purchase order 1
 -
   !python {model: stock.picking}: |
-    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet1")).picking_ids[0]
-    order.do_partial(context=context)
+    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet1")).picking_ids[0]
+    picking_id.do_partial(context=context)
 - 
   Check the standard price of the product (fifo icecream)
 - 
@@ -62,8 +62,8 @@
   Process the reception of purchase order 2
 - 
   !python {model: stock.picking}: |
-    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet2")).picking_ids[0]
-    order.do_partial(context=context)
+    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fiforet2")).picking_ids[0]
+    picking_id.do_partial(context=context)
 - 
   Return the goods of purchase order 2
 - 
