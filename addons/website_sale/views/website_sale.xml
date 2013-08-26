@@ -103,7 +103,7 @@
                             <t t-set="classname">pull-left</t>
                         </t>
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="navbar-search pull-right pagination">
-                            <input type="text" name="search" class="search-query col-md-2" placeholder="Search" t-att-value="search or '' or ''"/>
+                            <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
                     </div>
                 </nav>
@@ -145,7 +145,7 @@
                 <div class='navbar navbar-inverse'>
                     <div class='navbar-inner'>
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="navbar-search pull-right pagination">
-                            <input type="text" name="search" class="search-query col-md-2" placeholder="Search" t-att-value="search or '' or ''"/>
+                            <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
                     </div>
                 </div>
