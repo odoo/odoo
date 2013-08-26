@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,25 +19,10 @@
 #
 ##############################################################################
 
-import time
-from openerp.report import report_sxw
+from . import test_multicompany
 
-class picking(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(picking, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'get_product_desc': self.get_product_desc,
-        })
-    def get_product_desc(self, move_line):
-        desc = move_line.product_id.name
-        if move_line.product_id.default_code:
-            desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
-        return desc
+checks = [
+    test_multicompany,
+]
 
-for suffix in ['', '.in', '.out']:
-    report_sxw.report_sxw('report.stock.picking.list' + suffix,
-                          'stock.picking' + suffix,
-                          'addons/stock/report/picking.rml',
-                          parser=picking)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

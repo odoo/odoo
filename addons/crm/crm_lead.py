@@ -955,10 +955,8 @@ class crm_lead(format_address, osv.osv):
         """
         if custom_values is None:
             custom_values = {}
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
