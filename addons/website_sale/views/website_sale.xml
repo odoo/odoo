@@ -65,7 +65,7 @@
     <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
             <div class="col-md-4">
-                <ul class="nav nav-list">
+                <ul class="nav">
                     <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
                 <t t-foreach="categories" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -83,7 +83,7 @@
     <template id="categories_recursive">
         <li t-att-class="category.id == category_id and 'active' or ''">
             <a t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
-            <ul t-if="category.child_id" class="nav nav-list">
+            <ul t-if="category.child_id" class="nav">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
                 </t>
@@ -123,7 +123,7 @@
                                 <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
                             </div>
                             <div class="mb8 mt8">
-                                <a t-if="product.website_published" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">Add to cart</a>
+                                <a t-if="product.website_published" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-default btn-small btn-success">Add to cart</a>
                             </div>
                         </div>
                     </div>
@@ -152,14 +152,14 @@
                 <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h2 t-field="product.name"></h2>
-                    <a t-if="not product.product_variant_ids" t-attf-href="/shop/add_cart/#{ product.id }/" class="btn btn-small btn-success pull-right">Add to cart</a>
+                    <a t-if="not product.product_variant_ids" t-attf-href="/shop/add_cart/#{ product.id }/" class="btn btn-default btn-small btn-success pull-right">Add to cart</a>
                     <form t-if="len(product.product_variant_ids) > 1" action="/shop/add_cart/" class="pull-right">
-                        <label class="radio" t-foreach="product.product_variant_ids" t-as="product">
-                            <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
+                        <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
+                            <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None" />
                             <t t-esc="product.variants or ''">Standard</t>
                             <span class="badge" t-if="product.price_extra"><t t-esc="product.price_extra > 0 and '+' or ''"/><t t-esc="product.price_extra"/> €</span>
-                        </label><br/>
-                        <button class="btn btn-small btn-success">Add to cart</button>
+                        </label></br>
+                        <button class="btn btn-default btn-small btn-success">Add to cart</button>
                     </form>
                     <img class="media-object" t-att-src="product.img('image')"/>
                     <div t-field="product.website_description"></div>
@@ -237,8 +237,8 @@
                                     <td>
                                         <div class="mb8 mt8 pull-right">
                                             <input type="text" class="js_quantity input-mini" t-att-data-id="line.product_id.id" t-att-value="line.product_uom_qty"/>
-                                            <a t-attf-href="./remove_cart/#{ line.product_id.id }/" class="btn mb8 btn-small btn-inverse">-</a>
-                                            <a t-attf-href="./add_cart/#{ line.product_id.id }/" class="btn mb8 btn-small btn-success">+</a>
+                                            <a t-attf-href="./remove_cart/#{ line.product_id.id }/" class="btn btn-default mb8 btn-small btn-inverse">-</a>
+                                            <a t-attf-href="./add_cart/#{ line.product_id.id }/" class="btn btn-default mb8 btn-small btn-success">+</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -258,7 +258,7 @@
                             <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="order.amount_total"/> €</h4></th></tr>
                         </thead>
                     </table>
-                    <a t-if="order.order_line" href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
+                    <a t-if="order.order_line" href="/shop/checkout/" class="btn btn-default btn-success">Proceed To Payment</a>
                 </div>
             </t>
         </t>
@@ -288,7 +288,7 @@
                             </td>
                             <td>
                                 <div class="pull-right">
-                                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-small btn-success">+</a>
+                                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-default btn-small btn-success">+</a>
                                 </div>
                             </td>
                         </tr>
@@ -364,52 +364,53 @@
                     </div>
                     <form class="col-md-8 form-horizontal" action="/shop/confirm_order/" method="post">
                         <div class=" row">
-                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-default btn-primary">Log me, I have an account</a>
                             <h3 class="col-md-8">Billing Information</h3>
-                             <div t-attf-class="control-group #{error.get('name', '')}">
-                                <label class="control-label" for="contact_name">Name and firstname</label>
+                            <div t-attf-class="control-group #{error.get('name', '')}">
+                                <label class="control-label label-default" for="contact_name">Name and firstname</label>
                                 <div class="controls">
-                                    <input type="text" name="name" t-att-value="checkout.get('name', '')"/>
+                                    <input type="text" name="name" t-att-value="checkout.get('name', '')"
+                                    />
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('phone', '')}">
-                                <label class="control-label" for="contact_name">Telephone</label>
+                                <label class="control-label label-default" for="contact_name">Telephone</label>
                                 <div class="controls">
                                     <input type="tel" name="phone" t-att-value="checkout.get('phone', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('fax', '')}">
-                                <label class="control-label" for="contact_name">Fax</label>
+                                <label class="control-label label-default" for="contact_name">Fax</label>
                                 <div class="controls">
                                     <input type="tel" name="fax" t-att-value="checkout.get('fax', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('company', '')}">
-                                <label class="control-label" for="contact_name">Company</label>
+                                <label class="control-label label-default" for="contact_name">Company</label>
                                 <div class="controls">
                                     <input type="tel" name="company" t-att-value="checkout.get('company', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('email', '')}">
-                                <label class="control-label" for="contact_name">Email address</label>
+                                <label class="control-label label-default" for="contact_name">Email address</label>
                                 <div class="controls">
                                     <input type="tel" name="email" t-att-value="checkout.get('email', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('street', '')}">
-                                <label class="control-label" for="contact_name">Street</label>
+                                <label class="control-label label-default" for="contact_name">Street</label>
                                 <div class="controls">
                                     <input type="tel" name="street" t-att-value="checkout.get('street', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('city', '')}">
-                                <label class="control-label" for="contact_name">City</label>
+                                <label class="control-label label-default" for="contact_name">City</label>
                                 <div class="controls">
                                     <input type="tel" name="city" t-att-value="checkout.get('city', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('state_id', '')}">
-                                <label class="control-label" for="contact_name">State / Province</label>
+                                <label class="control-label label-default" for="contact_name">State / Province</label>
                                 <div class="controls">
                                     <select name="state_id">
                                         <option value="">State / Province...</option>
@@ -420,13 +421,13 @@
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('zip', '')}">
-                                <label class="control-label" for="contact_name">Zip / Postal Code</label>
+                                <label class="control-label label-default" for="contact_name">Zip / Postal Code</label>
                                 <div class="controls">
                                     <input type="tel" name="zip" t-att-value="checkout.get('zip', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('country_id', '')}">
-                                <label class="control-label" for="contact_name">Country</label>
+                                <label class="control-label label-default" for="contact_name">Country</label>
                                 <div class="controls">
                                     <select name="country_id">
                                         <option value="">Country...</option>
@@ -438,7 +439,7 @@
                             </div>
                             <div class="control-group checkbox">
                                 <div class="controls">
-                                    <label class="checkbox">
+                                    <label label-default="label-default" class="checkbox">
                                         <input t-if="not shipping" type="checkbox" name="shipping_different"/>
                                         <input t-if="shipping" type="checkbox" name="shipping_different" checked="1"/>
                                         Ship to different address
@@ -449,37 +450,37 @@
                         <div class="js_shipping row" t-att-style="not shipping and 'display:none' or ''">
                             <h3 class="col-md-8 oe_shipping">Shipping Information</h3>
                              <div t-attf-class="control-group #{error.get('shipping_name', '')}">
-                                <label class="control-label" for="contact_name">Name and firstname</label>
+                                <label class="control-label label-default" for="contact_name">Name and firstname</label>
                                 <div class="controls">
                                     <input type="text" name="shipping_name" t-att-value="checkout.get('shipping_name', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_phone', '')}">
-                                <label class="control-label" for="contact_name">Telephone</label>
+                                <label class="control-label label-default" for="contact_name">Telephone</label>
                                 <div class="controls">
                                     <input type="tel" name="shipping_phone" t-att-value="checkout.get('shipping_phone', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_fax', '')}">
-                                <label class="control-label" for="contact_name">Fax</label>
+                                <label class="control-label label-default" for="contact_name">Fax</label>
                                 <div class="controls">
                                     <input type="tel" name="shipping_fax" t-att-value="checkout.get('shipping_fax', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_street', '')}">
-                                <label class="control-label" for="contact_name">Street</label>
+                                <label class="control-label label-default" for="contact_name">Street</label>
                                 <div class="controls">
                                     <input type="tel" name="shipping_street" t-att-value="checkout.get('shipping_street', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_city', '')}">
-                                <label class="control-label" for="contact_name">City</label>
+                                <label class="control-label label-default" for="contact_name">City</label>
                                 <div class="controls">
                                     <input type="tel" name="shipping_city" t-att-value="checkout.get('shipping_city', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_state_id', '')}">
-                                <label class="control-label" for="contact_name">State / Province</label>
+                                <label class="control-label label-default" for="contact_name">State / Province</label>
                                 <div class="controls">
                                     <select name="shipping_state_id">
                                         <option value="">State / Province...</option>
@@ -490,13 +491,13 @@
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_zip', '')}">
-                                <label class="control-label" for="contact_name">Zip / Postal Code</label>
+                                <label class="control-label label-default" for="contact_name">Zip / Postal Code</label>
                                 <div class="controls">
                                     <input type="tel" name="shipping_zip" t-att-value="checkout.get('shipping_zip', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="control-group #{error.get('shipping_country_id', '')}">
-                                <label class="control-label" for="contact_name">Country</label>
+                                <label class="control-label label-default" for="contact_name">Country</label>
                                 <div class="controls">
                                     <select name="shipping_country_id">
                                         <option value="">Country...</option>
