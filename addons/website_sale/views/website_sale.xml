@@ -97,8 +97,8 @@
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <div class='navbar navbar-inverse'>
-                    <div class='navbar-inner'>
+                <nav class='navbar navbar-inverse' role='navigation'>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <t t-call="website.pager" >
                             <t t-set="classname">pull-left</t>
                         </t>
@@ -106,7 +106,7 @@
                             <input type="text" name="search" class="search-query col-md-2" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
                     </div>
-                </div>
+                </nav>
                 <div class='row grid grid-align-top' style="margin-left: 16px !important;">
                     <t t-foreach="products" t-as="product">
                     <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'alert alert-warning' or ''}">
