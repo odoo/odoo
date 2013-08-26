@@ -55,7 +55,7 @@
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
-                    <div class="span12" id="shop_content">
+                    <div class="col-md-12" id="shop_content">
                         <t t-raw="shop_content" />
                     </div>
                 </div>
@@ -64,7 +64,7 @@
     </template>
     <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
-            <div class="span4">
+            <div class="col-md-4">
                 <ul class="nav nav-list">
                     <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
                 <t t-foreach="categories" t-as="category">
@@ -74,7 +74,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='shop_content']" position="attributes">
-            <attribute name="class">span8</attribute>
+            <attribute name="class">col-md-8</attribute>
         </xpath>
     </template>
 
@@ -103,13 +103,13 @@
                             <t t-set="classname">pull-left</t>
                         </t>
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="navbar-search pull-right pagination">
-                            <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="search or '' or ''"/>
+                            <input type="text" name="search" class="search-query col-md-2" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
                     </div>
                 </div>
                 <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
-                    <div t-attf-class="span2 mb16 thumbnail text-center #{not product.website_published and 'alert' or ''}">
+                    <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'alert' or ''}">
                         <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
                             <h5  t-field="product.name"> </h5>
                             <img class="img-rounded" t-att-src="product.img('image_small')"/>
@@ -145,7 +145,7 @@
                 <div class='navbar navbar-inverse'>
                     <div class='navbar-inner'>
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="navbar-search pull-right pagination">
-                            <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="search or '' or ''"/>
+                            <input type="text" name="search" class="search-query col-md-2" placeholder="Search" t-att-value="search or '' or ''"/>
                         </form>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                 <h4>Customers who have bought this item also bought</h4>
                 <div class='row mt16'>
                 <t t-foreach="product.recommended_products()" t-as="product">
-                    <div class='span2 thumbnail'>
+                    <div class='col-md-2 thumbnail'>
                         <a t-attf-href="/shop/product/#{ product.id }/">
                             <div class='mt16 text-center'>
                                 <img t-att-src="product.img('image_small')"/>
@@ -199,7 +199,7 @@
         <t t-call="website_sale.layout">
             <t t-set="title">My cart</t>
             <t t-set="shop_content">
-                <div class="span8 oe_mycart">
+                <div class="col-md-8 oe_mycart">
                     <h2>My Shopping Cart</h2>
                     <table class='table' id="mycart_products">
                         <colgroup>
@@ -303,7 +303,7 @@
                 <h4>Suggested products</h4>
                 <div class='row mt16'>
                 <t t-foreach="suggested_products" t-as="product">
-                    <div class='span2 thumbnail'>
+                    <div class='col-md-2 thumbnail'>
                         <a t-attf-href="/shop/product/#{ product.id }/">
                             <div class='mt16 text-center'>
                                 <img t-att-src="product.img('image_small')"/>
@@ -337,7 +337,7 @@
             <t t-set="title">Shop - Checkout</t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
-                    <div class="span4">
+                    <div class="col-md-4">
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -362,10 +362,10 @@
                             </tfoot>
                         </table>
                     </div>
-                    <form class="span8 form-horizontal" action="/shop/confirm_order/" method="post">
+                    <form class="col-md-8 form-horizontal" action="/shop/confirm_order/" method="post">
                         <div class=" row">
                             <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
-                            <h3 class="span8">Billing Information</h3>
+                            <h3 class="col-md-8">Billing Information</h3>
                              <div t-attf-class="control-group #{error.get('name', '')}">
                                 <label class="control-label" for="contact_name">Name and firstname</label>
                                 <div class="controls">
@@ -447,7 +447,7 @@
                             </div>
                         </div>
                         <div class="js_shipping row" t-att-style="not shipping and 'display:none' or ''">
-                            <h3 class="span8 oe_shipping">Shipping Information</h3>
+                            <h3 class="col-md-8 oe_shipping">Shipping Information</h3>
                              <div t-attf-class="control-group #{error.get('shipping_name', '')}">
                                 <label class="control-label" for="contact_name">Name and firstname</label>
                                 <div class="controls">
@@ -523,7 +523,7 @@
             <t t-set="title">Shop - Payment</t>
             <div class="container mt48 oe_website_sale">
                 <div class="row">
-                    <div class="span4">
+                    <div class="col-md-4">
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -548,10 +548,10 @@
                             </tfoot>
                         </table>
                     </div>
-                    <div class="span8">
+                    <div class="col-md-8">
                         <div class="js_payment row">
-                            <h3 class="span8">Click on your payment method</h3>
-                            <div class="span2">
+                            <h3 class="col-md-8">Click on your payment method</h3>
+                            <div class="col-md-2">
                                 <t t-foreach="payments or []" t-as="payment">
                                     <label>
                                         <input t-att-value="payment.id" type="radio" name="payment_type"/> <t t-esc="payment.name"/>
@@ -559,7 +559,7 @@
                                 </t>
                             </div>
                             <t t-foreach="payments or []" t-as="payment">
-                                <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden span6"/>
+                                <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden col-md-6"/>
                             </t>
                             <a href="/shop/payment_validate/" class="hidden btn">I validate my payment</a>
                         </div>
