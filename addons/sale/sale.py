@@ -1082,4 +1082,10 @@ class procurement_order(osv.osv):
     _defaults = {
         'invoice_state': 'none',
     }
-
+    
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        res = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
+        res.update({
+            'price_unit': procurement.sale_line_id and procurement.sale_line_id.product_id and procurement.sale_line_id.product_id.standard_price or 0.0,
+        })
+        return res
