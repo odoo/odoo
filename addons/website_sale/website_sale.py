@@ -32,7 +32,7 @@ class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
         'website_published': fields.boolean('Available in the website'),
-        'description_website': fields.html('Description for the website'),
+        'website_description': fields.html('Description for the website'),
         'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
     }
