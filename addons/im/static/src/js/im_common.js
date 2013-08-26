@@ -92,34 +92,25 @@ function declare($, _, openerp) {
         },
         start_polling: function() {
             var self = this;
-
-            var auth_def = null;
-            var user_id = null;
+            var def = $.when();
+            var uuid = false;
 
             if (this.options.anonymous_mode) {
-                var uuid = localStorage["oe_livesupport_uuid"];
-                var def = $.when(uuid);
+                uuid = localStorage["oe_livesupport_uuid"] || false;
 
                 if (! uuid) {
-                    def = im_common.connection.rpc("/longpolling/im/gen_uuid", {});
+                    def = im_common.connection.rpc("/longpolling/im/gen_uuid", {}).then(function(my_uuid) {
+                        uuid = my_uuid;
+                        localStorage["oe_livesupport_uuid"] = uuid;
+                        return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
+                    });
                 }
-                var anonymous_user_id = null;
-                auth_def = def.then(function(uuid) {
-                    localStorage["oe_livesupport_uuid"] = uuid;
-                    return im_common.connection.model("im.user").call("get_by_user_id", [uuid]);
-                }).then(function(my_id) {
-                    user_id = my_id["id"];
-                    return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
-                });
-            } else {
-                auth_def = im_common.connection.model("im.user").call("get_by_user_id",
-                        [im_common.connection.uid]).then(function(my_id) {
-                    user_id = my_id["id"];
-                });
             }
 
-            return auth_def.then(function() {
-                self.my_id = user_id;
+            return def.then(function() {
+                return im_common.connection.model("im.user").call("get_my_id", [uuid]);
+            }).then(function(my_user_id) {
+                self.my_id = my_user_id;
                 return self.ensure_users([self.my_id]);
             }).then(function() {
                 var me = self.users_cache[self.my_id];

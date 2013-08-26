@@ -161,9 +161,9 @@ class im_livechat_channel(osv.osv):
 
     def get_available_user(self, cr, uid, channel_id, context=None):
         channel = self.browse(cr, openerp.SUPERUSER_ID, channel_id, context=context)
+        im_user_ids = self.pool.get("im.user").search(cr, uid, [["user_id", "in", [user.id for user in channel.user_ids]]], context=context)
         users = []
-        for user in channel.user_ids:
-            iuid = self.pool.get("im.user").get_by_user_id(cr, uid, user.id, context=context)["id"]
+        for iuid in im_user_ids:
             imuser = self.pool.get("im.user").browse(cr, uid, iuid, context=context)
             if imuser.im_status:
                 users.append(imuser)
