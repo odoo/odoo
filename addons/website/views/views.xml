@@ -401,12 +401,20 @@
 
         <template id="snippets">
 
-            <div class='oe_snippet' name='Spacer' data-selector-siblings='#wrap .container'>
+            <div class='oe_snippet' name='Darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
+                <div class='oe_snippet_thumbnail oe_label'>Darken</div>
+            </div>
+
+            <div class='oe_snippet' name='Darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.vomify'>
+                <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
+            </div>
+
+            <div class='oe_snippet' name='Spacer' data-action='insert' data-selector-siblings='#wrap .container'>
                 <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
                 <div class="oe_snippet_body container mt32"></div>
             </div>
 
-            <div class='oe_snippet' name='FooBar' data-selector-siblings='#wrap .container'>
+            <div class='oe_snippet' name='FooBar' data-action='insert' data-selector-siblings='#wrap .container'>
                 <div class='oe_snippet_thumbnail oe_label'>
                     Main Title
                 </div>
@@ -420,7 +428,7 @@
                 </section>
             </div>
 
-            <div class='oe_snippet' name='BarFoo' data-selector-siblings='#wrap .container'>
+            <div class='oe_snippet' name='BarFoo' data-action='insert' data-selector-siblings='#wrap .container'>
                 <section class="oe_snippet_body container">
                     <div class="row">
                         <div class="span12 text-center">
@@ -462,7 +470,7 @@
                 </section>
             </div>
 
-            <div class='oe_snippet' name='Header' data-selector-siblings='#wrap .container'>
+            <div class='oe_snippet' name='Header' data-action='insert' data-selector-siblings='#wrap .container'>
                 <section class="container oe_snippet_body">
                     <div class="row">
                         <div class="span5">
