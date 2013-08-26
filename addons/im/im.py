@@ -230,12 +230,12 @@ class im_user(osv.osv):
     def get_by_user_ids(self, cr, uid, ids, context=None):
         user_ids = [x for x in ids if isinstance(x, int)]
         uuids = [x for x in ids if isinstance(x, (str, unicode))]
-        users = self.search(cr, openerp.SUPERUSER_ID, ["|", ["user", "in", user_ids], ["uuid", "in", uuids]], context=None)
-        records = self.read(cr, openerp.SUPERUSER_ID, users, ["user", "uuid"], context=None)
+        users = self.search(cr, openerp.SUPERUSER_ID, ["|", ["user_id", "in", user_ids], ["uuid", "in", uuids]], context=None)
+        records = self.read(cr, openerp.SUPERUSER_ID, users, ["user_id", "uuid"], context=None)
         inside = {}
         for i in records:
-            if i["user"]:
-                inside[i["user"][0]] = True
+            if i["user_id"]:
+                inside[i["user_id"][0]] = True
             elif ["uuid"]:
                 inside[i["uuid"]] = True
         not_inside = {}
@@ -244,8 +244,8 @@ class im_user(osv.osv):
                 not_inside[i] = True
         for to_create in not_inside.keys():
             if isinstance(to_create, int):
-                created = self.create(cr, openerp.SUPERUSER_ID, {"user": to_create}, context=context)
-                records.append({"id": created, "user": [to_create, ""]})
+                created = self.create(cr, openerp.SUPERUSER_ID, {"user_id": to_create}, context=context)
+                records.append({"id": created, "user_id": [to_create, ""]})
             else:
                 created = self.create(cr, openerp.SUPERUSER_ID, {"uuid": to_create}, context=context)
                 records.append({"id": created, "uuid": to_create})
@@ -261,16 +261,16 @@ class im_user(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = record.assigned_name
-            if record.user:
-                res[record.id] = record.user.name
+            if record.user_id:
+                res[record.id] = record.user_id.name
                 continue
         return res
 
     _columns = {
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
-        'image': fields.related('user', 'image_small', type='binary', string="Image", readonly=True),
-        'user': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
@@ -283,3 +283,8 @@ class im_user(osv.osv):
         'im_last_status': False,
         'im_last_status_update': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
+
+    _sql_constraints = [
+        ('user_uniq', 'unique (user_id)', 'Only one chat user per OpenERP user.'),
+        ('uuid_uniq', 'unique (uuid)', 'Chat identifier already used.'),
+    ]

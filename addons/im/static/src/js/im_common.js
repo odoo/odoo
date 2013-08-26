@@ -35,8 +35,8 @@ function declare($, _, openerp) {
             user_rec.image_url = im_common.connection.url("/im/static/src/img/avatar/avatar.jpeg");
 
             // TODO : check it works correctly
-            if (user_rec.user)
-                user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
+            if (user_rec.user_id)
+                user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user_id[0]});
             /*if (user_rec.image)
                 user_rec.image_url = "data:image/png;base64," + user_rec.image;*/
 
