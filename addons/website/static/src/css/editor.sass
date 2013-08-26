@@ -140,27 +140,35 @@
     height: 100%
     overflow: hidden
 
+$mobile_preview_background: #000000
+$mobile_preview_border: #1A1A1A
+$mobile_preview_close: #E00101
 #mobile-preview.modal
     height: 660px
-    background-color: black
+    background-color: $mobile_preview_background
     border: 2px solid
     border-radius: 10px
+    border-color: $mobile_preview_border
     margin: auto
     top: 0
     left: 0
     bottom: 0
     right: 0
     max-width: 330px
-
-#mobile-preview
     .modal-header
+        background-color: $mobile_preview_background
         border-bottom: 0
         border-top-left-radius: 10px
         border-top-right-radius: 10px
+        .oe_mobile_preview_title
+            color: $mobile_preview_border
     .modal-body
+        background-color: $mobile_preview_background
         max-height: 600px
         padding: 0
         margin: 0
+    .modal-footer
+        background-color: $mobile_preview_background
 
 .oe_mobile_viewport
     width: 320px
@@ -173,4 +181,5 @@
         color: lightgrey
         opacity: 1
     .close:hover
-        color: darkgrey
+        color: $mobile_preview_close
+        opacity: 1

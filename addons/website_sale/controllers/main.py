@@ -20,6 +20,8 @@ def get_order(order_id=None):
     if not order_id:
         fields = [k for k, v in order_obj._columns.items()]
         order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields)
+        if request.httprequest.session.get('ecommerce_pricelist'):
+            order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
         order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
         order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
         order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
@@ -27,16 +29,14 @@ def get_order(order_id=None):
 
     context = {
         'pricelist': order.pricelist_id.id,
-        'partner': order.partner_id.id,
     }
     return order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=context)
 
 def get_current_order():
-    order = get_order(request.httprequest.session.get('ecommerce_order_id'))
-    if order.state != 'draft':
-        order = get_order()
-    request.httprequest.session['ecommerce_order_id'] = order.id
-    return order
+    if request.httprequest.session.get('ecommerce_order_id'):
+        return get_order(request.httprequest.session.get('ecommerce_order_id'))
+    else:
+        return False
 
 class website(osv.osv):
     _inherit = "website"
@@ -60,6 +60,9 @@ class Ecommerce(http.Controller):
     @http.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
 
+        if 'promo' in post:
+            self.change_pricelist(post.get('promo'))
+            
         website = request.registry['website']
         product_obj = request.registry.get('product.template')
 
@@ -71,7 +74,7 @@ class Ecommerce(http.Controller):
             domain += ['|', '|', '|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
-                ('description_website', 'ilike', "%%%s%%" % post.get("search")),
+                ('website_description', 'ilike', "%%%s%%" % post.get("search")),
                 ('product_variant_ids.pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
@@ -81,12 +84,14 @@ class Ecommerce(http.Controller):
         product_count = len(product_obj.search(request.cr, request.uid, domain))
         pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], order="website_published,name")
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
+
+        context = {'pricelist': self.get_pricelist()}
 
         values = website.get_rendering_context({
             'categories': self.get_categories(),
             'category_id': cat_id,
-            'products': product_obj.browse(request.cr, request.uid, product_ids),
+            'products': product_obj.browse(request.cr, request.uid, product_ids, context=context),
             'search': post.get("search"),
             'pager': pager,
         })
@@ -94,12 +99,16 @@ class Ecommerce(http.Controller):
 
     @http.route(['/shop/product/<product_id>/'], type='http', auth="public")
     def product(self, cat_id=0, product_id=0, **post):
+
+        if 'promo' in post:
+            self.change_pricelist(post.get('promo'))
+
         website = request.registry['website']
 
         product_id = product_id and int(product_id) or 0
         product_obj = request.registry.get('product.template')
 
-        context = get_current_order()._context
+        context = {'pricelist': self.get_pricelist()}
 
         product = product_obj.browse(request.cr, request.uid, product_id, context=context)
         values = website.get_rendering_context({
@@ -110,42 +119,45 @@ class Ecommerce(http.Controller):
         })
         return website.render("website_sale.product", values)
 
-    @http.route(['/shop/mycart/'], type='http', auth="public")
-    def mycart(self, **post):
-        order = get_current_order()
-        website = request.registry['website']
-        prod_obj = request.registry.get('product.product')
+    def get_pricelist(self):
+        if not request.httprequest.session.get('ecommerce_pricelist'):
+            self.change_pricelist(None)
+        return request.httprequest.session.get('ecommerce_pricelist')
 
-        if post.get('code'):
+    def change_pricelist(self, code):
+        request.httprequest.session.setdefault('ecommerce_pricelist', False)
+
+        pricelist_id = False
+        if code:
             pricelist_obj = request.registry.get('product.pricelist')
-            pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', post.get('code'))])
+            pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', code)])
             if pricelist_ids:
-                order.write({'pricelist_id': pricelist_ids[0]})
+                pricelist_id = pricelist_ids[0]
 
-        suggested_ids = []
-        for line in order.order_line:
-            suggested_ids += [p.id for p in line.product_id.suggested_product_ids for line in order.order_line]
-        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)])
-        # select 3 random products
-        suggested_products = []
-        while len(suggested_products) < 3 and suggested_ids:
-            index = random.randrange(0, len(suggested_ids))
-            suggested_products.append(suggested_ids.pop(index))
+        if not pricelist_id:
+            pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value']['pricelist_id']
+        
+        request.httprequest.session['ecommerce_pricelist'] = pricelist_id
 
-        values = website.get_rendering_context({
-            'categories': self.get_categories(),
-            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products),
-        })
-        return website.render("website_sale.mycart", values)
+        order = get_current_order()
+        if order:
+            values = {'pricelist_id': pricelist_id}
+            values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
+            order.write(values)
+            for line in order.order_line:
+                self.add_product_to_cart(line.product_id.id, 0)
 
     def add_product_to_cart(self, product_id=0, number=1, set_number=-1):
-        context = {}
-
         order_line_obj = request.registry.get('sale.order.line')
         user_obj = request.registry.get('res.users')
 
         product_id = product_id and int(product_id) or 0
         order = get_current_order()
+        if not order:
+            order = get_order()
+            request.httprequest.session['ecommerce_order_id'] = order.id
+
+        context = {'pricelist': self.get_pricelist()}
 
         quantity = 0
 
@@ -158,29 +170,60 @@ class Ecommerce(http.Controller):
                 quantity = set_number
             else:
                 quantity = order_line['product_uom_qty'] + number
-            if quantity <= 0:
-                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=context)
+            if quantity < 0:
+                quantity = 0
         else:
             fields = [k for k, v in order_line_obj._columns.items()]
             values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=context)
             quantity = 1
+
         values['product_uom_qty'] = quantity
         values['product_id'] = product_id
         values['order_id'] = order.id
 
         # change and record value
-        if quantity > 0:
-            pricelist_id = order.pricelist_id and order.pricelist_id.id or False
-            values.update(order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
-                partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
-                context=context)['value'])
-            if order_line_ids:
-                order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=context)
-            else:
-                order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=context)
-                order.write({'order_line': [(4, order_line_id)]}, context=context)
+        pricelist_id = order.pricelist_id and order.pricelist_id.id or False
+
+        vals = order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
+            partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
+            context=context)['value']
+
+        values.update(vals)
+        if order_line_ids:
+            order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=context)
+            if not quantity:
+                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=context)
+        else:
+            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=context)
+            order.write({'order_line': [(4, order_line_id)]}, context=context)
 
         return quantity
+
+    @http.route(['/shop/mycart/'], type='http', auth="public")
+    def mycart(self, **post):
+        order = get_current_order()
+        website = request.registry['website']
+        prod_obj = request.registry.get('product.product')
+
+        if 'promo' in post:
+            self.change_pricelist(post.get('promo'))
+
+        suggested_ids = []
+        if order:
+            for line in order.order_line:
+                suggested_ids += [p.id for p in line.product_id.suggested_product_ids for line in order.order_line]
+        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)])
+        # select 3 random products
+        suggested_products = []
+        while len(suggested_products) < 3 and suggested_ids:
+            index = random.randrange(0, len(suggested_ids))
+            suggested_products.append(suggested_ids.pop(index))
+
+        values = website.get_rendering_context({
+            'categories': self.get_categories(),
+            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products),
+        })
+        return website.render("website_sale.mycart", values)
 
     @http.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/', '/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
     def add_cart(self, path=None, product_id=0, remove=None):
@@ -319,7 +362,6 @@ class Ecommerce(http.Controller):
                 shipping_id = partner_obj.create(request.cr, SUPERUSER_ID, shipping_value)
 
         order_value = {
-            'state': 'progress',
             'partner_id': partner_id,
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
@@ -327,17 +369,14 @@ class Ecommerce(http.Controller):
         order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
         order.write(order_value)
 
-        request.httprequest.session['ecommerce_order_id_old'] = order.id
-        request.httprequest.session['ecommerce_order_id'] = None
-
         return werkzeug.utils.redirect("/shop/payment/")
 
     @http.route(['/shop/payment/'], type='http', auth="public")
     def payment(self, **post):
         website = request.registry['website']
-        order = get_order(request.httprequest.session.get('ecommerce_order_id_old'))
+        order = get_current_order()
 
-        if order.state != 'progress':
+        if not order or not order.order_line:
             return self.mycart(**post)
 
         values = website.get_rendering_context({
@@ -353,5 +392,11 @@ class Ecommerce(http.Controller):
             payment._content = content
 
         return website.render("website_sale.payment", values)
+
+    @http.route(['/shop/payment_validate/'], type='http', auth="public")
+    def payment_validate(self, **post):
+        request.httprequest.session['ecommerce_order_id'] = False
+        request.httprequest.session['ecommerce_pricelist'] = False
+        return werkzeug.utils.redirect("/shop/")
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
