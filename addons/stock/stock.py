@@ -624,16 +624,18 @@ class stock_picking(osv.osv):
             backorder_moves = picking.move_lines
         backorder_move_ids = [x.id for x in backorder_moves if x.state not in ('done','cancel')]
 
-        backorder_id = self.copy(cr, uid, picking.id, {
-            'name': '/',
-            'move_lines': [],
-            'pack_operation_ids': [],
-            'backorder_id': picking.id,
-        })
-        back_order_name = self.browse(cr, uid, backorder_id, context=context).name
-        self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
-        self.pool.get('stock.move').write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
-        return backorder_id
+        if backorder_move_ids:
+            backorder_id = self.copy(cr, uid, picking.id, {
+                'name': '/',
+                'move_lines': [],
+                'pack_operation_ids': [],
+                'backorder_id': picking.id,
+            })
+            back_order_name = self.browse(cr, uid, backorder_id, context=context).name
+            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
+            self.pool.get('stock.move').write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
+            return backorder_id
+        return False
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
@@ -1016,7 +1018,6 @@ class stock_move(osv.osv):
         return res
     
 
-    
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
         res = dict.fromkeys(ids, False)
         for move in self.browse(cr, uid, ids, context=context):
@@ -1419,6 +1420,7 @@ class stock_move(osv.osv):
                 for m2 in move.move_orig_ids:
                     for q in m2.quant_ids:
                         dp.append(str(q.id))
+                        qty -= q.qty
                 domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
                 quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = dp and ('id not in ('+','.join(dp)+')') or False, context=context)
                 #Will only reserve physical quants, no negative
