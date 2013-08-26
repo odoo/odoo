@@ -21,6 +21,8 @@
 ##############################################################################
 
 import base64
+import datetime
+import dateutil.relativedelta as relativedelta
 import logging
 
 import openerp
@@ -57,6 +59,12 @@ try:
         'str': str,
         'quote': quote,
         'urlencode': urlencode,
+        'datetime': datetime,
+
+        # dateutil.relativedelta is an old-style class and cannot be directly
+        # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
+        # is needed, apparently.
+        'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
