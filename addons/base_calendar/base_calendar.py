@@ -1088,8 +1088,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
 
         result = []
-        for data in super(calendar_event, self).read(cr, uid, select, ['rrule', 'exdate', 'exrule', 'date'], context=context):
-            if not data['rrule']:
+        for data in super(calendar_event, self).read(cr, uid, select, ['rrule', 'recurrency', 'exdate', 'exrule', 'date'], context=context):
+            if not data['recurrency'] or not data['rrule']:
                 result.append(data['id'])
                 continue
             event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
