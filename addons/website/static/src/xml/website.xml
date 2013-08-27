@@ -2,74 +2,80 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-<t t-name="Website.EditorBar">
-    <nav class="navbar navbar-inverse navbar-custom navbar-fixed-top" role="navigation">
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="navbar-collapse navbar-ex1-collapse" id="website-top-view">
-            <form class="navbar-form navbar-left">
-                <button data-action="edit" class="btn btn-primary">Edit</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
-                <li class="divider-vertical"></li>
-                <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
-                <li><a href="#">Translate</a></li>
-                <li class="dropdown">
-                    <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
-                    <div class="dropdown-menu">
-                        <ul class="nav nav-list" id="customize-menu">
-                            <!-- filled in JS -->
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="/admin#action=website.action_module_website">Apps</a>
-                </li>
-            </ul>
-        </div>
-        <div class="navbar-inner" id="website-top-edit">
-            <form class="navbar-form navbar-left">
-                <button data-action="save" class="btn btn-primary">Save</button>
-                <button data-action="cancel" class="btn">Cancel</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
-            </ul>
-        </div>
-    <!-- /.navbar-collapse -->
-    </nav>
-    <div id="mobile-preview" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
-        <div class="modal-header oe_mobile_preview_header">
-            <button title="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="mobile-preview-title" class="oe_mobile_preview_title">Mobile preview</h3>
-        </div>
-        <div class="modal-body">
-            <div class="oe_mobile_preview">
-                <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+    <t t-name="website.editorbar">
+        <nav class="navbar navbar-inverse navbar-custom navbar-fixed-top" role="navigation">
+            <div class="navbar-collapse navbar-ex1-collapse" id="website-top-view">
+                <form class="navbar-form navbar-left">
+                    <button data-action="edit" class="btn btn-primary">Edit</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
+                    <li class="divider-vertical"></li>
+                    <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
+                    <li><a href="#">Translate</a></li>
+                    <li class="dropdown">
+                        <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
+                        <div class="dropdown-menu">
+                            <ul class="nav nav-list" id="customize-menu">
+                                <!-- filled in JS -->
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="/admin#action=website.action_module_website">Apps</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="navbar-inner" id="website-top-edit">
+                <form class="navbar-form navbar-left">
+                    <button data-action="save" class="btn btn-primary">Save</button>
+                    <button data-action="cancel" class="btn">Cancel</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div id="mobile-preview" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
+            <div class="modal-header oe_mobile_preview_header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="mobile-preview-title" class="oe_mobile_preview_title">Mobile preview</h3>
+            </div>
+            <div class="modal-body">
+                <div class="oe_mobile_preview">
+                    <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+                </div>
             </div>
         </div>
-    </div>
 
-</t>
-<t t-name="Website.ActionGroup">
-    <div class="dropdown">
-        <button type="button" class="oe_button_list dropdown-toggle">
-            <t t-esc="widget.name"/>
-        </button>
-        <ul class="dropdown-menu" role="menu"/>
-    </div>
-</t>
-<t t-name="Website.Snipped.carousel">
-    <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
-        <div class='container'>
-            <h1 class='mt64'>Your New Banner Slide</h1>
-            <h2>With another convincing subtitle</h2>
+    </t>
+
+    <t t-name="website.carousel">
+        <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
+            <div class='container'>
+                <h1 class='mt64'>Your New Banner Slide</h1>
+                <h2>With another convincing subtitle</h2>
+            </div>
         </div>
-    </div>
-</t>
+    </t>
 
     <t t-name="website.snippets">
         <div class='oe_snippets oe_hidden'>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'>
+            <div class='oe_handle n'></div>
+            <div class='oe_handle ne'></div>
+            <div class='oe_handle e'></div>
+            <div class='oe_handle se'></div>
+            <div class='oe_handle s'></div>
+            <div class='oe_handle sw'></div>
+            <div class='oe_handle w'></div>
+            <div class='oe_handle nw'></div>
         </div>
     </t>
 

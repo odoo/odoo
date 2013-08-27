@@ -7,7 +7,7 @@ class res_partner(osv.osv):
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
-        'website_sort_description': fields.text('Sort description for the website'),
+        'website_short_description': fields.text('Sort description for the website'),
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):
