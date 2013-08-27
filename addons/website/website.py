@@ -15,6 +15,20 @@ from openerp.exceptions import AccessError, AccessDenied
 import logging
 logger = logging.getLogger(__name__)
 
+def route(*route_args, **route_kwargs):
+    def decorator(f):
+        def wrap(*args, **kwargs):
+            if not hasattr(request, 'webcontext'):
+                website = request.registry.get("website")
+                request.webcontext = website.get_rendering_context(lang=kwargs.get('lang', None))
+                request.context['lang'] = request.webcontext['lang_selected']['code']
+
+            return f(*args, **kwargs)
+        dec = http.route(*route_args, **route_kwargs)
+        dec(wrap)
+        wrap.func_name = f.func_name
+        return wrap
+    return decorator
 
 def auth_method_public():
     registry = openerp.modules.registry.RegistryManager.get(request.db)
@@ -48,7 +62,7 @@ class website(osv.osv):
             self.public_user = request.registry[ref[0]].browse(request.cr, openerp.SUPERUSER_ID, ref[1])
         return self.public_user
 
-    def get_lang_info(self):
+    def get_lang_info(self, lang):
         fields = ['id', 'name', 'code', 'website_default']
         lang_obj = request.registry['res.lang']
         languages = lang_obj.search_read(
@@ -59,7 +73,7 @@ class website(osv.osv):
         default = default[0] if default else None
 
         # Try to get the language from cookie
-        lang = request.httprequest.cookies.get('lang', None)
+        lang = lang or request.httprequest.cookies.get('lang', None)
         if not lang or lang not in activated:
             # Try to get the default language
             if default:
@@ -72,12 +86,12 @@ class website(osv.osv):
                 raise WebsiteError("Could not aquire default language")
 
         return {
-            'list': languages,
-            'default': default,
-            'selected': (lg for lg in languages if lg['code'] == lang).next(),
+            'lang_list': languages,
+            'lang_default': default,
+            'lang_selected': (lg for lg in languages if lg['code'] == lang).next(),
         }
 
-    def get_rendering_context(self, additional_values=None):
+    def get_rendering_context(self, additional_values=None, lang=None):
         debug = 'debug' in request.params
         is_logged = True
         try:
@@ -100,8 +114,9 @@ class website(osv.osv):
             'snipped': {
                 'kanban': self.kanban
             },
-            'lang_info': self.get_lang_info(),
         }
+        values.update(self.get_lang_info(lang))
+
         if additional_values:
             values.update(additional_values)
         return values
@@ -276,6 +291,8 @@ class res_lang(osv.osv):
         'website_activated': fields.boolean('Active on website'),
         'website_default': fields.boolean('Website default language'),
     }
+
+    # TODO: on write and create set website_default=False on other records if current is True
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
