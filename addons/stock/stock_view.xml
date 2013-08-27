@@ -1451,8 +1451,39 @@
                     <field name="location_src_id"/>
                     <field name="location_id"/>
                     <field name="action"/>
-                    <field name="picking_type_id"/>
+                    <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
                 </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_procurement_rule_form">
+            <field name="name">stock.procurement.form</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            
+            <field name="arch" type="xml">
+                <form string="Procurement Rules" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                        <h1>
+                            <label string="Name"/>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="location_src_id"/>
+                                <field name="location_id"/>
+                            </group>
+                            <group>
+                                <field name="action"/>
+                                <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                                <field name="group_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
         

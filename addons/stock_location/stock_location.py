@@ -60,7 +60,7 @@ class stock_location_path(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
             required=True,), 
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This is the picking type associated with the different pickings"), 
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True, help="This is the picking type associated with the different pickings"), 
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
