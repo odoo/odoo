@@ -65,11 +65,11 @@
     <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
             <div class="col-md-4">
-                <ul class="nav">
+                <ul class="nav nav-pills nav-stacked">
                     <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
-                <t t-foreach="categories" t-as="category">
-                    <t t-call="website_sale.categories_recursive"/>
-                </t>
+                    <t t-foreach="categories" t-as="category">
+                        <t t-call="website_sale.categories_recursive"/>
+                    </t>
                 </ul>
             </div>
         </xpath>
@@ -83,7 +83,7 @@
     <template id="categories_recursive">
         <li t-att-class="category.id == category_id and 'active' or ''">
             <a t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
-            <ul t-if="category.child_id" class="nav">
+            <ul t-if="category.child_id" class="nav nav-pills nav-stacked" style="padding-left: 16px;">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
                 </t>
@@ -109,7 +109,7 @@
                 </nav>
                 <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
-                    <div t-attf-class="span2 mb16 thumbnail text-center #{not product.website_published and 'alert alert-warning' or ''}">
+                    <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'alert alert-warning' or ''}">
                         <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
                             <h5  t-field="product.name"> </h5>
                             <img class="img-rounded" t-att-src="product.img('image_small')" />
@@ -179,7 +179,7 @@
                 <h4>Customers who have bought this item also bought</h4>
                 <div class='row mt16' style="margin-left: 15px !important;">
                     <t t-foreach="product.recommended_products()" t-as="product">
-                        <div class='span2 thumbnail'>
+                        <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
                             <a t-attf-href="/shop/product/#{ product.id }/">
                                 <div class='mt16 text-center'>
                                     <img t-att-src="product.img('image_small')"/>
@@ -437,9 +437,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="checkbox-inline">
-                                <div class="col-lg-12">
-                                    <label label-default="label-default" class="checkbox">
+                            <div class="form-group checkbox">
+                                <div class="col-lg-7 col-md-offset-3">
+                                    <label>
                                         <input t-if="not shipping" type="checkbox" name="shipping_different"/>
                                         <input t-if="shipping" type="checkbox" name="shipping_different" checked="1"/>
                                         Ship to different address
@@ -551,7 +551,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="js_payment row">
-                            <h3 class="col-md-8">Click on your payment method</h3>
+                            <h3 class="col-md-12">Click on your payment method</h3>
                             <div class="col-md-2">
                                 <t t-foreach="payments or []" t-as="payment">
                                     <label>
