@@ -216,7 +216,7 @@
         close: function () {
             $('body').removeClass('oe_stop_scrolling');
             this.destroy();
-        }
+        },
 
     });
 
@@ -237,11 +237,13 @@
         events: {
             'click button[data-action=add]': 'add',
             'click a[data-action=update]': 'update',
-            'hidden': 'destroy'
+            'hidden': 'close'
         },
         start: function () {
-            $('input[name=seo_page_url]').val(window.location.href);
-            $('input[name=seo_page_title]').val($('title').text());
+            $('body').addClass('oe_stop_scrolling');
+
+            this.$el.find('input[name=seo_page_url]').val(window.location.href);
+            this.$el.find('input[name=seo_page_title]').val($('title').text());
 
             this.$el.modal();
         },
@@ -256,6 +258,10 @@
         },
         update: function () {
             // TODO: Persist changes
+        },
+        close: function () {
+            $('body').removeClass('oe_stop_scrolling');
+            this.destroy();
         },
     });
 
