@@ -70,6 +70,7 @@ class mail_thread(osv.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
+    _mail_post_access = 'write'
 
     # Automatic logging system if mail installed
     # _track = {
@@ -156,12 +157,26 @@ class mail_thread(osv.AbstractModel):
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
-    def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
+    def read_followers_data(self, cr, uid, follower_ids, context=None):
+        result = []
+        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one')
+        for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
+            is_editable = uid in map(lambda x: x.id, technical_group.users)
+            is_uid = uid in map(lambda x: x.id, follower.user_ids)
+            data = (follower.id,
+                    follower.name,
+                    {'is_editable': is_editable, 'is_uid': is_uid},
+                    )
+            result.append(data)
+        return result
+
+    def _get_subscription_data(self, cr, uid, ids, name, args, user_pid=None, context=None):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
         res = dict((id, dict(message_subtype_data='')) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if user_pid is None:
+            user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # find current model subtypes, add them to a dictionary
         subtype_obj = self.pool.get('mail.message.subtype')
@@ -495,12 +510,22 @@ class mail_thread(osv.AbstractModel):
             access rule on the document, for portal document such as issues. """
         if not model_obj:
             model_obj = self
-        if operation in ['create', 'write', 'unlink']:
-            model_obj.check_access_rights(cr, uid, 'write')
-            model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+        if hasattr(self, '_mail_post_access'):
+            create_allow = self._mail_post_access
         else:
-            model_obj.check_access_rights(cr, uid, operation)
-            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+            create_allow = 'write'
+
+        if operation in ['write', 'unlink']:
+            check_operation = 'write'
+        elif operation == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
+            check_operation = create_allow
+        elif operation == 'create':
+            check_operation = 'write'
+        else:
+            check_operation = operation
+
+        model_obj.check_access_rights(cr, uid, check_operation)
+        model_obj.check_access_rule(cr, uid, mids, check_operation, context=context)
 
     def _get_formview_action(self, cr, uid, id, model=None, context=None):
         """ Return an action to open the document. This method is meant to be
@@ -657,6 +682,12 @@ class mail_thread(osv.AbstractModel):
                 assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
             _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
             thread_id = 0
+        # Private message: should have a parent_id (only answers)
+        if not model and not message_dict.get('parent_id'):
+            if assert_model:
+                assert message_dict.get('parent_id'), 'Routing: posting a message without model should be with a parent_id (private mesage).'
+            _warn('posting a message without model should be with a parent_id (private mesage), skipping')
+            return ()
 
         # Existing Document: check if exists; if not, fallback on create if allowed
         if thread_id and not model_pool.exists(cr, uid, thread_id):
@@ -670,7 +701,7 @@ class mail_thread(osv.AbstractModel):
                 return ()
 
         # Existing Document: check model accepts the mailgateway
-        if thread_id and not hasattr(model_pool, 'message_update'):
+        if thread_id and model and not hasattr(model_pool, 'message_update'):
             if create_fallback:
                 _warn('model %s does not accept document update, fall back on document creation' % model)
                 thread_id = None
@@ -681,7 +712,7 @@ class mail_thread(osv.AbstractModel):
                 return ()
 
         # New Document: check model accepts the mailgateway
-        if not thread_id and not hasattr(model_pool, 'message_new'):
+        if not thread_id and model and not hasattr(model_pool, 'message_new'):
             if assert_model:
                 assert hasattr(model_pool, 'message_new'), 'Model %s does not accept document creation, crashing' % model
             _warn('model %s does not accept document creation, skipping' % model)
@@ -773,16 +804,16 @@ class mail_thread(osv.AbstractModel):
 
         # 2. Reply to a private message
         if in_reply_to:
-            message_ids = self.pool.get('mail.message').search(cr, uid, [
+            mail_message_ids = self.pool.get('mail.message').search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
                             ], limit=1, context=context)
-            if message_ids:
-                message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+            if mail_message_ids:
+                mail_message = self.pool.get('mail.message').browse(cr, uid, mail_message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, message.id, custom_values, uid)
+                                email_from, email_to, message_id, mail_message.id, custom_values, uid)
                 route = self.message_route_verify(cr, uid, message, message_dict,
-                                (message.model, message.res_id, custom_values, uid, None),
+                                (mail_message.model, mail_message.res_id, custom_values, uid, None),
                                 update_author=True, assert_model=True, create_fallback=True, context=context)
                 return route and [route] or []
 
@@ -1007,8 +1038,10 @@ class mail_thread(osv.AbstractModel):
                 # text/plain -> <pre/>
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
-            alternative = (message.get_content_type() == 'multipart/alternative')
+            alternative = False
             for part in message.walk():
+                if part.get_content_type() == 'multipart/alternative':
+                    alternative = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 filename = part.get_filename()  # None if normal part
@@ -1401,9 +1434,9 @@ class mail_thread(osv.AbstractModel):
     # Followers API
     #------------------------------------------------------
 
-    def message_get_subscription_data(self, cr, uid, ids, context=None):
+    def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
         """ Wrapper to get subtypes data. """
-        return self._get_subscription_data(cr, uid, ids, None, None, context=context)
+        return self._get_subscription_data(cr, uid, ids, None, None, user_pid=user_pid, context=context)
 
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not

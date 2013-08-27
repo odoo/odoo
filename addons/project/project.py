@@ -61,6 +61,13 @@ class project(osv.osv):
                  "mail.alias": "alias_id"}
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    def _auto_init(self, cr, context=None):
+        """ Installation hook: aliases, project.project """
+        # create aliases for all projects and avoid constraint errors
+        alias_context = dict(context, alias_model_name='project.task')
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
+            'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
+
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
@@ -545,6 +552,7 @@ class task(osv.osv):
     _date_name = "date_start"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    _mail_post_access = 'read'
     _track = {
         'stage_id': {
             'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
@@ -559,7 +567,6 @@ class task(osv.osv):
     }
 
     def _get_default_partner(self, cr, uid, context=None):
-        """ Override of base_stage to add project specific behavior """
         project_id = self._get_default_project_id(cr, uid, context)
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -742,7 +749,8 @@ class task(osv.osv):
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
                                          readonly=True, required=False),
-        'create_date': fields.datetime('Create Date', readonly=True,select=True),
+        'create_date': fields.datetime('Create Date', readonly=True, select=True),
+        'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
@@ -1105,17 +1113,6 @@ class task(osv.osv):
         """ Override to get the reply_to of the parent project. """
         return [task.project_id.message_get_reply_to()[0] if task.project_id else False
                     for task in self.browse(cr, uid, ids, context=context)]
-
-    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
-        """ mail.message document permission rule: can post a new message if can read
-            because of portal document. """
-        if not model_obj:
-            model_obj = self
-        if operation == 'create':
-            model_obj.check_access_rights(cr, uid, 'read')
-            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
-        else:
-            return super(task, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """

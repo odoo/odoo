@@ -40,6 +40,11 @@
             <field name="args">()</field>
         </record>
 
+        <!-- Admin should not receivve emails at creation -->
+        <record id="base.partner_root" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+
         <!-- Catchall Email Alias -->
         <record id="icp_mail_catchall_alias" model="ir.config_parameter">
             <field name="key">mail.catchall.alias</field>

@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form/header/button[@name='case_mark_lost']" position="after">
-                        <button states="done" string="Create Quotation" name="%(action_crm_make_sale)d" type="action"/>
-                        <button states="draft,open,pending" string="Convert to Quotation" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
+                        <button attrs="{'invisible': [('probability', '&lt;', 100)]}" string="Create Quotation" name="%(action_crm_make_sale)d" type="action"/>
+                        <button attrs="{'invisible': [('probability', '=', 100)]}" string="Convert to Quotation" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
                     </xpath>
                 </data>
             </field>
@@ -116,7 +116,7 @@
             <field name="arch" type="xml">
             <data>
                     <xpath expr="//field[@name='company_id']" position="before">
-                        <field name="default_section_id"/>
+                        <field name="default_section_id" readonly="0"/>
                     </xpath>
                 </data>
             </field>
