@@ -162,7 +162,7 @@ header.navbar-fixed-top {
 .dark {
   background: #eff8f8;
 }
-
+/* ----- BOOTSTRAP HACK FOR STICKY carousel-control ----- */
 .carousel-control {
   top: 40%;
   left: 15px;
@@ -177,10 +177,29 @@ header.navbar-fixed-top {
   -moz-border-radius: 23px;
   border-radius: 23px;
 }
+/* ----- BOOTSTRAP HACK FOR STICKY header tags ----- */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: 900;
+}
 
-.divider-vertical {
-  height: 50px;
-  margin: 0 9px;
-  border-right: 1px solid #222222;
-  border-left: 1px solid #111111;
+.container>.navbar-header, .container>.navbar-collapse {
+  margin-left: -15px;
+}
+.navbar-form {
+  padding: 0;
+  margin-top: 0;
+}
+.navbar-form .btn {
+  margin-top: 3px;
+  margin-bottom: -5px;
+}
+header {
+  margin-bottom: 0px;
+  min-height: 40px;
+}
+header .collapse ul {
+  margin-top: 5px;
+}
+.navbar-nav>li>a {
+  padding:10px 15px 10px;
 }

@@ -53,6 +53,7 @@
                     <body>
                         <header class='navbar-static-top'>
                             <nav class="navbar-default" role="navigation">
+                                <div class="container">
                                 <!-- Brand and toggle get grouped for better mobile display -->
                                 <div class="navbar-header">
                                     <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
@@ -64,6 +65,7 @@
                                         <li><a href="/admin">Sign in</a></li>
                                     </ul>
                                 </div><!-- /.navbar-collapse -->
+                                </div>
                             </nav>
                         </header>
                         <div t-raw="0" id="wrap">
@@ -115,7 +117,7 @@
                                     Create a <a href="http://openerp.com/apps/website">free website</a> with
                                     <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                 </div>
-                                <div class="pull-left muted">
+                                <div class="pull-left text-muted">
                                     Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                                 </div>
                             </div>
@@ -188,7 +190,7 @@
                                         dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
                                         proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                                     </p>
-                                    <div class="text-center"> <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To <em>Action</em></a></div>
+                                    <div class="text-center"> <a href="http://www.openerp.com/start" class="btn mt16 btn-lg btn-primary">Call To <em>Action</em></a></div>
                                 </div>
                             </div>
                         </section>
@@ -256,9 +258,9 @@
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p> 
                         <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a> 
-                        <span class="muted">or</span> <a href="/sitemap">Search a Page</a>
+                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
                     </div>
-                    <div class="text-center muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
+                    <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
                 <hr />
                 <div class="container">
