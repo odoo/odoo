@@ -129,6 +129,11 @@
             <t t-call="website.layout">
                 <section>
                     <div id="myCarousel" class="carousel slide" data-interval="1000000">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        </ol>
                         <div class="oe_carousel_options js_carousel_options" t-ignore="1" t-if="editable">
                             <span class="label label-default js_add"><i class="icon-plus-sign"></i></span>
                             <span class="label label-default js_remove"><i class="icon-minus-sign"></i></span>
