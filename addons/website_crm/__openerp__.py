@@ -11,9 +11,7 @@ OpenERP Contact Form
     'author': 'OpenERP SA',
     'depends': ['website', 'crm'],
     'data': [
-        'views/website_crm.xml'
+        'views/website_crm.xml',
     ],
-    'js': ['static/src/js/ecommerce.js'],
-    'css': ['static/src/css/ecommerce.css'],
     'installable': True,
 }

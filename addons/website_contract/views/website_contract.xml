@@ -67,6 +67,8 @@
                             <a t-attf-href="/event/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
                         </li>
                     </t-->
+                    <iframe t-attf-src="/worldmap/?width=320&amp;height=240&amp;partner_ids=#{ worldmap_partner_ids }&amp;partner_url=/references/"
+                        style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
                 </ul>
             </div>
         </xpath>
