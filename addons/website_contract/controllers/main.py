@@ -20,6 +20,7 @@ class website_contract(http.Controller):
 
         # public partner profile
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, domain + [('website_published', '=', True)])
+        worldmap_partner_ids = ",".join([str(p) for p in partner_ids])
 
         if request.uid != website.get_public_user().id:
             contract_ids = account_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)])
@@ -36,6 +37,7 @@ class website_contract(http.Controller):
 
         values = website.get_rendering_context({
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
+            'worldmap_partner_ids': worldmap_partner_ids,
             'pager': pager,
             'search': post.get("search"),
         })
@@ -46,6 +48,9 @@ class website_contract(http.Controller):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)])
+        if request.uid != website.get_public_user().id:
+            partner_ids += partner_obj.search(request.cr, request.uid, [('id', '=', ref_id)])
+
         values = website.get_rendering_context({
             'partner_id': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids[0], context={'show_address': True}),
         })

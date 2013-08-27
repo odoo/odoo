@@ -66,6 +66,26 @@ class Website(openerp.addons.web.controllers.main.Home):
         })
         return werkzeug.utils.redirect("/page/%s" % path)
 
+    @http.route('/website/theme_change', type='http', auth="admin")
+    def theme_change(self, theme_id=False, **kwargs):
+        imd = request.registry['ir.model.data']
+        view = request.registry['ir.ui.view']
+
+        view_model, view_option_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
+        views = view.search(request.cr, request.uid, [('inherit_id','=',view_option_id)])
+        view.write(request.cr, request.uid, views, {'inherit_id': False})
+
+        if theme_id:
+            module, xml_id = theme_id.split('.')
+            view_model, view_id = imd.get_object_reference(request.cr, request.uid, module, xml_id)
+            view.write(request.cr, request.uid, [view_id], {'inherit_id':view_option_id})
+
+        website = request.registry.get("website")
+        values = website.get_rendering_context({
+            'theme_changed': True
+        })
+        return website.render('website.themes', values)
+
     @http.route('/page/<path:path>', type='http', auth="admin")
     def page(self, path, **kwargs):
         website = request.registry.get("website")
@@ -83,25 +103,25 @@ class Website(openerp.addons.web.controllers.main.Home):
         view_obj = request.registry.get("ir.ui.view")
         view = view_obj.browse(request.cr, request.uid, int(view_id), context=request.context)
         if view.inherit_id:
-            print '*', view.inherit_id
             value = False
         else:
             value = view.inherit_option_id and view.inherit_option_id.id or False
-            print '*', view.inherit_id, 'no', value, view
         view_obj.write(request.cr, request.uid, [view_id], {
             'inherit_id': value
         }, context=request.context)
-        print 'Wrote', value, 'on', view_id
         return True
 
     @http.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
     def customize_template_get(self, xml_id):
+        imd = request.registry['ir.model.data']
+        view_model, view_theme_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
+
         view = request.registry.get("ir.ui.view")
         views = view._views_get(request.cr, request.uid, xml_id, request.context)
         done = {}
         result = []
         for v in views:
-            if v.inherit_option_id:
+            if v.inherit_option_id and v.inherit_option_id.id<>view_theme_id:
                 if v.inherit_option_id.id not in done:
                     result.append({
                         'name': v.inherit_option_id.name,

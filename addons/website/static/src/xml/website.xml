@@ -9,9 +9,9 @@
                     <button data-action="edit" class="btn btn-primary">Edit</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
+                    <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                     <li class="divider-vertical"></li>
-                    <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
+                    <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                     <li><a href="#">Translate</a></li>
                     <li class="dropdown">
                         <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
@@ -35,8 +35,10 @@
                 </ul>
             </div>
         </nav>
+    </t>
 
-        <div id="mobile-preview" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
+    <t t-name="website.mobile_preview">
+        <div id="mobile-preview" class="modal hide fade oe_mobile_preview" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
             <div class="modal-header oe_mobile_preview_header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="mobile-preview-title" class="oe_mobile_preview_title">Mobile preview</h3>
@@ -47,7 +49,54 @@
                 </div>
             </div>
         </div>
+    </t>
 
+    <t t-name="website.seo_configuration">
+        <div class="modal hide fade oe_seo_configuration" tabindex="-1" role="dialog" aria-labelledby="seo-configuration-title" aria-hidden="true">
+            <div class="modal-header">
+                <button title="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="seo-configuration-title">Promote your page on the web</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_url">URL</label>
+                    <div class="controls">
+                        <input type="text" name="seo_page_url" maxlength="70" size="70" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_title">Title</label>
+                    <div class="controls">
+                        <input type="text" name="seo_page_title" maxlength="70" size="70"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_description">Description</label>
+                    <div class="controls">
+                        <textarea name="seo_page_description" rows="3" cols="70" size="160"/>
+                    </div>
+                </div>
+                <div class="control-group oe_seo_keywords_area">
+                    <label class="control-label" for="seo_page_keywords">Keywords</label>
+                    <div class="controls">
+                        <div class="input-append">
+                            <input type="text" name="seo_page_keywords" maxlength="20" size="24" placeholder="New keyword"/>
+                            <button data-action="add" class="btn" type="button">Add</button>
+                        </div>
+                        <ul class="oe_seo_keywords_list js_seo_keywords_list">
+                            <!-- filled in JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a data-action="update" href="#" class="btn btn-primary">Update page</a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.seo_keyword">
+        <li><a href="#" class="oe_remove" data-action="remove-keyword"><i class="icon-trash"/></a> <span class="label js_seo_keyword"><t t-raw="widget.keyword"/></span></li>
     </t>
 
     <t t-name="website.carousel">

@@ -90,7 +90,7 @@ class website(osv.osv):
         except ValueError:
             logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
             return self.render('website.404', values)
-
+ 
         # render template and catch error
         try:
             return view.render(request.cr, request.uid, template, values, context=context)
