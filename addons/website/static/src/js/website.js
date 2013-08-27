@@ -214,6 +214,7 @@
             'click a[data-action=remove-keyword]': 'destroy',
         },
         init: function (options) {
+            this._super.apply(this, arguments);
             this.keyword = options.keyword;
         }
     });
@@ -223,7 +224,6 @@
             'click button[data-action=add]': 'add',
             'click a[data-action=update]': 'update',
         },
-        container: 'body',
         start: function () {
             $('input[name=seo_page_url]').val(window.location.href);
             $('input[name=seo_page_title]').val($('title').text());
