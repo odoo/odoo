@@ -78,6 +78,9 @@
             $('#mobile-preview').on('hidden', function () {
                 $('body').removeClass('oe_stop_scrolling');
             });
+            $('.oe_mobile_preview_header button').click(function (){
+                $("#mobile-preview").addClass('hide');
+            });
         },
         start: function() {
             var self = this;
@@ -198,6 +201,8 @@
         },
         mobilePreview: function () {
             $('body').addClass('oe_stop_scrolling');
+            $('body').addClass('oe_stop_scrolling');
+            $("#mobile-preview").removeClass('hide');
             document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
 
         },
