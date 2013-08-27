@@ -82,74 +82,11 @@ class mail_mail(osv.Model):
             context = dict(context, default_type=None)
         return super(mail_mail, self).default_get(cr, uid, fields, context=context)
 
-    def _get_reply_to(self, cr, uid, values, context=None):
-        """ Return a specific reply_to: alias of the document through message_get_reply_to
-            or take the email_from
-        """
-        # if value specified: directly return it
-        if values.get('reply_to'):
-            return values.get('reply_to')
-        format_name = True  # whether to use a 'Followers of Pigs <pigs@openerp.com' format
-        email_reply_to = None
-
-        ir_config_parameter = self.pool.get("ir.config_parameter")
-        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
-
-        # model, res_id, email_from: comes from values OR related message
-        model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
-        if values.get('mail_message_id'):
-            message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
-            if message.reply_to:
-                email_reply_to = message.reply_to
-                format_name = False
-            if not model:
-                model = message.model
-            if not res_id:
-                res_id = message.res_id
-            if not email_from:
-                email_from = message.email_from
-
-        # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if not email_reply_to and model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
-            email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
-        # no alias reply_to -> catchall alias
-        if not email_reply_to:
-            catchall_alias = ir_config_parameter.get_param(cr, uid, "mail.catchall.alias", context=context)
-            if catchall_domain and catchall_alias:
-                email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
-
-        # still no reply_to -> reply_to will be the email_from
-        if not email_reply_to and email_from:
-            email_reply_to = email_from
-
-        # format 'Document name <email_address>'
-        if email_reply_to and model and res_id and format_name:
-            emails = tools.email_split(email_reply_to)
-            if emails:
-                email_reply_to = emails[0]
-            document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
-            if document_name:
-                # sanitize document name
-                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
-                # generate reply to
-                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
-
-        return email_reply_to
-
     def create(self, cr, uid, values, context=None):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        mail_id = super(mail_mail, self).create(cr, uid, values, context=context)
-
-        # reply_to: if not set, set with default values that require creation values
-        # but delegate after creation because of mail_message.message_id automatic
-        # creation using existence of reply_to
-        if not values.get('reply_to'):
-            reply_to = self._get_reply_to(cr, uid, values, context=context)
-            if reply_to:
-                self.write(cr, uid, [mail_id], {'reply_to': reply_to}, context=context)
-        return mail_id
+        return super(mail_mail, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete the parent message for all mails that are not created for a notification
@@ -225,11 +162,6 @@ class mail_mail(osv.Model):
     #------------------------------------------------------
     # mail_mail formatting, tools and send mechanism
     #------------------------------------------------------
-
-    # TODO in 8.0(+): maybe factorize this to enable in modules link generation
-    # independently of mail_mail model
-    # TODO in 8.0(+): factorize doc name sanitized and 'Followers of ...' formatting
-    # because it begins to appear everywhere
 
     def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
         """ Generate URLs for links in mails:

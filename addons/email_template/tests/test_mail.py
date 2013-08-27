@@ -20,10 +20,10 @@
 ##############################################################################
 
 import base64
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 
 
-class test_message_compose(TestMailBase):
+class test_message_compose(TestMail):
 
     def setUp(self):
         super(test_message_compose, self).setUp()
