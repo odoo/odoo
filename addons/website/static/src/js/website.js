@@ -248,15 +248,18 @@
 
             this.$el.modal();
         },
-        listKeywords: function () {
+        keywords: function () {
             var result = [];
             this.$el.find('.js_seo_keyword').each(function () {
                 result.push($(this).text());
             })
             return _.uniq(result);
         },
-        existsKeyword: function (word) {
-            return _.contains(this.listKeywords(), word);
+        isExistingKeyword: function (word) {
+            return _.contains(this.keywords(), word);
+        },
+        isKeywordListFull: function () {
+            return this.keywords().length >= 10;
         },
         confirmKeyword: function (e) {
             if (e.keyCode == 13) {
@@ -266,14 +269,14 @@
         },
         addKeyword: function () {
             var word = this.$el.find('input[name=seo_page_keywords]').val();
-            if (!this.existsKeyword(word)) {
+            if (!this.isKeywordListFull() && !this.isExistingKeyword(word)) {
                 new website.seo.Keyword({
                     keyword: word
                 }).appendTo(this.$el.find('.js_seo_keywords_list'));
             }
         },
         update: function () {
-            console.log(this.listKeywords());
+            console.log(this.keywords());
             // TODO: Persist changes
         },
         close: function () {
