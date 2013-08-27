@@ -10,7 +10,7 @@
                     <button data-action="edit" class="btn btn-primary">Edit</button>
                 </form>
                 <ul class="nav pull-right">
-                    <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
+                    <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                     <li class="divider-vertical"></li>
                     <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                     <li><a href="#">Translate</a></li>
@@ -38,8 +38,10 @@
                 </ul>
             </div>
         </div>
+    </t>
 
-        <div id="mobile-preview" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
+    <t t-name="website.mobile_preview">
+        <div id="mobile-preview" class="modal hide fade oe_mobile_preview" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
             <div class="modal-header oe_mobile_preview_header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="mobile-preview-title" class="oe_mobile_preview_title">Mobile preview</h3>
@@ -50,7 +52,6 @@
                 </div>
             </div>
         </div>
-
     </t>
 
     <t t-name="website.seo_configuration">
@@ -85,7 +86,7 @@
                             <input type="text" name="seo_page_keywords" required="True" size="30" placeholder="New keyword"/>
                             <button data-action="add" class="btn" type="button">Add</button>
                         </div>
-                        <ul class="seo-keywords-list">
+                        <ul class="js_seo_keywords_list">
                             <!-- filled in JS -->
                         </ul>
                     </div>

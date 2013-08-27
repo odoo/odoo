@@ -76,9 +76,6 @@
                     window.location.reload();
                 });
             });
-            $('#mobile-preview').on('hidden', function () {
-                $('body').removeClass('oe_stop_scrolling');
-            });
         },
         start: function() {
             var self = this;
@@ -198,12 +195,29 @@
             this.snippets.toggle();
         },
         mobilePreview: function () {
-            $('body').addClass('oe_stop_scrolling');
-            document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
+            (new website.MobilePreview()).appendTo($('body'));
         },
         promotePage: function () {
             (new website.seo.Configurator()).appendTo($('body'));
         },
+    });
+
+    /* ----- MOBILE PREVIEW ---- */
+    website.MobilePreview = openerp.Widget.extend({
+        template: 'website.mobile_preview',
+        events: {
+            'hidden': 'close'
+        },
+        start: function () {
+            $('body').addClass('oe_stop_scrolling');
+            document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
+            this.$el.modal();
+        },
+        close: function () {
+            $('body').removeClass('oe_stop_scrolling');
+            this.destroy();
+        }
+
     });
 
     /* ----- SEO TOOLS ---- */
@@ -223,6 +237,7 @@
         events: {
             'click button[data-action=add]': 'add',
             'click a[data-action=update]': 'update',
+            'hidden': 'destroy'
         },
         start: function () {
             $('input[name=seo_page_url]').val(window.location.href);
@@ -233,7 +248,7 @@
         addKeyword: function (word) {
             new website.seo.Keyword({
                 keyword: word
-            }).appendTo(this.$el.find('.seo-keywords-list'));
+            }).appendTo(this.$el.find('.js_seo_keywords_list'));
         },
         add: function () {
             var word = this.$el.find('input[name=seo_page_keywords]').val();
