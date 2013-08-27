@@ -36,6 +36,9 @@ class product_template(osv.osv):
         'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
     }
+    _defaults = {
+        'website_published': lambda *args: True
+    }
 
     def recommended_products(self, cr, uid, ids, context=None):
         id = ids[0]
