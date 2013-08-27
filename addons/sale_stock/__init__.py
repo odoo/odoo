@@ -24,5 +24,4 @@ import stock
 import report
 import company
 import res_config
-import wizard
 
