@@ -235,6 +235,7 @@
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
         events: {
+            'keypress input[name=seo_page_keywords]': 'confirmKeyword',
             'click button[data-action=add]': 'addKeyword',
             'click a[data-action=update]': 'update',
             'hidden': 'close'
@@ -246,6 +247,12 @@
             this.$el.find('input[name=seo_page_title]').val($('title').text());
 
             this.$el.modal();
+        },
+        confirmKeyword: function (e) {
+            if (e.keyCode == 13) {
+                this.addKeyword();
+                this.$el.find('input[name=seo_page_keywords]').val("");
+            }
         },
         addKeyword: function () {
             var word = this.$el.find('input[name=seo_page_keywords]').val();
