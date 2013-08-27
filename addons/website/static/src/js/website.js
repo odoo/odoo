@@ -235,7 +235,7 @@
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
         events: {
-            'click button[data-action=add]': 'add',
+            'click button[data-action=add]': 'addKeyword',
             'click a[data-action=update]': 'update',
             'hidden': 'close'
         },
@@ -247,14 +247,11 @@
 
             this.$el.modal();
         },
-        addKeyword: function (word) {
+        addKeyword: function () {
+            var word = this.$el.find('input[name=seo_page_keywords]').val();
             new website.seo.Keyword({
                 keyword: word
             }).appendTo(this.$el.find('.js_seo_keywords_list'));
-        },
-        add: function () {
-            var word = this.$el.find('input[name=seo_page_keywords]').val();
-            this.addKeyword(word);
         },
         update: function () {
             // TODO: Persist changes
