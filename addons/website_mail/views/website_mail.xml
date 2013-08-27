@@ -108,15 +108,15 @@
     <template id="blog_history" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="History">
         <xpath expr="//div[@id='left_column']" position="inside">
             <ul class="nav nav-pills nav-stacked">
-                <li><a t-attf-href="/blog/#{ mail_group_id }/">BLOG ARCHIVE</a></li>
+                <li class="nav-header"><a t-attf-href="/blog/#{ mail_group_id }/">BLOG ARCHIVE</a></li>
                 <!-- TODO: check qweb iteration -->
                 <li t-foreach="nav_list" t-as="year" class="js_nav_year">
                     <t t-set="year" t-value="nav_list[year]"/>
                     <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
-                    <ul class="nav nav-list css_nav_month">
+                    <ul class="nav list-group css_nav_month" style="padding-left: 16px;">
                         <t t-foreach="year['months']">
                             <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
-                                <ul class="nav nav-list"/>
+                                <ul class="nav list-group"/>
                             </li>
                         </t>
                     </ul>
