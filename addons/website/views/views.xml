@@ -51,19 +51,20 @@
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                     </head>
                     <body>
-                        <header class='navbar navbar-static-top'>
-                            <div class='navbar-inner'>
-                                <div class="container">
-                                    <a href="/page/website.homepage" class="navbar-brand">
-                                        <em>Open</em><b>ERP</b>
-                                        <!--<img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>-->
-                                    </a>
-                                    <ul class="nav navbar-nav navbar-right" id="top_menu">
+                        <header class='navbar-static-top'>
+                            <nav class="navbar-default" role="navigation">
+                                <!-- Brand and toggle get grouped for better mobile display -->
+                                <div class="navbar-header">
+                                    <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
+                                </div>
+                                <!-- Collect the nav links, forms, and other content for toggling -->
+                                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                                    <ul class="nav navbar-nav navbar-right">
                                         <li><a href="/page/website.contactus">Contact us</a></li>
                                         <li><a href="/admin">Sign in</a></li>
                                     </ul>
-                                </div>
-                            </div>
+                                </div><!-- /.navbar-collapse -->
+                            </nav>
                         </header>
                         <div t-raw="0" id="wrap">
                             <div class="container">
@@ -74,13 +75,13 @@
                             <div class="container" id="footer_container">
                                 <div class="row">
                                     <div class="col-md-3" name="product">
-                                         <h5>Our products</h5>
+                                        <h5>Our products</h5>
                                         <ul class="list-unstyled" name="products">
                                             <li><a href="/">Home</a></li>
                                         </ul>
                                     </div>
                                     <div class="col-md-3" name="info">
-                                         <h5 name="info_title">Connect with us</h5>
+                                        <h5 name="info_title">Connect with us</h5>
                                         <ul class="list-unstyled">
                                             <li><a href="/page/website.aboutus">About us</a></li>
                                             <li><a href="/page/website.contactus">Contact us</a></li>
@@ -92,11 +93,15 @@
                                     </div>
                                     <div class="col-md-5 col-lg-offset-1" name="about_us">
                                         <h5 t-field="res_company.name">About us</h5>
-                                        <p>We are a team of passionated people whose goal is to improve everyone's
+                                        <p>
+                                            We are a team of passionated people whose goal is to improve everyone's
                                             life through disruptive products. We build great products to solve your
-                                            business problems.</p>
-                                        <p>Our products are designed for small to medium companies willing to optimize
-                                            their performance.</p>
+                                            business problems.
+                                        </p>
+                                        <p>
+                                            Our products are designed for small to medium companies willing to optimize
+                                            their performance.
+                                        </p>
                                         <h1 style="padding: 12px 24px;">
                                             <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
                                             <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
@@ -172,13 +177,17 @@
                                     <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg" />
                                 </div>
                                 <div class="col-md-6 col-lg-offset-1">
-                                    <p class="mt16">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                    <p class="mt16">
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                                         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                                         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                        consequat.</p>
-                                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                        consequat.
+                                    </p>
+                                    <p>
+                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
                                         dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                                    </p>
                                     <div class="text-center"> <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To <em>Action</em></a></div>
                                 </div>
                             </div>
@@ -195,25 +204,31 @@
                             <div class="col-md-4">
                                 <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg" />
                                 <h4 class="mt16">Cillum Dolore</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                                     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                                     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                    consequat.</p>
+                                    consequat.
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
                                 <h4 class="mt16">Mollit Anim</h4>
-                                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                <p>
+                                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
                                     dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
                                 <h4 class="mt16">Nemo Enim Ipsam</h4>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                <p>
+                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
                                     doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
                                     veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                                    ipsam voluptatem quia voluptas</p>
+                                    ipsam voluptatem quia voluptas
+                                </p>
                             </div>
                         </div>
                     </section>
@@ -248,9 +263,11 @@
                 <hr />
                 <div class="container">
                     <h1 class="mt32">404: Page not found!</h1>
-                    <p>The page you were looking for could not be found; it is possible you have
+                    <p>
+                        The page you were looking for could not be found; it is possible you have
                         typed the address incorrectly, but it has most probably been removed due
-                        to the recent website reorganisation.</p>
+                        to the recent website reorganisation.
+                    </p>
                     <p>Maybe you were looking for one of these popular pages ?</p>
                     <ul>
                         <li><a href="/">Homepage</a></li>
