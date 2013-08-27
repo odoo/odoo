@@ -46,6 +46,7 @@
             'click button[data-action=cancel]': 'cancel',
             'click button[data-action=snippet]': 'snippet',
             'click a[data-action=show-mobile-preview]': 'mobilePreview',
+            'click a[data-action=promote-current-page]': 'promotePage',
         },
         container: 'body',
         customize_setup: function() {
@@ -199,7 +200,47 @@
         mobilePreview: function () {
             $('body').addClass('oe_stop_scrolling');
             document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
+        },
+        promotePage: function () {
+            (new website.seo.Configurator()).appendTo($('body'));
+        },
+    });
 
+    /* ----- SEO TOOLS ---- */
+    website.seo = {};
+    website.seo.Keyword = openerp.Widget.extend({
+        template: 'website.seo_keyword',
+        events: {
+            'click a[data-action=remove-keyword]': 'destroy',
+        },
+        init: function (options) {
+            this.keyword = options.keyword;
+        }
+    });
+    website.seo.Configurator = openerp.Widget.extend({
+        template: 'website.seo_configuration',
+        events: {
+            'click button[data-action=add]': 'add',
+            'click a[data-action=update]': 'update',
+        },
+        container: 'body',
+        start: function () {
+            $('input[name=seo_page_url]').val(window.location.href);
+            $('input[name=seo_page_title]').val($('title').text());
+
+            this.$el.modal();
+        },
+        addKeyword: function (word) {
+            new website.seo.Keyword({
+                keyword: word
+            }).appendTo(this.$el.find('.seo-keywords-list'));
+        },
+        add: function () {
+            var word = this.$el.find('input[name=seo_page_keywords]').val();
+            this.addKeyword(word);
+        },
+        update: function () {
+            // TODO: Persist changes
         },
     });
 
@@ -316,14 +357,14 @@
             }
         },
         vomify: function($el){
-            var hue=0; 
+            var hue=0;
             var beat = false;
-            var a = setInterval(function(){ 
+            var a = setInterval(function(){
                 $el.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
             }, 10);
             setTimeout(function(){
                 clearInterval(a);
-                setInterval(function(){ 
+                setInterval(function(){
                     var filter =  'hue-rotate('+hue+'deg)'+ (beat ? ' invert()' : '');
                     $('html').css({'-webkit-filter': filter}); hue += 5;
                     if(hue % 35 === 0){
@@ -367,7 +408,7 @@
         // setup widget and drag and drop
         start_snippets: function(){
             var self = this;
-            
+
             this.$('.oe_snippet').draggable({
                 helper: 'clone',
                 zIndex: '1000',
@@ -492,7 +533,7 @@
 
         activate_overlay_zones: function(selector){
             var $targets = $(selector);
-            
+
             function is_visible($el){
                 return     $el.css('display')    != 'none'
                         && $el.css('opacity')    != '0'
@@ -507,7 +548,7 @@
                 var parents = $(this).parents().filter(function(){ return !is_visible($(this)); });
                 return parents.length === 0;
             });
-            
+
             var zone_template = "<div class='oe_drop_zone oe_overlay'></div>";
             $('.oe_drop_zone').remove();
 
@@ -531,7 +572,7 @@
             var self = this;
             this.activate_overlay_zones('#wrap .container');
             var $snippets = $('.oe_drop_zone');
-            
+
             for(var i = 0, len = $snippets.length; i < len; i++){
                 var $snippet = $snippets.eq(i);
                 var $manipulator = $(openerp.qweb.render('website.snippet_manipulator'));
@@ -553,10 +594,10 @@
                     var y = event.pageY;
 
                     var pt = $snippet.css('padding-top');
-                    var pb = $snippet.css('padding-bottom'); 
+                    var pb = $snippet.css('padding-bottom');
                     pt = Number(pt.slice(0,pt.length - 2)) || 0; //FIXME something cleaner to remove 'px'
                     pb = Number(pb.slice(0,pb.length - 2)) || 0;
-                    
+
                     $manipulator.addClass('oe_hover');
                     event.preventDefault();
 
@@ -568,7 +609,7 @@
                             $snippet.css('padding-top',pt-dy+'px');
                             self.cover_target($manipulator,$snippet);
                         }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
-    
+
                             $snippet.css('padding-bottom',pb+dy+'px');
                             self.cover_target($manipulator,$snippet);
                         }
@@ -580,7 +621,7 @@
                         self.activate_snippet_manipulators();
                     });
                 });
-                    
+
             }
         },
         deactivate_snippet_manipulators: function(){

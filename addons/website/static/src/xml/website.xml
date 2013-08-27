@@ -12,7 +12,7 @@
                 <ul class="nav pull-right">
                     <li><a data-action="show-mobile-preview" href="#mobile-preview" data-toggle="modal" role="button"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                     <li class="divider-vertical"></li>
-                    <li><a href="#">Promote<!-- <sup><span class="badge">1</span></sup> --></a></li>
+                    <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                     <li><a href="#">Translate</a></li>
                     <li class="dropdown">
                         <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
@@ -51,6 +51,54 @@
             </div>
         </div>
 
+    </t>
+
+    <t t-name="website.seo_configuration">
+        <div class="modal hide fade oe_seo_configuration" tabindex="-1" role="dialog" aria-labelledby="seo-configuration-title" aria-hidden="true">
+            <div class="modal-header">
+                <button title="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="seo-configuration-title">Promote your page on the web</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_url">URL</label>
+                    <div class="controls">
+                        <input type="text" name="seo_page_url" required="True" size="70" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_title">Title</label>
+                    <div class="controls">
+                        <input type="text" name="seo_page_title" required="True" size="70"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_description">Description</label>
+                    <div class="controls">
+                        <textarea name="seo_page_description" rows="3" cols="70" size="160"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="seo_page_keywords">Keywords</label>
+                    <div class="controls">
+                        <div class="input-append">
+                            <input type="text" name="seo_page_keywords" required="True" size="30" placeholder="New keyword"/>
+                            <button data-action="add" class="btn" type="button">Add</button>
+                        </div>
+                        <ul class="seo-keywords-list">
+                            <!-- filled in JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a data-action="update" href="#" class="btn btn-primary">Update page</a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.seo_keyword">
+        <li><a href="#" class="oe_remove" data-action="remove-keyword"><i class="icon-trash"/></a> <span class="label seo-keyword"><t t-raw="widget.keyword"/></span></li>
     </t>
 
     <t t-name="website.carousel">
