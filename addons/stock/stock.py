@@ -1691,6 +1691,12 @@ class stock_inventory(osv.osv):
         'location_id': _default_stock_location,
     }
 
+    def set_checked_qty(self , cr ,uid ,ids ,context=None):
+        inventory = self.browse(cr, uid, ids[0], context=context)
+        line_ids = [line.id for line in inventory.line_ids]
+        self.pool.get('stock.inventory.line').write(cr, uid, line_ids, {'product_qty': 0})
+        return True
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
