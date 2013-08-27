@@ -700,7 +700,7 @@ class pos_order(osv.osv):
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
                 'partner_id': addr.get('delivery',False),
-                'type': 'out',
+                'picking_type_id': self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id,
                 'company_id': order.company_id.id,
                 'move_type': 'direct',
                 'note': order.note or "",
