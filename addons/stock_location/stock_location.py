@@ -215,7 +215,7 @@ class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes'),
-        #'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
+        'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         #'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
     }
 
