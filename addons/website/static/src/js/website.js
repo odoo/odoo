@@ -214,6 +214,9 @@
             $('body').addClass('oe_stop_scrolling');
             $('body').addClass('oe_stop_scrolling');
             $("#mobile-preview").removeClass('hide');
+            $("#mobile-preview").find('.oe_mobile_preview_header button').click(function() {
+                $('body').removeClass('oe_stop_scrolling');
+            });
             document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";
             this.$el.modal();
         },
