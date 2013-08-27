@@ -11,12 +11,11 @@
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
+        <!-- <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
             <xpath expr="//link[@id='bootstrap_css']" position="replace">
-                <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
-                <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
+                <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-theme.min.css' t-ignore="true"/>
             </xpath>
-        </template>
+        </template> -->
 
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
@@ -50,11 +49,10 @@
                         <t t-call="website.theme"/>
 
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
-                        <header>
-                            <nav class="navbar-collapse navbar-ex1-collapse" role="navigation">
+                        <header class='navbar navbar-static-top'>
+                            <div class='navbar-inner'>
                                 <div class="container">
                                     <a href="/page/website.homepage" class="navbar-brand">
                                         <em>Open</em><b>ERP</b>
@@ -65,7 +63,7 @@
                                         <li><a href="/admin">Sign in</a></li>
                                     </ul>
                                 </div>
-                            </nav>
+                            </div>
                         </header>
                         <div t-raw="0" id="wrap">
                             <div class="container">
