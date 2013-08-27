@@ -246,11 +246,14 @@
         },
         start: function () {
             $('body').addClass('oe_stop_scrolling');
-
-            this.$el.find('input[name=seo_page_url]').val(window.location.href);
+            this.$el.find('.js_seo_page_url').text(this.currentPage());
             this.$el.find('input[name=seo_page_title]').val($('title').text());
-
             this.$el.modal();
+        },
+        currentPage: function () {
+            var url = window.location.href;
+            var hashIndex = url.indexOf('#');
+            return hashIndex > 0 ? url.substring(0, hashIndex): url;
         },
         keywords: function () {
             var result = [];
@@ -272,7 +275,8 @@
             }
         },
         addKeyword: function () {
-            var word = this.$el.find('input[name=seo_page_keywords]').val().trim();
+            var word = this.$el.find('input[name=seo_page_keywords]').val()
+                .replace(/[,;.:]+/gm, " ").replace(/ +/g, " ").trim();
             if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
                 new website.seo.Keyword(this, {
                     keyword: word

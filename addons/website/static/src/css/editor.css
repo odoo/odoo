@@ -1,14 +1,13 @@
 @charset "utf-8";
-
-
 /* ---- CKEditor Minimal Reset ---- */
-
 .navbar.navbar-inverse .cke_chrome {
   border: none;
 }
+
 .navbar.navbar-inverse .cke_inner {
   background: transparent;
 }
+
 .navbar.navbar-inverse .cke_top {
   background: transparent;
   border: none;
@@ -17,9 +16,7 @@
   -moz-box-shadow: none;
 }
 
-
-/* ---- OpenERP ---- */
-
+/* ---- OpenERP Style ---- */
 .oe_hidden {
   display: none !important;
 }
@@ -236,12 +233,13 @@
   left: 0px;
 }
 
-/* ---- MOBILE PREVIEW ---- */
+/* ---- MODAL DIALOGS ---- */
 .oe_stop_scrolling {
   height: 100%;
   overflow: hidden;
 }
 
+/* ---- MOBILE PREVIEW ---- */
 .oe_mobile_preview.modal {
   height: 660px;
   background-color: black;
@@ -282,7 +280,7 @@
 }
 
 .oe_mobile_preview_header .close {
-  color: lightgrey;
+  color: #1a1a1a;
   opacity: 1;
 }
 .oe_mobile_preview_header .close:hover {
@@ -290,11 +288,12 @@
   opacity: 1;
 }
 
+/* ---- SEO TOOLS ---- */
 .oe_seo_configuration input {
-  width: inherit;
+  width: 90%;
 }
 .oe_seo_configuration textarea {
-  width: inherit;
+  width: 90%;
 }
 .oe_seo_configuration ul {
   list-style: none;
@@ -304,9 +303,9 @@
 }
 
 .oe_seo_keywords_list {
-  width: 39em;
+  width: 80%;
 }
 .oe_seo_keywords_list li {
   float: left;
-  width: 12em;
+  width: 15em;
 }
