@@ -290,7 +290,7 @@ class Field(object):
         if column._prefetch and not records.pool._init:
             fetch_fields = set(fname
                 for fname, fcolumn in records._columns.iteritems()
-                if fcolumn._classic_write and fcolumn._prefetch)
+                if fcolumn._prefetch)
         else:
             fetch_fields = set((name,))
 

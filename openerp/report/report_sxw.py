@@ -239,7 +239,7 @@ class rml_parse(object):
                 date = datetime_field.context_timestamp(self.cr, self.uid,
                                                         timestamp=date,
                                                         context=self.localcontext)
-            return date.strftime(date_format)
+            return date.strftime(date_format.encode('utf-8'))
 
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
         if currency_obj:

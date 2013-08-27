@@ -118,6 +118,10 @@ class _column(object):
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
+
+        # self._prefetch must imply self._classic_write and not self.groups
+        if not self._classic_write or self.groups:
+            self._prefetch = False
  
     def restart(self):
         pass

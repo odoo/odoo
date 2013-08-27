@@ -398,7 +398,9 @@ def is_leaf(element, internal=False):
         INTERNAL_OPS += ('inselect',)
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
-        and element[1] in INTERNAL_OPS
+        and element[1] in INTERNAL_OPS \
+        and ((isinstance(element[0], basestring) and element[0])
+             or element in (TRUE_LEAF, FALSE_LEAF))
 
 
 # --------------------------------------------------

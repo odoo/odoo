@@ -195,7 +195,8 @@ class ir_model(osv.osv):
             ctx = dict(context,
                 field_name=vals['name'],
                 field_state='manual',
-                select=vals.get('select_level', '0'))
+                select=vals.get('select_level', '0'),
+                update_custom_fields=True)
             self.pool[vals['model']]._auto_init(cr, ctx)
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
