@@ -145,7 +145,7 @@
                         </tree>
                     </field>
                     </page>
-                   <page string="Inventory Adjustments" attrs="{'invisible': [('move_ids_exist', '=', False)],'invisible': [('state','=','draft')] }">
+                    <page string="Inventory Adjustments" attrs="{'invisible': [('move_ids_exist', '=', False)],'invisible': [('state','=','draft')] }">
                         <field name="move_ids" context="{'inventory_id':active_id}" readonly="1">
                            <tree string="Inventory Adjustments">
                                <field name="product_id"/>
