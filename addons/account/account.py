@@ -137,16 +137,27 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
 
-    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
+    def _get_financial_report_ref(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
+        financial_report_ref = {}
+        for key, financial_report in [
+                    ('asset','account_financial_report_assets0'),
+                    ('liability','account_financial_report_liability0'),
+                    ('income','account_financial_report_income0'),
+                    ('expense','account_financial_report_expense0'),
+                ]:
+            try:
+                financial_report_ref[key] = obj_financial_report.browse(cr, uid,
+                    obj_data.get_object_reference(cr, uid, 'account', financial_report)[1],
+                    context=context)
+            except ValueError:
+                pass
+        return financial_report_ref
+
+    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        financial_report_ref = {
-            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
-            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
-            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
-            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
-        }
+        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = 'none'
             for key, financial_report in financial_report_ref.items():
@@ -157,15 +168,9 @@ class account_account_type(osv.osv):
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
         field_value = field_value or 'none'
-        obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
         #unlink if it exists somewhere in the financial reports related to BS or PL
-        financial_report_ref = {
-            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
-            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
-            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
-            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
-        }
+        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for key, financial_report in financial_report_ref.items():
             list_ids = [x.id for x in financial_report.account_type_ids]
             if account_type_id in list_ids:
