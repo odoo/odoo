@@ -248,6 +248,16 @@
 
             this.$el.modal();
         },
+        listKeywords: function () {
+            var result = [];
+            this.$el.find('.js_seo_keyword').each(function () {
+                result.push($(this).text());
+            })
+            return _.uniq(result);
+        },
+        existsKeyword: function (word) {
+            return _.contains(this.listKeywords(), word);
+        },
         confirmKeyword: function (e) {
             if (e.keyCode == 13) {
                 this.addKeyword();
@@ -256,11 +266,14 @@
         },
         addKeyword: function () {
             var word = this.$el.find('input[name=seo_page_keywords]').val();
-            new website.seo.Keyword({
-                keyword: word
-            }).appendTo(this.$el.find('.js_seo_keywords_list'));
+            if (!this.existsKeyword(word)) {
+                new website.seo.Keyword({
+                    keyword: word
+                }).appendTo(this.$el.find('.js_seo_keywords_list'));
+            }
         },
         update: function () {
+            console.log(this.listKeywords());
             // TODO: Persist changes
         },
         close: function () {
