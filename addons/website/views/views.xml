@@ -11,13 +11,6 @@
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
-            <xpath expr="//link[@id='bootstrap_css']" position="replace">
-                <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
-                <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
-            </xpath>
-        </template>
-
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
                 <html t-att-data-view-xmlid="__stack__[0]" t-att-data-editable="'1' if editable else '0'">

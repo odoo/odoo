@@ -65,6 +65,8 @@
                                     item.id, item.active ? '' : '-empty', item.name));
                             }
                         });
+                        // Adding Static Menus
+                        menu.append('<li class="divider"></li><li><a href="/page/website.themes">Change Theme</a></li>');
                     }
                 );
             });

@@ -13,6 +13,7 @@ OpenERP Website CMS
     'installable': True,
     'data': [
         'views/views.xml',
+        'views/themes.xml',
         'views/res_config.xml',
         'website_data.xml',
     ],
