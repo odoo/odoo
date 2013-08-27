@@ -89,7 +89,6 @@ class mail_message(osv.Model):
     def _get_record_name(self, cr, uid, ids, name, arg, context=None):
         """ Return the related document name, using name_get. It is done using
             SUPERUSER_ID, to be sure to have the record name correctly stored. """
-        # return dict.fromkeys(ids, False)
         # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
