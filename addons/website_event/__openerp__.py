@@ -1,7 +1,7 @@
 {
     'name': 'Online Events',
     'category': 'Website',
-    'summary': 'Schedule, Promote and Sell Events Online',
+    'summary': 'Schedule, Promote and Sell Events',
     'version': '1.0',
     'description': """
 OpenERP Blog

@@ -1,7 +1,7 @@
 {
 'name': 'Public References',
     'category': 'Website',
-    'summary': 'Publish Your Public References',
+    'summary': 'Publish Customer References',
     'version': '1.0',
     'description': """
 OpenERP Blog

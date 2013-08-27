@@ -1,7 +1,7 @@
 {
 'name': 'Team Page',
     'category': 'Website',
-    'summary': 'Publish Your Team, Employees',
+    'summary': 'Present Your Team',
     'version': '1.0',
     'description': """
 OpenERP Blog
