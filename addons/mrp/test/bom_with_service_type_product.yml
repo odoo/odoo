@@ -3,24 +3,24 @@
 -
   !record {model: mrp.bom, id: mrp_bom_test1}:
     company_id: base.main_company
-    name: BOM with Service type products
-    product_id: product.product_product_4
+    name: PC Assemble SC234
+    product_id: product.product_product_3
     product_qty: 1.0
     type: normal
     bom_lines:
       - company_id: base.main_company
         name: On Site Assistance
-        product_id: product.product_product_3
+        product_id: product.product_product_2
         product_qty: 1.0
       - company_id: base.main_company
         name: GrapWorks Software
-        product_id: product.product_product_45
+        product_id: product.product_product_44
         product_qty: 1.0
 -
-  I make the production order for BoM having one service type product and one consumable product.
+  I make the production order using BoM having one service type product and one consumable product.
 -
   !record {model: mrp.production, id: mrp_production_servicetype_mo1}:
-    product_id: product.product_product_6
+    product_id: product.product_product_5
     product_qty: 1.0
     bom_id: mrp_bom_test1
     date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -57,4 +57,3 @@
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
     assert order.state == 'done', "Production order should be closed."
-
