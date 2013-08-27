@@ -32,6 +32,9 @@
     };
 
     website.init_editor = function () {
+        CKEDITOR.on('dialogDefinition', function (ev) {
+            (alter_dialog[ev.data.name] || noop)(ev.data.definition);
+        });
         var editor = new website.EditorBar();
         editor.prependTo($('body'));
         $('body').css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
@@ -820,9 +823,6 @@
             })
         }
     };
-    CKEDITOR.on('dialogDefinition', function (ev) {
-        (alter_dialog[ev.data.name] || noop)(ev.data.definition);
-    });
 
     var all_ready = null;
     var dom_ready = $.Deferred();
