@@ -1,5 +1,5 @@
 {
-    'name': 'Website',
+    'name': 'Website Builder',
     'category': 'Website',
     'summary': 'Build Your Enterprise Website',
     'version': '1.0',
