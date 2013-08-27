@@ -64,13 +64,13 @@
                 <div class="control-group">
                     <label class="control-label" for="seo_page_url">URL</label>
                     <div class="controls">
-                        <input type="text" name="seo_page_url" size="70" readonly="readonly"/>
+                        <input type="text" name="seo_page_url" maxlength="70" size="70" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="seo_page_title">Title</label>
                     <div class="controls">
-                        <input type="text" name="seo_page_title" size="70"/>
+                        <input type="text" name="seo_page_title" maxlength="70" size="70"/>
                     </div>
                 </div>
                 <div class="control-group">
@@ -83,7 +83,7 @@
                     <label class="control-label" for="seo_page_keywords">Keywords</label>
                     <div class="controls">
                         <div class="input-append">
-                            <input type="text" name="seo_page_keywords" size="30" placeholder="New keyword"/>
+                            <input type="text" name="seo_page_keywords" maxlength="20" size="24" placeholder="New keyword"/>
                             <button data-action="add" class="btn" type="button">Add</button>
                         </div>
                         <ul class="oe_seo_keywords_list js_seo_keywords_list">

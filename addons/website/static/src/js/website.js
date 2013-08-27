@@ -219,7 +219,6 @@
             $('body').removeClass('oe_stop_scrolling');
             this.destroy();
         },
-
     });
 
     /* ----- SEO TOOLS ---- */
@@ -229,10 +228,10 @@
         events: {
             'click a[data-action=remove-keyword]': 'destroy',
         },
-        init: function (options) {
-            this._super.apply(this, arguments);
+        init: function (parent, options) {
+            this._super(parent);
             this.keyword = options.keyword;
-        }
+        },
     });
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
@@ -270,11 +269,15 @@
             }
         },
         addKeyword: function () {
-            var word = this.$el.find('input[name=seo_page_keywords]').val();
-            if (!this.isKeywordListFull() && !this.isExistingKeyword(word)) {
-                new website.seo.Keyword({
+            var word = this.$el.find('input[name=seo_page_keywords]').val().trim();
+            if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
+                new website.seo.Keyword(this, {
                     keyword: word
                 }).appendTo(this.$el.find('.js_seo_keywords_list'));
+                var $body = this.$el.find('.modal-body');
+                $body.animate({
+                    scrollTop: $body[0].scrollHeight
+                }, 500);
             }
         },
         update: function () {
