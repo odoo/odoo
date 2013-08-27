@@ -161,9 +161,9 @@ class im_livechat_channel(osv.osv):
 
     def get_available_user(self, cr, uid, channel_id, context=None):
         channel = self.browse(cr, openerp.SUPERUSER_ID, channel_id, context=context)
+        im_user_ids = self.pool.get("im.user").search(cr, uid, [["user_id", "in", [user.id for user in channel.user_ids]]], context=context)
         users = []
-        for user in channel.user_ids:
-            iuid = self.pool.get("im.user").get_by_user_id(cr, uid, user.id, context=context)["id"]
+        for iuid in im_user_ids:
             imuser = self.pool.get("im.user").browse(cr, uid, iuid, context=context)
             if imuser.im_status:
                 users.append(imuser)
@@ -206,12 +206,12 @@ class im_message(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = False
-            if record.to_id.user and record.from_id.user:
+            if record.to_id.user_id and record.from_id.user_id:
                 continue
-            elif record.to_id.user:
-                res[record.id] = record.to_id.user.id
-            elif record.from_id.user:
-                res[record.id] = record.from_id.user.id
+            elif record.to_id.user_id:
+                res[record.id] = record.to_id.user_id.id
+            elif record.from_id.user_id:
+                res[record.id] = record.from_id.user_id.id
         return res
 
     def _customer(self, cr, uid, ids, name, arg, context=None):
@@ -230,11 +230,11 @@ class im_message(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = False
-            if not not record.to_id.user and not not record.from_id.user:
+            if not not record.to_id.user_id and not not record.from_id.user_id:
                 continue
-            elif not not record.to_id.user:
+            elif not not record.to_id.user_id:
                 res[record.id] = "c2s"
-            elif not not record.from_id.user:
+            elif not not record.from_id.user_id:
                 res[record.id] = "s2c"
         return res
 

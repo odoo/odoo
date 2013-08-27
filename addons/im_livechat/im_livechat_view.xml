@@ -124,7 +124,7 @@
             <field name="name">History</field>
             <field name="res_model">im.message</field>
             <field name="view_mode">list</field>
-            <field name="domain">["|", ('to_id.user', '=', None), ('from_id.user', '=', None)]</field>
+            <field name="domain">["|", ('to_id.user_id', '=', None), ('from_id.user_id', '=', None)]</field>
         </record>
         <menuitem name="History" parent="im_livechat" id="history" action="action_history" groups="group_im_livechat_manager"/>
 
