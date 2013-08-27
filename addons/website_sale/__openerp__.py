@@ -11,6 +11,7 @@ OpenERP E-Commerce
     'author': 'OpenERP SA',
     'depends': ['website', 'sale', 'point_of_sale'],
     'data': [
+        'website_sale_data.xml',
         'views/website_sale.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
