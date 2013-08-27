@@ -211,5 +211,17 @@
 		
 		<menuitem action="action_routes_form" id="menu_stock_routes"
 			parent="stock.menu_stock_configuration" sequence="11" />
+			
+		<!-- Procurement -->
+		<record id="procurement_form_view_inherit" model="ir.ui.view">
+            <field name="name">procurement.order.form.view.inherit</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='rule_id']" position="after">
+                    <field name="route_ids"/>
+                </xpath>
+            </field>
+        </record>
 	</data>
 </openerp>
