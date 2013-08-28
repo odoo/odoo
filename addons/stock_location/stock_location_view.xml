@@ -212,8 +212,8 @@
               </p>
 				<p>You can define here the main logistic routes that run through
 					your warehouses and that define the flows of your products. These
-					routes can be assigned to a product, a product category or on a
-					location.</p>
+					routes can be assigned to a product, a product category or be fixed
+					on procurement or sales order. </p>
 			</field>
 		</record>
 		
@@ -229,7 +229,7 @@
             <field name="model">procurement.order</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='rule_id']" position="after">
-                    <field name="route_ids"/>
+                    <field name="route_ids" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
