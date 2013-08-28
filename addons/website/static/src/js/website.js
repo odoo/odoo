@@ -342,20 +342,15 @@
                     var node = this;
                     var $node = $(node);
                     var editor = CKEDITOR.inline(this, self._config());
-                    editor.on('loaded', function () {
-                        // CKEditor *still* performs DOM alterations after
-                        // loaded has fired => defer observation to ensure no
-                        // more initialization-related DOM alteration
-                        setTimeout(function () {
-                            observer.observe(node, {
-                                childList: true,
-                                attributes: true,
-                                characterData: true,
-                                subtree: true
-                            });
-                        }, 0);
+                    editor.on('instanceReady', function () {
+                        observer.observe(node, {
+                            childList: true,
+                            attributes: true,
+                            characterData: true,
+                            subtree: true
+                        });
                     });
-                    $node.one('content_changed', function (e) {
+                    $node.one('content_changed', function () {
                         $node.addClass('oe_dirty');
                         self.trigger('change');
                     });
