@@ -798,9 +798,18 @@ class pos_order(osv.osv):
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
+        
         for order in self.browse(cr, uid, ids, context=context):
+            current_session_ids = self.pool.get('pos.session').search(cr, uid, [
+                ('state', '!=', 'closed'),
+                ('user_id', '=', uid)], context=context)
+            if not current_session_ids:
+                raise osv.except_osv(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+
             clone_id = self.copy(cr, uid, order.id, {
-                'name': order.name + ' REFUND',
+                'name': order.name + ' REFUND', # not used, name forced by create
+                'session_id': current_session_ids[0],
+                'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context=context)
             clone_list.append(clone_id)
 
