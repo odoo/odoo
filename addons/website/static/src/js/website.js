@@ -239,17 +239,54 @@
             this.onDelete = options.onDelete;
         },
         destroy: function () {
-            this.onDelete(this.keyword);
+            if (_.isFunction(this.onDelete)) {
+                this.onDelete(this.keyword);
+            }
             this._super();
         },
     });
+    website.seo.cleanupKeyword = function (word) {
+        return word ? word.replace(/[,;.:]+/g, " ").replace(/ +/g, " ").trim() : "";
+    };
+    website.seo.PageParser = function () {
+        function currentURL () {
+            var url = window.location.href;
+            var hashIndex = url.indexOf('#');
+            return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
+        }
+        var parsedPage = {
+            url: currentURL(),
+            title: $('title').text(),
+            headers: {},
+            content: {}
+        };
+        _.each([ 'h1', 'h2', 'h3'], function (header) {
+            parsedPage.headers[header] = [];
+            $(header).each(function () {
+                var text = $(this).text();
+                parsedPage.headers[header].push(text);
+            });
+        });
+        this.url = function () {
+            return parsedPage.url;
+        };
+        this.title = function () {
+            return parsedPage.title;
+        };
+        this.headers = function () {
+            return parsedPage.headers;
+        };
+        this.keywordSuggestions = function () {
+            return _.map(_.uniq(parsedPage.headers.h1.concat(parsedPage.headers.h2)), website.seo.cleanupKeyword);
+        };
+    };
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
         events: {
             'keypress input[name=seo_page_keywords]': 'confirmKeyword',
             'click button[data-action=add]': 'addKeyword',
             'click a[data-action=update]': 'update',
-            'hidden': 'close'
+            'hidden': 'destroy'
         },
 
         maxTitleSize: 65,
@@ -258,9 +295,20 @@
         maxWordsPerKeyword: 4,
 
         start: function () {
+            var pageParser = new website.seo.PageParser();
+            var currentKeywords = this.keywords;
+            this.$el.find('.js_seo_page_url').text(pageParser.url());
+            this.$el.find('input[name=seo_page_title]').val(pageParser.title());
+            this.$el.find('input[name=seo_page_keywords]').typeahead({
+                source: function () {
+                    var suggestions = pageParser.keywordSuggestions();
+                    var alreadyChosen = currentKeywords();
+                    return _.difference(suggestions, alreadyChosen);
+                },
+                items: 4
+            });
+
             $('body').addClass('oe_stop_scrolling');
-            this.$el.find('.js_seo_page_url').text(this.currentPage());
-            this.$el.find('input[name=seo_page_title]').val($('title').text());
             this.$el.modal();
         },
         currentPage: function () {
@@ -270,7 +318,7 @@
         },
         keywords: function () {
             return _.uniq(this.$el.find('.js_seo_keyword').map(function () {
-                return $(this).text();
+x                return $(this).text();
             }).get());
         },
         isExistingKeyword: function (word) {
@@ -300,28 +348,31 @@
                 $modal.find('button[data-action=add]')
                     .prop('disabled', true).addClass('disabled');
             }
-            var word = this.$el.find('input[name=seo_page_keywords]').val()
-                .replace(/[,;.:]+/gm, " ").replace(/ +/g, " ").trim();
+            var candidate = this.$el.find('input[name=seo_page_keywords]').val();
+            var word = website.seo.cleanupKeyword(candidate);
             if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
                 new website.seo.Keyword(this, {
                     keyword: word,
                     onDelete: enableNewKeywords
                 }).appendTo(this.$el.find('.js_seo_keywords_list'));
-                var $body = this.$el.find('.modal-body');
-                $body.animate({
-                    scrollTop: $body[0].scrollHeight
-                }, 500);
+                this.scrollDown();
             }
             if (this.isKeywordListFull()) {
                 disableNewKeywords();
             }
         },
+        scrollDown: function () {
+            var $body = this.$el.find('.modal-body');
+            $body.animate({
+                scrollTop: $body[0].scrollHeight
+            }, 500);
+        },
         update: function () {
             // TODO: Persist changes
         },
-        close: function () {
+        destroy: function () {
             $('body').removeClass('oe_stop_scrolling');
-            this.destroy();
+            this._super();
         },
     });
 
