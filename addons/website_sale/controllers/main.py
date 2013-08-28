@@ -53,7 +53,7 @@ class website(osv.osv):
 class Ecommerce(http.Controller):
 
     def get_categories(self):
-        category_obj = request.registry.get('pos.category')
+        category_obj = request.registry.get('product.public.category')
         category_ids = category_obj.search(request.cr, SUPERUSER_ID, [('parent_id', '=', False)])
         categories = category_obj.browse(request.cr, SUPERUSER_ID, category_ids)
         return categories
@@ -76,10 +76,10 @@ class Ecommerce(http.Controller):
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search")),
-                ('product_variant_ids.pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+                ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
-            domain += [('product_variant_ids.pos_categ_id.id', 'child_of', cat_id)] + domain
+            domain += [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))

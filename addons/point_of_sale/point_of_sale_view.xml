@@ -8,9 +8,6 @@
             groups="group_pos_manager,group_pos_user"
             sequence="30"/>
 
-        <record id="categ_others" model="pos.category">
-            <field name="name">Others</field>
-        </record>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
@@ -177,8 +174,8 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
-            <field name="domain" eval="[('pos_categ_id','&lt;&gt;',False)]"/>
+            <field name="context" eval="{'default_public_categ_id': ref('product.categ_others')}"/>
+            <field name="domain" eval="[('public_categ_id','&lt;&gt;',False)]"/>
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">
@@ -619,7 +616,6 @@
                 <group name="sale" position="inside">
                     <group name="pos" string="Point of Sale">
                         <field name="available_in_pos"/>
-                        <field name="pos_categ_id"/>
                         <field name="to_weight" />
                         <field name="income_pdt"/>
                         <field name="expense_pdt"/>
@@ -632,56 +628,7 @@
         </record>
 
         <!-- Categories tree view -->
-        <record id="pos_category_form_view" model="ir.ui.view">
-            <field name="name">pos.category.form</field>
-            <field name="model">pos.category</field>
-            <field name="arch" type="xml">
-                <form string="Product PoS Categories" version="7.0">
-                    <sheet>
-                        <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
-                        <div class="oe_left">
-                            <group>
-                                <field name="name"/>
-                                <field name="parent_id"/>
-                                <field name="sequence"/>
-                            </group>
-                        </div>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="pos_category_tree_view" model="ir.ui.view">
-            <field name="name">pos.category.tree</field>
-            <field name="model">pos.category</field>
-            <field name="field_parent" eval="False"/>
-            <field name="arch" type="xml">
-                <tree string="Product PoS Categories">
-                    <field name="sequence" invisible="1"/>
-                    <field name="complete_name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="pos_category_action" model="ir.actions.act_window">
-            <field name="name">Product Categories</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.category</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" eval="False"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new category.
-              </p><p>
-                Categories are used to browse your products through the
-                touchscreen interface.
-              </p><p>
-                If you put a photo on the category, the layout of the
-                touchscreen interface will automatically. We suggest not to put
-                a photo on categories for small (1024x768) screens.
-              </p>
-            </field>
-        </record>
-        <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
+        <menuitem action="product.product_public_category_action" id="menu_product_public_category" parent="menu_point_of_sale_product" sequence="0" />
         <!-- END -->
 
         <menuitem name="Configuration" parent="menu_point_root"

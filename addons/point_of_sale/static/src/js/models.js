@@ -165,19 +165,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
-                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
-                }).then(function(categories){
-                    self.db.add_categories(categories);
-
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                        ['name', 'list_price','price','public_categ_id', 'taxes_id', 'ean13', 
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.get('pos_config').pricelist_id[0]} // context for price
                     );
                 }).then(function(products){
-                    self.db.add_products(products);
+                    self.tmp_products = products;
+
+                    var category_ids = _.without(_.uniq(_.map(products, function (product) {return product.public_categ_id[0] || 0;})), 0);
+                    return self.fetch(
+                        'product.public.category',
+                        ['id','name','parent_id','child_id','image'],
+                        ['|', ['id','=',category_ids], ['child_id','=',category_ids]]
+                    );
+                }).then(function(categories){
+                    self.db.add_categories(categories);
+                    self.db.add_products(self.tmp_products);
 
                     return self.fetch(
                         'account.bank.statement',

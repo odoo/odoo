@@ -48,15 +48,15 @@ class PointOfSaleController(http.Controller):
         load_css_img(imgdir,'/point_of_sale/static/src/img')
         
         products = request.registry.get('product.product')
-        for p in products.search_read(request.cr, request.uid, [('pos_categ_id','!=',False)], ['name']):
+        for p in products.search_read(request.cr, request.uid, [('public_categ_id','!=',False)], ['name']):
             product_id = p['id']
             url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (request.session_id, product_id)
             ml.append(url)
         
-        categories = request.registry.get('pos.category')
+        categories = request.registry.get('product.public.category')
         for c in categories.search_read(request.cr, request.uid, [], ['name']):
             category_id = c['id']
-            url = "/web/binary/image?session_id=%s&model=pos.category&field=image&id=%s" % (request.session_id, category_id)
+            url = "/web/binary/image?session_id=%s&model=product.public.category&field=image&id=%s" % (request.session_id, category_id)
             ml.append(url)
 
         ml += ["NETWORK:","*"]
