@@ -1342,6 +1342,18 @@ class account_analytic_account(osv.osv):
             raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if args is None:
+            args = []
+        if context is None:
+            context={}
+        if context.get('current_model') == 'project.project':
+            project_ids = self.search(cr, uid, args + [('name', operator, name)], limit=limit, context=context)
+            return self.name_get(cr, uid, project_ids, context=context)
+
+        return super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
+
+
 class project_project(osv.osv):
     _inherit = 'project.project'
     _defaults = {
