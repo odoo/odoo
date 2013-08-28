@@ -156,6 +156,7 @@
         save: function () {
             var self = this;
             var defs = [];
+            observer.disconnect();
             $('.oe_dirty').each(function (i, v) {
                 var $el = $(this);
                 // TODO: Add a queue with concurrency limit in webclient
@@ -338,10 +339,25 @@
             $elements
                 .not('span, [data-oe-type]')
                 .each(function () {
-                    var $this = $(this);
-                    CKEDITOR.inline(this, self._config()).on('change', function () {
-                        $this.addClass('oe_dirty');
-                        self.trigger('change', this, null);
+                    var node = this;
+                    var $node = $(node);
+                    var editor = CKEDITOR.inline(this, self._config());
+                    editor.on('loaded', function () {
+                        // CKEditor *still* performs DOM alterations after
+                        // loaded has fired => defer observation to ensure no
+                        // more initialization-related DOM alteration
+                        setTimeout(function () {
+                            observer.observe(node, {
+                                childList: true,
+                                attributes: true,
+                                characterData: true,
+                                subtree: true
+                            });
+                        }, 0);
+                    });
+                    $node.one('content_changed', function (e) {
+                        $node.addClass('oe_dirty');
+                        self.trigger('change');
                     });
                 });
         },
@@ -854,6 +870,34 @@
             })
         }
     };
+
+    var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
+    var observer = new Observer(function (mutations) {
+        _(mutations).chain()
+            .filter(function (m) {
+                switch(m.type) {
+                case 'attributes':
+                    // ignore cke_focus being added & removed from RTE root
+                    // FIXME: what if snippets are configured by adding/removing classes on their root element?
+                    return !$(m.target).hasClass('oe_editable');
+                case 'childList':
+                    // <br type="_moz"> appears when focusing RTE in FF, ignore
+                    return m.addedNodes.length !== 1 || m.addedNodes[0].nodeName !== 'BR';
+                default:
+                    return true;
+                }
+            })
+            .map(function (m) {
+                var node = m.target;
+                while (node && !$(node).hasClass('oe_editable')) {
+                    node = node.parentNode;
+                }
+                return node;
+            })
+            .compact()
+            .uniq()
+            .each(function (node) { $(node).trigger('content_changed'); })
+    });
 
     var all_ready = null;
     var dom_ready = $.Deferred();
