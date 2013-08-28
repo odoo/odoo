@@ -317,9 +317,9 @@
             return hashIndex > 0 ? url.substring(0, hashIndex): url;
         },
         keywords: function () {
-            return _.uniq(this.$el.find('.js_seo_keyword').map(function () {
-x                return $(this).text();
-            }).get());
+            return _.uniq($('.js_seo_keyword').map(function () {
+                return $(this).text();
+            }));
         },
         isExistingKeyword: function (word) {
             return _.contains(this.keywords(), word);
