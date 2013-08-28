@@ -493,6 +493,7 @@
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
                 <form string="Warehouse" version="7.0">
+                    <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
@@ -506,6 +507,7 @@
                             <field name="partner_id"/>
                         </group>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>

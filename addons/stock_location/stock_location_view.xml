@@ -157,6 +157,14 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="route_id"/>
                 </xpath>
+                <xpath expr="//group[last()]" position="after">
+                	<separator string="All Associated Routes"/>
+                	<field name="route_ids" nolabel="1" colspan="4">
+                		<tree string="All Routes">
+                		<field name="name"/>
+                		</tree>
+                	</field>
+                </xpath>
             </field>
         </record>
 
@@ -167,6 +175,7 @@
 				<tree string="Routes">
                     <field name="sequence" widget="handle" />
 					<field name="name"/>
+					<field name="warehouse_id"/>
 				</tree>
 			</field>
 		</record>
@@ -179,6 +188,7 @@
 				<form string="Route">
 					<field name="name" />
 					<field name="sequence" groups="base.group_no_one"/>
+					<field name="warehouse_id"/>
 					<group string="Push Rules" colspan="4" >
 						<field name="push_ids" colspan="4" nolabel="1"/>
                     </group>
