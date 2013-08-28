@@ -91,6 +91,7 @@ class mail_message(osv.Model):
             SUPERUSER_ID, to be sure to have the record name correctly stored. """
         # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
+        # return result
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
             if not message.get('model') or not message.get('res_id') or message['model'] not in self.pool:
                 continue
@@ -830,11 +831,11 @@ class mail_message(osv.Model):
             context = {}
         default_starred = context.pop('default_starred', False)
 
-        if not values.get('email_from'):  # needed to compute reply_to
+        if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
         if not values.get('message_id'):
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
-        if not values.get('reply_to'):
+        if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
