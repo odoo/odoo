@@ -153,7 +153,7 @@ class Registry(Mapping):
             model.clear_caches()
         # Special case for ir_ui_menu which does not use openerp.tools.ormcache.
         ir_ui_menu = self.models.get('ir.ui.menu')
-        if ir_ui_menu:
+        if ir_ui_menu is not None:
             ir_ui_menu.clear_cache()
 
 
