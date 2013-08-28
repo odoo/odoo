@@ -229,9 +229,7 @@
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
-                                        <t t-if="line.product_id.lst_price != line.price_unit">
-                                        <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
-                                        </t>
+                                        <small t-if="line.product_id.lst_price != line.price_unit" class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
                                        <span t-field="line.price_unit"></span> €
                                     </td>
                                     <td>
