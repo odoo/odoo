@@ -481,7 +481,11 @@ class res_partner(osv.osv, format_address):
         if partner.child_ids:
             # 2a. Commercial Fields: sync if commercial entity
             if partner.commercial_partner_id == partner:
-                self._commercial_sync_to_children(cr, uid, partner, context=context)
+                commercial_fields = self._commercial_fields(cr, uid,
+                                                            context=context)
+                if any(field in update_values for field in commercial_fields):
+                    self._commercial_sync_to_children(cr, uid, partner,
+                                                      context=context)
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields(cr, uid, context=context)
             if any(field in update_values for field in address_fields):
