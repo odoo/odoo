@@ -88,7 +88,6 @@ class Field(object):
     """ Base class of all fields. """
     __metaclass__ = MetaField
 
-    _ready = False              # whether the field has been completely set up
     interface = False           # whether the field is created by the ORM
 
     name = None                 # name of the field
@@ -136,32 +135,6 @@ class Field(object):
         self.name = name
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
-
-    def setup_related(self):
-        """ Setup the attributes of the related field `self`. """
-        # fix the type of self.related if necessary
-        if isinstance(self.related, basestring):
-            self.related = tuple(self.related.split('.'))
-
-        # check type consistency
-        model = self.model
-        for name in self.related[:-1]:
-            model = model[name]
-        field = model._fields[self.related[-1]]
-        if self.type != field.type:
-            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
-
-        # determine dependencies, compute, inverse, and search
-        self.depends = ('.'.join(self.related),)
-        self.compute = compute_related
-        self.inverse = inverse_related
-        self.search = search_related
-
-        # copy attributes from field to self (readonly, required, etc.)
-        field.complete_setup()
-        for attr in self._attrs:
-            if not getattr(self, attr) and getattr(field, attr):
-                setattr(self, attr, getattr(field, attr))
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -274,6 +247,7 @@ class Field(object):
         elif callable(self.compute):
             self.compute(self, records)
         else:
+            import pudb; pudb.set_trace()
             raise Warning("No way to compute %s on %s" % (self, records))
 
     def read_value(self, records):
@@ -358,23 +332,29 @@ class Field(object):
             return [(self.name, operator, value)]
 
     #
-    # Management of the recomputation of computed fields.
+    # Field setup.
     #
-    # Each field stores a set of triggers (`field`, `path`); when the field is
-    # modified, it invalidates the cache of `field` and registers the records to
-    # recompute based on `path`. See method `modified` below for details.
+    # Recomputation of computed fields: each field stores a set of triggers
+    # (`field`, `path`); when the field is modified, it invalidates the cache of
+    # `field` and registers the records to recompute based on `path`. See method
+    # `modified` below for details.
     #
 
-    def complete_setup(self):
+    @lazy_property
+    def _ready(self):
+        # lazy property, so that it is reset upon copy()
+        return False
+
+    def setup(self):
         """ Complete the setup of `self`: make it process its dependencies and
             store triggers on other fields to be recomputed.
         """
         if not self._ready:
             self._ready = True
 
-            if self.related is not None:
+            if self.related:
                 # setup all attributes of related field
-                self.setup_related()
+                self._setup_related()
             else:
                 # retrieve dependencies from compute method
                 if isinstance(self.compute, basestring):
@@ -386,6 +366,32 @@ class Field(object):
             # put invalidation/recomputation triggers on dependencies
             for path in self.depends:
                 self._depends_on_model(self.model, [], path.split('.'))
+
+    def _setup_related(self):
+        """ Setup the attributes of the related field `self`. """
+        # fix the type of self.related if necessary
+        if isinstance(self.related, basestring):
+            self.related = tuple(self.related.split('.'))
+
+        # check type consistency
+        model = self.model
+        for name in self.related[:-1]:
+            model = model[name]
+        field = model._fields[self.related[-1]]
+        if self.type != field.type:
+            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
+
+        # determine dependencies, compute, inverse, and search
+        self.depends = ('.'.join(self.related),)
+        self.compute = compute_related
+        self.inverse = inverse_related
+        self.search = search_related
+
+        # copy attributes from field to self (readonly, required, etc.)
+        field.setup()
+        for attr in self._attrs:
+            if not getattr(self, attr) and getattr(field, attr):
+                setattr(self, attr, getattr(field, attr))
 
     def _depends_on_model(self, model, path0, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of

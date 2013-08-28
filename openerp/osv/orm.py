@@ -3236,7 +3236,7 @@ class BaseModel(object):
         """ method called on all models after their creation """
         # complete the initialization of all fields
         for field in self._fields.itervalues():
-            field.complete_setup()
+            field.setup()
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
