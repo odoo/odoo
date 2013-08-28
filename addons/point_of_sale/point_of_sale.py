@@ -469,6 +469,11 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
+        for session in self.browse(cr, uid, ids, context=context):
+            if session.user_id.id != uid:
+                raise osv.except_osv(
+                        _('Error!'),
+                        _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
