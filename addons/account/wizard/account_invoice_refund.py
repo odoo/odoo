@@ -159,8 +159,8 @@ class account_invoice_refund(osv.osv_memory):
                     for line in movelines:
                         if line.account_id.id == inv.account_id.id:
                             to_reconcile_ids[line.account_id.id] = [line.id]
-                        if type(line.reconcile_id) != osv.orm.browse_null:
-                            reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
+                        if line.reconcile_id:
+                            line.reconcile_id.unlink()
                     wf_service.trg_validate(uid, 'account.invoice', \
                                         refund.id, 'invoice_open', cr)
                     refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
