@@ -28,7 +28,7 @@ from urlparse import urljoin
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -164,6 +164,7 @@ class mail_mail(osv.Model):
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
+    @api.cr_uid
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
