@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2012-2013 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -44,27 +44,54 @@ tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "if
 tags_to_remove = ['html', 'body', 'font']
 
 
-def html_sanitize(src):
+def html_sanitize(src, silent=True):
     if not src:
         return src
     src = ustr(src, errors='replace')
 
+    logger = _logger.getChild('html_sanitize')
+
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
-    
-    # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
+
+    kwargs = {
+        'page_structure': True,
+        'style': False,             # do not remove style attributes
+        'forms': True,              # remove form tags
+    }
+    if etree.LXML_VERSION >= (2, 3, 1):
+        # kill_tags attribute has been added in version 2.3.1
+        kwargs.update({
+            'kill_tags': tags_to_kill,
+            'remove_tags': tags_to_remove,
+        })
+    else:
+        kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+
+    if etree.LXML_VERSION >= (3, 1, 0):
+        kwargs.update({
+            'safe_attrs_only': True,
+            'safe_attrs': clean.defs.safe_attrs | set(['style']),
+        })
+    else:
+        # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+        kwargs['safe_attrs_only'] = False
+
     try:
-        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
+        # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
+        cleaner = clean.Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
-    except TypeError, e:
-        # lxml.clean version < 2.3.1 does not have a kill_tags attribute
-        # to remove in 2014
-        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill+tags_to_remove)
-        cleaned = cleaner.clean_html(src)
-    except:
-        _logger.warning('html_sanitize failed to parse %s' % (src))
-        cleaned = '<p>Impossible to parse</p>'
+    except etree.ParserError:
+        if not silent:
+            raise
+        logger.warning('ParserError obtained when sanitizing %r', src, exc_info=True)
+        cleaned = '<p>ParserError when sanitizing</p>'
+    except Exception:
+        if not silent:
+            raise
+        logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
+        cleaned = '<p>Unknown error when sanitizing</p>'
     return cleaned
 
 
@@ -72,17 +99,36 @@ def html_sanitize(src):
 # HTML Cleaner
 #----------------------------------------------------------
 
-def html_email_clean(html):
-    """ html_email_clean: clean the html to display in the web client.
-        - strip email quotes (remove blockquote nodes)
-        - strip signatures (remove --\n{\n)Blahblah), by replacing <br> by
-            \n to avoid ignoring signatures converted into html
+def html_email_clean(html, remove=False, shorten=False, max_length=300):
+    """ html_email_clean: clean the html by doing the following steps:
 
-        :param string html: sanitized html; tags like html or head should not
-            be present in the html string. This method therefore takes as input
-            html code coming from a sanitized source, like fields.html.
+     - try to strip email quotes, by removing blockquotes or having some client-
+       specific heuristics
+     - try to strip signatures
+     - shorten the html to a maximum number of characters if requested
+
+    Some specific use case:
+
+     - MsOffice: ``div.style = border-top:solid;`` delimitates the beginning of
+       a quote; detecting by finding WordSection1 of MsoNormal
+     - Hotmail: ``hr.stopSpelling`` delimitates the beginning of a quote; detect
+       Hotmail by funding ``SkyDrivePlaceholder``
+
+    :param string html: sanitized html; tags like html or head should not
+                        be present in the html string. This method therefore
+                        takes as input html code coming from a sanitized source,
+                        like fields.html.
+    :param boolean remove: remove the html code that is unwanted; otherwise it
+                           is only flagged and tagged
+    :param boolean shorten: shorten the html; every excessing content will
+                            be flagged as to remove
+    :param int max_length: if shortening, maximum number of characters before
+                           shortening
     """
     def _replace_matching_regex(regex, source, replace=''):
+        """ Replace all matching expressions in source by replace """
+        if not source:
+            return source
         dest = ''
         idx = 0
         for item in re.finditer(regex, source):
@@ -91,62 +137,162 @@ def html_email_clean(html):
         dest += source[idx:]
         return dest
 
+    def _create_node(tag, text, tail=None, attrs={}):
+        new_node = etree.Element(tag)
+        new_node.text = text
+        new_node.tail = tail
+        for key, val in attrs.iteritems():
+            new_node.set(key, val)
+        return new_node
+
+    def _insert_new_node(node, index, new_node_tag, new_node_text, new_node_tail=None, new_node_attrs={}):
+        new_node = _create_node(new_node_tag, new_node_text, new_node_tail, new_node_attrs)
+        node.insert(index, new_node)
+        return new_node
+
+    def _tag_matching_regex_in_text(regex, node, new_node_tag='span', new_node_attrs={}):
+        text = node.text or ''
+        if not re.search(regex, text):
+            return
+
+        cur_node = node
+        node.text = ''
+        idx, iteration = 0, 0
+        for item in re.finditer(regex, text):
+            if iteration == 0:
+                cur_node.text = text[idx:item.start()]
+            else:
+                _insert_new_node(node, (iteration - 1) * 2 + 1, new_node_tag, text[idx:item.start()])
+            new_node = _insert_new_node(node, iteration * 2, new_node_tag, text[item.start():item.end()], None, new_node_attrs)
+
+            cur_node = new_node
+            idx = item.end()
+            iteration += 1
+        new_node = _insert_new_node(node, -1, new_node_tag, text[idx:] + (cur_node.tail or ''), None, {})
+
     if not html or not isinstance(html, basestring):
         return html
-
     html = ustr(html)
 
-    # 0. remove encoding attribute inside tags
+    # Pre processing
+    # ------------------------------------------------------------
+    # TDE TODO: --- MAIL ORIGINAL ---: '[\-]{4,}([^\-]*)[\-]{4,}'
+
+    # html: remove encoding attribute inside tags
     doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
     html = doctype.sub(r"", html)
 
-    # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
-    br_tags = re.compile(r'([<]\s*[bB][rR]\s*\/?[>])')
-    html = _replace_matching_regex(br_tags, html, '__BR_TAG__')
+    # html: ClEditor seems to love using <div><br /><div> -> replace with <br />
+    br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)', re.IGNORECASE)
+    html = _replace_matching_regex(br_div_tags, html, '<br />')
 
-    # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
+    # form a tree
     root = lxml.html.fromstring(html)
     if not len(root) and root.text is None and root.tail is None:
         html = '<div>%s</div>' % html
         root = lxml.html.fromstring(html)
 
-    # 2.5 remove quoted text in nodes
-    quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
+    # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
     for node in root.getiterator():
-        if not node.text:
-            continue
-        node.text = _replace_matching_regex(quote_tags, node.text)
-
-    # 3. remove blockquotes
-    quotes = [el for el in root.getiterator(tag='blockquote')]
-    for node in quotes:
-        # copy the node tail into parent text
         if node.tail:
-            parent = node.getparent()
-            parent.text = parent.text or '' + node.tail
-        # remove the node
-        node.getparent().remove(node)
+            tail_node = _create_node('span', node.tail)
+            node.tail = None
+            node.addnext(tail_node)
 
-    # 4. strip signatures
-    signature = re.compile(r'([-]{2}[\s]?[\r\n]{1,2}[^\z]+)')
-    for elem in root.getiterator():
-        if elem.text:
-            match = re.search(signature, elem.text)
-            if match:
-                elem.text = elem.text[:match.start()] + elem.text[match.end():]
-        if elem.tail:
-            match = re.search(signature, elem.tail)
-            if match:
-                elem.tail = elem.tail[:match.start()] + elem.tail[match.end():]
+    # form node and tag text-based quotes and signature
+    quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
+    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[^.]+)')
+    for node in root.getiterator():
+        _tag_matching_regex_in_text(quote_tags, node, 'span', {'text_quote': '1'})
+        _tag_matching_regex_in_text(signature, node, 'span', {'text_signature': '1'})
 
-    # 5. \n back to <br/>
-    html = etree.tostring(root, pretty_print=True)
-    html = html.replace('__BR_TAG__', '<br />')
+    # Processing
+    # ------------------------------------------------------------
 
-    # 6. Misc cleaning :
-    # - ClEditor seems to love using <div><br /><div> -> replace with <br />
-    br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)')
-    html = _replace_matching_regex(br_div_tags, html, '<br />')
+    # tree: tag nodes
+    # signature_begin = False  # try dynamic signature recognition
+    quote_begin = False
+    overlength = False
+    cur_char_nbr = 0
+    for node in root.getiterator():
+        # root: try to tag the client used to write the html
+        if 'WordSection1' in node.get('class', '') or 'MsoNormal' in node.get('class', ''):
+            root.set('msoffice', '1')
+        if 'SkyDrivePlaceholder' in node.get('class', '') or 'SkyDrivePlaceholder' in node.get('id', ''):
+            root.set('hotmail', '1')
+
+        # state of the parsing
+        if quote_begin:
+            node.set('in_quote', '1')
+            node.set('tail_remove', '1')
+        if overlength:
+            node.set('in_overlength', '1')
+            node.set('tail_remove', '1')
+
+        if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
+            quote_begin = True
+            node.set('in_quote', '1')
+            node.set('tail_remove', '1')
+        if root.get('hotmail') and node.tag == 'hr' and ('stopSpelling' in node.get('class', '') or 'stopSpelling' in node.get('id', '')):
+            quote_begin = True
+            node.set('in_quote', '1')
+            node.set('tail_remove', '1')
+
+        # shorten:
+        # 1/ truncate the text at the next available space
+        # 2/ create a 'read more' node, next to current node
+        # 3/ add the truncated text in a new node, next to 'read more' node
+        if shorten and not overlength and cur_char_nbr + len(node.text or '') > max_length:
+            overlength = True
+            # truncate text
+            innertext = node.text[0:(max_length - cur_char_nbr)]
+            outertext = node.text[(max_length - cur_char_nbr):]
+            stop_idx = outertext.find(' ')
+            if stop_idx == -1:
+                stop_idx = len(outertext)
+            node.text = innertext + outertext[0:stop_idx]
+            # create <span> ... <a href="#">read more</a></span> node
+            read_more_node = _create_node('span', ' ... ', None, {'class': 'oe_mail_expand'})
+            read_more_link_node = _create_node('a', 'read more', None, {'href': '#', 'class': 'oe_mail_expand'})
+            read_more_node.append(read_more_link_node)
+            # create outertext node
+            new_node = _create_node('span', outertext[stop_idx:])
+            # add newly created nodes in dom
+            node.addnext(new_node)
+            node.addnext(read_more_node)
+            # tag node
+            new_node.set('in_overlength', '1')
+
+            cur_char_nbr += len(node.text or '')
+
+        if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
+            node.set('in_quote', '1')
+
+    # Post processing
+    # ------------------------------------------------------------
+
+    to_remove = []
+    for node in root.getiterator():
+        if node.get('in_quote') or node.get('in_overlength'):
+            # copy the node tail into parent text
+            if node.tail and not node.get('tail_remove'):
+                parent = node.getparent()
+                parent.tail = node.tail + (parent.tail or '')
+            to_remove.append(node)
+        if node.get('tail_remove'):
+            node.tail = ''
+    for node in to_remove:
+        if remove:
+            node.getparent().remove(node)
+        else:
+            if not 'oe_mail_expand' in node.get('class', ''):  # trick: read more link should be displayed even if it's in overlength
+                node_class = node.get('class', '') + ' ' + 'oe_mail_cleaned'
+                node.set('class', node_class)
+
+    # html: \n that were tail of elements have been encapsulated into <span> -> back to \n
+    html = etree.tostring(root, pretty_print=False)
+    linebreaks = re.compile(r'<span>([\s]*[\r\n]+[\s]*)<\/span>', re.IGNORECASE | re.DOTALL)
+    html = _replace_matching_regex(linebreaks, html, '\n')
 
     return html
 

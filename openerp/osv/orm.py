@@ -1804,13 +1804,19 @@ class BaseModel(object):
         # try to find a view_id if none provided
         if not view_id:
             # <view_type>_view_ref in context can be used to overrride the default view
-            view_ref = context.get(view_type + '_view_ref')
-            if view_ref and '.' in view_ref:
-                module, view_ref = view_ref.split('.', 1)
-                cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
-                view_ref_res = cr.fetchone()
-                if view_ref_res:
-                    view_id = view_ref_res[0]
+            view_ref_key = view_type + '_view_ref'
+            view_ref = context.get(view_ref_key)
+            if view_ref:
+                if '.' in view_ref:
+                    module, view_ref = view_ref.split('.', 1)
+                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                    view_ref_res = cr.fetchone()
+                    if view_ref_res:
+                        view_id = view_ref_res[0]
+                else:
+                    _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
+                        'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
+                        self._name)
             else:
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(cr, uid, self._name, view_type, context=context)

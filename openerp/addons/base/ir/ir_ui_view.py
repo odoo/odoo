@@ -229,7 +229,6 @@ class view(osv.osv):
             ])
         view_ids = self.search(cr, uid, conditions, context=context)
 
-        # filter views based on user groups
         return [(view.arch, view.id)
                 for view in self.browse(cr, 1, view_ids, context)
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
