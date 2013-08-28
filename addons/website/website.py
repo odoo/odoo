@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import functools
 import simplejson
 
 import openerp
@@ -17,6 +18,8 @@ logger = logging.getLogger(__name__)
 
 def route(*route_args, **route_kwargs):
     def decorator(f):
+        @http.route(*route_args, **route_kwargs)
+        @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
         def wrap(*args, **kwargs):
             if not hasattr(request, 'webcontext'):
                 website = request.registry.get("website")
@@ -24,9 +27,6 @@ def route(*route_args, **route_kwargs):
                 request.context['lang'] = request.webcontext['lang_selected']['code']
 
             return f(*args, **kwargs)
-        dec = http.route(*route_args, **route_kwargs)
-        dec(wrap)
-        wrap.func_name = f.func_name
         return wrap
     return decorator
 

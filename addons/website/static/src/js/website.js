@@ -36,8 +36,9 @@
             (alter_dialog[ev.data.name] || noop)(ev.data.definition);
         });
         var editor = new website.EditorBar();
-        editor.prependTo($('body'));
-        $('body').css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
+        var $body = $('body');
+        editor.prependTo($body);
+        $body.css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
     };
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
@@ -268,11 +269,9 @@
             return hashIndex > 0 ? url.substring(0, hashIndex): url;
         },
         keywords: function () {
-            var result = [];
-            this.$el.find('.js_seo_keyword').each(function () {
-                result.push($(this).text());
-            })
-            return _.uniq(result);
+            return _.uniq(this.$el.find('.js_seo_keyword').map(function () {
+                return $(this).text();
+            }).get());
         },
         isExistingKeyword: function (word) {
             return _.contains(this.keywords(), word);
@@ -289,16 +288,17 @@
         addKeyword: function () {
             var $modal = this.$el;
             function enableNewKeywords () {
-                $modal.find('input[name=seo_page_keywords]').removeAttr('readonly');
-                $modal.find('input[name=seo_page_keywords]').attr('placeholder', "New keyword");
-                $modal.find('button[data-action=add]').removeAttr('disabled');
-                $modal.find('button[data-action=add]').removeClass('disabled');
+                $modal.find('input[name=seo_page_keywords]')
+                    .removeAttr('readonly').attr('placeholder', "New keyword");
+                $modal.find('button[data-action=add]')
+                    .prop('disabled', false).removeClass('disabled');
             }
             function disableNewKeywords () {
-                $modal.find('input[name=seo_page_keywords]').attr('readonly', "readonly");
-                $modal.find('input[name=seo_page_keywords]').attr('placeholder', "Remove a keyword first");
-                $modal.find('button[data-action=add]').attr('disabled', "disabled");
-                $modal.find('button[data-action=add]').addClass('disabled');
+                $modal.find('input[name=seo_page_keywords]')
+                    .attr('readonly', "readonly")
+                    .attr('placeholder', "Remove a keyword first");
+                $modal.find('button[data-action=add]')
+                    .prop('disabled', true).addClass('disabled');
             }
             var word = this.$el.find('input[name=seo_page_keywords]').val()
                 .replace(/[,;.:]+/gm, " ").replace(/ +/g, " ").trim();
@@ -423,31 +423,35 @@
         // TODO clean
         snippet_carousel: function () {
             var self = this;
-            $('.carousel .js_carousel_options .label').on('click', function (e) {
+            var $carousel_options = $('.carousel .js_carousel_options');
+            $carousel_options.on('click', '.label', function (e) {
                 e.preventDefault();
                 var $button = $(e.currentTarget);
                 var $c = $button.parents(".carousel:first");
+                var $carousel_inner = $c.find('.carousel-inner');
 
                 if($button.hasClass("js_add")) {
-                    var cycle = $c.find(".carousel-inner .item").size();
-                    $c.find(".carousel-inner").append(openerp.qweb.render("website.carousel"));
+                    var cycle = $carousel_inner.find('.item').size();
+                    $carousel_inner.append(openerp.qweb.render('website.carousel'));
                     $c.carousel(cycle);
                 }
                 else {
-                    var cycle = $c.find(".carousel-inner .item.active").remove();
-                    $c.find(".carousel-inner .item:first").addClass("active");
+                    $carousel_inner
+                        .find('.item.active').remove().end()
+                        .find('.item:first').addClass('active');
                     $c.carousel(0);
                     self.trigger('change', self, null);
                 }
             });
-            $('.carousel .js_carousel_options').show();
+            $carousel_options.show();
         }
     });
 
     website.mutations = {
         darken: function($el){
-            if($el.parent().hasClass('dark')){
-                $el.parent().replaceWith($el);
+            var $parent = $el.parent();
+            if($parent.hasClass('dark')){
+                $parent.replaceWith($el);
             }else{
                 $el.replaceWith($("<div class='dark'></div>").append($el.clone()));
             }
@@ -558,23 +562,25 @@
         // selector.siblings -> will insert drop zones after and before selected elements
         activate_insertion_zones: function(selector){
             var self = this;
+            var i, len, $zones;
             var child_selector   =  selector.childs   || '';
             var sibling_selector =  selector.siblings || '';
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
+            var $drop_zone = $('.oe_drop_zone');
 
-            $('.oe_drop_zone').remove();
+            $drop_zone.remove();
 
             if(child_selector){
-                var $zones = $(child_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
+                $zones = $(child_selector);
+                for(i = 0, len = $zones.length; i < len; i++ ){
                     $zones.eq(i).find('> *:not(.oe_drop_zone)').after(zone_template);
                     $zones.eq(i).prepend(zone_template);
                 }
             }
 
             if(sibling_selector){
-                var $zones = $(sibling_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
+                $zones = $(sibling_selector);
+                for(i = 0, len = $zones.length; i < len; i++ ){
                     if($zones.eq(i).prev('.oe_drop_zone').length === 0){
                         $zones.eq(i).before(zone_template);
                     }
@@ -586,12 +592,12 @@
 
             // Cleaning up unnecessary zones
             $('.oe_snippets .oe_drop_zone').remove();   // no zone in the snippet selector ...
-            $('#website-top-view .oe_drop_zone').remove();   // no zone in the top bars ...
-            $('#website-top-edit .oe_drop_zone').remove();
+            $('#website-top-view').find('.oe_drop_zone').remove();   // no zone in the top bars ...
+            $('#website-top-edit').find('.oe_drop_zone').remove();
             var count;
             do {
                 count = 0;
-                var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
+                $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
                 count += $zones.length;
                 $zones.remove();
 
@@ -601,25 +607,23 @@
             }while(count > 0);
 
             // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = $('.oe_drop_zone');
-            for( var i = 0, len = $zones.length; i < len; i++ ){
+            $zones = $drop_zone;
+            for(i = 0, len = $zones.length; i < len; i++ ){
                 var zone = $zones.eq(i);
                 var prev = zone.prev();
                 var next = zone.next();
-                var float_prev = zone.prev().css('float')   || 'none';
-                var float_next = zone.next().css('float')   || 'none';
-                var disp_prev  = zone.prev().css('display') ||  null;
-                var disp_next  = zone.next().css('display') ||  null;
+                var float_prev = prev.css('float')   || 'none';
+                var float_next = next.css('float')   || 'none';
+                var disp_prev  = prev.css('display') ||  null;
+                var disp_next  = next.css('display') ||  null;
                 if(     (float_prev === 'left' || float_prev === 'right')
                     &&  (float_next === 'left' || float_next === 'right')  ){
                     zone.remove();
-                    continue;
                 }else if( !( disp_prev === null
                           || disp_next === null
                           || disp_prev === 'block'
                           || disp_next === 'block' )){
                     zone.remove();
-                    continue;
                 }
             }
         },
@@ -697,24 +701,25 @@
                     $manipulator.addClass('oe_hover');
                     event.preventDefault();
 
-                    $('body').mousemove(function(event){
-                        var dx = event.pageX - x;
-                        var dy = event.pageY - y;
-                        event.preventDefault();
-                        if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
-                            $snippet.css('padding-top',pt-dy+'px');
-                            self.cover_target($manipulator,$snippet);
-                        }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
+                    $('body').on({
+                        mousemove: function(event){
+                            var dx = event.pageX - x;
+                            var dy = event.pageY - y;
+                            event.preventDefault();
+                            if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
+                                $snippet.css('padding-top',pt-dy+'px');
+                                self.cover_target($manipulator,$snippet);
+                            }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
 
-                            $snippet.css('padding-bottom',pb+dy+'px');
-                            self.cover_target($manipulator,$snippet);
+                                $snippet.css('padding-bottom',pb+dy+'px');
+                                self.cover_target($manipulator,$snippet);
+                            }
+                        },
+                        mouseup: function(){
+                            $body.off('mouseup mousemove');
+                            self.deactivate_snippet_manipulators();
+                            self.activate_snippet_manipulators();
                         }
-                    });
-                    $('body').mouseup(function(){
-                        $('body').unbind('mousemove');
-                        $('body').unbind('mouseup');
-                        self.deactivate_snippet_manipulators();
-                        self.activate_snippet_manipulators();
                     });
                 });
 
