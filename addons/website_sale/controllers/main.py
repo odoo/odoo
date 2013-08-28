@@ -26,6 +26,7 @@ def get_order(order_id=None):
         order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
         order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
+        request.httprequest.session['ecommerce_order_id'] = order.id
 
     context = {
         'pricelist': order.pricelist_id.id,
@@ -155,7 +156,6 @@ class Ecommerce(http.Controller):
         order = get_current_order()
         if not order:
             order = get_order()
-            request.httprequest.session['ecommerce_order_id'] = order.id
 
         context = {'pricelist': self.get_pricelist()}
 
