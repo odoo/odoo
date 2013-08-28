@@ -375,23 +375,15 @@ class WebKitParser(report_sxw):
         report_xml_ids = ir_obj.search(cursor, uid,
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:
-
-            report_xml = ir_obj.browse(cursor,
-                                       uid,
-                                       report_xml_ids[0],
-                                       context=context)
-            report_xml.report_rml = None
-            report_xml.report_rml_content = None
-            report_xml.report_sxw_content_data = None
-            report_xml.report_sxw_content = None
-            report_xml.report_sxw = None
+            report_xml = ir_obj.browse(cursor, uid, report_xml_ids[0], context=context)
         else:
-            return super(WebKitParser, self).create(cursor, uid, ids, data, context)
-        if report_xml.report_type != 'webkit' :
-            return super(WebKitParser, self).create(cursor, uid, ids, data, context)
-        result = self.create_source_pdf(cursor, uid, ids, data, report_xml, context)
-        if not result:
-            return (False,False)
-        return result
+            report_xml = None
+
+        if report_xml and report_xml.report_type == 'webkit' :
+            result = self.create_source_pdf(cursor, uid, ids, data, report_xml, context)
+            return result or (False,False)
+        
+        return super(WebKitParser, self).create(cursor, uid, ids, data, context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
