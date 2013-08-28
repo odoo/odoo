@@ -21,5 +21,6 @@
 
 import product
 import stock_account
+import stock
 import wizard
 

@@ -20,7 +20,6 @@
 ##############################################################################
 
 import sale_stock
-import stock
 import report
 import company
 import res_config
