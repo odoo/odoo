@@ -458,7 +458,8 @@ def trans_export(lang, modules, buffer, format, cr):
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
-            for src, row in grouped_rows.items():
+            for src in sorted(grouped_rows):
+                row = grouped_rows[src]
                 if not lang:
                     # translation template, so no translation value
                     row['translation'] = ''
