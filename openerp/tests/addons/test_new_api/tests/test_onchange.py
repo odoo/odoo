@@ -25,22 +25,22 @@ class TestOnChange(common.TransactionCase):
             self.Model.not_really_a_method()
 
     def test_new_onchange_unsaved(self):
-        changed = self.Model.onchange('name', {
+        result = self.Model.onchange('name', {
             'name': u"Bob the Builder",
             'name_size': 0,
             'name_utf8_size': 0,
             'description': False,
         })
-        self.assertEqual(changed, {
+        self.assertEqual(result['value'], {
             'name_size': 15,
             'name_utf8_size': 15,
             'description': u"Bob the Builder (15:15)"
         })
 
-        changed = self.Model.onchange('description', {
+        result = self.Model.onchange('description', {
             'name': u"Bob the Builder",
             'name_size': 15,
             'name_utf8_size': 15,
             'description': u"Can we fix it? Yes we can!"
         })
-        self.assertEqual(changed, {})
+        self.assertEqual(result['value'], {})

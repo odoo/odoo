@@ -5637,11 +5637,12 @@ class BaseModel(object):
                 return result
 
         # determine result, and return it
-        return self._convert_to_write(dict(
+        changed = self._convert_to_write(dict(
             (k, record[k])
             for k, v in record_values.iteritems()
             if record[k] != v
         ))
+        return {'value': changed}
 
 
 # extra definitions for backward compatibility
