@@ -695,8 +695,8 @@
 
                     var pt = $snippet.css('padding-top');
                     var pb = $snippet.css('padding-bottom');
-                    pt = Number(pt.slice(0,pt.length - 2)) || 0; //FIXME something cleaner to remove 'px'
-                    pb = Number(pb.slice(0,pb.length - 2)) || 0;
+                    pt = Number(pt.slice(0, -2)) || 0; //FIXME something cleaner to remove 'px'
+                    pb = Number(pb.slice(0, -2)) || 0;
 
                     $manipulator.addClass('oe_hover');
                     event.preventDefault();
