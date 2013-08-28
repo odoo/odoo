@@ -111,7 +111,8 @@ class pos_config(osv.osv):
         return result
 
     def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
     def _default_warehouse(self, cr, uid, context=None):
@@ -958,11 +959,12 @@ class pos_order(osv.osv):
             user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
 
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
 
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
-                            order.partner_id.property_account_receivable.id or account_def or current_company.account_receivable.id
+                            order.partner_id.property_account_receivable.id or \
+                            account_def and account_def.id or current_company.account_receivable.id
 
             if move_id is None:
                 # Create an entry for the sale

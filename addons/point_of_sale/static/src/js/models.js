@@ -240,8 +240,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         on_removed_order: function(removed_order){
             if( this.get('orders').isEmpty()){
                 this.add_new_order();
-            }
-            if( this.get('selectedOrder') === removed_order){
+            }else{
                 this.set({ selectedOrder: this.get('orders').last() });
             }
         },
