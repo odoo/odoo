@@ -17,5 +17,6 @@ OpenERP Blog
         'security/website_event.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
+    'demo': ['event_demo.xml'],
     'installable': True,
 }

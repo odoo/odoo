@@ -11,6 +11,14 @@ class product(osv.osv):
     }
 
 
+class event(osv.osv):
+    _inherit = 'event.event'
+    _columns = {
+        'website_published': fields.boolean('Available in the website'),
+        'description_website': fields.html('Description for the website'),
+    }
+
+
 class event_event(osv.osv):
     _inherit = "event.event"
 
