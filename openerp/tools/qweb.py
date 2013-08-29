@@ -231,10 +231,12 @@ class QWebXml(object):
         if an.startswith("t-attf-"):
             att, val = an[7:], self.eval_format(av, v)
         elif an.startswith("t-att-"):
-            att, val = an[6:], self.eval_str(av, v)
+            att, val = an[6:], self.eval(av, v)
+            if isinstance(val, unicode):
+                return val.encode("utf8")
         else:
             att, val = self.eval_object(av, v)
-        return ' %s="%s"' % (att, cgi.escape(val, 1))
+        return val and ' %s="%s"' % (att, cgi.escape(str(val), 1)) or " "
 
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
