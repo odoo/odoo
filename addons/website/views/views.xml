@@ -370,7 +370,7 @@
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
+            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true" style="text-decoration: none !important;">
                 <span t-attf-class="label label-success js_unpublish #{ '' if object.website_published else 'hidden' }">Unpublish</span>
                 <span t-attf-class="label label-danger js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
             </a>
