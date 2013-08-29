@@ -530,7 +530,8 @@ class stock_picking(osv.osv):
         picking_obj = self.browse(cr, uid, id, context=context)
         if ('name' not in default) or (picking_obj.name == '/'):
             default['name'] = '/'
-        default['backorder_id'] = False
+        if not default.get('backorder_id'):
+            default['backorder_id'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def action_confirm(self, cr, uid, ids, context=None):
