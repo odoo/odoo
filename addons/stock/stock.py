@@ -1784,7 +1784,7 @@ class stock_inventory(osv.osv):
         #TODO test
         self.action_cancel_draft(cr, uid, ids, context=context)
 
-    def _prepare_inventory(self, cr, uid, ids, full_of_zeros=False, context=None):
+    def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
             #clean the existing inventory lines before redoing an inventory proposal
@@ -1793,8 +1793,6 @@ class stock_inventory(osv.osv):
             #compute the inventory lines and create them
             vals = self._get_inventory_lines(cr, uid, inventory, context=context)
             for product_line in vals:
-                if full_of_zeros:
-                    product_line['product_qty'] = 0
                 inventory_line_obj.create(cr, uid, product_line, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'})
 
@@ -1843,7 +1841,7 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity', store=True),
+        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity'),
     }
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
