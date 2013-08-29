@@ -36,7 +36,7 @@
                                 <t t-set="classname">pull-left</t>
                             </t>
                             <form action="/references/" method="get" class="navbar-search pull-right pagination">
-                                <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="search or '' or ''"/>
+                                <input type="text" name="search" class="search-query span2" placeholder="Search" t-att-value="searches.get('search') or '' or ''"/>
                             </form>
                         </div>
                     </div>
@@ -61,14 +61,15 @@
         <xpath expr="//div[@id='ref_content']" position="before">
             <div class="span4">
                 <ul class="nav nav-list">
-                    <li class="nav-header">Location</li>
-                    <!--t t-foreach="countries">
-                        <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                            <a t-attf-href="/event/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
-                        </li>
-                    </t-->
+                    <li class="nav-header">World Map</li>
                     <iframe t-attf-src="/worldmap/?width=320&amp;height=240&amp;partner_ids=#{ worldmap_partner_ids }&amp;partner_url=/references/"
                         style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+                    <li class="nav-header">Location</li>
+                    <t t-foreach="countries">
+                        <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
+                            <a t-attf-href="/references/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
+                        </li>
+                    </t>
                 </ul>
             </div>
         </xpath>
