@@ -3,7 +3,7 @@
 -->
 <templates id="template" xml:space="preserve">
     <t t-name="website.editorbar">
-        <nav class="navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar-inverse navbar-fixed-top">
             <div id="website-top-view">
                 <form class="navbar-form navbar-left">
                     <button data-action="edit" class="btn btn-primary">Edit</button>
@@ -24,7 +24,6 @@
                     </li>
                 </ul>
             </div>
-
             <div id="website-top-edit">
                 <form class="navbar-form navbar-left">
                     <button data-action="save" class="btn btn-primary">Save</button>
@@ -34,7 +33,7 @@
                     <li><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
                 </ul>
             </div>
-        </nav>
+        </div>
     </t>
 
     <t t-name="website.mobile_preview">
