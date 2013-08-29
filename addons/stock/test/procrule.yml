@@ -1,22 +1,46 @@
 - 
   Create new global procurement rule from Stock -> Output
 - 
-  !record {model: procurement.rule, ref:}
-    location_id: stock
-    location_dest_id: output 
+  !record {model: procurement.rule, id: global_proc_rule}:
+      name: Stock -> output
+      action: move
+      picking_type_id: stock.picking_type_out
+      location_src_id: stock.stock_location_stock
+      location_id: stock.stock_location_output 
 - 
   Create Delivery Order from Output -> Customer 
 - 
-  !record {model: stock.picking, ref:}
+  !record {model: stock.picking, id: pick_output}:
+      name: Delivery order for procurement
+      partner_id: base.res_partner_2
+      picking_type_id: stock.picking_type_out
+      move_lines:
+          - product_id: product.product_product_3
+            product_uom_qty: 10.00
+            location_id: stock.stock_location_output
+            location_dest_id: stock.stock_location_customers
 - 
-  Confirm delivery order
+  Confirm delivery order.
 - 
-  
+    !python {model: stock.picking}: |
+        self.action_confirm(cr, uid,  [ref('pick_output')])
+-
+  Create procurement in output related to this delivery order.
+-
+     !record {model: procurement.order, id: proc_order_stock_output}:
+        product_id: product.product_product_3
+        product_qty: 10.00
+        rule_id: global_proc_rule
+        location_id: stock.stock_location_output 
+        name: Procurement for stock to output
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 - 
-  Check procurement was created in output (as there is the global procurement rule) related to this delivery order
+  Check a picking was created from stock to output.
 - 
-  
-- 
-  Check a picking was created from stock to output
-- 
-  
+  !python {model: stock.move }: |
+      move_id = self.search(cr, uid, [('product_id', '=', ref('product.product_product_3')),('location_id', '=', ref('stock.stock_location_stock')),('location_dest_id', '=', ref('stock.stock_location_output'))])
+      assert len(move_id) == 1
