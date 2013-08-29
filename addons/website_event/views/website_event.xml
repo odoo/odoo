@@ -32,7 +32,7 @@
                 <div class="row">
                     <div class="col-md-4 css_noprint" id="left_column">
                         <ul class="nav nav-pills nav-stacked">
-                            <li>Date</li>
+                            <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
                                 <li t-att-class="searches.get('date') == date[0] and 'active' or ''">
                                     <a t-attf-href="/event/#{ search_path }&amp;date=#{ date[0] }"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
@@ -92,7 +92,7 @@
     <template id="event_category" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Category">
         <xpath expr="//div[@id='left_column']" position="inside">
             <ul class="nav nav-pills nav-stacked">
-                <li>Category</li>
+                <li class="nav-header">Category</li>
                 <t t-foreach="types">
                     <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
                         <a t-attf-href="/event/#{ search_path }&amp;type=#{ type[0] }"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
@@ -104,7 +104,7 @@
     <template id="event_location" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Location">
         <xpath expr="//div[@id='left_column']" position="inside">
             <ul class="nav nav-pills nav-stacked">
-                <li>Location</li>
+                <li class="nav-header">Location</li>
                 <t t-foreach="countries">
                     <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
                         <a t-attf-href="/event/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
