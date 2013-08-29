@@ -21,25 +21,9 @@
 -
   !python {model: crm.claim}: |
     claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
-    self.case_open(cr, uid, claim_ids)
 -
-  I check Claim Details after open. 
--
-  !python {model: crm.claim}: |
-    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
-    claim = self.browse(cr, uid, claim_ids[0])
-    assert claim.state == "open", "Claim is not in Open state"
-    assert claim.stage_id.id == ref("crm.stage_lead2"), "Claim is not in Qualification stage"
--
-  After complete all service from our side, I close this claim.
--
-  !python {model: crm.claim}: |
-    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
-    self.case_close(cr, uid, claim_ids)
--
-  I check Claim details after closed.
+  I check Claim Details after open.
 -
   !python {model: crm.claim}: |
     claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     claim = self.browse(cr, uid, claim_ids[0])
-    assert claim.state == "done", "Claim is not in close state"

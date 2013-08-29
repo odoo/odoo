@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-04-26 16:01+0000\n"
+"PO-Revision-Date: 2013-07-10 09:54+0000\n"
 "Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
 "Language-Team: Els Van Vossel\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-27 05:44+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-07-11 05:17+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 "Language: nl\n"
 
 #. module: account_voucher
@@ -28,7 +28,7 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:369
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Afschrijving"
@@ -132,7 +132,7 @@ msgid "Voucher Statistics"
 msgstr "Boekingsstatistieken"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -233,8 +233,8 @@ msgid "Journal Item"
 msgstr "Boekingslijn"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
-#: code:addons/account_voucher/account_voucher.py:981
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "Error!"
 msgstr "Fout"
@@ -261,7 +261,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -313,7 +313,7 @@ msgid "Tax"
 msgstr "Btw"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie"
@@ -366,10 +366,10 @@ msgid "Import Invoices"
 msgstr "Facturen importeren"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Verkeerde betalingsregel"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -385,7 +385,7 @@ msgid "Receipt"
 msgstr "Reçu"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -409,7 +409,7 @@ msgstr "Periode"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:211
+#: code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Leverancier"
@@ -430,7 +430,7 @@ msgid "Debit"
 msgstr "Debet"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid "Unable to change journal !"
 msgstr "Het dagboek kan niet worden gewijzigd"
@@ -469,6 +469,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier als u een nieuwe leveranciersbetaling wilt maken.\n"
+"              </p><p>\n"
+"                Met OpenERP kunt u betalingen aan leveranciers opvolgen.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -536,7 +542,7 @@ msgid "Pay Invoice"
 msgstr "Factuur betalen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Geen rekening voor basisvak en btw-vak"
@@ -590,15 +596,15 @@ msgid "To Review"
 msgstr "Te controleren"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1039
-#: code:addons/account_voucher/account_voucher.py:1194
+#: code:addons/account_voucher/account_voucher.py:1120
+#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1286
 #, python-format
 msgid "change"
 msgstr "wijzigen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1106
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -656,6 +662,7 @@ msgstr "Maand"
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Munt"
@@ -699,7 +706,7 @@ msgid "Reconcile Payment Balance"
 msgstr "Betalingssaldo afpunten"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:975
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "Configuration Error !"
 msgstr "Configuratiefout"
@@ -764,7 +771,7 @@ msgid "October"
 msgstr "Oktober"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:976
+#: code:addons/account_voucher/account_voucher.py:1068
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Gelieve de nummering van het gekozen journaal te activeren."
@@ -844,7 +851,7 @@ msgid "Previous Payments ?"
 msgstr "Vorige betalingen?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "De factuur die u wilt betalen, is niet meer geldig."
@@ -876,7 +883,7 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:982
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Gelieve een reeks in te stellen voor het journaal."
@@ -1004,7 +1011,7 @@ msgid "Journal Items"
 msgstr "Boekingslijnen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr "Stel een standaard debet-/creditrekening in voor journaal \"%s\"."
@@ -1221,7 +1228,7 @@ msgstr ""
 "Het bedrag van het reçu moet gelijk zijn aan het bedrag op de uittreksellijn."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Een openstaand of betaald reçu kan niet meer worden verwijderd."
@@ -1284,8 +1291,8 @@ msgid "Status <b>changed</b>"
 msgstr "Status <b>vgewijzigd</b>"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Niet volledig geconfigureerd"

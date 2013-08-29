@@ -70,8 +70,8 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         <field name="parent_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                          <page string="Salary Rules">
@@ -227,13 +227,12 @@
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
                         <h1><field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/></h1>
-                        <label for="date_from" class="oe_edit_only" string="Period"/>
-                        <h2>
-                            From <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
-                            to <field name="date_to"/>
-                        </h2>
                     </div>
                     <group col="4">
+                        <label for="date_from" string="Period"/>
+                        <div>
+                            <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
+                        </div>
                         <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),'|',('date_end','&gt;=',date_from),('date_end','=',False)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)" context="{'default_employee_id': employee_id}"/>
                         <field name="number"/>
                         <field name="struct_id" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
@@ -322,7 +321,7 @@
                                 </tree>
                             </field>
                        </page>
-                       <page string="Other Information">
+                       <page string="Accounting Information">
                             <group>
                                 <group string="Miscellaneous">
                                     <field name="company_id" groups="base.group_multi_company"/>
@@ -592,8 +591,8 @@
                                 <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/><newline/>
                                 <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
                                 <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/><newline/>
-                                <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                 <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
+                                <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                 <separator colspan="4" string="Company Contribution"/>
                                 <field name="register_id"/>
                             </group>
@@ -699,13 +698,11 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <h2>
-                        Period from 
-                        <field name="date_start"/> 
-                        to 
-                        <field name="date_end"/>
-                    </h2>
                     <group col="4">
+                        <label for="date_start" string="Period"/>
+                         <div>
+                               <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
+                         </div>
                         <field name="credit_note"/>
                     </group>
                     <separator string="Payslips"/>

@@ -267,12 +267,13 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return result_tmp  + result_init
 
     def _get_partners(self):
+        # TODO: deprecated, to remove in trunk
         if self.result_selection == 'customer':
-            return 'Receivable Accounts'
+            return _('Receivable Accounts')
         elif self.result_selection == 'supplier':
-            return 'Payable Accounts'
+            return _('Payable Accounts')
         elif self.result_selection == 'customer_supplier':
-            return 'Receivable and Payable Accounts'
+            return _('Receivable and Payable Accounts')
         return ''
 
     def _sum_currency_amount_account(self, account, form):
