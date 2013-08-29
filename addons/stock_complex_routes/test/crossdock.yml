@@ -1,0 +1,38 @@
+- 
+  Create new product without any routes
+- 
+  !record {model: product.product, id: cross_shop_product}:
+    name: PCE
+    type: product
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 5.0
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+- 
+  Create a sales order with a line of 100 PCE incoming shipment, with route_id crossdock shipping.
+- 
+  !record {model: sale.order, id: sale_order_crossdock_shpng}:
+    partner_id: base.res_partner_4
+    note: Create Sales order
+    order_line:
+      - product_id: cross_shop_product
+        product_uom_qty: 100.00
+        route_id: stock_location.route_warehouse0_crossdock
+- 
+  Confirm sales order
+- 
+  !python {model: sale.order}: |
+    self.action_button_confirm(cr, uid, [ref('sale_order_crossdock_shpng')])
+- 
+    Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
+-
+    !python {model: purchase.order}: |
+        po_id = self.search(cr, uid, [('partner_id', '=', ref('base.res_partner_2'))])
+        self.wkf_confirm_order(cr, uid, po_id)
