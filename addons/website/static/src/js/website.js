@@ -5,7 +5,7 @@
     // The following line can be removed in 2017
     openerp.website = website;
 
-    var templates = [
+    var templates = website.templates = [
         '/website/static/src/xml/website.xml'
     ];
 
