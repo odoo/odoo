@@ -74,9 +74,9 @@
                     function(result) {
                         _.each(result, function (item) {
                             if (item.header) {
-                                menu.append('<li class="nav-header">' + item.name + '</li>');
+                                menu.append('<li class="dropdown-header">' + item.name + '</li>');
                             } else {
-                                menu.append(_.str.sprintf('<li><a href="#" data-view-id="%s"><strong class="icon-check%s"></strong> %s</a></li>',
+                                menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="icon-check%s"></strong> %s</a></li>',
                                     item.id, item.active ? '' : '-empty', item.name));
                             }
                         });

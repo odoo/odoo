@@ -30,8 +30,8 @@
             <t t-set="title">Events</t>
             <div class="container mt48">
                 <div class="row">
-                    <div class="span4 css_noprint" id="left_column">
-                        <ul class="nav nav-list">
+                    <div class="col-md-4 css_noprint" id="left_column">
+                        <ul class="nav nav-pills nav-stacked">
                             <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
                                 <li t-att-class="searches.get('date') == date[0] and 'active' or ''">
@@ -40,22 +40,22 @@
                             </t>
                         </ul>
                     </div>
-                    <div class='span8 navbar'>
+                    <div class="col-md-8 navbar navbar-default">
                         <div class='navbar-inner'>
                             <t t-call="website.pager" >
                                 <t t-set="classname">pull-left</t>
                             </t>
                         </div>
                     </div>
-                    <div class="span8">
+                    <div class="col-md-8">
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media thumbnail">
                                 <div class="media-body">
-                                    <span t-if="not event.event_ticket_ids" class="label pull-right">No tickets needed.</span>
+                                    <span t-if="not event.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
                                     <t t-if="event.event_ticket_ids">
-                                        <span t-if="event.register_avail == 9999" class="label pull-right label-info">Tickets availables.</span>
-                                        <span t-if="not event.register_avail" class="label pull-right">No ticket available.</span>
-                                        <span t-if="event.register_avail and event.register_avail != 9999" t-attf-class="label pull-right label-#{ event.register_avail &lt;= 10 and 'warning' or 'info' }">
+                                        <span t-if="event.register_avail == 9999" class="label label-default pull-right label-info">Tickets availables.</span>
+                                        <span t-if="not event.register_avail" class="label label-default pull-right">No ticket available.</span>
+                                        <span t-if="event.register_avail and event.register_avail != 9999" t-attf-class="label label-default pull-right label-#{ event.register_avail &lt;= 10 and 'warning' or 'info' }">
                                             <t t-if="event.register_avail &lt;= 10">Only</t>
                                             <t t-esc="event.register_avail"/>
                                             <t t-if="event.register_avail &gt; 1">tickets</t>
@@ -81,7 +81,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="span8 offset4 text-center">
+                    <div class="col-md-8 col-lg-offset-4 text-center">
                         <t t-call="website.pager" />
                     </div>
                 </div>
@@ -91,7 +91,7 @@
 
     <template id="event_category" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Category">
         <xpath expr="//div[@id='left_column']" position="inside">
-            <ul class="nav nav-list">
+            <ul class="nav nav-pills nav-stacked">
                 <li class="nav-header">Category</li>
                 <t t-foreach="types">
                     <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
@@ -103,7 +103,7 @@
     </template>
     <template id="event_location" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Location">
         <xpath expr="//div[@id='left_column']" position="inside">
-            <ul class="nav nav-list">
+            <ul class="nav nav-pills nav-stacked">
                 <li class="nav-header">Location</li>
                 <t t-foreach="countries">
                     <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
@@ -123,7 +123,7 @@
             <t t-set="title">Events</t>
             <div class="container mt48">
                 <div class="row">
-                    <div class="span4 css_noprint">
+                    <div class="col-md-4 css_noprint">
                         <h4>When &amp; Where</h4>
                         <a t-att-href="event_id.google_map_link()" target="_BLANK">
                             <img class="thumbnail" t-att-src="event_id.google_map_img()"/>
@@ -138,13 +138,14 @@
                             </t>
                         </address>
                     </div>
-                    <div class="span8">
+                    <div class="col-md-8">
                         <div class="media-body">
-                            <span t-if="not event_id.event_ticket_ids" class="label pull-right">No tickets needed.</span>
+                            <span t-if="not event_id.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
                             <t t-if="event_id.event_ticket_ids">
-                                <span t-if="event_id.register_avail == 9999" class="label pull-right">Tickets availables.</span>
-                                <span t-if="not event_id.register_avail" class="label pull-right">No ticket available.</span>
-                                <span t-if="event_id.register_avail and event_id.register_avail != 9999" t-attf-class="label pull-right label-#{ event_id.register_avail &lt;= 10 and 'warning' or 'info' }">
+                                <span t-if="event_id.register_avail == 9999" class="label label-default pull-right">Tickets availables.</span>
+                                <span t-if="not event_id.register_avail" class="label label-default pull-right">No ticket available.</span>
+                                <span t-if="event_id.register_avail and event_id.register_avail != 9999"
+t-attf-class="label label-default pull-right label-#{ event_id.register_avail &lt;= 10 and 'warning' or 'info' }">
                                     <t t-if="event_id.register_avail &lt;= 10">Only</t>
                                     <t t-esc="event_id.register_avail"/>
                                     <t t-if="event_id.register_avail &gt; 1">tickets </t>

@@ -33,9 +33,8 @@
             <t t-set="title">Blog</t>
             <div class="container mt48 js_website_mail">
                 <div class="row">
-                    <div class="span4" id="left_column">
-                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn">Add a new Blog</a>
-
+                   <div class="col-md-4" id="left_column">
+                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">Add a new Blog</a>
                         <div id="blog_subscribe">
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
                                 <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="is_public_user"/>
@@ -43,11 +42,11 @@
                             </form>
                             <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
                                 <input type="hidden" name="email" t-att-value="subscribe"/>
-                                <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
+                                <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
                             </form>
                         </div>
                     </div>
-                    <div class="span8" t-if="blog_id">
+                    <div class="col-md-8" t-if="blog_id">
                         <div class="media">
                             <div class="media-body well">
                                 <t t-call="website.publish"><t t-set="object" t-value="blog_id"/></t>
@@ -70,14 +69,14 @@
                                     </div>
                                 </li>
                                 <form id="post" t-attf-action="/blog/#{ blog_id.res_id }/#{ blog_id.id }/post#post" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
-                                    <textarea rows="4" placeholder="Your comment" class="span7"> </textarea>
-                                    <button type="submit" class="btn">Post your comment</button>
+                                    <textarea rows="4" placeholder="Your comment" class="col-md-7 form-control"></textarea>
+                                    <button type="submit" class="btn btn-default">Post your comment</button>
                                 </form>
                             </ul>
                         </div>
                     </div>
 
-                    <div class="span8" t-if="not blog_id and blog_ids">
+                    <div class="col-md-8" t-if="not blog_id and blog_ids">
                         <ul class="media-list">
                             <li t-foreach="blog_ids" t-as="blog" class="media well">
                                 <div t-attf-class="media-body #{ 'css_published' if blog.website_published else '' }">
@@ -108,16 +107,16 @@
 
     <template id="blog_history" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="History">
         <xpath expr="//div[@id='left_column']" position="inside">
-            <ul class="nav nav-list">    
+            <ul class="nav nav-pills nav-stacked">
                 <li class="nav-header"><a t-attf-href="/blog/#{ mail_group_id }/">BLOG ARCHIVE</a></li>
                 <!-- TODO: check qweb iteration -->
                 <li t-foreach="nav_list" t-as="year" class="js_nav_year">
                     <t t-set="year" t-value="nav_list[year]"/>
                     <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
-                    <ul class="nav nav-list css_nav_month">
+                    <ul class="nav list-group css_nav_month nav-stacked nav-hierarchy">
                         <t t-foreach="year['months']">
                             <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
-                                <ul class="nav nav-list"/>
+                                <ul class="nav list-group nav-stacked nav-hierarchy"/>
                             </li>
                         </t>
                     </ul>

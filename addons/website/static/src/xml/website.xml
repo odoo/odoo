@@ -4,27 +4,34 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.editorbar">
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner" id="website-top-view">
-                <form class="navbar-form pull-left">
+        <div class="navbar-inverse navbar-fixed-top">
+            <div id="website-top-view">
+                <form class="navbar-form navbar-left">
                     <button data-action="edit" class="btn btn-primary">Edit</button>
                 </form>
-                <ul class="nav pull-right">
+                <ul class="nav navbar-nav navbar-right">
                     <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                     <li class="divider-vertical"></li>
                     <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                     <li><a href="#">Translate</a></li>
                     <li class="dropdown">
                         <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
-                        <div class="dropdown-menu">
-                            <ul class="nav nav-list" id="customize-menu">
-                                <!-- filled in JS -->
-                            </ul>
-                        </div>
+                        <ul class="dropdown-menu" role="menu" id="customize-menu">
+                            <!-- filled in JS -->
+                        </ul>
                     </li>
                     <li>
                         <a href="/admin#action=website.action_module_website">Apps</a>
                     </li>
+                </ul>
+            </div>
+            <div id="website-top-edit">
+                <form class="navbar-form navbar-left">
+                    <button data-action="save" class="btn btn-primary">Save</button>
+                    <button data-action="cancel" class="btn">Cancel</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
                 </ul>
             </div>
         </div>
