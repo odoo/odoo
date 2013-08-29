@@ -36,16 +36,18 @@
                               <t t-set="classname">pull-left</t>
                            </t>
                             <form action="/references/" method="get" class="navbar-search pull-right pagination">
-                                <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search" t-att-value="searches.get('search') or '' or ''" />
-                                <select class="search-query col-md-2 mt4" name="country" t-if="len(countries) > 1" onchange="submit()">
-                                    <t t-foreach="countries">
-                                        <t t-if="country_id">
-                                            <option t-att-selected="searches.get('country') == str(country_id and country_id[0]) and 'selected'" t-att-value="country_id[0]">
-                                                <t t-esc="country_id[1]"/> (<t t-esc="country_id_count"/>)
-                                            </option>
+                                <div class="form-group">
+                                    <input type="text" name="search" class="search-query col-md-4" placeholder="Search" t-att-value="searches.get('search') or '' or ''" />
+                                    <select class="search-query col-md-4 mt4" name="country" t-if="len(countries) > 1" onchange="submit()">
+                                        <t t-foreach="countries">
+                                            <t t-if="country_id">
+                                                <option t-att-selected="searches.get('country') == str(country_id and country_id[0]) and 'selected'" t-att-value="country_id[0]">
+                                                    <t t-esc="country_id[1]"/> (<t t-esc="country_id_count"/>)
+                                                </option>
+                                            </t>
                                         </t>
-                                    </t>
-                                </select>
+                                    </select>
+                                </div>
                            </form>
                        </div>
                    </div>
