@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" inherit_option_id="website.contactus">
             <xpath expr="//div[@name='mail_button']" position="replace">
-                <form action="/crm/contactus" method="post" class="form-horizontal">
-                    <div class="control-group">
-                        <label class="control-label" for="contact_name">Name</label>
-                        <div class="controls">
-                            <input type="text" name="contact_name" required="True"/>
+                <form action="/crm/contactus" method="post" class="form-horizontal mt32" >
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="contact_name">Your Name</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="contact_name" required="True" />
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="phone">Phone number</label>
-                        <div class="controls">
-                            <input type="text" name="phone" required="True" placeholder="e.g. (+32).81.81.37.00"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="phone">Phone Number</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="phone" required="True" placeholder="e.g. (+32).81.81.37.00"/>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="email_from">Email</label>
-                        <div class="controls">
-                            <input type="text" name="email_from" required="True"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="email_from">Email</label>
+                        <div class="col-md-6">
+                            <input type="email" class="form-control" name="email_from" required="True" />
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="name">Subject</label>
-                        <div class="controls">
-                            <input type="text" name="name" required="True"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="name">Subject</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="name" required="True"/>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="description">Your Question</label>
-                        <div class="controls">
-                            <textarea name="description"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="description">Your Question</label>
+                        <div class="col-md-6">
+                            <textarea  class="form-control" name="description"/>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <div class="controls">
-                            <button class="btn">Send</button>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button class="btn btn-primary">Send</button>
                         </div>
                     </div>
                 </form>
@@ -47,7 +48,7 @@
             <t t-call="website.layout">
                 <t t-set="title">Message Sent</t>
                 <div class="container">
-                    <div class="alert mt32">
+                    <div class="alert alert-success">
                         Your message has been sent successfully.
                         <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                     </div>
@@ -57,12 +58,13 @@
                     </p><p class="mt64">
                         If you have an emergency, do not hesitate to contact us by phone:
                     </p>
-                    <ul class='unstyled'>
+                    <ul class="list-unstyled">
                         <li><i class="icon-phone"></i> : <span t-field="res_company.phone"/></li>
-                        <li><i class="icon-envelope"></i> : <span t-field="res_company.email"></span></li>
+                        <li><i class="icon-envelope"></i> : <span t-field="res_company.email"/></li>
                     </ul>
                 </div>
             </t>
         </template>
+
      </data>
 </openerp>

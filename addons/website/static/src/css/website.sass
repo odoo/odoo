@@ -109,17 +109,61 @@ footer
 
 .nav > li  a 
     display: block
-
-/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
-
-header.navbar-fixed-top
-    position: static
-
-#myCarousel .item
     min-height: 300px
     color: white
+
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
 
 .dark
     background: rgb(239, 248, 248)
 
+/* Hacks to remove   */
+div.wrap
+    .carousel
+        top: -20px
 
+/* -- Hack for nav header -- */
+.nav > li.nav-header
+    display: block
+    font-size: 11px
+    font-weight: bold
+    line-height: 20px
+    color: #999999
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5)
+    text-transform: uppercase
+
+ul.nav-stacked>li>a
+    padding: 2px 15px
+
+.nav.nav-hierarchy 
+    padding-left: 16px
+
+.navbar-inverse .divider-vertical
+    height: 40px
+    margin: 0 9px
+    border-right: 1px solid #ffffff
+    border-left: 1px solid #f2f2f2
+
+.navbar-nav .divider-vertical
+    border-right-color: #222
+    border-left-color: #080808
+
+.navbar-inverse
+    background-image: -moz-linear-gradient(top, #222, #080808)
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222), to(#080808))
+    background-image: -webkit-linear-gradient(top, #222, #080808)
+    background-image: -o-linear-gradient(top, #222, #080808)
+    background-image: linear-gradient(to bottom, #222, #080808)
+    background-repeat: repeat-x
+
+.navbar-default
+    border: 1px solid #d4d4d4
+
+/* -- Hack for removing double scrollbar from mobile preview -- */
+.modal
+    overflow: hidden
+    overflow-y: hidden
+ul.nav-stacked>li>a
+    padding: 2px 15px
+.dropdown-header
+    text-transform: uppercase

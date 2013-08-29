@@ -10,7 +10,7 @@
         <t t-call="website.layout">
           <div class="container" t-if="editable">
     
-            <div class="alert alert-block alert-success mt32" t-if="theme_changed">
+            <div class="alert alert-success mt32" t-if="theme_changed">
                 <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                 <p>
                     <h4>Theme Changed!</h4>
@@ -21,7 +21,7 @@
     
             <div class="row mt32" id="themes-list">
     
-              <div class="span4">
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img class="img-responsive" src="http://bootswatch.com/flatly/thumbnail.png" alt="Flatly"/>
@@ -34,7 +34,7 @@
                 </div>
               </div>
     
-              <div class="span4">
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img src="http://bootswatch.com/amelia/thumbnail.png" class="img-responsive" alt="Amelia"/>
@@ -47,7 +47,7 @@
                 </div>
               </div>
     
-              <div class="span4">
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img src="http://bootswatch.com/cerulean/thumbnail.png" class="img-responsive" alt="Cerulean"/>
@@ -60,7 +60,7 @@
                 </div>
               </div>
     
-              <div class="span4">
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img class="img-responsive" src="http://bootswatch.com/cosmo/thumbnail.png" alt="Cosmo"/>
@@ -73,7 +73,7 @@
                 </div>
               </div>
     
-              <div class="span4">  
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img class="img-responsive" src="http://bootswatch.com/cyborg/thumbnail.png" alt="Cyborg"/>
@@ -86,7 +86,7 @@
                 </div>  
               </div>
     
-              <div class="span4">
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img class="img-responsive" src="http://bootswatch.com/journal/thumbnail.png" alt="Journal"/>
@@ -99,7 +99,7 @@
                 </div>
               </div>
     
-              <div class="span4">  
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img class="img-responsive" src="http://bootswatch.com/readable/thumbnail.png" alt="Readable"/>
@@ -112,7 +112,7 @@
                 </div>
               </div>
     
-              <div class="span4">
+              <div class="col-md-4">
                 <div class="well text-center">
                   <div class="image">
                     <img class="img-responsive" src="http://bootswatch.com/simplex/thumbnail.png" alt="Simplex"/>
@@ -137,7 +137,6 @@
     <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
         <xpath expr="//link[@id='bootstrap_css']" position="replace">
             <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
         </xpath>
     </template>
 
