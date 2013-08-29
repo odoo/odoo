@@ -66,10 +66,3 @@
         quant_id = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200)])
         assert len(self.browse(cr, uid, quant_id)[0].history_ids) == 1
         assert len(quant_id) == 1
-- 
-  Check the sum of the moves related to this product and the sum of the quants is equal
-- 
-    !python {model: stock.quant}: |
-        move_ids = self.pool.get('stock.move').search(cr, uid, [('product_id', '=', ref('drop_shop_product'))])
-        quant_ids = self.search(cr, uid, [('product_id', '=', ref('drop_shop_product'))])
-        assert len(move_ids) == len(quant_ids)
