@@ -14,7 +14,7 @@ function initialize(pt) {
      infoWindow.close();
   });
 
-  var partners = new google.maps.MarkerImage("/website_crm/static/src/img/partners.png",new google.maps.Size(25, 25));
+  var partners = new google.maps.MarkerImage("/website_crm_partner_assign/static/src/img/partners.png",new google.maps.Size(25, 25));
 
   var markers = [];
 

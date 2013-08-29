@@ -2,7 +2,9 @@
 
 import openerp
 from openerp.addons.web import http
+from openerp.tools.translate import _
 from openerp.addons.web.http import request
+import urllib
 
 class website_contract(http.Controller):
 
@@ -30,16 +32,27 @@ class website_contract(http.Controller):
             partner_ids += partner_obj.search(request.cr, request.uid, domain + ['|', ('id', "in", contract_project_ids), ('id', "child_of", contract_project_ids)])
             partner_ids = list(set(partner_ids))
 
+        # group by country
+        countries = partner_obj.read_group(request.cr, request.uid, domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
+        countries.insert(0, {'country_id_count': partner_obj.search(request.cr, request.uid, domain, count=True), 'country_id': ("all", _("All Countries"))})
+
+
+        if post.get("country", "all") != 'all':
+            partner_ids = partner_obj.search(request.cr, request.uid, [('id', 'in', partner_ids), ('country_id', '=', int(post.get('country')))])
+
 
         step = 20
         pager = website.pager(url="/references/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)], limit=step, offset=pager['offset'])
 
+
         values = website.get_rendering_context({
+            'countries': countries,
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
             'worldmap_partner_ids': worldmap_partner_ids,
             'pager': pager,
-            'search': post.get("search"),
+            'searches': post,
+            'search_path': "?%s" % urllib.urlencode(post),
         })
         return website.render("website_contract.index", values)
 
