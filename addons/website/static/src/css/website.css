@@ -83,7 +83,6 @@
   display: inline-block;
   float: none;
   vertical-align: top;
-  margin-right: -4px;
   box-sizing: border-box;
 }
 .grid > [class*="col-md"].grid-align-top > [class*="col-md"] {
@@ -209,4 +208,22 @@ header .collapse ul {
   color: #999999;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
+}
+.navbar-inverse .divider-vertical {
+  height: 40px;
+  margin: 0 9px;
+  border-right: 1px solid #ffffff;
+  border-left: 1px solid #f2f2f2;
+}
+.navbar-nav .divider-vertical {
+  border-right-color: #222;
+  border-left-color: #080808;
+}
+.navbar-inverse {
+  background-image: -moz-linear-gradient(top, #222, #080808);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222), to(#080808));
+  background-image: -webkit-linear-gradient(top, #222, #080808);
+  background-image: -o-linear-gradient(top, #222, #080808);
+  background-image: linear-gradient(to bottom, #222, #080808);
+  background-repeat: repeat-x;
 }
