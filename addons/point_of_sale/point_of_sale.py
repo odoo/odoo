@@ -1354,7 +1354,7 @@ class product_product(osv.osv):
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="These products belong to those categories that are used to group similar products and are specific to the Point of Sale."),
-        'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
+        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):
