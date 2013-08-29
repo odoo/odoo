@@ -30,7 +30,10 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <xpath expr="//tree/field[@name='price_unit']" position="before">
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                    <field name="route_id"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
                     <field name="route_id"/>
                 </xpath>
             </field>

@@ -51,7 +51,6 @@ You can choose flexible invoicing methods:
         'security/sale_stock_security.xml',
         'security/ir.model.access.csv',
         'company_view.xml',
-        'wizard/stock_invoice_onshipping_view.xml',
         'sale_stock_view.xml',
         'sale_stock_workflow.xml',
         'stock_view.xml',
