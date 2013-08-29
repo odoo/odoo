@@ -45,21 +45,25 @@
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                     </head>
                     <body>
-                        <header class='navbar-static-top'>
-                            <nav class="navbar-default" role="navigation">
+                        <header>
+                            <div class="navbar navbar-default navbar-static-top">
                                 <div class="container">
-                                <!-- Brand and toggle get grouped for better mobile display -->
-                                <div class="navbar-header">
-                                    <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
+                                    <div class="navbar-header">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
+                                    </div>
+                                    <div class="navbar-collapse collapse">
+                                        <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                            <li><a href="/page/website.contactus">Contact us</a></li>
+                                            <li><a href="/admin">Sign in</a></li>
+                                        </ul>
+                                    </div><!--/.nav-collapse -->
                                 </div>
-                                <!-- Collect the nav links, forms, and other content for toggling -->
-                                
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                    <li><a href="/page/website.contactus">Contact us</a></li>
-                                    <li><a href="/admin">Sign in</a></li>
-                                </ul>
-                                </div>
-                            </nav>
+                            </div>
                         </header>
                         <div t-raw="0" id="wrap">
                             <div class="container">
