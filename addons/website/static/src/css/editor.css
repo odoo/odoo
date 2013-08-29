@@ -289,18 +289,17 @@
 }
 
 /* ---- SEO TOOLS ---- */
-.oe_seo_configuration {
-  min-width: 42em;
+.oe_seo_configuration.modal {
+  width: 100%;
+  left: 0;
+  margin-left: 0;
+  top: 0 !important;
+  margin-top: 0 !important;
+  height: 100%;
 }
 .oe_seo_configuration .modal-body {
-  max-height: inherit;
-  min-height: 27em;
-}
-.oe_seo_configuration input {
-  width: 90%;
-}
-.oe_seo_configuration textarea {
-  width: 90%;
+  max-height: 100%;
+  height: 100%;
 }
 .oe_seo_configuration ul {
   list-style: none;
@@ -309,11 +308,10 @@
   color: #e00101;
 }
 
-.oe_seo_keywords_list {
-  width: 100%;
+.oe_seo_keywords_list.container {
   margin: 0.1em;
 }
-.oe_seo_keywords_list li {
+.oe_seo_keywords_list .oe_seo_keyword {
   float: left;
-  width: 19em;
+  padding-right: 0.5em;
 }
