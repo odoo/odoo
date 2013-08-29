@@ -1,17 +1,18 @@
 {
-    'name': 'Website Worldmap',
+'name': 'Public Partners References',
     'category': 'Website',
-    'summary': '',
+    'summary': 'Publish Customer References',
     'version': '1.0',
     'description': """
-OpenERP Website Worldmap
-========================
+OpenERP Blog
+============
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'website_crm', 'crm_partner_assign'],
+    'depends': ['website', 'website_worldmap'],
     'data': [
-        'views/worldmap.xml',
+        'views/website_crm_partner_assign.xml',
     ],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }

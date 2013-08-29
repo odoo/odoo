@@ -14,23 +14,27 @@ class website_contract(http.Controller):
         partner_obj = request.registry['res.partner']
         account_obj = request.registry['account.analytic.account']
 
-        domain = []
+        # check contracts
+        contract_ids = account_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)])
+        contract_project_ids = [contract.partner_id.id 
+            for contract in account_obj.browse(request.cr, openerp.SUPERUSER_ID, contract_ids) if contract.partner_id]
+        domain = ['|', ('id', "in", contract_project_ids), ('id', "child_of", contract_project_ids)]
+
         if post.get('search'):
             domain += ['|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('website_description', 'ilike', "%%%s%%" % post.get("search"))]
+
 
         # public partner profile
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, domain + [('website_published', '=', True)])
         worldmap_partner_ids = ",".join([str(p) for p in partner_ids])
 
         if request.uid != website.get_public_user().id:
-            contract_ids = account_obj.search(request.cr, openerp.SUPERUSER_ID, [(1, "=", 1)])
-            contract_project_ids = [contract.partner_id.id 
-                for contract in account_obj.browse(request.cr, openerp.SUPERUSER_ID, contract_ids) if contract.partner_id]
-            # search for check access rules
-            partner_ids += partner_obj.search(request.cr, request.uid, domain + ['|', ('id', "in", contract_project_ids), ('id', "child_of", contract_project_ids)])
+            # search without website_published
+            partner_ids += partner_obj.search(request.cr, request.uid, domain)
             partner_ids = list(set(partner_ids))
+
 
         # group by country
         countries = partner_obj.read_group(request.cr, request.uid, domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
