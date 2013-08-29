@@ -49,7 +49,7 @@ def html_sanitize(src, silent=True):
         return src
     src = ustr(src, errors='replace')
 
-    logger = _logger.getChild('html_sanitize')
+    logger = logging.getLogger(__name__ + '.html_sanitize')
 
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
