@@ -127,7 +127,7 @@ class event_event(osv.osv):
             string='Maximum Registrations',
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
-            type='integer', store=True)
+            type='integer')
     }
 
     def check_registration_limits(self, cr, uid, ids, context=None):

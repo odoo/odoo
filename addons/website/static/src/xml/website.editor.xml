@@ -1,0 +1,56 @@
+<templates id="template" xml:space="preserve">
+    <t t-extend="website.editorbar">
+        <t t-jquery="#website-top-view" t-operation="after">
+            <div class="navbar-inner" id="website-top-edit">
+                <form class="navbar-form pull-left">
+                    <button data-action="save" class="btn btn-primary">Save</button>
+                    <button data-action="cancel" class="btn">Cancel</button>
+                </form>
+                <ul class="nav navbar-nav pull-right">
+                    <li class="navbar-form"><button data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
+                </ul>
+            </div>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.link">
+        <div class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Link to:</h3>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <ul class="list-group">
+                        <li class="list-group-item active">
+                            <h3 class="list-group-item-heading">Page on Your Website</h3>
+                            <select class="form-control pages url-source"/>
+                        </li>
+                        <li class="list-group-item">
+                            <h3 class="list-group-item-heading pull-left">Website URL</h3>
+                            <div class="pull-right">
+                                <label>
+                                    <input type="checkbox" class="window-new"/>
+                                    Open in new window
+                                </label>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="input-group">
+                                <input type="text" class="form-control url url-source"
+                                       placeholder="http://openerp.com"/>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <h3 class="list-group-item-heading">Email Address</h3>
+                            <input type="email" class="form-control email-address url-source"
+                                   placeholder="you@yourwebsite.com"/>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -3,7 +3,53 @@
 
     var website = openerp.website;
 
+    website.templates.push('/website/static/src/xml/website.editor.xml');
+    website.dom_ready.done(function () {
+        // $.fn.data automatically parses value, '0'|'1' -> 0|1
+        website.is_editable = $(document.documentElement).data('editable');
+        var is_smartphone = $(document.body)[0].clientWidth < 767;
+
+        if (website.is_editable && !is_smartphone) {
+            website.ready().then(website.init_editor);
+        }
+    });
+
+    function link_dialog(editor) {
+        return new website.editor.LinkDialog(editor).appendTo(document.body);
+    }
+
     website.init_editor = function () {
+        CKEDITOR.plugins.add('customdialogs', {
+            requires: 'link,image',
+            init: function (editor) {
+                editor.on('doubleclick', function (evt) {
+                    if (evt.data.dialog === 'link' || evt.data.dialog === 'image') {
+                        delete evt.data.dialog;
+                        link_dialog(editor);
+                    }
+                    // priority should be smaller than dialog (999) but bigger
+                    // than link or image (default=10)
+                }, null, null, 500);
+
+                editor.addCommand('link', {
+                    exec: function (editor, data) {
+                        link_dialog(editor);
+                        return true;
+                    },
+                    canUndo: false,
+                    editorFocus: true,
+                });
+                editor.addCommand('image', {
+                    exec: function (editor, data) {
+                        console.log('image', editor, data);
+                        return true;
+                    },
+                    canUndo: false,
+                    editorFocus: true,
+                });
+
+            }
+        });
         var editor = new website.EditorBar();
         var $body = $(document.body);
         editor.prependTo($body);
@@ -215,7 +261,7 @@
                 autoParagraph: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace',
+                extraPlugins: 'sharedspace,customdialogs',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [
@@ -251,6 +297,158 @@
         },
     });
 
+    website.editor = { };
+    website.editor.Dialog = openerp.Widget.extend({
+        events: {
+            'hidden': 'destroy',
+        },
+        init: function (editor) {
+            this._super();
+            this.editor = editor;
+        },
+        start: function () {
+            var sup = this._super();
+            this.$el.modal();
+            return sup;
+        },
+    });
+
+    website.editor.LinkDialog = website.editor.Dialog.extend({
+        template: 'website.editor.dialog.link',
+        events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'click button.btn-primary': 'save',
+            'change .url-source': function (e) { this.changed($(e.target)); },
+        }),
+        init: function (editor) {
+            this._super(editor);
+            this.pages = Object.create(null);
+        },
+        start: function () {
+            var element;
+            if ((element = this.get_selected_link()) && element.hasAttribute('href')) {
+                this.editor.getSelection().selectElement(element);
+            }
+            this.element = element;
+
+            return $.when(
+                this.fetch_pages().done(this.proxy('fill_pages')),
+                this._super()
+            ).done(this.proxy('bind_data'));
+        },
+        /**
+         * Greatly simplified version of CKEDITOR's
+         * plugins.link.dialogs.link.onOk.
+         *
+         * @param {String} url
+         * @param {Boolean} [new_window=false]
+         * @param {String} [label=null]
+         */
+        make_link: function (url, new_window, label) {
+            var attributes = {href: url, 'data-cke-saved-href': url};
+            var to_remove = [];
+            if (new_window) {
+                attributes['target'] = '_blank';
+            } else {
+                to_remove.push('target');
+            }
+
+            if (this.element) {
+                this.element.setAttributes(attributes);
+                this.element.removeAttributes(to_remove);
+            } else {
+                var selection = this.editor.getSelection();
+                var range = selection.getRanges(true)[0];
+
+                if (range.collapsed) {
+                    var text = new CKEDITOR.dom.text(label || url);
+                    range.insertNode(text);
+                    range.selectNodeContents(text);
+                }
+
+                new CKEDITOR.style({
+                    type: CKEDITOR.STYLE_INLINE,
+                    element: 'a',
+                    attributes: attributes,
+                }).applyToRange(range);
+                // blows up the call stack, not sure why as original version
+                // seems to work OK
+                // range.select();
+            }
+        },
+        save: function () {
+            var $e = this.$('.url-source').filter(function () { return !!this.value; });
+
+            var val = $e.val();
+            if ($e.hasClass('email-address')) {
+                this.make_link('mailto:' + val, false, val);
+            } else if ($e.hasClass('pages')) {
+                this.make_link(val, false, $e.find('option:selected').text());
+            } else {
+                this.make_link(val, this.$('input.window-new').prop('checked'));
+            }
+            this.$el.modal('hide');
+        },
+        bind_data: function () {
+            var href = this.element && (this.element.data( 'cke-saved-href')
+                                    ||  this.element.getAttribute('href'));
+            if (!href) { return; }
+
+            var match, $control;
+            if (match = /(mailto):(.+)/.exec(href)) {
+                $control = this.$('input.email-address').val(match[2]);
+            } else if(href in this.pages) {
+                $control = this.$('select.pages').val(href);
+            }
+            if (!$control) {
+                $control = this.$('input.url').val(href);
+            }
+
+            this.changed($control);
+
+            this.$('input.window-new').prop(
+                'checked', this.element.getAttribute('target') === '_blank');
+        },
+        changed: function ($e) {
+            $e.closest('li.list-group-item').addClass('active')
+              .siblings().removeClass('active');
+            this.$('.url-source').not($e).val('');
+        },
+        /**
+         * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
+         * if the editor is set directly on a link it will thus not work.
+         */
+        get_selected_link: function () {
+            var sel = this.editor.getSelection(),
+                el = sel.getSelectedElement();
+            if (el && el.is('a')) { return el; }
+
+            var range = sel.getRanges(true)[0];
+            if (!range) { return null; }
+
+            range.shrink(CKEDITOR.SHRINK_TEXT);
+            return this.editor.elementPath(range.getCommonAncestor())
+                              .contains('a');
+
+        },
+        fetch_pages: function () {
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'website',
+                method: 'list_pages',
+                args: [],
+                kwargs: {}
+            });
+        },
+        fill_pages: function (results) {
+            var self = this;
+            var $select = this.$('select');
+            $select.append(new Option());
+            _(results).each(function (result) {
+                self.pages[result.url] = true;
+                $select.append(new Option(result.name, result.url));
+            });
+        },
+    });
+
 
     var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var observer = new Observer(function (mutations) {
@@ -278,15 +476,5 @@
             .compact()
             .uniq()
             .each(function (node) { $(node).trigger('content_changed'); })
-    });
-
-    website.dom_ready.done(function () {
-        // $.fn.data automatically parses value, '0'|'1' -> 0|1
-        website.is_editable = $(document.documentElement).data('editable');
-        var is_smartphone = $(document.body)[0].clientWidth < 767;
-
-        if (website.is_editable && !is_smartphone) {
-            website.ready().then(website.init_editor);
-        }
     });
 })();

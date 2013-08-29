@@ -40,7 +40,7 @@
                             </t>
                         </ul>
                     </div>
-                    <div class="col-md-8 navbar navbar-inverse">
+                    <div class="col-md-8 navbar navbar-default">
                         <div class='navbar-inner'>
                             <t t-call="website.pager" >
                                 <t t-set="classname">pull-left</t>
@@ -67,8 +67,8 @@
                                     <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
                                     <div>
                                         <span t-field="event.type">: </span>
-                                        <t t-if="event.user_id">
-                                            Organized by: <span t-field="event.user_id"> </span>
+                                        <t t-if="event.organizer_id">
+                                            Organized by: <span t-field="event.organizer_id"> </span>
                                         </t>
                                     </div>
                                     <div>
@@ -132,7 +132,7 @@
                             <pre t-field="event_id.address_id"/>
                             <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span><br/>
                             <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
-                            <t t-if="event_id.user_id">
+                            <t t-if="event_id.organizer_id">
                                 <h6>Organized by:</h6>
                                 <pre><t t-field="event_id.organizer_id"/><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></pre>
                             </t>
@@ -165,7 +165,7 @@ t-attf-class="label label-default pull-right label-#{ event_id.register_avail &l
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Ticket type</th>
+                                            <th>Ticket</th>
                                             <th>Sales End</th>
                                             <th>Price</th>
                                             <th>Seats</th>
@@ -174,7 +174,7 @@ t-attf-class="label label-default pull-right label-#{ event_id.register_avail &l
                                     </thead>
                                     <tbody>
                                         <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
-                                            <td t-field="ticket.product_id"/>
+                                            <td t-field="ticket.name"/>
                                             <td t-field="ticket.deadline"/>
                                             <td t-field="ticket.price"/>
                                             <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>

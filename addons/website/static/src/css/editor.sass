@@ -259,22 +259,24 @@ $icon_close: #E00101
 
 $remove_color: $icon_close
 .oe_seo_configuration
-    min-width: 42em
+    &.modal
+        width: 100%
+        left: 0
+        margin-left: 0
+        top: 0!important
+        margin-top: 0!important
+        height: 100%
     .modal-body
-        max-height: inherit
-        min-height: 27em
-    input
-        width: 90%
-    textarea
-        width: 90%
+        max-height: 100%
+        height: 100%
     ul
         list-style: none
     .oe_remove
         color: $remove_color
 
 .oe_seo_keywords_list
-    width: 100%
-    margin: 0.1em
-    li
+    &.container
+        margin: 0.1em
+    .oe_seo_keyword
         float: left
-        width: 19em
+        padding-right: 0.5em
