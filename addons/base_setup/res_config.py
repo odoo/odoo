@@ -21,24 +21,14 @@
 
 from openerp.osv import fields, osv
 import re
+import matplotlib.font_manager
 
-_select_font=[ ('DejaVu Sans',"DejaVu Sans"),
-        ('DejaVu Sans Bold',"DejaVu Sans Bold"),
-        ('DejaVu Sans Oblique',"DejaVu Sans Oblique"),
-        ('DejaVu Sans BoldOblique',"DejaVu Sans BoldOblique"),
-        ('Liberation Serif',"Liberation Serif"),
-        ('Liberation Serif Bold',"Liberation Serif Bold"),
-        ('Liberation Serif Italic',"Liberation Serif Italic"),
-        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
-        ('Liberation Serif',"Liberation Serif"),
-        ('Liberation Serif Bold',"Liberation Serif Bold"),
-        ('Liberation Serif Italic',"Liberation Serif Italic"),
-        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
-        ('FreeMono',"FreeMono"),
-        ('FreeMono Bold',"FreeMono Bold"),
-        ('FreeMono Oblique',"FreeMono Oblique"),
-        ('FreeMono BoldOblique',"FreeMono BoldOblique"),
-]
+_lst_font=[]
+for i in matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf'):
+    m=re.sub('(.*/)','', i)
+    n=m.strip('.ttf')
+    n=n.replace('-',' ')
+    _lst_font.append((n,n))
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
@@ -57,7 +47,7 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
-        'font': fields.selection(_select_font, "Select Font",help="Set your favorite font into company header"),
+        'font': fields.selection(_lst_font, "Select Font",help="Set your favorite font into company header"),
     }
     def open_company(self, cr, uid, ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
