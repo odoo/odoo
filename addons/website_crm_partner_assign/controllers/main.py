@@ -51,7 +51,8 @@ class website_crm_partner_assign(http.Controller):
 
         step = 20
         pager = website.pager(url="/partners/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
-        partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)], limit=step, offset=pager['offset'])
+        partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)], 
+            limit=step, offset=pager['offset'], order="grade_id ASC,partner_weight DESC")
 
 
         values = website.get_rendering_context({

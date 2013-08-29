@@ -11,3 +11,10 @@ class res_partner(osv.osv):
 
     def img(self, cr, uid, ids, field='image_small', context=None):
         return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+
+
+class res_partner_grade(osv.osv):
+    _inherit = 'res.partner.grade'
+    _columns = {
+        'website_description': fields.html('Description for the website'),
+    }
