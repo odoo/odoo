@@ -28,8 +28,7 @@
 - 
   Confirm sales order
 - 
-  !python {model: sale.order}: |
-    self.action_button_confirm(cr, uid, [ref('sale_order_crossdock_shpng')])
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_crossdock_shpng}
 - 
     Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
 -

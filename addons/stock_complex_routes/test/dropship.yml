@@ -51,8 +51,6 @@
 -
     !python {model: purchase.order}: |
          po_id = self.search(cr, uid, [('partner_id', '=', ref('base.res_partner_2'))])
-         picking_id = self.search(cr, uid, [('purchase_id', '=', po_id[0])])
-         context.update({'active_model': 'stock.picking', 'active_id': backorder_id[0], 'active_ids': backorder_id})
          self.view_picking(cr, uid, po_id)
 -
     Send the 200 pieces.
