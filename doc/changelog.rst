@@ -31,5 +31,15 @@ Changelog
   ``openerp.exceptions.RedirectWarning``.
 - Give a pair of new methods to ``res.config.settings`` and a helper to make
   them easier to use: ``get_config_warning()``.
-- Path to webkit report files (field ``report_file``) must be writen with the
+- Path to webkit report files (field ``report_file``) must be written the
   Unix way (with ``/`` and not ``\``)
+
+
+`7.0`
+-----
+
+- Modules may now include an ``i18n_extra`` directory that will be treated like the
+  default ``i18n`` directory. This is typically useful for manual translation files
+  that are not managed by Launchpad's translation system. An example is l10n modules
+  that depend on ``l10n_multilang``.
+
