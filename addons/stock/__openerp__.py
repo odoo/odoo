@@ -89,10 +89,10 @@ Dashboard / Reports for Warehouse Management will include:
         'res_config_view.xml',
     ],
     'test': [
-        'test/inventory.yml',
+#        'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',
-#         'test/shipment.yml',
+         'test/shipment.yml',
     ],
     'installable': True,
     'application': True,
