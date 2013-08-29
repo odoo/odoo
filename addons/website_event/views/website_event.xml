@@ -13,6 +13,12 @@
         </xpath>
     </template>
 
+    <template id="event_website_sale_mycart" inherit_id="website_sale.mycart">
+        <xpath expr="//small[@class='text-error']" position="replace">
+            <small t-if="line.product_id.lst_price != line.price_unit and not line.event_id" class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
+        </xpath>
+    </template>
+
     <!-- Page --> 
  
     <template id="index" name="Events" page="True">

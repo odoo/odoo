@@ -395,15 +395,21 @@ class mail_message(osv.Model):
         has_voted = uid in [user.id for user in message.vote_user_ids]
 
         try:
-            body_html = html_email_clean(message.body)
+            if parent_id:
+                max_length = 300
+            else:
+                max_length = 100
+            body_short = html_email_clean(message.body, remove=False, shorten=True, max_length=max_length)
+
         except Exception:
-            body_html = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % message.id
+            body_short = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % message.id
             _logger.exception(Exception)
 
         return {'id': message.id,
                 'type': message.type,
                 'subtype': message.subtype_id.name if message.subtype_id else False,
-                'body': body_html,
+                'body': message.body,
+                'body_short': body_short,
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,
@@ -673,14 +679,14 @@ class mail_message(osv.Model):
                 - no model, no res_id, I create a private message OR
                 - pid in message_follower_ids if model, res_id OR
                 - mail_notification (parent_id.id, pid) exists, uid has been notified of the parent, OR
-                - uid have write access on the related document if model, res_id, OR
+                - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
                 - author_id == pid, uid is the author, OR
-                - uid has write access on the related document if model, res_id
+                - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
             - unlink: if
-                - uid has write access on the related document if model, res_id
+                - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
         """
         def _generate_model_record_ids(msg_val, msg_ids=[]):

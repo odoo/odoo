@@ -62,8 +62,7 @@ class crm_merge_opportunity(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         """
         Use active_ids from the context to fetch the leads/opps to merge.
-        In order to get merged, these leads/opps can't be in 'Done' or
-        'Cancel' state.
+        In order to get merged, these leads/opps can't be in 'Dead' or 'Closed'
         """
         if context is None:
             context = {}
@@ -74,7 +73,7 @@ class crm_merge_opportunity(osv.osv_memory):
             opp_ids = []
             opps = self.pool.get('crm.lead').browse(cr, uid, record_ids, context=context)
             for opp in opps:
-                if opp.state not in ('done', 'cancel'):
+                if opp.probability < 100:
                     opp_ids.append(opp.id)
             if 'opportunity_ids' in fields:
                 res.update({'opportunity_ids': opp_ids})

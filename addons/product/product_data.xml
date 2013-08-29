@@ -198,5 +198,10 @@ parameter) will see those record just disappear.
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
         </record>
+
+        <!-- Product Public Categories -->
+        <record id="categ_others" model="product.public.category">
+            <field name="name">Others</field>
+        </record>
     </data>
 </openerp>

@@ -1,5 +1,22 @@
 @charset "utf-8"
 
+/* ---- CKEditor Minimal Reset ---- */
+
+.navbar.navbar-inverse .cke_chrome
+    border: none
+
+.navbar.navbar-inverse .cke_inner
+    background: transparent
+
+.navbar.navbar-inverse .cke_top
+    background: transparent
+    border: none
+    box-shadow: none
+    -webkit-box-shadow: none
+    -moz-box-shadow: none
+
+/* ---- OpenERP Style ---- */
+
 .oe_hidden
     display: none !important
 
@@ -186,11 +203,13 @@
 .oe_handle.nw,.oe_handle.w,.oe_handle.sw
     left: 0px
 
-/* ---- MOBILE PREVIEW ---- */
+/* ---- MODAL DIALOGS ---- */
 
 .oe_stop_scrolling
     height: 100%
     overflow: hidden
+
+/* ---- MOBILE PREVIEW ---- */
 
 $mobile_preview_background: #000000
 $mobile_preview_border: #1A1A1A
@@ -236,18 +255,26 @@ $icon_close: #E00101
         color: $icon_close
         opacity: 1
 
+/* ---- SEO TOOLS ---- */
+
+$remove_color: $icon_close
 .oe_seo_configuration
+    min-width: 42em
+    .modal-body
+        max-height: inherit
+        min-height: 27em
     input
-        width: inherit
+        width: 90%
     textarea
-        width: inherit
+        width: 90%
     ul
         list-style: none
     .oe_remove
-        color: $icon_close
+        color: $remove_color
 
 .oe_seo_keywords_list
-    width: 39em
+    width: 100%
+    margin: 0.1em
     li
         float: left
-        width: 12em
+        width: 19em

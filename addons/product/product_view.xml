@@ -67,6 +67,8 @@
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
+                            <label for="public_categ_id" class="oe_edit_only"/>
+                            <h3><field name="public_categ_id"/></h3>
                             <div name="options" groups="base.group_user">
                                 <field name="sale_ok"/>
                                 <label for="sale_ok"/>
@@ -392,6 +394,59 @@
             <field eval="'ir.actions.act_window,%d'%product_normal_action_tree" name="value"/>
         </record>
 
+
+        <!-- Product Public Categories -->
+        <record id="product_public_category_form_view" model="ir.ui.view">
+            <field name="name">product.public.category.form</field>
+            <field name="model">product.public.category</field>
+            <field name="arch" type="xml">
+                <form string="Product Categories" version="7.0">
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
+                        <div class="oe_left">
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_id"/>
+                                <field name="sequence"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_public_category_tree_view" model="ir.ui.view">
+            <field name="name">product.public.category.tree</field>
+            <field name="model">product.public.category</field>
+            <field name="field_parent" eval="False"/>
+            <field name="arch" type="xml">
+                <tree string="Product Product Categories">
+                    <field name="sequence" invisible="1"/>
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_public_category_action" model="ir.actions.act_window">
+            <field name="name">Public Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.public.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new category.
+              </p><p>
+                Categories are used to browse your products through the
+                touchscreen interface.
+              </p><p>
+                If you put a photo on the category, the layout of the
+                touchscreen interface will automatically. We suggest not to put
+                a photo on categories for small (1024x768) screens.
+              </p>
+            </field>
+        </record>
+        <menuitem action="product_public_category_action" id="menu_product_public_category" parent="base.menu_product" sequence="10" />
+        <!-- END -->
 
         <!-- Unit of Measure -->
 

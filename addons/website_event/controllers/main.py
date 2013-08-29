@@ -4,6 +4,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
+from openerp.addons import website_sale
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -103,16 +104,22 @@ class website_event(http.Controller):
         event = request.registry['event.event'].browse(request.cr, request.uid, event_id, {'show_address': 1})
         values = website.get_rendering_context({
             'event_id': event,
+            'range': range
         })
         return website.render("website_event.detail", values)
 
     @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
     def add_cart(self, event_id=None, **post):
+        website = request.registry['website']
+        user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
-        order = request.registry['website'].get_rendering_context()['order']
-        partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+        order = website.get_rendering_context()['order']
+        if not order:
+            order = website_sale.controllers.main.get_order()
+
+        partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
 
         context = {}
 

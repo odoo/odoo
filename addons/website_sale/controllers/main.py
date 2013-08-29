@@ -26,6 +26,7 @@ def get_order(order_id=None):
         order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
         order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
+        request.httprequest.session['ecommerce_order_id'] = order.id
 
     context = {
         'pricelist': order.pricelist_id.id,
@@ -52,7 +53,7 @@ class website(osv.osv):
 class Ecommerce(http.Controller):
 
     def get_categories(self):
-        category_obj = request.registry.get('pos.category')
+        category_obj = request.registry.get('product.public.category')
         category_ids = category_obj.search(request.cr, SUPERUSER_ID, [('parent_id', '=', False)])
         categories = category_obj.browse(request.cr, SUPERUSER_ID, category_ids)
         return categories
@@ -75,10 +76,10 @@ class Ecommerce(http.Controller):
                 ('name', 'ilike', "%%%s%%" % post.get("search")), 
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search")),
-                ('product_variant_ids.pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+                ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
         if cat_id:
             cat_id = int(cat_id)
-            domain += [('product_variant_ids.pos_categ_id.id', 'child_of', cat_id)] + domain
+            domain += [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain))
@@ -155,7 +156,6 @@ class Ecommerce(http.Controller):
         order = get_current_order()
         if not order:
             order = get_order()
-            request.httprequest.session['ecommerce_order_id'] = order.id
 
         context = {'pricelist': self.get_pricelist()}
 

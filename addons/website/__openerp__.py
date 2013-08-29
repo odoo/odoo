@@ -1,7 +1,7 @@
 {
-    'name': 'Website',
+    'name': 'Website Builder',
     'category': 'Website',
-    'summary': 'Create Your Enterprise Website',
+    'summary': 'Build Your Enterprise Website',
     'version': '1.0',
     'description': """
 OpenERP Website CMS

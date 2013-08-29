@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <group name="procurement" position="inside">
                     <group string="Manufacturer">
-                        <field name="manufacturer" />
+                        <field name="manufacturer" context="{'default_supplier':True, 'default_customer':False}"/>
                         <field name="manufacturer_pname"/>
                         <field name="manufacturer_pref"/>
                     </group>

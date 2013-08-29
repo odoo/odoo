@@ -32,9 +32,13 @@
     };
 
     website.init_editor = function () {
+        CKEDITOR.on('dialogDefinition', function (ev) {
+            (alter_dialog[ev.data.name] || noop)(ev.data.definition);
+        });
         var editor = new website.EditorBar();
-        editor.prependTo($('body'));
-        $('body').css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
+        var $body = $('body');
+        editor.prependTo($body);
+        $body.css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
     };
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
@@ -153,6 +157,7 @@
         save: function () {
             var self = this;
             var defs = [];
+            observer.disconnect();
             $('.oe_dirty').each(function (i, v) {
                 var $el = $(this);
                 // TODO: Add a queue with concurrency limit in webclient
@@ -236,36 +241,96 @@
         init: function (parent, options) {
             this._super(parent);
             this.keyword = options.keyword;
+            this.onDelete = options.onDelete;
+        },
+        destroy: function () {
+            if (_.isFunction(this.onDelete)) {
+                this.onDelete(this.keyword);
+            }
+            this._super();
         },
     });
+    website.seo.cleanupKeyword = function (word) {
+        return word ? word.replace(/[,;.:]+/g, " ").replace(/ +/g, " ").trim() : "";
+    };
+    website.seo.PageParser = function () {
+        function currentURL () {
+            var url = window.location.href;
+            var hashIndex = url.indexOf('#');
+            return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
+        }
+        var parsedPage = {
+            url: currentURL(),
+            title: $('title').text(),
+            headers: {},
+            content: {}
+        };
+        _.each([ 'h1', 'h2', 'h3'], function (header) {
+            parsedPage.headers[header] = [];
+            $(header).each(function () {
+                var text = $(this).text();
+                parsedPage.headers[header].push(text);
+            });
+        });
+        this.url = function () {
+            return parsedPage.url;
+        };
+        this.title = function () {
+            return parsedPage.title;
+        };
+        this.headers = function () {
+            return parsedPage.headers;
+        };
+        this.keywordSuggestions = function () {
+            return _.map(_.uniq(parsedPage.headers.h1.concat(parsedPage.headers.h2)), website.seo.cleanupKeyword);
+        };
+    };
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
         events: {
             'keypress input[name=seo_page_keywords]': 'confirmKeyword',
             'click button[data-action=add]': 'addKeyword',
             'click a[data-action=update]': 'update',
-            'hidden': 'close'
+            'hidden': 'destroy'
         },
+
+        maxTitleSize: 65,
+        maxDescriptionSize: 155,
+        maxNumberOfKeywords: 10,
+        maxWordsPerKeyword: 4,
+
         start: function () {
+            var pageParser = new website.seo.PageParser();
+            var currentKeywords = this.keywords;
+            this.$el.find('.js_seo_page_url').text(pageParser.url());
+            this.$el.find('input[name=seo_page_title]').val(pageParser.title());
+            this.$el.find('input[name=seo_page_keywords]').typeahead({
+                source: function () {
+                    var suggestions = pageParser.keywordSuggestions();
+                    var alreadyChosen = currentKeywords();
+                    return _.difference(suggestions, alreadyChosen);
+                },
+                items: 4
+            });
+
             $('body').addClass('oe_stop_scrolling');
-
-            this.$el.find('input[name=seo_page_url]').val(window.location.href);
-            this.$el.find('input[name=seo_page_title]').val($('title').text());
-
             this.$el.modal();
         },
+        currentPage: function () {
+            var url = window.location.href;
+            var hashIndex = url.indexOf('#');
+            return hashIndex > 0 ? url.substring(0, hashIndex): url;
+        },
         keywords: function () {
-            var result = [];
-            this.$el.find('.js_seo_keyword').each(function () {
-                result.push($(this).text());
-            })
-            return _.uniq(result);
+            return _.uniq($('.js_seo_keyword').map(function () {
+                return $(this).text();
+            }));
         },
         isExistingKeyword: function (word) {
             return _.contains(this.keywords(), word);
         },
         isKeywordListFull: function () {
-            return this.keywords().length >= 10;
+            return this.keywords().length >= this.maxNumberOfKeywords;
         },
         confirmKeyword: function (e) {
             if (e.keyCode == 13) {
@@ -274,24 +339,45 @@
             }
         },
         addKeyword: function () {
-            var word = this.$el.find('input[name=seo_page_keywords]').val().trim();
+            var $modal = this.$el;
+            function enableNewKeywords () {
+                $modal.find('input[name=seo_page_keywords]')
+                    .removeAttr('readonly').attr('placeholder', "New keyword");
+                $modal.find('button[data-action=add]')
+                    .prop('disabled', false).removeClass('disabled');
+            }
+            function disableNewKeywords () {
+                $modal.find('input[name=seo_page_keywords]')
+                    .attr('readonly', "readonly")
+                    .attr('placeholder', "Remove a keyword first");
+                $modal.find('button[data-action=add]')
+                    .prop('disabled', true).addClass('disabled');
+            }
+            var candidate = this.$el.find('input[name=seo_page_keywords]').val();
+            var word = website.seo.cleanupKeyword(candidate);
             if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
                 new website.seo.Keyword(this, {
-                    keyword: word
+                    keyword: word,
+                    onDelete: enableNewKeywords
                 }).appendTo(this.$el.find('.js_seo_keywords_list'));
-                var $body = this.$el.find('.modal-body');
-                $body.animate({
-                    scrollTop: $body[0].scrollHeight
-                }, 500);
+                this.scrollDown();
+            }
+            if (this.isKeywordListFull()) {
+                disableNewKeywords();
             }
         },
+        scrollDown: function () {
+            var $body = this.$el.find('.modal-body');
+            $body.animate({
+                scrollTop: $body[0].scrollHeight
+            }, 500);
+        },
         update: function () {
-            console.log(this.keywords());
             // TODO: Persist changes
         },
-        close: function () {
+        destroy: function () {
             $('body').removeClass('oe_stop_scrolling');
-            this.destroy();
+            this._super();
         },
     });
 
@@ -309,10 +395,20 @@
             $elements
                 .not('span, [data-oe-type]')
                 .each(function () {
-                    var $this = $(this);
-                    CKEDITOR.inline(this, self._config()).on('change', function () {
-                        $this.addClass('oe_dirty');
-                        self.trigger('change', this, null);
+                    var node = this;
+                    var $node = $(node);
+                    var editor = CKEDITOR.inline(this, self._config());
+                    editor.on('instanceReady', function () {
+                        observer.observe(node, {
+                            childList: true,
+                            attributes: true,
+                            characterData: true,
+                            subtree: true
+                        });
+                    });
+                    $node.one('content_changed', function () {
+                        $node.addClass('oe_dirty');
+                        self.trigger('change');
                     });
                 });
         },
@@ -378,31 +474,35 @@
         // TODO clean
         snippet_carousel: function () {
             var self = this;
-            $('.carousel .js_carousel_options .label').on('click', function (e) {
+            var $carousel_options = $('.carousel .js_carousel_options');
+            $carousel_options.on('click', '.label', function (e) {
                 e.preventDefault();
                 var $button = $(e.currentTarget);
                 var $c = $button.parents(".carousel:first");
+                var $carousel_inner = $c.find('.carousel-inner');
 
                 if($button.hasClass("js_add")) {
-                    var cycle = $c.find(".carousel-inner .item").size();
-                    $c.find(".carousel-inner").append(openerp.qweb.render("website.carousel"));
+                    var cycle = $carousel_inner.find('.item').size();
+                    $carousel_inner.append(openerp.qweb.render('website.carousel'));
                     $c.carousel(cycle);
                 }
                 else {
-                    var cycle = $c.find(".carousel-inner .item.active").remove();
-                    $c.find(".carousel-inner .item:first").addClass("active");
+                    $carousel_inner
+                        .find('.item.active').remove().end()
+                        .find('.item:first').addClass('active');
                     $c.carousel(0);
                     self.trigger('change', self, null);
                 }
             });
-            $('.carousel .js_carousel_options').show();
+            $carousel_options.show();
         }
     });
 
     website.mutations = {
         darken: function($el){
-            if($el.parent().hasClass('dark')){
-                $el.parent().replaceWith($el);
+            var $parent = $el.parent();
+            if($parent.hasClass('dark')){
+                $parent.replaceWith($el);
             }else{
                 $el.replaceWith($("<div class='dark'></div>").append($el.clone()));
             }
@@ -513,23 +613,25 @@
         // selector.siblings -> will insert drop zones after and before selected elements
         activate_insertion_zones: function(selector){
             var self = this;
+            var i, len, $zones;
             var child_selector   =  selector.childs   || '';
             var sibling_selector =  selector.siblings || '';
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
+            var $drop_zone = $('.oe_drop_zone');
 
-            $('.oe_drop_zone').remove();
+            $drop_zone.remove();
 
             if(child_selector){
-                var $zones = $(child_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
+                $zones = $(child_selector);
+                for(i = 0, len = $zones.length; i < len; i++ ){
                     $zones.eq(i).find('> *:not(.oe_drop_zone)').after(zone_template);
                     $zones.eq(i).prepend(zone_template);
                 }
             }
 
             if(sibling_selector){
-                var $zones = $(sibling_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
+                $zones = $(sibling_selector);
+                for(i = 0, len = $zones.length; i < len; i++ ){
                     if($zones.eq(i).prev('.oe_drop_zone').length === 0){
                         $zones.eq(i).before(zone_template);
                     }
@@ -541,12 +643,12 @@
 
             // Cleaning up unnecessary zones
             $('.oe_snippets .oe_drop_zone').remove();   // no zone in the snippet selector ...
-            $('#website-top-view .oe_drop_zone').remove();   // no zone in the top bars ...
-            $('#website-top-edit .oe_drop_zone').remove();
+            $('#website-top-view').find('.oe_drop_zone').remove();   // no zone in the top bars ...
+            $('#website-top-edit').find('.oe_drop_zone').remove();
             var count;
             do {
                 count = 0;
-                var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
+                $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
                 count += $zones.length;
                 $zones.remove();
 
@@ -556,25 +658,23 @@
             }while(count > 0);
 
             // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = $('.oe_drop_zone');
-            for( var i = 0, len = $zones.length; i < len; i++ ){
+            $zones = $drop_zone;
+            for(i = 0, len = $zones.length; i < len; i++ ){
                 var zone = $zones.eq(i);
                 var prev = zone.prev();
                 var next = zone.next();
-                var float_prev = zone.prev().css('float')   || 'none';
-                var float_next = zone.next().css('float')   || 'none';
-                var disp_prev  = zone.prev().css('display') ||  null;
-                var disp_next  = zone.next().css('display') ||  null;
+                var float_prev = prev.css('float')   || 'none';
+                var float_next = next.css('float')   || 'none';
+                var disp_prev  = prev.css('display') ||  null;
+                var disp_next  = next.css('display') ||  null;
                 if(     (float_prev === 'left' || float_prev === 'right')
                     &&  (float_next === 'left' || float_next === 'right')  ){
                     zone.remove();
-                    continue;
                 }else if( !( disp_prev === null
                           || disp_next === null
                           || disp_prev === 'block'
                           || disp_next === 'block' )){
                     zone.remove();
-                    continue;
                 }
             }
         },
@@ -646,30 +746,31 @@
 
                     var pt = $snippet.css('padding-top');
                     var pb = $snippet.css('padding-bottom');
-                    pt = Number(pt.slice(0,pt.length - 2)) || 0; //FIXME something cleaner to remove 'px'
-                    pb = Number(pb.slice(0,pb.length - 2)) || 0;
+                    pt = Number(pt.slice(0, -2)) || 0; //FIXME something cleaner to remove 'px'
+                    pb = Number(pb.slice(0, -2)) || 0;
 
                     $manipulator.addClass('oe_hover');
                     event.preventDefault();
 
-                    $('body').mousemove(function(event){
-                        var dx = event.pageX - x;
-                        var dy = event.pageY - y;
-                        event.preventDefault();
-                        if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
-                            $snippet.css('padding-top',pt-dy+'px');
-                            self.cover_target($manipulator,$snippet);
-                        }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
+                    $('body').on({
+                        mousemove: function(event){
+                            var dx = event.pageX - x;
+                            var dy = event.pageY - y;
+                            event.preventDefault();
+                            if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
+                                $snippet.css('padding-top',pt-dy+'px');
+                                self.cover_target($manipulator,$snippet);
+                            }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
 
-                            $snippet.css('padding-bottom',pb+dy+'px');
-                            self.cover_target($manipulator,$snippet);
+                                $snippet.css('padding-bottom',pb+dy+'px');
+                                self.cover_target($manipulator,$snippet);
+                            }
+                        },
+                        mouseup: function(){
+                            $body.off('mouseup mousemove');
+                            self.deactivate_snippet_manipulators();
+                            self.activate_snippet_manipulators();
                         }
-                    });
-                    $('body').mouseup(function(){
-                        $('body').unbind('mousemove');
-                        $('body').unbind('mouseup');
-                        self.deactivate_snippet_manipulators();
-                        self.activate_snippet_manipulators();
                     });
                 });
 
@@ -825,8 +926,33 @@
             })
         }
     };
-    CKEDITOR.on('dialogDefinition', function (ev) {
-        (alter_dialog[ev.data.name] || noop)(ev.data.definition);
+
+    var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
+    var observer = new Observer(function (mutations) {
+        _(mutations).chain()
+            .filter(function (m) {
+                switch(m.type) {
+                case 'attributes':
+                    // ignore cke_focus being added & removed from RTE root
+                    // FIXME: what if snippets are configured by adding/removing classes on their root element?
+                    return !$(m.target).hasClass('oe_editable');
+                case 'childList':
+                    // <br type="_moz"> appears when focusing RTE in FF, ignore
+                    return m.addedNodes.length !== 1 || m.addedNodes[0].nodeName !== 'BR';
+                default:
+                    return true;
+                }
+            })
+            .map(function (m) {
+                var node = m.target;
+                while (node && !$(node).hasClass('oe_editable')) {
+                    node = node.parentNode;
+                }
+                return node;
+            })
+            .compact()
+            .uniq()
+            .each(function (node) { $(node).trigger('content_changed'); })
     });
 
     var all_ready = null;
