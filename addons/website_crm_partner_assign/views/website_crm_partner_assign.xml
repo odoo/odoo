@@ -35,7 +35,7 @@
                             <t t-call="website.pager" >
                                 <t t-set="classname">pull-left</t>
                             </t>
-                            <form action="/references/" method="get" class="navbar-search pull-right pagination">
+                            <form action="/partners/" method="get" class="navbar-search pull-right pagination">
                                 <input type="text" name="search" class="search-query span2 mt4" placeholder="Search" t-att-value="searches.get('search') or '' or ''"/>
                                 <select class="search-query span2 mt4" name="country" t-if="len(countries) > 1" onchange="submit()">
                                     <t t-foreach="countries">
@@ -46,10 +46,10 @@
                                         </t>
                                     </t>
                                 </select>
-                                <select class="search-query span2 mt4" name="country" t-if="len(countries) > 1" onchange="submit()">
+                                <select class="search-query span2 mt4" name="grade" t-if="len(countries) > 1" onchange="submit()">
                                     <t t-foreach="grades">
                                         <t t-if="grade_id">
-                                        <option t-att-selected="searches.get('country') == str(grade_id and grade_id[0]) and 'selected'" t-att-value="grade_id[0]">
+                                        <option t-att-selected="searches.get('grade') == str(grade_id and grade_id[0]) and 'selected'" t-att-value="grade_id[0]">
                                             <t t-esc="grade_id[1]"/> (<t t-esc="grade_id_count"/>)
                                         </option>
                                         </t>
@@ -60,12 +60,12 @@
                     </div>
                     <div>
                         <div t-foreach="partner_ids" t-as="partner" class="media thumbnail">
-                            <a class="pull-left" t-attf-href="/references/#{ partner.id }/">
+                            <a class="pull-left" t-attf-href="/partners/#{ partner.id }/">
                                 <img class="media-object" t-att-src="partner.img('image_small')"/>
                             </a>
                             <div class="media-body">
                                 <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
-                                <a class="media-heading" t-attf-href="/references/#{ partner.id }/"><small t-field="partner.parent_id"/> <small t-field="partner.name"/></a>
+                                <a class="media-heading" t-attf-href="/partners/#{ partner.id }/"><small t-field="partner.parent_id"/> <small t-field="partner.name"/></a>
                                 <div t-field="partner.website_short_description"/>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
             <div class="span4">
                 <ul class="nav nav-list">
                     <li class="nav-header">World Map</li>
-                    <iframe t-attf-src="/worldmap/?width=320&amp;height=240&amp;partner_ids=#{ worldmap_partner_ids }&amp;partner_url=/references/"
+                    <iframe t-attf-src="/worldmap/?width=320&amp;height=240&amp;partner_ids=#{ worldmap_partner_ids }&amp;partner_url=/partners/"
                         style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
                 </ul>
             </div>
