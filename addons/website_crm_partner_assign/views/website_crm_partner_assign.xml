@@ -65,7 +65,7 @@
                             </a>
                             <div class="media-body">
                                 <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
-                                <a class="media-heading" t-attf-href="/partners/#{ partner.id }/"><small t-field="partner.parent_id"/> <small t-field="partner.name"/></a>
+                                <a class="media-heading" t-attf-href="/partners/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a> - <span t-field="partner.grade_id"/>
                                 <div t-field="partner.website_short_description"/>
                             </div>
                         </div>
