@@ -34,6 +34,12 @@ import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
+#----------------------------------------------------------
+# Invoice state
+#----------------------------------------------------------
+
+
+
 
 #----------------------------------------------------------
 # Stock Location

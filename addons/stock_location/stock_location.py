@@ -28,20 +28,29 @@ class stock_location_route(osv.osv):
     _name = 'stock.location.route'
     _description = "Inventory Routes"
     _order = 'sequence'
+
+    def _default_warehouse(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
+        return res and res[0] or False
+
     _columns = {
         'name': fields.char('Route Name', required=True),
         'sequence': fields.integer('Sequence'),
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
     }
     _defaults = {
         'sequence': lambda self,cr,uid,ctx: 0,
+        'warehouse_id': _default_warehouse,
     }
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
         'route_id': fields.many2one('stock.location.route', 'Default Logistic Route', help='Default route through the warehouse', required=True), 
+        'route_ids': fields.one2many('stock.location.route', 'warehouse_id', 'All Routes'),
     }
 
 
@@ -60,7 +69,7 @@ class stock_location_path(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
             required=True,), 
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This is the picking type associated with the different pickings"), 
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True, help="This is the picking type associated with the different pickings"), 
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',

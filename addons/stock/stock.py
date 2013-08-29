@@ -332,7 +332,7 @@ class stock_quant(osv.osv):
     def quants_unreserve(self, cr, uid, move, context=None):
         #cr.execute('update stock_quant set reservation_id=NULL where reservation_id=%s', (move.id,))
         #need write for related store of remaining qty
-        related_quants = self.search(cr, uid, [('reservation_id', '=', move.id)], context=context)
+        related_quants = [x.id for x in move.reserved_quant_ids]
         self.write(cr, uid, related_quants, {'reservation_id': False}, context=context)
         return True
 
@@ -530,7 +530,8 @@ class stock_picking(osv.osv):
         picking_obj = self.browse(cr, uid, id, context=context)
         if ('name' not in default) or (picking_obj.name == '/'):
             default['name'] = '/'
-        default['backorder_id'] = False
+        if not default.get('backorder_id'):
+            default['backorder_id'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -1441,6 +1442,8 @@ class stock_move(osv.osv):
         """
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
+            if move.reserved_quant_ids:
+                self.pool.get("stock.quant").quants_unreserve(cr, uid, move, context=context)
             if move.move_dest_id:
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
@@ -1615,10 +1618,9 @@ class stock_move(osv.osv):
         return res
 
     def split(self, cr, uid, move, qty, context=None):
-        """ Partially (or not) moves  a stock.move.
-        @param partial_datas: Dictionary containing details of partial picking
-                          like partner_id, delivery_date, delivery
-                          moves with product_id, product_qty, uom
+        """ 
+            Splits qty from move move into a new move
+            It will check if it can propagate the split
         """
         if move.product_qty==qty:
             return move.id
@@ -1647,6 +1649,9 @@ class stock_move(osv.osv):
             'product_uos_qty': move.product_uos_qty - uos_qty,
 #             'reserved_quant_ids': [(6,0,[])]  SHOULD NOT CHANGE as it has been reserved already
         }, context=context)
+        
+        if move.move_dest_id and move.propagate:
+            self.split(self, cr, uid, move.move_dest_id, qty, context=context)
         return new_move
 
 class stock_inventory(osv.osv):
@@ -1930,7 +1935,7 @@ report_sxw.report_sxw('report.stock.quant.package.barcode', 'stock.quant.package
 
 class stock_package(osv.osv):
     """
-    These are the packages, containing quants and/or others packages
+    These are the packages, containing quants and/or other packages
     """
     _name = "stock.quant.package"
     _description = "Physical Packages"

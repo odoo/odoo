@@ -198,6 +198,7 @@
                             <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
                             <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="picking_type_id"/>
                         </group>
                     </group>
                     <notebook>

@@ -2,6 +2,26 @@
 <openerp>
 	<data>
 
+		<record model="ir.ui.view" id="view_procurement_rule_form_inherit">
+            <field name="name">stock.procurement.rule.inherit.form</field>
+            <field name="model">procurement.rule</field>
+            <field name="inherit_id" ref="stock.view_procurement_rule_form"/>
+            
+            <field name="arch" type="xml">
+                <field name="location_id" position="after">
+                	<field name="route_id"/>
+                	<field name="route_sequence"/>
+                	<field name="sequence"/>
+                	<field name="delay"/>
+                	<field name="propagate"/>
+                </field>
+                <field name="group_id" position="before">
+                	<field name="procure_method"/>
+                	<field name="invoice_state"/>
+                	<field name="partner_address_id"/>
+                </field>
+            </field>
+        </record>
 
         <record id="view_location_form_inherit" model="ir.ui.view">
             <field name="name">stock.location.form</field>
@@ -137,6 +157,14 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="route_id"/>
                 </xpath>
+                <xpath expr="//group[last()]" position="after">
+                	<separator string="All Associated Routes"/>
+                	<field name="route_ids" nolabel="1" colspan="4">
+                		<tree string="All Routes">
+                		<field name="name"/>
+                		</tree>
+                	</field>
+                </xpath>
             </field>
         </record>
 
@@ -147,6 +175,7 @@
 				<tree string="Routes">
                     <field name="sequence" widget="handle" />
 					<field name="name"/>
+					<field name="warehouse_id"/>
 				</tree>
 			</field>
 		</record>
@@ -159,6 +188,7 @@
 				<form string="Route">
 					<field name="name" />
 					<field name="sequence" groups="base.group_no_one"/>
+					<field name="warehouse_id"/>
 					<group string="Push Rules" colspan="4" >
 						<field name="push_ids" colspan="4" nolabel="1"/>
                     </group>
@@ -182,8 +212,8 @@
               </p>
 				<p>You can define here the main logistic routes that run through
 					your warehouses and that define the flows of your products. These
-					routes can be assigned to a product, a product category or on a
-					location.</p>
+					routes can be assigned to a product, a product category or be fixed
+					on procurement or sales order. </p>
 			</field>
 		</record>
 		
@@ -191,5 +221,17 @@
 		
 		<menuitem action="action_routes_form" id="menu_stock_routes"
 			parent="stock.menu_stock_configuration" sequence="11" />
+			
+		<!-- Procurement -->
+		<record id="procurement_form_view_inherit" model="ir.ui.view">
+            <field name="name">procurement.order.form.view.inherit</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='rule_id']" position="after">
+                    <field name="route_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
 	</data>
 </openerp>
