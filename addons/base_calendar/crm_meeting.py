@@ -67,11 +67,24 @@ class crm_meeting(osv.Model):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        res = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        obj = self.browse(cr, uid, res, context=context)
-        if 'active_model' in context and context['active_model'] == 'hr.applicant':
-            self.pool.get('hr.applicant').log_meeting_in_parent(cr, uid, context['active_ids'], vals['name'], vals['date'], vals['duration'], context=context)
-        return res
+        meeting_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
+        if context.get('log_meeting_in_parent'):
+            self.log_meeting_in_parent(cr, uid, [meeting_id], context=context)
+        return meeting_id
+
+    def log_meeting_in_parent(self, cr, uid, ids, context=None):
+        if context is None: 
+            context = {}
+        parent_model = context.get('active_model',False)
+        parent_ids = context.get('active_ids', False)
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("Meeting scheduled at '%s'<br> Subject: %s") % (meeting.date, meeting.name)
+            if meeting.duration:
+                message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting.date, meeting.name, str(meeting.duration))
+            if parent_model and parent_ids:
+                self.pool.get(parent_model).message_post(cr, uid, parent_ids, body=message,context=context)
+        return True
+
 
     def message_get_subscription_data(self, cr, uid, ids, context=None):
         res = {}

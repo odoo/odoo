@@ -281,13 +281,6 @@ class hr_applicant(osv.Model):
             return stage_ids[0]
         return False
 
-    def log_meeting_in_parent(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
-         if not duration:
-             message = _("Meeting scheduled at '%s'<br> Subject: %s") % (meeting_date, meeting_subject)
-         else:
-             message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting_date, meeting_subject, str(duration))
-         return self.message_post(cr, uid, ids, body=message,context=context)
-
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
@@ -300,6 +293,7 @@ class hr_applicant(osv.Model):
             'default_user_id': uid,
             'default_name': applicant.name,
             'default_categ_ids': category and [category.id] or False,
+            'log_meeting_in_parent': True,
         }
         return res
 
