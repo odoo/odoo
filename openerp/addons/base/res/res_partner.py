@@ -379,7 +379,10 @@ class res_partner(osv.osv, format_address):
                                                       'company. You can use the "Discard" button to abandon this change.')}
             parent = self.browse(cr, uid, parent_id, context=context)
             address_fields = self._address_fields(cr, uid, context=context)
-            result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+            if use_parent_address:
+                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+            else:
+                result['value'] = dict((key,None) for key in address_fields)
         else:
             result['value'] = {'use_parent_address': False}
         return result
