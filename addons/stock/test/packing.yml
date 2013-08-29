@@ -1,5 +1,5 @@
 - 
-  Create a new stockable product
+  Create a new stockable product 
 - 
   !record {model: product.product, id: packingtest}:
     name: nice product
@@ -8,11 +8,61 @@
 - 
   !record{model: stock.picking}: |
 - 
-  Create move linked to picking
+  Confirm and assign picking and prepare partial
 - 
-  !record{model:stock.move, id:}
-- 
-  Confirm picking
-- 
-  !python {model: stock.picking}: |
+  !python {model: stock.picking, id:}: |
     self.action_confirm(cr, uid, ref())
+- 
+  Put 120 pieces on Pallet 1 (package), 120 pieces on Pallet 2 with lot A and 60 pieces on Pallet 3
+- 
+  !python {model: stock.picking, id:} |
+    #Change quantity of first to 120 and create 2 others quant operations
+    #Create package for each line and assign it as result_package_id
+- 
+  Use button rereserve and check the qtyremaining on the moves are correct (=0)
+- 
+  
+- 
+  Transfer the reception
+- 
+
+- 
+  Check the system created 3 quants one with 120 pieces on pallet 1, one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3
+- 
+  
+- 
+  Check there is no backorder or extra moves created
+- 
+  
+- 
+  Make a delivery order of 300 pieces to the customer
+- 
+  
+- 
+  Assign and confirm
+- 
+  
+- 
+  Instead of doing the 300 pieces, you decide to take pallet 1 (do not mention product in operation here) and 20 pieces from lot A and 10 pieces from pallet 3
+- 
+  
+- 
+  Process this picking
+- 
+  
+- 
+  Check the quants that you have 120 pieces pallet 1 in customers, 100 pieces pallet 2 in stock and 20 with customers and 50 in stock, 10 in customers from pallet 3 
+- 
+  
+- 
+  Check a backorder was created and on that backorder, prepare partial and add an op with 20 pieces (20 that cannot be assigned) with lot B
+- 
+  
+- 
+  Process this backorder
+- 
+  
+- 
+  Check you have a negative quant because there were 20 too many that were transferred with lot B
+- 
+  

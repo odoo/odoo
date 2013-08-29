@@ -213,7 +213,7 @@ class add_product(osv.osv_memory):
                                 'name':'%s (Added)' %order_id.name,
                                 'move_lines':[],
                                 'state':'draft',
-                                'type':'out',
+                                'picking_type_id': self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id,
                                 'date':date_cur
                             })
                 stock_move_obj.create(cr, uid, {
