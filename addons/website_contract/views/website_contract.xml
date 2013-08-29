@@ -30,8 +30,8 @@
                 <h1 class="col-md-12 text-center">Trusted by millions worldwide</h1>
                 <h2 class="col-md-12 text-center">Our public references</h2>
                 <div class="col-md-12" id="ref_content">
-                   <nav class="navbar navbar-inverse" role="navigation">
-                       <div class="collapse navbar-collapse navbar-ex1-collapse">
+                   <div class="navbar navbar-inverse" role="navigation">
+                       <div class="navbar-collapse">
                            <t t-call="website.pager">
                               <t t-set="classname">pull-left</t>
                            </t>
@@ -39,7 +39,7 @@
                               <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search" t-att-value="search or '' or ''" />
                            </form>
                        </div>
-                   </nav> 
+                   </div> 
                         <!-- <div class="navbar-inner">
                             
                         </div> -->
