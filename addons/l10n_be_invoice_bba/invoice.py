@@ -207,6 +207,19 @@ class account_invoice(osv.osv):
                               '\nPlease create manually a unique BBA Structured Communication.'))
         return super(account_invoice, self).write(cr, uid, ids, vals, context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        invoice = self.browse(cr, uid, id, context=context)
+        if invoice.type in ['out_invoice']:
+            reference_type = invoice.reference_type or 'none'
+            default['reference_type'] = reference_type
+            if reference_type == 'bba':
+                partner = invoice.partner_id
+                default['reference'] = self.generate_bbacomm(cr, uid, id,
+                    invoice.type, reference_type,
+                    partner.id, '', context=context)['value']['reference']
+        return super(account_invoice, self).copy(cr, uid, id, default, context=context)
+
     _columns = {
         'reference': fields.char('Communication', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Communication Type',
