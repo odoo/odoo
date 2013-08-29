@@ -7,21 +7,7 @@ import simplejson
 import werkzeug.wrappers
 from datetime import datetime
 
-from urllib import quote_plus
-
 class contactus(http.Controller):
-
-    @http.route(['/crm/contactus'], type='http', auth="admin")
-    def contactus(self, *arg, **post):
-        website = request.registry['website']
-        post['user_id'] = False
-        request.registry['crm.lead'].create(request.cr, request.uid, post)
-        values = website.get_rendering_context()
-        company = values['res_company']
-        values.update({
-            'google_map_url': "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % quote_plus('%s, %s %s, %s' % (company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''))
-        })
-        return website.render("website_crm.thanks", values)
 
     @http.route(['/worldmap/'], type='http', auth="admin")
     def worldmap(self, *arg, **post):
@@ -31,7 +17,7 @@ class contactus(http.Controller):
         values['width'] = post.get('width', 900)
         values['height'] = post.get('height', 460)
         values['partner_url'] = post.get('partner_url')
-        return website.render("website_crm_partner_assign.worldmap", values)
+        return website.render("website_worldmap.worldmap", values)
 
     @http.route(['/worldmap/partners.json'], type='http', auth="admin")
     def worldmap_data(self, *arg, **post):

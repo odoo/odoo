@@ -9,7 +9,7 @@ OpenERP Website Worldmap
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'website_crm', 'crm_partner_assign'],
+    'depends': ['website', 'crm_partner_assign'],
     'data': [
         'views/worldmap.xml',
     ],

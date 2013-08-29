@@ -1,2 +1,0 @@
-import controllers
-import website_crm_partner_assign
