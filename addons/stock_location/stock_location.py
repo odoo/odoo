@@ -155,7 +155,7 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Followed Route', help="Preferred route to be followed by the procurement order"),
         }
     
     def _run_move_create(self, cr, uid, procurement, context=None):
