@@ -39,10 +39,11 @@ This adds a route on the sales order and sales order line (mini module)
     'update_xml': ['stock_complex_routes.xml'],
     'demo_xml': [],
     'test': [
-             'test/crossdock.yml',
-             'test/dropship.yml',
-             'test/lifo_price.yml'
-             ],
+        'test/crossdock.yml',
+        'test/dropship.yml',
+        'test/procurementexception.yml',
+        'test/lifo_price.yml'
+        ],
     'installable': True,
     'auto_install': True,
 }
