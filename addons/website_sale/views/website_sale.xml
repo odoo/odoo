@@ -83,7 +83,7 @@
     <template id="categories_recursive">
         <li t-att-class="category.id == category_id and 'active' or ''">
             <a t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
-            <ul t-if="category.child_id" class="nav nav-pills nav-stacked" style="padding-left: 16px;">
+            <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
                 </t>

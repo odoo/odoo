@@ -113,10 +113,10 @@
                 <li t-foreach="nav_list" t-as="year" class="js_nav_year">
                     <t t-set="year" t-value="nav_list[year]"/>
                     <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
-                    <ul class="nav list-group css_nav_month" style="padding-left: 16px;">
+                    <ul class="nav list-group css_nav_month nav-stacked nav-hierarchy">
                         <t t-foreach="year['months']">
                             <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
-                                <ul class="nav list-group nav-stacked" style="padding-left: 16px;"/>
+                                <ul class="nav list-group nav-stacked nav-hierarchy"/>
                             </li>
                         </t>
                     </ul>
