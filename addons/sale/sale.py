@@ -658,7 +658,7 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             group_id = self.pool.get("procurement.group").create(cr, uid, {
-                'name': order.name, 'partner_id': order.partner_shipping_id.id
+                'name': order.name, 'partner_id': order.partner_shipping_id.id, 'move_type': order.picking_policy
             }, context=context)
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
@@ -1082,4 +1082,4 @@ class procurement_order(osv.osv):
     _defaults = {
         'invoice_state': 'none',
     }
-
+    

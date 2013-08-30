@@ -386,6 +386,8 @@ class purchase_order(osv.osv):
         '''
         This function returns an action that display existing picking orders of given purchase order ids.
         '''
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         pick_ids = []
         for po in self.browse(cr, uid, ids, context=context):
