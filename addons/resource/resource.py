@@ -496,35 +496,17 @@ class resource_calendar(osv.osv):
     # --------------------------------------------------
 
     def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
-        """ Compatibility method - will be removed for OpenERP v8. Computation
-        was done for the whole day, therefore setting start_dt at the beginning
-        of the day.
-        TDE TODO: hr_payroll/hr_payroll.py
-        """
+        """ Compatibility method - will be removed for OpenERP v8.
+        Computation was done for the whole day, ignoring hour/minutes.
+        Used in hr_payroll/hr_payroll.py """
         if isinstance(day, datetime.datetime):
             day = day.replace(hour=0, minute=0)
         return self.get_working_hours_of_date(cr, uid, resource_calendar_id.id, start_dt=day, context=None)
 
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
-        """
-        Calculates the working Schedule from supplied from date to till hours
-        will be satisfied  based or resource calendar id. If resource is also
-        given then it will consider the resource leave also and than will
-        calculates resource working schedule
-
-        @param dt_from: datetime object, start of working scheduled
-        @param hours: float, total number working  hours needed scheduled from
-                      start date
-        @param resource : Optional Resource id, if supplied than resource leaves
-                        will also taken into consideration for calculating working
-                        schedule.
-        @return : List datetime object of working schedule based on supplies
-                  params
-
-        TDE TODO: used in mrp_operations/mrp_operations.py
-        TDE NOTE: do not count leave hours, a leave is considered all-day
-        TDE UPDATE: now count leave hours
-        """
+        """ Compatibility method - will be removed for OpenERP v8.
+        Schedule hours backwards.  Note: now count leave hours instead of all-day leaves.
+        Used in mrp_operations/mrp_operations.py. """
         return self.schedule_hours(
             cr, uid, id, hours * -1.0,
             day_dt=dt_from.replace(minute=0, second=0),
@@ -532,11 +514,9 @@ class resource_calendar(osv.osv):
         )
 
     def interval_get_multi(self, cr, uid, date_and_hours_by_cal, resource=False, byday=True):
-        """ TDE NOTE: used in mrp_operations/mrp_operations.py (default parameters) and in interval_get()
-        TDE NOTE: byday is not used in this method...
-        TDE NOTE: do not count leave hours, a leave is considered all-day
-        TDE UPDATE: now count leave hours
-        """
+        """ Compatibility method - will be removed for OpenERP v8.
+        Note: used in mrp_operations/mrp_operations.py (default parameters) and in interval_get()
+        Byday was not used. Now counts Leave hours instead of all-day leaves. """
         res = {}
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.schedule_hours(
@@ -548,46 +528,19 @@ class resource_calendar(osv.osv):
         return res
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
-        """Calculates Resource Working Internal Timing Based on Resource Calendar.
-
-        @param dt_from: start resource schedule calculation.
-        @param hours : total number of working hours to be scheduled.
-        @param resource: optional resource id, If supplied it will take care of
-                         resource leave while scheduling.
-        @param byday: boolean flag bit enforce day wise scheduling
-
-        @return :  list of scheduled working timing  based on resource calendar.
-
-        TDE NOTE: mrp_operations/mrp_operations.py, crm/crm_lead.py (res given)
-        """
+        """ Compatibility method - will be removed for OpenERP v8. Unifier of interval_get_multi.
+        Used in: mrp_operations/mrp_operations.py, crm/crm_lead.py (res given) """
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
-        """ Unused wrapper """
+        """ Compatibility method - will be removed for OpenERP v8. Unused wrapper """
         return self._interval_hours_get(cr, uid, id, dt_from, dt_to, resource_id=resource)
 
     def _interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource_id=False, timezone_from_uid=None, exclude_leaves=True, context=None):
-        """ Calculates the Total Working hours based on given start_date to
-        end_date, If resource id is supplied that it will consider the source
-        leaves also in calculating the hours.
-
-        @param dt_from : date start to calculate hours
-        @param dt_end : date end to calculate hours
-        @param resource_id: optional resource id, If given resource leave will be
-                         considered.
-        @param timezone_from_uid: optional uid, if given we will considerer
-                                  working hours in that user timezone
-        @param exclude_leaves: optionnal, if set to True (default) we will exclude
-                               resource leaves from working hours
-        @param context: current request context
-        @return : Total number of working hours based dt_from and dt_end and
-                  resource if supplied.
-
-        TDE NOTE: used in project_issue/project_issue.py
-        TDE NOTE: day-long leaves
-        TDE UPDATE: timezone_from_uid not yet supported
-        """
+        """ Compatibility method - will be removed for OpenERP v8.
+        Computes working hours between two dates, taking always same hour/minuts.
+        Note: now resets hour/minuts. Now counts leave hours instead of all-day leaves. """
         return self.get_working_hours(cr, uid, id, dt_from, dt_to, compute_leaves=exclude_leaves, resource_id=resource_id, context=context)
 
 
