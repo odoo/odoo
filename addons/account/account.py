@@ -3030,6 +3030,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     }
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        if context.get('default_currency_id', False):
+            dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', context.get('default_currency_id'))
+            return {'value': {'currency_id': view_id}}
         currency_id = False
         if company_id:
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
@@ -3067,6 +3070,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
         if 'currency_id' in fields:
             company_id = res.get('company_id') or False
+            
             if company_id:
                 company_obj = self.pool.get('res.company')
                 country_id = company_obj.browse(cr, uid, company_id, context=context).country_id.id

@@ -36,7 +36,8 @@ United States - Chart of accounts.
         'account_tax_code_template.xml',
         'account_tax_template.xml',
         'account_chart_template_after.xml',
-        'l10n_us_wizard.xml'
+        'l10n_us_wizard.xml',
+        'account_chart_template_set_accounts.xml'
     ],
     'demo': [],
     'test': [],
