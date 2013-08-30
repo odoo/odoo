@@ -332,6 +332,44 @@ class Field(object):
             return [(self.name, operator, value)]
 
     #
+    # Setup of related fields.
+    #
+
+    @lazy_property
+    def related_field(self):
+        """ return the related field corresponding to `self` """
+        if self.related:
+            model = self.model
+            for name in self.related[:-1]:
+                model = model[name]
+            return model._fields[self.related[-1]]
+        return None
+
+    def setup_related(self):
+        """ Setup the attributes of the related field `self`. """
+        assert self.related
+        # fix the type of self.related if necessary
+        if isinstance(self.related, basestring):
+            self.related = tuple(self.related.split('.'))
+
+        # check type consistency
+        field = self.related_field
+        if self.type != field.type:
+            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
+
+        # determine dependencies, compute, inverse, and search
+        self.depends = ('.'.join(self.related),)
+        self.compute = compute_related
+        self.inverse = inverse_related
+        self.search = search_related
+
+        # copy attributes from field to self (readonly, required, etc.)
+        field.setup()
+        for attr in self._attrs:
+            if not getattr(self, attr) and getattr(field, attr):
+                setattr(self, attr, getattr(field, attr))
+
+    #
     # Field setup.
     #
     # Recomputation of computed fields: each field stores a set of triggers
@@ -354,7 +392,7 @@ class Field(object):
 
             if self.related:
                 # setup all attributes of related field
-                self._setup_related()
+                self.setup_related()
             else:
                 # retrieve dependencies from compute method
                 if isinstance(self.compute, basestring):
@@ -366,32 +404,6 @@ class Field(object):
             # put invalidation/recomputation triggers on dependencies
             for path in self.depends:
                 self._depends_on_model(self.model, [], path.split('.'))
-
-    def _setup_related(self):
-        """ Setup the attributes of the related field `self`. """
-        # fix the type of self.related if necessary
-        if isinstance(self.related, basestring):
-            self.related = tuple(self.related.split('.'))
-
-        # check type consistency
-        model = self.model
-        for name in self.related[:-1]:
-            model = model[name]
-        field = model._fields[self.related[-1]]
-        if self.type != field.type:
-            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
-
-        # determine dependencies, compute, inverse, and search
-        self.depends = ('.'.join(self.related),)
-        self.compute = compute_related
-        self.inverse = inverse_related
-        self.search = search_related
-
-        # copy attributes from field to self (readonly, required, etc.)
-        field.setup()
-        for attr in self._attrs:
-            if not getattr(self, attr) and getattr(field, attr):
-                setattr(self, attr, getattr(field, attr))
 
     def _depends_on_model(self, model, path0, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
@@ -588,6 +600,11 @@ class Selection(Field):
                 model method, or a method name.
         """
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
+
+    def setup_related(self):
+        super(Selection, self).setup_related()
+        # selection must be computed on related field
+        self.selection = lambda model: self.related_field.get_selection()
 
     def get_description(self):
         desc = super(Selection, self).get_description()
