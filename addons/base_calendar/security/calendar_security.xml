@@ -9,7 +9,7 @@
             <field name="name">Show Only Personal Invitation</field>
             <field ref="model_crm_meeting" name="model_id"/>
             <field eval="1" name="personal"/>
-            <field name="domain_force">[('attendee_ids.partner_id','=',user.partner_id.id)]</field>
+            <field name="domain_force">['|',('attendee_ids.partner_id','=',user.partner_id.id),('attendee_ids','=',False)]</field>
         </record>
    </data>
 </openerp>
