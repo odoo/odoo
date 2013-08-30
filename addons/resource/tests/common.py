@@ -39,15 +39,15 @@ class TestResourceCommon(common.TransactionCase):
         self.resource_leaves = self.registry('resource.calendar.leaves')
 
         # Some demo data
-        self.date1 = datetime.strptime('2013-02-12 09:22:13', '%Y-%m-%d %H:%M:%S')  # weekday() returns 1, isoweekday() returns 2
-        self.date2 = datetime.strptime('2013-02-15 09:22:13', '%Y-%m-%d %H:%M:%S')  # weekday() returns 4, isoweekday() returns 5
-        # Leave1: 19/02/2013, from 9 to 12, is a day 0
+        self.date1 = datetime.strptime('2013-02-12 09:08:07', '%Y-%m-%d %H:%M:%S')  # weekday() returns 1, isoweekday() returns 2
+        self.date2 = datetime.strptime('2013-02-15 10:11:12', '%Y-%m-%d %H:%M:%S')  # weekday() returns 4, isoweekday() returns 5
+        # Leave1: 19/02/2013, from 9 to 12, is a day 1
         self.leave1_start = datetime.strptime('2013-02-19 09:00:00', '%Y-%m-%d %H:%M:%S')
         self.leave1_end = datetime.strptime('2013-02-19 12:00:00', '%Y-%m-%d %H:%M:%S')
-        # Leave2: 22/02/2013, from 9 to 15, is a day 3
+        # Leave2: 22/02/2013, from 9 to 15, is a day 4
         self.leave2_start = datetime.strptime('2013-02-22 09:00:00', '%Y-%m-%d %H:%M:%S')
         self.leave2_end = datetime.strptime('2013-02-22 15:00:00', '%Y-%m-%d %H:%M:%S')
-        # Leave3: 25/02/2013 (day6) -> 01/03/2013 (day3)
+        # Leave3: 25/02/2013 (day0) -> 01/03/2013 (day4)
         self.leave3_start = datetime.strptime('2013-02-25 13:00:00', '%Y-%m-%d %H:%M:%S')
         self.leave3_end = datetime.strptime('2013-03-01 11:30:00', '%Y-%m-%d %H:%M:%S')
 
