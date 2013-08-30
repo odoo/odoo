@@ -300,7 +300,7 @@
     website.editor = { };
     website.editor.Dialog = openerp.Widget.extend({
         events: {
-            'hidden': 'destroy',
+            'hidden.bs.modal': 'destroy',
         },
         init: function (editor) {
             this._super();
