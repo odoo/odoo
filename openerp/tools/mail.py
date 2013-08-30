@@ -43,6 +43,9 @@ _logger = logging.getLogger(__name__)
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
 tags_to_remove = ['html', 'body', 'font']
 
+# allow new semantic HTML5 tags
+allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure'.split())
+safe_attrs = clean.defs.safe_attrs | frozenset(['style'])
 
 def html_sanitize(src, silent=True):
     if not src:
@@ -57,6 +60,8 @@ def html_sanitize(src, silent=True):
         'page_structure': True,
         'style': False,             # do not remove style attributes
         'forms': True,              # remove form tags
+        'remove_unknown_tags': False,
+        'allow_tags': allowed_tags,
     }
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
@@ -70,7 +75,7 @@ def html_sanitize(src, silent=True):
     if etree.LXML_VERSION >= (3, 1, 0):
         kwargs.update({
             'safe_attrs_only': True,
-            'safe_attrs': clean.defs.safe_attrs | set(['style']),
+            'safe_attrs': safe_attrs,
         })
     else:
         # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attribute in order to keep "style"
