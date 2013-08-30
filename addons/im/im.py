@@ -140,19 +140,23 @@ class im_message(osv.osv):
     _order = "date desc"
 
     _columns = {
-        'message': fields.char(string="Message", size=200, required=True),
+        'message': fields.text(string="Message", required=True),
         'from_id': fields.many2one("im.user", "From", required= True, ondelete='cascade'),
-        'to_id': fields.many2one("im.user", "To", required=True, select=True, ondelete='cascade'),
+        'session_id': fields.many2one("im.session", "Session", required=True, select=True, ondelete='cascade'),
+        'to_id': fields.many2many("im.user", "To"),
         'date': fields.datetime("Date", required=True, select=True),
+        'technical': fields.boolean("Technical Message"),
     }
 
     _defaults = {
         'date': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'technical': False,
     }
     
     def get_messages(self, cr, uid, last=None, users_watch=None, uuid=None, context=None):
         assert_uuid(uuid)
         users_watch = users_watch or []
+        session_ids = session_ids or []
 
         # complex stuff to determine the last message to show
         users = self.pool.get("im.user")
@@ -165,8 +169,8 @@ class im_message(osv.osv):
             last = c_user.im_last_received or -1
 
         # how fun it is to always need to reorder results from read
-        mess_ids = self.search(cr, openerp.SUPERUSER_ID, [['id', '>', last], ['to_id', '=', my_id]], order="id", context=context)
-        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "date"], context=context)
+        mess_ids = self.search(cr, openerp.SUPERUSER_ID, ["&", ['id', '>', last], "|", ['from_id', '=', my_id], ['to_id', 'in', [my_id]]], order="id", context=context)
+        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "session_id", "date"], context=context)
         index = {}
         for i in xrange(len(mess)):
             index[mess[i]["id"]] = mess[i]
@@ -179,12 +183,37 @@ class im_message(osv.osv):
         users_status = users.read(cr, openerp.SUPERUSER_ID, users_watch, ["im_status"], context=context)
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
-    def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
+    def post(self, cr, uid, message, to_session_id, uuid=None, context=None):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_user_id}, context=context)
-        notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
+        session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
+        to_ids = [x.id for x in session.user_ids if x != my_id]
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_ids}, context=context)
+        notify_channel(cr, "im_channel", {'type': 'message', 'receivers': to_user_id})
         return False
+
+class im_session(osv.osv):
+    _name = 'im.session'
+    _columns = {
+        'user_ids': fields.many2many('im.user'),
+    }
+
+    # Todo: reuse existing sessions if possible
+    def session_get(self, cr, uid, user_to, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        session_id = None
+        if user_to:
+            # FP Note: does the ORM allows something better than this? == on many2many
+            sids = self.search(cr, uid, [('user_ids', 'in', [user_to]), ('user_ids', 'in', [my_id])], context=context, limit=1)
+            for session in self.browse(cr, uid, sids, context=context):
+                if len(session.user_ids) == 2:
+                    session_id = session.id
+                    break
+        if not session_id:
+            session_id = self.create(cr, uid, {
+                'user_ids': [(6, 0, (user_to, uid))]
+            }, context=context)
+        return self.read(cr, uid, session_id, context=context)
 
 class im_user(osv.osv):
     _name = "im.user"
