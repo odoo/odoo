@@ -422,6 +422,14 @@ class resource_calendar(osv.osv):
         scheduling. """
         return self._schedule_hours(cr, uid, id, hours, day_dt, compute_leaves, resource_id, context)
 
+    def get_working_hours(self, cr, uid, id, start_dt, end_dt, compute_leaves=False, resource_id=None, context=None):
+        hours = 0.0
+        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
+                               until=end_dt + datetime.timedelta(days=1),
+                               byweekday=self.get_weekdays(cr, uid, id, context=context)):
+            hours += self.get_working_hours_of_date(cr, uid, id, start_dt=day, compute_leaves=compute_leaves, resource_id=resource_id)
+        return hours
+
     def _schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False, resource_id=None, context=None):
         """Schedule days of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
@@ -484,7 +492,7 @@ class resource_calendar(osv.osv):
         return self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, context)
 
     # --------------------------------------------------
-    # Compaqtibility / to clean / to remove
+    # Compatibility / to clean / to remove
     # --------------------------------------------------
 
     def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
@@ -496,31 +504,6 @@ class resource_calendar(osv.osv):
         if isinstance(day, datetime.datetime):
             day = day.replace(hour=0, minute=0)
         return self.get_working_hours_of_date(cr, uid, resource_calendar_id.id, start_dt=day, context=None)
-
-    def _get_leaves(self, cr, uid, id, resource):
-        """Private Method to Calculate resource Leaves days
-
-        @param id: resource calendar id
-        @param resource: resource id for which leaves will ew calculated
-
-        @return : returns the list of dates, where resource on leave in
-                  resource.calendar.leaves object (e.g.['%Y-%m-%d', '%Y-%m-%d'])
-        TDE TODO: internal only
-        """
-        resource_cal_leaves = self.pool.get('resource.calendar.leaves')
-        dt_leave = []
-        resource_leave_ids = resource_cal_leaves.search(cr, uid, [('calendar_id','=',id), '|', ('resource_id','=',False), ('resource_id','=',resource)])
-        #res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
-        res_leaves = resource_cal_leaves.browse(cr, uid, resource_leave_ids)
-
-        for leave in res_leaves:
-            dtf = datetime.datetime.strptime(leave.date_from, '%Y-%m-%d %H:%M:%S')
-            dtt = datetime.datetime.strptime(leave.date_to, '%Y-%m-%d %H:%M:%S')
-            no = dtt - dtf
-            [dt_leave.append((dtf + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
-            dt_leave.sort()
-
-        return dt_leave
 
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
         """
@@ -540,98 +523,29 @@ class resource_calendar(osv.osv):
 
         TDE TODO: used in mrp_operations/mrp_operations.py
         TDE NOTE: do not count leave hours, a leave is considered all-day
+        TDE UPDATE: now count leave hours
         """
-        if not id:
-            td = int(hours)*3
-            return [(dt_from - datetime.timedelta(hours=td), dt_from)]
-        dt_leave = self._get_leaves(cr, uid, id, resource)
-        dt_leave.reverse()
-        todo = hours
-        result = []
-        maxrecur = 100
-        current_hour = dt_from.hour
-        while float_compare(todo, 0, 4) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.weekday(),id))
-            for (hour_from,hour_to) in cr.fetchall():
-                leave_flag  = False
-                if (hour_from<current_hour) and float_compare(todo, 0, 4):
-                    m = min(hour_to, current_hour)
-                    if (m-hour_from)>todo:
-                        hour_from = m-todo
-                    dt_check = dt_from.strftime('%Y-%m-%d')
-                    for leave in dt_leave:
-                        if dt_check == leave:
-                            dt_check = datetime.datetime.strptime(dt_check, '%Y-%m-%d') + datetime.timedelta(days=1)
-                            leave_flag = True
-                    if leave_flag:
-                        break
-                    else:
-                        d1 = datetime.datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_from)), int((hour_from%1) * 60))
-                        d2 = datetime.datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
-                        result.append((d1, d2))
-                        current_hour = hour_from
-                        todo -= (m-hour_from)
-            dt_from -= datetime.timedelta(days=1)
-            current_hour = 24
-            maxrecur -= 1
-        result.reverse()
-        return result
+        return self.schedule_hours(
+            cr, uid, id, hours * -1.0,
+            day_dt=dt_from.replace(minute=0, second=0),
+            compute_leaves=True, resource_id=resource
+        )
 
-    # def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
     def interval_get_multi(self, cr, uid, date_and_hours_by_cal, resource=False, byday=True):
         """ TDE NOTE: used in mrp_operations/mrp_operations.py (default parameters) and in interval_get()
         TDE NOTE: byday is not used in this method...
         TDE NOTE: do not count leave hours, a leave is considered all-day
+        TDE UPDATE: now count leave hours
         """
-        def group(lst, key):
-            lst.sort(key=itemgetter(key))
-            grouped = itertools.groupby(lst, itemgetter(key))
-            return dict([(k, [v for v in itr]) for k, itr in grouped])
-        # END group
-
-        cr.execute("select calendar_id, dayofweek, hour_from, hour_to from resource_calendar_attendance order by hour_from")
-        hour_res = cr.dictfetchall()
-        hours_by_cal = group(hour_res, 'calendar_id')
-
-        results = {}
-
-        for d, hours, id in date_and_hours_by_cal:
-            dt_from = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
-            if not id:
-                td = int(hours)*3
-                results[(d, hours, id)] = [(dt_from, dt_from + datetime.timedelta(hours=td))]
-                continue
-
-            dt_leave = self._get_leaves(cr, uid, id, resource)
-            todo = hours
-            result = []
-            maxrecur = 100
-            current_hour = dt_from.hour
-            while float_compare(todo, 0, 4) and maxrecur:
-                for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
-                    leave_flag  = False
-                    if (hour_to>current_hour) and float_compare(todo, 0, 4):
-                        m = max(hour_from, current_hour)
-                        if (hour_to-m)>todo:
-                            hour_to = m+todo
-                        dt_check = dt_from.strftime('%Y-%m-%d')
-                        for leave in dt_leave:
-                            if dt_check == leave:
-                                dt_check = datetime.datetime.strptime(dt_check, '%Y-%m-%d') + datetime.timedelta(days=1)
-                                leave_flag = True
-                        if leave_flag:
-                            break
-                        else:
-                            d1 = datetime.datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
-                            d2 = datetime.datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
-                            result.append((d1, d2))
-                            current_hour = hour_to
-                            todo -= (hour_to - m)
-                dt_from += datetime.timedelta(days=1)
-                current_hour = 0
-                maxrecur -= 1
-            results[(d, hours, id)] = result
-        return results
+        res = {}
+        for dt_str, hours, calendar_id in date_and_hours_by_cal:
+            result = self.schedule_hours(
+                cr, uid, calendar_id, hours,
+                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(minute=0, second=0),
+                compute_leaves=True, resource_id=resource
+            )
+            res[(dt_str, hours, calendar_id)] = result
+        return res
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
         """Calculates Resource Working Internal Timing Based on Resource Calendar.
@@ -650,18 +564,7 @@ class resource_calendar(osv.osv):
         return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
-        """ Calculates the Total Working hours based on given start_date to
-        end_date, If resource id is supplied that it will consider the source
-        leaves also in calculating the hours.
-
-        @param dt_from : date start to calculate hours
-        @param dt_end : date end to calculate hours
-        @param resource: optional resource id, If given resource leave will be
-                         considered.
-
-        @return : Total number of working hours based dt_from and dt_end and
-                  resource if supplied.
-        """
+        """ Unused wrapper """
         return self._interval_hours_get(cr, uid, id, dt_from, dt_to, resource_id=resource)
 
     def _interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource_id=False, timezone_from_uid=None, exclude_leaves=True, context=None):
@@ -683,90 +586,9 @@ class resource_calendar(osv.osv):
 
         TDE NOTE: used in project_issue/project_issue.py
         TDE NOTE: day-long leaves
+        TDE UPDATE: timezone_from_uid not yet supported
         """
-        utc_tz = pytz.timezone('UTC')
-        local_tz = utc_tz
-
-        if timezone_from_uid:
-            users_obj = self.pool.get('res.users')
-            user_timezone = users_obj.browse(cr, uid, timezone_from_uid, context=context).partner_id.tz
-            if user_timezone:
-                try:
-                    local_tz = pytz.timezone(user_timezone)
-                except pytz.UnknownTimeZoneError:
-                    pass  # fallback to UTC as local timezone
-
-        def utc_to_local_zone(naive_datetime):
-            utc_dt = utc_tz.localize(naive_datetime, is_dst=False)
-            return utc_dt.astimezone(local_tz)
-
-        def float_time_convert(float_val):
-            factor = float_val < 0 and -1 or 1
-            val = abs(float_val)
-            return (factor * int(math.floor(val)), int(round((val % 1) * 60)))
-
-        # Get slots hours per day
-        # {day_of_week: [(8, 12), (13, 17), ...], ...}
-        hours_range_per_weekday = {}
-        if id:
-            cr.execute("select dayofweek, hour_from,hour_to from resource_calendar_attendance where calendar_id=%s order by hour_from", (id,))
-            for weekday, hour_from, hour_to in cr.fetchall():
-                weekday = int(weekday)
-                hours_range_per_weekday.setdefault(weekday, [])
-                hours_range_per_weekday[weekday].append((hour_from, hour_to))
-        else:
-            # considering default working hours (Monday -> Friday, 8 -> 12, 13 -> 17)
-            for weekday in range(5):
-                hours_range_per_weekday[weekday] = [(8, 12), (13, 17)]
-
-        ## Interval between dt_from - dt_to
-        ##
-        ##            dt_from            dt_to
-        ##  =============|==================|============
-        ##  [  1  ]   [  2  ]   [  3  ]  [  4  ]  [  5  ]
-        ##
-        ## [ : start of range
-        ## ] : end of range
-        ##
-        ## case 1: range end before interval start (skip)
-        ## case 2: range overlap interval start (fit start to internal)
-        ## case 3: range within interval
-        ## case 4: range overlap interval end (fit end to interval)
-        ## case 5: range start after interval end (skip)
-
-        interval_start = utc_to_local_zone(dt_from)
-        interval_end = utc_to_local_zone(dt_to)
-        hours_timedelta = datetime.timedelta()
-    
-        # Get leaves for requested resource
-        dt_leaves = set([])
-        if exclude_leaves and id:
-            dt_leaves = set(self._get_leaves(cr, uid, id, resource=resource_id))
-
-        for day in rrule.rrule(rrule.DAILY, dtstart=interval_start,
-                               until=interval_end+datetime.timedelta(days=1),
-                               byweekday=hours_range_per_weekday.keys()):
-            if exclude_leaves and day.strftime('%Y-%m-%d') in dt_leaves:
-                # XXX: futher improve leave management to allow for partial day leave
-                continue
-            for (range_from, range_to) in hours_range_per_weekday.get(day.weekday(), []):
-                range_from_hour, range_from_min = float_time_convert(range_from)
-                range_to_hour, range_to_min = float_time_convert(range_to)
-                daytime_start = local_tz.localize(day.replace(hour=range_from_hour, minute=range_from_min, second=0, tzinfo=None))
-                daytime_end = local_tz.localize(day.replace(hour=range_to_hour, minute=range_to_min, second=0, tzinfo=None))
-
-                # case 1 & 5: time range out of interval
-                if daytime_end < interval_start or daytime_start > interval_end:
-                    continue
-                # case 2 & 4: adjust start, end to fit within interval
-                daytime_start = max(daytime_start, interval_start)
-                daytime_end = min(daytime_end, interval_end)
-                
-                # case 2+, 4+, 3
-                hours_timedelta += (daytime_end - daytime_start)
-                
-        # return timedelta converted to hours
-        return (hours_timedelta.days * 24.0 + hours_timedelta.seconds / 3600.0)
+        return self.get_working_hours(cr, uid, id, dt_from, dt_to, compute_leaves=exclude_leaves, resource_id=resource_id, context=context)
 
 
 class resource_calendar_attendance(osv.osv):

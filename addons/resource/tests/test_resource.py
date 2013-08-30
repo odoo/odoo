@@ -366,7 +366,19 @@ class TestResource(TestResourceCommon):
             td += item[1] - item[0]
         self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
-    def test_40_calendar_schedule_days(self):
+        res = self.resource_calendar._interval_hours_get(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), resource_id=self.resource1_id, exclude_leaves=False)
+        print res
+
+        res = self.resource_calendar.get_working_hours(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), compute_leaves=False, resource_id=self.resource1_id)
+        print res
+
+        res = self.resource_calendar._interval_hours_get(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), resource_id=self.resource1_id, exclude_leaves=True)
+        print res
+
+        res = self.resource_calendar.get_working_hours(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), compute_leaves=True, resource_id=self.resource1_id)
+        print res
+
+    def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
         cr, uid = self.cr, self.uid
         _format = '%Y-%m-%d %H:%M:%S'
