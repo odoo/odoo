@@ -163,7 +163,6 @@ class Ecommerce(http.Controller):
 
         # values initialisation
         values = {}
-        vals = {}
         order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
         if order_line_ids:
             order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=context)[0]
@@ -178,17 +177,17 @@ class Ecommerce(http.Controller):
             values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=context)
             quantity = 1
 
-            # change and record value
-            pricelist_id = order.pricelist_id and order.pricelist_id.id or False
-            vals = order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
-                partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
-                context=context)['value']
+        # change and record value
+        pricelist_id = order.pricelist_id and order.pricelist_id.id or False
+        vals = order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
+            partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
+            context=context)['value']
+        values.update(vals)
 
         values['product_uom_qty'] = quantity
         values['product_id'] = product_id
         values['order_id'] = order.id
 
-        values.update(vals)
         if order_line_ids:
             order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=context)
             if not quantity:
