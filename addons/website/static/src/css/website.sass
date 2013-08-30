@@ -65,26 +65,25 @@
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
 html,body
-    height: 100%
     box-sizing: border-box
-    position: relative
+    height: 100%
 
-#wrap
-    min-height: 100%
-    height: auto !important
-    height: 100%
-    margin: 0 auto -300px
-    padding: 0 0 364px
-    box-sizing: border-box
+body
+    display: table
+    width: 100%
+
+header, #wrap, footer
+    display: table-row
 
 footer
+    height: 100%
     box-sizing: border-box
-    height: 380px
     background: rgb(239, 248, 248)
-    padding-top: 48px
-    padding-bottom: 48px
     background: rgba(100, 200, 200, 0.1)
 
+#footer_container
+    padding-top: 24px
+    padding-bottom: 12px
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
