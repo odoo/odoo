@@ -39,60 +39,76 @@
     </t>
 
     <t t-name="website.mobile_preview">
-        <div id="mobile-preview" class="modal hide fade oe_mobile_preview" tabindex="-1" role="dialog" aria-labelledby="mobile-preview-title" aria-hidden="true">
-            <div class="modal-header oe_mobile_preview_header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="mobile-preview-title" class="oe_mobile_preview_title modal-title">Mobile preview</h3>
-            </div>
-            <div class="modal-body">
-                <div class="oe_mobile_preview">
-                    <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+        <div class="modal fade oe_mobile_preview" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                        <h3 class="modal-title">Mobile preview</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </t>
 
     <t t-name="website.seo_configuration">
-        <div class="modal hide fade oe_seo_configuration" tabindex="-1" role="dialog" aria-labelledby="js_seo_page_url" aria-hidden="true">
-            <div class="modal-header">
-                <button title="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h2>Promote <small class="js_seo_page_url"></small></h2>
-                <h4>Get your page efficiently referenced in Google to attract more visitors with relevant content.</h4>
-            </div>
-            <div class="modal-body">
-                <div class="js_seo_tips" />
-
-                <h3 class="page-header">1. Define keywords <small>describing your page content</small></h3>
-                <div class="control-group form-horizontal oe_seo_keywords_area">
-                    <label class="control-label" for="seo_page_keywords">Keyword</label>
-                    <div class="controls">
-                        <div class="input-append">
-                            <input type="text" name="seo_page_keywords" data-provide="typeahead" autocomplete="off" maxlength="20" size="24" placeholder=""/>
-                            <button data-action="add" class="btn" type="button">Add</button>
-                        </div>
-                        <div class="container oe_seo_keywords_list js_seo_keywords_list">
-
+        <div class="modal fade oe_seo_configuration" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                        <h2 class="modal-title">Promote <small class="js_seo_page_url"></small></h2>
+                        <h4>Get your page efficiently referenced in Google to attract more visitors.</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="js_seo_tips" />
+                        <section>
+                            <h3 class="page-header">1. Define keywords <small>describing your page content</small></h3>
+                            <div class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="seo_page_keywords" class="col-lg-2 control-label">Keyword</label>
+                                    <div class="col-lg-8">
+                                        <div class="input-group">
+                                          <input type="text" name="seo_page_keywords" class="form-control" maxlength="20" size="24"/>
+                                          <span class="input-group-btn">
+                                              <button data-action="add" class="btn btn-default" type="button">Add</button>
+                                          </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container oe_seo_keywords_list js_seo_keywords_list">
                                 <!-- filled in JS -->
-
-                        </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h3 class="page-header">2. Choose a title and description <small>containing keywords relevant to what people are searching on the web</small></h3>
+                            <div class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="seo_page_title" class="col-lg-2 control-label">Title</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" name="seo_page_title" class="form-control" maxlength="70" size="70"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="seo_page_description" class="col-lg-2 control-label">Description</label>
+                                    <div class="col-lg-8">
+                                        <textarea name="seo_page_description" class="form-control" rows="3" cols="70" size="160"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <hr/>
+                        <section>
+                            <button type="button" data-action="update" class="btn btn-primary">Apply changes</button> or <a data-action="discard" data-dismiss="modal" href="#">Discard</a>
+                        </section>
                     </div>
                 </div>
-
-                <h3 class="page-header">2. Choose a title and description <small>containing keywords relevant to what people are searching on the web</small></h3>
-                <div class="control-group form-horizontal">
-                    <label class="control-label" for="seo_page_title">Title</label>
-                    <div class="controls">
-                        <input type="text" name="seo_page_title" maxlength="70" size="70"/>
-                    </div>
-                </div>
-                <div class="control-group form-horizontal">
-                    <label class="control-label" for="seo_page_description">Description</label>
-                    <div class="controls">
-                        <textarea name="seo_page_description" rows="3" cols="70" size="160"/>
-                    </div>
-                </div>
-                <hr/>
-                <a data-action="update" href="#" class="btn btn-primary">Update page</a>
             </div>
         </div>
     </t>
@@ -105,7 +121,10 @@
     </t>
 
     <t t-name="website.seo_keyword">
-        <div class="oe_seo_keyword"><a href="#" class="oe_remove" data-action="remove-keyword"><i class="icon-trash"/></a> <span class="label js_seo_keyword"><t t-raw="widget.keyword"/></span></div>
+        <div class="oe_seo_keyword">
+            <a href="#" class="oe_remove" data-action="remove-keyword"><i class="icon-trash"/></a>
+            <span class="label label-default js_seo_keyword"><t t-raw="widget.keyword"/></span>
+        </div>
     </t>
 
     <t t-name="website.carousel">

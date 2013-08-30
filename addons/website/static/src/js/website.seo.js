@@ -25,7 +25,7 @@
         init: function (parent, options) {
             this._super(parent);
             this.message = options.message;
-            // info, error or success
+            // success, info, warning or danger
             this.type = options.type;
         },
     });
@@ -97,19 +97,9 @@
 
         start: function () {
             var pageParser = new website.seo.PageParser();
-            var currentKeywords = this.keywords;
             this.$el.find('.js_seo_page_url').text(pageParser.url());
             this.$el.find('input[name=seo_page_title]').val(pageParser.title());
-            this.$el.find('input[name=seo_page_keywords]').typeahead({
-                items: 4,
-                source: function () {
-                    var suggestions = pageParser.keywordSuggestions();
-                    var alreadyChosen = currentKeywords();
-                    return _.difference(suggestions, alreadyChosen);
-                },
-            });
             this.checkBestPractices(pageParser);
-            $(document.body).addClass('oe_stop_scrolling');
             this.$el.modal();
         },
         checkBestPractices: function (parser) {
@@ -117,7 +107,7 @@
             if (pageParser.headers()['h1'].length > 1) {
                 new website.seo.Tip(this, {
                    message: "You have more than one &lt;h1&gt; tag on the page.",
-                   type: 'error'
+                   type: 'danger'
                 }).appendTo(this.$el.find('.js_seo_tips'));
             }
         },
@@ -165,24 +155,13 @@
                     keyword: word,
                     onDelete: enableNewKeywords
                 }).appendTo(this.$el.find('.js_seo_keywords_list'));
-                this.scrollDown();
             }
             if (this.isKeywordListFull()) {
                 disableNewKeywords();
             }
         },
-        scrollDown: function () {
-            var $body = this.$el.find('.modal-body');
-            $body.animate({
-                scrollTop: $body[0].scrollHeight
-            }, 500);
-        },
         update: function () {
             // TODO: Persist changes
-        },
-        destroy: function () {
-            $(document.body).removeClass('oe_stop_scrolling');
-            this._super();
         },
     });
 })();

@@ -200,72 +200,54 @@
 .oe_handle.nw,.oe_handle.w,.oe_handle.sw
     left: 0px
 
-/* ---- MODAL DIALOGS ---- */
-
-.oe_stop_scrolling
-    height: 100%
-    overflow: hidden
-
 /* ---- MOBILE PREVIEW ---- */
 
 $mobile_preview_background: #000000
 $mobile_preview_border: #1A1A1A
 $icon_close: #E00101
-.oe_mobile_preview.modal
-    height: 660px
-    background-color: $mobile_preview_background
-    border: 2px solid
-    border-radius: 10px
-    border-color: $mobile_preview_border
-    margin: auto
-    top: 0
-    left: 0
-    bottom: 0
-    right: 0
-    max-width: 330px
-    .modal-header
+.oe_mobile_preview
+    &.modal .modal-content
+        height: 660px
         background-color: $mobile_preview_background
-        border-bottom: 0
-        border-top-left-radius: 10px
-        border-top-right-radius: 10px
-        .oe_mobile_preview_title
-            color: $mobile_preview_border
-    .modal-body
-        background-color: $mobile_preview_background
-        max-height: 600px
-        padding: 0
-        margin: 0
-    .modal-footer
-        background-color: $mobile_preview_background
-
-.oe_mobile_viewport
-    width: 320px
-    height: 568px
-    padding: 5px
-    border: none
-
-.oe_mobile_preview_header
-    .close
-        color: lightgrey
-        opacity: 1
-    .close:hover
-        color: $icon_close
-        opacity: 1
+        border: 2px solid
+        border-radius: 10px
+        border-color: $mobile_preview_border
+        margin: auto
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
+        max-width: 330px
+        .modal-header
+            background-color: $mobile_preview_background
+            border-bottom: 0
+            border-top-left-radius: 10px
+            border-top-right-radius: 10px
+            .modal-title
+                color: $mobile_preview_border
+            .close
+                color: lightgrey
+                opacity: 1
+            .close:hover
+                color: $icon_close
+                opacity: 1
+        .modal-body
+            background-color: $mobile_preview_background
+            max-height: 600px
+            padding: 0
+            margin: 0
+            .oe_mobile_viewport
+                width: 320px
+                height: 568px
+                padding: 5px
+                border: none
+        .modal-footer
+            background-color: $mobile_preview_background
 
 /* ---- SEO TOOLS ---- */
 
 $remove_color: $icon_close
 .oe_seo_configuration
-    &.modal
-        width: 100%
-        left: 0
-        margin-left: 0
-        top: 0!important
-        margin-top: 0!important
-        height: 100%
-    .modal-body
-        max-height: 100%
-        height: 100%
     ul
         list-style: none
     .oe_remove
