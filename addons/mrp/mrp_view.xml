@@ -189,7 +189,7 @@
                                     <field name="time_stop" widget="float_time"/>
                                 </group>
                                 <group string="Costing Information">
-                                    <field name="product_id" on_change="on_change_product_cost(product_id)"/>
+                                    <field name="product_id" on_change="on_change_product_cost(product_id)" context="{'default_supply_method':'produce'}"/>
                                     <field name="costs_hour"/>
                                     <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_cycle"/>
@@ -248,7 +248,7 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <form string="Routing Work Centers" version="7.0">
-                    <group col="4" string="General Information">
+                    <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="sequence"/>
                         <field name="workcenter_id"/>
@@ -280,7 +280,7 @@
                     </group>
                     <notebook>
                         <page string="Work Center Operations">
-                            <field name="workcenter_lines"/>
+                            <field name="workcenter_lines" string="Operation"/>
                         </page>
                         <page string="Notes">
                             <field name="note"/>
@@ -422,6 +422,7 @@
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
                     <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="bom_lines" string="Components"/>
                     <field name="product_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
@@ -513,7 +514,18 @@
               </p>
             </field>
         </record>
-        
+        <record id="product_search_form_view_procurment" model="ir.ui.view">
+             <field name="name">product.search.bom</field>
+             <field name="model">product.product</field>
+             <field name="inherit_id" ref="product.product_search_form_view"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//filter[@string='Consumable']" position="after">
+                     <separator/>
+                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]" invisible="not context.get('search_default_filter_supply_method_produce', False)"/>
+                 </xpath>
+             </field>
+        </record>
+
         <record id="product_supply_method_produce" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.product</field>
@@ -537,15 +549,15 @@
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
             parent="menu_mrp_configuration"
-            groups="base.group_no_one"
             sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
-            <field name="domain">[('bom_id', '=',active_ids)]</field>
+            <field name="domain">[('id', 'in', active_ids)]</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
+            <field name="view_type">tree</field>
         </record>
         <record id="ir_BOM_structure" model="ir.values">
             <field eval="'client_action_multi'" name="key2"/>
@@ -994,7 +1006,7 @@
         <!-- Menu for Resource for MRP-->
 
         <record id="mrp_workcenter_action" model="ir.actions.act_window">
-            <field name="name">Work Center</field>
+            <field name="name">Work Centers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workcenter</field>
             <field name="view_type">form</field>
@@ -1031,6 +1043,7 @@
             <field name="name">Bill of Materials</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="res_model">mrp.bom</field>
+            <field name="view_type">form</field>
         </record>
 
         <record model="ir.ui.view" id="product_form_view_bom_button">

@@ -76,7 +76,7 @@ class mail_group(osv.Model):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="The email address associated with this group. New emails received will automatically "
                  "create new topics."),
     }

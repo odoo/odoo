@@ -79,6 +79,13 @@ class project(osv.osv):
                  "mail.alias": "alias_id"}
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    def _auto_init(self, cr, context=None):
+        """ Installation hook: aliases, project.project """
+        # create aliases for all projects and avoid constraint errors
+        alias_context = dict(context, alias_model_name='project.task')
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
+            self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
+
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
@@ -274,7 +281,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
@@ -1334,6 +1341,18 @@ class account_analytic_account(osv.osv):
         if analytic_ids:
             raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if args is None:
+            args = []
+        if context is None:
+            context={}
+        if context.get('current_model') == 'project.project':
+            project_ids = self.search(cr, uid, args + [('name', operator, name)], limit=limit, context=context)
+            return self.name_get(cr, uid, project_ids, context=context)
+
+        return super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
+
 
 class project_project(osv.osv):
     _inherit = 'project.project'

@@ -2945,12 +2945,22 @@ class stock_warehouse(osv.osv):
     }
 
     def _default_lot_input_stock_id(self, cr, uid, context=None):
-        lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return lot_input_stock.id
+        try:
+            lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+        except (ValueError, orm.except_orm):
+            # the user does not have read access on the location or it does not exists
+            lot_input_stock_id = False
+        return lot_input_stock_id
 
     def _default_lot_output_id(self, cr, uid, context=None):
-        lot_output = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output')
-        return lot_output.id
+        try:
+            lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+        except (ValueError, orm.except_orm):
+            # the user does not have read access on the location or it does not exists
+            lot_output_id = False
+        return lot_output_id
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
@@ -2994,6 +3004,10 @@ class stock_picking_in(osv.osv):
         #override in order to fire the workflow signal on given stock.picking workflow instance
         #instead of it's own workflow (which is not existing)
         return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+
+    def message_post(self, *args, **kwargs):
+        """Post the message on stock.picking to be able to see it in the form view when using the chatter"""
+        return self.pool.get('stock.picking').message_post(*args, **kwargs)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -3045,6 +3059,10 @@ class stock_picking_out(osv.osv):
         #override in order to fire the workflow signal on given stock.picking workflow instance
         #instead of it's own workflow (which is not existing)
         return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+
+    def message_post(self, *args, **kwargs):
+        """Post the message on stock.picking to be able to see it in the form view when using the chatter"""
+        return self.pool.get('stock.picking').message_post(*args, **kwargs)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
