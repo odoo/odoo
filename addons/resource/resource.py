@@ -20,13 +20,10 @@
 ##############################################################################
 
 import datetime
-# from datetime import datetime, timedelta
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-import itertools
-import math
 from operator import itemgetter
-import pytz
+# import pytz
 
 from faces import *
 from openerp import tools
@@ -182,7 +179,7 @@ class resource_calendar(osv.osv):
 
         :param date day_date: current day as a date
         """
-        if id is None:
+        if not id:
             return day_date + relativedelta(days=1)
         weekdays = self.get_weekdays(cr, uid, id, context)
 
@@ -205,7 +202,7 @@ class resource_calendar(osv.osv):
 
         :param date day_date: current day as a date
         """
-        if id is None:
+        if not id:
             return day_date + relativedelta(days=-1)
         weekdays = self.get_weekdays(cr, uid, id, context)
         weekdays.reverse()
