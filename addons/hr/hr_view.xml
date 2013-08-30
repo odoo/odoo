@@ -349,25 +349,23 @@
                         </div>
                         <div class="oe_right oe_job_button_box" name="buttons"/>
                         <group>
-                            <group colspan="4">
-                                <group name="job_data">
-                                    <field name="department_id"/>
-                                    <label for="no_of_recruitment"/>
-                                    <div>
-                                        <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)" class="oe_inline"/>
-                                        <p>Currently, <field name="no_of_employee" groups="base.group_user" colspan="0" class="oe_inline"/> employees</p>
-                                    </div>
-                                </group>
+                            <group name="job_data">
+                                <field name="department_id"/>
+                                <label for="no_of_recruitment"/>
+                                <div>
+                                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)" class="oe_inline"/>
+                                    <p>Currently, <field name="no_of_employee" groups="base.group_user" colspan="0" class="oe_inline"/> employees</p>
+                                </div>
                             </group>
-                            <div colspan="4">
-                                <label for="description"/>
-                                <field name="description"/>
-                            </div>
-                            <div colspan="4">
-                                <label for="requirements"/>
-                                <field name="requirements"/>
-                            </div>
                         </group>
+                        <div>
+                            <label for="description"/>
+                            <field name="description"/>
+                        </div>
+                        <div>
+                            <label for="requirements"/>
+                            <field name="requirements"/>
+                        </div>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

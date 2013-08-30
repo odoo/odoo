@@ -419,6 +419,7 @@ class hr_applicant(osv.Model):
                                                      'department_id': applicant.department_id.id
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
+                self.message_post(cr, uid, [applicant.id], body=_('Applicant <b>Hired</b>'), subtype="hr_recruitment.mt_applicant_employee", context=context)
             else:
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
