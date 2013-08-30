@@ -23,7 +23,7 @@
   !python {model: stock.picking}: |
       self.action_confirm(cr, uid, [ref("incomming_shipment")])
 -
-  I receive 40kgm Ice-cream so I make backorder of incomming shipment for 40 kgm.
+  I receive 40kgm Ice-cream so It will make backorder of incomming shipment for 10 kgm.
 -
   !python {model: stock.picking}: |
     pick = self.browse(cr, uid, ref("incomming_shipment"), context=context)
