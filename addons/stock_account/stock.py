@@ -54,6 +54,10 @@ class procurement_order(osv.osv):
         res = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
         res.update({'invoice_state': (procurement.rule_id.invoice_state in ('none', False) and procurement.invoice_state or procurement.rule_id.invoice_state) or 'none'})
         return res
+    
+    defaults = {
+        'invoice_state': 'none'
+        }
 
 
 #----------------------------------------------------------

@@ -1073,7 +1073,4 @@ class procurement_order(osv.osv):
     _columns = {
         'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
     }
-    _defaults = {
-        'invoice_state': 'none',
-    }
     
