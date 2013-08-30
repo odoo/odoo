@@ -61,7 +61,14 @@ class sale_order(osv.osv):
             if move.procurement_id and move.procurement_id.sale_line_id:
                 res.add(move.procurement_id.sale_line_id.order_id.id)
         return list(res)
-
+    
+    def _get_orders_procurements(self, cr, uid, ids, context=None):
+        res = set()
+        for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
+            if proc.sale_line_id:
+                res.add(proc.sale_line_id.order_id.id)
+        return list(res)
+    
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         for sale in self.browse(cr, uid, ids, context=context):
@@ -107,7 +114,10 @@ class sale_order(osv.osv):
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={'stock.move': (_get_orders, ['state'], 10)}),
+        'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
+                'stock.move': (_get_orders, ['state'], 10),
+                'procurement.order': (_get_orders_procurements, ['state'], 10)
+            }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
@@ -223,7 +233,7 @@ class sale_order(osv.osv):
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
-
+            
         if mode == 'finished':
             return finished
         elif mode == 'canceled':
@@ -265,7 +275,7 @@ class sale_order(osv.osv):
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
-
+    
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
