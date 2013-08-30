@@ -14,7 +14,7 @@
     website.MobilePreview = openerp.Widget.extend({
         template: 'website.mobile_preview',
         events: {
-            'hidden': 'destroy'
+            'hidden.bs.modal': 'destroy'
         },
         start: function () {
             document.getElementById("mobile-viewport").src = window.location.href + "?mobile-preview=true";

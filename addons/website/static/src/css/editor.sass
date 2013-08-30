@@ -203,7 +203,7 @@
 /* ---- MOBILE PREVIEW ---- */
 
 $mobile_preview_background: #000000
-$mobile_preview_border: #1A1A1A
+$mobile_preview_border: #1C1F1F
 $icon_close: #E00101
 .oe_mobile_preview
     &.modal .modal-content
@@ -248,14 +248,13 @@ $icon_close: #E00101
 
 $remove_color: $icon_close
 .oe_seo_configuration
-    ul
-        list-style: none
-    .oe_remove
-        color: $remove_color
-
-.oe_seo_keywords_list
-    &.container
-        margin: 0.1em
-    .oe_seo_keyword
-        float: left
-        padding-right: 0.5em
+    .modal-dialog
+        width: 80%
+    .oe_seo_keywords_list
+        &.container
+            margin: 0.1em
+        .oe_seo_keyword
+            float: left
+            padding-right: 0.5em
+        .oe_remove
+            color: $remove_color

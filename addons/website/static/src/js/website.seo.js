@@ -20,14 +20,14 @@
     website.seo.Tip = openerp.Widget.extend({
         template: 'website.seo_tip',
         events: {
-            'click button[data-action=close]': 'destroy',
+            'closed.bs.alert': 'destroy',
         },
         init: function (parent, options) {
             this._super(parent);
             this.message = options.message;
             // success, info, warning or danger
             this.type = options.type;
-        },
+        }
     });
 
     website.seo.Keyword = openerp.Widget.extend({
@@ -41,6 +41,7 @@
             this.onDelete = options.onDelete;
         },
         destroy: function () {
+            console.log("Destroyed", this.keyword);
             if (_.isFunction(this.onDelete)) {
                 this.onDelete(this.keyword);
             }
@@ -87,7 +88,7 @@
             'keypress input[name=seo_page_keywords]': 'confirmKeyword',
             'click button[data-action=add]': 'addKeyword',
             'click a[data-action=update]': 'update',
-            'hidden': 'destroy'
+            'hidden.bs.modal': 'destroy'
         },
 
         maxTitleSize: 65,
