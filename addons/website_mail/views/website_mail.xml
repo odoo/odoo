@@ -38,11 +38,11 @@
                         <div id="blog_subscribe">
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
                                 <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="is_public_user"/>
-                                <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
+                                <button type="submit" class="btn btn-primary mt4" name="subscribe">Subscribe</button>
                             </form>
                             <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
                                 <input type="hidden" name="email" t-att-value="subscribe"/>
-                                <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
+                                <button type="submit" class="btn btn-default mt4" name="unsubscribe">Unsubscribe</button>
                             </form>
                         </div>
                     </div>
