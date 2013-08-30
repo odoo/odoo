@@ -17,7 +17,7 @@
     product_qty: 10
     location_id: stock.stock_location_14
 -
-  I confirm this inventory
+  I Validate this inventory
 -
   !python {model: stock.inventory}: |
     self.action_done(cr, uid, [ref('inventory_test0')], context=context)
@@ -62,9 +62,9 @@
     inventory_id: stock.inventory_test1
     product_id: product.product_product_3
     product_qty: 20
-    location_id: stock.stock_location_14
+    location_id: stock.stock_location_components
 -
-  I confirm this inventory
+  I Validate this inventory
 -
   !python {model: stock.inventory}: |
     self.action_done(cr, uid, [ref('inventory_test1')], context=context)
@@ -72,6 +72,6 @@
   I check that the quantity on hand is 20 on the location and it's parent.
 -
   !python {model: product.product}: |
-    context['location'] = ref('stock.stock_location_14')
+    context['location'] = ref('stock.stock_location_components')
     product = self.browse(cr, uid, ref('product.product_product_3'), context=context)
-    assert product.qty_available==20, 'Expecting 20 products, got %.2f on location stock_location_14!' % (product.qty_available,)
+    assert product.qty_available==20, 'Expecting 20 products, got %.2f on location stock_location_components!' % (product.qty_available,)

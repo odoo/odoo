@@ -1485,7 +1485,7 @@ class stock_move(osv.osv):
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
             domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
-            prefered_order = 'reservation_id<>' + str(move.id)
+            prefered_order = 'reservation_id <> ' + str(move.id)
 #             if lot_id: 
 #                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
 #             if pack_id: 
