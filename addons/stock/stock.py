@@ -1130,7 +1130,10 @@ class stock_move(osv.osv):
         'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move'),
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
         'availability': fields.function(_get_product_availability, type='float', string='Availability'),
-    }
+        }
+    
+    
+
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
