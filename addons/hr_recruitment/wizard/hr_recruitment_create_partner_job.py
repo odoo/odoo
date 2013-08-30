@@ -66,8 +66,6 @@ class hr_recruitment_partner_create(osv.osv_memory):
             case_obj.write(cr, uid, [case.id], {
                 'partner_id': partner_id,
             }, context=context)
-        if data['close']:
-            case_obj.case_close(cr, uid, context['active_ids'])
 
         return {
             'domain': "[]",

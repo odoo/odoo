@@ -25,7 +25,6 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 from base_calendar import get_real_ids, base_calendar_id2real_id
-from openerp.addons.base_status.base_state import base_state
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
 # without forcing the installation of crm.
@@ -38,14 +37,13 @@ class crm_meeting_type(osv.Model):
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
 
-class crm_meeting(base_state, osv.Model):
+class crm_meeting(osv.Model):
     """ Model for CRM meetings """
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
     _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
     _columns = {
-        # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
         'date_open': fields.datetime('Confirmed', readonly=True),
@@ -78,6 +76,12 @@ class crm_meeting(base_state, osv.Model):
         default = default or {}
         default['attendee_ids'] = False
         return super(crm_meeting, self).copy(cr, uid, id, default, context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        """ Override to add case management: open/close dates """
+        if values.get('state')and values.get('state') == 'open':
+            values['date_open'] = fields.datetime.now()
+        return super(crm_meeting, self).write(cr, uid, ids, values, context=context)
 
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ The basic purpose of this method is to check that destination partners

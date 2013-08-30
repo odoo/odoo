@@ -612,6 +612,13 @@
                             </field>
                         </page>
                     </notebook>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="balance_end" />
+                        </div>
+                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <div class="oe_clear"/>
                 </sheet>
                 </form>
             </field>

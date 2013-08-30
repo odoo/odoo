@@ -101,17 +101,19 @@ class LongPollingController(http.Controller):
             raise Exception("Not usable in a server not running gevent")
         from openerp.addons.im.watcher import ImWatcher
         if db is not None:
-            request.session.authenticate(db=db, uid=uid, password=password)
+            openerp.service.security.check(db, uid, password)
         else:
-            request.session.authenticate(db=request.session._db, uid=request.session._uid, password=request.session._password)
+            uid = request.session.uid
+            db = request.session.db
 
-        with request.registry.cursor() as cr:
-            request.registry.get('im.user').im_connect(cr, request.uid, uuid=uuid, context=request.context)
-            my_id = request.registry.get('im.user').get_by_user_id(cr, request.uid, uuid or request.session._uid, request.context)["id"]
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        with registry.cursor() as cr:
+            registry.get('im.user').im_connect(cr, uid, uuid=uuid, context=request.context)
+            my_id = registry.get('im.user').get_my_id(cr, uid, uuid, request.context)
         num = 0
         while True:
-            with request.registry.cursor() as cr:
-                res = request.registry.get('im.message').get_messages(cr, request.uid, last, users_watch, uuid=uuid, context=request.context)
+            with registry.cursor() as cr:
+                res = registry.get('im.message').get_messages(cr, uid, last, users_watch, uuid=uuid, context=request.context)
             if num >= 1 or len(res["res"]) > 0:
                 return res
             last = res["last"]
@@ -128,7 +130,7 @@ class LongPollingController(http.Controller):
         return "%s" % uuid.uuid1()
 
 def assert_uuid(uuid):
-    if not isinstance(uuid, (str, unicode, type(None))):
+    if not isinstance(uuid, (str, unicode, type(None))) and uuid != False:
         raise Exception("%s is not a uuid" % uuid)
 
 
@@ -154,7 +156,7 @@ class im_message(osv.osv):
 
         # complex stuff to determine the last message to show
         users = self.pool.get("im.user")
-        my_id = users.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
+        my_id = users.get_my_id(cr, uid, uuid, context=context)
         c_user = users.browse(cr, openerp.SUPERUSER_ID, my_id, context=context)
         if last:
             if c_user.im_last_received < last:
@@ -179,7 +181,7 @@ class im_message(osv.osv):
 
     def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
         assert_uuid(uuid)
-        my_id = self.pool.get('im.user').get_by_user_id(cr, uid, uuid or uid)["id"]
+        my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
         self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_user_id}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
         return False
@@ -197,10 +199,9 @@ class im_user(osv.osv):
             res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
-    def search_users(self, cr, uid, domain, fields, limit, context=None):
-        # do not user openerp.SUPERUSER_ID, reserved to normal users
-        found = self.pool.get('res.users').search(cr, uid, domain, limit=limit, context=context)
-        found = self.get_by_user_ids(cr, uid, found, context=context)
+    def search_users(self, cr, uid, text_search, fields, limit, context=None):
+        my_id = self.get_my_id(cr, uid, None, context)
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]], limit=limit, context=context)
         return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, uuid=None, context=None):
@@ -213,7 +214,7 @@ class im_user(osv.osv):
 
     def _im_change_status(self, cr, uid, new_one, uuid=None, context=None):
         assert_uuid(uuid)
-        id = self.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
+        id = self.get_my_id(cr, uid, uuid, context=context)
         current_status = self.read(cr, openerp.SUPERUSER_ID, id, ["im_status"], context=None)["im_status"]
         self.write(cr, openerp.SUPERUSER_ID, id, {"im_last_status": new_one, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
@@ -221,37 +222,20 @@ class im_user(osv.osv):
             notify_channel(cr, "im_channel", {'type': 'status', 'user': id})
         return True
 
-    def get_by_user_id(self, cr, uid, id, context=None):
-        ids = self.get_by_user_ids(cr, uid, [id], context=context)
-        return ids[0]
-
-    def get_by_user_ids(self, cr, uid, ids, context=None):
-        user_ids = [x for x in ids if isinstance(x, int)]
-        uuids = [x for x in ids if isinstance(x, (str, unicode))]
-        users = self.search(cr, openerp.SUPERUSER_ID, ["|", ["user", "in", user_ids], ["uuid", "in", uuids]], context=None)
-        records = self.read(cr, openerp.SUPERUSER_ID, users, ["user", "uuid"], context=None)
-        inside = {}
-        for i in records:
-            if i["user"]:
-                inside[i["user"][0]] = True
-            elif ["uuid"]:
-                inside[i["uuid"]] = True
-        not_inside = {}
-        for i in ids:
-            if not (i in inside):
-                not_inside[i] = True
-        for to_create in not_inside.keys():
-            if isinstance(to_create, int):
-                created = self.create(cr, openerp.SUPERUSER_ID, {"user": to_create}, context=context)
-                records.append({"id": created, "user": [to_create, ""]})
-            else:
-                created = self.create(cr, openerp.SUPERUSER_ID, {"uuid": to_create}, context=context)
-                records.append({"id": created, "uuid": to_create})
-        return records
+    def get_my_id(self, cr, uid, uuid=None, context=None):
+        assert_uuid(uuid)
+        if uuid:
+            users = self.search(cr, openerp.SUPERUSER_ID, [["uuid", "=", uuid]], context=None)
+        else:
+            users = self.search(cr, openerp.SUPERUSER_ID, [["user_id", "=", uid]], context=None)
+        my_id = users[0] if len(users) >= 1 else False
+        if not my_id:
+            my_id = self.create(cr, openerp.SUPERUSER_ID, {"user_id": uid if not uuid else False, "uuid": uuid if uuid else False}, context=context)
+        return my_id
 
     def assign_name(self, cr, uid, uuid, name, context=None):
         assert_uuid(uuid)
-        id = self.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
+        id = self.get_my_id(cr, uid, uuid, context=context)
         self.write(cr, openerp.SUPERUSER_ID, id, {"assigned_name": name}, context=context)
         return True
 
@@ -259,16 +243,16 @@ class im_user(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = record.assigned_name
-            if record.user:
-                res[record.id] = record.user.name
+            if record.user_id:
+                res[record.id] = record.user_id.name
                 continue
         return res
 
     _columns = {
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
-        'image': fields.related('user', 'image_small', type='binary', string="Image", readonly=True),
-        'user': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
@@ -281,3 +265,8 @@ class im_user(osv.osv):
         'im_last_status': False,
         'im_last_status_update': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
+
+    _sql_constraints = [
+        ('user_uniq', 'unique (user_id)', 'Only one chat user per OpenERP user.'),
+        ('uuid_uniq', 'unique (uuid)', 'Chat identifier already used.'),
+    ]

@@ -37,36 +37,45 @@ env.filters["json"] = json.dumps
 
 class LiveChatController(http.Controller):
 
-    @http.route('/im_livechat/loader')
+    def _auth(self, db):
+        reg = openerp.modules.registry.RegistryManager.get(db)
+        uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, "anonymous", "anonymous", None])
+        return reg, uid
+
+    @http.route('/im_livechat/loader', auth="none")
     def loader(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
         user_name = p.get("user_name", None)
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
-        info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
-        info["db"] = db
-        info["channel"] = channel
-        info["userName"] = user_name
-        return request.make_response(env.get_template("loader.js").render(info),
-             headers=[('Content-Type', "text/javascript")])
 
-    @http.route('/im_livechat/web_page')
+        reg, uid = self._auth(db)
+        with reg.cursor() as cr:
+            info = reg.get('im_livechat.channel').get_info_for_chat_src(cr, uid, channel)
+            info["db"] = db
+            info["channel"] = channel
+            info["userName"] = user_name
+            return request.make_response(env.get_template("loader.js").render(info),
+                 headers=[('Content-Type', "text/javascript")])
+
+    @http.route('/im_livechat/web_page', auth="none")
     def web_page(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
-        script = request.session.model('im_livechat.channel').read(channel, ["script"])["script"]
-        info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
-        info["script"] = script
-        return request.make_response(env.get_template("web_page.html").render(info),
-             headers=[('Content-Type', "text/html")])
+        reg, uid = self._auth(db)
+        with reg.cursor() as cr:
+            script = reg.get('im_livechat.channel').read(cr, uid, channel, ["script"])["script"]
+            info = reg.get('im_livechat.channel').get_info_for_chat_src(cr, uid, channel)
+            info["script"] = script
+            return request.make_response(env.get_template("web_page.html").render(info),
+                 headers=[('Content-Type', "text/html")])
 
-    @http.route('/im_livechat/available', type='json')
+    @http.route('/im_livechat/available', type='json', auth="none")
     def available(self, db, channel):
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
-        return request.session.model('im_livechat.channel').get_available_user(channel) > 0
+        reg, uid = self._auth(db)
+        with reg.cursor() as cr:
+            return reg.get('im_livechat.channel').get_available_user(cr, uid, channel) > 0
 
 class im_livechat_channel(osv.osv):
     _name = 'im_livechat.channel'
@@ -152,9 +161,9 @@ class im_livechat_channel(osv.osv):
 
     def get_available_user(self, cr, uid, channel_id, context=None):
         channel = self.browse(cr, openerp.SUPERUSER_ID, channel_id, context=context)
+        im_user_ids = self.pool.get("im.user").search(cr, uid, [["user_id", "in", [user.id for user in channel.user_ids]]], context=context)
         users = []
-        for user in channel.user_ids:
-            iuid = self.pool.get("im.user").get_by_user_id(cr, uid, user.id, context=context)["id"]
+        for iuid in im_user_ids:
             imuser = self.pool.get("im.user").browse(cr, uid, iuid, context=context)
             if imuser.im_status:
                 users.append(imuser)
@@ -197,12 +206,12 @@ class im_message(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = False
-            if record.to_id.user and record.from_id.user:
+            if record.to_id.user_id and record.from_id.user_id:
                 continue
-            elif record.to_id.user:
-                res[record.id] = record.to_id.user.id
-            elif record.from_id.user:
-                res[record.id] = record.from_id.user.id
+            elif record.to_id.user_id:
+                res[record.id] = record.to_id.user_id.id
+            elif record.from_id.user_id:
+                res[record.id] = record.from_id.user_id.id
         return res
 
     def _customer(self, cr, uid, ids, name, arg, context=None):
@@ -221,11 +230,11 @@ class im_message(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = False
-            if not not record.to_id.user and not not record.from_id.user:
+            if not not record.to_id.user_id and not not record.from_id.user_id:
                 continue
-            elif not not record.to_id.user:
+            elif not not record.to_id.user_id:
                 res[record.id] = "c2s"
-            elif not not record.from_id.user:
+            elif not not record.from_id.user_id:
                 res[record.id] = "s2c"
         return res
 
