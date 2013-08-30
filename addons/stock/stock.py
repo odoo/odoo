@@ -157,7 +157,7 @@ class stock_quant(osv.osv):
         'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="Is this quant reserved for a stock.move?"),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'cost': fields.float('Unit Cost'),
-        'partner_id': fields.related('lot_id', 'partner_id', type='many2one', relation="res.partner", string="Owner", store=True),  # TODO implement store={}
+        'owner_id': fields.many2one('res.partner', 'Owner', help="This is the owner of the quant"),
 
         'create_date': fields.datetime('Creation Date'),
         'in_date': fields.datetime('Incoming Date'),
@@ -653,9 +653,11 @@ class stock_picking(osv.osv):
                         'product_qty': qty,
                         'quant_id': quant.id,
                         'product_id': quant.product_id.id,
-                        'lot_id': quant.lot_id.id,
+                        'lot_id': quant.lot_id and quant.lot_id.id or False,
                         'product_uom_id': quant.product_id.uom_id.id,
+                        'owner_id': quant.owner_id and quant.owner_id.id or False,
                         'cost': quant.cost,
+                        'package_id': quant.package_id and quant.package_id.id or False, 
                     }, context=context)
                 if remaining_qty > 0:
                     pack_operation_obj.create(cr, uid, {
@@ -750,7 +752,8 @@ class stock_picking(osv.osv):
                                 'history_ids': [(4, move.id)],
                                 'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                                 'company_id': move.company_id.id,
-                                'lot_id': ops.lot_id and ops.lot_id.id or False, 
+                                'lot_id': ops.lot_id and ops.lot_id.id or False,
+                                'owner_id': ops.owner_id and ops.owner_id.id or False,
                                 'reservation_id': move.id, #Reserve at once
                                 'package_id': ops.result_package_id and ops.result_package_id.id or False, 
                             }
@@ -929,7 +932,7 @@ class stock_production_lot(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants'),
         'create_date': fields.datetime('Creation Date'),
-        'partner_id': fields.many2one('res.partner', 'Owner'),
+#         'partner_id': fields.many2one('res.partner', 'Owner'),
     }
     _defaults = {
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
@@ -942,8 +945,8 @@ class stock_production_lot(osv.osv):
         res = []
         for lot in self.browse(cr, uid, ids, context=context):
             name = lot.name
-            if lot.partner_id:
-                name += ' (' + lot.partner_id.name + ')'
+#             if lot.partner_id:
+#                 name += ' (' + lot.partner_id.name + ')'
             res.append((lot.id, name))
         return res
 
@@ -1654,7 +1657,7 @@ class stock_move(osv.osv):
         }, context=context)
         
         if move.move_dest_id and move.propagate:
-            self.split(self, cr, uid, move.move_dest_id, qty, context=context)
+            self.split(cr, uid, move.move_dest_id, qty, context=context)
         return new_move
 
 class stock_inventory(osv.osv):
@@ -2079,6 +2082,7 @@ class stock_pack_operation(osv.osv):
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'), 
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
+        'owner_id': fields.many2one('res.partner', 'Owner', help="Owner of the quants"),
         #'update_cost': fields.boolean('Need cost update'),
         'cost': fields.float("Cost", help="Unit Cost for this product line"),
         'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
@@ -2095,9 +2099,16 @@ class stock_pack_operation(osv.osv):
             res += "package_id <> " + str(ops.package_id.id)
         if ops.lot_id:
             if res:
-                res += ", lot_id <> " + str(ops.lot_id.id)
-            else:
-                res += "lot_id <> " + str(ops.lot_id.id)
+                res += ", " 
+            res += "lot_id <> " + str(ops.lot_id.id)
+        if ops.owner_id:
+            if res:
+                res += ", "
+            res += "owner_id <> " + str(ops.owner_id.id)
+        else:
+            if res:
+                res += ", "
+            res += "owner_id IS NOT NULL"
         return res
 
 
