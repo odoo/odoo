@@ -1623,10 +1623,11 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res, context=context)
         return res
 
+
+
     def split(self, cr, uid, move, qty, context=None):
         """ 
             Splits qty from move move into a new move
-            It will check if it can propagate the split
         """
         if move.product_qty==qty:
             return move.id
