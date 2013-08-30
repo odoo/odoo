@@ -118,19 +118,12 @@ footer {
   background: #eff8f8;
   padding-top: 48px;
   padding-bottom: 48px;
+  background: rgba(100, 200, 200, 0.1);
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .navbar .nav > li > p {
   margin-bottom: 0px;
-}
-
-.navbar .nav > li a {
-  text-shadow: none;
-}
-
-.nav > li a {
-  display: block;
 }
 
 #myCarousel .item {
@@ -140,6 +133,7 @@ footer {
 /* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
 .dark {
   background: #eff8f8;
+  background: rgba(100, 200, 200, 0.1);
 }
 
 /* Hacks to remove   */
@@ -147,44 +141,8 @@ div#wrap .carousel {
   top: -20px;
 }
 
-/* -- Hack for nav header -- */
-.nav > li.nav-header {
-  display: block;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 20px;
-  color: #999999;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-}
-
-.nav.nav-hierarchy {
-  padding-left: 16px;
-}
-
-.navbar-inverse .divider-vertical {
-  height: 40px;
-  margin: 0 9px;
-  border-right: 1px solid white;
-  border-left: 1px solid #f2f2f2;
-}
-
-.navbar-nav .divider-vertical {
-  border-right-color: #222222;
-  border-left-color: #080808;
-}
-
-.navbar-inverse {
-  background-image: -moz-linear-gradient(top, #222222, #080808);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#080808));
-  background-image: -webkit-linear-gradient(top, #222222, #080808);
-  background-image: -o-linear-gradient(top, #222222, #080808);
-  background-image: linear-gradient(to bottom, #222222, #080808);
-  background-repeat: repeat-x;
-}
-
 /* -- Hack for removing double scrollbar from mobile preview -- */
-.modal {
+div#mobile-preview.modal {
   overflow: hidden;
   overflow-y: hidden;
   background-color: whitesmoke;
@@ -194,6 +152,6 @@ ul.nav-stacked > li > a {
   padding: 2px 15px;
 }
 
-.dropdown-header {
+#customize-menu .dropdown-header {
   text-transform: uppercase;
 }
