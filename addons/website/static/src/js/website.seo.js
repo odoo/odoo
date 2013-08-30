@@ -117,7 +117,7 @@
             if (pageParser.headers()['h1'].length > 1) {
                 new website.seo.Tip(this, {
                    message: "You have more than one &lt;h1&gt; tag on the page.",
-                   type: 'error'
+                   type: 'danger'
                 }).appendTo(this.$el.find('.js_seo_tips'));
             }
         },
