@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openerp-web\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-08-27 23:48+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
+"PO-Revision-Date: 2013-08-29 14:48+0000\n"
+"Last-Translator: Aputsiaq Niels Janussen <aj@isit.gl>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-29 04:53+0000\n"
-"X-Generator: Launchpad (build 16738)\n"
+"X-Launchpad-Export-Date: 2013-08-30 05:12+0000\n"
+"X-Generator: Launchpad (build 16750)\n"
 
 #. module: web
 #. openerp-web
@@ -68,7 +68,7 @@ msgstr "Indtast dit forrige kodeord"
 #: code:addons/web/static/src/xml/base.xml:300
 #, python-format
 msgid "Master password:"
-msgstr "Hovedadgangskode"
+msgstr "Primær adgangskode:"
 
 #. module: web
 #. openerp-web
@@ -1738,6 +1738,7 @@ msgstr "Vælg felter for at gemme eksport liste..."
 #, python-format
 msgid "Copyright © 2004-TODAY OpenERP SA. All Rights Reserved."
 msgstr ""
+"Ophavsret © 2004 til dags dato, OpenERP SA. Alle rettigheder forbeholdes."
 
 #. module: web
 #. openerp-web
@@ -1788,14 +1789,14 @@ msgstr "Filtrer med: %s"
 #: code:addons/web/static/src/js/view_form.js:3878
 #, python-format
 msgid "Create: "
-msgstr ""
+msgstr "Opret: "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:562
 #, python-format
 msgid "View Fields"
-msgstr ""
+msgstr "Vis felter"
 
 #. module: web
 #. openerp-web
@@ -1809,7 +1810,7 @@ msgstr ""
 #: code:addons/web/static/src/js/view_list.js:587
 #, python-format
 msgid "Do you really want to remove these records?"
-msgstr ""
+msgstr "Vil du virkelig fjerne disse poster?"
 
 #. module: web
 #. openerp-web
@@ -2282,7 +2283,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:81
 #, python-format
 msgid "Manage Databases"
-msgstr ""
+msgstr "Håndtér databaser"
 
 #. module: web
 #. openerp-web
@@ -2296,7 +2297,7 @@ msgstr ""
 #: code:addons/web/static/src/js/search.js:1387
 #, python-format
 msgid "not a valid integer"
-msgstr ""
+msgstr "ikke et gyldigt heltal"
 
 #. module: web
 #. openerp-web
@@ -2396,7 +2397,7 @@ msgstr ""
 #: code:addons/web/static/src/js/search.js:841
 #, python-format
 msgid "triggered from search view"
-msgstr ""
+msgstr "udløst fra søgevisning"
 
 #. module: web
 #. openerp-web
@@ -2410,7 +2411,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:972
 #, python-format
 msgid "Widget:"
-msgstr ""
+msgstr "Kontrol:"
 
 #. module: web
 #. openerp-web
@@ -2438,7 +2439,7 @@ msgstr "Kun dig"
 #: code:addons/web/static/src/xml/base.xml:571
 #, python-format
 msgid "Edit Workflow"
-msgstr ""
+msgstr "Redigér arbejdsgang"
 
 #. module: web
 #. openerp-web
@@ -2502,7 +2503,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:1359
 #, python-format
 msgid "Special:"
-msgstr ""
+msgstr "Speciel:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:877
@@ -2755,15 +2756,28 @@ msgstr "Filtre"
 #~ msgid "Customize"
 #~ msgstr "Tilpasse"
 
-#~ msgid "Attachments"
-#~ msgstr "vedhæftet fil"
-
 #, python-format
 #~ msgid "Do you really want to delete the attachment %s?"
 #~ msgstr "Vil du virkelig slette den vedhæftede fil %r?"
 
+#~ msgid "Attachments"
+#~ msgstr "Vedhæftede filer"
+
+#~ msgid "Do you really wants to create an inherited view here?"
+#~ msgstr "Vil du virkelig oprette en nedarvet visning her?"
+
+#~ msgid "Inherited View"
+#~ msgstr "Nedarvet visning"
+
+#, python-format
+#~ msgid "[%(first_record)d to %(last_record)d] of %(records_count)d"
+#~ msgstr "[%(first_record)d til %(last_record)d] af %(records_count)d"
+
 #~ msgid "Page"
 #~ msgstr "Side"
+
+#~ msgid "Could not find current view declaration"
+#~ msgstr "Kunne ikke finde nuværende visningsdeklaration"
 
 #~ msgid "Translate"
 #~ msgstr "Oversæt"
@@ -2771,11 +2785,24 @@ msgstr "Filtre"
 #~ msgid "Other Options"
 #~ msgstr "Andre tilvalg"
 
+#~ msgid "What you did:"
+#~ msgstr "Hvad du foretog dig:"
+
 #~ msgid "Your report will be sent to the OpenERP Enterprise team."
 #~ msgstr "Din rapport vil blive sendt til OpenERP Enterprise-holdet."
 
 #~ msgid "Summary:"
 #~ msgstr "Resumé:"
+
+#~ msgid ""
+#~ "Your version of OpenERP is unsupported. Support & maintenance services are "
+#~ "available here:"
+#~ msgstr ""
+#~ "Din version af OpenERP understøttes ikke. Tjenester for support & "
+#~ "vedligehold er tilgængelige her:"
+
+#~ msgid "OpenERP Entreprise"
+#~ msgstr "OpenERP Entreprise"
 
 #~ msgid "OpenERP Enterprise Contract."
 #~ msgstr "OpenERP Enterprise-kontrakt."
@@ -2792,8 +2819,50 @@ msgstr "Filtre"
 #~ msgid "Actions"
 #~ msgstr "Handlinger"
 
+#~ msgid "Add / Remove Shortcut..."
+#~ msgstr "Tilføj/fjern genvej ..."
+
+#~ msgid "Home"
+#~ msgstr "Hjem"
+
+#~ msgid "Unfold menu"
+#~ msgstr "Udfold menu"
+
+#~ msgid "Fold menu"
+#~ msgstr "Sammenfold menu"
+
+#~ msgid "More…"
+#~ msgstr "Mere ..."
+
+#~ msgid "Add attachment"
+#~ msgstr "Tilføj vedhæftet fil"
+
+#~ msgid "Set Image"
+#~ msgstr "Angiv billede"
+
 #~ msgid "Open this resource"
 #~ msgstr "Åbn denne ressource"
 
 #~ msgid "Send an e-mail with your default e-mail client"
 #~ msgstr "Send en e-mail med din standard e-mail-klient"
+
+#~ msgid "Advanced Filters"
+#~ msgstr "Avancerede filtre"
+
+#~ msgid "Select Dashboard to add this filter to:"
+#~ msgstr "Vælg instrumentbræt som skal have dette filter tilføjet:"
+
+#~ msgid "Title of new Dashboard item:"
+#~ msgstr "Titel på ny brik i instrumentbræt:"
+
+#~ msgid "Activate the developper mode"
+#~ msgstr "Aktivér udviklingstilstand"
+
+#~ msgid "Send OpenERP Enterprise Report"
+#~ msgstr "Send OpenERP Enterprise-rapport"
+
+#~ msgid "Filter Entry"
+#~ msgstr "Filtrér post"
+
+#~ msgid "Filter disabled due to invalid syntax"
+#~ msgstr "Filtret er deaktiveret på grund af ugyldig syntaks"
