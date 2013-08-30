@@ -3,8 +3,6 @@
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-import simplejson
-import werkzeug.wrappers
 from datetime import datetime
 
 class google_map(http.Controller):
@@ -30,23 +28,7 @@ class google_map(http.Controller):
             partner_ids += partner_obj.search(request.cr, request.uid, domain)
             partner_ids = list(set(partner_ids))
 
-        data = {
-            "counter": len(partner_ids),
-            "partners": []
-            }
-        for partner in partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids, context={'show_address': True}):
-            data["partners"].append({
-                'id': partner.id,
-                'name': partner.name,
-                'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
-                'type': partner.grade_id.name,
-                'latitude': partner.partner_latitude,
-                'longitude': partner.partner_longitude,
-                })
-
-        mime = 'application/json'
-        body = "var data = " + "}, \n{".join(simplejson.dumps(data).split("}, {"))
-        return werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
+        return partner_obj.google_map_json(request.cr, openerp.SUPERUSER_ID, partner_ids)
 
     @http.route(['/google_map/set_partner_position/'], type='http', auth="admin")
     def google_map_set_partner_position(self, *arg, **post):
