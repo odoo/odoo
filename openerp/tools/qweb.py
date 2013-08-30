@@ -233,7 +233,7 @@ class QWebXml(object):
         elif an.startswith("t-att-"):
             att, val = an[6:], self.eval(av, v)
             if isinstance(val, unicode):
-                return val.encode("utf8")
+                val = val.encode("utf8")
         else:
             att, val = self.eval_object(av, v)
         return val and ' %s="%s"' % (att, cgi.escape(str(val), 1)) or " "
