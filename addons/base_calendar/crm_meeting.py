@@ -190,7 +190,7 @@ class crm_meeting(osv.Model):
             attendee = self._find_user_attendee(cr, uid, meeting_id, context)
             if attendee:
                 if attendee.state != 'declined':
-                    self.message_post(cr, uid, meeting_id, body=_(("%s has Declined Invitation") % (attendee.cn)), context=context)
+                    self.message_post(cr, uid, meeting_id, body=_(("%s has declined invitation") % (attendee.cn)), context=context)
                 attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
         return True
 
@@ -200,7 +200,7 @@ class crm_meeting(osv.Model):
             attendee = self._find_user_attendee(cr, uid, meeting_id, context)
             if attendee:
                 if attendee.state != 'accepted':
-                    self.message_post(cr, uid, meeting_id, body=_(("%s has Accepted Invitation") % (attendee.cn)), context=context)
+                    self.message_post(cr, uid, meeting_id, body=_(("%s has accepted invitation") % (attendee.cn)), context=context)
                 attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
         return True
 
