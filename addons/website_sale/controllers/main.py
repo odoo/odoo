@@ -268,7 +268,8 @@ class Ecommerce(http.Controller):
         if request.uid != website.get_public_user().id:
             partner = user_obj.browse(request.cr, request.uid, request.uid).partner_id
             partner_id = partner.id
-            checkout = user_obj.read(request.cr, SUPERUSER_ID, [partner_id], [])[0]
+            fields = ["name", "phone", "fax", "company", "email", "street", "city", "state_id", "zip", "country_id"]
+            checkout = user_obj.read(request.cr, SUPERUSER_ID, [partner_id], fields)[0]
             checkout['company'] = partner.parent_id and partner.parent_id.name or ''
 
             shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')])

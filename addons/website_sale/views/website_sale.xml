@@ -380,25 +380,25 @@
                             <div t-attf-class="form-group #{error.get('company', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">Company</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="company" class="form-control" t-att-value="checkout.get('company', '')"/>
+                                    <input type="text" name="company" class="form-control" t-att-value="checkout.get('company', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('email', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">Email address</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="email" class="form-control" t-att-value="checkout.get('email', '')"/>
+                                    <input type="email" name="email" class="form-control" t-att-value="checkout.get('email', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('street', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">Street</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="street" class="form-control" t-att-value="checkout.get('street', '')"/>
+                                    <input type="text" name="street" class="form-control" t-att-value="checkout.get('street', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('city', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">City</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="city" class="form-control" t-att-value="checkout.get('city', '')"/>
+                                    <input type="text" name="city" class="form-control" t-att-value="checkout.get('city', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id', '')}">
@@ -415,7 +415,7 @@
                             <div t-attf-class="form-group #{error.get('zip', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">Zip / Postal Code</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="zip" class="form-control" t-att-value="checkout.get('zip', '')"/>
+                                    <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id', '')}">
@@ -462,13 +462,13 @@
                             <div t-attf-class="form-group #{error.get('shipping_street', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">Street</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')"/>
+                                    <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_city', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">City</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')"/>
+                                    <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_state_id', '')}">
@@ -485,7 +485,7 @@
                             <div t-attf-class="form-group #{error.get('shipping_zip', '')}">
                                 <label class="col-lg-3 control-label" for="contact_name">Zip / Postal Code</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
+                                    <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_country_id', '')}">
