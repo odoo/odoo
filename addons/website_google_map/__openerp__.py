@@ -1,17 +1,17 @@
 {
-    'name': 'Website Worldmap',
+    'name': 'Website Google Map',
     'category': 'Website',
     'summary': '',
     'version': '1.0',
     'description': """
-OpenERP Website Worldmap
+OpenERP Website Google Map
 ========================
 
         """,
     'author': 'OpenERP SA',
     'depends': ['website', 'crm_partner_assign'],
     'data': [
-        'views/worldmap.xml',
+        'views/google_map.xml',
     ],
     'installable': True,
 }

@@ -7,20 +7,20 @@ import simplejson
 import werkzeug.wrappers
 from datetime import datetime
 
-class contactus(http.Controller):
+class google_map(http.Controller):
 
-    @http.route(['/worldmap/'], type='http', auth="admin")
-    def worldmap(self, *arg, **post):
+    @http.route(['/google_map/'], type='http', auth="admin")
+    def google_map(self, *arg, **post):
         website = request.registry['website']
         values = website.get_rendering_context()
         values['partner_ids'] = post.get('partner_ids', "")
         values['width'] = post.get('width', 900)
         values['height'] = post.get('height', 460)
         values['partner_url'] = post.get('partner_url')
-        return website.render("website_worldmap.worldmap", values)
+        return website.render("website_google_map.google_map", values)
 
-    @http.route(['/worldmap/partners.json'], type='http', auth="admin")
-    def worldmap_data(self, *arg, **post):
+    @http.route(['/google_map/partners.json'], type='http', auth="admin")
+    def google_map_data(self, *arg, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
 
@@ -48,8 +48,8 @@ class contactus(http.Controller):
         body = "var data = " + "}, \n{".join(simplejson.dumps(data).split("}, {"))
         return werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
 
-    @http.route(['/worldmap/set_partner_position/'], type='http', auth="admin")
-    def worldmap_set_partner_position(self, *arg, **post):
+    @http.route(['/google_map/set_partner_position/'], type='http', auth="admin")
+    def google_map_set_partner_position(self, *arg, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
 

@@ -22,15 +22,15 @@ class contactus(http.Controller):
         })
         return website.render("website_crm.thanks", values)
 
-    @http.route(['/crm/worldmap/'], type='http', auth="admin")
-    def worldmap(self, *arg, **post):
+    @http.route(['/crm/google_map/'], type='http', auth="admin")
+    def google_map(self, *arg, **post):
         website = request.registry['website']
         values = website.get_rendering_context()
         values['partner_ids'] = post.get('partner_ids', "")
-        return website.render("website_crm.worldmap", values)
+        return website.render("website_crm.google_map", values)
 
-    @http.route(['/crm/worldmap/partners.json'], type='http', auth="admin")
-    def worldmap_data(self, *arg, **post):
+    @http.route(['/crm/google_map/partners.json'], type='http', auth="admin")
+    def google_map_data(self, *arg, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
 

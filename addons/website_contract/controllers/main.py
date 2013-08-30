@@ -28,7 +28,7 @@ class website_contract(http.Controller):
 
         # public partner profile
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, domain + [('website_published', '=', True)])
-        worldmap_partner_ids = ",".join([str(p) for p in partner_ids])
+        google_map_partner_ids = ",".join([str(p) for p in partner_ids])
 
         if request.uid != website.get_public_user().id:
             # search without website_published
@@ -53,7 +53,7 @@ class website_contract(http.Controller):
         values = website.get_rendering_context({
             'countries': countries,
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
-            'worldmap_partner_ids': worldmap_partner_ids,
+            'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),

@@ -35,7 +35,7 @@ class website_crm_partner_assign(http.Controller):
 
         # public partner profile
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, dom_without(False) )
-        worldmap_partner_ids = ",".join([str(p) for p in partner_ids])
+        google_map_partner_ids = ",".join([str(p) for p in partner_ids])
 
 
         # group by country
@@ -59,7 +59,7 @@ class website_crm_partner_assign(http.Controller):
             'countries': countries,
             'grades': grades,
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
-            'worldmap_partner_ids': worldmap_partner_ids,
+            'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),

@@ -14,7 +14,7 @@ function initialize(pt) {
      infoWindow.close();
   });
 
-  var partners = new google.maps.MarkerImage("/website_worldmap/static/src/img/partners.png",new google.maps.Size(25, 25));
+  var partners = new google.maps.MarkerImage("/website_google_map/static/src/img/partners.png",new google.maps.Size(25, 25));
 
   var markers = [];
 
@@ -38,7 +38,7 @@ function initialize(pt) {
         if (status == google.maps.GeocoderStatus.OK) {
           var location = results[0].geometry.location;
 
-          $.post("/worldmap/set_partner_position/", {
+          $.post("/google_map/set_partner_position/", {
               'partner_id': partner.id,
               'latitude': location.ob,
               'longitude': location.pb

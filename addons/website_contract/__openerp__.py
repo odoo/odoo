@@ -9,7 +9,7 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'sale', 'website_worldmap'],
+    'depends': ['website', 'sale', 'website_google_map'],
     'data': [
         'views/website_contract.xml',
     ],
