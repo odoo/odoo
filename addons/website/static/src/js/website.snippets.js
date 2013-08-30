@@ -303,11 +303,11 @@
             $('.oe_snippet_manipulator').remove();
         },
         toggle: function(){
-            if(this.$el.hasClass('oe_hidden')){
-                this.$el.removeClass('oe_hidden');
+            if(this.$el.hasClass('hide')){
+                this.$el.removeClass('hide');
                 this.activate_snippet_manipulators();
             }else{
-                this.$el.addClass('oe_hidden');
+                this.$el.addClass('hide');
                 this.deactivate_snippet_manipulators();
             }
         },
