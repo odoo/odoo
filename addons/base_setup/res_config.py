@@ -27,7 +27,7 @@ class base_config_settings(osv.osv_memory):
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
             help='Work in multi-company environments, with appropriate security access between companies.\n'
-                'This installs the module multi_company.'),
+                '-This installs the module multi_company.'),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of openerp."""),
         'module_portal': fields.boolean('Activate the customer portal',
@@ -69,12 +69,12 @@ class sale_config_settings(osv.osv_memory):
                 'attach the selected mail as a .eml file in '
                 'the attachment of a selected record. You can create documents for CRM Lead, '
                 'Partner from the selected emails.\n'
-                'This installs the module plugin_thunderbird.'),
+                '-This installs the module plugin_thunderbird.'),
         'module_plugin_outlook': fields.boolean('Enable Outlook plug-in',
             help='The Outlook plugin allows you to select an object that you would like to add '
                 'to your email and its attachments from MS Outlook. You can select a partner, '
                 'or a lead object and archive a selected email into an OpenERP mail message with attachments.\n'
-                'This installs the module plugin_outlook.'),
+                '-This installs the module plugin_outlook.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

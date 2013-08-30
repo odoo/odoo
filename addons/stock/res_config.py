@@ -28,11 +28,11 @@ class stock_config_settings(osv.osv_memory):
     _columns = {
         'module_claim_from_delivery': fields.boolean("Allow claim on deliveries",
             help='Adds a Claim link to the delivery order.\n'
-                'This installs the module claim_from_delivery.'),
+                '-This installs the module claim_from_delivery.'),
         'module_stock_invoice_directly': fields.boolean("Create and open the invoice when the user finish a delivery order",
             help='This allows to automatically launch the invoicing wizard if the delivery is '
                 'to be invoiced when you send or deliver goods.\n'
-                'This installs the module stock_invoice_directly.'),
+                '-This installs the module stock_invoice_directly.'),
         'module_product_expiry': fields.boolean("Expiry date on serial numbers",
             help="""Track different dates on products and serial numbers.
 The following dates can be tracked:
@@ -45,7 +45,7 @@ This installs the module product_expiry."""),
             help='Provide push and pull inventory flows. Typical uses of this feature are: '
                 'manage product manufacturing chains, manage default locations per product, '
                 'define routes within your warehouse according to business needs, etc.\n'
-                'This installs the module stock_location.'),
+                '-This installs the module stock_location.'),
         'group_uom': fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),

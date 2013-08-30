@@ -35,26 +35,26 @@ class mrp_config_settings(osv.osv_memory):
                 '* Warranty concept\n'
                 '* Repair quotation report\n'
                 '* Notes for the technician and for the final customer.\n'
-                'This installs the module mrp_repair.'),
+                '-This installs the module mrp_repair.'),
         'module_mrp_operations': fields.boolean("Allow detailed planning of work order",
             help='This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).\n'
-                'This installs the module mrp_operations.'),
+                '-This installs the module mrp_operations.'),
         'module_mrp_byproduct': fields.boolean("Produce several products from one manufacturing order",
             help='You can configure by-products in the bill of material.\n'
                 'Without this module: A + B + C -> D.\n'
                 'With this module: A + B + C -> D + E.\n'
-                'This installs the module mrp_byproduct.'),
+                '-This installs the module mrp_byproduct.'),
         'module_mrp_jit': fields.boolean("Generate procurement in real time",
             help='This allows Just In Time computation of procurement orders.\n'
                 'All procurement orders will be processed immediately, which could in some '
                 'cases entail a small performance impact.\n'
-                'This installs the module mrp_jit.'),
+                '-This installs the module mrp_jit.'),
         'module_stock_no_autopicking': fields.boolean("Manage manual picking to fulfill manufacturing orders ",
             help='This module allows an intermediate picking process to provide raw materials to production orders.\n'
                 'For example to manage production made by your suppliers (sub-contracting).\n'
                 'To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking" '
                 'and put the location of the supplier in the routing of the assembly operation.\n'
-                'This installs the module stock_no_autopicking.'),
+                '-This installs the module stock_no_autopicking.'),
         'group_mrp_routings': fields.boolean("Manage routings and work orders ",
             implied_group='mrp.group_mrp_routings',
             help='Routings allow you to create and manage the manufacturing operations that should be followed '
@@ -69,7 +69,7 @@ class mrp_config_settings(osv.osv_memory):
                 '* Manufacturer Product Name\n'
                 '* Manufacturer Product Code\n'
                 '* Product Attributes.\n'
-                'This installs the module product_manufacturer.'),
+                '-This installs the module product_manufacturer.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

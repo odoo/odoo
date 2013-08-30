@@ -48,14 +48,14 @@ class purchase_config_settings(osv.osv_memory):
                 'Supplier: don\'t forget to ask for an express delivery.'),
         'module_purchase_double_validation': fields.boolean("Force two levels of approvals",
             help='Provide a double validation mechanism for purchases exceeding minimum amount.\n'
-                'This installs the module purchase_double_validation.'),
+                '-This installs the module purchase_double_validation.'),
         'module_purchase_requisition': fields.boolean("Manage purchase requisitions",
             help='Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.\n'
                 'You can configure per product if you directly do a Request for Quotation '
                 'to one supplier or if you want a purchase requisition to negotiate with several suppliers.'),
         'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on purchase orders',
             help ='Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n'
-                'This installs the module purchase_analytic_plans.'),
+                '-This installs the module purchase_analytic_plans.'),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
@@ -78,7 +78,7 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on orders',
             help ='Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n'
-                'This installs the module purchase_analytic_plans.'),
+                '-This installs the module purchase_analytic_plans.'),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
