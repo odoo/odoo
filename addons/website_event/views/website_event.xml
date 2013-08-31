@@ -28,7 +28,8 @@
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Events</t>
-            <div class="container mt48">
+            <h1 class="text-center">Our Events</h1>
+            <div class="container">
                 <div class="row">
                     <div class="col-md-4 css_noprint" id="left_column">
                         <ul class="nav nav-pills nav-stacked">
@@ -40,12 +41,10 @@
                             </t>
                         </ul>
                     </div>
-                    <div class="col-md-8 navbar navbar-default">
-                        <div class='navbar-inner'>
-                            <t t-call="website.pager" >
-                                <t t-set="classname">pull-left</t>
-                            </t>
-                        </div>
+                    <div class="col-md-8">
+                        <t t-call="website.pager" >
+                            <t t-set="classname">pull-left</t>
+                        </t>
                     </div>
                     <div class="col-md-8">
                         <ul class="media-list">
@@ -91,7 +90,7 @@
 
     <template id="event_category" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Category">
         <xpath expr="//div[@id='left_column']" position="inside">
-            <ul class="nav nav-pills nav-stacked">
+            <ul class="nav nav-pills nav-stacked mt32">
                 <li class="nav-header">Category</li>
                 <t t-foreach="types">
                     <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
@@ -103,7 +102,7 @@
     </template>
     <template id="event_location" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Location">
         <xpath expr="//div[@id='left_column']" position="inside">
-            <ul class="nav nav-pills nav-stacked">
+            <ul class="nav nav-pills nav-stacked mt32">
                 <li class="nav-header">Location</li>
                 <t t-foreach="countries">
                     <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
@@ -121,7 +120,13 @@
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Events</t>
-            <div class="container mt48">
+            <div class="container">
+                <h1 class="text-center" t-field="event_id.name"></h1>
+                <h4 class="text-center">
+                    <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
+                    <span t-field="event_id.date_end"/>
+                </h4>
+                <h5 class="text-center" t-field="event_id.address_id"/>
                 <div class="row">
                     <div class="col-md-4 css_noprint">
                         <h4>When &amp; Where</h4>
@@ -153,13 +158,7 @@ t-attf-class="label label-default pull-right label-#{ event_id.register_avail &l
                                     available.
                                 </span>
                             </t>
-                            <h4 class="media-heading"><a t-attf-href="/event/#{ event_id.id }/"><span t-field="event_id.name"> </span></a></h4>
                             <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
-                            <h5 class="media-heading">
-                                <span t-field="event_id.address_id"/><br/>
-                                <i class="icon-time"></i> <span t-field="event_id.date_begin"/><br/>
-                                <i class="icon-time"></i> <span t-field="event_id.date_end"/>
-                            </h5>
                             <h4 t-if="event_id.event_ticket_ids">Ticket Information</h4>
                             <form t-attf-action="/event/#{ event_id.id }/add_cart" method="post" t-if="event_id.event_ticket_ids">
                                 <table class="table">
