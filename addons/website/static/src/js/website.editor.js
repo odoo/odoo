@@ -92,7 +92,7 @@
                 );
             });
             menu.on('click', 'a', function (event) {
-                var view_id = $(event.target).data('view-id');
+                var view_id = $(event.currentTarget).data('view-id');
                 openerp.jsonRpc('/website/customize_template_toggle', 'call', {
                     'view_id': view_id
                 }).then( function(result) {
