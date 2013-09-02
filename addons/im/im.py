@@ -193,8 +193,16 @@ class im_message(osv.osv):
 
 class im_session(osv.osv):
     _name = 'im.session'
+
+    def _calc_name(self, cr, uid, ids, something, something_else, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            res[obj.id] = ", ".join([x.name for x in obj.user_ids])
+        return res
+
     _columns = {
         'user_ids': fields.many2many('im.user'),
+        "name": fields.function(_calc_name, string="Name", type='char'),
     }
 
     # Todo: reuse existing sessions if possible
