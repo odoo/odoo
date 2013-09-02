@@ -71,18 +71,37 @@
         },
     });
 
+    website.seo.Image = openerp.Widget.extend({
+        template: 'website.seo_image',
+        init: function (parent, options) {
+            this.src = options.src;
+            this.alt = options.alt;
+            this._super(parent);
+        }
+    });
+
     website.seo.PageParser = openerp.Class.extend({
         init: function () {
             this._company = $('meta[name="openerp.company"]').attr('value');
             this._url = this._currentURL();
             this._title = $(document.title).text();
             this._headers = {};
+            var _images = [];
+            this._images = _images;
 
             var self = this;
             _.each([ 'h1', 'h2', 'h3'], function (header) {
                 self._headers[header] = $(header).map(function () {
                     return $(this).text();
                 }).get();
+            });
+            $('#wrap img').each(function () {
+                var $this = $(this);
+                var img = {
+                    src: $this.attr('src'),
+                    alt: $this.attr('alt'),
+                };
+                _images.push(img);
             });
         },
         _currentURL: function () {
@@ -98,6 +117,9 @@
         },
         headers: function () {
             return this._headers;
+        },
+        images: function () {
+            return this._images;
         },
         company: function () {
             return this._company;
@@ -122,6 +144,7 @@
             this.$el.find('input[name=seo_page_title]').val(pageParser.title());
             this.checkBestPractices(pageParser);
             this.displayKeywordSuggestions(pageParser);
+            this.displayImages(pageParser);
 
             this.$el.modal();
         },
@@ -176,6 +199,14 @@
                         }).appendTo($modal.find('.js_seo_company_suggestions'));
                     }
                 });
+            });
+        },
+        displayImages: function (pageParser) {
+            var $container = this.$el.find('.js_seo_images');
+            $container.empty();
+            var self = this;
+            _.each(pageParser.images(), function (image) {
+                new website.seo.Image(self, image).appendTo($container);
             });
         },
         currentPage: function () {
