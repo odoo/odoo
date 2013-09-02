@@ -188,7 +188,7 @@
             var $modal = $el || this.$el;
             function keywords () {
                 return $('.js_seo_keyword').map(function () {
-                    return $(this).text();
+                    return $(this).data('keyword');
                 });
             }
             function isKeywordListFull () {
