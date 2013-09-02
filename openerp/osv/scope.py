@@ -168,7 +168,7 @@ class Scope(object):
 
         if context == ():
             context = self.context
-        context = dict(context, **kwargs)
+        context = dict(context or {}, **kwargs)
 
         return Scope(cr, uid, context)
 
