@@ -37,6 +37,8 @@
         },
         init: function (parent, options) {
             this.keyword = options.keyword;
+            // default, primary, success, info, warning, danger
+            this.type = options.type || 'default';
             this.onDelete = options.onDelete;
             this._super(parent);
         },
@@ -58,7 +60,7 @@
             // default, primary, success, info, warning, danger
             this.type = options.type || 'default';
             this._addToSelection = function (keyword) {
-                parent.addKeyword(keyword, parent.$el);
+                parent.addKeyword(keyword, parent.$el, 'info');
             };
             this._super(parent);
         },
@@ -157,16 +159,17 @@
             var requestURL = "http://seo.eu01.aws.af.cm/suggest/" + encodeURIComponent(companyName);
             var self = this;
             $.getJSON(requestURL, function (list) {
-                list.push(companyName);
                 var nameRegex = new RegExp(companyName, "gi");
                 var cleanList = _.map(list, function (word) {
-                    console.log(word);
-                    return word.replace(nameRegex, "");
+                    return word.replace(nameRegex, "").trim();
                 });
-                _.each(_.uniq(list), function (keyword) {
-                    new website.seo.Suggestion(self, {
-                        keyword: keyword
-                    }).appendTo($('.js_seo_company_suggestions'));
+                cleanList.push(companyName);
+                _.each(_.uniq(cleanList), function (keyword) {
+                    if (keyword) {
+                        new website.seo.Suggestion(self, {
+                            keyword: keyword
+                        }).appendTo($('.js_seo_company_suggestions'));
+                    }
                 });
             });
         },
@@ -181,7 +184,7 @@
                 this.$el.find('input[name=seo_page_keywords]').val("");
             }
         },
-        addKeyword: function (keyword, $el) {
+        addKeyword: function (keyword, $el, type) {
             var $modal = $el || this.$el;
             function keywords () {
                 return $('.js_seo_keyword').map(function () {
@@ -212,6 +215,7 @@
             if (word && !isKeywordListFull() && !isExistingKeyword(word)) {
                 new website.seo.Keyword(this, {
                     keyword: word,
+                    type: type,
                     onDelete: enableNewKeywords
                 }).appendTo($modal.find('.js_seo_keywords_list'));
             }
