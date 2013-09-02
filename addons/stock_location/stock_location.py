@@ -140,7 +140,6 @@ class procurement_rule(osv.osv):
     }
     _defaults = {
         'procure_method': 'make_to_stock',
-        'invoice_state': 'none',
         'propagate': True, 
         'delay': 0, 
     }
