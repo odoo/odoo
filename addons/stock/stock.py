@@ -727,6 +727,10 @@ class stock_picking(osv.osv):
             for move in picking.move_lines:
                 quant_obj.quants_unreserve(cr, uid, move, context=context)
                 res2[move.id] = move.product_qty
+            # Resort pack_operation_ids
+            
+            
+            #
             for ops in picking.pack_operation_ids:
                 #Find moves that correspond
                 if ops.product_id:
