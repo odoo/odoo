@@ -5313,7 +5313,8 @@ class BaseModel(object):
             return self
         ids = list(self._ids)
         if all(ids):
-            return self.browse(ids)
+            with scope:
+                return self.browse(ids)
         raise except_orm("ValueError", "Cannot scope %s" % self)
 
     def unbrowse(self):
