@@ -384,9 +384,12 @@
                     element: 'a',
                     attributes: attributes,
                 }).applyToRange(range);
-                // blows up the call stack, not sure why as original version
-                // seems to work OK
-                // range.select();
+
+                // focus dance between RTE & dialog blow up the stack in Safari
+                // and Chrome, so defer select() until dialog has been closed
+                setTimeout(function () {
+                    range.select();
+                }, 0);
             }
         },
         save: function () {
