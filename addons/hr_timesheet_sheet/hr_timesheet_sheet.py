@@ -337,9 +337,20 @@ class hr_timesheet_line(osv.osv):
     def _check_sheet_state(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        for timesheet_line in self.browse(cr, uid, ids, context=context):
-            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
-                return False
+        ts_sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+        # When a timesheet_line is created from view tree of
+        # hr.analytic.timesheet sheet_id is not defined at this stage
+        # here we check the state of the timesheet for the given date
+        # Furthermore we don't want a default sheet_id allowing to bypass
+        # the check so we recompute all sheet_ids
+        sheet_ids = self._sheet(cr ,uid, ids, False, False, context=context)
+        for ts_line_id, sheet in sheet_ids.iteritems():
+
+            if sheet:
+                ts_sheet = ts_sheet_obj.browse(cr, uid, sheet[0], context=context)
+                if ts_sheet.state not in ('draft', 'new'):
+                    return False
+
         return True
 
     _constraints = [
