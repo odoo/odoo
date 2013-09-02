@@ -161,7 +161,7 @@
     <t t-name="website.seo_image">
         <div class="col-sm-6 col-md-3 oe_seo_image_preview">
             <img t-att-src="widget.src" class="img-rounded thumbnail"/>
-            <input type="text" class="form-control" t-attf-placeholder="#{widget.alt or 'Description...'}"/>
+            <input type="text" class="form-control" t-att-value="widget.alt" placeholder="Description..."/>
         </div>
     </t>
 
