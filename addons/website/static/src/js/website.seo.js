@@ -60,7 +60,9 @@
             // default, primary, success, info, warning, danger
             this.type = options.type || 'default';
             this._addToSelection = function (keyword) {
-                parent.addKeyword(keyword, parent.$el, 'info');
+                if (_.isFunction(parent.addKeyword)) {
+                    parent.addKeyword(keyword, parent.$el, 'info');
+                }
             };
             this._super(parent);
         },
@@ -155,10 +157,13 @@
             }
         },
         displayKeywordSuggestions: function (pageParser) {
+            var $modal = this.$el;
             var companyName = pageParser.company().toLowerCase();
             var requestURL = "http://seo.eu01.aws.af.cm/suggest/" + encodeURIComponent(companyName);
+            $modal.find('.js_seo_company_suggestions').append("Loading...");
             var self = this;
             $.getJSON(requestURL, function (list) {
+                $modal.find('.js_seo_company_suggestions').empty();
                 var nameRegex = new RegExp(companyName, "gi");
                 var cleanList = _.map(list, function (word) {
                     return word.replace(nameRegex, "").trim();
@@ -168,7 +173,7 @@
                     if (keyword) {
                         new website.seo.Suggestion(self, {
                             keyword: keyword
-                        }).appendTo($('.js_seo_company_suggestions'));
+                        }).appendTo($modal.find('.js_seo_company_suggestions'));
                     }
                 });
             });
