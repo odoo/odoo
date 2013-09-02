@@ -634,7 +634,9 @@ class stock_picking(osv.osv):
             })
             back_order_name = self.browse(cr, uid, backorder_id, context=context).name
             self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
-            self.pool.get('stock.move').write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
+            move_obj = self.pool.get("stock.move")
+            move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
+            self.pool.get("stock.picking").action_confirm(cr, uid, [picking.id], context=context)
             return backorder_id
         return False
 
@@ -657,7 +659,7 @@ class stock_picking(osv.osv):
                         'product_uom_id': quant.product_id.uom_id.id,
                         'owner_id': quant.owner_id and quant.owner_id.id or False,
                         'cost': quant.cost,
-                        'package_id': quant.package_id and quant.package_id.id or False, 
+                        'package_id': quant.package_id and quant.package_id.id or False,
                     }, context=context)
                 if remaining_qty > 0:
                     pack_operation_obj.create(cr, uid, {
@@ -729,9 +731,11 @@ class stock_picking(osv.osv):
                 res2[move.id] = move.product_qty
             # Resort pack_operation_ids
             
-            
-            #
-            for ops in picking.pack_operation_ids:
+            orderedpackops = picking.pack_operation_ids
+            #Sort packing operations such that packing operations with most specific information 
+            orderedpackops.sort(key = lambda x: (x.package_id and -1 or 0) + (x.lot_id and -1 or 0))
+
+            for ops in orderedpackops:
                 #Find moves that correspond
                 if ops.product_id:
                     #TODO: Should have order such that things with lots and packings are searched first
@@ -764,10 +768,13 @@ class stock_picking(osv.osv):
                             quant_id = quant_obj.create(cr, uid, vals, context=context)
                         else:
                             #Quants get
-                            domain = [('reservation_id', '=', False)]
-                            prefered_order = op_obj._get_preferred_order(cr, uid, ops.id, context=context)
+                            prefered_order = "reservation_id IS NOT NULL"
+                            domain = op_obj._get_domain(cr, uid, ops, context=context)
                             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+                            #In the end, move quants in correct package
+                            if create and ops.result_package_id:
+                                quant_obj.write(cr, uid, [x[0] for x in quants], {'package_id': ops.result_package_id.id}, context=context)
                         res2[move.id] -= qty
                     res[ops.id] = {}
                     res[ops.id][ops.product_id.id] = qty_to_do
@@ -788,6 +795,9 @@ class stock_picking(osv.osv):
                             res2[move.id] -= qty
                         res.setdefault(ops.id, {}).setdefault(quant.product_id.id, 0.0)
                         res[ops.id][quant.product_id.id] += qty_to_do
+                    #Add parent package
+                    if create and ops.result_package_id:
+                        self.pool.get("stock.package").write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
         return (res, res2)
 
 
@@ -2098,25 +2108,21 @@ class stock_pack_operation(osv.osv):
         'date': fields.date.context_today,
     }
 
-    def _get_preferred_order(self, cr, uid, id, context=None):
-        ops = self.browse(cr, uid, id, context=context)
-        res = ""
-        if ops.package_id:
-            res += "package_id <> " + str(ops.package_id.id)
-        if ops.lot_id:
-            if res:
-                res += ", " 
-            res += "lot_id <> " + str(ops.lot_id.id)
-        if ops.owner_id:
-            if res:
-                res += ", "
-            res += "owner_id <> " + str(ops.owner_id.id)
-        else:
-            if res:
-                res += ", "
-            res += "owner_id IS NOT NULL"
-        return res
 
+    def _get_domain(self, cr, uid, ops, context=None):
+        '''
+            Gives domain for different 
+        '''
+        res = []
+        if ops.package_id:
+            res.append(('package_id', '=', ops.package_id.id), )
+        if ops.lot_id:
+            res.append(('lot_id', '=', ops.lot_id.id), )
+        if ops.owner_id: 
+            res.append(('owner_id', '=', ops.owner_id.id), )
+        else:
+            res.append(('owner_id', '=', False), )
+        return res
 
     #TODO: this function can be refactored
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
