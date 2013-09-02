@@ -454,11 +454,12 @@ class mrp_production(osv.osv):
 
     def _moves_assigned(self, cr, uid, ids, name, arg, context=None):
         """ Test whether all the consume lines are assigned """
-        res = True
+        res = {}
         for production in self.browse(cr, uid, ids, context=context):
+            res[production.id] = True
             states = [x.state != 'assigned' for x in production.move_lines if x]
             if any(states) or len(states) == 0:
-                return False
+                res[production.id] = False
         return res
 
 
