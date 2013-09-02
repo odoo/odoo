@@ -30,7 +30,7 @@ class base_action_rule(osv.Model):
 
     _columns = {
         'trg_date_resource_field_id': fields.many2one(
-            'ir.model.fields', 'User related field',
+            'ir.model.fields', 'Use employee work schedule',
             help='Use the user\'s working schedule.',
         ),
     }
