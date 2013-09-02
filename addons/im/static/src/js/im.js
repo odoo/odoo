@@ -170,4 +170,8 @@
         },
     });
 
+    im_common.technical_messages_handlers.force_kitten = function() {
+        openerp.webclient.to_kitten();
+    };
+
 })();
