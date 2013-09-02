@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
 
@@ -35,9 +36,6 @@ class product_template(osv.osv):
         'website_description': fields.html('Description for the website'),
         'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
-    }
-    _defaults = {
-        'website_published': lambda *args: True
     }
 
     def recommended_products(self, cr, uid, ids, context=None):
@@ -78,3 +76,15 @@ class sale_order(osv.osv):
         order = self.browse(cr, uid, ids[0], context=context)
 
         return sum(l.product_uom_qty for l in (order.order_line or []))
+
+class sale_order_line(osv.osv):
+    _inherit = "sale.order.line"
+ 
+    def _recalculate_product_values(self, cr, uid, ids, product_id=None, context=None):
+        user_obj = self.pool.get('res.users')
+        product_id = product_id or ids and self.browse(cr, uid, ids[0], context=context).product_id.id
+        return self.product_id_change(cr, uid, [],
+            pricelist=context.pop('pricelist'),
+            product=product_id,
+            partner_id=user_obj.browse(cr, SUPERUSER_ID, uid).partner_id.id,
+            context=context)['value']

@@ -146,13 +146,13 @@ class Ecommerce(http.Controller):
             values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
             order.write(values)
             for line in order.order_line:
-                self.add_product_to_cart(line.product_id.id, 0)
+                self.add_product_to_cart(order_line_id=line.id, number=0)
 
-    def add_product_to_cart(self, product_id=0, number=1, set_number=-1):
+    def add_product_to_cart(self, product_id=0, order_line_id=0, number=1, set_number=-1):
         order_line_obj = request.registry.get('sale.order.line')
-        user_obj = request.registry.get('res.users')
 
         product_id = product_id and int(product_id) or 0
+
         order = get_current_order()
         if not order:
             order = get_order()
@@ -163,9 +163,18 @@ class Ecommerce(http.Controller):
 
         # values initialisation
         values = {}
-        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, [('order_id', '=', order.id), ('product_id', '=', product_id)], context=context)
+
+        domain = [('order_id', '=', order.id)]
+        if order_line_id:
+            domain += [('id', '=', order_line_id)]
+        else:
+            domain += [('product_id', '=', product_id)]
+
+        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, domain, context=context)
         if order_line_ids:
             order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=context)[0]
+            if not product_id:
+                product_id = order_line['product_id'][0]
             if set_number >= 0:
                 quantity = set_number
             else:
@@ -178,10 +187,7 @@ class Ecommerce(http.Controller):
             quantity = 1
 
         # change and record value
-        pricelist_id = order.pricelist_id and order.pricelist_id.id or False
-        vals = order_line_obj.product_id_change(request.cr, SUPERUSER_ID, [], pricelist_id, product_id,
-            partner_id=user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id,
-            context=context)['value']
+        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=context)
         values.update(vals)
 
         values['product_uom_qty'] = quantity
@@ -210,7 +216,7 @@ class Ecommerce(http.Controller):
         suggested_ids = []
         if order:
             for line in order.order_line:
-                suggested_ids += [p.id for p in line.product_id.suggested_product_ids for line in order.order_line]
+                suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or [] for line in order.order_line]
         suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)])
         # select 3 random products
         suggested_products = []
@@ -224,21 +230,21 @@ class Ecommerce(http.Controller):
         })
         return website.render("website_sale.mycart", values)
 
-    @http.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/', '/shop/add_cart/<product_id>/', '/shop/<path:path>/add_cart/<product_id>/'], type='http', auth="public")
-    def add_cart(self, path=None, product_id=0, remove=None):
-        self.add_product_to_cart(product_id, number=(remove and -1 or 1))
+    @http.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/'], type='http', auth="public")
+    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None):
+        self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
         if path:
             return werkzeug.utils.redirect("/shop/%s/" % path)
         else:
             return werkzeug.utils.redirect("/shop/")
 
-    @http.route(['/shop/remove_cart/<product_id>/', '/shop/<path:path>/remove_cart/<product_id>/'], type='http', auth="public")
-    def remove_cart(self, path=None, product_id=0):
-        return self.add_cart(product_id=product_id, path=path, remove=True)
+    @http.route(['/shop/remove_cart/', '/shop/<path:path>/remove_cart/'], type='http', auth="public")
+    def remove_cart(self, path=None, product_id=None, order_line_id=None):
+        return self.add_cart(product_id=product_id, order_line_id=order_line_id, path=path, remove=True)
 
-    @http.route(['/shop/set_cart/<product_id>/<set_number>/', '/shop/<path:path>/set_cart/<product_id>/<set_number>/'], type='http', auth="public")
-    def set_cart(self, path=None, product_id=0, set_number=0):
-        self.add_product_to_cart(product_id, set_number=set_number)
+    @http.route(['/shop/set_cart/', '/shop/<path:path>/set_cart/'], type='http', auth="public")
+    def set_cart(self, path=None, product_id=None, order_line_id=None, set_number=0):
+        self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
         if path:
             return werkzeug.utils.redirect("/shop/%s/" % path)
         else:

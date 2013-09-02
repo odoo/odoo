@@ -120,7 +120,7 @@
                                 <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
                             </div>
                             <div class="mb8 mt8">
-                                <a t-if="product.website_published" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-default btn-sm btn-success">Add to cart</a>
+                                <a t-if="product.website_published" t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to cart</a>
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                 <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                     <h1 t-field="product.name"></h1>
-                    <a t-if="not product.product_variant_ids" t-attf-href="./add_cart/#{ product.id }/" class="btn btn-default btn-sm btn-success pull-right">Add to cart</a>
+                    <a t-if="not product.product_variant_ids" t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success pull-right">Add to cart</a>
                     <form t-if="len(product.product_variant_ids) > 1" action="./add_cart/" class="pull-right">
                         <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
                             <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
@@ -216,22 +216,25 @@
                         <tbody t-if="order and order.order_line">
                             <t t-foreach="order.order_line" t-as="line">
                                 <tr>
-                                    <td>
+                                    <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
+                                    <td t-if="line.product_id.product_tmpl_id">
                                         <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
-                                    <td>
+                                    <td t-if="line.product_id.product_tmpl_id">
                                         <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><span t-field="line.name"/></a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
-                                        <small t-if="line.product_id.lst_price != line.price_unit" class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
+                                        <t t-if="line.product_id.product_tmpl_id and line.product_id.lst_price != line.price_unit">
+                                        <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
+                                        </t>
                                        <span t-field="line.price_unit"></span> €
                                     </td>
                                     <td>
                                         <div class="pull-right">
-                                            <input type="text" class="js_quantity input-sm col-md-5" t-att-data-id="line.product_id.id" t-att-value="line.product_uom_qty"/>
-                                            <a t-attf-href="./remove_cart/#{ line.product_id.id }/" class="btn btn-default mb8 btn-sm btn-inverse">-</a>
-                                            <a t-attf-href="./add_cart/#{ line.product_id.id }/" class="btn btn-default mb8 btn-sm btn-success">+</a>
+                                            <input type="text" class="js_quantity input-sm col-md-5" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
+                                            <a t-attf-href="./remove_cart/?order_line_id=#{ line.id }" class="btn btn-default mb8 btn-sm btn-inverse">-</a>
+                                            <a t-attf-href="./add_cart/?order_line_id=#{ line.id }" class="btn btn-default mb8 btn-sm btn-success">+</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -281,7 +284,7 @@
                             </td>
                             <td>
                                 <div class="pull-right">
-                                    <a t-attf-href="./add_cart/#{ product.id }/" class="btn btn-sm btn-success">+</a>
+                                    <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-sm btn-success">+</a>
                                 </div>
                             </td>
                         </tr>

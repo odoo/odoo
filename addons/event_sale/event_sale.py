@@ -47,7 +47,8 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids,
                           pricelist, 
-                          product, qty=0,
+                          product,
+                          qty=0,
                           uom=False,
                           qty_uos=0,
                           uos=False,
@@ -88,7 +89,6 @@ class sale_order_line(osv.osv):
                     'event_id': order_line.event_id.id,
                     'event_ticket_id': order_line.event_ticket_id and order_line.event_ticket_id.id or None,
                 }
-                print dic
 
                 if order_line.event_ticket_id:
                     if order_line.event_ticket_id.register_avail != 9999 and dic['nb_register'] > order_line.event_ticket_id.register_avail:

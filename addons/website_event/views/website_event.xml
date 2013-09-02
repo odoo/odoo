@@ -15,7 +15,9 @@
 
     <template id="event_website_sale_mycart" inherit_id="website_sale.mycart">
         <xpath expr="//small[@class='text-error']" position="replace">
-            <small t-if="line.product_id.lst_price != line.price_unit and not line.event_id" class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
+            <t t-if="(not line.event_id or line.event_ticket_id and line.event_ticket_id.price == line.product_id.lst_price)">
+                <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
+            </t>
         </xpath>
     </template>
 
