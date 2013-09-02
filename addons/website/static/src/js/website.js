@@ -340,6 +340,9 @@
         template: 'website.snippets',
         init: function () {
             this._super.apply(this, arguments);
+            if(!$('#oe_manipulators').length){
+                $("<div id='oe_manipulators'></div>").appendTo('body');
+            }
         },
         start: function() {
             var self = this;
@@ -549,7 +552,7 @@
                 var $target = $targets.eq(i);
                 var $zone = $(zone_template);
                 this.cover_target($zone,$target);
-                $zone.appendTo('body');
+                $zone.appendTo('#oe_manipulators');
                 $zone.data('target',$target);
             }
         },
@@ -567,7 +570,12 @@
         // activates the manipulator boxes (with resizing handles) for all snippets
         activate_snippet_manipulators: function(){
             var self = this;
+            // we generate overlay drop zones only to get an idea of where the snippet are, the drop
+            // zones are replaced by manipulators
             this.activate_overlay_zones('#wrap .container');
+
+            var $active_manipulator = null;
+            var locked = false;
 
             $('.oe_drop_zone').each(function(){;
 
@@ -577,10 +585,35 @@
 
                 self.cover_target($manipulator, $zone);
                 $manipulator.data('target',$snippet);
-                $manipulator.appendTo('body');
+                $manipulator.appendTo('#oe_manipulators');
                 $zone.remove();
 
+                $manipulator.mouseover(function(){
+                    if(!locked && $active_manipulator != $manipulator){
+                        if($active_manipulator){
+                            $active_manipulator.removeClass('oe_selected');
+                        }
+                        $active_manipulator = $manipulator;
+                        $manipulator.addClass('oe_selected');
+                    }
+                });
+                /*$manipulator.mouseleave(function(){
+                    if(!locked && $active_manipulator){
+                        $active_manipulator.removeClass('oe_selected');
+                        $active_manipulator = null;
+                    }
+                });*/
+                /*
+                $manipulator.click(function(){
+                    if($active_manipulator === $manipulator){
+                        selected = !selected;
+                        $manipulator.toggleClass('oe_selected',selected);
+                    }
+                });
+                */
+
                 $manipulator.find('.oe_handle').mousedown(function(event){
+                    locked = true;
                     var $handle = $(this);
                     var x = event.pageX;
                     var y = event.pageY;
@@ -607,6 +640,7 @@
                     });
 
                     $('body').mouseup(function(){
+                        locked = false;
                         $('body').unbind('mousemove');
                         $('body').unbind('mouseup');
                         self.deactivate_snippet_manipulators();

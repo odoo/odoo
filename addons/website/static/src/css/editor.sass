@@ -89,6 +89,7 @@
         line-height: 120px
         color: white
         text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95)
+        box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
 
     .oe_snippet_body
         display: none
@@ -146,27 +147,48 @@
 .oe_snippet_manipulator
     display: block
     position: absolute
-    background: rgba(153, 0, 255, 0.1)
+    background: transparent //rgba(153, 0, 255, 0.05)
     border-radius: 3px
-    border: solid 1px rgba(153, 0, 255, 0.5)
     opacity: 0
     transition: opacity 100ms linear
+    box-sizing: border-box
     & > .oe_handle
         display: none
-    &:hover,&.oe_hover
+    &.oe_hover
         opacity: 1
+        cursor: pointer
+    &.oe_selected
+        opacity: 1
+        pointer-events: none
+        background: transparent
+        border: solid 1px rgba(153, 0, 255, 0.5)
+        & > *
+            pointer-events: auto
         & > .oe_handle
             display: block
+    .oe_buttons
+        position: absolute
+        right: 16px
+        top: 16px
+        background: rgb(173, 0, 255)
+        color: white
+        padding: 0px 2px
+        border-radius: 3px
+        .oe_icon
+            display: inline-block
+            padding: 8px
+            cursor: pointer
 
 .oe_handle
+    pointer-events: auto
     position: absolute
     top: 50%
     left: 50%
     display: block
     background: rgba(255, 255, 255, 1)
-    border: solid 1px rgba(153, 0, 255, 0.5)
+    border: solid 1px rgba(153, 0, 255, 1)
     box-sizing: border-box
-    border-radius: 2px
+    border-radius: 8px
     width: 16px
     height: 16px
     margin: -8px
