@@ -729,7 +729,7 @@ class test_mail(TestMailBase):
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
         for dummy in range(3):
-            with scope(user_raoul):
+            with scope(user=user_raoul):
                 group_pigs.message_post(body='My Demo Body', subtype='mt_comment')
 
         # Test: admin has 3 new notifications (from demo), and 3 new needaction
