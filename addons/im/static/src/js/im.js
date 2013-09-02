@@ -18,7 +18,8 @@
                 im_common.notification = function(message) {
                     instance.client.do_warn(message);
                 };
-                im_common.connection = openerp.session;
+                // TODO: allow to use a different host for the chat
+                im_common.connection = new openerp.Session(self, null, {session_id: openerp.session.session_id});
 
                 var im = new instance.im.InstantMessaging(self);
                 im.appendTo(instance.client.$el);

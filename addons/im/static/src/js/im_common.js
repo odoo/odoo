@@ -242,9 +242,14 @@ function declare($, _, openerp) {
             }
             var defs = [];
             _.each(messages, function(message) {
-                defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
-                    return conv.received_message(message);
-                }));
+                if (! message.technical) {
+                    defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
+                        return conv.received_message(message);
+                    }));
+                } else {
+                    var json = JSON.parse(message.message);
+                    defs.push($.when(im_common.technical_messages_handlers[json.type](self, message)));
+                }
             });
             return $.when.apply($, defs);
         },
@@ -267,7 +272,7 @@ function declare($, _, openerp) {
     im_common.Conversation = openerp.Widget.extend({
         className: "openerp_style oe_im_chatview",
         events: {
-            "keydown input": "send_message",
+            "keydown input": "keydown",
             "click .oe_im_chatview_close": "destroy",
             "click .oe_im_chatview_header": "show_hide"
         },
@@ -289,6 +294,7 @@ function declare($, _, openerp) {
             var self = this;
 
             self.$().append(openerp.qweb.render("im_common.conversation", {widget: self}));
+            this.$().hide();
 
             var change_status = function() {
                 var disconnected = _.every(this.get("users"), function(u) { return u.get("im_status") === false; });
@@ -304,34 +310,47 @@ function declare($, _, openerp) {
                     user.on("change:im_status", self, change_status);
                 });
                 change_status.call(self);
+                _.each(ev.oldValue, function(user) {
+                    if (! _.contains(ev.newValue, user)) {
+                        user.remove_watcher();
+                    }
+                });
+                _.each(ev.newValue, function(user) {
+                    if (! _.contains(ev.oldValue, user)) {
+                        user.add_watcher();
+                    }
+                });
             });
             this.on("change:disconnected", this, function() {
                 self.$().toggleClass("oe_im_chatview_disconnected_status", this.get("disconnected"));
                 self._go_bottom();
             });
 
+            self.on("change:right_position", self, self.calc_pos);
+            self.on("change:bottom_position", self, self.calc_pos);
+            self.full_height = self.$().height();
+            self.calc_pos();
+            self.on("change:pending", self, _.bind(function() {
+                if (self.get("pending") === 0) {
+                    self.$(".oe_im_chatview_nbr_messages").text("");
+                } else {
+                    self.$(".oe_im_chatview_nbr_messages").text("(" + self.get("pending") + ")");
+                }
+            }, self));
+
+            return this.refresh_users().then(function() {
+                self.$().show();
+            });
+        },
+        refresh_users: function() {
+            var self = this;
             var user_ids;
             return im_common.connection.model("im.session").call("read", [self.session_id]).then(function(session) {
                 user_ids = _.without(session.user_ids, self.c_manager.me.get("id"));
                 return self.c_manager.ensure_users(session.user_ids);
             }).then(function() {
                 var users = _.map(user_ids, function(id) {return self.c_manager.get_user(id);});
-                _.each(users, function(user) {
-                    user.add_watcher();
-                });
                 self.set("users", users);
-
-                self.on("change:right_position", self, self.calc_pos);
-                self.on("change:bottom_position", self, self.calc_pos);
-                self.full_height = self.$().height();
-                self.calc_pos();
-                self.on("change:pending", self, _.bind(function() {
-                    if (self.get("pending") === 0) {
-                        self.$(".oe_im_chatview_nbr_messages").text("");
-                    } else {
-                        self.$(".oe_im_chatview_nbr_messages").text("(" + self.get("pending") + ")");
-                    }
-                }, self));
             });
         },
         show_hide: function() {
@@ -368,7 +387,7 @@ function declare($, _, openerp) {
                 this._add_bubble(user, message.message, openerp.str_to_datetime(message.date));
             }, this));
         },
-        send_message: function(e) {
+        keydown: function(e) {
             if(e && e.which !== 13) {
                 return;
             }
@@ -377,9 +396,13 @@ function declare($, _, openerp) {
                 return;
             }
             this.$("input").val("");
+            this.send_message(mes);
+        },
+        send_message: function(message, technical) {
+            technical = technical || false;
             var send_it = _.bind(function() {
                 var model = im_common.connection.model("im.message");
-                return model.call("post", [mes, this.session_id], {uuid: this.c_manager.me.get("uuid"), context: {}});
+                return model.call("post", [message, this.session_id, technical], {uuid: this.c_manager.me.get("uuid"), context: {}});
             }, this);
             var tries = 0;
             send_it().then(_.bind(function() {}, function(error, e) {
@@ -415,12 +438,7 @@ function declare($, _, openerp) {
                 return;
             im_common.connection.model("im.session").call("add_to_session",
                     [this.session_id, user.get("id"), this.c_manager.me.get("uuid")]).then(_.bind(function() {
-                if (_.contains(this.others, user)) {
-                    this.others = _.without(this.others, user);
-                } else {
-                    user.add_watcher();
-                }
-                this.set("users", this.get("users").concat([user]));
+                this.send_message(JSON.stringify({"type": "session_modified"}), true);
             }, this));
         },
         focus: function() {
@@ -439,6 +457,14 @@ function declare($, _, openerp) {
             return this._super();
         }
     });
+
+    im_common.technical_messages_handlers = {};
+
+    im_common.technical_messages_handlers.session_modified = function(c_manager, message) {
+        c_manager.activate_session(message.session_id[0], true).then(function(conv) {
+            conv.refresh_users();
+        });
+    };
 
     return im_common;
 }
