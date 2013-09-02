@@ -138,19 +138,15 @@
 
     dom_ready.then(function () {
         /* ----- PUBLISHING STUFF ---- */
-        $(document).on('click', '.js_publish, .js_unpublish', function (e) {
+        $(document).on('click', '.js_publish', function (e) {
             e.preventDefault();
-            var $link = $(this).parent();
-            $link.find('.js_publish, .js_unpublish').addClass("hidden");
-            var $unp = $link.find(".js_unpublish");
-            var $p = $link.find(".js_publish");
+            var $link = $(this);
+            $link.toggleClass("css_publish").toggleClass("css_unpublish");
             $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
                 if (+result) {
-                    $p.addClass("hidden");
-                    $unp.removeClass("hidden");
+                    $link.addClass("css_publish").removeClass("css_unpublish");
                 } else {
-                    $p.removeClass("hidden");
-                    $unp.addClass("hidden");
+                    $link.removeClass("css_publish").addClass("css_unpublish");
                 }
             });
         });

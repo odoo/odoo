@@ -125,3 +125,22 @@ ul.nav-stacked > li > a
 #customize-menu
     .dropdown-header
         text-transform: uppercase
+
+/* ---- PUBLISH BUTTON ---- */
+a
+    &.css_unpublish
+        .css_unpublish
+            display: none
+        &:hover
+            .css_unpublish
+                display: inline
+            .css_publish
+                display: none
+    &.css_publish
+        .css_publish
+            display: none
+        &:hover
+            .css_publish
+                display: inline
+            .css_unpublish
+                display: none
