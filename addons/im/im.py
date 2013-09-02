@@ -229,7 +229,8 @@ class im_user(osv.osv):
 
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
-        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]], limit=limit, context=context)
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]],
+            order="name asc", limit=limit, context=context)
         return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, uuid=None, context=None):

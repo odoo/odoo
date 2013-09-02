@@ -86,12 +86,15 @@
             var users = new instance.web.Model("im.user");
             var self = this;
             return this.user_search_dm.add(users.call("search_users", [this.get("current_search"), ["name", "user_id", "uuid", "im_status"],
-                    USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(result) {
-                self.c_manager.add_to_user_cache(result);
+                    USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(users) {
+                var logged_users = _.filter(users, function(u) { return !!u.im_status; });
+                var non_logged_users = _.filter(users, function(u) { return !u.im_status; });
+                users = logged_users.concat(non_logged_users);
+                self.c_manager.add_to_user_cache(users);
                 self.$(".oe_im_input").val("");
                 var old_users = self.users;
                 self.users = [];
-                _.each(result, function(user) {
+                _.each(users, function(user) {
                     var widget = new instance.im.UserWidget(self, self.c_manager.get_user(user.id));
                     widget.appendTo(self.$(".oe_im_users"));
                     widget.on("activate_user", self, self.activate_user);
