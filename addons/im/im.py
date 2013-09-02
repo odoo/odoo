@@ -203,14 +203,14 @@ class im_session(osv.osv):
         session_id = None
         if user_to:
             # FP Note: does the ORM allows something better than this? == on many2many
-            sids = self.search(cr, uid, [('user_ids', 'in', [user_to]), ('user_ids', 'in', [my_id])], context=context, limit=1)
+            sids = self.search(cr, openerp.SUPERUSER_ID, [('user_ids', 'in', [user_to]), ('user_ids', 'in', [my_id])], context=context, limit=1)
             for session in self.browse(cr, uid, sids, context=context):
                 if len(session.user_ids) == 2:
                     session_id = session.id
                     break
         if not session_id:
-            session_id = self.create(cr, uid, {
-                'user_ids': [(6, 0, (user_to, uid))]
+            session_id = self.create(cr, openerp.SUPERUSER_ID, {
+                'user_ids': [(6, 0, [user_to, my_id])]
             }, context=context)
         return self.read(cr, uid, session_id, context=context)
 

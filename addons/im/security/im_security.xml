@@ -22,16 +22,5 @@
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
         </record>
-
-        <record id="sessions_rule_1" model="ir.rule">
-            <field name="name">Can modify sessions if you are in it.</field>
-            <field name="model_id" ref="model_im_session"/>
-            <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
-            <field name="domain_force">[('user_ids', 'in', [user.id])]</field>
-            <field name="perm_read" eval="0"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_create" eval="0"/>
-            <field name="perm_unlink" eval="0"/>
-        </record>
     </data>
 </openerp>
