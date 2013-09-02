@@ -247,7 +247,6 @@ class Field(object):
         elif callable(self.compute):
             self.compute(self, records)
         else:
-            import pudb; pudb.set_trace()
             raise Warning("No way to compute %s on %s" % (self, records))
 
     def read_value(self, records):
