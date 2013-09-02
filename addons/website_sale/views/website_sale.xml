@@ -95,6 +95,10 @@
 
     <template id="products" page="True">
         <t t-call="website_sale.layout">
+            <t t-set="head">
+                <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+                <t t-raw="head or ''"/>
+            </t>
             <t t-set="title">Product</t>
             <t t-set="shop_content">
                 <t t-call="website.pager">
@@ -106,7 +110,7 @@
                 <div class="clearfix"/>
                 <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
-                    <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'alert alert-warning' or ''}" style="width: 170px; margin-left: 16px;">
+                    <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'disabled' or ''}" style="width: 170px; margin-left: 16px;">
                         <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
                             <h5  t-field="product.name"> </h5>
                             <img class="img-rounded" t-att-src="product.img('image_small')"/>
