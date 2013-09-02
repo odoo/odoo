@@ -19,16 +19,16 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
 from openerp import tools
-from .. import crm
+from openerp.addons.crm import crm
+from openerp.osv import fields, osv
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Todo'),
+    ('draft', 'Draft'),
+    ('open', 'Todo'),
     ('cancel', 'Cancelled'),
     ('done', 'Held'),
-    ('pending','Pending')
+    ('pending', 'Pending')
 ]
 
 

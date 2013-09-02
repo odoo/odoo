@@ -1,4 +1,6 @@
 openerp.auth_oauth = function(instance) {
+    var _t = instance.web._t,
+        _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
 
     instance.web.Login.include({
@@ -9,9 +11,11 @@ openerp.auth_oauth = function(instance) {
             this.$el.on('click', 'a.zocial', this.on_oauth_sign_in);
             this.oauth_providers = [];
             if(this.params.oauth_error === 1) {
-                this.do_warn("Sign up error.","Sign up is not allowed on this database.");
+                this.do_warn(_t("Sign up error"),_t("Sign up is not allowed on this database."), true);
             } else if(this.params.oauth_error === 2) {
-                this.do_warn("Authentication error","");
+                this.do_warn(_t("Authentication error"),_t("Access Denied"), true);
+            } else if(this.params.oauth_error === 3) {
+                this.do_warn(_t("Authentication error"),_t("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."), true);
             }
             return d.done(this.do_oauth_load).fail(function() {
                 self.do_oauth_load([]);
