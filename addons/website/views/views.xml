@@ -16,6 +16,7 @@
                 <html t-att-data-editable="'1' if editable else '0'" t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
+                        <meta name="openerp.company" t-att-value="res_company.name" />
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
@@ -255,8 +256,8 @@
             <t t-call="website.layout">
                 <div class="container" t-if="editable and path">
                     <div class="well mt32">
-                        <p>This page does not exists, but you can create it as you are administrator of this site.</p> 
-                        <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a> 
+                        <p>This page does not exists, but you can create it as you are administrator of this site.</p>
+                        <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
                         <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
                     </div>
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
@@ -326,7 +327,7 @@
                                 <a t-att-href="'mailto:'+res_company.email" class="btn btn-primary">Send us an email</a>
                             </div>
                         </div>
-                        <div class="col-md-4"> 
+                        <div class="col-md-4">
                             <address>
                                 <strong t-field="res_company.name">Name</strong><br />
                                 <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
@@ -372,7 +373,7 @@
                 <t t-foreach="pager['pages']" t-as="page">
                     <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
                 </t>
-                <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' "> 
+                <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
                     <a t-att-href=" pager['page_end']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
                 </li>
             </ul>

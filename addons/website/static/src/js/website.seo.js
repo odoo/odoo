@@ -12,7 +12,7 @@
     });
 
     function cleanupKeyword (word) {
-        return word ? word.replace(/[,;.:]+/g, " ").replace(/ +/g, " ").trim() : "";
+        return word ? word.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
     }
 
     website.seo = {};
@@ -23,10 +23,10 @@
             'closed.bs.alert': 'destroy',
         },
         init: function (parent, options) {
-            this._super(parent);
             this.message = options.message;
             // success, info, warning or danger
-            this.type = options.type;
+            this.type = options.type || 'info';
+            this._super(parent);
         }
     });
 
@@ -36,12 +36,11 @@
             'click a[data-action=remove-keyword]': 'destroy',
         },
         init: function (parent, options) {
-            this._super(parent);
             this.keyword = options.keyword;
             this.onDelete = options.onDelete;
+            this._super(parent);
         },
         destroy: function () {
-            console.log("Destroyed", this.keyword);
             if (_.isFunction(this.onDelete)) {
                 this.onDelete(this.keyword);
             }
@@ -49,8 +48,28 @@
         },
     });
 
+    website.seo.Suggestion = openerp.Widget.extend({
+        template: 'website.seo_suggestion',
+        events: {
+            'click .js_seo_suggestion': 'addToSelection'
+        },
+        init: function (parent, options) {
+            this.keyword = options.keyword;
+            // default, primary, success, info, warning, danger
+            this.type = options.type || 'default';
+            this._addToSelection = function (keyword) {
+                parent.addKeyword(keyword, parent.$el);
+            };
+            this._super(parent);
+        },
+        addToSelection: function () {
+            this._addToSelection(this.keyword);
+        },
+    });
+
     website.seo.PageParser = openerp.Class.extend({
         init: function () {
+            this._company = $('meta[name="openerp.company"]').attr('value');
             this._url = this._currentURL();
             this._title = $(document.title).text();
             this._headers = {};
@@ -62,6 +81,11 @@
                 }).get();
             });
         },
+        _currentURL: function () {
+            var url = window.location.href;
+            var hashIndex = url.indexOf('#');
+            return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
+        },
         url: function () {
             return this._url;
         },
@@ -71,16 +95,9 @@
         headers: function () {
             return this._headers;
         },
-        _currentURL: function () {
-            var url = window.location.href;
-            var hashIndex = url.indexOf('#');
-            return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
-        },
-        keywordSuggestions: function () {
-            var headers = this.headers();
-            return _.map(_.uniq(headers.h1.concat(headers.h2)),
-                         cleanupKeyword);
-        },
+        company: function () {
+            return this._company;
+        }
     });
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
@@ -93,7 +110,6 @@
 
         maxTitleSize: 65,
         maxDescriptionSize: 155,
-        maxNumberOfKeywords: 10,
         maxWordsPerKeyword: 4,
 
         start: function () {
@@ -101,32 +117,63 @@
             this.$el.find('.js_seo_page_url').text(pageParser.url());
             this.$el.find('input[name=seo_page_title]').val(pageParser.title());
             this.checkBestPractices(pageParser);
+            this.displayKeywordSuggestions(pageParser);
+
             this.$el.modal();
         },
         checkBestPractices: function (parser) {
-            var pageParser = parser || new website.seo.PageParser();
-            if (pageParser.headers()['h1'].length > 1) {
+            var tips = [];
+            var self = this;
+            function displayTip(message, type) {
                 new website.seo.Tip(this, {
-                   message: "You have more than one &lt;h1&gt; tag on the page.",
-                   type: 'danger'
-                }).appendTo(this.$el.find('.js_seo_tips'));
+                   message: message,
+                   type: type
+                }).appendTo(self.$el.find('.js_seo_tips'));
             }
+            var pageParser = parser || new website.seo.PageParser();
+            if (pageParser.headers()['h1'].length === 0) {
+                tips.push({
+                    type: 'warning',
+                    message: "You don't have an &lt;h1&gt; tag on your page."
+                });
+            }
+            if (pageParser.headers()['h1'].length > 1) {
+                tips.push({
+                    type: 'warning',
+                    message: "You have more than one &lt;h1&gt; tag on your page."
+                });
+            }
+
+            if (tips.length > 0) {
+                _.each(tips, function (tip) {
+                    displayTip(tip.message, tip.type);
+                });
+            } else {
+                displayTip("Your page makup is appropriate for search engines.", 'success');
+            }
+        },
+        displayKeywordSuggestions: function (pageParser) {
+            var companyName = pageParser.company().toLowerCase();
+            var requestURL = "http://seo.eu01.aws.af.cm/suggest/" + encodeURIComponent(companyName);
+            var self = this;
+            $.getJSON(requestURL, function (list) {
+                list.push(companyName);
+                var nameRegex = new RegExp(companyName, "gi");
+                var cleanList = _.map(list, function (word) {
+                    console.log(word);
+                    return word.replace(nameRegex, "");
+                });
+                _.each(_.uniq(list), function (keyword) {
+                    new website.seo.Suggestion(self, {
+                        keyword: keyword
+                    }).appendTo($('.js_seo_company_suggestions'));
+                });
+            });
         },
         currentPage: function () {
             var url = window.location.href;
             var hashIndex = url.indexOf('#');
             return hashIndex > 0 ? url.substring(0, hashIndex): url;
-        },
-        keywords: function () {
-            return _.uniq($('.js_seo_keyword').map(function () {
-                return $(this).text();
-            }));
-        },
-        isExistingKeyword: function (word) {
-            return _.contains(this.keywords(), word);
-        },
-        isKeywordListFull: function () {
-            return this.keywords().length >= this.maxNumberOfKeywords;
         },
         confirmKeyword: function (e) {
             if (e.keyCode == 13) {
@@ -134,8 +181,19 @@
                 this.$el.find('input[name=seo_page_keywords]').val("");
             }
         },
-        addKeyword: function () {
-            var $modal = this.$el;
+        addKeyword: function (keyword, $el) {
+            var $modal = $el || this.$el;
+            function keywords () {
+                return $('.js_seo_keyword').map(function () {
+                    return $(this).text();
+                });
+            }
+            function isKeywordListFull () {
+                return keywords().length >= 10;
+            }
+            function isExistingKeyword (word) {
+                return _.contains(keywords(), word);
+            }
             function enableNewKeywords () {
                 $modal.find('input[name=seo_page_keywords]')
                     .removeAttr('readonly').attr('placeholder', "");
@@ -149,15 +207,15 @@
                 $modal.find('button[data-action=add]')
                     .prop('disabled', true).addClass('disabled');
             }
-            var candidate = this.$el.find('input[name=seo_page_keywords]').val();
+            var candidate = keyword || $modal.find('input[name=seo_page_keywords]').val();
             var word = cleanupKeyword(candidate);
-            if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
+            if (word && !isKeywordListFull() && !isExistingKeyword(word)) {
                 new website.seo.Keyword(this, {
                     keyword: word,
                     onDelete: enableNewKeywords
-                }).appendTo(this.$el.find('.js_seo_keywords_list'));
+                }).appendTo($modal.find('.js_seo_keywords_list'));
             }
-            if (this.isKeywordListFull()) {
+            if (isKeywordListFull()) {
                 disableNewKeywords();
             }
         },
