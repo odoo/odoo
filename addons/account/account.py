@@ -3030,6 +3030,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     }
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        if context is None:context = {}
         if context.get('default_currency_id', False):
             dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', context.get('default_currency_id'))
             return {'value': {'currency_id': view_id}}
