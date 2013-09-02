@@ -1732,6 +1732,7 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
+            inv.refresh()
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
@@ -2272,17 +2273,10 @@ class stock_warehouse_orderpoint(osv.osv):
 class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
-        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'supply_method': fields.selection([('produce', 'Manufacture'), ('buy', 'Buy'), ('wait', 'None')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
     }
     _defaults = {
         'supply_method': 'buy',
-    }
-
-class product_product(osv.osv):
-    _inherit = "product.product"
-    _columns = {
-        'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
 class stock_picking_code(osv.osv):
