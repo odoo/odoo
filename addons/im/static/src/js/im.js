@@ -125,7 +125,10 @@
             this.shown = ! this.shown;
         },
         activate_user: function(user) {
-            this.c_manager.activate_user(user, true);
+            var self = this;
+            im_common.connection.model("im.session").call("session_get", [user.get("id"), self.c_manager.me.get("uuid")]).then(function(session) {
+                self.c_manager.activate_session(session.id, true);
+            });
         },
     });
 

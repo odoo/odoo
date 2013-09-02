@@ -143,7 +143,7 @@ class im_message(osv.osv):
         'message': fields.text(string="Message", required=True),
         'from_id': fields.many2one("im.user", "From", required= True, ondelete='cascade'),
         'session_id': fields.many2one("im.session", "Session", required=True, select=True, ondelete='cascade'),
-        'to_id': fields.many2many("im.user", "To"),
+        'to_id': fields.many2many("im.user", "im_message_users", 'message_id', 'user_id', 'To'),
         'date': fields.datetime("Date", required=True, select=True),
         'technical': fields.boolean("Technical Message"),
     }
@@ -156,7 +156,6 @@ class im_message(osv.osv):
     def get_messages(self, cr, uid, last=None, users_watch=None, uuid=None, context=None):
         assert_uuid(uuid)
         users_watch = users_watch or []
-        session_ids = session_ids or []
 
         # complex stuff to determine the last message to show
         users = self.pool.get("im.user")
@@ -188,8 +187,8 @@ class im_message(osv.osv):
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
         session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
         to_ids = [x.id for x in session.user_ids if x != my_id]
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_ids}, context=context)
-        notify_channel(cr, "im_channel", {'type': 'message', 'receivers': to_user_id})
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_ids, 'session_id': to_session_id}, context=context)
+        notify_channel(cr, "im_channel", {'type': 'message', 'receivers': to_ids})
         return False
 
 class im_session(osv.osv):

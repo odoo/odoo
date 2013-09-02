@@ -198,7 +198,7 @@ class im_livechat_channel(osv.osv):
         self.write(cr, uid, ids, {'user_ids': [(3, uid)]})
         return True
 
-
+"""
 class im_message(osv.osv):
     _inherit = 'im.message'
 
@@ -244,3 +244,4 @@ class im_message(osv.osv):
         'direction': fields.function(_direction, type="selection", selection=[("s2c", "Support Member to Customer"), ("c2s", "Customer to Support Member")],
             string='Direction', store=False),
     }
+"""
