@@ -101,65 +101,52 @@
             <field name="arch" type="xml">
                 <form string="Physical Inventory" version="7.0">
                 <header>
-                    <button name="%(action_view_stock_fill_inventory)d" states="draft" string="Start Inventory" type="action" class="oe_highlight" groups="stock.group_stock_user"/>
+                    <button name="prepare_inventory" states="draft" string="Start Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                     <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                     <button name="action_cancel_inventory" states="draft,confirm,done" string="Cancel Inventory" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_button_box">
-                        <button name="action_check" string="Check Inventory Adjustments" states="draft,confirm" type="object" />
-                    </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="e.g. Annual inventory"/></h1>
                     </div>
                     <group>
                         <group>
                             <field name="location_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                        <div class="oe_grey" colspan="4">Specify filters to focus your inventory a on particular product, lot, pack and products owner</div>
+                        <group>
                             <field name="product_id"/>
                             <field name="lot_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
-                            <field name="date"/>
                             <field name="partner_id"/>
                             <field name="package_id"/>
                         </group>
                     </group>
-                    <field name="move_ids_exist" invisible="1"/>
-                    <notebook>
-                    <page string="Inventory Details" attrs="{'invisible':[('state','=','draft')]}">
-                    <button name="set_checked_qty" states="confirm" icon="gtk-go-forward" string="Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
-                    <field name="line_ids" string="Inventory Details">
-                        <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
-                            <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
-                            <field name="real_qty" readonly="1"/>
-                            <field name="product_qty" string="Checked Quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
-                            <field name="prod_lot_id"/>
-                            <field name="package_id" readonly="1"/>
-                            <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
-                            <field name="state" invisible="True"/>
-                        </tree>
-                    </field>
-                    </page>
-                    <page string="Inventory Adjustments" attrs="{'invisible': [('move_ids_exist', '=', False)],'invisible': [('state','=','draft')] }">
-                        <field name="move_ids" context="{'inventory_id':active_id}" readonly="1">
-                           <tree string="Inventory Adjustments">
-                               <field name="product_id"/>
-                               <field name="lot_ids"/>
-                               <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
-                               <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                               <field name="location_id"/>
-                               <field name="location_dest_id"/>
-                               <field name="state"  invisible="True"/>
-                           </tree>
-                        </field>
-                    </page>
+                    <notebook attrs="{'invisible':[('state','=','draft')]}">
+                        <page string="Inventory Details" >
+                            <button name="set_checked_qty" states="confirm" icon="gtk-go-forward" string="Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
+                            <field name="line_ids" string="Inventory Details">
+                                <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
+                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
+                                    <field name="real_qty" readonly="1"/>
+                                    <field name="product_qty" string="Checked Quantity"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="prod_lot_id"/>
+                                    <field name="package_id" readonly="1"/>
+                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
+                                    <field name="state" invisible="True"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
-                    </sheet>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -495,6 +482,7 @@
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
                 <form string="Warehouse" version="7.0">
+                    <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
@@ -508,6 +496,7 @@
                             <field name="partner_id"/>
                         </group>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -1453,8 +1442,39 @@
                     <field name="location_src_id"/>
                     <field name="location_id"/>
                     <field name="action"/>
-                    <field name="picking_type_id"/>
+                    <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
                 </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_procurement_rule_form">
+            <field name="name">stock.procurement.form</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            
+            <field name="arch" type="xml">
+                <form string="Procurement Rules" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                        <h1>
+                            <label string="Name"/>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="location_src_id"/>
+                                <field name="location_id"/>
+                            </group>
+                            <group>
+                                <field name="action"/>
+                                <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                                <field name="group_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
         
@@ -1540,6 +1560,7 @@
 
         <!-- Procurements are located in Warehouse menu hierarchy, MRP users should come to Stock application to use it.  -->
         <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="4" groups="stock.group_stock_manager"/>
+            <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="stock.group_stock_manager"/>
             <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
             <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>

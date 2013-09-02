@@ -332,7 +332,7 @@ class stock_quant(osv.osv):
     def quants_unreserve(self, cr, uid, move, context=None):
         #cr.execute('update stock_quant set reservation_id=NULL where reservation_id=%s', (move.id,))
         #need write for related store of remaining qty
-        related_quants = self.search(cr, uid, [('reservation_id', '=', move.id)], context=context)
+        related_quants = [x.id for x in move.reserved_quant_ids]
         self.write(cr, uid, related_quants, {'reservation_id': False}, context=context)
         return True
 
@@ -530,7 +530,8 @@ class stock_picking(osv.osv):
         picking_obj = self.browse(cr, uid, id, context=context)
         if ('name' not in default) or (picking_obj.name == '/'):
             default['name'] = '/'
-        default['backorder_id'] = False
+        if not default.get('backorder_id'):
+            default['backorder_id'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -1441,6 +1442,8 @@ class stock_move(osv.osv):
         """
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
+            if move.reserved_quant_ids:
+                self.pool.get("stock.quant").quants_unreserve(cr, uid, move, context=context)
             if move.move_dest_id:
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
@@ -1482,7 +1485,7 @@ class stock_move(osv.osv):
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
             domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
-            prefered_order = 'reservation_id<>' + str(move.id)
+            prefered_order = 'reservation_id <> ' + str(move.id)
 #             if lot_id: 
 #                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
 #             if pack_id: 
@@ -1615,10 +1618,9 @@ class stock_move(osv.osv):
         return res
 
     def split(self, cr, uid, move, qty, context=None):
-        """ Partially (or not) moves  a stock.move.
-        @param partial_datas: Dictionary containing details of partial picking
-                          like partner_id, delivery_date, delivery
-                          moves with product_id, product_qty, uom
+        """ 
+            Splits qty from move move into a new move
+            It will check if it can propagate the split
         """
         if move.product_qty==qty:
             return move.id
@@ -1647,6 +1649,9 @@ class stock_move(osv.osv):
             'product_uos_qty': move.product_uos_qty - uos_qty,
 #             'reserved_quant_ids': [(6,0,[])]  SHOULD NOT CHANGE as it has been reserved already
         }, context=context)
+        
+        if move.move_dest_id and move.propagate:
+            self.split(self, cr, uid, move.move_dest_id, qty, context=context)
         return new_move
 
 class stock_inventory(osv.osv):
@@ -1722,6 +1727,7 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
+            inv.refresh()
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
@@ -1784,7 +1790,7 @@ class stock_inventory(osv.osv):
         #TODO test
         self.action_cancel_draft(cr, uid, ids, context=context)
 
-    def _prepare_inventory(self, cr, uid, ids, full_of_zeros=False, context=None):
+    def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
             #clean the existing inventory lines before redoing an inventory proposal
@@ -1793,8 +1799,6 @@ class stock_inventory(osv.osv):
             #compute the inventory lines and create them
             vals = self._get_inventory_lines(cr, uid, inventory, context=context)
             for product_line in vals:
-                if full_of_zeros:
-                    product_line['product_qty'] = 0
                 inventory_line_obj.create(cr, uid, product_line, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'})
 
@@ -1843,7 +1847,7 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity', store=True),
+        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity'),
     }
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
@@ -1931,7 +1935,7 @@ report_sxw.report_sxw('report.stock.quant.package.barcode', 'stock.quant.package
 
 class stock_package(osv.osv):
     """
-    These are the packages, containing quants and/or others packages
+    These are the packages, containing quants and/or other packages
     """
     _name = "stock.quant.package"
     _description = "Physical Packages"

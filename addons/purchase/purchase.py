@@ -150,6 +150,10 @@ class purchase_order(osv.osv):
                                                 limit=1)
         return res and res[0] or False  
 
+    def _get_picking_in(self, cr, uid, context=None):
+        obj_data = self.pool.get('ir.model.data')
+        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1]
+
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
@@ -230,6 +234,7 @@ class purchase_order(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'bid_date': fields.date('Bid Received On', readonly=True, help="Date on which the bid was received"),
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This will determine picking type of incoming shipment"),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -241,7 +246,8 @@ class purchase_order(osv.osv):
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
         'journal_id': _get_journal,
-        'currency_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        'currency_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id,
+        'picking_type_id': _get_picking_in,
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -380,6 +386,8 @@ class purchase_order(osv.osv):
         '''
         This function returns an action that display existing picking orders of given purchase order ids.
         '''
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         pick_ids = []
         for po in self.browse(cr, uid, ids, context=context):
