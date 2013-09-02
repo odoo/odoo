@@ -473,6 +473,7 @@
                 this.$('input[type=file]').click();
             },
             'change input[type=file]': 'file_selection',
+            'change input.url': 'preview_image',
         }),
         start: function () {
             var selection = this.editor.getSelection();
@@ -481,6 +482,7 @@
             if (el && el.is('img')) {
                 this.element = el;
                 this.$('input.url').val(el.getAttribute('src'));
+                this.preview_image();
             }
 
             return this._super();
@@ -524,6 +526,13 @@
             }
             $button.addClass('btn-success');
             this.$('input.url').val(url);
+            this.preview_image();
+        },
+        preview_image: function () {
+            var image = this.$('input.url').val();
+            if (!image) { return; }
+
+            this.$('img').attr('src', image);
         },
     });
 

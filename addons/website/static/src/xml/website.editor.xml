@@ -62,25 +62,33 @@
     </t>
     <t t-name="website.editor.dialog.image">
         <t t-call="website.editor.dialog">
-            <t t-set="title">Image</t>
-            <form method="POST" action="/website/attach"
-                  enctype="multipart/form-data"
-                  target="fileframe">
-                <div class="well">
-                    <!-- a href="#" class="pull-left">Find image</a -->
-                    <h3 class="list-group-item-heading">Image URL</h3>
-                    <input type="text" class="form-control url"
-                           placeholder="http://openerp.com"/>
+            <t t-set="title">Image:</t>
+            <div class="row">
+                <form method="POST" action="/website/attach"
+                      enctype="multipart/form-data"
+                      target="fileframe"
+                      class="col-sm-8">
+                    <div class="well">
+                        <!-- a href="#" class="pull-left">Find image</a -->
+                        <h3 class="list-group-item-heading">Image URL</h3>
+                        <input type="text" class="form-control url"
+                               placeholder="http://openerp.com"/>
+                    </div>
+                    <div class="text-center">
+                        <p class="">— or —</p>
+                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary btn-lg filepicker">
+                            Upload an image from your computer
+                        </button>
+                    </div>
+                    <input type="hidden" name="func"/>
+                </form>
+                <div class="col-sm-4">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
+                         class="pull-right img-rounded"
+                         width="100%"/>
                 </div>
-                <div class="text-center">
-                    <p class="">— or —</p>
-                    <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                    <button type="button" class="btn btn-primary btn-lg filepicker">
-                        Upload an image from your computer
-                    </button>
-                </div>
-                <input type="hidden" name="func"/>
-            </form>
+            </div>
             <iframe src="about:blank" name="fileframe" class="hidden"/>
         </t>
     </t>
