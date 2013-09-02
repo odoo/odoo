@@ -21,14 +21,54 @@
 
 from openerp.osv import fields, osv
 import re
-import matplotlib.font_manager
+import os
+import platform
+from reportlab import rl_config
+from openerp.tools import config
 
 _lst_font=[]
-for i in matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf'):
-    m=re.sub('(.*/)','', i)
-    n=m.strip('.ttf')
-    n=n.replace('-',' ')
-    _lst_font.append((n,n))
+TTFSearchPath_Linux = [
+            '/usr/share/fonts/truetype', # SuSE
+            '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
+            '/usr/share/fonts/truetype/*', # Ubuntu,
+            '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
+            '/usr/share/fonts/TTF', # Arch Linux
+            ]
+
+TTFSearchPath_Windows = [
+            'c:/winnt/fonts',
+            'c:/windows/fonts'
+            ]
+
+TTFSearchPath_Darwin = [
+            '~/Library/Fonts',
+            '/Library/Fonts',
+            '/Network/Library/Fonts',
+            '/System/Library/Fonts',
+            ]
+
+TTFSearchPathMap = {
+    'Darwin': TTFSearchPath_Darwin,
+    'Windows': TTFSearchPath_Windows,
+    'Linux': TTFSearchPath_Linux,
+}
+searchpath = []
+
+if config.get('fonts_search_path'):
+    searchpath += map(str.strip, config.get('fonts_search_path').split(','))
+
+local_platform = platform.system()
+if local_platform in TTFSearchPathMap:
+    searchpath += TTFSearchPathMap[local_platform]
+
+searchpath += rl_config.TTFSearchPath
+for dirglob in searchpath:
+    if os.path.isdir(dirglob):
+        for file in os.listdir('/'+dirglob):
+            if os.path.isfile('/'+dirglob+'/'+file):
+                font=file.strip('.ttf')
+                font=font.replace('-',' ')
+                _lst_font.append((font,font))
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
