@@ -1,4 +1,12 @@
-.thumbnail.disabled {
+.thumbnail.disabled :not(.css_unpublish):not(.css_publish) {
     opacity: 0.5;
-    background: #eee;
+}
+.thumbnail > .css_unpublish, .thumbnail > .css_publish {
+    position: absolute;
+    right: -6px;
+    top: -10px;
+    display: none;
+}
+.thumbnail:hover > .css_unpublish, .thumbnail:hover > .css_publish {
+    display: block;
 }

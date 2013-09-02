@@ -111,6 +111,7 @@
                 <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
                     <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'disabled' or ''}" style="width: 170px; margin-left: 16px;">
+                        <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                         <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
                             <h5  t-field="product.name"> </h5>
                             <img class="img-rounded" t-att-src="product.img('image_small')"/>
@@ -124,7 +125,7 @@
                                 <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
                             </div>
                             <div class="mb8 mt8">
-                                <a t-if="product.website_published" t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to cart</a>
+                                <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to cart</a>
                             </div>
                         </div>
                     </div>
