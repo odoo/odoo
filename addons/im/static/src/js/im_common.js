@@ -223,6 +223,7 @@ function declare($, _, openerp) {
                     });
                     this.conversations.push(conv);
                     this.calc_positions();
+                    this.trigger("new_conversation", conv);
                 }, this));
             }
             if (focus) {
@@ -392,6 +393,19 @@ function declare($, _, openerp) {
         },
         _go_bottom: function() {
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
+        },
+        add_user: function(user) {
+            if (user === this.me || _.contains(this.users, user))
+                return;
+            im_common.connection.model("im.session").call("add_to_session",
+                    [this.session_id, user.get("id"), this.c_manager.me.get("uuid")]).then(_.bind(function() {
+                if (_.contains(this.others, user)) {
+                    this.others = _.without(this.others, user);
+                } else {
+                    user.add_watcher();
+                }
+                this.users.push(user);
+            }, this));
         },
         focus: function() {
             this.$(".oe_im_chatview_input").focus();

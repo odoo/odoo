@@ -222,6 +222,13 @@ class im_session(osv.osv):
             }, context=context)
         return self.read(cr, uid, session_id, context=context)
 
+    def add_to_session(self, cr, uid, session_id, user_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        session = self.read(cr, uid, session_id, context=context)
+        if my_id not in session.get("user_ids"):
+            raise Exception("Not allowed to modify a session when you are not in it.")
+        self.write(cr, uid, session_id, {"user_ids": [(4, user_id)]}, context=context)
+
 class im_user(osv.osv):
     _name = "im.user"
 

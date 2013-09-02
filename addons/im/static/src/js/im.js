@@ -70,7 +70,15 @@
 
             var self = this;
 
-            return this.c_manager.start_polling();
+            return this.c_manager.start_polling().then(function() {
+                self.c_manager.on("new_conversation", self, function(conv) {
+                    conv.$el.droppable({
+                        drop: function(event, ui) {
+                            self.add_user(conv, ui.draggable.data("user"));
+                        }
+                    });
+                });
+            });
         },
         calc_box: function() {
             var $topbar = instance.client.$(".oe_topbar");
@@ -133,6 +141,9 @@
                 self.c_manager.activate_session(session.id, true);
             });
         },
+        add_user: function(conversation, user) {
+            conversation.add_user(user);
+        },
     });
 
     instance.im.UserWidget = instance.web.Widget.extend({
@@ -146,6 +157,8 @@
             this.user.add_watcher();
         },
         start: function() {
+            this.$el.data("user", this.user);
+            this.$el.draggable({helper: "clone"});
             var change_status = function() {
                 this.$(".oe_im_user_online").toggle(this.user.get("im_status") === true);
             };
