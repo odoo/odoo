@@ -471,6 +471,34 @@
             },
             'change input[type=file]': 'file_selection',
         }),
+        start: function () {
+            var selection = this.editor.getSelection();
+            var el = selection && selection.getSelectedElement();
+            this.element = null;
+            if (el && el.is('img')) {
+                this.element = el;
+                this.$('input.url').val(el.getAttribute('src'));
+            }
+
+            return this._super();
+        },
+        save: function () {
+            var url = this.$('input.url').val();
+            var element, editor = this.editor;
+            if (!(element = this.element)) {
+                element = editor.document.createElement('img');
+                // focus event handler interactions between bootstrap (modal)
+                // and ckeditor (RTE) lead to blowing the stack in Safari and
+                // Chrome (but not FF) when this is done synchronously =>
+                // defer insertion so modal has been hidden & destroyed before
+                // it happens
+                setTimeout(function () {
+                    editor.insertElement(element);
+                }, 0);
+            }
+            element.setAttribute('src', url);
+            this._super();
+        },
 
         file_selection: function (e) {
             this.$('button.filepicker').removeClass('btn-danger btn-success');
