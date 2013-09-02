@@ -47,10 +47,13 @@ def default(value):
 
 def compute_related(field, records):
     """ Compute the related `field` on `records`. """
+    sudo_scope = scope.SUDO()
     for record in records:
-        value = record
+        # bypass access rights check when traversing the related path
+        value = record.scoped(sudo_scope) if record.id else record
         for name in field.related:
             value = value[name]
+        # /!\ do not "scope" value: read() needs to name_get() it as SUPERUSER
         record[field.name] = value
 
 def inverse_related(field, records):
