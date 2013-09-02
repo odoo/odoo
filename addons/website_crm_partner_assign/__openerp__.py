@@ -4,8 +4,8 @@
     'summary': 'Publish Customer References',
     'version': '1.0',
     'description': """
-OpenERP Blog
-============
+OpenERP Public Partners References
+==================================
 
         """,
     'author': 'OpenERP SA',

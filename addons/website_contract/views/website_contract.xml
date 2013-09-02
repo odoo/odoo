@@ -27,30 +27,34 @@
     <template id="index" name="References">
         <t t-call="website_contract.layout">
             <t t-set="ref_content">
-                <h1 class="col-md-12 text-center">Customer References</h1>
-                <h2 class="col-md-12 text-center">Trusted by millions worldwide</h2>
+                <h1 class="col-md-12 text-center">
+                    Customer References<br/>
+                    <small>Trusted by millions worldwide</small>
+                </h1>
                 <div class="col-md-12" id="ref_content">
-
-                    <t t-call="website.pager">
-                       <t t-set="classname">pull-left</t>
-                    </t>
-                    <form action="/references/" method="get" class="pull-right pagination">
-                        <div class="form-group"> 
-                            <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search') or '' or ''" />
+                    <div class='navbar'>
+                        <div>
+                            <t t-call="website.pager">
+                               <t t-set="classname">pull-left</t>
+                            </t>
+                            <form action="/references/" method="get" class="navbar-search pull-right pagination form-inline">
+                                <div class="form-group"> 
+                                    <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search') or '' or ''" />
+                                </div>
+                                <div class="form-group">
+                                    <select class="search-query form-control" name="country" t-if="len(countries) > 1" onchange="submit()">
+                                        <t t-foreach="countries">
+                                            <t t-if="country_id">
+                                                <option t-att-selected="searches.get('country') == str(country_id and country_id[0]) and 'selected'" t-att-value="country_id[0]">
+                                                    <t t-esc="country_id[1]"/> (<t t-esc="country_id_count"/>)
+                                                </option>
+                                            </t>
+                                        </t>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <select class="search-query form-control" name="country" t-if="len(countries) > 1" onchange="submit()">
-                                <t t-foreach="countries">
-                                    <t t-if="country_id">
-                                        <option t-att-selected="searches.get('country') == str(country_id and country_id[0]) and 'selected'" t-att-value="country_id[0]">
-                                            <t t-esc="country_id[1]"/> (<t t-esc="country_id_count"/>)
-                                        </option>
-                                    </t>
-                                </t>
-                            </select>
-                        </div>
-                    </form>
-                    <div class="clearfix"/>
+                    </div>
 
                     <div>
                         <div t-foreach="partner_ids" t-as="partner" class="media thumbnail">
