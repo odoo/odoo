@@ -17,15 +17,21 @@
     function link_dialog(editor) {
         return new website.editor.LinkDialog(editor).appendTo(document.body);
     }
+    function image_dialog(editor) {
+        return new website.editor.ImageDialog(editor).appendTo(document.body);
+    }
 
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
             requires: 'link,image',
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
-                    if (evt.data.dialog === 'link' || evt.data.dialog === 'image') {
+                    if (evt.data.dialog === 'link') {
                         delete evt.data.dialog;
                         link_dialog(editor);
+                    } else if(evt.data.dialog === 'image') {
+                        delete evt.data.dialog;
+                        image_dialog(editor);
                     }
                     // priority should be smaller than dialog (999) but bigger
                     // than link or image (default=10)
@@ -41,7 +47,7 @@
                 });
                 editor.addCommand('image', {
                     exec: function (editor, data) {
-                        console.log('image', editor, data);
+                        image_dialog(editor);
                         return true;
                     },
                     canUndo: false,
@@ -138,13 +144,17 @@
             var $rte_ables = $editables.not('[data-oe-type]');
             var $raw_editables = $editables.not($rte_ables);
 
-            // temporary fix until we fix ckeditor
-            $raw_editables.each(function () {
-                $(this).parents().add($(this).find('*')).on('click', function(ev) {
-                    ev.preventDefault();
-                    ev.stopPropagation();
+            // temporary: on raw editables, links are still active so an
+            // editable link, containing a link or within a link becomes very
+            // hard to edit. Disable linking for these.
+            $raw_editables.parents('a')
+                .add($raw_editables.find('a'))
+                .on('click', function (e) {
+                    // Don't alter bubbling events not coming from links
+                    if (e.target === e.currentTarget) {
+                        e.preventDefault();
+                    }
                 });
-            });
 
             this.rte.start_edition($rte_ables);
             $raw_editables.on('keydown keypress cut paste', function (e) {
@@ -301,6 +311,7 @@
     website.editor.Dialog = openerp.Widget.extend({
         events: {
             'hidden.bs.modal': 'destroy',
+            'click button.save': 'save',
         },
         init: function (editor) {
             this._super();
@@ -310,6 +321,9 @@
             var sup = this._super();
             this.$el.modal();
             return sup;
+        },
+        save: function () {
+            this.$el.modal('hide');
         },
     });
 
@@ -370,9 +384,12 @@
                     element: 'a',
                     attributes: attributes,
                 }).applyToRange(range);
-                // blows up the call stack, not sure why as original version
-                // seems to work OK
-                // range.select();
+
+                // focus dance between RTE & dialog blow up the stack in Safari
+                // and Chrome, so defer select() until dialog has been closed
+                setTimeout(function () {
+                    range.select();
+                }, 0);
             }
         },
         save: function () {
@@ -386,7 +403,7 @@
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
             }
-            this.$el.modal('hide');
+            this._super();
         },
         bind_data: function () {
             var href = this.element && (this.element.data( 'cke-saved-href')
@@ -446,6 +463,67 @@
                 self.pages[result.url] = true;
                 $select.append(new Option(result.name, result.url));
             });
+        },
+    });
+    website.editor.ImageDialog = website.editor.Dialog.extend({
+        template: 'website.editor.dialog.image',
+        events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'change .url-source': function (e) { this.changed($(e.target)); },
+            'click button.filepicker': function () {
+                this.$('input[type=file]').click();
+            },
+            'change input[type=file]': 'file_selection',
+        }),
+        start: function () {
+            var selection = this.editor.getSelection();
+            var el = selection && selection.getSelectedElement();
+            this.element = null;
+            if (el && el.is('img')) {
+                this.element = el;
+                this.$('input.url').val(el.getAttribute('src'));
+            }
+
+            return this._super();
+        },
+        save: function () {
+            var url = this.$('input.url').val();
+            var element, editor = this.editor;
+            if (!(element = this.element)) {
+                element = editor.document.createElement('img');
+                // focus event handler interactions between bootstrap (modal)
+                // and ckeditor (RTE) lead to blowing the stack in Safari and
+                // Chrome (but not FF) when this is done synchronously =>
+                // defer insertion so modal has been hidden & destroyed before
+                // it happens
+                setTimeout(function () {
+                    editor.insertElement(element);
+                }, 0);
+            }
+            element.setAttribute('src', url);
+            this._super();
+        },
+
+        file_selection: function (e) {
+            this.$('button.filepicker').removeClass('btn-danger btn-success');
+
+            var self = this;
+            var callback = _.uniqueId('func_');
+            this.$('input[name=func]').val(callback);
+
+            window[callback] = function (url, error) {
+                delete window[callback];
+                self.file_selected(url, error);
+            };
+            this.$('form').submit();
+        },
+        file_selected: function(url, error) {
+            var $button = this.$('button.filepicker');
+            if (error) {
+                $button.addClass('btn-danger');
+                return;
+            }
+            $button.addClass('btn-success');
+            this.$('input.url').val(url);
         },
     });
 

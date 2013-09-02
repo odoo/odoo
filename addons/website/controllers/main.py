@@ -138,7 +138,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return result
 
     @http.route('/website/attach', type='http', auth='admin') # FIXME: auth
-    def attach(self, CKEditorFuncNum, CKEditor, langCode, upload):
+    def attach(self, func, upload):
         req = request.httprequest
         if req.method != 'POST':
             return werkzeug.exceptions.MethodNotAllowed(valid_methods=['POST'])
@@ -158,8 +158,8 @@ class Website(openerp.addons.web.controllers.main.Home):
             message = str(e)
 
         return """<script type='text/javascript'>
-            window.parent.CKEDITOR.tools.callFunction(%d, %s, %s);
-        </script>""" % (int(CKEditorFuncNum), json.dumps(url), json.dumps(message))
+            window.parent['%s'](%s, %s);
+        </script>""" % (func, json.dumps(url), json.dumps(message))
 
     @http.route('/website/attachment/<int:id>', type='http', auth="admin")
     def attachment(self, id):
