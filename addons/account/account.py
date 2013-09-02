@@ -3076,7 +3076,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
             if 'chart_template_id' in fields:
-                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': ids[0]})
+                chart_id = ids[0]
+                if context.get("default_charts"):
+                    chart_id = self.pool.get('ir.model.data').search_read(cr, uid, [('model','=','account.chart.template'),('module','=',context.get("default_charts"))], ['res_id'], context=context)[0]['res_id']
+                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': chart_id})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
