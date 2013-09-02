@@ -107,8 +107,11 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
                 }
                 self.manager.activate_session(session_id, true).then(function(conv) {
                     if (self.options.defaultMessage) {
-                        conv.received_message({message: self.options.defaultMessage, 
-                            date: openerp.datetime_to_str(new Date())});
+                        conv.received_message({
+                            message: self.options.defaultMessage, 
+                            date: openerp.datetime_to_str(new Date()),
+                            from_id: [conv.users[0].get("id"), "Unknown"]
+                        });
                     }
                 });
             });
