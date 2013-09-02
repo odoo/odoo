@@ -141,12 +141,16 @@ function declare($, _, openerp) {
                     no_cache[el] = el;
             }, this);
             var self = this;
+            var def;
             if (_.size(no_cache) === 0)
-                return $.when();
+                def = $.when();
             else
-                return im_common.connection.model("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
+                def = im_common.connection.model("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
                     self.add_to_user_cache(users);
                 });
+            return def.then(function() {
+                return _.map(user_ids, function(id) { return self.get_user(id); });
+            });
         },
         add_to_user_cache: function(user_recs) {
             _.each(user_recs, function(user_rec) {
@@ -210,6 +214,21 @@ function declare($, _, openerp) {
                 return;
             openerp.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
+        },
+        chat_with_users: function(users) {
+            var self = this;
+            return im_common.connection.model("im.session").call("session_get", [_.map(users, function(user) {return user.get("id");}),
+                    self.me.get("uuid")]).then(function(session) {
+                return self.activate_session(session.id, true);
+            });
+        },
+        chat_with_all_users: function() {
+            var self = this;
+            return im_common.connection.model("im.user").call("search", [[["uuid", "=", false]]]).then(function(user_ids) {
+                return self.ensure_users(_.without(user_ids, self.me.get("id")));
+            }).then(function(users) {
+                return self.chat_with_users(users);
+            });
         },
         activate_session: function(session_id, focus) {
             var conv = _.find(this.conversations, function(conv) {return conv.session_id == session_id;});
@@ -347,9 +366,8 @@ function declare($, _, openerp) {
             var user_ids;
             return im_common.connection.model("im.session").call("read", [self.session_id]).then(function(session) {
                 user_ids = _.without(session.user_ids, self.c_manager.me.get("id"));
-                return self.c_manager.ensure_users(session.user_ids);
-            }).then(function() {
-                var users = _.map(user_ids, function(id) {return self.c_manager.get_user(id);});
+                return self.c_manager.ensure_users(user_ids);
+            }).then(function(users) {
                 self.set("users", users);
             });
         },
@@ -378,8 +396,8 @@ function declare($, _, openerp) {
             } else {
                 this.set("pending", this.get("pending") + 1);
             }
-            this.c_manager.ensure_users([message.from_id[0]]).then(_.bind(function() {
-                var user = this.c_manager.get_user(message.from_id[0]);
+            this.c_manager.ensure_users([message.from_id[0]]).then(_.bind(function(users) {
+                var user = users[0];
                 if (! _.contains(this.get("users"), user) && ! _.contains(this.others, user)) {
                     this.others.push(user);
                     user.add_watcher();

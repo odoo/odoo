@@ -207,19 +207,21 @@ class im_session(osv.osv):
     }
 
     # Todo: reuse existing sessions if possible
-    def session_get(self, cr, uid, user_to, uuid=None, context=None):
+    def session_get(self, cr, uid, users_to, uuid=None, context=None):
         my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        users = [my_id] + users_to
+        domain = []
+        for user_to in users:
+            domain.append(('user_ids', 'in', [user_to]))
+        sids = self.search(cr, openerp.SUPERUSER_ID, domain, context=context, limit=1)
         session_id = None
-        if user_to:
-            # FP Note: does the ORM allows something better than this? == on many2many
-            sids = self.search(cr, openerp.SUPERUSER_ID, [('user_ids', 'in', [user_to]), ('user_ids', 'in', [my_id])], context=context, limit=1)
-            for session in self.browse(cr, uid, sids, context=context):
-                if len(session.user_ids) == 2:
-                    session_id = session.id
-                    break
+        for session in self.browse(cr, uid, sids, context=context):
+            if len(session.user_ids) == len(users):
+                session_id = session.id
+                break
         if not session_id:
             session_id = self.create(cr, openerp.SUPERUSER_ID, {
-                'user_ids': [(6, 0, [user_to, my_id])]
+                'user_ids': [(6, 0, users)]
             }, context=context)
         return self.read(cr, uid, session_id, context=context)
 

@@ -55,6 +55,7 @@
             this.set("current_search", "");
             this.users = [];
             this.c_manager = new im_common.ConversationManager(this);
+            window.im_conversation_manager = this.c_manager;
             this.on("change:right_offset", this.c_manager, _.bind(function() {
                 this.c_manager.set("right_offset", this.get("right_offset"));
             }, this));
@@ -106,7 +107,7 @@
                 _.each(users, function(user) {
                     var widget = new instance.im.UserWidget(self, self.c_manager.get_user(user.id));
                     widget.appendTo(self.$(".oe_im_users"));
-                    widget.on("activate_user", self, self.activate_user);
+                    widget.on("activate_user", self, function(user) {self.c_manager.chat_with_users([user]);});
                     self.users.push(widget);
                 });
                 _.each(old_users, function(user) {
@@ -135,12 +136,6 @@
                 }, opt);
             }
             this.shown = ! this.shown;
-        },
-        activate_user: function(user) {
-            var self = this;
-            im_common.connection.model("im.session").call("session_get", [user.get("id"), self.c_manager.me.get("uuid")]).then(function(session) {
-                self.c_manager.activate_session(session.id, true);
-            });
         },
         add_user: function(conversation, user) {
             conversation.add_user(user);
