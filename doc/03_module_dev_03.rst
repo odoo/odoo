@@ -680,6 +680,16 @@ toolbar
 	its descendants will be displayed in the main tree. The value is ignored
 	for flat lists.
 
+create
+        set to 'false' to hide the link which allows to create a new
+        record. This works if the Tree view is the main view on screen
+        and also if it is displayed inside a form, for a one2many
+        relation. This works also for Form views. 
+
+delete
+        set to 'false' to hide the link which allows to remove a
+        record. This works also on Form views. 
+
 Grouping Elements
 +++++++++++++++++
 
