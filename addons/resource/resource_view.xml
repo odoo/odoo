@@ -60,12 +60,13 @@
             <field name="arch" type="xml">
                 <form string="Working Time" version="7.0">
                     <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="manager"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                    </group>
-                    <field name="attendance_ids"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="manager"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                            <field name="attendance_ids"/>
+                            <field name="leave_ids"/>
                     </sheet>
                 </form>
             </field>
@@ -245,14 +246,17 @@
                 </tree>
             </field>
         </record>
+
         <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
             <field name="name">Resource Leaves</field>
             <field name="res_model">resource.calendar.leaves</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
         </record>
+
        <menuitem id="menu_resource_config" name="Resource" parent="base.next_id_4" sequence="5"/>
-       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="1"/>
-       <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search" parent="menu_resource_config" sequence="1"/>
+       <menuitem action="resource.action_resource_calendar_form" id="menu_resource_calendar" parent="menu_resource_config" sequence="1"/>
+       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_resource_calendar_leaves" parent="menu_resource_config" sequence="1"/>
+       <menuitem action="resource.action_resource_resource_tree" id="menu_resource_resource" parent="menu_resource_config" sequence="1"/>
     </data>
 </openerp>

@@ -240,6 +240,18 @@ class base_action_rule(osv.osv):
             data.update({'model': model.model})
         return {'value': data}
 
+    def _check_delay(self, cr, uid, action, record, record_dt, context=None):
+        if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
+            start_dt = get_datetime(record_dt)
+            action_dt = self.pool['resource.calendar'].schedule_days_get_date(
+                cr, uid, action.trg_date_calendar_id.id, action.trg_date_range,
+                day_date=start_dt, compute_leaves=True, context=context
+            )
+        else:
+            delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
+            action_dt = get_datetime(record_dt) + delay
+        return action_dt
+
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
@@ -266,21 +278,12 @@ class base_action_rule(osv.osv):
             else:
                 get_record_dt = lambda record: record[date_field]
 
-            delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
-
             # process action on the records that should be executed
             for record in model.browse(cr, uid, record_ids, context=context):
                 record_dt = get_record_dt(record)
                 if not record_dt:
                     continue
-                if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
-                    start_dt = get_datetime(record_dt)
-                    action_dt = self.pool['resource.calendar'].schedule_days(
-                        cr, uid, action.trg_date_calendar_id.id, action.trg_date_range,
-                        date=start_dt, compute_leaves=True
-                    )
-                else:
-                    action_dt = get_datetime(record_dt) + delay
+                action_dt = self._check_delay(cr, uid, action, record, record_dt, context=context)
                 if last_run and (last_run <= action_dt < now) or (action_dt < now):
                     try:
                         self._process(cr, uid, action, [record.id], context=context)

@@ -481,7 +481,7 @@ class resource_calendar(osv.osv):
         """Wrapper on _schedule_days: return the beginning/ending datetime of
         a days scheduling. """
         res = self._schedule_days(cr, uid, id, days, day_date, compute_leaves, resource_id, context)
-        return res[-1][1].date()
+        return res[-1][1]
 
     def schedule_days(self, cr, uid, id, days, day_date=None, compute_leaves=False, resource_id=None, context=None):
         """Wrapper on _schedule_days: return the working intervals of a days

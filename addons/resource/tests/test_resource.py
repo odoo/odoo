@@ -367,16 +367,16 @@ class TestResource(TestResourceCommon):
         self.assertEqual(td.total_seconds() / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
         res = self.resource_calendar._interval_hours_get(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), resource_id=self.resource1_id, exclude_leaves=False)
-        print res
+        # print res
 
         res = self.resource_calendar.get_working_hours(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), compute_leaves=False, resource_id=self.resource1_id)
-        print res
+        # print res
 
         res = self.resource_calendar._interval_hours_get(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), resource_id=self.resource1_id, exclude_leaves=True)
-        print res
+        # print res
 
         res = self.resource_calendar.get_working_hours(cr, uid, self.calendar_id, self.date1.replace(hour=6, minute=0), self.date2.replace(hour=23, minute=0) + relativedelta(days=7), compute_leaves=True, resource_id=self.resource1_id)
-        print res
+        # print res
 
     def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
@@ -384,12 +384,12 @@ class TestResource(TestResourceCommon):
         _format = '%Y-%m-%d %H:%M:%S'
 
         res = self.resource_calendar.schedule_days_get_date(cr, uid, self.calendar_id, 5, day_date=self.date1)
-        self.assertEqual(res, datetime.strptime('2013-02-26 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
+        self.assertEqual(res.date(), datetime.strptime('2013-02-26 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
 
         res = self.resource_calendar.schedule_days_get_date(
             cr, uid, self.calendar_id, 5, day_date=self.date1,
             compute_leaves=True, resource_id=self.resource1_id)
-        self.assertEqual(res, datetime.strptime('2013-03-01 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
+        self.assertEqual(res.date(), datetime.strptime('2013-03-01 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
 
         # --------------------------------------------------
         # Misc

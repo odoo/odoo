@@ -38,11 +38,12 @@ You can assign several contracts per employee.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_contract.jpeg'],
-    'depends': ['hr'],
+    'depends': ['base_action_rule', 'hr'],
     'data': [
         'security/ir.model.access.csv',
         'hr_contract_view.xml',
-        'hr_contract_data.xml'
+        'hr_contract_data.xml',
+        'base_action_rule_view.xml',
     ],
     'demo': [],
     'test': ['test/test_hr_contract.yml'],
