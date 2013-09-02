@@ -186,9 +186,9 @@ class im_message(osv.osv):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
         session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
-        to_ids = [x.id for x in session.user_ids if x != my_id]
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_ids, 'session_id': to_session_id}, context=context)
-        notify_channel(cr, "im_channel", {'type': 'message', 'receivers': to_ids})
+        to_ids = [x.id for x in session.user_ids if x.id != my_id]
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': [(6, 0, to_ids)], 'session_id': to_session_id}, context=context)
+        notify_channel(cr, "im_channel", {'type': 'message', 'receivers': [my_id] + to_ids})
         return False
 
 class im_session(osv.osv):
