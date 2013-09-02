@@ -281,29 +281,45 @@ function declare($, _, openerp) {
             this.shown = true;
             this.set("pending", 0);
             this.inputPlaceholder = this.options.defaultInputPlaceholder;
-            this.users = [];
+            this.set("users", []);
+            this.set("disconnected", false);
             this.others = [];
         },
         start: function() {
             var self = this;
+
+            self.$().append(openerp.qweb.render("im_common.conversation", {widget: self}));
+
+            var change_status = function() {
+                var disconnected = _.every(this.get("users"), function(u) { return u.get("im_status") === false; });
+                self.set("disconnected", disconnected);
+                this.$(".oe_im_chatview_users").html(openerp.qweb.render("im_common.conversation.header",
+                    {widget: self, to_url: _.bind(im_common.connection.url, im_common.connection)}));
+            };
+            this.on("change:users", this, function(unused, ev) {
+                _.each(ev.oldValue, function(user) {
+                    user.off("change:im_status", self, change_status);
+                });
+                _.each(ev.newValue, function(user) {
+                    user.on("change:im_status", self, change_status);
+                });
+                change_status.call(self);
+            });
+            this.on("change:disconnected", this, function() {
+                self.$().toggleClass("oe_im_chatview_disconnected_status", this.get("disconnected"));
+                self._go_bottom();
+            });
+
             var user_ids;
             return im_common.connection.model("im.session").call("read", [self.session_id]).then(function(session) {
                 user_ids = _.without(session.user_ids, self.c_manager.me.get("id"));
                 return self.c_manager.ensure_users(session.user_ids);
             }).then(function() {
-                self.users = _.map(user_ids, function(id) {return self.c_manager.get_user(id);});
-                _.each(self.users, function(user) {
+                var users = _.map(user_ids, function(id) {return self.c_manager.get_user(id);});
+                _.each(users, function(user) {
                     user.add_watcher();
                 });
-                // TODO: correctly display status
-                self.$().append(openerp.qweb.render("im_common.conversation", {widget: self, to_url: _.bind(im_common.connection.url, im_common.connection)}));
-                var change_status = function() {
-                    self.$().toggleClass("oe_im_chatview_disconnected_status", self.users[0].get("im_status") === false);
-                    self.$(".oe_im_chatview_online").toggle(self.users[0].get("im_status") === true);
-                    self._go_bottom();
-                };
-                self.users[0].on("change:im_status", self, change_status);
-                change_status.call(self);
+                self.set("users", users);
 
                 self.on("change:right_position", self, self.calc_pos);
                 self.on("change:bottom_position", self, self.calc_pos);
@@ -345,7 +361,7 @@ function declare($, _, openerp) {
             }
             this.c_manager.ensure_users([message.from_id[0]]).then(_.bind(function() {
                 var user = this.c_manager.get_user(message.from_id[0]);
-                if (! _.contains(this.users, user) && ! _.contains(this.others, user)) {
+                if (! _.contains(this.get("users"), user) && ! _.contains(this.others, user)) {
                     this.others.push(user);
                     user.add_watcher();
                 }
@@ -395,7 +411,7 @@ function declare($, _, openerp) {
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
         },
         add_user: function(user) {
-            if (user === this.me || _.contains(this.users, user))
+            if (user === this.me || _.contains(this.get("users"), user))
                 return;
             im_common.connection.model("im.session").call("add_to_session",
                     [this.session_id, user.get("id"), this.c_manager.me.get("uuid")]).then(_.bind(function() {
@@ -404,7 +420,7 @@ function declare($, _, openerp) {
                 } else {
                     user.add_watcher();
                 }
-                this.users.push(user);
+                this.set("users", this.get("users").concat([user]));
             }, this));
         },
         focus: function() {
@@ -413,7 +429,7 @@ function declare($, _, openerp) {
                 this.show_hide();
         },
         destroy: function() {
-            _.each(this.users, function(user) {
+            _.each(this.get("users"), function(user) {
                 user.remove_watcher();
             })
             _.each(this.others, function(user) {
