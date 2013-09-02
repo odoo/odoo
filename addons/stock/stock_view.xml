@@ -104,7 +104,7 @@
                     <button name="prepare_inventory" states="draft" string="Start Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                     <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                    <button name="action_cancel_inventory" states="draft,confirm,done" string="Cancel Inventory" type="object"/>
+                    <button name="action_cancel_inventory" states="confirm,done" string="Cancel Inventory" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
                 <sheet>
@@ -131,7 +131,7 @@
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
                         <page string="Inventory Details" >
-                            <button name="set_checked_qty" states="confirm" icon="gtk-go-forward" string="Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
+                            <button name="set_checked_qty" states="confirm" string="==> Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
@@ -139,7 +139,7 @@
                                     <field name="product_qty" string="Checked Quantity"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="prod_lot_id"/>
-                                    <field name="package_id" readonly="1"/>
+                                    <field name="package_id"/>
                                     <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                                     <field name="state" invisible="True"/>
                                 </tree>

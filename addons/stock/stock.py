@@ -1847,7 +1847,7 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity'),
+        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity', store=True),
     }
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
