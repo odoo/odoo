@@ -5555,7 +5555,7 @@ class BaseModel(object):
             .. deprecated:: 8.0
                 The record cache is automatically invalidated.
         """
-        pass
+        scope_proxy.invalidate_all()
 
     def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
