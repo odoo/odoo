@@ -93,10 +93,8 @@
                             </div>
                             <dl class="dl-horizontal oe_seo_keywords_list">
                                 <dt>Current selection</dt>
-                                <dd>
-                                    <ul class="list-inline js_seo_keywords_list">
-                                        <!-- filled in JS -->
-                                    </ul>
+                                <dd class="js_seo_keywords_list">
+                                    <!-- filled in JS -->
                                 </dd>
                             </dl>
                         </section>
@@ -148,6 +146,12 @@
                 <a href="#" class="oe_remove" data-action="remove-keyword">x</a>
             </span>
         </li>
+    </t>
+
+    <t t-name="website.seo_keyword_list">
+        <ul class="list-inline">
+            <!-- filled in JS -->
+        </ul>
     </t>
 
     <t t-name="website.seo_suggestion">
