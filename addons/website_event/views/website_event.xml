@@ -141,7 +141,7 @@
                             <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
                             <t t-if="event_id.organizer_id">
                                 <h6>Organized by:</h6>
-                                <pre><t t-field="event_id.organizer_id"/><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></pre>
+                                <pre><t t-field="event_id.organizer_id"/><t t-if="event_id.phone"><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span></t><t t-if="event_id.email"><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></t></pre>
                             </t>
                         </address>
                     </div>

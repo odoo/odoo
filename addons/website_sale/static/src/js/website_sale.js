@@ -22,4 +22,5 @@ $(document).ready(function () {
     $(document).on('mouseup', '.js_publish', function (ev) {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
+
 });

@@ -110,23 +110,24 @@
                 <div class="clearfix"/>
                 <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
-                    <div t-attf-class="col-md-2 mb16 thumbnail text-center #{not product.website_published and 'disabled' or ''}" style="width: 170px; margin-left: 16px;">
+                    <div t-attf-class="css_product col-md-2 mb16 thumbnail text-center #{not product.website_published and 'disabled' or ''}">
                         <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
-                        <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
-                            <h5  t-field="product.name"> </h5>
-                            <img class="img-rounded" t-att-src="product.img('image_small')"/>
-                        </a>
+                        <div class="ellipsis css_content">
+                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+                                <h5 t-field="product.name"> </h5>
+                                <img class="img-rounded" t-att-src="product.img('image_small')"/>
+                            </a>
+                            <small t-field="product.description_sale"></small>
+                            <span class="end">&amp;#133;</span><span class="fill"></span>
+                        </div>
                         <div>
-                            <div t-field="product.description_sale"></div>
-                            <div>
-                                <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                <small class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</small>
-                                </t>
-                                <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
-                            </div>
-                            <div class="mb8 mt8">
-                                <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to cart</a>
-                            </div>
+                            <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                            <small class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</small>
+                            </t>
+                            <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
+                        </div>
+                        <div class="mb8 mt8">
+                            <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to cart</a>
                         </div>
                     </div>
                     </t>
@@ -162,7 +163,10 @@
                         <button class="btn btn-sm btn-success">Add to cart</button>
                     </form>
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <div t-field="product.website_description"></div>
+                    <h2 t-if="editable">Description for Quotations</h2>
+                    <div t-if="editable" t-field="product.description_sale"><br/></div>
+                    <h2 t-if="editable">Description</h2>
+                    <div t-field="product.website_description"><br/></div>
                     <div>
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                         <h5 class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</h5>
