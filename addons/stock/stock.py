@@ -773,8 +773,8 @@ class stock_picking(osv.osv):
                             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                             #In the end, move quants in correct package
-                            if create and ops.result_package_id:
-                                quant_obj.write(cr, uid, [x[0] for x in quants], {'package_id': ops.result_package_id.id}, context=context)
+                            if create:
+                                quant_obj.write(cr, uid, [x[0] for x in quants], {'package_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
                         res2[move.id] -= qty
                     res[ops.id] = {}
                     res[ops.id][ops.product_id.id] = qty_to_do
@@ -796,8 +796,8 @@ class stock_picking(osv.osv):
                         res.setdefault(ops.id, {}).setdefault(quant.product_id.id, 0.0)
                         res[ops.id][quant.product_id.id] += qty_to_do
                     #Add parent package
-                    if create and ops.result_package_id:
-                        self.pool.get("stock.package").write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
+                    if create:
+                        self.pool.get("stock.package").write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
         return (res, res2)
 
 

@@ -168,13 +168,10 @@ class procurement_order(osv.osv):
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
-        route_ids = [x.id for x in procurement.route_ids]
+        route_ids = [x.id for x in procurement.route_ids] + [x.id for x in procurement.product_id.route_ids] 
         res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
         if not res:
-            route_ids = [x.id for x in procurement.product_id.route_ids]
-            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
-            if not res:
-                res = self.pool.get('procurement.rule').search(cr, uid, domain, order='sequence', context=context)
+            res = self.pool.get('procurement.rule').search(cr, uid, domain, order='sequence', context=context)
         return res
 
 
