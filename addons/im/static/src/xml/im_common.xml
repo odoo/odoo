@@ -33,7 +33,7 @@
         <div class="oe_im_chatview_from"><t t-esc="user.get('name')"/></div>
         <div class="oe_im_chatview_bubble_list">
             <t t-foreach="items" t-as="item">
-                <div class="oe_im_chatview_bubble_item"><t t-esc="item"/></div>
+                <div class="oe_im_chatview_bubble_item"><t t-raw="item"/></div>
             </t>
         </div>
         <div class="oe_im_chatview_time"><t t-esc="time"/></div>

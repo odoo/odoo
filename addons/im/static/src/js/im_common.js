@@ -443,8 +443,8 @@ function declare($, _, openerp) {
                 return new Array(size - str.length + 1).join('0') + str;
             };
             date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
-            
-            this.last_bubble = $(openerp.qweb.render("im_common.conversation_bubble", {"items": items, "user": user, "time": date}));
+            var to_show = _.map(items, im_common.escape_keep_url);
+            this.last_bubble = $(openerp.qweb.render("im_common.conversation_bubble", {"items": to_show, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();
         },
@@ -482,6 +482,24 @@ function declare($, _, openerp) {
         c_manager.activate_session(message.session_id[0], true).then(function(conv) {
             conv.refresh_users();
         });
+    };
+
+    var url_regex = /(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/gi;
+
+    im_common.escape_keep_url = function(str) {
+        var last = 0;
+        var txt = "";
+        while (true) {
+            var result = url_regex.exec(str);
+            if (! result)
+                break;
+            txt += _.escape(str.slice(last, result.index));
+            last = url_regex.lastIndex;
+            var url = _.escape(result[0]);
+            txt += '<a href="' + url + '">' + url + '</a>';
+        }
+        txt += str.slice(last, str.length);
+        return txt;
     };
 
     return im_common;
