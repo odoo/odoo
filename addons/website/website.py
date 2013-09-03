@@ -133,7 +133,7 @@ class website(osv.osv):
 
         # check if xmlid of the template exists
         try:
-            model, xmlid = template.split('.')
+            model, xmlid = template.split('.', 1)
             model, id = IMD.get_object_reference(request.cr, request.uid, model, xmlid)
         except ValueError:
             logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())

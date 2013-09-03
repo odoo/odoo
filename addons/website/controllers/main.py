@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 import base64
+import cStringIO
+import hashlib
 import json
 import logging
-import cStringIO
+import os
 
+import psycopg2
+import werkzeug
+import werkzeug.exceptions
+import werkzeug.utils
+import werkzeug.wrappers
 from PIL import Image
 
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-import werkzeug
-import werkzeug.exceptions
-import werkzeug.wrappers
-import hashlib
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
-
+NOPE = object()
 # PIL images have a type flag, but no MIME. Reverse type flag to MIME.
 PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }
 # Completely arbitrary limits
@@ -41,30 +43,42 @@ class Website(openerp.addons.web.controllers.main.Home):
         return super(Website, self).index(*args, **kw)
 
     @http.route('/pagenew/<path:path>', type='http', auth="admin")
-    def pagenew(self, path):
+    def pagenew(self, path, noredirect=NOPE):
+        if '.' in path:
+            module, idname = path.split('.', 1)
+        else:
+            module = 'website'
+            idname = path
+        path = "%s.%s" % (module, idname)
+
+        request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
         view_model, view_id = imd.get_object_reference(request.cr, request.uid, 'website', 'default_page')
         newview_id = view.copy(request.cr, request.uid, view_id)
-        newview = view.browse(request.cr, request.uid, newview_id, context={})
+        newview = view.browse(request.cr, request.uid, newview_id)
         newview.write({
             'arch': newview.arch.replace("website.default_page", path),
             'name': "page/%s" % path,
             'page': True,
         })
-        if '.' in path:
-            module, idname = path.split('.')
+        # Fuck it, we're doing it live
+        try:
+            imd.create(request.cr, request.uid, {
+                'name': idname,
+                'module': module,
+                'model': 'ir.ui.view',
+                'res_id': newview_id,
+                'noupdate': True
+            })
+        except psycopg2.IntegrityError:
+            request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
         else:
-            module = False
-            idname = path
-        imd.create(request.cr, request.uid, {
-            'name': idname,
-            'module': module,
-            'model': 'ir.ui.view',
-            'res_id': newview_id,
-            'noupdate': True
-        })
-        return werkzeug.utils.redirect("/page/%s" % path)
+            request.cr.execute('RELEASE SAVEPOINT pagenew')
+        url = "/page/%s" % path
+        if noredirect is not NOPE:
+            return werkzeug.wrappers.Response(url, mimetype='text/plain')
+        return werkzeug.utils.redirect(url)
 
     @http.route('/website/theme_change', type='http', auth="admin")
     def theme_change(self, theme_id=False, **kwargs):

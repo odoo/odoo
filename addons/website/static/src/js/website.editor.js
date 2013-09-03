@@ -330,12 +330,15 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'click button.btn-primary': 'save',
             'change .url-source': function (e) { this.changed($(e.target)); },
+            'click div.existing a': 'select_page',
         }),
         init: function (editor) {
             this._super(editor);
+            // url -> name mapping for existing pages
             this.pages = Object.create(null);
+            // name -> url mapping for the same
+            this.pages_by_name = Object.create(null);
         },
         start: function () {
             var element;
@@ -393,17 +396,30 @@
             }
         },
         save: function () {
+            var self = this, _super = this._super.bind(this);
             var $e = this.$('.url-source').filter(function () { return !!this.value; });
 
-            var val = $e.val();
+            var val = $e.val(), done = $.when();
             if ($e.hasClass('email-address')) {
                 this.make_link('mailto:' + val, false, val);
             } else if ($e.hasClass('pages')) {
-                this.make_link(val, false, $e.find('option:selected').text());
+                // ``val`` is the *name* of the page
+                var url = this.pages_by_name[val];
+                if (!url) {
+                    // Create the page, get the URL back
+                    done = $.get(_.str.sprintf(
+                        '/pagenew/%s?noredirect', encodeURIComponent(val)))
+                        .then(function (response) {
+                            url = response;
+                        });
+                }
+                done.then(function () {
+                    self.make_link(url, false, val);
+                });
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
             }
-            this._super();
+            done.then(_super);
         },
         bind_data: function () {
             var href = this.element && (this.element.data( 'cke-saved-href')
@@ -414,7 +430,7 @@
             if (match = /(mailto):(.+)/.exec(href)) {
                 $control = this.$('input.email-address').val(match[2]);
             } else if(href in this.pages) {
-                $control = this.$('select.pages').val(href);
+                $control = this.$('input.pages').val(this.pages[href]);
             }
             if (!$control) {
                 $control = this.$('input.url').val(href);
@@ -429,6 +445,18 @@
             $e.closest('li.list-group-item').addClass('active')
               .siblings().removeClass('active');
             this.$('.url-source').not($e).val('');
+        },
+        /**
+         * Selected an existing page in dropdown
+         */
+        select_page: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $target = $(e.target);
+            this.$('input.pages').val($target.text()).change();
+            // No #dropdown('close'), and using #dropdown('toggle') sur
+            // #closest('.dropdown') makes the dropdown not work correctly
+            $target.closest('.open').removeClass('open')
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
@@ -457,11 +485,12 @@
         },
         fill_pages: function (results) {
             var self = this;
-            var $select = this.$('select');
-            $select.append(new Option());
+            var $pages = this.$('div.existing ul').empty();
             _(results).each(function (result) {
-                self.pages[result.url] = true;
-                $select.append(new Option(result.name, result.url));
+                self.pages[result.url] = result.name;
+                self.pages_by_name[result.name] = result.url;
+                var $link = $('<a>').attr('href', result.url).text(result.name);
+                $('<li>').append($link).appendTo($pages);
             });
         },
     });
