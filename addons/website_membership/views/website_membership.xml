@@ -62,12 +62,12 @@
                                 <h3 class="text-center well"><span t-field="membership_line_id.membership_id"/></h3>
                             </t>
                             <t t-set="partner" t-value="membership_line_id.partner"/>
-                            <div class="media thumbnail">
+                            <div class="media thumbnail" data-publish="">
+                                <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
                                 <a class="pull-left" t-attf-href="/members/#{ partner.id }/">
                                     <img class="media-object" t-att-src="partner.img('image_small')"/>
                                 </a>
-                                <div class="media-body">
-                                    <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
+                                <div class="media-body" style="min-height: 64px;">
                                     <a class="media-heading" t-attf-href="/members/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a> - <span t-field="membership_line_id.membership_id"/>
                                     <div t-field="partner.website_short_description"/>
                                 </div>

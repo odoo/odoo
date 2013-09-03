@@ -140,7 +140,10 @@
         /* ----- PUBLISHING STUFF ---- */
         $('[data-publish]:has([data-publish])').each(function () {
             var $pub = $("[data-publish]", this);
-            $(this).attr("data-publish", $pub.attr("data-publish"));
+            if($pub.size())
+                $(this).attr("data-publish", $pub.attr("data-publish"));
+            else
+                $(this).removeAttr("data-publish");
         });
 
         $(document).on('click', '.js_publish', function (e) {

@@ -30,12 +30,12 @@
             <h3>Our team</h3>
             <div class="thumbnails">
                 <div t-foreach="employee_ids" t-as="employee" class="col-md-4 mt16">
-                    <div class="media img-thumbnail">
+                    <div class="media img-thumbnail" data-publish="">
+                        <t t-call="website.publish"><t t-set="object" t-value="employee"/></t>
                         <a class="pull-left" href="#">
                             <img class="media-object" t-att-src="employee.img('image_small')"/>
                         </a>
-                        <div class="media-body">
-                            <t t-call="website.publish"><t t-set="object" t-value="employee"/></t>
+                        <div class="media-body" style="min-height: 64px; min-width: 130px;">
                             <h5 class="media-heading" t-field="employee.name"/>
                             <div t-field="employee.department_id"/>
                             <div t-field="employee.job_id"/>
