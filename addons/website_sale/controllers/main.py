@@ -23,7 +23,7 @@ def get_order(order_id=None):
         if request.httprequest.session.get('ecommerce_pricelist'):
             order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
         order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
-        order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
+        order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context={})['value'])
         order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         request.httprequest.session['ecommerce_order_id'] = order.id
@@ -92,7 +92,7 @@ class Ecommerce(http.Controller):
         values = website.get_rendering_context({
             'categories': self.get_categories(),
             'category_id': cat_id,
-            'products': product_obj.browse(request.cr, request.uid, product_ids, context=context),
+            'products': product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=context),
             'search': post.get("search"),
             'pager': pager,
         })
@@ -136,7 +136,8 @@ class Ecommerce(http.Controller):
                 pricelist_id = pricelist_ids[0]
 
         if not pricelist_id:
-            pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value']['pricelist_id']
+            partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+            pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], partner_id, context={})['value']['pricelist_id']
         
         request.httprequest.session['ecommerce_pricelist'] = pricelist_id
 
@@ -372,7 +373,7 @@ class Ecommerce(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], request.uid, context={})['value'])
+        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], order.partner_id.id, context={})['value'])
         order.write(order_value)
 
         return werkzeug.utils.redirect("/shop/payment/")
