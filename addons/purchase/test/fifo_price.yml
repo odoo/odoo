@@ -88,7 +88,7 @@
     picking_id: outgoing_fifo_shipment
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 20.0
+    product_uom_qty: 20.0
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     picking_type_id: stock.picking_type_out
@@ -107,7 +107,7 @@
   Check product standard price changed to 65.0 (because last outgoing shipment was made of 10 kg at 50€ and 10 kg at 80€)
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)
 - 
   Do a delivery of an extra 500 g (delivery order)
 - 
@@ -122,7 +122,7 @@
     product_uom: product.product_uom_gram
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
-    product_qty: 500.0
+    product_uom_qty: 500.0
     picking_type_id: stock.picking_type_out
 - 
   I assign this outgoing shipment 
@@ -139,7 +139,7 @@
   Check product price changed to 80.0 (because last outgoing shipment was made of 0.5 kg at 80€)
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0, "Product price not updated accordingly. %s found instead of 80" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)
 - 
   We will temporarily change the currency rate on the sixth of June to have the same results all year
 - 
@@ -204,7 +204,7 @@
     picking_id: outgoing_fifo_shipment_cur
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 49.5
+    product_uom_qty: 49.5
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     picking_type_id: stock.picking_type_out
@@ -223,7 +223,7 @@
   Check rounded price is 102 euro (because last outgoing shipment was made of 19.5kg at 80€ and 30kg at $150 (rate=1.2834)
 - 
   !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == 102, "Price after doing other currency is wrong"
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == 102, "Product price not updated accordingly. %s found instead of 102 (rounded values)" %(round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price),)
 - 
   Do a delivery of an extra 10 kg
 - 
@@ -236,7 +236,7 @@
     picking_id: outgoing_fifo_shipment_ret
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 10.0
+    product_uom_qty: 10.0
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     picking_type_id: stock.picking_type_out
@@ -255,7 +255,7 @@
   Check rounded price is 150.0 / 1.2834
 - 
   !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834)
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834), "Product price not updated accordingly. %s found instead of %s" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price, round(150.0/1.2834))
 - 
   Let us create some outs to get negative stock. Create outpicking.  We create delivery order of 200 kg, but will pick only 100 kg
 - 
@@ -268,7 +268,7 @@
     picking_id: outgoing_fifo_shipment_neg
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 200.0
+    product_uom_qty: 200.0
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     picking_type_id: stock.picking_type_out
@@ -284,7 +284,7 @@
     picking_id: outgoing_fifo_shipment_neg2
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 400.0
+    product_uom_qty: 400.0
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     picking_type_id: stock.picking_type_out
@@ -323,7 +323,7 @@
   Assert price on product is still the old price as the out move has not been received fully yet
 - 
   !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834)
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834), 'The product price should not have been updated'
 - 
   Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
 - 
@@ -351,4 +351,4 @@
   The price of the product should have changed back to 65.0 
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)

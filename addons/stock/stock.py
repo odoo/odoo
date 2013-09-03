@@ -231,6 +231,7 @@ class stock_quant(osv.osv):
                 result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             else:
                 raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
+        print 'Quant get result', result
         return result
 
     #
@@ -241,7 +242,7 @@ class stock_quant(osv.osv):
     def _quant_create(self, cr, uid, qty, move, lot_id = False, context=None):
         # FP Note: TODO: compute the right price according to the move, with currency convert
         # QTY is normally already converted to main product's UoM
-        price_unit = move.price_unit
+        price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
         vals = {
             'product_id': move.product_id.id,
             'location_id': move.location_dest_id.id,
@@ -253,7 +254,6 @@ class stock_quant(osv.osv):
             'lot_id': lot_id,
         }
 
-        negative_quant_id = False
         if move.location_id.usage == 'internal':
             #if we were trying to move something from an internal location and reach here (quant creation),
             #it means that a negative quant has to be created as well.
@@ -262,9 +262,9 @@ class stock_quant(osv.osv):
             negative_vals['qty'] = -qty
             negative_vals['cost'] = price_unit
             negative_quant_id = self.create(cr, uid, negative_vals, context=context)
+            vals.update({'propagated_from_id': negative_quant_id})
 
         #create the quant
-        vals.update({'propagated_from_id': negative_quant_id})
         quant_id = self.create(cr, uid, vals, context=context)
         return self.browse(cr, uid, quant_id, context=context)
 
@@ -975,6 +975,10 @@ class stock_move(osv.osv):
     _order = 'date_expected desc, id'
     _log_create = False
 
+    def get_price_unit(self, cr, uid, move, context=None):
+        """ Returns the unit price to store on the move """
+        return move.price_unit or move.product_id.standard_price
+
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for line in self.browse(cr, uid, ids, context=context):
@@ -1497,7 +1501,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.picking_id:
                 pickings.add(move.picking_id.id)
-            qty = move.product_uom_qty
+            qty = move.product_qty
 
             # for qty, location_id in move_id.prefered_location_ids:
             #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
