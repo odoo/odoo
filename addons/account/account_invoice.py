@@ -1407,6 +1407,7 @@ class account_invoice_line(osv.osv):
 
     _name = "account.invoice.line"
     _description = "Invoice Line"
+    _order = "invoice_id,sequence"
     _columns = {
         'name': fields.text('Description', required=True),
         'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
