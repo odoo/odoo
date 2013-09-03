@@ -55,11 +55,6 @@ class accounting_report(osv.osv_memory):
             'account_report_id': _get_account_report,
     }
     
-    def _build_contexts(self, cr, uid, ids, data, context=None):
-        result = super(accounting_report, self)._build_contexts(cr, uid, ids,data, context=context)
-        result['state'] = 'target_move' in data['form'] and data['form']['target_move'] or ''
-        return result
-
     def _build_comparison_context(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
