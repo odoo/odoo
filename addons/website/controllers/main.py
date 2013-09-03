@@ -102,7 +102,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/page/<path:path>', type='http', auth="admin")
     def page(self, path, **kwargs):
-        website = request.registry.get("website")
+        website = request.registry['website']
         values = website.get_rendering_context({
             'path': path
         })
