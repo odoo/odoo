@@ -1921,24 +1921,16 @@ class stock_warehouse(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Owner Address'),
-        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage', '<>', 'view')]),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
-        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage', '<>', 'view')]),
     }
 
-    def _default_lot_input_stock_id(self, cr, uid, context=None):
+    def _default_stock_id(self, cr, uid, context=None):
         lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
         return lot_input_stock.id
 
-    def _default_lot_output_id(self, cr, uid, context=None):
-        lot_output = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output')
-        return lot_output.id
-
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
-        'lot_input_id': _default_lot_input_stock_id,
-        'lot_stock_id': _default_lot_input_stock_id,
-        'lot_output_id': _default_lot_output_id,
+        'lot_stock_id': _default_stock_id,
     }
 
 

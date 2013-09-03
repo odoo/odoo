@@ -58,7 +58,6 @@
       assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
       assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
       location_id = sale_order.warehouse_id.lot_stock_id.id
-      output_id = sale_order.warehouse_id.lot_output_id.id
       for move in picking.move_lines:
          order_line = move.procurement_id.sale_line_id
          date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
@@ -72,7 +71,6 @@
          assert move.product_packaging.id == order_line.product_packaging.id,"Product packaging is not correspond."
          assert move.partner_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
          #assert move.location_id.id == location_id,"Source Location is not correspond."
-         #assert move.location_dest_id == output_id,"Destination Location is not correspond."
          assert move.price_unit == order_line.product_id.standard_price or 0.0,"Price Unit is not correspond"
 -
   Now, I dispatch delivery order.

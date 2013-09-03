@@ -308,12 +308,6 @@ class purchase_order(osv.osv):
             values.update({'location_id': location_id})
         return {'value':values}
 
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
-        if not warehouse_id:
-            return {}
-        warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id)
-        return {'value':{'location_id': warehouse.lot_input_id.id, 'dest_address_id': False}}
-
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:

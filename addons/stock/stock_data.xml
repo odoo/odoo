@@ -210,9 +210,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
     -->
         <record id="warehouse0" model="stock.warehouse">
             <field model="res.company" name="name" search="[]" use="name"/>
-            <field name="lot_input_id" ref="stock_location_stock"/>
             <field name="lot_stock_id" ref="stock_location_stock"/>
-            <field name="lot_output_id" ref="stock_location_output"/>
         </record>
 
         <record id="sequence_mrp_op_type" model="ir.sequence.type">
