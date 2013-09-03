@@ -11,74 +11,7 @@
         },
     });
 
-    function cleanupKeyword (word) {
-        return word ? word.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
-    }
-
     website.seo = {};
-
-    website.seo.Tip = openerp.Widget.extend({
-        template: 'website.seo_tip',
-        events: {
-            'closed.bs.alert': 'destroy',
-        },
-        init: function (parent, options) {
-            this.message = options.message;
-            // success, info, warning or danger
-            this.type = options.type || 'info';
-            this._super(parent);
-        }
-    });
-
-    website.seo.Keyword = openerp.Widget.extend({
-        template: 'website.seo_keyword',
-        events: {
-            'click a[data-action=remove-keyword]': 'destroy',
-        },
-        init: function (parent, options) {
-            this.keyword = options.keyword;
-            // default, primary, success, info, warning, danger
-            this.type = options.type || 'default';
-            this.onDelete = options.onDelete;
-            this._super(parent);
-        },
-        destroy: function () {
-            if (_.isFunction(this.onDelete)) {
-                this.onDelete(this.keyword);
-            }
-            this._super();
-        },
-    });
-
-    website.seo.Suggestion = openerp.Widget.extend({
-        template: 'website.seo_suggestion',
-        events: {
-            'click .js_seo_suggestion': 'addToSelection'
-        },
-        init: function (parent, options) {
-            this.keyword = options.keyword;
-            // default, primary, success, info, warning, danger
-            this.type = options.type || 'default';
-            this._addToSelection = function (keyword) {
-                if (_.isFunction(parent.addKeyword)) {
-                    parent.addKeyword(keyword, parent.$el, 'info');
-                }
-            };
-            this._super(parent);
-        },
-        addToSelection: function () {
-            this._addToSelection(this.keyword);
-        },
-    });
-
-    website.seo.Image = openerp.Widget.extend({
-        template: 'website.seo_image',
-        init: function (parent, options) {
-            this.src = options.src;
-            this.alt = options.alt;
-            this._super(parent);
-        }
-    });
 
     website.seo.PageParser = openerp.Class.extend({
         init: function () {
@@ -125,6 +58,118 @@
             return this._company;
         }
     });
+
+
+    website.seo.Tip = openerp.Widget.extend({
+        template: 'website.seo_tip',
+        events: {
+            'closed.bs.alert': 'destroy',
+        },
+        init: function (parent, options) {
+            this.message = options.message;
+            // success, info, warning or danger
+            this.type = options.type || 'info';
+            this._super(parent);
+        }
+    });
+
+    website.seo.Keyword = openerp.Widget.extend({
+        template: 'website.seo_keyword',
+        events: {
+            'click a[data-action=remove-keyword]': 'destroy',
+        },
+        init: function (parent, options) {
+            this.keyword = options.keyword;
+            // default, primary, success, info, warning, danger
+            this.type = options.type || 'default';
+            this.onDelete = options.onDelete;
+            this._super(parent);
+        },
+        destroy: function () {
+            if (_.isFunction(this.onDelete)) {
+                this.onDelete(this.keyword);
+            }
+            this._super();
+        },
+    });
+
+    website.seo.KeywordList = openerp.Class.extend({
+        init: function (parent, pageParser) {
+            this.$parent = parent.$el;
+            this._enableNewKeywords = function () {
+                parent.keywordsNotFull.call(parent);
+            };
+            this._disableNewKeywords = function () {
+                parent.keywordsFull.call(parent);
+            }
+        },
+        cleanupKeyword: function (word) {
+            return word ? word.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
+        },
+        keywords: function () {
+            return this.$parent.find('.js_seo_keyword').map(function () {
+                return $(this).data('keyword');
+            });
+        },
+        suggestions: function () {
+            return this.$parent.find('.js_seo_suggestion').map(function () {
+                return $(this).data('keyword');
+            });
+        },
+        isKeywordListFull: function () {
+            return this.keywords().length >= 10;
+        },
+        isExistingKeyword: function (word) {
+            return _.contains(this.keywords(), word);
+        },
+        determineType: function (word) {
+            return _.contains(this.suggestions(), word) ? 'success' : 'default';
+        },
+        add: function (word) {
+            var word = this.cleanupKeyword(word);
+            if (!this.isKeywordListFull() && !this.isExistingKeyword(word)) {
+                var type = this.determineType(word);
+                new website.seo.Keyword(this, {
+                    keyword: word,
+                    type: type,
+                    onDelete: this._enableNewKeywords
+                }).appendTo(this.$parent.find('.js_seo_keywords_list'));
+            }
+            if (this.isKeywordListFull()) {
+                this._disableNewKeywords();
+            }
+        },
+    });
+
+    website.seo.Suggestion = openerp.Widget.extend({
+        template: 'website.seo_suggestion',
+        events: {
+            'click .js_seo_suggestion': 'addToSelection'
+        },
+        init: function (parent, options) {
+            this.keyword = options.keyword;
+            // default, primary, success, info, warning, danger
+            this.type = options.type || 'default';
+            var hasAddToSelection = parent && _.isFunction(parent.addKeyword);
+            this._addToSelection = hasAddToSelection ? function (keyword) {
+                parent.addKeyword.call(parent, keyword, parent.$el);
+            } : function () {};
+            this._super(parent);
+        },
+        addToSelection: function () {
+            this._addToSelection(this.keyword);
+        },
+    });
+
+    website.seo.Image = openerp.Widget.extend({
+        template: 'website.seo_image',
+        init: function (parent, options) {
+            this.src = options.src;
+            this.alt = options.alt;
+            this._super(parent);
+        }
+    });
+
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
         events: {
@@ -145,7 +190,7 @@
             this.checkBestPractices(pageParser);
             this.displayKeywordSuggestions(pageParser);
             this.displayImages(pageParser);
-
+            this.keywordList = new website.seo.KeywordList(this, pageParser);
             this.$el.modal();
         },
         checkBestPractices: function (parser) {
@@ -217,47 +262,28 @@
         confirmKeyword: function (e) {
             if (e.keyCode == 13) {
                 this.addKeyword();
-                this.$el.find('input[name=seo_page_keywords]').val("");
             }
         },
-        addKeyword: function (keyword, $el, type) {
-            var $modal = $el || this.$el;
-            function keywords () {
-                return $('.js_seo_keyword').map(function () {
-                    return $(this).data('keyword');
-                });
-            }
-            function isKeywordListFull () {
-                return keywords().length >= 10;
-            }
-            function isExistingKeyword (word) {
-                return _.contains(keywords(), word);
-            }
-            function enableNewKeywords () {
-                $modal.find('input[name=seo_page_keywords]')
-                    .removeAttr('readonly').attr('placeholder', "");
-                $modal.find('button[data-action=add]')
-                    .prop('disabled', false).removeClass('disabled');
-            }
-            function disableNewKeywords () {
-                $modal.find('input[name=seo_page_keywords]')
-                    .attr('readonly', "readonly")
-                    .attr('placeholder', "Remove a keyword first");
-                $modal.find('button[data-action=add]')
-                    .prop('disabled', true).addClass('disabled');
-            }
+        keywordsFull: function () {
+            var $modal = this.$el;
+            $modal.find('input[name=seo_page_keywords]')
+                .attr('readonly', "readonly")
+                .attr('placeholder', "Remove a keyword first");
+            $modal.find('button[data-action=add]')
+                .prop('disabled', true).addClass('disabled');
+        },
+        keywordsNotFull: function () {
+            var $modal = this.$el;
+            $modal.find('input[name=seo_page_keywords]')
+                .removeAttr('readonly').attr('placeholder', "");
+            $modal.find('button[data-action=add]')
+                .prop('disabled', false).removeClass('disabled');
+        },
+        addKeyword: function (keyword) {
+            var $modal = this.$el;
             var candidate = keyword || $modal.find('input[name=seo_page_keywords]').val();
-            var word = cleanupKeyword(candidate);
-            if (word && !isKeywordListFull() && !isExistingKeyword(word)) {
-                new website.seo.Keyword(this, {
-                    keyword: word,
-                    type: type,
-                    onDelete: enableNewKeywords
-                }).appendTo($modal.find('.js_seo_keywords_list'));
-            }
-            if (isKeywordListFull()) {
-                disableNewKeywords();
-            }
+            this.keywordList.add(candidate);
+            $modal.find('input[name=seo_page_keywords]').val("");
         },
         update: function () {
             // TODO: Persist changes
