@@ -22,8 +22,7 @@ def route(*route_args, **route_kwargs):
         @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
         def wrap(*args, **kwargs):
             if not hasattr(request, 'webcontext'):
-                website = request.registry.get("website")
-                request.webcontext = website.get_rendering_context(lang=kwargs.get('lang', None))
+                request.webcontext = WebContext()
                 request.context['lang'] = request.webcontext['lang_selected']['code']
 
             return f(*args, **kwargs)
@@ -49,6 +48,22 @@ def urlplus(url, params):
 
 class WebsiteError(Exception):
     pass
+
+class WebContext(dict):
+    def __init__(self):
+        self.website = request.registry.get("website")
+        lang = request.httprequest.host.split('.')[0]
+        context = self.website.get_rendering_context(lang=lang)
+        dict.__init__(self, context)
+    def __getattr__(self, name):
+        if hasattr(self.website, name):
+            return getattr(self.website, name)
+        elif name in self:
+            return self[name]
+        else:
+            raise AttributeError
+    def render(self, template, values=None):
+        return self.website.render(template, self)
 
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco

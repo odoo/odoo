@@ -42,7 +42,7 @@ def get_current_order():
 
 class website(osv.osv):
     _inherit = "website"
-    def get_rendering_context(self, additional_values=None):
+    def get_rendering_context(self, additional_values=None, **kw):
         values = {
             'order': get_current_order(),
             # 'website_sale_get_current_order': get_current_order, # TODO: replace 'order' key in templates

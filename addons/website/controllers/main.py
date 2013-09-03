@@ -14,6 +14,7 @@ import werkzeug.wrappers
 from PIL import Image
 
 import openerp
+from openerp.addons.website.website import route
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
@@ -34,7 +35,7 @@ PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif'
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
-    @http.route('/', type='http', auth="admin")
+    @route('/', type='http', auth="admin")
     def index(self, **kw):
         return self.page("website.homepage")
 
@@ -42,7 +43,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def admin(self, *args, **kw):
         return super(Website, self).index(*args, **kw)
 
-    @http.route('/pagenew/<path:path>', type='http', auth="admin")
+    @route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path, noredirect=NOPE):
         if '.' in path:
             module, idname = path.split('.', 1)
@@ -80,7 +81,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @http.route('/website/theme_change', type='http', auth="admin")
+    @route('/website/theme_change', type='http', auth="admin")
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
@@ -94,25 +95,19 @@ class Website(openerp.addons.web.controllers.main.Home):
             view_model, view_id = imd.get_object_reference(request.cr, request.uid, module, xml_id)
             view.write(request.cr, request.uid, [view_id], {'inherit_id':view_option_id})
 
-        website = request.registry.get("website")
-        values = website.get_rendering_context({
-            'theme_changed': True
-        })
-        return website.render('website.themes', values)
+        request.webcontext['theme_changed'] = True
+        return request.webcontext.render('website.themes')
 
-    @http.route('/page/<path:path>', type='http', auth="admin")
+    @route('/page/<path:path>', type='http', auth="admin")
     def page(self, path, **kwargs):
-        website = request.registry['website']
-        values = website.get_rendering_context({
-            'path': path
-        })
+        request.webcontext['path'] = path
         try:
-            html = website.render(path, values)
+            html = request.webcontext.render(path)
         except ValueError:
-            html = website.render('website.404', values)
+            html = request.webcontext.render('website.404')
         return html
 
-    @http.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
+    @route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
     def customize_template_set(self, view_id):
         view_obj = request.registry.get("ir.ui.view")
         view = view_obj.browse(request.cr, request.uid, int(view_id), context=request.context)
@@ -125,7 +120,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         }, context=request.context)
         return True
 
-    @http.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
+    @route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
     def customize_template_get(self, xml_id):
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
@@ -151,7 +146,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
-    @http.route('/website/attach', type='http', auth='admin') # FIXME: auth
+    @route('/website/attach', type='http', auth='admin') # FIXME: auth
     def attach(self, func, upload):
         req = request.httprequest
         if req.method != 'POST':
@@ -175,7 +170,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             window.parent['%s'](%s, %s);
         </script>""" % (func, json.dumps(url), json.dumps(message))
 
-    @http.route('/website/attachment/<int:id>', type='http', auth="admin")
+    @route('/website/attachment/<int:id>', type='http', auth="admin")
     def attachment(self, id):
         # FIXME: can't use Binary.image because auth=user and website attachments need to be public
         attachment = request.registry['ir.attachment'].browse(
@@ -200,7 +195,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         image.save(response.stream, image.format)
         return response
 
-    @http.route('/website/image', type='http', auth="public")
+    @route('/website/image', type='http', auth="public")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
         Model = request.registry[model]
@@ -241,7 +236,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return request.make_response(image_data, headers)
 
-    @http.route(['/website/publish/'], type='http', auth="public")
+    @route(['/website/publish/'], type='http', auth="public")
     def publish(self, **post):
         _id = int(post['id'])
         _object = request.registry[post['object']]
@@ -252,7 +247,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return obj.website_published and "1" or "0"
 
-    @http.route(['/website/kanban/'], type='http', auth="public")
+    @route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
         return request.registry['website'].kanban_col(**post)
 

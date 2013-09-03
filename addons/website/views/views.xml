@@ -69,6 +69,20 @@
                                         <ul class="nav navbar-nav navbar-right" id="top_menu">
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                             <li><a href="/admin">Sign in</a></li>
+                                            <li t-if="len(lang_list) &gt; 1" class="dropdown">
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                    <t t-esc="lang_selected['name']"/> <span class="caret"></span>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li t-foreach="lang_list" t-as="lg">
+                                                        <a href="#" role="menuitem">
+                                                            <strong t-att-class="'icon-check' if lg['code'] == lang_selected['code']
+                                                                else 'icon-check-empty'"></strong>
+                                                            <t t-esc="lg['name']"/>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
