@@ -131,7 +131,7 @@
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
                         <page string="Inventory Details" >
-                            <button name="set_checked_qty" states="confirm" string="==> Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
+                            <button name="set_checked_qty" states="confirm" string="⇒ Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
