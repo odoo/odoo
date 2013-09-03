@@ -49,12 +49,16 @@ def compute_related(field, records):
     """ Compute the related `field` on `records`. """
     sudo_scope = scope.SUDO()
     for record in records:
-        # bypass access rights check when traversing the related path
-        value = record.scoped(sudo_scope) if record.id else record
-        for name in field.related:
-            value = value[name]
-        # /!\ do not "scope" value: read() needs to name_get() it as SUPERUSER
-        record[field.name] = value
+        try:
+            # bypass access rights check when traversing the related path
+            value = record.scoped(sudo_scope) if record.id else record
+            for name in field.related:
+                value = value[name]
+            # /!\ do not "scope" value: read() needs to name_get() it as SUPERUSER
+            record[field.name] = value
+        except Exception:
+            # let the field unassigned; the cache will raise an exception
+            _logger.debug("Error while computing %s on %s", field.name, record)
 
 def inverse_related(field, records):
     """ Inverse the related `field` on `records`. """
