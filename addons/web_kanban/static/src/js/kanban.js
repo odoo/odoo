@@ -1249,15 +1249,15 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
             var sparkline_options = _.extend({
                     type: 'bar',
                     barWidth: 5,
-                    height: '50px',
-                    barWidth: '10px',
-                    barSpacing: '5px',
+                    height: '20px',
+                    barWidth: 4,
+                    barSpacing: 1,
                     barColor: '#96d854',
                     tooltipFormat: '{{offset:offset}} {{value}}',
                     tooltipValueLookups: {
                         'offset': tooltips
                     }
-                }, this.options);
+                }, self.options);
             self.$el.sparkline(value, sparkline_options);
             self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
         }, 0);
@@ -1287,7 +1287,6 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
         var val = this.field.value;
         var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
         var title = this.$node.html() || this.field.string;
-        console.log(value, title, max);
         this.gage = new JustGage({
             parentNode: this.$el[0],
             value: value,
