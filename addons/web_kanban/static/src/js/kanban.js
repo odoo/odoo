@@ -1231,6 +1231,148 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
 });
 
 instance.web_kanban.fields_registry = new instance.web.Registry({});
+
+
+/**
+ * Kanban widgets: Sparkline
+ *
+ */
+
+instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.extend({
+    className: "oe_sparkline_bar",
+    start: function() {
+        var self = this;
+        var title = this.$node.html() || this.field.string;
+        setTimeout(function () {
+            var value = _.pluck(self.field.value, 'value');
+            var tooltips = _.pluck(self.field.value, 'tooltip');
+            var sparkline_options = _.extend({
+                    type: 'bar',
+                    barWidth: 5,
+                    height: '50px',
+                    barWidth: '10px',
+                    barSpacing: '5px',
+                    barColor: '#96d854',
+                    tooltipFormat: '{{offset:offset}} {{value}}',
+                    tooltipValueLookups: {
+                        'offset': tooltips
+                    }
+                }, this.options);
+            self.$el.sparkline(value, sparkline_options);
+            self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
+        }, 0);
+    },
+});
+
+instance.web_kanban.fields_registry.add("sparkline_bar", "instance.web_kanban.SparklineBarWidget");
+
+
+/**
+ * Kanban widgets: GaugeWidget
+ *
+ */
+
+instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
+    className: "oe_gauge",
+    start: function() {
+        var self = this;
+        var max = 100;
+        if (this.options.max_field) {
+            max = this.getParent().record[this.options.max_field].raw_value;
+        }
+        var label = this.options.label || "";
+        if (this.options.label_field) {
+            label = this.getParent().record[this.options.label_field].raw_value;
+        }
+        var val = this.field.value;
+        var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
+        var title = this.$node.html() || this.field.string;
+        console.log(value, title, max);
+        this.gage = new JustGage({
+            parentNode: this.$el[0],
+            value: value,
+            title: title,
+            min: 0,
+            max: max,
+            relativeGaugeSize: true,
+            humanFriendly: true,
+            label: label,
+            levelColors: [
+                "#ff0000",
+                "#f9c802",
+                "#a9d70b"
+            ]
+        });
+
+        var flag_open = false;
+        if (self.options.action_change) {
+            var $svg = self.$el.find('svg');
+            var css = {
+                'text-align': 'center',
+                'position': 'absolute',
+                'width': self.$el.outerWidth() + 'px',
+                'top': (self.$el.outerHeight()/2-5) + 'px'
+            };
+
+            self.$el.click(function (event) {
+                event.stopPropagation();
+                flag_open = false;
+                if (!parent.view.is_action_enabled('edit')) {
+                    return;
+                }
+                if (!self.$el.find(".oe_justgage_edit").size()) {
+                    $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
+                    $div.css(css);
+                    $input = $('<input/>').val(value);
+                    $input.css({
+                        'text-align': 'center',
+                        'margin': 'auto',
+                        'width': ($svg.outerWidth()-40) + 'px'
+                    });
+                    $div.append($input);
+                    self.$el.prepend($div)
+                    $input.focus()
+                        .keydown(function (event) {
+                            event.stopPropagation();
+                            if (event.keyCode == 13 || event.keyCode == 9) {
+                                if ($input.val() != value) {
+                                    parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
+                                        parent.do_reload();
+                                    });
+                                } else {
+                                    $div.remove();
+                                }
+                            }
+                        })
+                        .click(function (event) {
+                            event.stopPropagation();
+                            flag_open = false;
+                        })
+                        .blur(function (event) {
+                            if(!flag_open) {
+                                self.$el.find(".oe_justgage_edit").remove();
+                            } else {
+                                flag_open = false;
+                                setTimeout(function () {$input.focus();}, 0);
+                            }
+                        });
+                }
+            }).mousedown(function () {
+                flag_open = true;
+            });
+
+            if (!+value) {
+                $svg.fadeTo(0, 0.3);
+                $div = $('<div/>').text(_t("Click to change value"));
+                $div.css(css);
+                self.$el.append($div);
+            }
+        }
+    },
+});
+
+instance.web_kanban.fields_registry.add("gauge", "instance.web_kanban.GaugeWidget");
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
