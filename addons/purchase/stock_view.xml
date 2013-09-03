@@ -20,9 +20,6 @@
                 <xpath expr="//field[@name='move_type']" position="before">
                     <field name="purchase_id" domain="[('invoice_method','=','picking')]" groups="base.group_no_one" context="{'search_default_partner_id':partner_id,'default_partner_id':partner_id, 'default_invoice_method':'picking'}"/>
                 </xpath>
-                <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="warehouse_id" groups="stock.group_locations"/>
-                </xpath>
             </field>
         </record>
 
