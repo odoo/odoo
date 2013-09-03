@@ -234,7 +234,7 @@ class purchase_order(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'bid_date': fields.date('Bid Received On', readonly=True, help="Date on which the bid was received"),
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This will determine picking type of incoming shipment"),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This will determine picking type of incoming shipment", required=True),
     }
     _defaults = {
         'date_order': fields.date.context_today,
