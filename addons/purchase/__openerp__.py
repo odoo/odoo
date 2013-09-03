@@ -83,8 +83,8 @@ Dashboard / Reports for Purchase Management will include:
         'test/average_price.yml',
     ],
     'demo': [
-        #'purchase_order_demo.yml',
-        #'purchase_demo.xml',
+        'purchase_order_demo.yml',
+        'purchase_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
