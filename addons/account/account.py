@@ -2808,6 +2808,7 @@ class account_chart_template(osv.osv):
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete'),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
@@ -3068,12 +3069,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
 
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        currency_id = False
-        if company_id:
-            currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
-        return {'value': {'currency_id': currency_id}}
-
     def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
@@ -3083,7 +3078,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}
         if chart_template_id:
             data = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-            res['value'].update({'complete_tax_set': data.complete_tax_set})
+            currency_id = data.currency_id.id or self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+            res['value'].update({'complete_tax_set': data.complete_tax_set, 'currency_id': currency_id})
             if data.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
@@ -3115,7 +3111,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
             if 'chart_template_id' in fields:
-                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': ids[0]})
+                #in order to set default chart which was last created set max of ids.
+                chart_id = max(ids)
+                if context.get("default_charts"):
+                    chart_id = self.pool.get('ir.model.data').search_read(cr, uid, [('model','=','account.chart.template'),('module','=',context.get("default_charts"))], ['res_id'], context=context)[0]['res_id']
+                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': chart_id})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
