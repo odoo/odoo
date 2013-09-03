@@ -3232,8 +3232,14 @@ class BaseModel(object):
                 cls._columns[field_name].required = True
                 cls._columns[field_name].ondelete = "cascade"
 
-    def after_create_instance(self):
-        """ method called on all models after their creation """
+    def _before_registry_update(self):
+        """ method called on all models before updating the registry """
+        # reset setup of all fields
+        for field in self._fields.itervalues():
+            field.reset()
+
+    def _after_registry_update(self):
+        """ method called on all models after updating the registry """
         # complete the initialization of all fields
         for field in self._fields.itervalues():
             field.setup()

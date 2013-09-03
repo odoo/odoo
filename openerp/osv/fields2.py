@@ -133,7 +133,7 @@ class Field(object):
         field = copy(self)
         for attr, value in kwargs.iteritems():
             setattr(field, attr, value)
-        lazy_property.reset_all(field)      # reset all lazy properties on field
+        # Note: lazy properties will be recomputed later thanks to reset()
         return field
 
     def set_model_name(self, model_name, name):
@@ -386,8 +386,11 @@ class Field(object):
 
     @lazy_property
     def _ready(self):
-        # lazy property, so that it is reset upon copy()
         return False
+
+    def reset(self):
+        """ Prepare `self` for a new setup. This resets all lazy properties. """
+        lazy_property.reset_all(self)
 
     def setup(self):
         """ Complete the setup of `self`: make it process its dependencies and

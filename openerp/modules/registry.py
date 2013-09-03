@@ -129,6 +129,10 @@ class Registry(Mapping):
         models_to_load = [] # need to preserve loading order
 
         with openerp.osv.scope.Scope(cr, SUPERUSER_ID, None):
+            # call hook before adding stuff in the registry
+            for model in self.models.itervalues():
+                model._before_registry_update()
+
             # Instantiate registered classes (via the MetaModel automatic discovery
             # or via explicit constructor call), and add them to the pool.
             for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
@@ -140,7 +144,7 @@ class Registry(Mapping):
 
             # call hook after models have been instantiated
             for model in self.models.itervalues():
-                model.after_create_instance()
+                model._after_registry_update()
 
         return [self.models[m] for m in models_to_load]
 
