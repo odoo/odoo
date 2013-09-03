@@ -6,6 +6,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 import random
 import werkzeug
+import simplejson
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
@@ -203,7 +204,7 @@ class Ecommerce(http.Controller):
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=context)
             order.write({'order_line': [(4, order_line_id)]}, context=context)
 
-        return quantity
+        return [quantity, order.get_total_quantity()]
 
     @http.route(['/shop/mycart/'], type='http', auth="public")
     def mycart(self, **post):
@@ -232,20 +233,24 @@ class Ecommerce(http.Controller):
         return website.render("website_sale.mycart", values)
 
     @http.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/'], type='http', auth="public")
-    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None):
-        self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None, json=None):
+        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        if json:
+            return simplejson.dumps(quantity)
         if path:
             return werkzeug.utils.redirect("/shop/%s/" % path)
         else:
             return werkzeug.utils.redirect("/shop/")
 
     @http.route(['/shop/remove_cart/', '/shop/<path:path>/remove_cart/'], type='http', auth="public")
-    def remove_cart(self, path=None, product_id=None, order_line_id=None):
-        return self.add_cart(product_id=product_id, order_line_id=order_line_id, path=path, remove=True)
+    def remove_cart(self, path=None, product_id=None, order_line_id=None, json=None):
+        return self.add_cart(product_id=product_id, order_line_id=order_line_id, path=path, remove=True, json=json)
 
     @http.route(['/shop/set_cart/', '/shop/<path:path>/set_cart/'], type='http', auth="public")
-    def set_cart(self, path=None, product_id=None, order_line_id=None, set_number=0):
-        self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
+    def set_cart(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
+        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
+        if json:
+            return simplejson.dumps(quantity)
         if path:
             return werkzeug.utils.redirect("/shop/%s/" % path)
         else:

@@ -21,10 +21,7 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart
-                    <t t-if="order and order.get_total_quantity()">
-                        <span class="badge" t-esc="order.get_total_quantity()"/>
-                    </t>
+                    My cart <span id="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order.get_total_quantity()"/>
                 </a>
             </li>
         </xpath>
