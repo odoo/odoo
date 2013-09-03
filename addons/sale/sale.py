@@ -1072,14 +1072,5 @@ class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
         'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
-        'invoice_state': fields.selection(
-          [
-            ("invoiced", "Invoiced"),
-            ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")
-          ], "Invoice Control", required=True),
-    }
-    _defaults = {
-        'invoice_state': 'none',
     }
     

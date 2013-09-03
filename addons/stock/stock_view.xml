@@ -603,11 +603,12 @@
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}">
                                 <tree editable="top">
                                     <field name="product_id"/>
-                                    <field name="product_uom_id"/>
-                                    <field name="lot_id"/>
-                                    <field name="package_id"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="lot_id" groups="stock.group_production_lot"/>
+                                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="product_qty"/>
-                                    <field name="result_package_id"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id}"/>
@@ -1533,6 +1534,7 @@
                     <field name="reservation_id"/>
                     <field name="propagated_from_id"/>
                     <field name="history_ids"/>
+                    <field name="owner_id"/>
                 </form>
             </field>
         </record>
@@ -1548,7 +1550,7 @@
                     <field name="qty"/>
                     <field name="location_id"/>
                     <field name="lot_id"/>
-                    <field name="package_id" invisible="1"/>
+                    <field name="package_id"/>
                     <field name="packaging_type_id" invisible="1"/>
                     <field name="in_date"/>
                     <field name="reservation_id" invisible='1'/>
