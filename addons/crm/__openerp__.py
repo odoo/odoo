@@ -121,7 +121,6 @@ Dashboard for CRM will include:
         'static/src/css/crm.css'
     ],
     'js': [
-        'static/lib/sparkline/jquery.sparkline.js',
         'static/src/js/crm_case_section.js',
     ],
     'installable': True,

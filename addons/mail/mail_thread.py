@@ -1426,8 +1426,7 @@ class mail_thread(osv.AbstractModel):
             # update original mail_mail if exists
             if type == 'email':
                 mail_mail_ids = self.pool['mail.mail'].search(cr, SUPERUSER_ID, [('mail_message_id', '=', parent_id)], context=context)
-                for mail in self.pool['mail.mail'].browse(cr, SUPERUSER_ID, mail_mail_ids, context=context):
-                    self.pool['mail.mail'].write(cr, SUPERUSER_ID, [mail.id], {'replied': mail.replied + 1}, context=context)
+                self.pool['mail.mail'].set_replied(cr, SUPERUSER_ID, mail_mail_ids, context=context)
 
             message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
             # avoid loops when finding ancestors

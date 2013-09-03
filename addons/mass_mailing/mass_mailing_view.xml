@@ -3,7 +3,7 @@
     <data>
 
         <!--  MASS MAILING CAMPAIGNS !-->
-        <record model="ir.ui.view" id="view_followers_tree">
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_tree">
             <field name="name">mail.mass_mailing.campaign.tree</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="priority">10</field>
@@ -14,7 +14,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_subscription_form">
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_form">
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
@@ -22,14 +22,71 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="template_id"/>
                             <field name="sent"/>
-                            <field name="opened_ratio"/>
-                            <field name="replied_ratio"/>
-                            <field name="bounce_ratio"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+
+        <!-- CRM Lead Kanban View  -->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_kanban">
+            <field name="name">mail.mass_mailing.campaign.kanban</field>
+            <field name="model">mail.mass_mailing.campaign</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="segment_kanban_ids"/>
+                    <field name='sent'/>
+                    <templates>
+                        <t t-name="mass_mailing.segment">
+                            <div>
+                                <h4><t t-raw="segment.name"/></h4>
+                            </div>
+                            <div>
+                                <p class="oe_mail_stats">
+                                    <span class="oe_mail_result"><t t-raw="segment.sent"/></span><br />
+                                    Sent
+                                </p>
+                                <p class="oe_mail_stats">
+                                    <span class="oe_mail_result"><t t-raw="segment.opened"/></span><br />
+                                    Opened
+                                </p>
+                                <p class="oe_mail_stats">
+                                    <span class="oe_mail_result"><t t-raw="segment.replied"/></span><br />
+                                    Replied
+                                </p>
+                                <p class="oe_mail_stats">
+                                    <span class="oe_mail_result"><t t-raw="segment.bounced"/></span><br />
+                                    Bounced
+                                </p>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <!-- <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"> -->
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_campaign">
+                                 <div class="oe_kanban_content">
+                                    <h3>
+                                        <field name="name"/>
+                                    </h3>
+                                    <div>
+                                        <field name="opened" widget="gauge" style="width:120px; height: 80px;"
+                                            options="{'max_field': 'sent'}"/>
+                                        <field name="replied" widget="gauge" style="width:120px; height: 80px;"
+                                            options="{'max_field': 'sent'}"/>
+                                    </div>
+                                    <t t-foreach='record.segment_kanban_ids.value' t-as='segment'>
+                                        <t t-call="mass_mailing.segment"/>
+                                    </t>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -37,12 +94,116 @@
             <field name="name">Mass Mailing Campaigns</field>
             <field name="res_model">mail.mass_mailing.campaign</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!--  MASS MAILING SEGMENTS !-->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_tree">
+            <field name="name">mail.mass_mailing.segment.tree</field>
+            <field name="model">mail.mass_mailing.segment</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Mass Mailing Segments">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_form">
+            <field name="name">mail.mass_mailing.segment.form</field>
+            <field name="model">mail.mass_mailing.segment</field>
+            <field name="arch" type="xml">
+                <form string="Mass Mailing Campaign" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="mass_mailing_campaign_id"/>
+                            <field name="date"/>
+                            <field name="template_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_kanban">
+            <field name="name">mail.mass_mailing.segment.kanban</field>
+            <field name="model">mail.mass_mailing.segment</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_segment">
+                                 <div class="oe_kanban_content">
+                                    <div>
+                                        <h3>
+                                            <field name="name"/>
+                                        </h3>
+                                            <p style="margin-left: 10px; margin-top: 8px;">
+                                                Sent: <field name="date"/><br />
+                                                Campaign: <field name="mass_mailing_campaign_id"/>
+                                            </p>
+                                    </div>
+                                    <div>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="sent"/></span><br />
+                                            Sent
+                                        </p>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="opened"/></span><br />
+                                            Opened
+                                        </p>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="replied"/></span><br />
+                                            Replied
+                                        </p>
+                                        <p class="oe_mail_stats">
+                                            <span class="oe_mail_result"><field name="bounced"/></span><br />
+                                            Bounced
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="oe_sparkline_container">
+                                            <h4 class="oe_sparkline_bar_title">Opened</h4><br />
+                                            <field name="opened_monthly" widget="sparkline_bar" height="50px" barWidth="10px" barSpacing="15px"/>
+                                        </div>
+                                        <div class="oe_sparkline_container">
+                                            <h4 class="oe_sparkline_bar_title">Replied</h4><br />
+                                            <field name="replied_monthly" widget="sparkline_bar" height="50px" barWidth="10px" barSpacing="15px"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_view_mass_mailing_segments" model="ir.actions.act_window">
+            <field name="name">Mass Mailing Segments</field>
+            <field name="res_model">mail.mass_mailing.segment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <!-- Add followers related menu entries in Settings/Email -->
         <menuitem name="Mass mailing campaigns" id="menu_email_campaigns" parent="base.menu_email"
                     action="action_view_mass_mailing_campaigns" sequence="60" groups="base.group_no_one"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Marketing" id="base.marketing_menu" sequence="85"/>
+
+        <!-- Add in marketing -->
+        <menuitem name="Mass Mailing Campaign" id="mass_mailing_campaign"
+            parent="base.marketing_menu" sequence="1"/>
+        <menuitem name="Campaigns" id="menu_email_campaigns"
+            parent="mass_mailing_campaign" sequence="1"
+            action="action_view_mass_mailing_campaigns"/>
+        <menuitem name="Segments" id="menu_email_segments"
+            parent="mass_mailing_campaign" sequence="2"
+            action="action_view_mass_mailing_segments"/>
 
     </data>
 </openerp>

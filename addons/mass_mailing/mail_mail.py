@@ -28,8 +28,14 @@ class MailMail(osv.Model):
     _inherit = ['mail.mail']
 
     _columns = {
-        'mass_mailing_campaign_id': fields.many2one(
-            'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
+        'mass_mailing_segment_id': fields.many2one(
+            'mail.mass_mailing.segment', 'Mass Mailing Segment',
             ondelete='set null',
+        ),
+        'mass_mailing_campaign_id': fields.related(
+            'mass_mailing_segment_id', 'mass_mailing_campaign_id',
+            type='many2one', ondelete='set null',
+            relation='mail.mass_mailing.campaign',
+            store=True, readonly=True,
         ),
     }

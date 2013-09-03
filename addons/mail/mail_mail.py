@@ -63,12 +63,16 @@ class mail_mail(osv.Model):
         'notification': fields.boolean('Is Notification',
             help='Mail has been created to notify people of an existing mail.message'),
         # Bounce and tracking
-        'opened': fields.integer(
+        'opened': fields.datetime(
             'Opened',
-            help='Number of times this email has been seen, using the OpenERP tracking.'),
-        'replied': fields.integer(
-            'Reply Received',
-            help='If checked, a reply to this email has been received.'),
+            help='Date when this email has been opened for the first time.'),
+        'replied': fields.datetime(
+            'Replied',
+            help='Date when this email has been replied for the first time.'),
+        'bounced': fields.datetime(
+            'Bounced',
+            help='Date when this email has bounced.'
+        ),
     }
 
     _defaults = {
@@ -103,15 +107,24 @@ class mail_mail(osv.Model):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def set_opened(self, cr, uid, ids, context=None):
-        """ Increment opened counter """
+        """ Set as opened """
         for mail in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [mail.id], {'opened': (mail.opened + 1)}, context=context)
+            if not mail.opened:
+                self.write(cr, uid, [mail.id], {'opened': fields.datetime.now()}, context=context)
         return True
 
     def set_replied(self, cr, uid, ids, context=None):
-        """ Increment replied counter """
+        """ Set as replied """
         for mail in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [mail.id], {'replied': (mail.replied + 1)}, context=context)
+            if not mail.replied:
+                self.write(cr, uid, [mail.id], {'replied': fields.datetime.now()}, context=context)
+        return True
+
+    def set_bounced(self, cr, uid, ids, context=None):
+        """ Set as bounced """
+        for mail in self.browse(cr, uid, ids, context=context):
+            if not mail.bounced:
+                self.write(cr, uid, [mail.id], {'bounced': fields.datetime.now()}, context=context)
         return True
 
     def process_email_queue(self, cr, uid, ids=None, context=None):

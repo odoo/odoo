@@ -29,9 +29,15 @@
     'description': """TODO""",
     'data': [
         'mass_mailing_view.xml',
+        'mass_mailing_demo.xml',
         'mail_mail_view.xml',
         'wizard/mail_compose_message_view.xml',
         'security/ir.model.access.csv',
+    ],
+    'js': [],
+    'qweb': [],
+    'css': [
+        'static/src/css/mass_mailing.css'
     ],
     'demo': [],
     'installable': True,
