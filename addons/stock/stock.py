@@ -2395,7 +2395,9 @@ class stock_picking_type(osv.osv):
             return res
         reads = self.browse(cr, uid, ids, context=context)
         for record in reads:
-            name = record.warehouse_id.name+': '+record.name
+            name = record.name
+            if record.warehouse_id:
+                name = record.warehouse_id.name+': '+name
             res.append((record.id, name))
         return res
 
@@ -2415,7 +2417,7 @@ class stock_picking_type(osv.osv):
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
         'code_id': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
 
         # Statistics for the kanban view
         'weekly_picking': fields.function(_get_picking_data,
