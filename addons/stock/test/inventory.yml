@@ -1,9 +1,9 @@
 -
   In order to test the inventory, I create a new product
 -
-    !record {model: product.product, id: inventory_product}:
-         name: inventory prod
-         type: product
+  !record {model: product.product, id: inventory_product}:
+    name: inventory prod
+    type: product
 -
   I create an inventory for this product only
 -
@@ -67,8 +67,8 @@
     self.prepare_inventory(cr, uid, [ref('inventory_test1')], context=context)
     inv = self.browse(cr, uid, ref('inventory_test1'), context=context)
     assert inv.line_ids and len(inv.line_ids) == 1, "Wrong number of inventory lines."
-    assert len(inv.line_ids[0].product_qty) == 10, "Wrong quantity in inventory line."
-    assert len(inv.line_ids[0].product_id.id) == ref('inventory_product'), "Wrong product in inventory line."
+    assert inv.line_ids[0].product_qty == 10, "Wrong quantity in inventory line."
+    assert inv.line_ids[0].product_id.id == ref('inventory_product'), "Wrong product in inventory line."
 -
   I modify the inventory line and set the quantity to 20 product on this new inventory
 -
