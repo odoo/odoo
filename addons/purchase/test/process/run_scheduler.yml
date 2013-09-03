@@ -6,13 +6,8 @@
   !record {model: procurement.order, id: procurement_order_testcase0}:
     location_id: stock.stock_location_stock
     name: Test scheduler for RFQ
-    procure_method: make_to_order
     product_id: product.product_product_45
     product_qty: 15.0
--
-  I confirm on procurement order.
--
-  !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_testcase0}
 -
   I run the scheduler.
 -

@@ -22,6 +22,66 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+#----------------------------------------------------------
+# Procurement Rule
+#----------------------------------------------------------
+class procurement_rule(osv.osv):
+    _inherit = 'procurement.rule'
+    _columns= {
+        'invoice_state': fields.selection([
+            ("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not Applicable")], "Invoice Status",
+            required=False),
+        }
+    
+#----------------------------------------------------------
+# Procurement Order
+#----------------------------------------------------------
+
+
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
+    _columns = {
+        'invoice_state': fields.selection(
+          [("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not Applicable")
+          ], "Invoice Control", required=True),
+        }
+
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        res = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
+        res.update({'invoice_state': (procurement.rule_id.invoice_state in ('none', False) and procurement.invoice_state or procurement.rule_id.invoice_state) or 'none'})
+        return res
+    
+    _defaults = {
+        'invoice_state': 'none'
+        }
+
+
+#----------------------------------------------------------
+# Move
+#----------------------------------------------------------
+
+class stock_move(osv.osv):
+    _inherit = "stock.move"
+    _columns = {
+        'invoice_state': fields.selection([("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not Applicable")], "Invoice Control",
+            select=True, required=True, track_visibility='onchange', 
+            states={'draft': [('readonly', False)]}),
+        }
+    _defaults= {
+        'invoice_state': lambda *args, **argv: 'none'
+        }
+
+
+
+#----------------------------------------------------------
+# Picking
+#----------------------------------------------------------
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -30,21 +90,12 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             result[pick.id] = 'none'
             for move in pick.move_lines:
-                if move.procurement_id:
-                    if move.procurement_id.invoice_state=='invoiced':
-                        result[pick.id] = 'invoiced'
-                    elif move.procurement_id.invoice_state=='2binvoiced':
-                        result[pick.id] = '2binvoiced'
-                        break
+                if move.invoice_state=='invoiced':
+                    result[pick.id] = 'invoiced'
+                elif move.invoice_state=='2binvoiced':
+                    result[pick.id] = '2binvoiced'
+                    break
         return result
-
-    def __get_picking_procurement(self, cr, uid, ids, context={}):
-        result = {}
-        for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
-            for move in proc.move_ids:
-                if move.picking_id:
-                    result[move.picking_id.id] = True
-        return result.keys()
 
     def __get_picking_move(self, cr, uid, ids, context={}):
         res = []
@@ -59,8 +110,8 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True, 
+
         store={
-          'procurement.order': (__get_picking_procurement, ['invoice_state'], 10),
           'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
           'stock.move': (__get_picking_move, ['picking_id'], 10),
         },

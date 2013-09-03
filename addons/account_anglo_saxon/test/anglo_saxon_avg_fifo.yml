@@ -197,18 +197,19 @@
         product_id: product_fifo_anglo_saxon
         product_qty: 1.0
         location_dest_id: stock.stock_location_customers
+        invoice_state: 2binvoiced
     move_type: direct
     picking_type_id: stock.picking_type_out
 -
   I need to check the availability of the product, So I make my picking order for processing later.
 -
   !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('stock_picking_out001')], context=context)
+    self.action_confirm(cr, uid, [ref('stock_picking_out001_fifo')], context=context)
 -
   I check the product availability, Product is available in the stock and ready to be sent.
 -
   !python {model: stock.picking}: |
-    picking = self.browse(cr, uid, ref("stock_picking_out001"))
+    picking = self.browse(cr, uid, ref("stock_picking_out001_fifo"))
     assert picking.state == "confirmed", "Picking should be confirmed."
     for move_line in picking.move_lines:
       assert move_line.state == "confirmed", "Move should be confirmed."
