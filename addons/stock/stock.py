@@ -1033,7 +1033,7 @@ class stock_move(osv.osv):
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
         res = {}
         for move in self.browse(cr, uid, ids, context=context):
-            res[move.id] = move.product_uom_qty
+            res[move.id] = move.product_qty
             for quant in move.reserved_quant_ids:
                 res[move.id] -= quant.qty
         return res
