@@ -116,10 +116,15 @@
                 <form string="Mass Mailing Campaign" version="7.0">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="mass_mailing_campaign_id"/>
-                            <field name="date"/>
-                            <field name="template_id"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="mass_mailing_campaign_id"/>
+                                <field name="template_id"/>
+                                <field name="domain"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
