@@ -113,11 +113,11 @@
     self.do_prepare_partial(cr, uid, [ref('delivery_order1')], context=context)
     delivery_id = self.browse(cr, uid, ref('delivery_order1'), context=context)
     for rec in delivery_id.pack_operation_ids:
-      if rec.package_id.name == 'Pallet 1' or rec.product_qty == 120:
-        stock_pack.write(cr, uid, rec.id, {'product_qty': 120}, context=context)
-      if rec.package_id.name == 'Pallet 2' or rec.lot_id.name == 'Lot A' :
+      if rec.package_id.name == 'Pallet 1' and rec.product_qty == 120:
+        stock_pack.write(cr, uid, rec.id, {'product_id': False}, context=context)
+      if rec.package_id.name == 'Pallet 2' and rec.lot_id.name == 'Lot A' :
         stock_pack.write(cr, uid, rec.id, {'product_qty': 20}, context=context)
-      if rec.package_id.name == 'Pallet 3' or rec.product_qty == 60:
+      if rec.package_id.name == 'Pallet 3' and rec.product_qty == 60:
         stock_pack.write(cr, uid, rec.id, {'product_qty': 10}, context=context)
 - 
   Process this picking

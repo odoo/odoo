@@ -250,7 +250,7 @@ class stock_quant(osv.osv):
             'history_ids': [(4, move.id)],
             'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'company_id': move.company_id.id,
-            'lot_id': lot_id, 
+            'lot_id': lot_id,
         }
 
         negative_quant_id = False
@@ -791,13 +791,13 @@ class stock_picking(osv.osv):
                             else:
                                 qty = move.remaining_qty
                                 qty_to_do -= move.remaining_qty
-                            quant_obj.quants_reserve(cr, uid, [(quant.id, qty)], move, context=context)
+                            quant_obj.quants_reserve(cr, uid, [(quant, qty)], move, context=context)
                             res2[move.id] -= qty
                         res.setdefault(ops.id, {}).setdefault(quant.product_id.id, 0.0)
                         res[ops.id][quant.product_id.id] += qty_to_do
                     #Add parent package
                     if create:
-                        self.pool.get("stock.package").write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
+                        self.pool.get("stock.quant.package").write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
         return (res, res2)
 
 
