@@ -78,8 +78,8 @@
 
                     <div class="col-md-8" t-if="not blog_id and blog_ids">
                         <ul class="media-list">
-                            <li t-foreach="blog_ids" t-as="blog" class="media well">
-                                <div t-attf-class="media-body #{ 'css_published' if blog.website_published else '' }">
+                            <li t-foreach="blog_ids" t-as="blog" class="media well thumbnail" data-publish="">
+                                <div class="media-body">
                                     <t t-call="website.publish"><t t-set="object" t-value="blog"/></t>
                                     <h4 class="media-heading" ><a t-attf-href="/blog/#{ blog.res_id }/#{ blog.id }#comment" t-field="blog.subject"></a></h4>
                                     <div class="media">

@@ -162,22 +162,44 @@ ul.nav-stacked > li > a {
   text-transform: uppercase;
 }
 
-/* ---- PUBLISH BUTTON ---- */
-a.css_unpublish .css_unpublish {
+/* ---- PUBLISH ---- */
+a[data-publish] {
+  text-decoration: none !important;
+  z-index: 2;
+}
+a[data-publish] .label {
+  padding: 5px 8px;
+}
+a[data-publish] .css_unpublish, a[data-publish] .css_publish, a[data-publish] .css_unpublished, a[data-publish] .css_published {
   display: none;
 }
-a.css_unpublish:hover .css_unpublish {
+a[data-publish][data-publish='off'] .css_unpublished, a[data-publish][data-publish='off']:hover .css_publish {
   display: inline;
 }
-a.css_unpublish:hover .css_publish {
+a[data-publish][data-publish='off']:hover .css_unpublished {
   display: none;
 }
-a.css_publish .css_publish {
-  display: none;
-}
-a.css_publish:hover .css_publish {
+a[data-publish][data-publish='on'] .css_published, a[data-publish][data-publish='on']:hover .css_unpublish {
   display: inline;
 }
-a.css_publish:hover .css_unpublish {
+a[data-publish][data-publish='on']:hover .css_published {
   display: none;
+}
+
+[data-publish='off']:not(a) > :not([data-publish]) {
+  opacity: 0.5;
+}
+
+[data-publish]:not(a) {
+  position: relative;
+  overflow: visible;
+}
+[data-publish]:not(a) > [data-publish] {
+  position: absolute;
+  right: -6px;
+  top: -10px;
+  display: none;
+}
+[data-publish]:not(a):hover > [data-publish] {
+  display: block;
 }

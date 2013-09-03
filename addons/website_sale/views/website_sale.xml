@@ -110,13 +110,13 @@
                 <div class="clearfix"/>
                 <div class='row grid grid-align-top'>
                     <t t-foreach="products" t-as="product">
-                    <div t-attf-class="css_product col-md-2 mb16 thumbnail text-center #{not product.website_published and 'disabled' or ''}">
+                    <div class="css_product col-md-2 mb16 thumbnail text-center" data-publish="">
                         <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                         <div class="ellipsis css_content">
-                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}" style="text-decoration: none;">
                                 <h5 t-field="product.name"> </h5>
                                 <img class="img-rounded" t-att-src="product.img('image_small')"/>
-                            </a>
+                            </a><br/>
                             <small t-field="product.description_sale"></small>
                             <span class="end">&amp;#133;</span><span class="fill"></span>
                         </div>

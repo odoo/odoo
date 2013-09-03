@@ -380,9 +380,11 @@
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-attf-class="pull-right js_publish #{ object.website_published and 'css_publish' or 'css_unpublish' }" t-if="editable" t-ignore="true" style="text-decoration: none !important;">
-                <span t-attf-class="label label-success css_unpublish">Publish</span>
-                <span t-attf-class="label label-danger css_publish">Unpublish</span>
+            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
+                <span t-attf-class="label label-success css_publish">Publish</span>
+                <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
+                <span t-attf-class="label label-success css_published">Published</span>
+                <span t-attf-class="label label-danger css_unpublished">Unpublished</span>
             </a>
         </template>
 

@@ -50,7 +50,8 @@
                     </div>
                     <div class="col-md-8">
                         <ul class="media-list">
-                            <li t-foreach="event_ids" t-as="event" class="media thumbnail">
+                            <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
+                                <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
                                 <div class="media-body">
                                     <span t-if="not event.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
                                     <t t-if="event.event_ticket_ids">
@@ -65,7 +66,6 @@
                                         </span>
                                     </t>
                                     <h4 class="media-heading"><a t-attf-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
-                                    <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
                                     <div>
                                         <span t-field="event.type">: </span>
                                         <t t-if="event.organizer_id">
@@ -123,7 +123,20 @@
             </t>
             <t t-set="title">Events</t>
             <div class="container">
+                <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
                 <h1 class="text-center" t-field="event_id.name"></h1>
+                <span t-if="not event_id.event_ticket_ids" class="label label-default pull-left">No tickets needed.</span>
+                <t t-if="event_id.event_ticket_ids">
+                    <span t-if="event_id.register_avail == 9999" class="label label-default pull-left">Tickets availables.</span>
+                    <span t-if="not event_id.register_avail" class="label label-default pull-left">No ticket available.</span>
+                    <span t-if="event_id.register_avail and event_id.register_avail != 9999" t-attf-class="label label-default pull-left label-#{ event_id.register_avail &lt;= 10 and 'warning' or 'info' }">
+                        <t t-if="event_id.register_avail &lt;= 10">Only</t>
+                        <t t-esc="event_id.register_avail"/>
+                        <t t-if="event_id.register_avail &gt; 1">tickets </t>
+                        <t t-if="event_id.register_avail == 1">ticket </t>
+                        available.
+                    </span>
+                </t>
                 <h4 class="text-center">
                     <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
                     <span t-field="event_id.date_end"/>
@@ -147,22 +160,9 @@
                     </div>
                     <div class="col-md-8">
                         <div class="media-body">
-                            <span t-if="not event_id.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
                             <t t-if="event_id.event_ticket_ids">
-                                <span t-if="event_id.register_avail == 9999" class="label label-default pull-right">Tickets availables.</span>
-                                <span t-if="not event_id.register_avail" class="label label-default pull-right">No ticket available.</span>
-                                <span t-if="event_id.register_avail and event_id.register_avail != 9999"
-t-attf-class="label label-default pull-right label-#{ event_id.register_avail &lt;= 10 and 'warning' or 'info' }">
-                                    <t t-if="event_id.register_avail &lt;= 10">Only</t>
-                                    <t t-esc="event_id.register_avail"/>
-                                    <t t-if="event_id.register_avail &gt; 1">tickets </t>
-                                    <t t-if="event_id.register_avail == 1">ticket </t>
-                                    available.
-                                </span>
-                            </t>
-                            <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
-                            <h4 t-if="event_id.event_ticket_ids">Ticket Information</h4>
-                            <form t-attf-action="/event/#{ event_id.id }/add_cart" method="post" t-if="event_id.event_ticket_ids">
+                            <hr/>
+                            <form t-attf-action="/event/#{ event_id.id }/add_cart" method="post">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -190,7 +190,8 @@ t-attf-class="label label-default pull-right label-#{ event_id.register_avail &l
                                 </table>
                                 <button type="submit" class="btn btn-primary" t-if="event_id.register_avail">Order Now</button>
                             </form>
-                            <h4>Event Details</h4>
+                            </t>
+                            <hr/>
                             <div t-field="event_id.description_website"></div>
                         </div>
                     </div>

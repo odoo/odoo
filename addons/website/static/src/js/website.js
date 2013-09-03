@@ -138,16 +138,17 @@
 
     dom_ready.then(function () {
         /* ----- PUBLISHING STUFF ---- */
+        $('[data-publish]:has([data-publish])').each(function () {
+            var $pub = $("[data-publish]", this);
+            $(this).attr("data-publish", $pub.attr("data-publish"));
+        });
+
         $(document).on('click', '.js_publish', function (e) {
             e.preventDefault();
-            var $link = $(this);
-            $link.toggleClass("css_publish").toggleClass("css_unpublish");
-            $.post('/website/publish', {'id': $link.data('id'), 'object': $link.data('object')}, function (result) {
-                if (+result) {
-                    $link.addClass("css_publish").removeClass("css_unpublish");
-                } else {
-                    $link.removeClass("css_publish").addClass("css_unpublish");
-                }
+            var $data = $(":first", this).parents("[data-publish]");
+            $data.attr("data-publish", $data.first().attr("data-publish") == 'off' ? 'on' : 'off');
+            $.post('/website/publish', {'id': $(this).data('id'), 'object': $(this).data('object')}, function (result) {
+                $data.attr("data-publish", +result ? 'on' : 'off');
             });
         });
 
