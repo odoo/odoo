@@ -750,7 +750,7 @@ class stock_picking(osv.osv):
                             qty = move.remaining_qty
                             qty_to_do -= move.remaining_qty
                         
-                        if create and move.location_id != 'internal':
+                        if create and move.location_id.usage != 'internal':
                             # Create quants
                             vals = {
                                 'product_id': move.product_id.id,
@@ -841,7 +841,6 @@ class stock_picking(osv.osv):
                     if res2[move] > 0:
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
                         newmove_id = stock_move_obj.split(cr, uid, mov, res2[move], context=context)
-
                 stock_move_obj.action_done(cr, uid, extra_moves + [x.id for x in orig_moves], context=context)
             picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
@@ -1505,13 +1504,12 @@ class stock_move(osv.osv):
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
             domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
-            prefered_order = 'reservation_id<>' + str(move.id)
+            prefered_order = 'reservation_id'
 #             if lot_id: 
 #                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
 #             if pack_id: 
 #                 prefered_order = 'pack_id<>' + pack_id + ", " + prefered_order
             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = prefered_order, context=context)
-            
             #Will move all quants_get and as such create negative quants
             quant_obj.quants_move(cr, uid, quants, move, context=context)
             quant_obj.quants_unreserve(cr, uid, move, context=context)
