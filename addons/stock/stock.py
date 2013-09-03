@@ -2285,13 +2285,6 @@ class product_template(osv.osv):
         'supply_method': 'buy',
     }
 
-class stock_picking_code(osv.osv):
-    _name = "stock.picking.code"
-    _description = "Will group picking types for kanban view"
-    _columns = {
-        'name': fields.char("Picking Type", translate=True),
-    }
-
 class stock_picking_type(osv.osv):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
@@ -2383,17 +2376,56 @@ class stock_picking_type(osv.osv):
                 result[type_id]['latest_picking_waiting'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
         return result
 
+    def onchange_picking_code(self, cr, uid, ids, picking_code=False):
+        if not picking_code:
+            return False
+        
+        obj_data = self.pool.get('ir.model.data')
+        stock_loc = obj_data.get_object_reference(cr, uid, 'stock','stock_location_stock')[1]
+        
+        result = {
+            'default_location_src_id': stock_loc,
+            'default_location_dest_id': stock_loc,
+        }
+        if picking_code == 'incoming':
+            result['default_location_src_id'] = obj_data.get_object_reference(cr, uid, 'stock','stock_location_suppliers')[1]
+            return {'value': result}
+        if picking_code == 'outgoing':
+            result['default_location_dest_id'] = obj_data.get_object_reference(cr, uid, 'stock','stock_location_customers')[1]
+            return {'value': result}
+        else:
+            return {'value': result}
+
+    def name_get(self, cr, uid, ids, context=None):
+        """Overides orm name_get method to display 'Warehouse_name: PickingType_name' """
+        if not isinstance(ids, list):
+            ids = [ids]
+        res = []
+        if not ids:
+            return res
+        reads = self.browse(cr, uid, ids, context=context)
+        for record in reads:
+            name = record.warehouse_id.name+': '+record.name
+            res.append((record.id, name))
+        return res
+
+    def _default_warehouse(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
+        return res and res[0] or False
+
     _columns = {
         'name': fields.char('name', translate=True, required=True),
-        'pack': fields.boolean('Pack', help='This picking type needs packing interface'),
+        'pack': fields.boolean('Prefill Pack Operations', help='This picking type needs packing interface'),
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in stock'),
         'color': fields.integer('Color Index'),
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required=True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
-        'code_id': fields.many2one('stock.picking.code', 'Picking type code', required=True),
+        'code_id': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
 
         # Statistics for the kanban view
         'weekly_picking': fields.function(_get_picking_data,
@@ -2421,5 +2453,8 @@ class stock_picking_type(osv.osv):
         'latest_picking_waiting': fields.function(_get_picking_history,
             type='string', multi='_get_picking_history'),
 
+    }
+    _defaults = {
+        'warehouse_id': _default_warehouse,
     }
 

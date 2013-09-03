@@ -1205,18 +1205,27 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <form string="Picking Types" version="7.0">
-                    <group>
-                        <field name="name"/>
-                        <field name="code_id"/>
-                        <field name="sequence_id"/>
-                        <field name="pack"/>
-                        <field name="auto_force_assign"/>
-                    </group>
-                    <group>
-                        <field name="default_location_src_id"/>
-                        <field name="default_location_dest_id"/>
-                        <field name="return_picking_type_id"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence_id"/>
+                                <field name="warehouse_id"/>
+                                <field name="pack"/>
+                            </group>
+                            <group>
+                                <field name="code_id" on_change="onchange_picking_code(code_id)"/>
+                                <field name="return_picking_type_id"/>
+                                <field name="auto_force_assign"/>
+                                <field name="delivery"/>
+                            </group>
+                        </group>
+                        <separator string="Locations"/>
+                        <group>
+                            <field name="default_location_src_id" attrs="{'required': [('code_id', '=', 'internal')]}"/>
+                            <field name="default_location_dest_id" attrs="{'required': [('code_id', 'in', ('internal', 'incoming'))]}"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
