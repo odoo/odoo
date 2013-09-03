@@ -48,9 +48,9 @@
     package3 = stock_quant_pack.create(cr, uid, {'name': 'Pallet 3'}, context=context)
     #Create package for each line and assign it as result_package_id
     #create pack operation
-    stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'package_id': package1, 'result_package_id': package1, 'product_qty': 120})
-    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'lot_id': lot_a, 'package_id': package2, 'result_package_id': package2, 'product_qty': 120}, context=context)
-    new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'package_id': package3, 'result_package_id': package3, 'product_qty': 60}, context=context)
+    stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 120})
+    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120}, context=context)
+    new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'result_package_id': package3, 'product_qty': 60}, context=context)
 - 
   Use button rereserve and check the qtyremaining on the moves are correct (=original quantities)
 - 
@@ -72,7 +72,7 @@
     assert len(reco_id) == 3, "The number of quants created is not correct"
     for rec in self.browse(cr, uid, reco_id, context=context):
       if rec.package_id.name == 'Pallet 1':
-        assert rec.qty == 120, "Should have 120 pîeces on pallet 1"
+        assert rec.qty == 120, "Should have 120 pieces on pallet 1"
       elif rec.package_id.name == 'Pallet 2':
         assert rec.qty == 120, "Should have 120 pieces on pallet 2"
       elif rec.package_id.name == 'Pallet 3':
@@ -133,10 +133,16 @@
     for rec in self.browse(cr, uid, reco_id, context=context):
       if rec.package_id.name == 'Pallet 1' and rec.location_id.id == ref('stock_location_customers'):
         assert rec.qty == 120, "Should have 120 pieces on pallet 1"
-      if rec.package_id.name == 'Pallet 2' and rec.location_id.id == ref('stock_location_stock'):
-        assert rec.qty == 20, "Should have 20 pieces in stock on pallet 2"
-      if rec.package_id.name == 'Pallet 3' and rec.location_id.id == ref('stock_location_stock'):
-        assert rec.qty == 10, "Should have 10 pieces in stock on pallet 3"
+      elif rec.package_id.name == 'Pallet 2' and rec.location_id.id == ref('stock_location_stock'):
+        assert rec.qty == 100, "Should have 100 pieces in stock on pallet 2"
+      elif rec.lot_id.name == 'Lot A' and rec.location_id.id == ref('stock_location_customers'):
+        assert (rec.qty == 20 and not rec.package_id), "Should have 20 pieces in customer location from pallet 2"
+      elif rec.package_id.name == 'Pallet 3' and rec.location_id.id == ref('stock_location_stock'):
+        assert rec.qty == 50, "Should have 50 pieces in stock on pallet 3"
+      elif not rec.package_id and not rec.lot_id and rec.location_id.id == ref('stock_location_customers'):
+        assert rec.qty == 10, "Should have 10 pieces in customer location from pallet 3"
+      else:
+        assert False, "Unrecognized quant"
 - 
   Check a backorder was created and on that backorder, prepare partial and add an op with 20 pieces (20 that cannot be assigned) with lot B
 - 

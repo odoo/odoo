@@ -840,7 +840,7 @@ class stock_picking(osv.osv):
                 for move in res2.keys():
                     if res2[move] > 0:
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
-                        newmove_id = stock_move_obj.split(cr, uid, mov, res2[move], context=context)
+                        stock_move_obj.split(cr, uid, mov, res2[move], context=context)
                 stock_move_obj.action_done(cr, uid, extra_moves + [x.id for x in orig_moves], context=context)
             picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
@@ -848,7 +848,7 @@ class stock_picking(osv.osv):
 
     def do_split(self, cr, uid, picking_ids, context=None):
         """
-            just spit the picking without making it 'done'
+            just split the picking without making it 'done'
         """
         if context is None:
             context = {}
