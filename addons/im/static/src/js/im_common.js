@@ -32,13 +32,8 @@ function declare($, _, openerp) {
     im_common.ImUser = openerp.Class.extend(openerp.PropertiesMixin, {
         init: function(parent, user_rec) {
             openerp.PropertiesMixin.init.call(this, parent);
-            user_rec.image_url = im_common.connection.url("/im/static/src/img/avatar/avatar.jpeg");
-
-            // TODO : check it works correctly
-            if (user_rec.user)
-                user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
-            /*if (user_rec.image)
-                user_rec.image_url = "data:image/png;base64," + user_rec.image;*/
+            
+            user_rec.image_url = im_common.connection.url('/web/binary/image', {model:'im.user', field: 'image', id: user_rec.id});
 
             this.set(user_rec);
             this.set("watcher_count", 0);
@@ -72,7 +67,6 @@ function declare($, _, openerp) {
             this.set("right_offset", 0);
             this.set("bottom_offset", 0);
             this.conversations = [];
-            this.users = {};
             this.on("change:right_offset", this, this.calc_positions);
             this.on("change:bottom_offset", this, this.calc_positions);
             this.set("window_focus", true);
@@ -97,34 +91,27 @@ function declare($, _, openerp) {
         },
         start_polling: function() {
             var self = this;
-
-            var auth_def = null;
-            var user_id = null;
+            var def = $.when();
+            var uuid = false;
 
             if (this.options.anonymous_mode) {
-                var uuid = localStorage["oe_livesupport_uuid"];
-                var def = $.when(uuid);
+                uuid = localStorage["oe_livesupport_uuid"] || false;
 
                 if (! uuid) {
-                    def = im_common.connection.rpc("/longpolling/im/gen_uuid", {});
+                    def = im_common.connection.rpc("/longpolling/im/gen_uuid", {}).then(function(my_uuid) {
+                        uuid = my_uuid;
+                        localStorage["oe_livesupport_uuid"] = uuid;
+                    });
                 }
-                var anonymous_user_id = null;
-                auth_def = def.then(function(uuid) {
-                    localStorage["oe_livesupport_uuid"] = uuid;
-                    return im_common.connection.model("im.user").call("get_by_user_id", [uuid]);
-                }).then(function(my_id) {
-                    user_id = my_id["id"];
+                def = def.then(function() {
                     return im_common.connection.model("im.user").call("assign_name", [uuid, self.options.userName]);
-                });
-            } else {
-                auth_def = im_common.connection.model("im.user").call("get_by_user_id",
-                        [im_common.connection.uid]).then(function(my_id) {
-                    user_id = my_id["id"];
                 });
             }
 
-            return auth_def.then(function() {
-                self.my_id = user_id;
+            return def.then(function() {
+                return im_common.connection.model("im.user").call("get_my_id", [uuid]);
+            }).then(function(my_user_id) {
+                self.my_id = my_user_id;
                 return self.ensure_users([self.my_id]);
             }).then(function() {
                 var me = self.users_cache[self.my_id];
@@ -190,12 +177,7 @@ function declare($, _, openerp) {
                         self.get_user(el.id).set(el);
                 });
                 self.last = result.last;
-                var user_ids = _.pluck(_.pluck(result.res, "from_id"), 0);
-                self.ensure_users(user_ids).then(function() {
-                    _.each(result.res, function(mes) {
-                        var user = self.get_user(mes.from_id[0]);
-                        self.received_message(mes, user);
-                    });
+                self.received_messages(result.res).then(function() {
                     self.poll();
                 });
             }, function(unused, e) {
@@ -229,32 +211,41 @@ function declare($, _, openerp) {
             openerp.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
-        activate_user: function(user, focus) {
-            var conv = this.users[user.get('id')];
+        activate_session: function(session_id, focus) {
+            var conv = _.find(this.conversations, function(conv) {return conv.session_id == session_id;});
+            var def = $.when();
             if (! conv) {
-                conv = new im_common.Conversation(this, user, this.me, this.options);
-                conv.appendTo($("body"));
-                conv.on("destroyed", this, function() {
-                    this.conversations = _.without(this.conversations, conv);
-                    delete this.users[conv.user.get('id')];
+                conv = new im_common.Conversation(this, this, session_id, this.options);
+                def = conv.appendTo($("body")).then(_.bind(function() {
+                    conv.on("destroyed", this, function() {
+                        this.conversations = _.without(this.conversations, conv);
+                        this.calc_positions();
+                    });
+                    this.conversations.push(conv);
                     this.calc_positions();
-                });
-                this.conversations.push(conv);
-                this.users[user.get('id')] = conv;
-                this.calc_positions();
+                }, this));
             }
-            if (focus)
-                conv.focus();
-            return conv;
+            if (focus) {
+                def = def.then(function() {
+                    conv.focus();
+                });
+            }
+            return def.then(function() {return conv});
         },
-        received_message: function(message, user) {
-            if (! this.get("window_focus")) {
-                this.set("waiting_messages", this.get("waiting_messages") + 1);
+        received_messages: function(messages) {
+            var self = this;
+            if (! this.get("window_focus") && messages.length >= 1) {
+                this.set("waiting_messages", this.get("waiting_messages") + messages.length);
                 this.ting.play();
                 this.create_ting();
             }
-            var conv = this.activate_user(user);
-            conv.received_message(message);
+            var defs = [];
+            _.each(messages, function(message) {
+                defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
+                    return conv.received_message(message);
+                }));
+            });
+            return $.when.apply($, defs);
         },
         calc_positions: function() {
             var current = this.get("right_offset");
@@ -279,39 +270,52 @@ function declare($, _, openerp) {
             "click .oe_im_chatview_close": "destroy",
             "click .oe_im_chatview_header": "show_hide"
         },
-        init: function(parent, user, me, options) {
+        init: function(parent, c_manager, session_id, options) {
             this._super(parent);
-            this.options = options;
-            this.me = me;
-            this.user = user;
-            this.user.add_watcher();
+            this.c_manager = c_manager;
+            this.options = options || {};
+            this.session_id = session_id;
             this.set("right_position", 0);
             this.set("bottom_position", 0);
             this.shown = true;
             this.set("pending", 0);
             this.inputPlaceholder = this.options.defaultInputPlaceholder;
+            this.users = [];
+            this.others = [];
         },
         start: function() {
-            this.$().append(openerp.qweb.render("im_common.conversation", {widget: this, to_url: _.bind(im_common.connection.url, im_common.connection)}));
-            var change_status = function() {
-                this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
-                this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
-                this._go_bottom();
-            };
-            this.user.on("change:im_status", this, change_status);
-            change_status.call(this);
+            var self = this;
+            var user_ids;
+            return im_common.connection.model("im.session").call("read", [self.session_id]).then(function(session) {
+                user_ids = _.without(session.user_ids, self.c_manager.me.get("id"));
+                return self.c_manager.ensure_users(session.user_ids);
+            }).then(function() {
+                self.users = _.map(user_ids, function(id) {return self.c_manager.get_user(id);});
+                _.each(self.users, function(user) {
+                    user.add_watcher();
+                });
+                // TODO: correctly display status
+                self.$().append(openerp.qweb.render("im_common.conversation", {widget: self, to_url: _.bind(im_common.connection.url, im_common.connection)}));
+                var change_status = function() {
+                    self.$().toggleClass("oe_im_chatview_disconnected_status", self.users[0].get("im_status") === false);
+                    self.$(".oe_im_chatview_online").toggle(self.users[0].get("im_status") === true);
+                    self._go_bottom();
+                };
+                self.users[0].on("change:im_status", self, change_status);
+                change_status.call(self);
 
-            this.on("change:right_position", this, this.calc_pos);
-            this.on("change:bottom_position", this, this.calc_pos);
-            this.full_height = this.$().height();
-            this.calc_pos();
-            this.on("change:pending", this, _.bind(function() {
-                if (this.get("pending") === 0) {
-                    this.$(".oe_im_chatview_nbr_messages").text("");
-                } else {
-                    this.$(".oe_im_chatview_nbr_messages").text("(" + this.get("pending") + ")");
-                }
-            }, this));
+                self.on("change:right_position", self, self.calc_pos);
+                self.on("change:bottom_position", self, self.calc_pos);
+                self.full_height = self.$().height();
+                self.calc_pos();
+                self.on("change:pending", self, _.bind(function() {
+                    if (self.get("pending") === 0) {
+                        self.$(".oe_im_chatview_nbr_messages").text("");
+                    } else {
+                        self.$(".oe_im_chatview_nbr_messages").text("(" + self.get("pending") + ")");
+                    }
+                }, self));
+            });
         },
         show_hide: function() {
             if (this.shown) {
@@ -338,7 +342,14 @@ function declare($, _, openerp) {
             } else {
                 this.set("pending", this.get("pending") + 1);
             }
-            this._add_bubble(this.user, message.message, openerp.str_to_datetime(message.date));
+            this.c_manager.ensure_users([message.from_id[0]]).then(_.bind(function() {
+                var user = this.c_manager.get_user(message.from_id[0]);
+                if (! _.contains(this.users, user) && ! _.contains(this.others, user)) {
+                    this.others.push(user);
+                    user.add_watcher();
+                }
+                this._add_bubble(user, message.message, openerp.str_to_datetime(message.date));
+            }, this));
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -351,17 +362,15 @@ function declare($, _, openerp) {
             this.$("input").val("");
             var send_it = _.bind(function() {
                 var model = im_common.connection.model("im.message");
-                return model.call("post", [mes, this.user.get('id')], {uuid: this.me.get("uuid"), context: {}});
+                return model.call("post", [mes, this.session_id], {uuid: this.c_manager.me.get("uuid"), context: {}});
             }, this);
             var tries = 0;
-            send_it().then(_.bind(function() {
-                this._add_bubble(this.me, mes, new Date());
-            }, this), function(error, e) {
+            send_it().then(_.bind(function() {}, function(error, e) {
                 e.preventDefault();
                 tries += 1;
                 if (tries < 3)
                     return send_it();
-            });
+            }));
         },
         _add_bubble: function(user, item, date) {
             var items = [item];
@@ -390,7 +399,12 @@ function declare($, _, openerp) {
                 this.show_hide();
         },
         destroy: function() {
-            this.user.remove_watcher();
+            _.each(this.users, function(user) {
+                user.remove_watcher();
+            })
+            _.each(this.others, function(user) {
+                user.remove_watcher();
+            })
             this.trigger("destroyed");
             return this._super();
         }
