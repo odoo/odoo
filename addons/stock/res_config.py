@@ -26,6 +26,11 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
+        'module_mrp_jit': fields.boolean("Generate procurement in real time",
+            help="""This allows Just In Time computation of procurement orders.
+                All procurement orders will be processed immediately, which could in some
+                cases entail a small performance impact.
+                This installs the module mrp_jit."""),
         'module_claim_from_delivery': fields.boolean("Allow claim on deliveries",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
