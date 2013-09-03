@@ -27,7 +27,6 @@ class procurement_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
-        # TODO: maybe this is not necessary anymore as we do this already
         self.run(cr, uid, [procurement_id], context=context)
         self.check(cr, uid, [procurement_id], context=context)
         return procurement_id
