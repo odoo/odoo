@@ -34,8 +34,8 @@ class product_template(osv.osv):
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
-        'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
-        'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
+        'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
+        'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
     }
 
     def recommended_products(self, cr, uid, ids, context=None):
