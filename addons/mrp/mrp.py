@@ -879,6 +879,7 @@ class mrp_production(osv.osv):
                     'procure_method': production_line.product_id.procure_method,
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
+                    'sale_line_id': production.move_prod_id and production.move_prod_id.sale_line_id and production.move_prod_id.sale_line_id.id
                 })
         wf_service.trg_validate(uid, procurement_order._name, procurement_id, 'button_confirm', cr)
         return procurement_id
