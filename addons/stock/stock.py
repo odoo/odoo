@@ -774,7 +774,7 @@ class stock_picking(osv.osv):
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                             #In the end, move quants in correct package
                             if create:
-                                quant_obj.write(cr, uid, [x[0].id for x in quants if x != None], {'package_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
+                                quant_obj.write(cr, uid, [x[0].id for x in quants if x[0] != None], {'package_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
                         res2[move.id] -= qty
                     res[ops.id] = {}
                     res[ops.id][ops.product_id.id] = qty_to_do
@@ -1012,7 +1012,7 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id)
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, round=False)
         return res
 
 #     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
@@ -1137,7 +1137,7 @@ class stock_move(osv.osv):
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', 
                                          digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]},
-                                         store = {'stock.move': (lambda self, cr, uid, ids, c={}: ids , ['product_qty', 'product_uom', 'reserved_quant_ids'], 10), 
+                                         store = {'stock.move': (lambda self, cr, uid, ids, c={}: ids , ['product_uom_qty', 'product_uom', 'reserved_quant_ids'], 20), 
                                                   'stock.quant': (_get_move, ['reservation_id'], 10)}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.related('procurement_id', 'group_id', type='many2one', relation="procurement.group", string='Procurement Group'),

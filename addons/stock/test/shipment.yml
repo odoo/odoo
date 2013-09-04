@@ -31,7 +31,6 @@
         assert move_line.state == 'draft', "Move line of backorder should be draft."
     context.update({'active_model': 'stock.picking', 'active_id': backorder_id[0], 'active_ids': backorder_id})
     self.action_confirm(cr, uid, backorder_id, context=context)
-    self.do_partial(cr, uid, backorder_id, context=context)
 -
   I receive the remaining 10kgm Ice-cream from the backorder.
 -
