@@ -43,6 +43,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def admin(self, *args, **kw):
         return super(Website, self).index(*args, **kw)
 
+     # FIXME: auth, if /pagenew known anybody can create new empty page
     @route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path, noredirect=NOPE):
         if '.' in path:
@@ -146,7 +147,8 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
-    @route('/website/attach', type='http', auth='admin') # FIXME: auth
+    #  # FIXME: auth, anybody can upload an attachment if URL known/found
+    @route('/website/attach', type='http', auth='admin')
     def attach(self, func, upload):
         req = request.httprequest
         if req.method != 'POST':
@@ -172,6 +174,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @route('/website/attachment/<int:id>', type='http', auth="admin")
     def attachment(self, id):
+        # TODO: provide actual thumbnails?
         # FIXME: can't use Binary.image because auth=user and website attachments need to be public
         attachment = request.registry['ir.attachment'].browse(
             request.cr, request.uid, id, request.context)

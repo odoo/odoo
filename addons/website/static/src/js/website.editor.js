@@ -504,6 +504,7 @@
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
+            'click .existing-attachments a': 'select_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
@@ -511,11 +512,12 @@
             this.element = null;
             if (el && el.is('img')) {
                 this.element = el;
-                this.$('input.url').val(el.getAttribute('src'));
-                this.preview_image();
+                this.set_image(el.getAttribute('src'));
             }
 
-            return this._super();
+            return $.when(
+                this._super(),
+                this.fetch_existing().then(this.proxy('fetched_existing')));
         },
         save: function () {
             var url = this.$('input.url').val();
@@ -533,6 +535,15 @@
             }
             element.setAttribute('src', url);
             this._super();
+        },
+
+        /**
+         * Sets the provided image url as the dialog's value-to-save and
+         * refreshes the preview element to use it.
+         */
+        set_image: function (url) {
+            this.$('input.url').val(url);
+            this.preview_image();
         },
 
         file_selection: function (e) {
@@ -555,22 +566,52 @@
                 return;
             }
             $button.addClass('btn-success');
-            this.$('input.url').val(url);
-            this.preview_image();
+            this.set_image(url);
         },
         preview_image: function () {
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img').attr('src', image);
+            this.$('img.image-preview').attr('src', image);
+        },
+
+        fetch_existing: function () {
+            // FIXME: lazy load attachments?
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.attachment',
+                method: 'search_read',
+                args: [],
+                kwargs: {
+                    fields: ['name'],
+                    domain: [['res_model', '=', 'ir.ui.view']],
+                    order: 'name',
+                }
+            });
+        },
+        fetched_existing: function (records) {
+            // Create rows of 3 records
+            var rows = _(records).chain()
+                .groupBy(function (_, index) { return Math.floor(index / 3); })
+                .values()
+                .value();
+            this.$('.existing-attachments').replaceWith(
+                openerp.qweb.render('website.editor.dialog.image.existing', {rows: rows}));
+        },
+        select_existing: function (e) {
+            e.preventDefault();
+            this.set_image(e.currentTarget.getAttribute('href'));
         },
     });
 
 
     var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var observer = new Observer(function (mutations) {
+        // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
+        //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
+        //       will not mark dirty on attribute changes (@class, img/@src,
+        //       a/@href, ...)
         _(mutations).chain()
-            .filter(function (m) {
+                .filter(function (m) {
                 switch(m.type) {
                 case 'attributes':
                     // ignore cke_focus being added & removed from RTE root
