@@ -111,7 +111,8 @@ class pos_config(osv.osv):
         return result
 
     def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
     def _default_warehouse(self, cr, uid, context=None):
@@ -958,11 +959,12 @@ class pos_order(osv.osv):
             user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
 
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
 
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
-                            order.partner_id.property_account_receivable.id or account_def or current_company.account_receivable.id
+                            order.partner_id.property_account_receivable.id or \
+                            account_def and account_def.id or current_company.account_receivable.id
 
             if move_id is None:
                 # Create an entry for the sale
@@ -1238,80 +1240,6 @@ class pos_order_line(osv.osv):
         })
         return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
-class pos_category(osv.osv):
-    _name = 'pos.category'
-    _description = "Point of Sale Category"
-    _order = "sequence, name"
-    def _check_recursion(self, cr, uid, ids, context=None):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
-    _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
-    ]
-
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
-    _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('pos.category','Parent Category', select=True),
-        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-    }
-
 import io, StringIO
 
 class ean_wizard(osv.osv_memory):
@@ -1350,25 +1278,23 @@ class product_product(osv.osv):
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
-        'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
-            help="The Point of Sale Category this products belongs to. Those categories are used to group similar products and are specific to the Point of Sale."),
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
-    def _default_pos_categ_id(self, cr, uid, context=None):
+    def _default_public_categ_id(self, cr, uid, context=None):
         proxy = self.pool.get('ir.model.data')
 
         try:
-            category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
+            category_id = proxy.get_object_reference(cr, uid, 'product', 'categ_others')[1]
         except ValueError:
             values = {
                 'name' : 'Others',
             }
-            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
+            category_id = self.pool.get('product.public.category').create(cr, uid, values, context=context)
             values = {
                 'name' : 'categ_others',
-                'model' : 'pos.category',
-                'module' : 'point_of_sale',
+                'model' : 'product.public.category',
+                'module' : 'product',
                 'res_id' : category_id,
             }
             proxy.create(cr, uid, values, context=context)
@@ -1378,7 +1304,7 @@ class product_product(osv.osv):
     _defaults = {
         'to_weight' : False,
         'available_in_pos': True,
-        'pos_categ_id' : _default_pos_categ_id,
+        'public_categ_id' : _default_public_categ_id,
     }
 
     def edit_ean(self, cr, uid, ids, context):

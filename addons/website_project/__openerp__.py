@@ -1,5 +1,5 @@
 {
-'name': 'Public Project',
+'name': 'Public Projects',
     'category': 'Website',
     'summary': 'Publish Your Public Projects',
     'version': '1.0',

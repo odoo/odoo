@@ -1,7 +1,7 @@
 {
-    'name': 'Website',
+    'name': 'Website Builder',
     'category': 'Website',
-    'summary': 'Create Your Enterprise Website',
+    'summary': 'Build Your Enterprise Website',
     'version': '1.0',
     'description': """
 OpenERP Website CMS
@@ -9,10 +9,11 @@ OpenERP Website CMS
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['web'],
+    'depends': ['web', 'share'],
     'installable': True,
     'data': [
         'views/views.xml',
+        'views/themes.xml',
         'views/res_config.xml',
         'website_data.xml',
     ],

@@ -27,6 +27,9 @@ class mail_message(osv.osv):
     _columns = {
         'website_published': fields.boolean('Publish', help="Publish on the website as a blog"),
     }
+    _defaults = {
+        'website_published': lambda *args: True
+    }
 
 
 class mail_group(osv.Model):

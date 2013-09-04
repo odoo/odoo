@@ -1,7 +1,21 @@
 @charset "utf-8"
 
-.oe_hidden
-    display: none !important
+/* ---- CKEditor Minimal Reset ---- */
+
+.navbar.navbar-inverse .cke_chrome
+    border: none
+
+.navbar.navbar-inverse .cke_inner
+    background: transparent
+
+.navbar.navbar-inverse .cke_top
+    background: transparent
+    border: none
+    box-shadow: none
+    -webkit-box-shadow: none
+    -moz-box-shadow: none
+
+/* ---- OpenERP Style ---- */
 
 .oe_website_editorbar
     position: fixed
@@ -51,6 +65,8 @@
     z-index: 1
     display: none
 
+/* ---- SNIPPET EDITOR ---- */
+
 .oe_snippets
     position: fixed
     left: 0px
@@ -61,6 +77,7 @@
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
+    z-index: 100
 
 .oe_snippet
     display: inline-block
@@ -71,12 +88,12 @@
     border-radius: 3px
     margin: 10px
     margin-right: 0px
-    cursor: move 
     position: relative
     box-shadow: 0px 3px 10px rgba(0,0,0,0.2)
     overflow: hidden
     -webkit-user-select: none
     user-select: none
+    cursor: move
 
     .oe_snippet_thumbnail.oe_label
         text-align: center
@@ -97,12 +114,13 @@
         -webkit-transform-origin-x: 5px
         -webkit-transform-origin-y: 10px
         -webkit-transform: scale(0.095)
-               
 
-.oe_drop_zone
+
+/* ---- SNIPPETS DROP ZONES ---- */
+
+
+.oe_drop_zone.oe_insert
     display: block
-    background: rgba(153, 0, 255, 0.17)
-    border-radius: 3px
     height: 32px
     margin: -16px 0px
     -webkit-transition: margin 250ms linear
@@ -112,9 +130,6 @@
     &:last-child:not(:first-child)
         margin-top: -24px
         margin-bottom: -8px
-    &.oe_hover
-        background: rgba(0, 255, 133, 0.22)
-        z-index: 100000
     &:before
         content: ""
         display: block
@@ -128,4 +143,114 @@
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
 
+.oe_drop_zone.oe_overlay
+    position: absolute
+    background: rgba(153, 0, 255, 0.17)
+    border-radius: 3px
 
+.oe_drop_zone
+    background: rgba(153, 0, 255, 0.17)
+    border-radius: 3px
+    &.oe_hover
+        background: rgba(0, 255, 133, 0.22)
+        z-index: 99
+
+/* ---- SNIPPET MANIPULATOR ---- */
+
+.oe_snippet_manipulator
+    display: block
+    position: absolute
+    background: rgba(153, 0, 255, 0.1)
+    border-radius: 3px
+    border: solid 1px rgba(153, 0, 255, 0.5)
+    opacity: 0
+    transition: opacity 100ms linear
+    & > .oe_handle
+        display: none
+    &:hover,&.oe_hover
+        opacity: 1
+        & > .oe_handle
+            display: block
+
+.oe_handle
+    position: absolute
+    top: 50%
+    left: 50%
+    display: block
+    background: rgba(255, 255, 255, 1)
+    border: solid 1px rgba(153, 0, 255, 0.5)
+    box-sizing: border-box
+    border-radius: 2px
+    width: 16px
+    height: 16px
+    margin: -8px
+    cursor: move
+    -webkit-transition: background 100ms linear
+    &:hover
+        background: rgb(153, 0, 255)
+
+.oe_handle.nw,.oe_handle.n,.oe_handle.ne
+    top: 0px
+.oe_handle.ne,.oe_handle.e,.oe_handle.se
+    left: auto
+    right: 0px
+.oe_handle.sw,.oe_handle.s,.oe_handle.se
+    top: auto
+    bottom: 0px
+.oe_handle.nw,.oe_handle.w,.oe_handle.sw
+    left: 0px
+
+/* ---- MOBILE PREVIEW ---- */
+
+$mobile_preview_background: #000000
+$mobile_preview_border: #1C1F1F
+$icon_close: #E00101
+.oe_mobile_preview
+    &.modal .modal-content
+        height: 660px
+        background-color: $mobile_preview_background
+        border: 2px solid
+        border-radius: 10px
+        border-color: $mobile_preview_border
+        margin: auto
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
+        max-width: 330px
+        .modal-header
+            background-color: $mobile_preview_background
+            border-bottom: 0
+            border-top-left-radius: 10px
+            border-top-right-radius: 10px
+            .modal-title
+                color: $mobile_preview_border
+            .close
+                color: lightgrey
+                opacity: 1
+            .close:hover
+                color: $icon_close
+                opacity: 1
+        .modal-body
+            background-color: $mobile_preview_background
+            max-height: 600px
+            padding: 0
+            margin: 0
+            .oe_mobile_viewport
+                width: 320px
+                height: 568px
+                padding: 5px
+                border: none
+        .modal-footer
+            background-color: $mobile_preview_background
+
+/* ---- SEO TOOLS ---- */
+
+$remove_color: $icon_close
+.oe_seo_configuration
+    .modal-dialog
+        width: 80%
+    .oe_remove
+        color: $remove_color
+    .oe_seo_suggestion
+        cursor: pointer

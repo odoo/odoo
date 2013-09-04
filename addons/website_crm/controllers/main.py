@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+import simplejson
+import werkzeug.wrappers
 
 from urllib import quote_plus
 

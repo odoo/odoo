@@ -682,6 +682,12 @@ class mail_thread(osv.AbstractModel):
                 assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
             _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
             thread_id = 0
+        # Private message: should have a parent_id (only answers)
+        if not model and not message_dict.get('parent_id'):
+            if assert_model:
+                assert message_dict.get('parent_id'), 'Routing: posting a message without model should be with a parent_id (private mesage).'
+            _warn('posting a message without model should be with a parent_id (private mesage), skipping')
+            return ()
 
         # Existing Document: check if exists; if not, fallback on create if allowed
         if thread_id and not model_pool.exists(cr, uid, thread_id):
@@ -695,7 +701,7 @@ class mail_thread(osv.AbstractModel):
                 return ()
 
         # Existing Document: check model accepts the mailgateway
-        if thread_id and not hasattr(model_pool, 'message_update'):
+        if thread_id and model and not hasattr(model_pool, 'message_update'):
             if create_fallback:
                 _warn('model %s does not accept document update, fall back on document creation' % model)
                 thread_id = None
@@ -706,7 +712,7 @@ class mail_thread(osv.AbstractModel):
                 return ()
 
         # New Document: check model accepts the mailgateway
-        if not thread_id and not hasattr(model_pool, 'message_new'):
+        if not thread_id and model and not hasattr(model_pool, 'message_new'):
             if assert_model:
                 assert hasattr(model_pool, 'message_new'), 'Model %s does not accept document creation, crashing' % model
             _warn('model %s does not accept document creation, skipping' % model)
@@ -798,16 +804,16 @@ class mail_thread(osv.AbstractModel):
 
         # 2. Reply to a private message
         if in_reply_to:
-            message_ids = self.pool.get('mail.message').search(cr, uid, [
+            mail_message_ids = self.pool.get('mail.message').search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
                             ], limit=1, context=context)
-            if message_ids:
-                message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+            if mail_message_ids:
+                mail_message = self.pool.get('mail.message').browse(cr, uid, mail_message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, message.id, custom_values, uid)
+                                email_from, email_to, message_id, mail_message.id, custom_values, uid)
                 route = self.message_route_verify(cr, uid, message, message_dict,
-                                (message.model, message.res_id, custom_values, uid, None),
+                                (mail_message.model, mail_message.res_id, custom_values, uid, None),
                                 update_author=True, assert_model=True, create_fallback=True, context=context)
                 return route and [route] or []
 
@@ -1032,8 +1038,10 @@ class mail_thread(osv.AbstractModel):
                 # text/plain -> <pre/>
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
-            alternative = (message.get_content_type() == 'multipart/alternative')
+            alternative = False
             for part in message.walk():
+                if part.get_content_type() == 'multipart/alternative':
+                    alternative = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 filename = part.get_filename()  # None if normal part

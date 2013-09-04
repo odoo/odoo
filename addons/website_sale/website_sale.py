@@ -19,22 +19,23 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
 
 class product_pricelist(osv.osv):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotionnal Code', size=64, required=True, translate=True),
+        'code': fields.char('Promotionnal Code', size=64, translate=True),
     }
 
-class product_product(osv.osv):
+class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
         'website_published': fields.boolean('Available in the website'),
-        'description_website': fields.html('Description for the website'),
-        'suggested_product_id': fields.many2one('product.product', 'Suggested For Product'),
-        'suggested_product_ids': fields.one2many('product.product', 'suggested_product_id', 'Suggested Products'),
+        'website_description': fields.html('Description for the website'),
+        'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
+        'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
     }
 
     def recommended_products(self, cr, uid, ids, context=None):
@@ -62,6 +63,12 @@ class product_product(osv.osv):
     def img(self, cr, uid, ids, field='image_small', context=None):
         return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
 
+class product_product(osv.osv):
+    _inherit = "product.product"
+
+    def img(self, cr, uid, ids, field='image_small', context=None):
+        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+
 class sale_order(osv.osv):
     _inherit = "sale.order"
  
@@ -69,3 +76,15 @@ class sale_order(osv.osv):
         order = self.browse(cr, uid, ids[0], context=context)
 
         return sum(l.product_uom_qty for l in (order.order_line or []))
+
+class sale_order_line(osv.osv):
+    _inherit = "sale.order.line"
+ 
+    def _recalculate_product_values(self, cr, uid, ids, product_id=None, context=None):
+        user_obj = self.pool.get('res.users')
+        product_id = product_id or ids and self.browse(cr, uid, ids[0], context=context).product_id.id
+        return self.product_id_change(cr, uid, [],
+            pricelist=context.pop('pricelist'),
+            product=product_id,
+            partner_id=user_obj.browse(cr, SUPERUSER_ID, uid).partner_id.id,
+            context=context)['value']

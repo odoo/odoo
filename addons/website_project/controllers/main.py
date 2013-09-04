@@ -7,7 +7,7 @@ from openerp.addons.web.http import request
 
 class website(osv.osv):
     _inherit = "website"
-    def get_rendering_context(self, additional_values=None):
+    def get_rendering_context(self, additional_values=None, **kw):
         project_obj = request.registry['project.project']
         project_ids = project_obj.search(request.cr, request.uid, [('privacy_visibility', "=", "public")])
         values = {

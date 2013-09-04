@@ -12,6 +12,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             
             this.weight = 0;
             this.weighting = false;
+            this.debug_weight = 0;
+            this.use_debug_weight = false;
 
             this.paying = false;
             this.default_payment_status = {
@@ -92,38 +94,36 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
-            if(this.bypass_proxy){
-                return this.weight;
-            }else{
-                this.message('weighting_read_kg',{})
-                    .done(function(weight){
-                        if(self.weighting && !self.bypass_proxy){
+            this.message('weighting_read_kg',{})
+                .done(function(weight){
+                    if(self.weighting){
+                        if(self.use_debug_weight){
+                            self.weight = self.debug_weight;
+                        }else{
                             self.weight = weight;
                         }
-                    });
-                return this.weight;
-            }
+                    }
+                });
+            return this.weight;
         },
 
         // sets a custom weight, ignoring the proxy returned value. 
         debug_set_weight: function(kg){
-            this.bypass_proxy = true;
-            this.weight = kg;
+            this.use_debug_weight = true;
+            this.debug_weight = kg;
         },
 
         // resets the custom weight and re-enable listening to the proxy for weight values
         debug_reset_weight: function(){
-            this.bypass_proxy = false;
-            this.weight = 0;
+            this.use_debug_weight = false;
+            this.debug_weight = 0;
         },
 
         // the client has finished weighting products
         weighting_end: function(){
-            if(!this.bypass_proxy){
-                this.weight = 0;
-                this.weighting = false;
-                this.message('weighting_end');
-            }
+            this.weight = 0;
+            this.weighting = false;
+            this.message('weighting_end');
         },
 
         // the pos asks the client to pay 'price' units

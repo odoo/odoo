@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import functools
 import simplejson
 
 import openerp
-from openerp.osv import osv, orm
+from openerp.osv import osv, fields
 from openerp.addons.web import http
 from openerp.addons.web.controllers import main
 from openerp.addons.web.http import request
@@ -10,10 +11,23 @@ import urllib
 import math
 import traceback
 from openerp.tools.safe_eval import safe_eval
+from openerp.exceptions import AccessError, AccessDenied
 
 import logging
 logger = logging.getLogger(__name__)
 
+def route(*route_args, **route_kwargs):
+    def decorator(f):
+        @http.route(*route_args, **route_kwargs)
+        @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
+        def wrap(*args, **kwargs):
+            if not hasattr(request, 'webcontext'):
+                request.webcontext = WebContext()
+                request.context['lang'] = request.webcontext['lang_selected']['code']
+
+            return f(*args, **kwargs)
+        return wrap
+    return decorator
 
 def auth_method_public():
     registry = openerp.modules.registry.RegistryManager.get(request.db)
@@ -32,6 +46,24 @@ def urlplus(url, params):
         url += "%s=%s&" % (k, urllib.quote_plus(str(v)))
     return url
 
+class WebsiteError(Exception):
+    pass
+
+class WebContext(dict):
+    def __init__(self):
+        self.website = request.registry.get("website")
+        lang = request.httprequest.host.split('.')[0]
+        context = self.website.get_rendering_context(lang=lang)
+        dict.__init__(self, context)
+    def __getattr__(self, name):
+        if hasattr(self.website, name):
+            return getattr(self.website, name)
+        elif name in self:
+            return self[name]
+        else:
+            raise AttributeError
+    def render(self, template, values=None):
+        return self.website.render(template, self)
 
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
@@ -45,7 +77,36 @@ class website(osv.osv):
             self.public_user = request.registry[ref[0]].browse(request.cr, openerp.SUPERUSER_ID, ref[1])
         return self.public_user
 
-    def get_rendering_context(self, additional_values=None):
+    def get_lang_info(self, lang):
+        fields = ['id', 'name', 'code', 'website_default']
+        lang_obj = request.registry['res.lang']
+        languages = lang_obj.search_read(
+            request.cr, openerp.SUPERUSER_ID, [('website_activated', '=', True)], fields
+        )
+        activated = [lg['code'] for lg in languages]
+        default = [lg['code'] for lg in languages if lg['website_default']]
+        default = default[0] if default else None
+
+        # Try to get the language from cookie
+        lang = lang or request.httprequest.cookies.get('lang', None)
+        if not lang or lang not in activated:
+            # Try to get the default language
+            if default:
+                lang = default
+            # Otherwise get the first activated language
+            elif activated:
+                lang = activated[0]
+            # Otherwise the language setup is broken
+            else:
+                raise WebsiteError("Could not aquire default language")
+
+        return {
+            'lang_list': languages,
+            'lang_default': default,
+            'lang_selected': (lg for lg in languages if lg['code'] == lang).next(),
+        }
+
+    def get_rendering_context(self, additional_values=None, lang=None):
         debug = 'debug' in request.params
         is_logged = True
         try:
@@ -53,6 +114,7 @@ class website(osv.osv):
         except: # TODO fme: check correct exception
             is_logged = False
         is_public_user = request.uid == self.get_public_user().id
+
         values = {
             'debug': debug,
             'is_public_user': is_public_user,
@@ -66,31 +128,44 @@ class website(osv.osv):
             'json': simplejson,
             'snipped': {
                 'kanban': self.kanban
-            }
+            },
         }
+        values.update(self.get_lang_info(lang))
+
         if additional_values:
             values.update(additional_values)
         return values
 
-    def render(self, template, values={}):
+    def render(self, template, values=None):
         view = request.registry.get("ir.ui.view")
+        IMD = request.registry.get("ir.model.data")
+
+        if not values:
+            values = {}
         context = {
             'inherit_branding': values.get('editable', False),
         }
+
+        # check if xmlid of the template exists
+        try:
+            model, xmlid = template.split('.', 1)
+            model, id = IMD.get_object_reference(request.cr, request.uid, model, xmlid)
+        except ValueError:
+            logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
+            return self.render('website.404', values)
+ 
+        # render template and catch error
         try:
             return view.render(request.cr, request.uid, template, values, context=context)
-        # except (osv.except_osv, orm.except_orm), err:
-        #     logger.error(err)
-        #     values['error'] = err[1]
-        #     return self.render('website.401', values)
-        # except ValueError:
-        #     logger.error("Website Rendering Error.\n\n%s" % (traceback.format_exc()))
-        #     return self.render('website.404', values)
+        except (AccessError, AccessDenied), err:
+            logger.error(err)
+            values['error'] = err[1]
+            logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
+            return self.render('website.401', values)
         except Exception:
-            trace = traceback.format_exc()
-            logger.error("Website Rendering Error.\n\n%s" % trace)
+            values['traceback'] = traceback.format_exc()
+            logger.error("Website Rendering Error.\n\n%s" % values['traceback'])
             if values['editable']:
-                values['traceback'] = trace
                 return view.render(request.cr, request.uid, 'website.500', values, context=context)
             else:
                 return view.render(request.cr, request.uid, 'website.404', values, context=context)
@@ -150,7 +225,7 @@ class website(osv.osv):
             if xids[view['id']]
         ]
 
-    def kanban(self, model, domain, column, content, step=None, scope=None, orderby=None):
+    def kanban(self, model, domain, column, template, step=None, scope=None, orderby=None):
         step = step and int(step) or 10
         scope = scope and int(scope) or 5
         orderby = orderby or "name"
@@ -185,8 +260,10 @@ class website(osv.osv):
 
             # pager
             number = model_obj.search(request.cr, request.uid, group['__domain'], count=True)
-            obj['page'] = pages.get(relation_id) or 1
             obj['page_count'] = int(math.ceil(float(number) / step))
+            obj['page'] = pages.get(relation_id) or 1
+            if obj['page'] > obj['page_count']:
+                obj['page'] = obj['page_count']
             offset = (obj['page']-1) * step
             obj['page_start'] = max(obj['page'] - int(math.floor((scope-1)/2)), 1)
             obj['page_end'] = min(obj['page_start'] + (scope-1), obj['page_count'])
@@ -206,11 +283,11 @@ class website(osv.osv):
         values = self.get_rendering_context({
             'objects': objects,
             'range': range,
-            'content': content,
+            'template': template,
         })
         return self.render("website.kanban_contain", values)
 
-    def kanban_col(self, model, domain, page, content, step, orderby):
+    def kanban_col(self, model, domain, page, template, step, orderby):
         html = ""
         model_obj = request.registry[model]
         domain = safe_eval(domain)
@@ -219,8 +296,18 @@ class website(osv.osv):
         object_ids = model_obj.search(request.cr, request.uid, domain, limit=step, offset=offset, order=orderby)
         object_ids = model_obj.browse(request.cr, request.uid, object_ids)
         for object_id in object_ids:
-            html += self.render(content, self.get_rendering_context({'object_id': object_id}))
+            html += self.render(template, self.get_rendering_context({'object_id': object_id}))
         return html
+
+class res_lang(osv.osv):
+    _inherit = "res.lang"
+
+    _columns = {
+        'website_activated': fields.boolean('Active on website'),
+        'website_default': fields.boolean('Website default language'),
+    }
+
+    # TODO: on write and create set website_default=False on other records if current is True
 
 class res_partner(osv.osv):
     _inherit = "res.partner"

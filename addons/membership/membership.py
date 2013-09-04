@@ -328,13 +328,13 @@ class Partner(osv.osv):
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
-                    }, help="""It indicates the membership state.
-                    -Non Member: A partner who has not applied for any membership.
-                    -Cancelled Member: A member who has cancelled his membership.
-                    -Old Member: A member whose membership date has expired.
-                    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
-                    -Invoiced Member: A member whose invoice has been created.
-                    -Paying member: A member who has paid the membership fee."""),
+                    }, help='It indicates the membership state.\n'
+                            '-Non Member: A partner who has not applied for any membership.\n'
+                            '-Cancelled Member: A member who has cancelled his membership.\n'
+                            '-Old Member: A member whose membership date has expired.\n'
+                            '-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n'
+                            '-Invoiced Member: A member whose invoice has been created.\n'
+                            '-Paying member: A member who has paid the membership fee.'),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
                     string = 'Membership Start Date', type = 'date',
