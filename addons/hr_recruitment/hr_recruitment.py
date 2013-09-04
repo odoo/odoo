@@ -465,6 +465,14 @@ class hr_job(osv.osv):
         for applicant in applicant_obj.browse(cr, uid, applicant_ids, context=context):
             res[applicant.job_id.id] += 1
         return res
+        
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        attachment = self.pool.get('ir.attachment')
+        for id in ids:
+            job_attachments = attachment.search(cr, uid, [('res_model', '=', 'hr.job'), ('res_id', '=', id)], context=context, count=True)
+            res[id] = (job_attachments or 0)
+        return res
 
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
@@ -473,6 +481,7 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
         'application_count': fields.function(_application_count, type='integer', string="Total Applications"),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
     }
 
     def _auto_init(self, cr, context=None):
@@ -512,6 +521,20 @@ class hr_job(osv.osv):
             'nodestroy': True,
         }
 
+    def attachment_tree_view(self, cr, uid, ids, context):
+        domain = ['&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids)]
+        res_id = ids and ids[0] or False
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 80,
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }
 
 class applicant_category(osv.osv):
     """ Category of applicant """
