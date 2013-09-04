@@ -787,7 +787,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 lines: orderLines,
                 statement_ids: paymentLines,
                 pos_session_id: this.pos.get('pos_session').id,
-                partner_id: this.pos.get('client') ? this.pos.get('client').id : undefined,
+                partner_id: this.get('client') ? this.get('client').id : undefined,
                 user_id: this.pos.get('cashier') ? this.pos.get('cashier').id : this.pos.get('user').id,
             };
         },

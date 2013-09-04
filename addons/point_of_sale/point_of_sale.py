@@ -497,9 +497,9 @@ class pos_order(osv.osv):
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
                 'lines': order['lines'],
-                'pos_reference':order['name']
+                'pos_reference':order['name'],
+                'partner_id': order.get('partner_id', False)
             }, context)
-
             for payments in order['statement_ids']:
                 payment = payments[2]
                 self.add_payment(cr, uid, order_id, {
