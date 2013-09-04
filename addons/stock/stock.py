@@ -774,7 +774,7 @@ class stock_picking(osv.osv):
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                             #In the end, move quants in correct package
                             if create:
-                                quant_obj.write(cr, uid, [x[0].id for x in quants], {'package_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
+                                quant_obj.write(cr, uid, [x[0].id for x in quants if x != None], {'package_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
                         res2[move.id] -= qty
                     res[ops.id] = {}
                     res[ops.id][ops.product_id.id] = qty_to_do
@@ -1037,7 +1037,6 @@ class stock_move(osv.osv):
             for quant in move.reserved_quant_ids:
                 res[move.id] -= quant.qty
         return res
-    
 
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
         res = dict.fromkeys(ids, False)

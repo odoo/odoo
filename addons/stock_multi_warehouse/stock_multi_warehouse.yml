@@ -53,7 +53,7 @@
     name: Panama Santiago District Warehouse
     lot_stock_id: location_panama_santiago
 - 
-  Create picking types for this warehouse
+  Create picking type in for this warehouse
 - 
   !record {model: stock.picking.type, id: picking_type_santiago_in}:
     name: Reception
@@ -61,6 +61,25 @@
     sequence_id: stock.seq_picking_type_in
     warehouse_id: wh_panama_santiago
     default_location_dest_id: location_panama_santiago_input 
+- 
+  Create picking type out for this warehouse
+- 
+  !record {model: stock.picking.type, id: picking_type_santiago_out}:
+    name: Deliveries
+    code_id: outgoing
+    sequence_id: stock.seq_picking_type_out
+    warehouse_id: wh_panama_santiago
+    default_location_src_id: location_panama_santiago_output
+- 
+  Create picking type internal for this warehouse
+- 
+  !record {model: stock.picking.type, id: picking_type_santiago_internal}:
+    name: Deliveries
+    code_id: internal
+    sequence_id: stock.seq_picking_type_internal
+    warehouse_id: wh_panama_santiago
+    default_location_src_id: location_panama_santiago_input
+    default_location_dest_id: location_panama_santiago_stock
 - 
   Create Location structure of Warehouse Panama Main
 - 
