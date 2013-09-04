@@ -672,6 +672,7 @@ class purchase_order(osv.osv):
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
+            'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'purchase_id': order.id,
             'company_id': order.company_id.id,
