@@ -15,14 +15,10 @@
                 </t>
                 <t t-set="title">Jobs</t>
                 <div class="container">
-                    <div class="page-header">
-                        <h1>Job Position</h1>
-                    </div>
+                    <h1>Job Position</h1>
                     <t t-if="no_of_jobs &gt; 0">
                         <t t-foreach="companies" t-as="company">
-                            <div class="page-header">
-                                <h2 class="text-center"><t t-field="company.name"/></h2>
-                            </div>
+                            <h2 class="text-center"><t t-field="company.name"/></h2>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -65,23 +61,22 @@
                                                         <div class="subscribedetails">
                                                             <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
                                                             Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
-                                                            <input placeholder="Email Address" type="email" name="email" class="input-medium"/>
-                                                            <button class="btn btn-primary" name="subscribe" style="margin-bottom:10px;">Subscribe</button>
+                                                            <div class="col-md-4 col-sm-8">
+                                                                <input placeholder="Email Address" type="email" name="email" class="form-control"/>
+                                                            </div>
+                                                            <button class="btn btn-primary" name="subscribe">Subscribe</button>
                                                             <input type="hidden" name="recid" t-att-value="job.id"/>
                                                         </div>
                                                         <div class="hidden">
-                                                            <div class="alert alert-success">
-                                                                <button type="button" class="close" data-dismiss="alert">×</button>
-                                                                <strong>Oh great!</strong> You are successfully subscribed email notifications for a <b><t t-esc="job.name"/></b> job.
+                                                            <div class="alert alert-dismissable alert-success">
+                                                                <button type="button" class="close" data-dismiss="alert">x</button>
+                                                                <strong>Oh great!</strong> You are successfully subscribed email notifications for a <a t-att-href="'/job/detail/%%s' %% job.id" class="alert-link"><t t-esc="job.name"/></a> job.
                                                             </div>
                                                             <input type="hidden" name="email"/>
                                                             <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
                                                         </div>
                                                     </t>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <t t-call="website_hr_recruitment.published"><t t-set="object" t-value="job"/></t>
                                             </td>
                                         </tr>
                                     </t>
@@ -95,24 +90,16 @@
                 </div>
             </t>
         </template>
-        <template id="published">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
-                <span t-att-class="'label label-success js_unpublished %%s' %% (not object.website_published and 'hidden' or '')">Unpublish</span>
-                <span t-att-class="'label label-important js_published %%s' %% (object.website_published and 'hidden' or '')">Publish</span>
-            </a>
-        </template>
         <template id="detail">
             <t t-call="website.layout">
                 <t t-set="title">Job Detail</t>
-                <div class="span4 pull-right">
+                <div class="col-md-4 pull-right">
                     <ul class="pager">
                         <li><a t-att-href="'/jobs'">All Jobs</a></li>
                     </ul>
                 </div>
                 <div class="container">
-                    <div class="page-header">
-                        <h1><t t-field="job.name"/></h1>
-                    </div>
+                    <h1><t t-field="job.name"/></h1>
                     <div class="row">
                         <div class="span12">
                             <t t-if="job.description">
@@ -128,32 +115,41 @@
         <template id="applyjobpost">
             <t t-set="title">Apply Job</t>
             <section id="forms">
-                <div class="page-header">
-                    <h1>Apply</h1>
-                </div>
+                <h1>Apply</h1>
                 <div class="row">
-                    <form class="form-horizontal well" action="/job/success" method="post" enctype="multipart/form-data">
-                        <fieldset>
-                            <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
-                            <input type="hidden" t-att-value="job.id" name="job_id"/>
-                            <input type="hidden" t-att-value="job.name" name="name"/>
-                            <div class="control-group">
-                                <input type="text" class="input-xlarge" id="nametxt" name="partner_name" required="true" placeholder="Name..."/>
+                    <form class="form-horizontal mt32" action="/job/success" method="post" enctype="multipart/form-data">
+                        <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
+                        <input type="hidden" t-att-value="job.id" name="job_id"/>
+                        <input type="hidden" t-att-value="job.name" name="name"/>
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-4 control-label" for="partner_name">Name</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control" name="partner_name" required="True" />
                             </div>
-                            <div class="control-group">
-                                <input type="email" class="input-xlarge" id="emailtxt" name="email_from" required="true" placeholder="Email..."/>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="email" class="form-control" name="email_from" required="True" />
                             </div>
-                            <div class="control-group">
-                                <textarea class="span8" style="margin-top:5px; height: 140px;" name="description" placeholder="Enter your comment..."> </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
+                            <div class="col-md-7 col-sm-8">
+                                <textarea  class="form-control" name="description" style="min-height: 120px"/>
                             </div>
-                            <div class="control-group">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-sm-4 control-label" for="ufile">Upload File</label>
+                            <div class="col-md-7 col-sm-8">
                                 <input class="input-file" id="fileInput" type="file" name="ufile" required="true"/>
                             </div>
-                            <div class="form-actions">
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
                                 <button type="submit" class="btn btn-primary">Save</button>
-                                <button type="reset" class="btn"><a t-att-href="'/jobs'">Cancel</a></button>
-                          </div>
-                        </fieldset>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </section>
@@ -161,7 +157,7 @@
         <template id="thankyou">
             <t t-call="website.layout">
                 <t t-set="title">Thank You!</t>
-                <div class="span4 pull-right">
+                <div class="col-md-4 pull-right">
                     <ul class="pager">
                         <li><a t-att-href="'/job/detail/%%s' %% jobid">All Jobs</a></li>
                     </ul>
@@ -169,7 +165,7 @@
                 <section id="typography">
                     <div class="container">
                         <div class="row">
-                            <h2 class="oe_slogan">You have successfully applied for job.</h2>
+                            <h2>You have successfully applied for job.</h2>
                         </div>
                     </div>
                 </section>

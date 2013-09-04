@@ -63,26 +63,6 @@ class website_hr_recruitment(http.Controller):
            })
         return website.render("website_hr_recruitment.thankyou", values)
 
-    @http.route('/recruitment/published', type='json', auth="admin")
-    def published (self, **post):
-        hr_job = request.registry['hr.job']
-        id = int(post['id'])
-        rec = hr_job.browse(request.cr, request.uid, id)
-        vals = {}
-
-        vals['website_published'] = not rec.website_published
-        if vals['website_published']:
-            vals['state'] = 'recruit'
-            if rec.no_of_recruitment == 0.0:
-                vals ['no_of_recruitment'] = 1.0
-        else:
-            vals['state'] = 'open'
-            vals ['no_of_recruitment'] = 0.0
-
-        res = hr_job.write(request.cr, request.uid, [rec.id], vals)
-        obj = hr_job.browse(request.cr, request.uid, id)
-        return { 'published': obj.website_published and "1" or "0", 'count': obj.no_of_recruitment }
-
     @http.route('/recruitment/message_get_subscribed', type='json', auth="admin")
     def message_get_subscribed(self, email, id):
         id = int(id)
