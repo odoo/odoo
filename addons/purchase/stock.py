@@ -44,7 +44,6 @@ class stock_picking(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
-        'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
 
     _defaults = {
