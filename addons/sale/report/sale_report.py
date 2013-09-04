@@ -27,17 +27,7 @@ class sale_report(osv.osv):
     _description = "Sales Orders Statistics"
     _auto = False
     _rec_name = 'date'
-    def _compute_total_in_user_currency(self, cr, uid, ids, field_names=[], args={}, context=None):
-        """Compute the Price total in the currency of the user
-        """
-        res = {}
-        currency_obj = self.pool.get('res.currency')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        for item in self.browse(cr, uid, ids, context=context):
-            res[item.id] = {
-                'user_price_total': currency_obj.compute(cr, uid, item.pricelist_id.currency_id.id, user_currency_id, item.price_total, context=context),
-            }
-        return res
+
     _columns = {
         'date': fields.date('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
@@ -68,7 +58,6 @@ class sale_report(osv.osv):
             ], 'Order Status', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'user_price_total': fields.function(_compute_total_in_user_currency, string="Total Price", type='float',digits=(16,2), multi="_compute_amounts", readonly=True),
     }
     _order = 'date desc'
 
@@ -124,16 +113,6 @@ class sale_report(osv.osv):
                     s.project_id
         """
         return group_by_str
-
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        res = super(sale_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
-        for group in res:
-            group['user_price_total'] = 0
-            group_ids = self.search(cr, uid, group.get('__domain'),context=context)
-            record = self._compute_total_in_user_currency(cr, uid, group_ids, context=context)
-            for id, rec in record.iteritems():
-                group['user_price_total'] += rec['user_price_total']
-        return res
 
     def init(self, cr):
         # self._table = sale_report

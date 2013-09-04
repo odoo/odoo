@@ -28,7 +28,7 @@
                 <field name="nbr" sum="# Leads"/>
                 <field name="delay_open"/>
                 <field name="delay_close"/>
-                <field name="user_currency_planned_revenue"/>
+                <field name="planned_revenue"/>
              </tree>
             </field>
         </record>
@@ -53,7 +53,7 @@
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
-                    <field name="user_currency_planned_revenue" operator="+"/>
+                    <field name="planned_revenue" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
             </field>
@@ -148,13 +148,13 @@
                 <field name="type" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
-                <field name="user_currency_planned_revenue" sum="Planned Revenues"/>
+                <field name="planned_revenue" sum="Planned Revenues"/>
                 <field name="delay_open" sum='Delay to Assign'/>
                 <field name="delay_close" sum='Delay to close'/>
                 <field name="date_last_stage_update"/>
                 <field name="delay_expected"/>
                 <field name="probability" widget="progressbar"/>
-                <field name="user_currency_probable_revenue"/>
+                <field name="probable_revenue"/>
              </tree>
             </field>
         </record>

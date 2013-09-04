@@ -45,19 +45,6 @@ class crm_lead_report(osv.osv):
     _description = "CRM Lead Analysis"
     _rec_name = 'deadline_day'
 
-    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names=[], args={}, context=None):
-        """Compute the amounts in the currency of the user
-        """
-        res = {}
-        currency_obj = self.pool.get('res.currency')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        for item in self.browse(cr, uid, ids, context=context):
-            res[item.id] = {
-                'user_currency_planned_revenue': currency_obj.compute(cr, uid, item.company_id.currency_id.id, user_currency_id, item.planned_revenue, context=context),
-                'user_currency_probable_revenue': currency_obj.compute(cr, uid, item.company_id.currency_id.id, user_currency_id, item.probable_revenue, context=context),
-            }
-        return res
-
     _columns = {
         # grouping fields based on Deadline Date
         'deadline_year': fields.char('Ex. Closing Year', size=10, readonly=True, help="Expected closing year"),
@@ -88,9 +75,7 @@ class crm_lead_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
-        'user_currency_planned_revenue': fields.function(_compute_amounts_in_user_currency, string="Planned Revenue", type='float',digits=(16,2), multi="_compute_amounts", readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
-        'user_currency_probable_revenue': fields.function(_compute_amounts_in_user_currency, string="Probable Revenue", type='float',digits=(16,2), multi="_compute_amounts",readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
@@ -101,20 +86,6 @@ class crm_lead_report(osv.osv):
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
-
-    #FIX:To show sum of values of function fields in groupby
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        res = super(crm_lead_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
-        for group in res:
-            group['user_currency_probable_revenue'] = 0
-            group['user_currency_planned_revenue'] = 0
-            if group.get('__domain'):
-                group_ids = self.search(cr, uid, group.get('__domain'),context=context)
-                record = self._compute_amounts_in_user_currency(cr, uid, group_ids, context=context)
-                for id, rec in record.iteritems():
-                    group['user_currency_planned_revenue'] += rec['user_currency_planned_revenue']
-                    group['user_currency_probable_revenue'] += rec['user_currency_probable_revenue']
-        return res
     
     def init(self, cr):
         """
