@@ -176,6 +176,7 @@
                        help="Phone Calls Assigned to the current user or with a team having the current user as team leader"/>
                <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                <field name="user_id"/>
+               <field name="opportunity_id"/>
                <field name="section_id" string="Sales Team"
                         groups="base.group_multi_salesteams"/>
                <group expand="0" string="Group By...">

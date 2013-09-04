@@ -313,6 +313,7 @@ class crm_lead(format_address, osv.osv):
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
+        phonecall_obj = self.pool.get('crm.phonecall')
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
@@ -327,6 +328,8 @@ class crm_lead(format_address, osv.osv):
                 'mobile': partner.mobile,
                 'fax': partner.fax,
             }
+        call_ids = phonecall_obj.search(cr, uid, [('opportunity_id','in',ids)], context)
+        phonecall_obj.write(cr, uid, call_ids, {'partner_id': partner_id}, context)
         return {'value': values}
 
     def on_change_user(self, cr, uid, ids, user_id, context=None):
