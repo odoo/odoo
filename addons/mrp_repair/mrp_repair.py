@@ -525,6 +525,7 @@ class mrp_repair(osv.osv):
                     'move_type': 'one',
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'note': repair.internal_notes,
+                    'invoice_state': 'none',
                     'picking_type_id': self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id
                 })
                 move_id = move_obj.create(cr, uid, {
