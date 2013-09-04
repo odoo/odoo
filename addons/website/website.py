@@ -53,7 +53,7 @@ class WebContext(dict):
     def __init__(self):
         self.website = request.registry.get("website")
         lang = request.httprequest.host.split('.')[0]
-        context = self.website.get_rendering_context(lang=lang)
+        context = self.website.get_webcontext(lang=lang)
         dict.__init__(self, context)
     def __getattr__(self, name):
         if hasattr(self.website, name):
@@ -63,7 +63,10 @@ class WebContext(dict):
         else:
             raise AttributeError
     def render(self, template, values=None):
-        return self.website.render(template, self)
+        context = self.copy()
+        if values:
+            context.update(values)
+        return self.website.render(template, context)
 
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
@@ -106,7 +109,7 @@ class website(osv.osv):
             'lang_selected': (lg for lg in languages if lg['code'].lower() == lang.lower()).next(),
         }
 
-    def get_rendering_context(self, additional_values=None, lang=None):
+    def get_webcontext(self, additional_values=None, lang=None):
         debug = 'debug' in request.params
         is_logged = True
         try:
@@ -280,12 +283,12 @@ class website(osv.osv):
 
             objects.append(obj)
 
-        values = self.get_rendering_context({
+        values = {
             'objects': objects,
             'range': range,
             'template': template,
-        })
-        return self.render("website.kanban_contain", values)
+        }
+        return request.webcontext.render("website.kanban_contain", values)
 
     def kanban_col(self, model, domain, page, template, step, orderby):
         html = ""
@@ -296,7 +299,7 @@ class website(osv.osv):
         object_ids = model_obj.search(request.cr, request.uid, domain, limit=step, offset=offset, order=orderby)
         object_ids = model_obj.browse(request.cr, request.uid, object_ids)
         for object_id in object_ids:
-            html += self.render(template, self.get_rendering_context({'object_id': object_id}))
+            html += request.webcontext.render(template, {'object_id': object_id})
         return html
 
 class res_lang(osv.osv):

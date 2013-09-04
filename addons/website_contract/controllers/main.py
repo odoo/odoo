@@ -4,11 +4,12 @@ import openerp
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
+from openerp.addons.website import website
 import urllib
 
 class website_contract(http.Controller):
 
-    @http.route(['/references/', '/references/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/references/', '/references/page/<int:page>/'], type='http', auth="public")
     def references(self, page=0, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
@@ -30,7 +31,7 @@ class website_contract(http.Controller):
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, domain + [('website_published', '=', True)])
         google_map_partner_ids = ",".join([str(p) for p in partner_ids])
 
-        if request.uid != website.get_public_user().id:
+        if not request.webcontext.is_public_user:
             # search without website_published
             partner_ids += partner_obj.search(request.cr, request.uid, domain)
             partner_ids = list(set(partner_ids))
@@ -49,27 +50,24 @@ class website_contract(http.Controller):
         pager = website.pager(url="/references/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)], limit=step, offset=pager['offset'])
 
-
-        values = website.get_rendering_context({
+        values = {
             'countries': countries,
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),
-        })
-        return website.render("website_contract.index", values)
+        }
+        return request.webcontext.render("website_contract.index", values)
 
-    @http.route(['/references/<int:ref_id>/'], type='http', auth="public")
+    @website.route(['/references/<int:ref_id>/'], type='http', auth="public")
     def references_ref(self, ref_id=0, **post):
-        website = request.registry['website']
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)])
-        if request.uid != website.get_public_user().id:
+        if not request.webcontext.is_public_user:
             partner_ids += partner_obj.search(request.cr, request.uid, [('id', '=', ref_id)])
 
-        values = website.get_rendering_context({
+        values = {
             'partner_id': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids[0], context={'show_address': True}),
-        })
-        return website.render("website_contract.details", values)
-
+        }
+        return request.webcontext.render("website_contract.details", values)

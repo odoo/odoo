@@ -4,11 +4,12 @@ import openerp
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
+from openerp.addons.website import website
 import urllib
 
 class website_crm_partner_assign(http.Controller):
 
-    @http.route(['/members/', '/members/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/members/', '/members/page/<int:page>/'], type='http', auth="public")
     def members(self, page=0, **post):
         website = request.registry['website']
         membership_obj = request.registry['membership.membership_line']
@@ -48,26 +49,24 @@ class website_crm_partner_assign(http.Controller):
             limit=step, offset=pager['offset'], order="membership_id ASC,date DESC")
 
 
-        values = website.get_rendering_context({
+        values = {
             'memberships': memberships,
             'membership_line_ids': membership_obj.browse(request.cr, openerp.SUPERUSER_ID, membership_ids),
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),
-        })
-        return website.render("website_membership.index", values)
+        }
+        return request.webcontext.render("website_membership.index", values)
 
-    @http.route(['/members/<int:ref_id>/'], type='http', auth="public")
+    @website.route(['/members/<int:ref_id>/'], type='http', auth="public")
     def partners_ref(self, ref_id=0, **post):
-        website = request.registry['website']
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)])
-        if request.uid != website.get_public_user().id:
+        if not request.webcontext.is_public_user:
             partner_ids += partner_obj.search(request.cr, request.uid, [('id', '=', ref_id)])
 
-        values = website.get_rendering_context({
+        values = {
             'partner_id': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids[0], context={'show_address': True}),
-        })
-        return website.render("website_membership.details", values)
-
+        }
+        return request.webcontext.render("website_membership.details", values)

@@ -5,6 +5,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons import website_sale
+from openerp.addons.website import website
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -15,7 +16,7 @@ import werkzeug
 
 class website_event(http.Controller):
 
-    @http.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
     def events(self, page=1, **searches):
         website = request.registry['website']
         event_obj = request.registry['event.event']
@@ -86,7 +87,7 @@ class website_event(http.Controller):
         pager = website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
         obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), limit=step, offset=pager['offset'], order="date_begin DESC")
 
-        values = website.get_rendering_context({
+        values = {
             'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
             'types': types,
@@ -94,28 +95,26 @@ class website_event(http.Controller):
             'pager': pager,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
-        })
+        }
 
-        return website.render("website_event.index", values)
+        return request.webcontext.render("website_event.index", values)
 
-    @http.route(['/event/<int:event_id>'], type='http', auth="public")
+    @website.route(['/event/<int:event_id>'], type='http', auth="public")
     def event(self, event_id=None, **post):
-        website = request.registry['website']
         event = request.registry['event.event'].browse(request.cr, request.uid, event_id, {'show_address': 1})
-        values = website.get_rendering_context({
+        values = {
             'event_id': event,
             'range': range
-        })
-        return website.render("website_event.detail", values)
+        }
+        return request.webcontext.render("website_event.detail", values)
 
-    @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
+    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
     def add_cart(self, event_id=None, **post):
-        website = request.registry['website']
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
-        order = website.get_rendering_context()['order']
+        order = request.webcontext['order']
         if not order:
             order = website_sale.controllers.main.get_order()
 
