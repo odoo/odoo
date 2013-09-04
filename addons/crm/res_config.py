@@ -67,7 +67,7 @@ class crm_configuration(osv.TransientModel):
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
         'group_scheduled_calls_menu': fields.boolean("Show Scheduled Calls Menu",
             implied_group='crm.group_scheduled_calls_menu',
-            help="""Allows to Show Scheduled Calls Menu in Sales/Phone Calls Menu""")
+            help="""Allow to show 'Scheduled Calls' menu under 'Sales/Phone Calls' menu""")
     }
 
 
