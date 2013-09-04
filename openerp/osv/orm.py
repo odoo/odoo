@@ -4897,7 +4897,7 @@ class BaseModel(object):
         record_ids = self.search(cr, uid, domain or [], offset=offset, limit=limit, order=order, context=context)
         if not record_ids:
             return []
-        result = self.read(cr, uid, record_ids, fields=fields, context=context)
+        result = self.read(cr, uid, record_ids, fields, context=context)
         if len(result) <= 1:
             return result
 
