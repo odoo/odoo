@@ -126,6 +126,7 @@
             );
         },
         edit: function () {
+            var self = this;
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
             this.$('#website-top-edit').show();
@@ -158,15 +159,12 @@
                 });
 
             this.rte.start_edition($rte_ables);
-            $raw_editables.on('keydown keypress cut paste', function (e) {
-                var $target = $(e.target);
-                if ($target.hasClass('oe_dirty')) {
-                    return;
-                }
-
-                $target.addClass('oe_dirty');
-                this.$buttons.save.prop('disabled', false);
-            }.bind(this));
+            $raw_editables.each(function () {
+                observer.observe(this, OBSERVER_CONFIG);
+            }).one('content_changed', function () {
+                $(this).addClass('oe_dirty');
+                self.rte_changed();
+            });
         },
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);
@@ -234,13 +232,7 @@
                     var $node = $(node);
                     var editor = CKEDITOR.inline(this, self._config());
                     editor.on('instanceReady', function () {
-                        observer.observe(node, {
-                            childList: true,
-                            attributes: true,
-                            characterData: true,
-                            subtree: true,
-                            attributeOldValue: true,
-                        });
+                        observer.observe(node, OBSERVER_CONFIG);
                     });
                     $node.one('content_changed', function () {
                         $node.addClass('oe_dirty');
@@ -615,6 +607,13 @@
 
 
     var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
+    var OBSERVER_CONFIG = {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true,
+        attributeOldValue: true,
+    };
     var observer = new Observer(function (mutations) {
         // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
         //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
