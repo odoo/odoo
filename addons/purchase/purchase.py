@@ -401,7 +401,9 @@ class purchase_order(osv.osv):
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
         action = self.pool[action_model].read(cr, uid, action_id, context=context)
         active_id = context.get('active_id',ids[0])
-        ctx = eval(action['context'],{'active_id': active_id}, nocopy=True)
+        picking_type_id = self.browse(cr, uid, active_id, context=context)['picking_type_id'].id
+
+        ctx = eval(action['context'],{'active_id': picking_type_id}, nocopy=True)
         ctx.update({
             'search_default_purchase_id': ids[0]
         })
