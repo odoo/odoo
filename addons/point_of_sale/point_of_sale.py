@@ -642,6 +642,7 @@ class pos_order(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'account_move': fields.many2one('account.move', 'Journal Entry', readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
@@ -660,6 +661,13 @@ class pos_order(osv.osv):
             return session_record.config_id.pricelist_id and session_record.config_id.pricelist_id.id or False
         return False
 
+    def _get_out_picking_type(self, cr, uid, context=None):
+        try:
+            picking_type = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context)
+        except:
+            picking_type = False
+        return picking_type
+
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
         'state': 'draft',
@@ -669,6 +677,7 @@ class pos_order(osv.osv):
         'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'pricelist_id': _default_pricelist,
+        'picking_type_id': _get_out_picking_type,
     }
 
     def create(self, cr, uid, values, context=None):
@@ -697,18 +706,21 @@ class pos_order(osv.osv):
             if not order.state=='draft':
                 continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
+            picking_type = order.picking_type_id
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
                 'partner_id': addr.get('delivery',False),
-                'picking_type_id': self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id,
+                'picking_type_id': picking_type.id,
                 'company_id': order.company_id.id,
                 'move_type': 'direct',
                 'note': order.note or "",
                 'invoice_state': 'none',
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = order.warehouse_id.lot_stock_id.id
-            output_id = order.warehouse_id.lot_output_id.id
+            location_id = picking_type.default_location_src_id.id
+            output_id = picking_type.default_location_dest_id.id
+            if not location_id or not output_id:
+                raise osv.except_osv(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':

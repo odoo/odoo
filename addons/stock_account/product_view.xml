@@ -75,7 +75,7 @@
             <field name="priority">26</field>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='properties']" position="before">
-                    <group groups="stock.group_inventory_valuation">
+                    <group>
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>

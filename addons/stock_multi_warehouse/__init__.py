@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,20 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-
-from openerp.osv import osv
-
-class procurement_order(osv.osv):
-    _inherit = "procurement.order"
-
-    def create(self, cr, uid, vals, context=None):
-        procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
-        self.run(cr, uid, [procurement_id], context=context)
-        self.check(cr, uid, [procurement_id], context=context)
-        return procurement_id
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import stock_multi_warehouse

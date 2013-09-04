@@ -498,9 +498,7 @@
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
-                            <field name="lot_input_id" groups="stock.group_locations"/>
                             <field name="lot_stock_id" groups="stock.group_locations"/>
-                            <field name="lot_output_id" groups="stock.group_locations"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -517,9 +515,7 @@
             <field name="arch" type="xml">
                 <tree string="Warehouse">
                     <field name="name"/>
-                    <field name="lot_input_id" groups="stock.group_locations"/>
                     <field name="lot_stock_id" groups="stock.group_locations"/>
-                    <field name="lot_output_id" groups="stock.group_locations"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -1186,6 +1182,7 @@
                 <search string="Picking Type">
                     <field name="name" string="Picking Type"/>
                     <field name="sequence_id"/>
+                    <field name="warehouse_id"/>
                 </search>
             </field>
         </record>
@@ -1205,18 +1202,27 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <form string="Picking Types" version="7.0">
-                    <group>
-                        <field name="name"/>
-                        <field name="code_id"/>
-                        <field name="sequence_id"/>
-                        <field name="pack"/>
-                        <field name="auto_force_assign"/>
-                    </group>
-                    <group>
-                        <field name="default_location_src_id"/>
-                        <field name="default_location_dest_id"/>
-                        <field name="return_picking_type_id"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence_id"/>
+                                <field name="warehouse_id"/>
+                                <field name="pack"/>
+                            </group>
+                            <group>
+                                <field name="code_id" on_change="onchange_picking_code(code_id)"/>
+                                <field name="return_picking_type_id"/>
+                                <field name="auto_force_assign"/>
+                                <field name="delivery"/>
+                            </group>
+                        </group>
+                        <separator string="Locations"/>
+                        <group>
+                            <field name="default_location_src_id" attrs="{'required': [('code_id', '=', 'internal')]}"/>
+                            <field name="default_location_dest_id" attrs="{'required': [('code_id', 'in', ('internal', 'incoming'))]}"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -1561,7 +1567,7 @@
                     <field name="qty"/>
                     <field name="location_id"/>
                     <field name="lot_id"/>
-                    <field name="package_id" invisible="1"/>
+                    <field name="package_id"/>
                     <field name="packaging_type_id" invisible="1"/>
                     <field name="in_date"/>
                     <field name="reservation_id" invisible='1'/>
@@ -1656,7 +1662,7 @@
                         <field name="loc_case"/>
                     </group>
                 </group>
-                <group name="Weights" position="after">
+                <group name="Weights" position="before">
                      <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
                          <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
                          <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
