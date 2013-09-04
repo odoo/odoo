@@ -123,7 +123,6 @@
   Process this picking
 - 
   !python {model: stock.picking}: |
-    self.rereserve(cr, uid, [ref('delivery_order1')], context=context)
     self.do_partial(cr, uid, [ref('delivery_order1')], context=context)
 - 
   Check the quants that you have 120 pieces pallet 1 in customers, 100 pieces pallet 2 in stock and 20 with customers and 50 in stock, 10 in customers from pallet 3 
