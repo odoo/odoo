@@ -811,25 +811,28 @@ class _RelationalMulti(_Relational):
             # value is a list of record ids or commands
             result = self.comodel.browse()
             for command in value:
-                if not isinstance(command, (tuple, list)):
+                if isinstance(command, (tuple, list)):
+                    if command[0] == 0:
+                        result += self.comodel.new(command[2])
+                    elif command[0] == 1:
+                        record = self.comodel.browse(command[1])
+                        record.draft = True
+                        record.update(command[2])
+                        result += record
+                    elif command[0] == 2:
+                        pass
+                    elif command[0] == 3:
+                        pass
+                    elif command[0] == 4:
+                        result += self.comodel.browse(command[1])
+                    elif command[0] == 5:
+                        result = self.comodel.browse()
+                    elif command[0] == 6:
+                        result = self.comodel.browse(command[2])
+                elif isinstance(command, dict):
+                    result += self.comodel.new(command)
+                else:
                     result += self.comodel.browse(command)
-                elif command[0] == 0:
-                    result += self.comodel.new(command[2])
-                elif command[0] == 1:
-                    record = self.comodel.browse(command[1])
-                    record.draft = True
-                    record.update(command[2])
-                    result += record
-                elif command[0] == 2:
-                    pass
-                elif command[0] == 3:
-                    pass
-                elif command[0] == 4:
-                    result += self.comodel.browse(command[1])
-                elif command[0] == 5:
-                    result = self.comodel.browse()
-                elif command[0] == 6:
-                    result = self.comodel.browse(command[2])
             return result
         elif not value:
             return self.null()
