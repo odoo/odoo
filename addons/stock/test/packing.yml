@@ -143,7 +143,7 @@
       else:
         assert False, "Unrecognized quant"
 - 
-  Check a backorder was created and on that backorder, prepare partial and add an op with 20 pieces (20 that cannot be assigned) with lot B
+  Check a backorder was created and on that backorder, prepare partial
 - 
   !python {model: stock.picking}: |
     picking = self.browse(cr, uid, ref('delivery_order1'), context=context)
@@ -152,11 +152,8 @@
     backorder_id = self.browse(cr, uid, backorder, context=context)
     self.action_confirm(cr, uid, backorder, context=context)
     self.action_assign(cr, uid, backorder)
-    self.force_assign(cr, uid, backorder, context=context)
     self.do_prepare_partial(cr, uid, backorder, context=context)
-    #create lot B
-    lot_b = self.pool.get('stock.production.lot').create(cr, uid, {'name': 'Lot B', 'product_id': ref('product1')}, context=context)
-    stock_pack = self.pool.get('stock.pack.operation').create(cr, uid, {'picking_id': backorder_id[0].id, 'lot_id': lot_b, 'product_qty': 20})
+    stock_pack = self.pool.get('stock.pack.operation').create(cr, uid, {'picking_id': backorder_id[0].id, 'product_qty': 20})
 - 
   Process this backorder
 - 
@@ -167,10 +164,13 @@
     self.rereserve(cr, uid, [backorder_id[0].id], context=context)
     self.do_partial(cr, uid, [backorder_id[0].id], context=context)
 - 
-  Check you have a negative quant because there were 20 too many that were transferred with lot B
+  Check there are still 0 pieces in stock 
 - 
   !python {model: stock.quant}: |
-    reco_id = self.search(cr ,uid , [('product_id','=',ref('product1'))], context=context)
+    reco_id = self.search(cr ,uid , [('product_id','=',ref('product1')), ('location_id', '=', ref('stock_location_stock'))], context=context)
+    total_qty = 0
     for rec in self.browse(cr, uid, reco_id, context=context):
-      if rec.lot_id.name == 'Lot B':
-        assert rec.qty != -20, "" 
+      total_qty += rec.qty
+    product = self.pool.get("product.product").browse(cr, uid, ref('product1'))
+    assert total_qty == 0, "Total quantity in stock should be 0 as the backorder took everything out of stock"
+    assert product.qty_available == 0, "Quantity available should be 0 too" 
