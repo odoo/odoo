@@ -8,8 +8,16 @@
             groups="group_project_manager,group_project_user"
             sequence="40"/>
 
-        <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem name="Project"
+            id="menu_project_management"
+            parent="base.menu_main_pm"
+            sequence="1"/>
+
+        <menuitem name="Configuration"
+            id="base.menu_definitions"
+            parent="base.menu_main_pm"
+            groups="group_project_manager"
+            sequence="60"/>
 
         <record id="view_task_search_form" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
