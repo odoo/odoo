@@ -248,13 +248,13 @@
         displayKeywordSuggestions: function (pageParser) {
             var $modal = this.$el;
             var self = this;
-            var companyName = pageParser.company().toLowerCase();
-
             $modal.find('.js_seo_company_suggestions').append("Loading...");
-            // TODO Improve algorithm + Ajust based on custom user keywords
-            var requestURL = "http://seo.eu01.aws.af.cm/suggest/" + encodeURIComponent(companyName);
-            $.getJSON(requestURL, function (list) {
+            var companyName = pageParser.company().toLowerCase();
+            // cf. https://github.com/ddm/seo
+            // TODO Try with /recommend/
+            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(companyName), function (list) {
                 $modal.find('.js_seo_company_suggestions').empty();
+                // TODO Improve algorithm + Ajust based on custom user keywords
                 var nameRegex = new RegExp(companyName, "gi");
                 var cleanList = _.map(list, function removeCompanyName (word) {
                     return word.replace(nameRegex, "").trim();
