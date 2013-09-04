@@ -710,8 +710,12 @@ class stock_picking(osv.osv):
             Needed for parameter create
         '''
         self.rereserve(cr, uid, picking_ids, context=context)
-
-
+        
+    #
+    # TODO:rereserve should be improved for giving negative quants when a certain lot is not there
+    # (Suppose you have a pack op for 20 lot B and lot B does not have any quants in the source location
+    # and could be used also instead of do_split
+    #
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
             This will unreserve all products and reserve the quants from the operations
