@@ -24,7 +24,7 @@
             return $(document.title).text();
         },
         headers: function (tag) {
-            return $('h1').map(function () {
+            return $('#wrap h1').map(function () {
                     return $(this).text();
             });
         },
