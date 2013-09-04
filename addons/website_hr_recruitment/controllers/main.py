@@ -64,23 +64,27 @@ class website_hr_recruitment(http.Controller):
         return website.render("website_hr_recruitment.thankyou", values)
 
     @http.route('/recruitment/message_get_subscribed', type='json', auth="admin")
-    def message_get_subscribed(self, email, id):
+    def message_get_subscribed(self, email, id, mail_group_id):
         id = int(id)
-        hr_job = request.registry['hr.job']
+        mail_group_id = int(mail_group_id)
+        group_obj = request.registry['mail.group']
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)])
         if not partner_ids:
             partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": email, "name": "Subscribe: %s" % email})]
-        hr_job.write(request.cr, request.uid, [id], {'message_follower_ids': partner_ids})
+        group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
+        group_obj.message_subscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
         return 1
 
     @http.route('/recruitment/message_get_unsubscribed', type='json', auth="admin")
-    def message_get_unsubscribed(self, email, id):
-        hr_job = request.registry['hr.job']
+    def message_get_unsubscribed(self, email, id, mail_group_id):
+        mail_group_id = int(mail_group_id)
         id = int(id)
         partner_obj = request.registry['res.partner']
+        group_obj = request.registry['mail.group']
         partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)])
-        hr_job.write(request.cr, request.uid, [id], {'message_follower_ids': [(3, pid) for pid in partner_ids]})
+        group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
+        group_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
         return 1
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="website_mail_jobs" model="mail.group">
+            <field name="name">Jobs</field>
+            <field name="public">public</field>
+            <field name="description">Job Posts on your website</field>
+        </record>
         <template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
             <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
                 <li><a href="/jobs">Jobs</a></li>
@@ -66,6 +71,7 @@
                                                             </div>
                                                             <button class="btn btn-primary" name="subscribe">Subscribe</button>
                                                             <input type="hidden" name="recid" t-att-value="job.id"/>
+                                                            <input type="hidden" name="group_id" t-att-value="%(website_hr_recruitment.website_mail_jobs)d"/>
                                                         </div>
                                                         <div class="hidden">
                                                             <div class="alert alert-dismissable alert-success">
@@ -73,6 +79,7 @@
                                                                 <strong>Oh great!</strong> You are successfully subscribed email notifications for a <a t-att-href="'/job/detail/%%s' %% job.id" class="alert-link"><t t-esc="job.name"/></a> job.
                                                             </div>
                                                             <input type="hidden" name="email"/>
+                                                            <input type="hidden" name="group_id" t-att-value="%(website_hr_recruitment.website_mail_jobs)d"/>
                                                             <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
                                                         </div>
                                                     </t>
