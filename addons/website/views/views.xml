@@ -394,7 +394,7 @@
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
+            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.id and object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
                 <span t-attf-class="label label-success css_publish">Publish</span>
                 <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
                 <span t-attf-class="label label-success css_published">Published</span>

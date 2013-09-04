@@ -109,17 +109,32 @@ class Ecommerce(http.Controller):
 
         product_id = product_id and int(product_id) or 0
         product_obj = request.registry.get('product.template')
+        category_obj = request.registry.get('product.public.category')
 
         context = {'pricelist': self.get_pricelist()}
+
+        category_list = category_obj.name_get(request.cr, request.uid, category_obj.search(request.cr, request.uid, [(1,'=',1)]))
+        category_list = sorted(category_list, key=lambda category: category[1])
 
         product = product_obj.browse(request.cr, request.uid, product_id, context=context)
         values = website.get_rendering_context({
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
             'search': post.get("search"),
             'categories': self.get_categories(),
+            'category_list': category_list,
             'product': product,
         })
         return website.render("website_sale.product", values)
+
+    @http.route(['/shop/add_product/'], type='http', auth="public")
+    def add_product(self, **post):
+        product_id = request.registry.get('product.product').create(request.cr, request.uid, {'name': 'New Product'})
+        return werkzeug.utils.redirect("/shop/product/%s/" % product_id)
+
+    @http.route(['/shop/change_category/<product_id>/'], type='http', auth="public")
+    def edit_product(self, product_id=0, **post):
+        request.registry.get('product.template').write(request.cr, request.uid, [int(product_id)], {'public_categ_id': int(post.get('public_categ_id', 0))})
+        return "1"
 
     def get_pricelist(self):
         if not request.httprequest.session.get('ecommerce_pricelist'):

@@ -129,6 +129,7 @@
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
             this.$('#website-top-edit').show();
+            $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
             // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
             //     .add(this.$buttons.save)
