@@ -28,24 +28,16 @@
   !record {model: stock.location, id: location_panama_santiago_stock}:
     name: Stock
     location_id: location_panama_santiago
-    child_ids:
-      - name: Area1
-        child_ids:
-          - name: Bin 1
-          - name: Bin 2
-          - name: Bin 3
-          - name: Bin 4
-          - name: Bin 5
-          - name: Bin 6
-          - name: Bin 7
-          - name: Bin 8
-          - name: Bin 9
-          - name: Bin 10
-          - name: Bin 11
-          - name: Bin 12
-          - name: Bin 13
-          - name: Bin 14
-          - name: Bin 15
+
+-
+  !record {model: stock.location, id: location_panama_santiago_stock_area1}:
+    name: Area1
+    location_id: location_panama_santiago_stock
+
+-
+  !record {model: stock.location, id: location_panama_santiago_stock_area1_bin1}:
+    name: Bin1
+    location_id: location_panama_santiago_stock_area1
 - 
   Create  warehouse Panama Santiago District
 - 
@@ -101,25 +93,54 @@
 - 
   Stock
 - 
-  !record {model: stock.location, id: location_panama__main_stock}:
+  !record {model: stock.location, id: location_panama_main_stock}:
     name: Stock
     location_id: location_panama_main
-- 
-  Create  warehouse Panama Santiago District
+
+-
+  !record {model: stock.location, id: location_panama_main_stock_area2}:
+    name: Area2
+    location_id: location_panama_main_stock
+-
+  Create  warehouse Panama main
 - 
   !record {model: stock.warehouse, id: wh_panama_main}:
     name: Panama Main Warehouse
     lot_stock_id: location_panama_main
+- 
+  Create picking type in for warehouse panama main
+- 
+  !record {model: stock.picking.type, id: picking_type_main_in}:
+    name: Reception
+    code_id: incoming
+    sequence_id: stock.seq_picking_type_in
+    warehouse_id: wh_panama_main
+    default_location_dest_id: location_panama_main_input 
+- 
+  Create picking type out for warehouse panama main
+- 
+  !record {model: stock.picking.type, id: picking_type_main_out}:
+    name: Deliveries
+    code_id: outgoing
+    sequence_id: stock.seq_picking_type_out
+    warehouse_id: wh_panama_main
+    default_location_src_id: location_panama_main_output
+- 
+  Create picking type internal for warehouse panama main
+- 
+  !record {model: stock.picking.type, id: picking_type_main_internal}:
+    name: Deliveries
+    code_id: internal
+    sequence_id: stock.seq_picking_type_internal
+    warehouse_id: wh_panama_main
+    default_location_src_id: location_panama_main_input
+    default_location_dest_id: location_panama_main_stock
 - 
   Create Location structure of Warehouse Dubai
 - 
   !record {model: stock.location, id: location_panama_main}:
     name: Panama Main Warehouse
     location_id: location_panama
-    child_ids:
-      - name: Input
-      - name: Output
-      - name: Stock
 - 
   Create United Arab Emirates in Location structure
 - 
@@ -144,3 +165,334 @@
   !record {model: stock.warehouse, id: wh_dubai}:
     name: Dubai Warehouse
     lot_stock_id: location_dubai
+
+-
+  Create Ship Route for main panama warehouse
+-
+  !record {model: stock.location.route, id: route_wh_panama_main_push}:
+    name: Ship main panama
+    pull_ids:
+        - invoice_state: none
+          location_id: location_panama_main_output
+          location_src_id: location_panama_main_stock
+          name: Panama Main Stock -> Panama Main Output
+          procure_method: make_to_stock
+          picking_type_id: picking_type_main_internal
+          action: move
+        - invoice_state: none
+          location_id: stock.stock_location_customers
+          location_src_id: location_panama_main_output
+          name: Panama Main Output -> Customer
+          picking_type_id: picking_type_main_out
+          procure_method: make_to_order
+          action: move
+-
+  Create Ship Route for panama santiago warehouse
+-
+  !record {model: stock.location.route, id: route_wh_panama_santiago_push}:
+    name: Ship panama santiago
+    pull_ids:
+        - invoice_state: none
+          location_id: location_panama_santiago_output
+          location_src_id: location_panama_santiago_stock
+          name: Santiago Stock -> Santiago Output
+          procure_method: make_to_stock
+          picking_type_id: picking_type_santiago_internal
+          action: move
+        - invoice_state: none
+          location_id: stock.stock_location_customers
+          location_src_id: location_panama_santiago_output
+          name: Santiago Output -> Customer
+          picking_type_id: picking_type_santiago_out
+          procure_method: make_to_order
+          action: move
+-
+  Create Products
+-
+  !record {model: product.product, id: product_A}:
+    name: Product A
+    type: consu
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_B}:
+    name: Product B
+    type: consu
+    categ_id: product.product_category_1
+    list_price: 150.0
+    standard_price: 150.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_C}:
+    name: Product C
+    type: consu
+    categ_id: product.product_category_1
+    list_price: 200.0
+    standard_price: 150.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_D}:
+    name: Product D
+    type: consu
+    categ_id: product.product_category_1
+    list_price: 300.0
+    standard_price: 280.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_E}:
+    name: Product E
+    type: product
+    categ_id: product.product_category_1
+    list_price: 10.0
+    standard_price: 10.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_F}:
+    name: Product F
+    type: product
+    categ_id: product.product_category_1
+    list_price: 20.0
+    standard_price: 20.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_G}:
+    name: Product G
+    type: product
+    categ_id: product.product_category_1
+    list_price: 30.0
+    standard_price: 30.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  !record {model: product.product, id: product_H}:
+    name: Product H
+    type: product
+    categ_id: product.product_category_1
+    list_price: 40.0
+    standard_price: 40.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+  Create Lot
+-
+  !record {model: stock.production.lot, id: lot001}:
+    name: Lot001
+    product_id: product_C
+
+-
+  !record {model: stock.production.lot, id: lot002}:
+    name: Lot002
+    product_id: product_C
+
+-
+  !record {model: stock.production.lot, id: lot003}:
+    name: Lot003
+    product_id: product_C
+
+-
+  !record {model: stock.production.lot, id: lot004}:
+    name: Lot004
+    product_id: product_C
+
+-
+  Fill inventory
+-
+  I create an inventory for Location Stock1
+-
+  !record {model: stock.inventory, id: inventory_stock1}:
+    name: Inventory Stock 1
+    location_id: location_panama_santiago_stock
+-
+  I create the wizard to confirm the inventory
+-
+  !record {model: stock.fill.inventory, id: inventory_wizard}:
+    set_stock_zero: False
+-
+  I fill Stock1 inventory
+-
+  !python {model: stock.inventory.line}: |
+    context = {'active_ids': [ref('inventory_stock1')]}
+    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+-
+  I add 2 inventory line for product A and B and say i have 6 and 12 products in stock
+-
+  !record {model: stock.inventory.line, id: inventory_stock1line_productA}:
+    inventory_id: inventory_stock1
+    product_id: product_A
+    product_qty: 6
+    location_id: location_panama_santiago_stock
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock1line_productB}:
+    inventory_id: inventory_stock1
+    product_id: product_B
+    product_qty: 12
+    location_id: location_panama_santiago_stock
+-
+  I confirm Stock1 inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_done(cr, uid, [ref('inventory_stock1')], context=context)
+-
+  I create an inventory for Location Stock2
+-
+  !record {model: stock.inventory, id: inventory_stock2}:
+    name: Inventory Stock 2
+    location_id: location_panama_main_stock
+-
+  I fill Stock2 inventory
+-
+  !python {model: stock.inventory.line}: |
+    context = {'active_ids': [ref('inventory_stock2')]}
+    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+-
+  I add 4 inventory lines for product A, B, C, C and say i have 8, 120, 5, 15 products in stock
+-
+  !record {model: stock.inventory.line, id: inventory_stock2line_productA}:
+    inventory_id: inventory_stock2
+    product_id: product_A
+    product_qty: 8
+    location_id: location_panama_main_stock
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock2line_productB}:
+    inventory_id: inventory_stock2
+    product_id: product_B
+    product_qty: 120
+    location_id: location_panama_main_stock
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock2line_productC_1}:
+    inventory_id: inventory_stock2
+    product_id: product_C
+    product_qty: 5
+    location_id: location_panama_main_stock
+    prod_lot_id: lot003
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock2line_productC_2}:
+    inventory_id: inventory_stock2
+    product_id: product_C
+    product_qty: 15
+    location_id: location_panama_main_stock
+    prod_lot_id: lot004
+-
+  I confirm Stock2 inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_done(cr, uid, [ref('inventory_stock2')], context=context)
+-
+  I create an inventory for Location Area1
+-
+  !record {model: stock.inventory, id: inventory_stock1_area1}:
+    name: Inventory Stock1 area 1
+    location_id: location_panama_santiago_stock_area1
+-
+  I fill Area1 inventory
+-
+  !python {model: stock.inventory.line}: |
+    context = {'active_ids': [ref('inventory_stock1_area1')]}
+    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+-
+  I add 2 inventory lines for product D, D and say i have 4, 5 products in stock
+-
+  !record {model: stock.inventory.line, id: inventory_stock1line_productD_1}:
+    inventory_id: inventory_stock1_area1
+    product_id: product_D
+    product_qty: 4
+    location_id: location_panama_santiago_stock_area1
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock1line_productD_2}:
+    inventory_id: inventory_stock1_area1
+    product_id: product_D
+    product_qty: 5
+    location_id: location_panama_santiago_stock_area1
+-
+  I confirm Area1 inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_done(cr, uid, [ref('inventory_stock1_area1')], context=context)
+-
+  I create an inventory for Location Area 2
+-
+  !record {model: stock.inventory, id: inventory_stock2_area2}:
+    name: Inventory Stock2 area 2
+    location_id: location_panama_main_stock_area2
+-
+  I fill Area2 inventory
+-
+  !python {model: stock.inventory.line}: |
+    context = {'active_ids': [ref('inventory_stock2_area2')]}
+    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+-
+  I add 2 inventory lines for product D, D and say i have 2, 3 products in stock
+-
+  !record {model: stock.inventory.line, id: inventory_stock2line_productD_1}:
+    inventory_id: inventory_stock2_area2
+    product_id: product_D
+    product_qty: 2
+    location_id: location_panama_main_stock_area2
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock2line_productD_2}:
+    inventory_id: inventory_stock2_area2
+    product_id: product_D
+    product_qty: 3
+    location_id: location_panama_main_stock_area2
+-
+  I confirm Area2 inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_done(cr, uid, [ref('inventory_stock2_area2')], context=context)
+
+-
+  I create an inventory for Location Bin1
+-
+  !record {model: stock.inventory, id: inventory_stock1_area1_bin1}:
+    name: Inventory Stock1 area1 bin 1
+    location_id: location_panama_santiago_stock_area1_bin1
+-
+  I fill Bin1 inventory
+-
+  !python {model: stock.inventory.line}: |
+    context = {'active_ids': [ref('inventory_stock1_area1_bin1')]}
+    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+-
+  I add 2 inventory lines for product C, C and say i have 3, 14 products in stock
+-
+  !record {model: stock.inventory.line, id: inventory_stock1line_productC_1}:
+    inventory_id: inventory_stock1_area1_bin1
+    product_id: product_C
+    product_qty: 3
+    location_id: location_panama_santiago_stock_area1_bin1
+    prod_lot_id: lot001
+
+-
+  !record {model: stock.inventory.line, id: inventory_stock1line_productC_2}:
+    inventory_id: inventory_stock1_area1_bin1
+    product_id: product_C
+    product_qty: 14
+    location_id: location_panama_santiago_stock_area1_bin1
+    prod_lot_id: lot002
+-
+  I confirm Bin1 inventory
+-
+  !python {model: stock.inventory}: |
+    self.action_done(cr, uid, [ref('inventory_stock1_area1_bin1')], context=context)
