@@ -152,10 +152,7 @@
             $raw_editables.parents('a')
                 .add($raw_editables.find('a'))
                 .on('click', function (e) {
-                    // Don't alter bubbling events not coming from links
-                    if (e.target === e.currentTarget) {
-                        e.preventDefault();
-                    }
+                    e.preventDefault();
                 });
 
             this.rte.start_edition($rte_ables);
