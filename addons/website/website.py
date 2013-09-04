@@ -103,7 +103,7 @@ class website(osv.osv):
         return {
             'lang_list': languages,
             'lang_default': default,
-            'lang_selected': (lg for lg in languages if lg['code'].lower() == lang).next(),
+            'lang_selected': (lg for lg in languages if lg['code'].lower() == lang.lower()).next(),
         }
 
     def get_rendering_context(self, additional_values=None, lang=None):
