@@ -107,7 +107,7 @@
             var self = this;
             // TODO Refine
             var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
-            if (!this.isKeywordListFull() && !this.isExistingKeyword(word)) {
+            if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
                 var type = _.contains(this.suggestions(), word) ? 'advised' : 'new';
                 var keyword = new website.seo.Keyword(this, {
                     keyword: word,
