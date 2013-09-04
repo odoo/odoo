@@ -117,7 +117,7 @@
                         </section>
                         <section>
                             <h3 class="page-header">3. Describe your images</h3>
-                            <div class="row js_seo_images">
+                            <div class="row js_seo_image_list">
                                   <!-- filled in JS -->
                             </div>
                         </section>
@@ -129,6 +129,12 @@
                 </div>
             </div>
         </div>
+    </t>
+
+    <t t-name="website.seo_list">
+        <ul class="list-inline">
+            <!-- filled in JS -->
+        </ul>
     </t>
 
     <t t-name="website.seo_tip">
@@ -148,12 +154,6 @@
         </li>
     </t>
 
-    <t t-name="website.seo_keyword_list">
-        <ul class="list-inline">
-            <!-- filled in JS -->
-        </ul>
-    </t>
-
     <t t-name="website.seo_suggestion">
         <li class="oe_seo_suggestion">
             <span t-attf-class="label label-#{ widget.type } js_seo_suggestion" t-att-data-keyword="widget.keyword">
@@ -165,7 +165,7 @@
     <t t-name="website.seo_image">
         <div class="col-sm-6 col-md-3 oe_seo_image_preview">
             <img t-att-src="widget.src" class="img-rounded thumbnail"/>
-            <input type="text" class="form-control" t-att-value="widget.alt" placeholder="Description..."/>
+            <input type="text" class="form-control" t-att-src="widget.src" t-att-value="widget.alt" placeholder="Description..."/>
         </div>
     </t>
 
