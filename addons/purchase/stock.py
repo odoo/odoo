@@ -29,8 +29,10 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-    def action_done(self, cr ,uid, ids, context=None):
-        res = super(stock_move, self).action_done(cr, uid, ids, context)
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
         wf_service = netsvc.LocalService('workflow')
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)

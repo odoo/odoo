@@ -2397,11 +2397,10 @@ class stock_picking_type(osv.osv):
         res = []
         if not ids:
             return res
-        reads = self.browse(cr, uid, ids, context=context)
-        for record in reads:
+        for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if record.warehouse_id:
-                name = record.warehouse_id.name+': '+name
+                name = record.warehouse_id.name + ': ' +name
             res.append((record.id, name))
         return res
 

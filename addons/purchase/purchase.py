@@ -745,30 +745,26 @@ class purchase_order(osv.osv):
         return [picking_id]
 
     def test_moves_done(self, cr, uid, ids, context=None):
-        done = True
+        '''PO is done at the delivery side if all the incoming shipments are done'''
         for purchase in self.browse(cr, uid, ids, context=context):
-            for line in purchase.order_line:
-                for move in line.move_ids:
-                    if move.state != 'done':
-                        done = False
-        return done
-        
+            for picking in purchase.picking_ids:
+                if picking.state != 'done':
+                    return False
+        return True
 
     def test_moves_except(self, cr, uid, ids, context=None):
+        ''' PO is in exception at the delivery side if one of the picking is canceled
+            and the other pickings are completed (done or canceled)
         '''
-            If one of the pickings is cancel and the other pickings are done: except
-        '''
-        cancel = False
+        at_least_one_canceled = False
         alldoneorcancel = True
         for purchase in self.browse(cr, uid, ids, context=context):
-            for line in purchase.order_line:
-                for move in line.move_ids:
-                    if move.state == 'cancel':
-                        cancel = True
-                    if move.state not in  ['done', 'cancel']:
-                        alldoneorcancel = False
-        return cancel and alldoneorcancel
-
+            for picking in purchase.picking_ids:
+                if picking.state == 'cancel':
+                    at_least_one_canceled = True
+                if picking.state not in ['done', 'cancel']:
+                    alldoneorcancel = False
+        return at_least_one_canceled and alldoneorcancel
 
     def move_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -776,7 +772,6 @@ class purchase_order(osv.osv):
             for line in order.order_line:
                 res += [x.id for x in line.move_ids]
         return res
-
 
     def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
