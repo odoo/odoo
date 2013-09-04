@@ -92,8 +92,8 @@
                         <field name="partner_name" class="oe_inline"/>
                     </h2>
                     <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                                    class="oe_link oe_inline" style="margin-left: 8px;"
-                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
+		               	class="oe_link oe_inline" style="margin-left: 8px;"
+                        attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
                 </div>
                 <group>
                     <group>
@@ -198,7 +198,7 @@
                     <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
