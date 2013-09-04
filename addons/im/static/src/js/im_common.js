@@ -254,22 +254,25 @@ function declare($, _, openerp) {
         },
         received_messages: function(messages) {
             var self = this;
-            if (! this.get("window_focus") && messages.length >= 1) {
-                this.set("waiting_messages", this.get("waiting_messages") + messages.length);
-                this.ting.play();
-                this.create_ting();
-            }
             var defs = [];
+            var received = false;
             _.each(messages, function(message) {
                 if (! message.technical) {
                     defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
+                        received = true;
                         return conv.received_message(message);
                     }));
                 } else {
                     var json = JSON.parse(message.message);
+                    message.json = json;
                     defs.push($.when(im_common.technical_messages_handlers[json.type](self, message)));
                 }
             });
+            if (! this.get("window_focus") && received) {
+                this.set("waiting_messages", this.get("waiting_messages") + messages.length);
+                this.ting.play();
+                this.create_ting();
+            }
             return $.when.apply($, defs);
         },
         calc_positions: function() {
@@ -456,7 +459,7 @@ function declare($, _, openerp) {
                 return;
             im_common.connection.model("im.session").call("add_to_session",
                     [this.session_id, user.get("id"), this.c_manager.me.get("uuid")]).then(_.bind(function() {
-                this.send_message(JSON.stringify({"type": "session_modified"}), true);
+                this.send_message(JSON.stringify({"type": "session_modified", "action": "added", "user_id": user.get("id")}), true);
             }, this));
         },
         focus: function() {
@@ -479,8 +482,15 @@ function declare($, _, openerp) {
     im_common.technical_messages_handlers = {};
 
     im_common.technical_messages_handlers.session_modified = function(c_manager, message) {
-        c_manager.activate_session(message.session_id[0], true).then(function(conv) {
-            conv.refresh_users();
+        var def = $.when();
+        if (message.json.action === "added" && message.json.user_id === c_manager.me.get("id")) {
+            def = c_manager.activate_session(message.session_id[0], true);
+        }
+        return def.then(function() {
+            var conv = _.find(c_manager.conversations, function(conv) {return conv.session_id == message.session_id[0];});
+            if (conv)
+                return conv.refresh_users();
+            return undefined;
         });
     };
 
