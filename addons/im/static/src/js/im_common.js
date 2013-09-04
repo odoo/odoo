@@ -295,7 +295,7 @@ function declare($, _, openerp) {
         className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "keydown",
-            "click .oe_im_chatview_close": "destroy",
+            "click .oe_im_chatview_close": "close",
             "click .oe_im_chatview_header": "show_hide"
         },
         init: function(parent, c_manager, session_id, options) {
@@ -466,6 +466,20 @@ function declare($, _, openerp) {
             this.$(".oe_im_chatview_input").focus();
             if (! this.shown)
                 this.show_hide();
+        },
+        close: function() {
+            var def = $.when();
+            if (this.get("users").length > 1) {
+                def = im_common.connection.model("im.session").call("remove_me_from_session",
+                        [this.session_id, this.c_manager.me.get("uuid")]).then(_.bind(function() {
+                    return this.send_message(JSON.stringify({"type": "session_modified", "action": "removed",
+                        "user_id": this.c_manager.me.get("id")}), true)
+                }, this))
+            }
+
+            return def.then(_.bind(function() {
+                this.destroy();
+            }, this));
         },
         destroy: function() {
             _.each(this.get("users"), function(user) {
