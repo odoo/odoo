@@ -658,7 +658,7 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             group_id = self.pool.get("procurement.group").create(cr, uid, {
-                'name': order.name, 'partner_id': order.partner_shipping_id.id
+                'name': order.name, 'partner_id': order.partner_shipping_id.id, 'move_type': order.picking_policy
             }, context=context)
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
@@ -1072,14 +1072,5 @@ class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
         'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
-        'invoice_state': fields.selection(
-          [
-            ("invoiced", "Invoiced"),
-            ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")
-          ], "Invoice Control", required=True),
     }
-    _defaults = {
-        'invoice_state': 'none',
-    }
-
+    

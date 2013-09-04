@@ -55,10 +55,9 @@
 - 
   Process the reception of purchase order 1
 -
-  !python {model: stock.partial.picking}: |
+  !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average1")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_partial(cr, uid, [pick_ids[0].id])
 - 
   Check the standard price of the product (average icecream). 
 - 
@@ -69,10 +68,9 @@
 - 
   Process the reception of purchase order 2
 - 
-  !python {model: stock.partial.picking}: |
+  !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average2")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_partial(cr, uid, [pick_ids[0].id])
 - 
   Check the standard price
 - 
@@ -82,7 +80,7 @@
   Create picking to send some goods
 - 
   !record {model: stock.picking, id: outgoing_average_shipment}:
-    type: out
+    picking_type_id: stock.picking_type_out
 - 
   Create move for picking
 - 
@@ -91,18 +89,12 @@
     product_id: product_average_icecream
     product_uom: product.product_uom_kgm
     product_qty: 20.0
-    type: out
 - 
-  I assign this outgoing shipment 
+  I assign this outgoing shipment and process the delivery
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_average_shipment")])
-- 
-  Process the delivery of the outgoing shipment
-- 
-  !python {model: stock.partial.picking}: |
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_average_shipment")], 'default_type':'out'})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_partial(cr, uid, [ref("outgoing_average_shipment")])
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
@@ -129,10 +121,9 @@
 - 
   Process the reception of purchase order 3 in grams
 - 
-  !python {model: stock.partial.picking}: |
+  !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average3")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_partial(cr, uid, [pick_ids[0].id])
 - 
   Check price is (75.0*20 + 500) / 20.5 = 97.56097561
 - 

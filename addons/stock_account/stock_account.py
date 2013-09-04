@@ -35,6 +35,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -68,7 +69,6 @@ class stock_quant(osv.osv):
         if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
             return line.cost * line.qty
         return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
-
 
     # FP Note: this is where we should post accounting entries for adjustment
     def _price_update(self, cr, uid, quant, newprice, context=None):
@@ -197,4 +197,28 @@ class stock_quant(osv.osv):
         return move_obj.create(cr, uid, {'journal_id': journal_id,
                                   'line_id': move_lines,
                                   'ref': move.picking_id and move.picking_id.name}, context=context)
+class stock_move(osv.osv):
+    _inherit = "stock.move"
 
+    def action_done(self, cr, uid, ids, context=None):
+        super(stock_move, self).action_done(cr, uid, ids, context=context)
+        self.product_price_update(cr, uid, ids, context=context)
+
+    def product_price_update(self, cr, uid, ids, context=None):
+        '''
+        This method adapts the price on the product when necessary (if the cost_method is 'real'), so that a return or an inventory loss is made using the last value used for an outgoing valuation.
+        '''
+        product_obj = self.pool.get('product.product')
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
+                if any([q.qty <= 0 for q in move.quant_ids]):
+                    #if there is a negative quant, the standard price shouldn't be updated
+                    continue
+                #get the average price of the move
+                #Note: here we can't use the quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 cost has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+                average_valuation_price = 0.0
+                for q in move.quant_ids:
+                    average_valuation_price += q.qty * q.cost
+                average_valuation_price = average_valuation_price / move.product_qty
+                product_obj.write(cr, uid, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
+                self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)

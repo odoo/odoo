@@ -26,6 +26,11 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
+        'module_mrp_jit': fields.boolean("Generate procurement in real time",
+            help="""This allows Just In Time computation of procurement orders.
+                All procurement orders will be processed immediately, which could in some
+                cases entail a small performance impact.
+                This installs the module mrp_jit."""),
         'module_claim_from_delivery': fields.boolean("Allow claim on deliveries",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
@@ -62,8 +67,10 @@ This installs the module product_expiry."""),
         'group_stock_tracking_lot': fields.boolean("Track serial number on logistic units (pallets)",
             implied_group='stock.group_tracking_lot',
             help="""When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
+        'group_stock_tracking_owner': fields.boolean("Manage owner on stock", 
+            implied_group='stock.group_tracking_owner', 
+            help="""This way you can receive products attributed to a certain owner. """), 
         'module_stock_account': fields.boolean("Generate accounting entries per stock movement",
-            implied_group='stock.group_inventory_valuation',
             help="""Allows to configure inventory valuations on products and product categories."""),
         'group_stock_multiple_locations': fields.boolean("Manage multiple locations and warehouses",
             implied_group='stock.group_locations',

@@ -44,7 +44,7 @@
         </record>
         
         <function
-            eval="('default',False,'warehouse_id', [('purchase.order', False)], ref('stock.warehouse0'), True, False, False, False, True)"
+            eval="('default',False,'picking_type_id', [('purchase.order', False)], ref('stock.picking_type_in'), True, False, False, False, True)"
             id="purchase_default_set"
             model="ir.values"
             name="set"/>

@@ -19,5 +19,28 @@
 #
 ##############################################################################
 
-import stock_change_standard_price
-import stock_invoice_onshipping
+
+{
+    'name': 'Multi-warehouse',
+    'version': '1.0',
+    'category': 'Warehousing',
+    'description': """
+This module supplements the Warehouse application with demo data for multiple warehouses
+========================================================================================
+It creates 3 warehouses
+
+    """,
+    'author': 'OpenERP SA',
+    'images': [],
+    'depends': ['stock_complex_routes'],
+    'data': ['stock_multi_warehouse.yml'],
+    'demo': [
+        
+    ],
+    'installable': True,
+    'test': [
+    ],
+    'auto_install': False,
+}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

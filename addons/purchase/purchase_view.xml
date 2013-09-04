@@ -196,8 +196,13 @@
                         <group>
                             <field name="date_order"/>
                             <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
-                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code_id','=','incoming')]" string="Warehouse / Operation" widget="selection"/>
+                            <field name="related_location_id" invisible="1"/>
+                            <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"
+                                attrs="{'invisible':['|', ('picking_type_id','=',False), ('related_location_id','!=', False)], 
+                                'required': [('picking_type_id','!=',False), ('related_location_id','=', False)]}" 
+                                groups="stock.group_locations"/>
                         </group>
                     </group>
                     <notebook>
@@ -240,7 +245,7 @@
                         <page string="Deliveries &amp; Invoices">
                             <group>
                                 <group>
-                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)" groups="stock.group_locations"/>
+                                    
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>

@@ -31,20 +31,14 @@
     from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     for order_line in order.order_line:
-        procurement = order_line.procurement_id
-        sale_order_date = self.date_to_datetime(cr, uid, order.date_order, context)
-        date_planned = datetime.strptime(sale_order_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+        procurement = order_line.procurement_ids[0]
+        date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         assert procurement.date_planned == date_planned, "Scheduled date is not correspond."
         assert procurement.product_id.id == order_line.product_id.id, "Product is not correspond."
         assert procurement.product_qty == order_line.product_uom_qty, "Qty is not correspond."
         assert procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
-        assert procurement.procure_method == order_line.type, "Procurement method is not correspond."
--
-  I run the scheduler.
--
-  !python {model: procurement.order}: |
-    self.run_scheduler(cr, uid)
+        assert procurement.move_ids[0].procure_method == order_line.type, "Procurement method is not correspond."
 -
   I check the details of delivery order after confirmed quotation.
 -
@@ -57,18 +51,16 @@
     for picking in sale_order.picking_ids:
       assert picking.state == "auto" or "confirmed", "Delivery order should be in 'Waitting Availability' state."
       assert picking.origin == sale_order.name,"Origin of Delivery order is not correspond with sequence number of sale order."
-      assert picking.type == 'out',"Shipment should be Outgoing."
+      assert picking.picking_type_id == self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context),"Shipment should be Outgoing."
       assert picking.move_type == sale_order.picking_policy,"Delivery Method is not corresponding with delivery method of sale order."
       assert picking.partner_id.id == sale_order.partner_shipping_id.id,"Shipping Address is not correspond with sale order."
       assert picking.note == sale_order.note,"Note is not correspond with sale order."
       assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
       assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
       location_id = sale_order.warehouse_id.lot_stock_id.id
-      output_id = sale_order.warehouse_id.lot_output_id.id
       for move in picking.move_lines:
-         order_line = move.sale_line_id
-         sale_order_date = self.date_to_datetime(cr, uid, sale_order.date_order, context)
-         date_planned = datetime.strptime(sale_order_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+         order_line = move.procurement_id.sale_line_id
+         date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
          date_planned = (date_planned - timedelta(days=sale_order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
          assert datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) == datetime.strptime(date_planned, DEFAULT_SERVER_DATETIME_FORMAT), "Excepted Date is not correspond with Planned Date."
          assert move.product_id.id == order_line.product_id.id,"Product is not correspond."
@@ -79,18 +71,21 @@
          assert move.product_packaging.id == order_line.product_packaging.id,"Product packaging is not correspond."
          assert move.partner_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
          #assert move.location_id.id == location_id,"Source Location is not correspond."
-         #assert move.location_dest_id == output_id,"Destination Location is not correspond."
          assert move.price_unit == order_line.product_id.standard_price or 0.0,"Price Unit is not correspond"
 -
   Now, I dispatch delivery order.
 -
-  !python {model: stock.partial.picking}: |
+  !python {model: stock.picking}: |
     order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
     for pick in order.picking_ids:
         data = pick.force_assign()
         if data == True:
-          partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick.id]})
-          self.do_partial(cr, uid, [partial_id])
+          pick.do_partial(context=context)
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 -
   I check sale order to verify shipment.
 -
@@ -123,7 +118,7 @@
         assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond."
         assert invoice.partner_id.id == order.partner_invoice_id.id,"Customer does not correspond."
         assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
-        assert invoice.comment == (order.note or ''),"Note is not correspond."
+        assert (invoice.comment or '') == (order.note or ''),"Note is not correspond."
         assert invoice.journal_id.id in journal_ids,"Sales Journal is not link on Invoice."
         assert invoice.payment_term.id == order.payment_term.id, "Payment term is not correspond."
     for so_line in order.order_line:

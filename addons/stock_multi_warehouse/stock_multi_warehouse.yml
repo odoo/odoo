@@ -1,0 +1,127 @@
+- 
+  Create Panama in Location structure
+- 
+  !record {model: stock.location, id: location_panama}:
+    name: Panama
+    location_id: stock.stock_location_locations
+- 
+  Create Location structure of Warehouse Panama Santiago District
+- 
+  !record {model: stock.location, id: location_panama_santiago}:
+    name: Panama Santiago District Warehouse
+    location_id: location_panama
+- 
+  Input
+- 
+  !record {model: stock.location, id: location_panama_santiago_input}:
+    name: Input
+    location_id: location_panama_santiago
+- 
+  Output
+- 
+  !record {model: stock.location, id: location_panama_santiago_output}:
+    name: Output
+    location_id: location_panama_santiago
+- 
+  Stock
+- 
+  !record {model: stock.location, id: location_panama_santiago_stock}:
+    name: Stock
+    location_id: location_panama_santiago
+    child_ids:
+      - name: Area1
+        child_ids:
+          - name: Bin 1
+          - name: Bin 2
+          - name: Bin 3
+          - name: Bin 4
+          - name: Bin 5
+          - name: Bin 6
+          - name: Bin 7
+          - name: Bin 8
+          - name: Bin 9
+          - name: Bin 10
+          - name: Bin 11
+          - name: Bin 12
+          - name: Bin 13
+          - name: Bin 14
+          - name: Bin 15
+- 
+  Create  warehouse Panama Santiago District
+- 
+  !record {model: stock.warehouse, id: wh_panama_santiago}:
+    name: Panama Santiago District Warehouse
+    lot_stock_id: location_panama_santiago
+- 
+  Create picking types for this warehouse
+- 
+  !record {model: stock.picking.type, id: picking_type_santiago_in}:
+    name: Reception
+    code_id: incoming
+    sequence_id: stock.seq_picking_type_in
+    warehouse_id: wh_panama_santiago
+    default_location_dest_id: location_panama_santiago_input 
+- 
+  Create Location structure of Warehouse Panama Main
+- 
+  !record {model: stock.location, id: location_panama_main}:
+    name: Panama Main Warehouse
+    location_id: location_panama
+- 
+  Input
+- 
+  !record {model: stock.location, id: location_panama_main_input}:
+    name: Input
+    location_id: location_panama_main
+- 
+  Output
+- 
+  !record {model: stock.location, id: location_panama_main_output}:
+    name: Output
+    location_id: location_panama_main
+- 
+  Stock
+- 
+  !record {model: stock.location, id: location_panama__main_stock}:
+    name: Stock
+    location_id: location_panama_main
+- 
+  Create  warehouse Panama Santiago District
+- 
+  !record {model: stock.warehouse, id: wh_panama_main}:
+    name: Panama Main Warehouse
+    lot_stock_id: location_panama_main
+- 
+  Create Location structure of Warehouse Dubai
+- 
+  !record {model: stock.location, id: location_panama_main}:
+    name: Panama Main Warehouse
+    location_id: location_panama
+    child_ids:
+      - name: Input
+      - name: Output
+      - name: Stock
+- 
+  Create United Arab Emirates in Location structure
+- 
+  !record {model: stock.location, id: location_uae}:
+    name: United Arab Emirates
+    location_id: stock.stock_location_locations
+- 
+  Create Location structure of Dubai Warehouse
+- 
+  !record {model: stock.location, id: location_dubai}:
+    name: Dubai Warehouse
+    location_id: location_uae
+    child_ids:
+      - name: Input
+      - name: Output
+      - name: Stock
+        child_ids:
+          - name: Area3
+- 
+  Create Dubai warehouse
+- 
+  !record {model: stock.warehouse, id: wh_dubai}:
+    name: Dubai Warehouse
+    lot_stock_id: location_dubai
