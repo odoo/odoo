@@ -291,11 +291,20 @@
                         "Image", "Table"
                     ]},{
                     name: 'styles', items: [
-                        "Format", "Styles"
+                        "Styles"
                     ]}
                 ],
                 // styles dropdown in toolbar
                 stylesSet: [
+                    {name: "Normal", element: 'p'},
+                    {name: "Heading 1", element: 'h1'},
+                    {name: "Heading 2", element: 'h2'},
+                    {name: "Heading 3", element: 'h3'},
+                    {name: "Heading 4", element: 'h4'},
+                    {name: "Heading 5", element: 'h5'},
+                    {name: "Heading 6", element: 'h6'},
+                    {name: "Formatted", element: 'pre'},
+                    {name: "Address", element: 'address'},
                     // emphasis
                     {name: "Muted", element: 'span', attributes: {'class': 'text-muted'}},
                     {name: "Primary", element: 'span', attributes: {'class': 'text-primary'}},
