@@ -10,10 +10,10 @@
             <!-- add state field in header -->
             <xpath expr="//sheet" position="before">
                 <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
-                    <p attrs="{'invisible': [('website_published', '=', False)]}">
+                    <p attrs="{'invisible': [('website_published', '=', True)]}">
                         This product is <b>not available</b> for public user in your ecommerce.
                     </p>
-                    <p attrs="{'invisible': [('website_published', '=', True)]}">
+                    <p attrs="{'invisible': [('website_published', '=', False)]}">
                         This product is <b>available</b> for public user in your ecommerce.
                     </p>
                     <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
