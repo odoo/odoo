@@ -2,6 +2,33 @@
 <openerp>
 <data>
 
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <p attrs="{'invisible': [('website_published', '=', False)]}">
+                        This product is <b>not available</b> for public user in your ecommerce.
+                    </p>
+                    <p attrs="{'invisible': [('website_published', '=', True)]}">
+                        This product is <b>available</b> for public user in your ecommerce.
+                    </p>
+                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
+                </div>
+            </xpath>
+
+            <group name="sale" position="inside">
+                <group name="website" string="Website">
+                    <field name="website_published"/>
+                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="product_pricelist_view">
         <field name="name">product.pricelist.website.form</field>
         <field name="model">product.pricelist</field>
@@ -26,20 +53,6 @@
             </li>
         </xpath>
     </template>
-
-    <record id="product_normal_form_view" model="ir.ui.view">
-        <field name="name">product.normal.form.inherit</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="arch" type="xml">
-            <group name="sale" position="inside">
-                <group name="website" string="Website">
-                    <field name="website_published"/>
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
-                </group>
-            </group>
-        </field>
-    </record>
 
     <!-- Page Shop --> 
 
@@ -161,7 +174,7 @@
                     </form>
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
                     <div t-if="editable" t-att-class="'well css_non_editable_mode_hidden'">
-                        <h2>Category<br/><small>Select a the public category where this product appear</small></h2>
+                        <h2>Category<br/><small>Select the public category</small></h2>
                         <select name="public_categ_id" class="form-control" t-att-data-id="product.id">
                             <option value="0">Choose a Category</option>
                             <t t-foreach="category_list" t-as="cat">
