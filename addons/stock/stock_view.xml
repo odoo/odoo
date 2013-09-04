@@ -1688,7 +1688,7 @@
                 <form string="Stock Journal" version="7.0">
                     <group>
                         <field name="name"/>
-                        <field name="user_id"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'stock.group_stock_manager']}"/>
                     </group>
                 </form>
             </field>

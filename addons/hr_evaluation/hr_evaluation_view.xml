@@ -190,7 +190,7 @@
                                     <group>
                                         <field name="survey_id"/>
                                         <field name="user_to_review_id"/>
-                                        <field name="user_id" string="Interviewer"/>
+                                        <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                                     </group>
                                     <group>              
                                         <field name="date_deadline"/>
@@ -313,7 +313,7 @@
                             <group>
                                 <field name="survey_id"/>
                                 <field name="user_to_review_id"/>
-                                <field name="user_id" string="Interviewer"/>
+                                <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                             </group>
                             <group>
                                 <field name="date_deadline"/>
