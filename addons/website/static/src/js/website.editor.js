@@ -238,7 +238,8 @@
                             childList: true,
                             attributes: true,
                             characterData: true,
-                            subtree: true
+                            subtree: true,
+                            attributeOldValue: true,
                         });
                     });
                     $node.one('content_changed', function () {
@@ -622,10 +623,17 @@
         _(mutations).chain()
                 .filter(function (m) {
                 switch(m.type) {
-                case 'attributes':
-                    // ignore cke_focus being added & removed from RTE root
-                    // FIXME: what if snippets are configured by adding/removing classes on their root element?
-                    return !$(m.target).hasClass('oe_editable');
+                case 'attributes': // ignore .cke_focus being added or removed
+                    // if attribute is not a class, can't be .cke_focus change
+                    if (m.attributeName !== 'class') { return true; }
+
+                    // find out what classes were added or removed
+                    var oldClasses = m.oldValue.split(/\s+/);
+                    var newClasses = m.target.className.split(/\s+/);
+                    var change = _.union(_.difference(oldClasses, newClasses),
+                                         _.difference(newClasses, oldClasses));
+                    // ignore mutation if the *only* change is .cke_focus
+                    return change.length !== 1 || change[0] === 'cke_focus';
                 case 'childList':
                     // <br type="_moz"> appears when focusing RTE in FF, ignore
                     return m.addedNodes.length !== 1 || m.addedNodes[0].nodeName !== 'BR';
