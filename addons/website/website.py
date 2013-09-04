@@ -83,7 +83,7 @@ class website(osv.osv):
         languages = lang_obj.search_read(
             request.cr, openerp.SUPERUSER_ID, [('website_activated', '=', True)], fields
         )
-        activated = [lg['code'] for lg in languages]
+        activated = [lg['code'].lower() for lg in languages]
         default = [lg['code'] for lg in languages if lg['website_default']]
         default = default[0] if default else None
 
@@ -103,7 +103,7 @@ class website(osv.osv):
         return {
             'lang_list': languages,
             'lang_default': default,
-            'lang_selected': (lg for lg in languages if lg['code'] == lang).next(),
+            'lang_selected': (lg for lg in languages if lg['code'].lower() == lang).next(),
         }
 
     def get_rendering_context(self, additional_values=None, lang=None):

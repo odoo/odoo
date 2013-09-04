@@ -49,7 +49,7 @@ class website(osv.osv):
         }
         if additional_values:
             values.update(additional_values)
-        return super(website, self).get_rendering_context(values)
+        return super(website, self).get_rendering_context(values, **kw)
 
 class Ecommerce(http.Controller):
 
