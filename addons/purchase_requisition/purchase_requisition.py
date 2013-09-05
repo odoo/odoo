@@ -136,22 +136,13 @@ class purchase_requisition(osv.osv):
         return res
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
-        if not requisition.warehouse_id:
-            warehouse_obj = self.pool.get('stock.warehouse')
-
-            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', requisition.company_id.id)], context=context)
-            if not warehouse_id:
-                raise osv.except_osv(_('Warning!'), _('No warehouse found for this company.'))
-            location_id = warehouse_obj.browse(cr, uid, warehouse_id, context=context)[0].lot_input_id.id
-        else:
-            location_id = requisition.warehouse_id.lot_input_id.id
         supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
         return {
             'origin': requisition.name,
             'date_order': requisition.date_end or fields.date.context_today(self, cr, uid, context=context),
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist,
-            'location_id': location_id,
+            #'location_id': location_id,
             'company_id': requisition.company_id.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'requisition_id': requisition.id,

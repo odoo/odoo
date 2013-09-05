@@ -58,6 +58,9 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
+    #
+    # TODO: Needs to be rechecked 
+    #
     def _get_domain_locations(self, cr, uid, ids, context=None):
         '''
         Parses the context and returns a list of location_ids based on it.
@@ -118,7 +121,6 @@ class product_product(osv.osv):
         domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
         domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
         domain_quant += domain_products
-
         if context.get('lot_id', False):
             domain_quant.append(('lot_id','=',context['lot_id']))
             moves_in  = []

@@ -21,6 +21,10 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 import openerp
 
 class procurement_group(osv.osv):
@@ -139,9 +143,17 @@ class procurement_order(osv.osv):
 
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             move_obj = self.pool.get('stock.move')
+            #Minimum stock rules
+            self. _procure_orderpoint_confirm(cr, uid, automatic=False,use_new_cursor=False, context=context, user_id=False)
+
             #Search all confirmed stock_moves and try to assign them
-            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], context=context) #Type  = stockable product?
-            move_obj.action_assign(cr, uid, confirmed_ids, context=context)
+            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], limit = None, context=context) #Type  = stockable product?
+            for x in xrange(0, len(confirmed_ids), 100):
+                move_obj.action_assign(cr, uid, confirmed_ids[x:x+100], context=context)
+                if use_new_cursor:
+                    cr.commit()
+            
+            
             if use_new_cursor:
                 cr.commit()
         finally:
@@ -152,3 +164,148 @@ class procurement_order(osv.osv):
                     pass
         return {}
 
+    def _prepare_automatic_op_procurement(self, cr, uid, product, warehouse, location_id, context=None):
+        return {'name': _('Automatic OP: %s') % (product.name,),
+                'origin': _('SCHEDULER'),
+                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'product_id': product.id,
+                'product_qty': -product.virtual_available,
+                'product_uom': product.uom_id.id,
+                'location_id': location_id,
+                'company_id': warehouse.company_id.id,
+                'procure_method': 'make_to_order',}
+
+    def create_automatic_op(self, cr, uid, context=None):
+        """
+        Create procurement of  virtual stock < 0
+
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param uid: The current user ID for security checks
+        @param context: A standard dictionary for contextual values
+        @return:  Dictionary of values
+        """
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product')
+        proc_obj = self.pool.get('procurement.order')
+        warehouse_obj = self.pool.get('stock.warehouse')
+
+        warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
+        products_ids = product_obj.search(cr, uid, [], order='id', context=context)
+
+        for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
+            context['warehouse'] = warehouse
+            # Here we check products availability.
+            # We use the method 'read' for performance reasons, because using the method 'browse' may crash the server.
+            for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
+                if product_read['virtual_available'] >= 0.0:
+                    continue
+
+                product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
+                if product.supply_method == 'buy':
+                    location_id = warehouse.lot_input_id.id
+                elif product.supply_method == 'produce':
+                    location_id = warehouse.lot_stock_id.id
+                else:
+                    continue
+                proc_id = proc_obj.create(cr, uid,
+                            self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
+                            context=context)
+                self.signal_button_confirm(cr, uid, [proc_id])
+                self.signal_button_check(cr, uid, [proc_id])
+        return True
+
+    def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
+        date_planned = start_date + \
+                       relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
+        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
+        return {'name': orderpoint.name,
+                'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
+                'product_id': orderpoint.product_id.id,
+                'product_qty': product_qty,
+                'company_id': orderpoint.company_id.id,
+                'product_uom': orderpoint.product_uom.id,
+                'location_id': orderpoint.location_id.id,
+                'procure_method': 'make_to_order',
+                'origin': orderpoint.name}
+
+    def _product_virtual_get(self, cr, uid, order_point):
+        product_obj = self.pool.get('product.product')
+        return product_obj._product_available(cr, uid,
+                [order_point.product_id.id],
+                {'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
+
+    def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
+            use_new_cursor=False, context=None, user_id=False):
+        '''
+        Create procurement based on Orderpoint
+        use_new_cursor: False or the dbname
+
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param user_id: The current user ID for security checks
+        @param context: A standard dictionary for contextual values
+        @param param: False or the dbname
+        @return:  Dictionary of values
+        """
+        '''
+        if context is None:
+            context = {}
+        if use_new_cursor:
+            cr = openerp.registry(use_new_cursor).db.cursor()
+        orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
+        
+        procurement_obj = self.pool.get('procurement.order')
+        offset = 0
+        ids = [1]
+        if automatic:
+            self.create_automatic_op(cr, uid, context=context)
+        while ids:
+            ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
+            for op in orderpoint_obj.browse(cr, uid, ids, context=context):
+                prods = self._product_virtual_get(cr, uid, op)
+                if prods is None:
+                    continue
+                if prods < op.product_min_qty:
+                    qty = max(op.product_min_qty, op.product_max_qty)-prods
+
+                    reste = qty % op.qty_multiple
+                    if reste > 0:
+                        qty += op.qty_multiple - reste
+
+                    if qty <= 0:
+                        continue
+                    if op.product_id.type not in ('consu'):
+                        if op.procurement_draft_ids:
+                        # Check draft procurement related to this order point
+                            pro_ids = [x.id for x in op.procurement_draft_ids]
+                            procure_datas = procurement_obj.read(
+                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
+                            to_generate = qty
+                            for proc_data in procure_datas:
+                                if to_generate >= proc_data['product_qty']:
+                                    self.signal_button_confirm(cr, uid, [proc_data['id']])
+                                    procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
+                                    to_generate -= proc_data['product_qty']
+                                if not to_generate:
+                                    break
+                            qty = to_generate
+
+                    if qty:
+                        proc_id = procurement_obj.create(cr, uid,
+                                                         self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
+                                                         context=context)
+                        self.check(cr, uid, [proc_id])
+                        self.run(cr, uid, [proc_id])
+                        orderpoint_obj.write(cr, uid, [op.id],
+                                {'procurement_id': proc_id}, context=context)
+            offset += len(ids)
+            if use_new_cursor:
+                cr.commit()
+        if use_new_cursor:
+            cr.commit()
+            cr.close()
+        return {}

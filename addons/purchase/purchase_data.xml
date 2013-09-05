@@ -44,7 +44,7 @@
         </record>
         
         <function
-            eval="('default',False,'warehouse_id', [('purchase.order', False)], ref('stock.warehouse0'), True, False, False, False, True)"
+            eval="('default',False,'picking_type_id', [('purchase.order', False)], ref('stock.picking_type_in'), True, False, False, False, True)"
             id="purchase_default_set"
             model="ir.values"
             name="set"/>
@@ -64,6 +64,17 @@
             <field name="name">RFQ Done</field>
             <field name="default" eval="False"/>
             <field name="res_model">purchase.order</field>
+        </record>
+
+        <!--
+             Procurement rules
+        -->
+
+        <record id="procurement_rule_supply_stock" model="procurement.rule">
+            <field name="name">Buy to refill stock</field>
+            <field name="action">buy</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="picking_type_id" ref="stock.picking_type_in"/>
         </record>
 
     </data>

@@ -80,16 +80,7 @@ class stock_return_picking(osv.osv_memory):
                 res.update({'product_return_moves': result1})
         return res
 
-    def create_returns(self, cr, uid, ids, context=None):
-        """
-         Creates return picking.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param ids: List of ids selected
-         @param context: A standard dictionary
-         @return: A dictionary which of fields with values.
-        """
+    def _create_returns(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         record_id = context and context.get('active_id', False) or False
@@ -136,9 +127,22 @@ class stock_return_picking(osv.osv_memory):
 
         pick_obj.action_confirm(cr, uid, [new_picking], context=context)
         pick_obj.force_assign(cr, uid, [new_picking], context)
+        return new_picking, pick_type_id
+
+    def create_returns(self, cr, uid, ids, context=None):
+        """
+         Creates return picking.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of ids selected
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
+        """
+        new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
         ctx = {'default_picking_type_id': pick_type_id}
         return {
-            'domain': "[('id', 'in', [" + str(new_picking) + "])]",
+            'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
             'name': _('Returned Picking'),
             'view_type': 'form',
             'view_mode': 'tree,form',

@@ -44,11 +44,6 @@ class mrp_config_settings(osv.osv_memory):
                 Without this module: A + B + C -> D.
                 With this module: A + B + C -> D + E.
                 This installs the module mrp_byproduct."""),
-        'module_mrp_jit': fields.boolean("Generate procurement in real time",
-            help="""This allows Just In Time computation of procurement orders.
-                All procurement orders will be processed immediately, which could in some
-                cases entail a small performance impact.
-                This installs the module mrp_jit."""),
         'module_stock_no_autopicking': fields.boolean("Manage manual picking to fulfill manufacturing orders ",
             help="""This module allows an intermediate picking process to provide raw materials to production orders.
                 For example to manage production made by your suppliers (sub-contracting).

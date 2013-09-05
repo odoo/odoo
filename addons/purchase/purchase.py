@@ -188,7 +188,6 @@ class purchase_order(osv.osv):
             help="Put an address if you want to deliver directly from the supplier to the customer. " \
                 "Otherwise, keep empty to deliver to your own company."
         ),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Destination Warehouse'),
         'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]} ),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
         'currency_id': fields.many2one('res.currency','Currency', readonly=True, required=True,states={'draft': [('readonly', False)],'sent': [('readonly', False)]}),
@@ -234,7 +233,9 @@ class purchase_order(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'bid_date': fields.date('Bid Received On', readonly=True, help="Date on which the bid was received"),
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This will determine picking type of incoming shipment"),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This will determine picking type of incoming shipment", required=True, 
+                                           states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
+        'related_location_id':fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -301,18 +302,22 @@ class purchase_order(osv.osv):
         if not address_id:
             return {}
         address = self.pool.get('res.partner')
-        values = {'warehouse_id': False}
+        values = {}
         supplier = address.browse(cr, uid, address_id)
         if supplier:
             location_id = supplier.property_stock_customer.id
             values.update({'location_id': location_id})
         return {'value':values}
 
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
-        if not warehouse_id:
-            return {}
-        warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id)
-        return {'value':{'location_id': warehouse.lot_input_id.id, 'dest_address_id': False}}
+    def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):
+        value = {}
+        if picking_type_id:
+            picktype = self.pool.get("stock.picking.type").browse(cr, uid, picking_type_id, context=context)
+            if picktype.default_location_dest_id:
+                value.update({'location_id': picktype.default_location_dest_id.id})
+            value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
+        return {'value': value}
+
 
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
@@ -396,7 +401,9 @@ class purchase_order(osv.osv):
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
         action = self.pool[action_model].read(cr, uid, action_id, context=context)
         active_id = context.get('active_id',ids[0])
-        ctx = eval(action['context'],{'active_id': active_id}, nocopy=True)
+        picking_type_id = self.browse(cr, uid, active_id, context=context)['picking_type_id'].id
+
+        ctx = eval(action['context'],{'active_id': picking_type_id}, nocopy=True)
         ctx.update({
             'search_default_purchase_id': ids[0]
         })
@@ -738,30 +745,26 @@ class purchase_order(osv.osv):
         return [picking_id]
 
     def test_moves_done(self, cr, uid, ids, context=None):
-        done = True
+        '''PO is done at the delivery side if all the incoming shipments are done'''
         for purchase in self.browse(cr, uid, ids, context=context):
-            for line in purchase.order_line:
-                for move in line.move_ids:
-                    if move.state != 'done':
-                        done = False
-        return done
-        
+            for picking in purchase.picking_ids:
+                if picking.state != 'done':
+                    return False
+        return True
 
     def test_moves_except(self, cr, uid, ids, context=None):
+        ''' PO is in exception at the delivery side if one of the picking is canceled
+            and the other pickings are completed (done or canceled)
         '''
-            If one of the pickings is cancel and the other pickings are done: except
-        '''
-        cancel = False
+        at_least_one_canceled = False
         alldoneorcancel = True
         for purchase in self.browse(cr, uid, ids, context=context):
-            for line in purchase.order_line:
-                for move in line.move_ids:
-                    if move.state == 'cancel':
-                        cancel = True
-                    if move.state not in  ['done', 'cancel']:
-                        alldoneorcancel = False
-        return cancel and alldoneorcancel
-
+            for picking in purchase.picking_ids:
+                if picking.state == 'cancel':
+                    at_least_one_canceled = True
+                if picking.state not in ['done', 'cancel']:
+                    alldoneorcancel = False
+        return at_least_one_canceled and alldoneorcancel
 
     def move_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -769,7 +772,6 @@ class purchase_order(osv.osv):
             for line in order.order_line:
                 res += [x.id for x in line.move_ids]
         return res
-
 
     def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
@@ -856,7 +858,7 @@ class purchase_order(osv.osv):
                     'date_order': porder.date_order,
                     'partner_id': porder.partner_id.id,
                     'dest_address_id': porder.dest_address_id.id,
-                    'warehouse_id': porder.warehouse_id.id,
+                    'picking_type_id': porder.picking_type_id.id,
                     'location_id': porder.location_id.id,
                     'pricelist_id': porder.pricelist_id.id,
                     'state': 'draft',
@@ -1242,7 +1244,6 @@ class procurement_order(osv.osv):
                 partner_id = partner.id
                 address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
                 pricelist_id = partner.property_product_pricelist_purchase.id
-                warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
                 uom_id = procurement.product_id.uom_po_id.id
                 qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
                 if seller_qty:
@@ -1278,7 +1279,7 @@ class procurement_order(osv.osv):
                     'origin': procurement.origin,
                     'partner_id': partner_id,
                     'location_id': procurement.location_id.id,
-                    'warehouse_id': warehouse_id and warehouse_id[0] or False,
+                    'picking_type_id': procurement.rule_id.picking_type_id.id,
                     'pricelist_id': pricelist_id,
                     'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'company_id': procurement.company_id.id,
