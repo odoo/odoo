@@ -154,7 +154,7 @@
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="route_id" widget="many2many_tags"/>
+                    <field name="route_id"/>
                 </xpath>
             </field>
         </record>
