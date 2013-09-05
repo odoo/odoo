@@ -142,7 +142,7 @@ class purchase_requisition(osv.osv):
             'date_order': requisition.date_end or fields.date.context_today(self, cr, uid, context=context),
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist,
-            'location_id': supplier.property_stock_supplier.id,
+            'location_id': requisition.warehouse_id.lot_stock_id.id,
             'company_id': requisition.company_id.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'requisition_id': requisition.id,
