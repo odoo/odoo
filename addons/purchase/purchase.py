@@ -685,7 +685,11 @@ class purchase_order(osv.osv):
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
         ''' prepare the stock move data from the PO line '''
         type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
-        type = self.pool.get("stock.picking.type").browse(cr, uid, type_id, context=context)
+        price_unit = order_line.price_unit
+        if order_line.product_uom.id != order_line.product_id.uom_id.id:
+            price_unit *= order_line.product_uom.factor
+        if order.currency_id.id != order.company_id.currency_id.id:
+            price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, context=context)
 
         return {
             'name': order_line.name or '',
@@ -704,7 +708,7 @@ class purchase_order(osv.osv):
             'state': 'draft',
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
-            'price_unit': order_line.price_unit,
+            'price_unit': price_unit,
             'picking_type_id': type_id, 
         }
 
