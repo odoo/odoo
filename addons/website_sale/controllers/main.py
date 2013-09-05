@@ -359,7 +359,7 @@ class Ecommerce(http.Controller):
             partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value)
 
         shipping_id = None
-        if 'shipping_name' in post:
+        if post.get('shipping_different'):
             shipping_value = {
                 'fax': post['shipping_fax'],
                 'phone': post['shipping_phone'],
@@ -372,8 +372,9 @@ class Ecommerce(http.Controller):
                 'country_id': post['shipping_country_id'],
                 'state_id': post['shipping_state_id'],
             }
-            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and int(value) or value)
+            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or False)
                 for key, value in shipping_value.items() if key in required_field + ["type", "parent_id"]]
+
             shipping_ids = partner_obj.search(request.cr, SUPERUSER_ID, domain)
             if shipping_ids:
                 shipping_id = shipping_ids[0]

@@ -399,49 +399,49 @@
                         <div class=" row">
                             <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="col-md-10">Billing Information</h3>
-                            <div t-attf-class="form-group #{error.get('name', '')}">
+                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Name and firstname</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="name" class="form-control" t-att-value="checkout.get('name', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('phone', '')}">
+                            <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Telephone</label>
                                 <div class="col-lg-4">
                                     <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('fax', '')}">
+                            <div t-attf-class="form-group #{error.get('fax') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Fax</label>
                                 <div class="col-lg-4">
                                     <input type="tel" name="fax" class="form-control" t-att-value="checkout.get('fax', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('company', '')}">
+                            <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Company</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="company" class="form-control" t-att-value="checkout.get('company', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('email', '')}">
+                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Email address</label>
                                 <div class="col-lg-4">
                                     <input type="email" name="email" class="form-control" t-att-value="checkout.get('email', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('street', '')}">
+                            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Street</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="street" class="form-control" t-att-value="checkout.get('street', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('city', '')}">
+                            <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">City</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="city" class="form-control" t-att-value="checkout.get('city', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('state_id', '')}">
+                            <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">State / Province</label>
                                 <div class="col-lg-4">
                                     <select name="state_id" class="form-control">
@@ -452,13 +452,13 @@
                                     </select>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('zip', '')}">
+                            <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Zip / Postal Code</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('country_id', '')}">
+                            <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Country</label>
                                 <div class="col-lg-4">
                                     <select name="country_id" class="form-control">
@@ -481,37 +481,37 @@
                         </div>
                         <div class="js_shipping row" t-att-style="not shipping and 'display:none' or ''">
                             <h3 class="col-md-12 oe_shipping">Shipping Information</h3>
-                             <div t-attf-class="form-group #{error.get('shipping_name', '')}">
+                             <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Name and firstname</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_phone', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Telephone</label>
                                 <div class="col-lg-4">
                                     <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_fax', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_fax') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Fax</label>
                                 <div class="col-lg-4">
                                     <input type="tel" name="shipping_fax" class="form-control" t-att-value="checkout.get('shipping_fax', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_street', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Street</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_city', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_city') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">City</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_state_id', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">State / Province</label>
                                 <div class="col-lg-4">
                                     <select name="shipping_state_id" class="form-control">
@@ -522,13 +522,13 @@
                                     </select>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_zip', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_zip') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Zip / Postal Code</label>
                                 <div class="col-lg-4">
                                     <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
                                 </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('shipping_country_id', '')}">
+                            <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Country</label>
                                 <div class="col-lg-4">
                                     <select name="shipping_country_id" class="form-control">
