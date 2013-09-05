@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     function set_my_cart_quantity(qty) {
-        $("#my_cart_quantity").html(qty.toString().indexOf(".") > -1 ? qty : qty + '.0');
+        $("#my_cart_quantity").html(qty.toString().indexOf(".") > -1 ? qty : qty + '.0').removeClass("hidden");
     }
 
     $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
