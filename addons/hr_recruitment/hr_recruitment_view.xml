@@ -416,6 +416,10 @@
                                                 <span t-if="record.application_count.value gt 1"><field name="application_count"/> Applications</span>
                                                 <span t-if="record.application_count.value lt 2"><field name="application_count"/> Application</span>
                                             </a>
+                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object"> 
+                                                <span t-if="record.doc_count.raw_value gt 1"><field name="doc_count"/> Documents</span>
+                                                <span t-if="record.doc_count.raw_value lt 2"><field name="doc_count"/> Document</span>
+                                            </a>
                                         </div>
                                         <field state="recruit" name="no_of_recruitment" widget="justgage" options="{'label_field': 'no_of_hired_employee', 'action_change': 'action_employee_to_hire'}">Forecast</field>
                                     </t>
@@ -425,9 +429,6 @@
                                             <img src="/hr_recruitment/static/src/img/down1.png"/>
                                         </div>
                                     </t>
-                                    <div class="oe_kanban_job_list">
-                                        <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
-                                    </div>
                                     <div class="oe_launch_recruitment">
                                         <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
                                         <a t-if="record.survey_id.raw_value"> | </a>
