@@ -56,9 +56,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
-        view_model, view_id = imd.get_object_reference(request.cr, request.uid, 'website', 'default_page')
-        newview_id = view.copy(request.cr, request.uid, view_id)
-        newview = view.browse(request.cr, request.uid, newview_id)
+        view_model, view_id = imd.get_object_reference(
+            request.cr, request.uid, 'website', 'default_page',
+            context=request.context)
+        newview_id = view.copy(
+            request.cr, request.uid, view_id, context=request.context)
+        newview = view.browse(
+            request.cr, request.uid, newview_id, context=request.context)
         newview.write({
             'arch': newview.arch.replace("website.default_page", path),
             'name': "page/%s" % path,
@@ -72,7 +76,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 'model': 'ir.ui.view',
                 'res_id': newview_id,
                 'noupdate': True
-            })
+            }, context=request.context)
         except psycopg2.IntegrityError:
             request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
         else:
@@ -87,14 +91,20 @@ class Website(openerp.addons.web.controllers.main.Home):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
 
-        view_model, view_option_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
-        views = view.search(request.cr, request.uid, [('inherit_id','=',view_option_id)])
-        view.write(request.cr, request.uid, views, {'inherit_id': False})
+        view_model, view_option_id = imd.get_object_reference(
+            request.cr, request.uid, 'website', 'theme', context=request.context)
+        views = view.search(
+            request.cr, request.uid, [('inherit_id', '=', view_option_id)],
+            context=request.context)
+        view.write(request.cr, request.uid, views, {'inherit_id': False},
+                   context=request.context)
 
         if theme_id:
             module, xml_id = theme_id.split('.')
-            view_model, view_id = imd.get_object_reference(request.cr, request.uid, module, xml_id)
-            view.write(request.cr, request.uid, [view_id], {'inherit_id':view_option_id})
+            view_model, view_id = imd.get_object_reference(
+                request.cr, request.uid, module, xml_id, context=request.context)
+            view.write(request.cr, request.uid, [view_id],
+                       {'inherit_id': view_option_id}, context=request.context)
 
         return request.webcontext.render('website.themes', {'theme_changed': True})
 
@@ -110,7 +120,8 @@ class Website(openerp.addons.web.controllers.main.Home):
     @website.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
     def customize_template_set(self, view_id):
         view_obj = request.registry.get("ir.ui.view")
-        view = view_obj.browse(request.cr, request.uid, int(view_id), context=request.context)
+        view = view_obj.browse(request.cr, request.uid, int(view_id),
+                               context=request.context)
         if view.inherit_id:
             value = False
         else:
@@ -123,14 +134,15 @@ class Website(openerp.addons.web.controllers.main.Home):
     @website.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
     def customize_template_get(self, xml_id):
         imd = request.registry['ir.model.data']
-        view_model, view_theme_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
+        view_model, view_theme_id = imd.get_object_reference(
+            request.cr, request.uid, 'website', 'theme', context=request.context)
 
         view = request.registry.get("ir.ui.view")
         views = view._views_get(request.cr, request.uid, xml_id, request.context)
         done = {}
         result = []
         for v in views:
-            if v.inherit_option_id and v.inherit_option_id.id<>view_theme_id:
+            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id:
                 if v.inherit_option_id.id not in done:
                     result.append({
                         'name': v.inherit_option_id.name,
@@ -221,8 +233,10 @@ class Website(openerp.addons.web.controllers.main.Home):
                     width = int(resize[0])
                     height = int(resize[1])
                     # resize maximum 500*500
-                    if width > 500: width = 500
-                    if height > 500: height = 500
+                    if width > 500:
+                        width = 500
+                    if height > 500:
+                        height = 500
                     image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
 
             image_data = base64.b64decode(image_base64)
@@ -244,7 +258,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         _object = request.registry[post['object']]
 
         obj = _object.browse(request.cr, request.uid, _id)
-        _object.write(request.cr, request.uid, [_id], {'website_published': not obj.website_published})
+        _object.write(request.cr, request.uid, [_id],
+                      {'website_published': not obj.website_published},
+                      context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
 
         return obj.website_published and "1" or "0"
