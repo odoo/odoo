@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
@@ -152,9 +153,12 @@ class sale_order(osv.osv):
 
         #compute the number of delivery orders to display
         pick_ids = []
+        ctx = {}
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
-
+        if len(pick_ids)>0:
+            pick_type = self.pool.get('stock.picking').browse(cr, uid, pick_ids[0], context=context)['picking_type_id'].id
+            ctx = eval(result['context'],{'active_id': pick_type}, nocopy=True)
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
@@ -162,6 +166,9 @@ class sale_order(osv.osv):
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
             result['views'] = [(res and res[1] or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
+        result.update({
+            'context': ctx,
+        })
         return result
 
     # TODO: FP Note: I guess it's better to do:
