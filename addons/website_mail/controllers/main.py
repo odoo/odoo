@@ -64,7 +64,6 @@ class website_mail(http.Controller):
 
     @website.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="public")
     def blog_post(self, mail_group_id=None, blog_id=None, **post):
-        website = request.registry['website']
         url = request.httprequest.host_url
         if post.get('body'):
             request.session.body = post.get('body')

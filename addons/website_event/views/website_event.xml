@@ -124,25 +124,28 @@
             <t t-set="title">Events</t>
             <div class="container">
                 <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
-                <h1 class="text-center" t-field="event_id.name"></h1>
-                <span t-if="not event_id.event_ticket_ids" class="label label-default pull-left">No tickets needed.</span>
-                <t t-if="event_id.event_ticket_ids">
-                    <span t-if="event_id.register_avail == 9999" class="label label-default pull-left">Tickets availables.</span>
-                    <span t-if="not event_id.register_avail" class="label label-default pull-left">No ticket available.</span>
-                    <span t-if="event_id.register_avail and event_id.register_avail != 9999" t-attf-class="label label-default pull-left label-#{ event_id.register_avail &lt;= 10 and 'warning' or 'info' }">
-                        <t t-if="event_id.register_avail &lt;= 10">Only</t>
-                        <t t-esc="event_id.register_avail"/>
-                        <t t-if="event_id.register_avail &gt; 1">tickets </t>
-                        <t t-if="event_id.register_avail == 1">ticket </t>
-                        available.
-                    </span>
-                </t>
-                <h4 class="text-center">
-                    <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
-                    <span t-field="event_id.date_end"/>
-                </h4>
-                <h5 class="text-center" t-field="event_id.address_id"/>
                 <div class="row">
+                    <div class="col-md-4">
+                        <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
+                            <div class="col-lg-7">
+                                <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
+                        </form>
+                        <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
+                            <input type="hidden" name="email" t-att-value="subscribe"/>
+                            <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
+                        </form>
+                    </div>
+                        <div class="col-md-8">
+                        <h1 class="text-center" t-field="event_id.name"></h1>
+                        <h4 class="text-center">
+                            <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
+                            <span t-field="event_id.date_end"/>
+                        </h4>
+                        <h5 class="text-center" t-field="event_id.address_id"/>
+                    </div>
+
                     <div class="col-md-4 css_noprint">
                         <h4>When &amp; Where</h4>
                         <a t-att-href="event_id.google_map_link()" target="_BLANK">
@@ -159,41 +162,52 @@
                         </address>
                     </div>
                     <div class="col-md-8">
-                        <div class="media-body">
-                            <t t-if="event_id.event_ticket_ids">
-                            <hr/>
-                            <form t-attf-action="/event/#{ event_id.id }/add_cart" method="post">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Ticket</th>
-                                            <th>Sales End</th>
-                                            <th>Price</th>
-                                            <th>Seats</th>
-                                            <th>Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
-                                            <td t-field="ticket.name"/>
-                                            <td t-field="ticket.deadline"/>
-                                            <td t-field="ticket.price"/>
-                                            <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>
-                                            <td>
-                                                <select t-if="ticket.register_avail" t-attf-name="ticket- #{ ticket.id }" class="form-control">
-                                                    <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
-                                                </select>
-                                                <span t-if="not ticket.register_avail">Not ticket available</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <button type="submit" class="btn btn-primary" t-if="event_id.register_avail">Order Now</button>
-                            </form>
-                            </t>
-                            <hr/>
-                            <div t-field="event_id.description_website"></div>
-                        </div>
+                        <t t-if="event_id.event_ticket_ids">
+                        <hr/>
+                        <form t-attf-action="/event/#{ event_id.id }/add_cart" method="post">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket</th>
+                                        <th>Sales End</th>
+                                        <th>Price</th>
+                                        <th>Seats</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
+                                        <td t-field="ticket.name"/>
+                                        <td t-field="ticket.deadline"/>
+                                        <td t-field="ticket.price"/>
+                                        <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>
+                                        <td>
+                                            <select t-if="ticket.register_avail" t-attf-name="ticket- #{ ticket.id }" class="form-control">
+                                                <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
+                                            </select>
+                                            <span t-if="not ticket.register_avail">Not ticket available</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-primary" t-if="event_id.register_avail">Order Now</button>
+                        </form>
+                        </t>
+                        <hr/>
+                        <div t-field="event_id.description_website"></div>
+                        <hr/>
+                        <ul class="media-list" id="comment">
+                            <li t-foreach="message_ids" t-as="comment" class="media">
+                                <div class="media-body">
+                                    <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
+                                    <t t-raw="comment.body"/>
+                                    <small class="pull-right muted text-right">
+                                        <div t-field="comment.author_id"/>
+                                        <div t-field="comment.date"/>
+                                    </small>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

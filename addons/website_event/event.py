@@ -18,9 +18,6 @@ class event(osv.osv):
         'description_website': fields.html('Description for the website'),
     }
 
-class event_event(osv.osv):
-    _inherit = "event.event"
-
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         if partner.address_id:
