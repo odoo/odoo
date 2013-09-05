@@ -52,9 +52,9 @@ class crm_case_section(osv.osv):
         for id in ids:
             res[id] = dict()
             created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', groupby_begin)]
-            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order','pricelist_id'], 'amount_total', ['date_order','pricelist_id'], context=context)
+            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order', 'pricelist_id'], 'amount_total', ['date_order', 'pricelist_id'], context=context)
             validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', groupby_begin)]
-            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm','pricelist_id'], 'amount_total', ['date_confirm','pricelist_id'], context=context)
+            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm', 'pricelist_id'], 'amount_total', ['date_confirm', 'pricelist_id'], context=context)
         return res
 
     def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -64,7 +64,7 @@ class crm_case_section(osv.osv):
         groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', groupby_begin)]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date'], 'user_currency_price_total', 'date', context=context)
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date', 'currency_id'], 'price_total', ['date', 'currency_id'], context=context)
         return res
 
     def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):

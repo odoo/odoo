@@ -129,13 +129,15 @@ class crm_case_section(osv.osv):
             if type == "Lead" or not inner_groupby:
                 section_result[month]['value'] = group.get(value_field, 0)
                 continue
-            if inner_groupby:
-                groupby_company = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
-                for groupby in groupby_company:
+            elif inner_groupby:
+                inner_group_obj = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
+                for groupby in inner_group_obj:
                     if inner_groupby[0] == 'company_id':
                         base_currency_id = self.pool.get('res.company').browse(cr, uid, groupby['__domain'][0][2], context=context).currency_id.id
                     elif inner_groupby[0] == 'pricelist_id':
                         base_currency_id = self.pool.get('product.pricelist').browse(cr, uid, groupby['__domain'][0][2], context=context).currency_id.id
+                    elif inner_groupby[0] == 'currency_id':
+                        base_currency_id = self.pool.get('res.currency.rate').search_read(cr, uid, [('rate', '=', 1)], ['currency_id'], limit=1, context=context)[0]['currency_id'][0]
                     user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
                     value = self.pool.get('res.currency').compute(cr, uid, base_currency_id, user.company_id.currency_id.id, groupby.get(value_field, 0))
                     section_result[month]['value'] = section_result[month]['value'] + value
