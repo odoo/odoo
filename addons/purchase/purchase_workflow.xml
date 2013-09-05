@@ -186,13 +186,13 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">purchase_cancel</field>
         </record>
-        <!--<record id="trans_picking_except_picking" model="workflow.transition">
+        <record id="trans_picking_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_except_picking"/>
             <field name="trigger_model">stock.move</field>
             <field name="trigger_expr_id">move_lines_get()</field>
             <field name="condition">test_moves_except()</field>
-        </record>-->
+        </record>
         <record id="trans_invoice_except_invoice" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_except_invoice"/>

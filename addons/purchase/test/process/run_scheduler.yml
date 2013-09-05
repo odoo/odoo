@@ -1,12 +1,21 @@
 -
-  In order to test the scheduler to generate RFQ.
+  In order to test the scheduler to generate RFQ, I create a new product
+-
+    !record {model: product.product, id: scheduler_product}:
+         name: scheduler prod
+         type: product
+         supply_method: buy
+         seller_ids:
+           - delay: 1
+             name: base.res_partner_2
+             min_qty: 5.0
 -
   I create a procurement order.
 -
   !record {model: procurement.order, id: procurement_order_testcase0}:
     location_id: stock.stock_location_stock
     name: Test scheduler for RFQ
-    product_id: product.product_product_45
+    product_id: scheduler_product
     product_qty: 15.0
 -
   I run the scheduler.

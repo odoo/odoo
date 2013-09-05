@@ -144,8 +144,8 @@
             <tr>
               <td>
                 <para style="terp_default_Bold_9"><b>Shipping address :</b></para>
-                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id.name) or (o.warehouse_id and o.warehouse_id.name) or '']]</para>
-                <para style="terp_default_9">[[ (o.dest_address_id and display_address(o.dest_address_id)) or (o.warehouse_id and display_address(o.warehouse_id.partner_id)) or '']]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id.name) or (o.picking_type_id.warehouse_id and o.picking_type_id.warehouse_id.name) or '']]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and display_address(o.dest_address_id)) or (o.picking_type_id.warehouse_id and display_address(o.picking_type_id.warehouse_id.partner_id)) or '']]</para>
               </td>
             </tr>
           </blockTable>

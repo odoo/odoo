@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,15 +20,27 @@
 ##############################################################################
 
 
-from openerp.osv import osv
+{
+    'name': 'Multi-warehouse',
+    'version': '1.0',
+    'category': 'Warehousing',
+    'description': """
+This module supplements the Warehouse application with demo data for multiple warehouses
+========================================================================================
+It creates 3 warehouses
 
-class procurement_order(osv.osv):
-    _inherit = "procurement.order"
-
-    def create(self, cr, uid, vals, context=None):
-        procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
-        self.run(cr, uid, [procurement_id], context=context)
-        self.check(cr, uid, [procurement_id], context=context)
-        return procurement_id
+    """,
+    'author': 'OpenERP SA',
+    'images': [],
+    'depends': ['stock_complex_routes'],
+    'data': ['stock_multi_warehouse.yml'],
+    'demo': [
+        
+    ],
+    'installable': True,
+    'test': [
+    ],
+    'auto_install': False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
