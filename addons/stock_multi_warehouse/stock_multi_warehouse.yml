@@ -1,3 +1,12 @@
+-
+  Create Two Customers
+-
+  !record {model: res.partner, id: customer_1}:
+    name: Customer 1
+
+-
+  !record {model: res.partner, id: customer_2}:
+    name: Customer 2
 - 
   Create Panama in Location structure
 - 
@@ -169,7 +178,7 @@
 -
   Create Ship Route for main panama warehouse
 -
-  !record {model: stock.location.route, id: route_wh_panama_main_push}:
+  !record {model: stock.location.route, id: route_wh_panama_main_ship}:
     name: Ship main panama
     pull_ids:
         - invoice_state: none
@@ -189,7 +198,7 @@
 -
   Create Ship Route for panama santiago warehouse
 -
-  !record {model: stock.location.route, id: route_wh_panama_santiago_push}:
+  !record {model: stock.location.route, id: route_wh_panama_santiago_ship}:
     name: Ship panama santiago
     pull_ids:
         - invoice_state: none
@@ -206,6 +215,11 @@
           picking_type_id: picking_type_santiago_out
           procure_method: make_to_order
           action: move
+
+-
+  !python {model: stock.warehouse}: |
+    self.write(cr, uid, [ref('wh_panama_main')], {'route_id': ref('route_wh_panama_main_ship')}, context=context)
+    self.write(cr, uid, [ref('wh_panama_santiago')], {'route_id': ref('route_wh_panama_santiago_ship')}, context=context)
 -
   Create Products
 -
@@ -496,3 +510,44 @@
 -
   !python {model: stock.inventory}: |
     self.action_done(cr, uid, [ref('inventory_stock1_area1_bin1')], context=context)
+-
+  I create some sale order in draft
+-
+  !record {model: sale.order, id: so1}:
+    partner_id: customer_1
+    warehouse_id: wh_panama_main
+    order_line: 
+      - product_id: product_A
+        product_uom_qty: 7
+      - product_id: product_B
+        product_uom_qty: 10
+      - product_id: product_C
+        product_uom_qty: 6
+      - product_id: product_D
+        product_uom_qty: 2
+
+-
+  !record {model: sale.order, id: so2}:
+    partner_id: customer_1
+    warehouse_id: wh_panama_main
+    order_line: 
+      - product_id: product_E
+        product_uom_qty: 5
+      - product_id: product_F
+        product_uom_qty: 20
+      - product_id: product_G
+        product_uom_qty: 12
+      - product_id: product_H
+        product_uom_qty: 8
+
+-
+  !record {model: sale.order, id: so3}:
+    partner_id: customer_2
+    warehouse_id: wh_panama_santiago
+    order_line: 
+      - product_id: product_A
+        product_uom_qty: 5
+      - product_id: product_D
+        product_uom_qty: 3
+      - product_id: product_G
+        product_uom_qty: 12
