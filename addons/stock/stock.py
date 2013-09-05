@@ -2416,7 +2416,7 @@ class stock_picking_type(osv.osv):
     _columns = {
         'name': fields.char('name', translate=True, required=True),
         'pack': fields.boolean('Prefill Pack Operations', help='This picking type needs packing interface'),
-        'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in stock'),
+        'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color Index'),
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required=True),
