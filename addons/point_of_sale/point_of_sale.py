@@ -1357,30 +1357,10 @@ class product_product(osv.osv):
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
-    def _default_pos_categ_id(self, cr, uid, context=None):
-        proxy = self.pool.get('ir.model.data')
-
-        try:
-            category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
-        except ValueError:
-            values = {
-                'name' : 'Others',
-            }
-            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
-            values = {
-                'name' : 'categ_others',
-                'model' : 'pos.category',
-                'module' : 'point_of_sale',
-                'res_id' : category_id,
-            }
-            proxy.create(cr, uid, values, context=context)
-
-        return category_id
 
     _defaults = {
         'to_weight' : False,
         'available_in_pos': True,
-        'pos_categ_id' : _default_pos_categ_id,
     }
 
     def edit_ean(self, cr, uid, ids, context):

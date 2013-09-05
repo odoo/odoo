@@ -8,10 +8,6 @@
             groups="group_pos_manager,group_pos_user"
             sequence="30"/>
 
-        <record id="categ_others" model="pos.category">
-            <field name="name">Others</field>
-        </record>
-
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
             <field name="model">pos.order</field>
@@ -177,8 +173,8 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
-            <field name="domain" eval="[('pos_categ_id','&lt;&gt;',False)]"/>
+            <field name="context" eval="{}"/>
+            <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">
