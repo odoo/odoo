@@ -120,19 +120,19 @@
                         </group>
                         <div class="oe_grey" colspan="4">Specify filters to focus your inventory a on particular product, lot, pack and products owner</div>
                         <group>
-                            <field name="product_id"/>
-                            <field name="lot_id"/>
+                            <field name="product_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="lot_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="package_id"/>
+                            <field name="partner_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="package_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
                         <page string="Inventory Details" >
                             <button name="set_checked_qty" states="confirm" string="⇒ Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
-                            <field name="line_ids" string="Inventory Details">
+                            <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id}">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
                                     <field name="real_qty" readonly="1"/>
