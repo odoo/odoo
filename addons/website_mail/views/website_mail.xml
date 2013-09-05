@@ -12,7 +12,7 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+    <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
             <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
         </xpath>

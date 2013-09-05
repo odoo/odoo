@@ -4,11 +4,11 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+    <template id="header_footer" inherit_id="website_sale.header_footer">
+        <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
             <li><a href="/event">Events</a></li>
         </xpath>
-        <xpath expr="//body/footer//a[@href='/page/website.contactus']" position="after">
+        <xpath expr="//body/footer//ul[@name='products']/li" position="after">
             <li><a href="/event">Events</a></li>
         </xpath>
     </template>

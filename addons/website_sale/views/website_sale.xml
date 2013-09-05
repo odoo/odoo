@@ -42,13 +42,22 @@
     
     <!-- Layout add nav and footer -->
 
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+    <template id="header_footer" inherit_id="website.layout" name="Custom Footer">
         <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span id="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span class="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//body/footer//ul[@name='products']" position="inside">
+            <li><a href="/shop/">Shop</a></li>
+            <li>
+                <a href="/shop/mycart/">
+                    <i class="icon-shopping-cart"></i>
+                    My cart <span class="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
