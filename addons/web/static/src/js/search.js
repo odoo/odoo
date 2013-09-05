@@ -241,6 +241,8 @@ my.InputView = instance.web.Widget.extend({
         setTimeout(function () {
             // Read text content (ignore pasted HTML)
             var data = this.$el.text();
+            if (!data)
+                return; 
             // paste raw text back in
             this.$el.empty().text(data);
             this.el.normalize();

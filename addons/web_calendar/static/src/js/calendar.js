@@ -399,11 +399,14 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var A = format(this.range_start.clone().addDays(-6));
         var B = format(this.range_stop.clone().addDays(6));
         var domain = [
-            '|', '|',
-            '&', [this.date_start, '>=', A], [this.date_start, '<=', B],
-            '&', [this.date_stop, '>=', A], [this.date_stop, '<=', B],
-            '&', [this.date_start, '<', A], [this.date_stop, '>', B]
+            '&', [this.date_start, '>=', A], [this.date_start, '<=', B]
         ];
+        if (this.date_stop) {
+            domain.push(
+            '&', [this.date_stop, '>=', A], [this.date_stop, '<=', B],
+            '&', [this.date_start, '<', A], [this.date_stop, '>', B]);
+            domain.unshift("|", "|");
+        }
         domain.concat(this.last_search[0].slice(0))
         return domain;
     },

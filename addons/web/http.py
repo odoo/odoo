@@ -936,7 +936,7 @@ class Root(object):
             if httprequest.session.should_save:
                 self.session_store.save(httprequest.session)
             if not explicit_session and hasattr(response, 'set_cookie'):
-                response.set_cookie('session_id', httprequest.session.sid)
+                response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
             return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:
