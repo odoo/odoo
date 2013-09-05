@@ -1836,7 +1836,7 @@ class stock_inventory(osv.osv):
         domain = ' location_id in %s'
         args = (tuple(location_ids),)
         if inventory.partner_id:
-            domain += ' and partner_id = %s'
+            domain += ' and owner_id = %s'
             args += (inventory.partner_id.id,)
         if inventory.lot_id:
             domain += ' and lot_id = %s'
