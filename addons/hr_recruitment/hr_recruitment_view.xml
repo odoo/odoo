@@ -399,14 +399,14 @@
                                         <div class="oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
-                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
-                                        </div>
                                         <div class="oe_job oe_department">
                                             <field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
                                             </span>
+                                        </div>
+                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
+                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                         </div>
                                         
                                     </div>
@@ -425,15 +425,15 @@
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">
-                                            <p>To start the recruitment, <b>click here</b></p>
+                                            <p><b>click here</b>, To start the recruitment</p>
                                             <img src="/hr_recruitment/static/src/img/down1.png"/>
                                         </div>
                                     </t>
                                     <div class="oe_launch_recruitment">
-                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
-                                        <a t-if="record.survey_id.raw_value"> | </a>
                                         <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
                                         <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
+                                        <a t-if="record.survey_id.raw_value"> | </a>
+                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
                                     </div>
                                     <div class="oe_kanban_footer_left oe_job_messages">
                                         <t t-raw="record.message_summary.raw_value"/>
