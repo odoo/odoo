@@ -61,6 +61,13 @@ class project(osv.osv):
                  "mail.alias": "alias_id"}
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    def _auto_init(self, cr, context=None):
+        """ Installation hook: aliases, project.project """
+        # create aliases for all projects and avoid constraint errors
+        alias_context = dict(context, alias_model_name='project.task')
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
+            'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
+
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)

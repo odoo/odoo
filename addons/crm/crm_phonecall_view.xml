@@ -87,7 +87,7 @@
 
                     <group col="4">
                         <field name="date"/>
-                        <field name="user_id"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                         <label for="duration"/>
                         <div>
                         	<field name="duration" widget="float_time" class="oe_inline" style="vertical-align:baseline"/> <b> min(s)</b>
@@ -123,7 +123,7 @@
                     on_change="onchange_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
-                <field name="user_id"/>
+                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                 <field name="categ_id" widget="selection"
                     domain="[('object_id.model', '=', 'crm.phonecall')]"
                     invisible="1"/>
@@ -182,7 +182,7 @@
                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    <filter string="Creation" icon="terp-go-month" help="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
-                   <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Date of Call"/>
+                   <filter string="Calls Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Calls Date by Month"/>
                </group>
            </search>
         </field>
