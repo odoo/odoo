@@ -126,9 +126,11 @@
             );
         },
         edit: function () {
+            var self = this;
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
             this.$('#website-top-edit').show();
+            $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
             // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
             //     .add(this.$buttons.save)
@@ -150,22 +152,16 @@
             $raw_editables.parents('a')
                 .add($raw_editables.find('a'))
                 .on('click', function (e) {
-                    // Don't alter bubbling events not coming from links
-                    if (e.target === e.currentTarget) {
-                        e.preventDefault();
-                    }
+                    e.preventDefault();
                 });
 
             this.rte.start_edition($rte_ables);
-            $raw_editables.on('keydown keypress cut paste', function (e) {
-                var $target = $(e.target);
-                if ($target.hasClass('oe_dirty')) {
-                    return;
-                }
-
-                $target.addClass('oe_dirty');
-                this.$buttons.save.prop('disabled', false);
-            }.bind(this));
+            $raw_editables.each(function () {
+                observer.observe(this, OBSERVER_CONFIG);
+            }).one('content_changed', function () {
+                $(this).addClass('oe_dirty');
+                self.rte_changed();
+            });
         },
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);
@@ -233,12 +229,7 @@
                     var $node = $(node);
                     var editor = CKEDITOR.inline(this, self._config());
                     editor.on('instanceReady', function () {
-                        observer.observe(node, {
-                            childList: true,
-                            attributes: true,
-                            characterData: true,
-                            subtree: true
-                        });
+                        observer.observe(node, OBSERVER_CONFIG);
                     });
                     $node.one('content_changed', function () {
                         $node.addClass('oe_dirty');
@@ -290,11 +281,20 @@
                         "Image", "Table"
                     ]},{
                     name: 'styles', items: [
-                        "Format", "Styles"
+                        "Styles"
                     ]}
                 ],
                 // styles dropdown in toolbar
                 stylesSet: [
+                    {name: "Normal", element: 'p'},
+                    {name: "Heading 1", element: 'h1'},
+                    {name: "Heading 2", element: 'h2'},
+                    {name: "Heading 3", element: 'h3'},
+                    {name: "Heading 4", element: 'h4'},
+                    {name: "Heading 5", element: 'h5'},
+                    {name: "Heading 6", element: 'h6'},
+                    {name: "Formatted", element: 'pre'},
+                    {name: "Address", element: 'address'},
                     // emphasis
                     {name: "Muted", element: 'span', attributes: {'class': 'text-muted'}},
                     {name: "Primary", element: 'span', attributes: {'class': 'text-primary'}},
@@ -503,6 +503,7 @@
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
+            'click .existing-attachments a': 'select_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
@@ -510,11 +511,12 @@
             this.element = null;
             if (el && el.is('img')) {
                 this.element = el;
-                this.$('input.url').val(el.getAttribute('src'));
-                this.preview_image();
+                this.set_image(el.getAttribute('src'));
             }
 
-            return this._super();
+            return $.when(
+                this._super(),
+                this.fetch_existing().then(this.proxy('fetched_existing')));
         },
         save: function () {
             var url = this.$('input.url').val();
@@ -532,6 +534,15 @@
             }
             element.setAttribute('src', url);
             this._super();
+        },
+
+        /**
+         * Sets the provided image url as the dialog's value-to-save and
+         * refreshes the preview element to use it.
+         */
+        set_image: function (url) {
+            this.$('input.url').val(url);
+            this.preview_image();
         },
 
         file_selection: function (e) {
@@ -554,27 +565,71 @@
                 return;
             }
             $button.addClass('btn-success');
-            this.$('input.url').val(url);
-            this.preview_image();
+            this.set_image(url);
         },
         preview_image: function () {
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img').attr('src', image);
+            this.$('img.image-preview').attr('src', image);
+        },
+
+        fetch_existing: function () {
+            // FIXME: lazy load attachments?
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.attachment',
+                method: 'search_read',
+                args: [],
+                kwargs: {
+                    fields: ['name'],
+                    domain: [['res_model', '=', 'ir.ui.view']],
+                    order: 'name',
+                }
+            });
+        },
+        fetched_existing: function (records) {
+            // Create rows of 3 records
+            var rows = _(records).chain()
+                .groupBy(function (_, index) { return Math.floor(index / 3); })
+                .values()
+                .value();
+            this.$('.existing-attachments').replaceWith(
+                openerp.qweb.render('website.editor.dialog.image.existing', {rows: rows}));
+        },
+        select_existing: function (e) {
+            e.preventDefault();
+            this.set_image(e.currentTarget.getAttribute('href'));
         },
     });
 
 
     var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
+    var OBSERVER_CONFIG = {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true,
+        attributeOldValue: true,
+    };
     var observer = new Observer(function (mutations) {
+        // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
+        //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
+        //       will not mark dirty on attribute changes (@class, img/@src,
+        //       a/@href, ...)
         _(mutations).chain()
-            .filter(function (m) {
+                .filter(function (m) {
                 switch(m.type) {
-                case 'attributes':
-                    // ignore cke_focus being added & removed from RTE root
-                    // FIXME: what if snippets are configured by adding/removing classes on their root element?
-                    return !$(m.target).hasClass('oe_editable');
+                case 'attributes': // ignore .cke_focus being added or removed
+                    // if attribute is not a class, can't be .cke_focus change
+                    if (m.attributeName !== 'class') { return true; }
+
+                    // find out what classes were added or removed
+                    var oldClasses = m.oldValue.split(/\s+/);
+                    var newClasses = m.target.className.split(/\s+/);
+                    var change = _.union(_.difference(oldClasses, newClasses),
+                                         _.difference(newClasses, oldClasses));
+                    // ignore mutation if the *only* change is .cke_focus
+                    return change.length !== 1 || change[0] === 'cke_focus';
                 case 'childList':
                     // <br type="_moz"> appears when focusing RTE in FF, ignore
                     return m.addedNodes.length !== 1 || m.addedNodes[0].nodeName !== 'BR';

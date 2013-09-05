@@ -4,11 +4,12 @@ import openerp
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
+from openerp.addons.website import website
 import urllib
 
 class website_crm_partner_assign(http.Controller):
 
-    @http.route(['/partners/', '/partners/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/partners/', '/partners/page/<int:page>/'], type='http', auth="public")
     def partners(self, page=0, **post):
         website = request.registry['website']
         partner_obj = request.registry['res.partner']
@@ -54,8 +55,7 @@ class website_crm_partner_assign(http.Controller):
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)], 
             limit=step, offset=pager['offset'], order="grade_id ASC,partner_weight DESC")
 
-
-        values = website.get_rendering_context({
+        values = {
             'countries': countries,
             'grades': grades,
             'partner_ids': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids),
@@ -63,19 +63,17 @@ class website_crm_partner_assign(http.Controller):
             'pager': pager,
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),
-        })
-        return website.render("website_crm_partner_assign.index", values)
+        }
+        return request.webcontext.render("website_crm_partner_assign.index", values)
 
-    @http.route(['/partners/<int:ref_id>/'], type='http', auth="public")
+    @website.route(['/partners/<int:ref_id>/'], type='http', auth="public")
     def partners_ref(self, ref_id=0, **post):
-        website = request.registry['website']
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)])
-        if request.uid != website.get_public_user().id:
+        if not request.webcontext.is_public_user:
             partner_ids += partner_obj.search(request.cr, request.uid, [('id', '=', ref_id)])
 
-        values = website.get_rendering_context({
+        values = {
             'partner_id': partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids[0], context={'show_address': True}),
-        })
-        return website.render("website_crm_partner_assign.details", values)
-
+        }
+        return request.webcontext.render("website_crm_partner_assign.details", values)

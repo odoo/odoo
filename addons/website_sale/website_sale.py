@@ -65,7 +65,18 @@ class product_template(osv.osv):
 
 class product_product(osv.osv):
     _inherit = "product.product"
+    
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        for id in ids:
+            res[id] = "%s/shop/product/%s/" % (base_url, id)
+        return res
 
+    _columns = {
+        'website_url': fields.function(_website_url, string="Website url"),
+    }
+    
     def img(self, cr, uid, ids, field='image_small', context=None):
         return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
 

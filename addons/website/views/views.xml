@@ -159,14 +159,28 @@
                         <div class="oe_carousel_options js_carousel_options" t-ignore="1" t-if="editable">
                             <span class="label label-default js_add"><i class="icon-plus-sign"></i></span>
                             <span class="label label-default js_remove"><i class="icon-minus-sign"></i></span>
+                            <select name="carousel-background" class="form-control">
+                                <option value="">Chose an other background</option>
+                                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
+                                <option value="/website/static/src/img/landscape.png">landscape</option>
+                                <option value="/website/static/src/img/aqua.jpg">aqua</option>
+                            </select>
+                            <select name="carousel-style" class="form-control">
+                                <option value="">Chose an other style</option>
+                                <option value="no_image">No image</option>
+                                <option value="image_left">Image left</option>
+                                <option value="image_right">Image right</option>
+                            </select>
                         </div>
                         <!-- Carousel items -->
                         <div class="carousel-inner">
-                            <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover; padding-top: 90px; padding-bottom:45px;">
+                            <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
                                 <div class="container">
-                                    <h1>Create Awesome Websites</h1>
-                                    <h3>Super easy, fully flexible</h3>
-                                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                                    <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                                        <h1>Create Awesome Websites</h1>
+                                        <h3>Super easy, fully flexible</h3>
+                                        <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -394,7 +408,7 @@
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
+            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.id and object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
                 <span t-attf-class="label label-success css_publish">Publish</span>
                 <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
                 <span t-attf-class="label label-success css_published">Published</span>

@@ -2,6 +2,33 @@
 <openerp>
 <data>
 
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <p attrs="{'invisible': [('website_published', '=', True)]}">
+                        This product is <b>not available</b> for public user in your ecommerce.
+                    </p>
+                    <p attrs="{'invisible': [('website_published', '=', False)]}">
+                        This product is <b>available</b> for public user in your ecommerce.
+                    </p>
+                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
+                </div>
+            </xpath>
+
+            <group name="sale" position="inside">
+                <group name="website" string="Website">
+                    <field name="website_published"/>
+                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="product_pricelist_view">
         <field name="name">product.pricelist.website.form</field>
         <field name="model">product.pricelist</field>
@@ -27,20 +54,6 @@
         </xpath>
     </template>
 
-    <record id="product_normal_form_view" model="ir.ui.view">
-        <field name="name">product.normal.form.inherit</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="arch" type="xml">
-            <group name="sale" position="inside">
-                <group name="website" string="Website">
-                    <field name="website_published"/>
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
-                </group>
-            </group>
-        </field>
-    </record>
-
     <!-- Page Shop --> 
 
     <template id="layout" name="Products Layout">
@@ -51,6 +64,7 @@
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container oe_website_sale">
+                <a t-if="editable" href="/shop/add_product/" class="btn btn-default pull-right">Create New Product</a>
                 <div class="row">
                     <div class="col-md-12" id="shop_content">
                         <t t-raw="shop_content" />
@@ -142,14 +156,13 @@
         <t t-call="website_sale.layout">
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-
                 <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
                     <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search..." t-att-value="search or '' or ''"/>
                 </form>
                 <div class="clearfix"/>
                 <div id="product_detail">
                     <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
-                    <h1 t-field="product.name"></h1>
+                    <h1 t-field="product.name">Product Name</h1>
                     <a t-if="len(product.product_variant_ids) &lt;= 1" t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success pull-right">Add to basket</a>
                     <form t-if="len(product.product_variant_ids) > 1" action="./add_cart/" class="pull-right">
                         <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
@@ -160,15 +173,24 @@
                         <button class="btn btn-sm btn-success">Add to basket</button>
                     </form>
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <h2 t-if="editable">Description for Quotations</h2>
-                    <div t-if="editable" t-field="product.description_sale"><br/></div>
-                    <h2 t-if="editable">Description</h2>
-                    <div t-field="product.website_description"><br/></div>
+                    <div t-if="editable" t-att-class="'well css_non_editable_mode_hidden'">
+                        <h2>Category<br/><small>Select the public category</small></h2>
+                        <select name="public_categ_id" class="form-control" t-att-data-id="product.id">
+                            <option value="0">Choose a Category</option>
+                            <t t-foreach="category_list" t-as="cat">
+                            <option t-att-value="cat[0]" t-att-selected="cat[0] == product.public_categ_id.id and 'selected'"><t t-esc="cat[1]"/></option>
+                            </t>
+                        </select>
+                        <h2>Short Description for Quotations<br/><small>Displayed in your shop categories and for quotations</small></h2>
+                        <div class="form-control" t-field="product.description_sale">Enter a short description for this product</div>
+                    </div>
+                    <div t-field="product.website_description">Enter a short Website description for this product</div>
                     <div>
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                        <h5 class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</h5>
-                        </t>
+                        <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><t t-field="product.product_variant_ids[0].lst_price" /> €</h5>
                         <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
+                        </t>
+                        <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price"><t t-field="product.product_variant_ids[0].lst_price" /> €</h4>
                     </div>
                 </div>
             </t>

@@ -26,27 +26,52 @@
         // TODO clean
         snippet_carousel: function () {
             var self = this;
-            var $carousel_options = $('.carousel .js_carousel_options');
-            $carousel_options.on('click', '.label', function (e) {
-                e.preventDefault();
-                var $button = $(e.currentTarget);
-                var $c = $button.parents(".carousel:first");
-                var $carousel_inner = $c.find('.carousel-inner');
+            $('.carousel').each(function () {
+                var $carousel = $(this);
+                var $options = $('.js_carousel_options', $carousel);
+                $options.on('click', '.label', function (e) {
+                    e.preventDefault();
+                    var $button = $(e.currentTarget);
+                    var $c = $button.parents(".carousel:first");
+                    var $carousel_inner = $c.find('.carousel-inner');
 
-                if($button.hasClass("js_add")) {
-                    var cycle = $carousel_inner.find('.item').size();
-                    $carousel_inner.append(openerp.qweb.render('website.carousel'));
-                    $c.carousel(cycle);
-                }
-                else {
-                    $carousel_inner
-                        .find('.item.active').remove().end()
-                        .find('.item:first').addClass('active');
-                    $c.carousel(0);
-                    self.trigger('change', self, null);
-                }
+                    if($button.hasClass("js_add")) {
+                        var cycle = $carousel_inner.find('.item').size();
+                        $carousel_inner.append(openerp.qweb.render('website.carousel'));
+                        $c.carousel(cycle);
+                    }
+                    else if ($carousel_inner.find('.item').size() > 1) {
+                        $carousel_inner
+                            .find('.item.active').remove().end()
+                            .find('.item:first').addClass('active');
+                        $c.carousel(0);
+                        self.trigger('change', self, null);
+                    }
+                });
+                $options.on('change', 'select[name="carousel-background"]', function () {
+                    $('.carousel-inner .item.active', $carousel).css('background-image', 'url(' + $(this).val() + ')');
+                    $(this).val("");
+                });
+                $options.on('change', 'select[name="carousel-style"]', function () {
+                    var $container = $('.carousel-inner .item.active .container', $carousel);
+                    $('.content_image', $container).remove();
+                    switch ($(this).val()) {
+                        case 'no_image':
+                            $('.content', $container).attr("class", "content");
+                            break;
+                        case 'image_left':
+                            $('.content', $container).attr("class", "content col-md-6")
+                                .before('<div class="content_image col-md-5"><img class="img-rounded img-responsive" src="/website/static/src/img/china.jpg"></div>');
+                        break;
+                        case 'image_right':
+                            $('.content', $container).attr("class", "content col-md-6")
+                                .after('<div class="content_image col-md-5 col-lg-offset-1"><img class="img-rounded img-responsive" src="/website/static/src/img/china.jpg"></div>');
+                        break;
+                    }
+                    $(this).val("");
+                });
+                $options.show();
             });
-            $carousel_options.show();
         },
     });
 

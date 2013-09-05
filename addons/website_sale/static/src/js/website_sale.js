@@ -30,6 +30,12 @@ $(document).ready(function () {
             });
         }
     });
+
+    $(".oe_website_sale #product_detail select[name='public_categ_id']").change(function () {
+        var $select = $(this);
+        $.get("/shop/change_category/"+$select.data('id')+"/", {'public_categ_id': $select.val()});
+    });
+
     
     // hack to add and rome from cart with json
     $('.oe_website_sale a[href*="/add_cart/"], a[href*="/remove_cart/"]').on('click', function (ev) {
