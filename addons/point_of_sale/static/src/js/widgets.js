@@ -62,10 +62,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         start: function() {
             this.state.bind('change:mode', this.changedMode, this);
             this.changedMode();
-            this.$el.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
-            this.$el.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
-            this.$el.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
-            this.$el.find('button.mode-button').click(_.bind(this.clickChangeMode, this));
+            this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
+            this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
+            this.$el.find('.number-char').click(_.bind(this.clickAppendNewChar, this));
+            this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
         },
         clickDeleteLastChar: function() {
             return this.state.deleteLastChar();
@@ -844,12 +844,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.cashier_controls_visible = true;
             this.image_cache = new module.ImageCache(); // for faster products image display
 
-            $('.oe_tooltip').remove();  // remove tooltip from the start session button
         },
       
         start: function() {
             var self = this;
             return self.pos.ready.done(function() {
+                $('.oe_tooltip').remove();  // remove tooltip from the start session button
+
                 self.build_currency_template();
                 self.renderElement();
                 
