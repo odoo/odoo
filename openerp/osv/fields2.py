@@ -114,14 +114,15 @@ class Field(object):
     help = None                 # field tooltip
     readonly = False
     required = False
+    states = None
     groups = False              # csv list of group xml ids
 
     # attributes passed when converting from/to a column
-    _attrs = ('string', 'help', 'readonly', 'required', 'groups')
+    _attrs = ('string', 'help', 'readonly', 'required', 'states', 'groups')
 
     # attributes exported by get_description()
     _desc0 = ('type', 'store')
-    _desc1 = ('depends', 'related', 'string', 'help', 'readonly', 'required', 'groups')
+    _desc1 = ('depends', 'related', 'string', 'help', 'readonly', 'required', 'states', 'groups')
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
