@@ -62,7 +62,7 @@
             <tr>
               <td>
                 <para style="terp_default_Bold_9"><b>Expected Delivery address:</b></para>
-                <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
+                <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.name) or (order.picking_type_id.warehouse_id and order.picking_type_id.warehouse_id.name) or '']]</para>
                 <para style="P1">[[ order.dest_address_id and display_address(order.dest_address_id) ]]</para>
               </td>
             </tr>
