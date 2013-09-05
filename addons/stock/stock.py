@@ -1870,20 +1870,19 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Owner'),
     }
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
         found = False
-        #first try to match the inventory line with a theorical line with same product, lot and location
+        
         for th_line in theorical_lines:
-            if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and th_line['prod_lot_id'] == inventory_line.prod_lot_id.id:
-                th_line['product_qty'] -= inventory_line.product_qty
-                found = True
-                break
-        #then if the line was not found, try to match the inventory line with a theorical line with same product and location (only if it has no lot information given)
-        if not found:
-            for th_line in theorical_lines:
-                if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and not inventory_line.prod_lot_id.id:
+            #We try to match the inventory line with a theorical line with same product, lot and location and owner
+            #or match with same product and lot (only if owner is missing)
+            #or match with same product and owner (only if lot is missing)
+            #or match with same product (only if owner and lot are missing)
+            if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id:
+                if (not inventory_line.prod_lot_id.id or th_line['prod_lot_id'] == inventory_line.prod_lot_id.id) and (not inventory_line.partner_id.id or th_line['partner_id'] == inventory_line.partner_id.id):
                     th_line['product_qty'] -= inventory_line.product_qty
                     found = True
                     break

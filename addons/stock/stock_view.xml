@@ -138,6 +138,7 @@
                             <field name="product_uom_id" groups="product.group_uom"/>
                             <field name="prod_lot_id"/>
                             <field name="package_id" readonly="1"/>
+                            <field name="partner_id"/>
                             <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                             <field name="state" invisible="True"/>
                         </tree>
