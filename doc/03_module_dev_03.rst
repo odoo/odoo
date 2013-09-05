@@ -37,7 +37,6 @@ There are two types of views:
 
 .. note:: Since OpenERP 4.1, form views can also contain graphs. 
 
-
 Form views
 ----------
 
@@ -388,6 +387,33 @@ The easiest method to compute real statistics on objects is:
 You can get en example in all modules of the form: report\_.... Example: report_crm. 
 
 
+Controlling view actions
+------------------------
+
+When defining a view, the following attributes can be added on the
+opening element of the view (i.e. ``<form>``, ``<tree>``...)
+
+``create``
+        set to ``false`` to hide the link / button which allows to create a new
+        record.
+
+``delete``
+        set to ``false`` to hide the link / button which allows to remove a
+        record.
+
+``edit``
+        set to ``false`` to hide the link / button which allows to
+        edit a record. 
+
+
+These attributes are available on form, tree, kanban and gantt
+views. They are normally automatically set from the access rights of
+the users, but can be forced globally in the view definition. A
+possible use case for these attributes is to define an inner tree view
+for a one2many relation inside a form view, in which the user cannot
+add or remove related records, but only edit the existing ones (which
+are presumably created through another way, such as a wizard). 
+
 
 Calendar Views
 --------------
@@ -679,6 +705,7 @@ toolbar
 	in a separate toolbar area. When you click on an entry in the toolbar, all
 	its descendants will be displayed in the main tree. The value is ignored
 	for flat lists.
+
 
 Grouping Elements
 +++++++++++++++++
