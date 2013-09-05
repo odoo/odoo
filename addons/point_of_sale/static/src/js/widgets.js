@@ -362,27 +362,22 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.order = options.order;
             this.order.bind('destroy',function(){ self.destroy(); });
             this.order.bind('change', function(){ self.renderElement(); });
-            this.pos.bind('change:selectedOrder', _.bind( function(pos) {
-                var selectedOrder;
-                selectedOrder = pos.get('selectedOrder');
-                if (this.order === selectedOrder) {
-                    this.setButtonSelected();
-                }
-            }, this));
+            this.pos.bind('change:selectedOrder', function() {
+                self.renderElement();
+            }, this);
         },
         renderElement:function(){
             this._super();
             this.$('button.select-order').off('click').click(_.bind(this.selectOrder, this));
             this.$('button.close-order').off('click').click(_.bind(this.closeOrder, this));
+            if( this.order === this.pos.get('selectedOrder') ){
+                this.$el.addClass('selected-order');
+            }
         },
         selectOrder: function(event) {
             this.pos.set({
                 selectedOrder: this.order
             });
-        },
-        setButtonSelected: function() {
-            $('.selected-order').removeClass('selected-order');
-            this.$el.addClass('selected-order');
         },
         closeOrder: function(event) {
             this.order.destroy();
@@ -848,6 +843,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
             this.image_cache = new module.ImageCache(); // for faster products image display
+
+            $('.oe_tooltip').remove();  // remove tooltip from the start session button
         },
       
         start: function() {
@@ -858,6 +855,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 
                 self.$('.neworder-button').click(function(){
                     self.pos.add_new_order();
+                });
+
+                self.$('.deleteorder-button').click(function(){
+                    self.pos.delete_current_order();
                 });
                 
                 //when a new order is created, add an order button widget
