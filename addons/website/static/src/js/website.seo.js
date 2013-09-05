@@ -3,6 +3,8 @@
     // TODO l10n ?
 
     var website = openerp.website;
+    website.templates.push('/website/static/src/xml/website.seo.xml');
+
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action=promote-current-page]': 'promotePage',
@@ -24,7 +26,7 @@
             return $(document.title).text();
         },
         headers: function (tag) {
-            return $('#wrap h1').map(function () {
+            return $('#wrap '+tag).map(function () {
                     return $(this).text();
             });
         },
