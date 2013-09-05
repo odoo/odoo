@@ -432,7 +432,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         // TODO: reorder results to match ids list
         return this._model.call('read',
             [ids, fields || false],
-            {context: this._model.context(options.context)});
+            {context: this.get_context(options.context)});
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
