@@ -1192,7 +1192,7 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <tree string="Picking Types">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="sequence_id"/>
                     <field name="pack"/>
                 </tree>
@@ -1234,7 +1234,7 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <kanban version="7.0" class="oe_background_grey">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="color"/>
                     <field name="count_picking"/>
                     <field name="count_picking_waiting"/>
@@ -1255,7 +1255,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4 class="oe_center"><field name="name"/></h4>
+                                    <h4 class="oe_center"><field name="complete_name"/></h4>
                                     <div class="oe_right">
                                         <a name="%(action_stock_stock_ui)d" type="action">
                                             <img src="/stock/static/src/img/scan.png" 

@@ -2392,6 +2392,9 @@ class stock_picking_type(osv.osv):
         else:
             return {'value': result}
 
+    def _get_name(self, cr, uid, ids, field_names, arg, context=None):
+        return dict(self.name_get(cr, uid, ids, context=context))
+
     def name_get(self, cr, uid, ids, context=None):
         """Overides orm name_get method to display 'Warehouse_name: PickingType_name' """
         if not isinstance(ids, list):
@@ -2413,6 +2416,7 @@ class stock_picking_type(osv.osv):
 
     _columns = {
         'name': fields.char('name', translate=True, required=True),
+        'complete_name': fields.function(_get_name, type='char', string='Name'),
         'pack': fields.boolean('Prefill Pack Operations', help='This picking type needs packing interface'),
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color Index'),

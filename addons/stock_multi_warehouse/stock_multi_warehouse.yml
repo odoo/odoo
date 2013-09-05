@@ -75,7 +75,7 @@
   Create picking type internal for this warehouse
 - 
   !record {model: stock.picking.type, id: picking_type_santiago_internal}:
-    name: Deliveries
+    name: Internal
     code_id: internal
     sequence_id: stock.seq_picking_type_internal
     warehouse_id: wh_panama_santiago
@@ -138,7 +138,7 @@
   Create picking type internal for warehouse panama main
 - 
   !record {model: stock.picking.type, id: picking_type_main_internal}:
-    name: Deliveries
+    name: Internal
     code_id: internal
     sequence_id: stock.seq_picking_type_internal
     warehouse_id: wh_panama_main
@@ -225,7 +225,7 @@
 -
   !record {model: product.product, id: product_A}:
     name: Product A
-    type: consu
+    type: product
     categ_id: product.product_category_1
     list_price: 100.0
     standard_price: 70.0
@@ -235,7 +235,7 @@
 -
   !record {model: product.product, id: product_B}:
     name: Product B
-    type: consu
+    type: product
     categ_id: product.product_category_1
     list_price: 150.0
     standard_price: 150.0
@@ -245,7 +245,7 @@
 -
   !record {model: product.product, id: product_C}:
     name: Product C
-    type: consu
+    type: product
     categ_id: product.product_category_1
     list_price: 200.0
     standard_price: 150.0
@@ -255,7 +255,7 @@
 -
   !record {model: product.product, id: product_D}:
     name: Product D
-    type: consu
+    type: product
     categ_id: product.product_category_1
     list_price: 300.0
     standard_price: 280.0
