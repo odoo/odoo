@@ -189,8 +189,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }else if( mode === 'price'){
                     order.getSelectedLine().set_unit_price(val);
                 }
-        	} else {
-        	    this.pos.get('selectedOrder').destroy();
         	}
         },
         change_selected_order: function() {
