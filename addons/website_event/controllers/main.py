@@ -16,7 +16,7 @@ import werkzeug
 
 class website_event(http.Controller):
 
-    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/event', '/event/page/<int:page>/'], type='http', auth="public")
     def events(self, page=1, **searches):
         website = request.registry['website']
         event_obj = request.registry['event.event']

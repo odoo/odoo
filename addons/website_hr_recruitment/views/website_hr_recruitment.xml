@@ -39,18 +39,14 @@
                                                     <span t-field="job.department_id.name"></span>
                                                 </t><br/>
                                                 <i class="icon-time"></i> <t t-esc="vals[job.id]['date_recruitment']"/><br/>
-                                                <span id='counting'>
-                                                    <t t-if="job.no_of_recruitment &gt; 0">
-                                                        <i class="icon-group"></i> No.of Post:
-                                                        <span id='counting_num'>
-                                                            <t t-esc="vals[job.id]['count']"></t>
-                                                        </span>
-                                                    </t>
+                                                <span id='counting' t-att-class="job.no_of_recruitment &gt; 0 and 'show' or 'hidden'" style="position:absolute;">
+                                                    <i class="icon-group"></i> No.of Post:
+                                                    <span id='counting_num'>
+                                                        <t t-esc="vals[job.id]['count']"></t>
+                                                    </span>
                                                 </span>
-                                                <span id="norecruit">
-                                                    <t t-if="job.no_of_recruitment &lt; 1">
-                                                        Right now no recruitment is going on.
-                                                    </t>
+                                                <span id="norecruit" t-att-class="job.no_of_recruitment &lt; 1 and 'show' or 'hidden'" style="position:absolute;">
+                                                    Right now no recruitment is going on.
                                                 </span>
                                                 <br/>
                                                 <span><i class="icon-map-marker"></i> <t t-field="res_company.city"/> 
@@ -62,29 +58,28 @@
                                                 </t><br/>
                                                 <t t-if="res_company.phone">&amp;#x2706; <t t-field="res_company.phone"/></t></span>
                                                 <div t-att-id="job.id">
-                                                    <t t-if="job.no_of_recruitment &lt; 1">
-                                                        <div class="subscribedetails">
-                                                            <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
-                                                            Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
-                                                            <div class="col-md-4 col-sm-8">
-                                                                <input placeholder="Email Address" type="email" name="email" class="form-control"/>
-                                                            </div>
-                                                            <button class="btn btn-primary" name="subscribe">Subscribe</button>
-                                                            <input type="hidden" name="recid" t-att-value="job.id"/>
-                                                            <input type="hidden" name="group_id" t-att-value="%(website_hr_recruitment.website_mail_jobs)d"/>
+                                                    <div class="subscribedetails" t-att-class="job.no_of_recruitment &lt; 1 and 'show' or 'hidden'">
+                                                        <strong>You may also be interested in our others job positions, for which we don't have availabilities right now.<br/>
+                                                        Follow the positions that interests you and we will send you an email when the position is available.</strong><br/><br/>
+                                                        <div class="col-md-4 col-sm-8">
+                                                            <input placeholder="Email Address" type="email" name="email" class="form-control"/>
                                                         </div>
-                                                        <div class="hidden">
-                                                            <div class="alert alert-dismissable alert-success">
-                                                                <button type="button" class="close" data-dismiss="alert">x</button>
-                                                                <strong>Oh great!</strong> You are successfully subscribed email notifications for a <a t-att-href="'/job/detail/%%s' %% job.id" class="alert-link"><t t-esc="job.name"/></a> job.
-                                                            </div>
-                                                            <input type="hidden" name="email"/>
-                                                            <input type="hidden" name="group_id" t-att-value="%(website_hr_recruitment.website_mail_jobs)d"/>
-                                                            <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
+                                                        <button class="btn btn-primary" name="subscribe">Subscribe</button>
+                                                        <input type="hidden" name="recid" t-att-value="job.id"/>
+                                                        <input type="hidden" name="group_id" t-att-value="%(website_hr_recruitment.website_mail_jobs)d"/>
+                                                    </div>
+                                                    <div class="hidden">
+                                                        <div class="alert alert-dismissable alert-success">
+                                                            <button type="button" class="close" data-dismiss="alert">x</button>
+                                                            <strong>Oh great!</strong> You are successfully subscribed email notifications for a <a t-att-href="'/job/detail/%%s' %% job.id" class="alert-link"><t t-esc="job.name"/></a> job.
                                                         </div>
-                                                    </t>
+                                                        <input type="hidden" name="email"/>
+                                                        <input type="hidden" name="group_id" t-att-value="%(website_hr_recruitment.website_mail_jobs)d"/>
+                                                        <button type="submit" class="btn" name="unsubscribe">Unsubscribe</button>
+                                                    </div>
                                                 </div>
                                             </td>
+                                            <td><t t-call="website.publish"><t t-set="object" t-value="job"/></t></td>
                                         </tr>
                                     </t>
                                 </tbody>
