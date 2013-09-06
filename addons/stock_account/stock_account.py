@@ -206,10 +206,27 @@ class stock_move(osv.osv):
 
     def product_price_update(self, cr, uid, ids, context=None):
         '''
-        This method adapts the price on the product when necessary (if the cost_method is 'real'), so that a return or an inventory loss is made using the last value used for an outgoing valuation.
+        This method adapts the price on the product when necessary
         '''
         product_obj = self.pool.get('product.product')
         for move in self.browse(cr, uid, ids, context=context):
+            #adapt standard price on incomming moves if the product cost_method is 'average'
+            if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
+                product = move.product_id
+                company_currency_id = move.company_id.currency_id.id
+                ctx = {'currency_id': company_currency_id}
+                product_avail = product.qty_available
+                if product.qty_available <= 0:
+                    new_std_price = move.price_unit
+                else:
+                    # Get the standard price
+                    amount_unit = product.price_get('standard_price', context=ctx)[product.id]
+                    new_std_price = (amount_unit * (product_avail - move.product_qty) + (move.price_unit * move.product_qty)) / product_avail
+                # Write the field according to price type field
+                product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=context)
+
+            #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
+            #or an inventory loss is made using the last value used for an outgoing valuation.
             if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
                 if any([q.qty <= 0 for q in move.quant_ids]):
                     #if there is a negative quant, the standard price shouldn't be updated

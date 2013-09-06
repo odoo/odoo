@@ -132,7 +132,7 @@
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
                         <page string="Inventory Details" >
                             <button name="set_checked_qty" states="confirm" string="⇒ Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
-                            <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id}">
+                            <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
                                     <field name="real_qty" readonly="1"/>
@@ -140,6 +140,7 @@
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="prod_lot_id"/>
                                     <field name="package_id"/>
+                                    <field name="partner_id"/>
                                     <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                                     <field name="state" invisible="True"/>
                                 </tree>
@@ -1180,7 +1181,7 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <tree string="Picking Types">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="sequence_id"/>
                     <field name="pack"/>
                 </tree>
@@ -1222,7 +1223,7 @@
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <kanban version="7.0" class="oe_background_grey">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="color"/>
                     <field name="count_picking"/>
                     <field name="count_picking_waiting"/>
@@ -1243,7 +1244,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4 class="oe_center"><field name="name"/></h4>
+                                    <h4 class="oe_center"><field name="complete_name"/></h4>
                                     <div class="oe_right">
                                         <a name="%(action_stock_stock_ui)d" type="action">
                                             <img src="/stock/static/src/img/scan.png" 
