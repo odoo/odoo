@@ -2,7 +2,7 @@
 *
 * jquery.sparkline.js
 *
-* v2.1.1
+* v2.1.2
 * (c) Splunk, Inc
 * Contact: Gareth Watts (gareth@splunk.com)
 * http://omnipotent.net/jquery.sparkline/
@@ -202,11 +202,11 @@
 
 /*jslint regexp: true, browser: true, jquery: true, white: true, nomen: false, plusplus: false, maxerr: 500, indent: 4 */
 
+(function(document, Math, undefined) { // performance/minified-size optimization
 (function(factory) {
     if(typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
-    }
-    else {
+    } else if (jQuery && !jQuery.fn.sparkline) {
         factory(jQuery);
     }
 }
@@ -597,19 +597,41 @@
         if (useExisting && (target = this.data('_jqs_vcanvas'))) {
             return target;
         }
+
+        if ($.fn.sparkline.canvas === false) {
+            // We've already determined that neither Canvas nor VML are available
+            return false;
+
+        } else if ($.fn.sparkline.canvas === undefined) {
+            // No function defined yet -- need to see if we support Canvas or VML
+            var el = document.createElement('canvas');
+            if (!!(el.getContext && el.getContext('2d'))) {
+                // Canvas is available
+                $.fn.sparkline.canvas = function(width, height, target, interact) {
+                    return new VCanvas_canvas(width, height, target, interact);
+                };
+            } else if (document.namespaces && !document.namespaces.v) {
+                // VML is available
+                document.namespaces.add('v', 'urn:schemas-microsoft-com:vml', '#default#VML');
+                $.fn.sparkline.canvas = function(width, height, target, interact) {
+                    return new VCanvas_vml(width, height, target);
+                };
+            } else {
+                // Neither Canvas nor VML are available
+                $.fn.sparkline.canvas = false;
+                return false;
+            }
+        }
+
         if (width === undefined) {
             width = $(this).innerWidth();
         }
         if (height === undefined) {
             height = $(this).innerHeight();
         }
-        if ($.fn.sparkline.hasCanvas) {
-            target = new VCanvas_canvas(width, height, this, interact);
-        } else if ($.fn.sparkline.hasVML) {
-            target = new VCanvas_vml(width, height, this);
-        } else {
-            return false;
-        }
+
+        target = $.fn.sparkline.canvas(width, height, this, interact);
+
         mhandler = $(this).data('_jqs_mhandler');
         if (mhandler) {
             mhandler.registerCanvas(target);
@@ -977,8 +999,7 @@
                     mhandler.registerSparkline(sp);
                 }
             };
-            // jQuery 1.3.0 completely changed the meaning of :hidden :-/
-            if (($(this).html() && !options.get('disableHiddenCheck') && $(this).is(':hidden')) || ($.fn.jquery < '1.3.0' && $(this).parents().is(':hidden')) || !$(this).parents('body').length) {
+            if (($(this).html() && !options.get('disableHiddenCheck') && $(this).is(':hidden')) || !$(this).parents('body').length) {
                 if (!options.get('composite') && $.data(this, '_jqs_pending')) {
                     // remove any existing references to the element
                     for (i = pending.length; i; i--) {
@@ -2528,20 +2549,6 @@
     // Setup a very simple "virtual canvas" to make drawing the few shapes we need easier
     // This is accessible as $(foo).simpledraw()
 
-    // Detect browser renderer support
-    (function() {
-        if (document.namespaces && !document.namespaces.v) {
-            $.fn.sparkline.hasVML = true;
-            document.namespaces.add('v', 'urn:schemas-microsoft-com:vml', '#default#VML');
-        } else {
-            $.fn.sparkline.hasVML = false;
-        }
-
-        var el = document.createElement('canvas');
-        $.fn.sparkline.hasCanvas = !!(el.getContext && el.getContext('2d'));
-
-    })()
-
     VShape = createClass({
         init: function (target, id, type, args) {
             this.target = target;
@@ -3044,4 +3051,4 @@
         }
     });
 
-}));
+}))}(document, Math));
