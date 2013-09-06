@@ -9,6 +9,10 @@ class view(osv.osv):
     _columns = {
         'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
+        'page': fields.boolean("Whether this view is a web page template (complete)"),
+    }
+    _defaults = {
+        'page': False,
     }
 
     # Returns all views (called and inherited) related to a view
