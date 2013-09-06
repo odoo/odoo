@@ -25,7 +25,12 @@
     'author': 'OpenERP',
     'website': 'http://www.openerp.com',
     'category': 'Marketing',
-    'depends': ['mail', 'email_template'],
+    'depends': [
+        'mail',
+        'email_template',
+        'web_kanban_gauge',
+        'web_kanban_sparkline',
+    ],
     'description': """TODO""",
     'data': [
         'mass_mailing_view.xml',

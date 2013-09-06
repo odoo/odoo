@@ -57,7 +57,8 @@ Dashboard for CRM will include:
         'base_calendar',
         'resource',
         'board',
-        'fetchmail'
+        'fetchmail',
+        'web_kanban_sparkline',
     ],
     'data': [
         'crm_data.xml',
