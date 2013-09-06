@@ -80,6 +80,17 @@ table.editorbar-panel
     td.selected
         background-color: #b1c9d9
 
+/* ---- RTE ---- */
+
+// bootstrap makes .btn elements unselectable -> RTE double-click can't know
+// about them either
+.oe_editable .btn
+    -webkit-user-select: auto
+    -moz-user-select: auto
+    -ms-user-select: auto
+    -o-user-select: auto
+    user-select: auto
+
 /* ---- SNIPPET EDITOR ---- */
 
 .oe_snippets
