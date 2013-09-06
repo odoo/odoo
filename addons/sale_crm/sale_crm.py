@@ -111,7 +111,7 @@ class crm_case_section(osv.osv):
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'user_currency_invoiced_forecast': int(float(value))}, context=context)
+        return self.write(cr, uid, [id], {'user_currency_invoiced_forecast': round(float(value))}, context=context)
 
 class res_users(osv.Model):
     _inherit = 'res.users'
