@@ -1307,13 +1307,8 @@ instance.web.WebClient = instance.web.Client.extend({
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
         return $.when(this._super()).then(function() {
-            if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
-                $("body").addClass("kitten-mode-activated");
-                $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
-                if ($.blockUI) {
-                    var imgkit = Math.floor(Math.random() * 2 + 1);
-                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
-                }
+            if (jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
+                self.to_kitten();
             }
             if (!self.session.session_is_valid()) {
                 self.show_login();
@@ -1321,6 +1316,15 @@ instance.web.WebClient = instance.web.Client.extend({
                 self.show_application();
             }
         });
+    },
+    to_kitten: function() {
+        this.kitten = true;
+        $("body").addClass("kitten-mode-activated");
+        $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
+        if ($.blockUI) {
+            var imgkit = Math.floor(Math.random() * 2 + 1);
+            $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
+        }
     },
     /**
         Sets the first part of the title of the window, dedicated to the current action.
