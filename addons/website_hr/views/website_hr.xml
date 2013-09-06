@@ -13,7 +13,7 @@
     <!-- Layout add nav and footer -->
 
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
+        <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
             <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
         </xpath>
     </template>
@@ -22,20 +22,20 @@
 
  
     <template id="aboutus" inherit_id="website.aboutus">
-        <xpath expr="//div[@class='span8']" position="inside">
+        <xpath expr="//div[@class='col-md-8']" position="inside">
             <t t-set="head">
                 <script type="text/javascript" src="/website_hr/static/src/js/website_hr.js"></script>
                 <t t-raw="head or ''"/>
             </t>
             <h3>Our team</h3>
             <div class="thumbnails">
-                <div t-foreach="employee_ids" t-as="employee" class="span4 mt16">
-                    <div class="media thumbnail">
+                <div t-foreach="employee_ids" t-as="employee" class="col-md-4 mt16">
+                    <div class="media img-thumbnail" data-publish="">
+                        <t t-call="website.publish"><t t-set="object" t-value="employee"/></t>
                         <a class="pull-left" href="#">
                             <img class="media-object" t-att-src="employee.img('image_small')"/>
                         </a>
-                        <div class="media-body">
-                            <t t-call="website.publish"><t t-set="object" t-value="employee"/></t>
+                        <div class="media-body" style="min-height: 64px; min-width: 130px;">
                             <h5 class="media-heading" t-field="employee.name"/>
                             <div t-field="employee.department_id"/>
                             <div t-field="employee.job_id"/>

@@ -47,7 +47,8 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids,
                           pricelist, 
-                          product, qty=0,
+                          product,
+                          qty=0,
                           uom=False,
                           qty_uos=0,
                           uos=False,
@@ -88,7 +89,6 @@ class sale_order_line(osv.osv):
                     'event_id': order_line.event_id.id,
                     'event_ticket_id': order_line.event_ticket_id and order_line.event_ticket_id.id or None,
                 }
-                print dic
 
                 if order_line.event_ticket_id:
                     if order_line.event_ticket_id.register_avail != 9999 and dic['nb_register'] > order_line.event_ticket_id.register_avail:
@@ -121,13 +121,13 @@ class event_event(osv.osv):
         'description_website': fields.html('Description for the website'),
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
         'organizer_id': fields.many2one('res.partner', "Orgonizer"),
-        'phone': fields.related('orgonizer_id', 'phone', type='char', string='Phone'),
-        'email': fields.related('orgonizer_id', 'email', type='char', string='Email'),
+        'phone': fields.related('organizer_id', 'phone', type='char', string='Phone'),
+        'email': fields.related('organizer_id', 'email', type='char', string='Email'),
         'register_max': fields.function(_get_register_max,
             string='Maximum Registrations',
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
-            type='integer', store=True)
+            type='integer')
     }
 
     def check_registration_limits(self, cr, uid, ids, context=None):

@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 import base64
+import cStringIO
+import hashlib
 import json
 import logging
-import cStringIO
+import os
 
+import psycopg2
+import werkzeug
+import werkzeug.exceptions
+import werkzeug.utils
+import werkzeug.wrappers
 from PIL import Image
 
 import openerp
+from openerp.addons.website import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-import werkzeug
-import werkzeug.exceptions
-import werkzeug.wrappers
-import hashlib
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +29,13 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
-
+NOPE = object()
 # PIL images have a type flag, but no MIME. Reverse type flag to MIME.
 PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
-    @http.route('/', type='http', auth="admin")
+    @website.route('/', type='http', auth="admin")
     def index(self, **kw):
         return self.page("website.homepage")
 
@@ -40,68 +43,94 @@ class Website(openerp.addons.web.controllers.main.Home):
     def admin(self, *args, **kw):
         return super(Website, self).index(*args, **kw)
 
-    @http.route('/pagenew/<path:path>', type='http', auth="admin")
-    def pagenew(self, path):
+     # FIXME: auth, if /pagenew known anybody can create new empty page
+    @website.route('/pagenew/<path:path>', type='http', auth="admin")
+    def pagenew(self, path, noredirect=NOPE):
+        if '.' in path:
+            module, idname = path.split('.', 1)
+        else:
+            module = 'website'
+            idname = path
+        path = "%s.%s" % (module, idname)
+
+        request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
         view_model, view_id = imd.get_object_reference(request.cr, request.uid, 'website', 'default_page')
         newview_id = view.copy(request.cr, request.uid, view_id)
-        newview = view.browse(request.cr, request.uid, newview_id, context={})
+        newview = view.browse(request.cr, request.uid, newview_id)
         newview.write({
             'arch': newview.arch.replace("website.default_page", path),
             'name': "page/%s" % path,
             'page': True,
         })
-        if '.' in path:
-            module, idname = path.split('.')
-        else:
-            module = False
-            idname = path
-        imd.create(request.cr, request.uid, {
-            'name': idname,
-            'module': module,
-            'model': 'ir.ui.view',
-            'res_id': newview_id,
-            'noupdate': True
-        })
-        return werkzeug.utils.redirect("/page/%s" % path)
-
-    @http.route('/page/<path:path>', type='http', auth="admin")
-    def page(self, path, **kwargs):
-        website = request.registry.get("website")
-        values = website.get_rendering_context({
-            'path': path
-        })
+        # Fuck it, we're doing it live
         try:
-            html = website.render(path, values)
+            imd.create(request.cr, request.uid, {
+                'name': idname,
+                'module': module,
+                'model': 'ir.ui.view',
+                'res_id': newview_id,
+                'noupdate': True
+            })
+        except psycopg2.IntegrityError:
+            request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
+        else:
+            request.cr.execute('RELEASE SAVEPOINT pagenew')
+        url = "/page/%s" % path
+        if noredirect is not NOPE:
+            return werkzeug.wrappers.Response(url, mimetype='text/plain')
+        return werkzeug.utils.redirect(url)
+
+    @website.route('/website/theme_change', type='http', auth="admin")
+    def theme_change(self, theme_id=False, **kwargs):
+        imd = request.registry['ir.model.data']
+        view = request.registry['ir.ui.view']
+
+        view_model, view_option_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
+        views = view.search(request.cr, request.uid, [('inherit_id','=',view_option_id)])
+        view.write(request.cr, request.uid, views, {'inherit_id': False})
+
+        if theme_id:
+            module, xml_id = theme_id.split('.')
+            view_model, view_id = imd.get_object_reference(request.cr, request.uid, module, xml_id)
+            view.write(request.cr, request.uid, [view_id], {'inherit_id':view_option_id})
+
+        return request.webcontext.render('website.themes', {'theme_changed': True})
+
+    @website.route('/page/<path:path>', type='http', auth="admin")
+    def page(self, path, **kwargs):
+        request.webcontext['path'] = path
+        try:
+            html = request.webcontext.render(path)
         except ValueError:
-            html = website.render('website.404', values)
+            html = request.webcontext.render('website.404')
         return html
 
-    @http.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
+    @website.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
     def customize_template_set(self, view_id):
         view_obj = request.registry.get("ir.ui.view")
         view = view_obj.browse(request.cr, request.uid, int(view_id), context=request.context)
         if view.inherit_id:
-            print '*', view.inherit_id
             value = False
         else:
             value = view.inherit_option_id and view.inherit_option_id.id or False
-            print '*', view.inherit_id, 'no', value, view
         view_obj.write(request.cr, request.uid, [view_id], {
             'inherit_id': value
         }, context=request.context)
-        print 'Wrote', value, 'on', view_id
         return True
 
-    @http.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
+    @website.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
     def customize_template_get(self, xml_id):
+        imd = request.registry['ir.model.data']
+        view_model, view_theme_id = imd.get_object_reference(request.cr, request.uid, 'website', 'theme')
+
         view = request.registry.get("ir.ui.view")
         views = view._views_get(request.cr, request.uid, xml_id, request.context)
         done = {}
         result = []
         for v in views:
-            if v.inherit_option_id:
+            if v.inherit_option_id and v.inherit_option_id.id<>view_theme_id:
                 if v.inherit_option_id.id not in done:
                     result.append({
                         'name': v.inherit_option_id.name,
@@ -117,8 +146,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
-    @http.route('/website/attach', type='http', auth='admin') # FIXME: auth
-    def attach(self, CKEditorFuncNum, CKEditor, langCode, upload):
+    #  # FIXME: auth, anybody can upload an attachment if URL known/found
+    @website.route('/website/attach', type='http', auth='admin')
+    def attach(self, func, upload):
         req = request.httprequest
         if req.method != 'POST':
             return werkzeug.exceptions.MethodNotAllowed(valid_methods=['POST'])
@@ -138,11 +168,12 @@ class Website(openerp.addons.web.controllers.main.Home):
             message = str(e)
 
         return """<script type='text/javascript'>
-            window.parent.CKEDITOR.tools.callFunction(%d, %s, %s);
-        </script>""" % (int(CKEditorFuncNum), json.dumps(url), json.dumps(message))
+            window.parent['%s'](%s, %s);
+        </script>""" % (func, json.dumps(url), json.dumps(message))
 
-    @http.route('/website/attachment/<int:id>', type='http', auth="admin")
+    @website.route('/website/attachment/<int:id>', type='http', auth="admin")
     def attachment(self, id):
+        # TODO: provide actual thumbnails?
         # FIXME: can't use Binary.image because auth=user and website attachments need to be public
         attachment = request.registry['ir.attachment'].browse(
             request.cr, request.uid, id, request.context)
@@ -166,7 +197,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         image.save(response.stream, image.format)
         return response
 
-    @http.route('/website/image', type='http', auth="public")
+    @website.route('/website/image', type='http', auth="public")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
         Model = request.registry[model]
@@ -207,7 +238,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return request.make_response(image_data, headers)
 
-    @http.route(['/website/publish/'], type='http', auth="public")
+    @website.route(['/website/publish/'], type='http', auth="public")
     def publish(self, **post):
         _id = int(post['id'])
         _object = request.registry[post['object']]
@@ -218,7 +249,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return obj.website_published and "1" or "0"
 
-    @http.route(['/website/kanban/'], type='http', auth="public")
+    @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
         return request.registry['website'].kanban_col(**post)
 

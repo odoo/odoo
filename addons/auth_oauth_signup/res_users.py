@@ -23,6 +23,7 @@ import logging
 import simplejson
 
 import openerp
+from openerp.addons.auth_signup.res_users import SignupError
 from openerp.osv import osv, fields
 
 _logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ class res_users(osv.Model):
         try:
             login = super(res_users, self)._auth_oauth_signin(cr, uid, provider, validation, params, context=context)
 
-        except openerp.exceptions.AccessDenied:
+        except openerp.exceptions.AccessDenied, access_denied_exception:
             if context and context.get('no_user_creation'):
                 return None
             state = simplejson.loads(params['state'])
@@ -52,6 +53,8 @@ class res_users(osv.Model):
                 'oauth_access_token': params['access_token'],
                 'active': True,
             }
-            _, login, _ = self.signup(cr, uid, values, token, context=context)
-
+            try:
+                _, login, _ = self.signup(cr, uid, values, token, context=context)       
+            except SignupError:
+                raise access_denied_exception
         return login

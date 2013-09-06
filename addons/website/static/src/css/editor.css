@@ -1,7 +1,22 @@
-.oe_hidden {
-  display: none !important;
+@charset "utf-8";
+/* ---- CKEditor Minimal Reset ---- */
+.navbar.navbar-inverse .cke_chrome {
+  border: none;
 }
 
+.navbar.navbar-inverse .cke_inner {
+  background: transparent;
+}
+
+.navbar.navbar-inverse .cke_top {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+}
+
+/* ---- OpenERP Style ---- */
 .oe_website_editorbar {
   position: fixed;
   top: 0;
@@ -50,12 +65,22 @@
   outline: none !important;
 }
 
+.css_non_editable_mode_hidden {
+  display: none;
+}
+
 .oe_carousel_options {
   cursor: pointer;
   position: absolute;
   white-space: nowrap;
   z-index: 1;
   display: none;
+}
+.oe_carousel_options > * {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: 2px;
 }
 
 /* ---- SNIPPET EDITOR ---- */
@@ -242,17 +267,12 @@
 }
 
 /* ---- MOBILE PREVIEW ---- */
-.oe_stop_scrolling {
-  height: 100%;
-  overflow: hidden;
-}
-
-#mobile-preview.modal {
+.oe_mobile_preview.modal .modal-content {
   height: 660px;
   background-color: black;
   border: 2px solid;
   border-radius: 10px;
-  border-color: #1a1a1a;
+  border-color: #1c1f1f;
   margin: auto;
   top: 0;
   left: 0;
@@ -260,37 +280,46 @@
   right: 0;
   max-width: 330px;
 }
-#mobile-preview.modal .modal-header {
+.oe_mobile_preview.modal .modal-content .modal-header {
   background-color: black;
   border-bottom: 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
-#mobile-preview.modal .modal-header .oe_mobile_preview_title {
-  color: #1a1a1a;
+.oe_mobile_preview.modal .modal-content .modal-header .modal-title {
+  color: #1c1f1f;
 }
-#mobile-preview.modal .modal-body {
+.oe_mobile_preview.modal .modal-content .modal-header .close {
+  color: lightgrey;
+  opacity: 1;
+}
+.oe_mobile_preview.modal .modal-content .modal-header .close:hover {
+  color: #e00101;
+  opacity: 1;
+}
+.oe_mobile_preview.modal .modal-content .modal-body {
   background-color: black;
   max-height: 600px;
   padding: 0;
   margin: 0;
 }
-#mobile-preview.modal .modal-footer {
-  background-color: black;
-}
-
-.oe_mobile_viewport {
+.oe_mobile_preview.modal .modal-content .modal-body .oe_mobile_viewport {
   width: 320px;
   height: 568px;
   padding: 5px;
   border: none;
 }
-
-.oe_mobile_preview_header .close {
-  color: lightgrey;
-  opacity: 1;
+.oe_mobile_preview.modal .modal-content .modal-footer {
+  background-color: black;
 }
-.oe_mobile_preview_header .close:hover {
+
+/* ---- SEO TOOLS ---- */
+.oe_seo_configuration .modal-dialog {
+  width: 80%;
+}
+.oe_seo_configuration .oe_remove {
   color: #e00101;
-  opacity: 1;
+}
+.oe_seo_configuration .oe_seo_suggestion {
+  cursor: pointer;
 }

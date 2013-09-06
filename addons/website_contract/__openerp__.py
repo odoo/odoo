@@ -1,7 +1,7 @@
 {
 'name': 'Public References',
     'category': 'Website',
-    'summary': 'Publish Your Public References',
+    'summary': 'Publish Customer References',
     'version': '1.0',
     'description': """
 OpenERP Blog
@@ -9,7 +9,7 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'sale'],
+    'depends': ['website', 'sale', 'website_google_map'],
     'data': [
         'views/website_contract.xml',
     ],

@@ -4,6 +4,8 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
+from openerp.addons import website_sale
+from openerp.addons.website import website
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -14,7 +16,7 @@ import werkzeug
 
 class website_event(http.Controller):
 
-    @http.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
     def events(self, page=1, **searches):
         website = request.registry['website']
         event_obj = request.registry['event.event']
@@ -85,7 +87,7 @@ class website_event(http.Controller):
         pager = website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
         obj_ids = event_obj.search(request.cr, request.uid, dom_without("none"), limit=step, offset=pager['offset'], order="date_begin DESC")
 
-        values = website.get_rendering_context({
+        values = {
             'event_ids': event_obj.browse(request.cr, request.uid, obj_ids),
             'dates': dates,
             'types': types,
@@ -93,26 +95,31 @@ class website_event(http.Controller):
             'pager': pager,
             'searches': searches,
             'search_path': "?%s" % urllib.urlencode(searches),
-        })
+        }
 
-        return website.render("website_event.index", values)
+        return request.webcontext.render("website_event.index", values)
 
-    @http.route(['/event/<int:event_id>'], type='http', auth="public")
+    @website.route(['/event/<int:event_id>'], type='http', auth="public")
     def event(self, event_id=None, **post):
-        website = request.registry['website']
-        event = request.registry['event.event'].browse(request.cr, request.uid, event_id, {'show_address': 1})
-        values = website.get_rendering_context({
-            'event_id': event,
-        })
-        return website.render("website_event.detail", values)
+        values = {
+            'event_id': request.registry['event.event'].browse(request.cr, request.uid, event_id, {'show_address': 1}),
+            'message_ids': request.registry['event.event'].browse(request.cr, request.uid, event_id).message_ids,
+            'subscribe': post.get('subscribe'),
+            'range': range
+        }
+        return request.webcontext.render("website_event.detail", values)
 
-    @http.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
+    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
     def add_cart(self, event_id=None, **post):
+        user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
-        order = request.registry['website'].get_rendering_context()['order']
-        partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+        order = request.webcontext['order']
+        if not order:
+            order = website_sale.controllers.main.get_order()
+
+        partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
 
         context = {}
 
@@ -148,3 +155,37 @@ class website_event(http.Controller):
         if not _values:
             return werkzeug.utils.redirect("/event/%s/" % event_id)
         return werkzeug.utils.redirect("/shop/checkout")
+
+    @website.route(['/event/<int:event_id>/subscribe'], type='http', auth="public")
+    def subscribe(self, event_id=None, **post):
+        partner_obj = request.registry['res.partner']
+        event_obj = request.registry['event.event']
+        user_obj = request.registry['res.users']
+
+        if event_id and 'subscribe' in post and (post.get('email') or not request.webcontext.is_public_user):
+            if request.webcontext.is_public_user:
+                partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
+                if not partner_ids:
+                    partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": post.get('email'), "name": "Subscribe: %s" % post.get('email')})]
+            else:
+                partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
+            event_obj.check_access_rule(request.cr, request.uid, [event_id], 'read')
+            event_obj.message_subscribe(request.cr, SUPERUSER_ID, [event_id], partner_ids)
+
+        return self.event(event_id=event_id, subscribe=post.get('email'))
+
+    @website.route(['/event/<int:event_id>/unsubscribe'], type='http', auth="public")
+    def unsubscribe(self, event_id=None, **post):
+        partner_obj = request.registry['res.partner']
+        event_obj = request.registry['event.event']
+        user_obj = request.registry['res.users']
+
+        if event_id and 'unsubscribe' in post and (post.get('email') or not request.webcontext.is_public_user):
+            if request.webcontext.is_public_user:
+                partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
+            else:
+                partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
+            event_obj.check_access_rule(request.cr, request.uid, [event_id], 'read')
+            event_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [event_id], partner_ids)
+
+        return self.event(event_id=event_id, subscribe=None)

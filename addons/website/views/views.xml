@@ -11,18 +11,12 @@
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="website.theme_flatly" name="Flat Theme" inherit_option_id="website.theme">
-            <xpath expr="//link[@id='bootstrap_css']" position="replace">
-                <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-flatly.css' t-ignore="true"/>
-                <link rel='stylesheet' href='/website/static/src/css/website-flatly.css' t-ignore="true"/>
-            </xpath>
-        </template>
-
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
-                <html t-att-data-view-xmlid="__stack__[0]" t-att-data-editable="'1' if editable else '0'">
+                <html t-att-data-editable="'1' if editable else '0'" t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
+                        <meta name="openerp.company" t-att-value="res_company.name" />
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
@@ -43,27 +37,54 @@
                                 CKEDITOR.dtd.$editable = $.extend( {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
                             </script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                            <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
+                            <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
                         </t>
 
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+                        <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+                        <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
+                        <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
+                        <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
                         <t t-raw="head or ''"/>
                         <t t-call="website.theme"/>
 
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <link rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap-responsive.css'/>
                     </head>
                     <body>
-                        <header class='navbar navbar-static-top'>
-                            <div class='navbar-inner'>
+                        <header>
+                            <div class="navbar navbar-default navbar-static-top">
                                 <div class="container">
-                                    <a href='/page/website.homepage' class='brand'>
-                                        <em>Open</em><b>ERP</b>
-                                        <!--<img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>-->
-                                    </a>
-                                    <ul class="nav pull-right" id="top_menu">
-                                        <li><a href="/page/website.contactus">Contact us</a></li>
-                                        <li><a href="/admin">Sign in</a></li>
-                                    </ul>
+                                    <div class="navbar-header">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
+                                    </div>
+                                    <div class="collapse navbar-collapse navbar-top-collapse">
+                                        <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                            <li><a href="/page/website.contactus">Contact us</a></li>
+                                            <li><a href="/admin">Sign in</a></li>
+                                            <li t-if="len(lang_list) &gt; 1" class="dropdown">
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                    <t t-esc="lang_selected['name']"/> <span class="caret"></span>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li t-foreach="lang_list" t-as="lg">
+                                                        <a href="#" role="menuitem">
+                                                            <strong t-att-class="'icon-check' if lg['code'] == lang_selected['code']
+                                                                else 'icon-check-empty'"></strong>
+                                                            <t t-esc="lg['name']"/>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </header>
@@ -75,53 +96,54 @@
                         <footer>
                             <div class="container" id="footer_container">
                                 <div class="row">
-                                    <div class="span3" name="product">
-                                        <h5>Our products</h5>
-                                        <ul class='unstyled' name="products">
+                                    <div class="col-md-3" name="product">
+                                        <h4>Our products &amp; Services</h4>
+                                        <ul class="list-unstyled" name="products">
                                             <li><a href="/">Home</a></li>
                                         </ul>
                                     </div>
-                                    <div class="span3" name="info">
-                                        <h5 name="info_title">Connect with us</h5>
-                                        <ul class='unstyled'>
-                                            <li><a href="/page/website.aboutus">About us</a></li>
+                                    <div class="col-md-3" name="info">
+                                        <h4 name="info_title">Connect with us</h4>
+                                        <ul class="list-unstyled">
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                         </ul>
-                                        <ul class='unstyled'>
-                                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"/></li>
-                                            <li><i class="icon-envelope"></i> <span t-field="res_company.email"></span></li>
+                                        <ul class="list-unstyled">
+                                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
+                                            <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
                                         </ul>
-                                    </div>
-                                    <div class="span5 offset1" name="about_us">
-                                        <h5 t-field="res_company.name">About us</h5>
-                                        <p>
-                                            We are a team of passionated people whose goal
-                                            is to improve everyone's life through
-                                            disruptive products. We build great products to
-                                            solve your business problems.
-                                        </p><p>
-                                            Our products are designed for small to medium
-                                            companies willing to optimize their
-                                            performance.
-                                        </p>
-                                        <h1 style="padding: 12px 24px">
+                                        <h1>
                                             <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
                                             <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
                                             <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
                                         </h1>
                                     </div>
+                                    <div class="col-md-5 col-lg-offset-1" name="about_us">
+                                        <h4 t-field="res_company.name">About us</h4>
+                                        <ul class="list-unstyled">
+                                            <li><a href="/page/website.aboutus">About us</a></li>
+                                        </ul>
+                                        <p>
+                                            We are a team of passionated people whose goal is to improve everyone's
+                                            life through disruptive products. We build great products to solve your
+                                            business problems.
+                                        </p>
+                                        <p>
+                                            Our products are designed for small to medium companies willing to optimize
+                                            their performance.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="container mt16">
                                 <div class="pull-right" t-ignore="1">
-                                    Create a <a href="http://openerp.com/apps/website">free website</a> with <a class="label label-important" href="https://openerp.com/apps/website">OpenERP</a>
+                                    Create a <a href="http://openerp.com/apps/website">free website</a> with
+                                    <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                 </div>
-                                <div class="pull-left muted">
+                                <div class="pull-left text-muted">
                                     Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                                 </div>
                             </div>
                         </footer>
-
                     </body>
                 </html>
         </template>
@@ -134,102 +156,110 @@
 
         <template id="homepage" page="True">
             <t t-call="website.layout">
-
                 <section>
-                    <div id="myCarousel" class="carousel slide" data-interval='1000000'>
+                    <div id="myCarousel" class="carousel slide" data-interval="1000000">
                         <div class="oe_carousel_options js_carousel_options" t-ignore="1" t-if="editable">
-                            <span class="label js_add"><i class="icon-plus-sign"></i></span>
-                            <span class="label js_remove"><i class="icon-minus-sign"></i></span>
+                            <span class="label label-default js_add"><i class="icon-plus-sign"></i></span>
+                            <span class="label label-default js_remove"><i class="icon-minus-sign"></i></span>
+                            <select name="carousel-background" class="form-control">
+                                <option value="">Chose an other background</option>
+                                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
+                                <option value="/website/static/src/img/landscape.png">landscape</option>
+                                <option value="/website/static/src/img/aqua.jpg">aqua</option>
+                            </select>
+                            <select name="carousel-style" class="form-control">
+                                <option value="">Chose an other style</option>
+                                <option value="no_image">No image</option>
+                                <option value="image_left">Image left</option>
+                                <option value="image_right">Image right</option>
+                            </select>
                         </div>
                         <!-- Carousel items -->
                         <div class="carousel-inner">
-                            <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;" >
-                                <div class='container'>
-                                    <div class="mt64"> </div>
-                                    <h1>Create Awesome Websites</h1>
-                                    <h3>Super easy, fully flexible</h3>
-                                    <a href='/page/website.contactus' class='btn btn-success btn-large mt16'>Contact us</a>
+                            <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
+                                <div class="container">
+                                    <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                                        <h1>Create Awesome Websites</h1>
+                                        <h3>Super easy, fully flexible</h3>
+                                        <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Carousel nav -->
-                        <a class="carousel-control left" href="#myCarousel" data-slide="prev" t-ignore="1">&amp;lsaquo;</a>
-                        <a class="carousel-control right" href="#myCarousel" data-slide="next" t-ignore="1">&amp;rsaquo;</a>
+                        <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
+                        <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
                     </div>
                 </section>
 
                 <div>
                     <section class="container">
                         <div class="row">
-                            <div class="span12 text-center">
-                                <h1 class='mt64'>Welcome To Your New Homepage,</h1>
-                                <h2 class='mt32 subheader'>where <b><em>everything</em></b> can be customized </h2>
+                            <div class="col-md-12 text-center">
+                                 <h1>Welcome To Your New Homepage,</h1>
+                                 <h2>where <b>everything</b> can be <em>customized</em></h2>
                             </div>
                         </div>
                     </section>
 
-                    <div class='dark mt64'>
-                    <section class="container">
-                        <div class="row">
-                            <div class="span5">
-                                <img class='img-rounded' src="/website/static/src/img/island.jpg"/>
-                            </div>
-                            <div class="span6 offset1">
-                                <p class='mt16'>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                    ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                </p>
-                                <p>
-                                    Duis aute irure dolor in reprehenderit in voluptate velit 
-                                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                    occaecat cupidatat non proident, sunt in culpa qui officia 
-                                    deserunt mollit anim id est laborum
-                                </p>
-                                <div class="text-center">
-                                    <a href="http://www.openerp.com/start" class="btn mt16 btn-large btn-primary">Call To  <em>Action</em></a>
+                    <div class="dark mt64">
+                        <section class="container">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg" />
+                                </div>
+                                <div class="col-md-6 col-lg-offset-1">
+                                    <p class="mt16">
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                        consequat.
+                                    </p>
+                                    <p>
+                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                                    </p>
+                                    <div class="text-center"> <a href="http://www.openerp.com/start" class="btn mt16 btn-lg btn-primary">Call To <em>Action</em></a></div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
                     </div>
 
                     <section class="container">
                         <div class="row">
-                            <div class="span12 text-center">
-                                <h2 class='mt48'>Ut enim ad minim veniam</h2>
+                            <div class="col-md-12 text-center">
+                                 <h2 class="mt48">Ut enim ad minim veniam</h2>
                             </div>
                         </div>
                         <div class="row mt32">
-                            <div class="span4">
-                                <img class='img-rounded' src="/website/static/src/img/china_thumb.jpg"/>
-                                <h4 class='mt16'>Cillum Dolore</h4>
+                            <div class="col-md-4">
+                                <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg" />
+                                <h4 class="mt16">Cillum Dolore</h4>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                    ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                    consequat.
                                 </p>
                             </div>
-                            <div class="span4">
-                                <img class='img-rounded' src="/website/static/src/img/desert_thumb.jpg"/>
-                                <h4 class='mt16'>Mollit Anim</h4>
+                            <div class="col-md-4">
+                                <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
+                                <h4 class="mt16">Mollit Anim</h4>
                                 <p>
-                                    Duis aute irure dolor in reprehenderit in voluptate velit 
-                                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                    occaecat cupidatat non proident, sunt in culpa qui officia 
-                                    deserunt mollit anim id est laborum
+                                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                    dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                                 </p>
                             </div>
-                            <div class="span4">
-                                <img class='img-rounded' src="/website/static/src/img/deers_thumb.jpg"/>
-                                <h4 class='mt16'>Nemo Enim Ipsam</h4>
+                            <div class="col-md-4">
+                                <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
+                                <h4 class="mt16">Nemo Enim Ipsam</h4>
                                 <p>
-                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                    accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
-                                    quae ab illo inventore veritatis et quasi architecto beatae vitae
-                                    dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
+                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                    doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                                    veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
+                                    ipsam voluptatem quia voluptas
                                 </p>
                             </div>
                         </div>
@@ -242,7 +272,7 @@
             <t t-call="website.layout">
                 <div class="container">
                     <div class="row">
-                        <div class="span12">
+                        <div class="col-md-12">
                             <h1>New Page</h1>
                             <p>Write your text here...</p>
                         </div>
@@ -253,46 +283,37 @@
 
 
         <template id="404">
-                <t t-call="website.layout">
-                    <div class="container" t-if="editable and path">
-                        <div class="well mt32">
-                            <p>
-                                This page does not exists, but you can create
-                                it as you are administrator of this site.
-                            </p>
-                            <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a> <span class="muted"> or </span> <a href="/sitemap">Search a Page</a>
-                        </div>
-
-                        <div class="text-center muted">
-                            Edit the content bellow this line to adapt the default "page not found" page.
-                        </div>
+            <t t-call="website.layout">
+                <div class="container" t-if="editable and path">
+                    <div class="well mt32">
+                        <p>This page does not exists, but you can create it as you are administrator of this site.</p>
+                        <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
+                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
                     </div>
-                    <hr/>
-                    <div class="container">
-                        <h1 class="mt32">404: Page not found!</h1>
-                        <p>
-                            The page you were looking for could not be
-                            found; it is possible you have typed the
-                            address incorrectly, but it has most
-                            probably been removed due to the recent
-                            website reorganisation.
-                        </p><p>
-                            Maybe you were looking for one of these
-                            popular pages ?
-                        </p>
-                        <ul>
-                            <li><a href="/">Homepage</a></li>
-                            <li><a href="/">Contact Us</a></li>
-                        </ul>
-                    </div>
-                </t>
+                    <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
+                </div>
+                <hr />
+                <div class="container">
+                    <h1 class="mt32">404: Page not found!</h1>
+                    <p>
+                        The page you were looking for could not be found; it is possible you have
+                        typed the address incorrectly, but it has most probably been removed due
+                        to the recent website reorganisation.
+                    </p>
+                    <p>Maybe you were looking for one of these popular pages ?</p>
+                    <ul>
+                        <li><a href="/">Homepage</a></li>
+                        <li><a href="/">Contact Us</a></li>
+                    </ul>
+                </div>
+            </t>
         </template>
 
         <template id="500">
             <t t-call="website.layout">
                 <div class="container">
                     <h1 class="mt32">500: Internal Server Error!</h1>
-                    <pre t-esc="traceback"/>
+                    <pre t-if="editable" t-esc="traceback"/>
                 </div>
             </t>
         </template>
@@ -301,6 +322,7 @@
             <t t-call="website.layout">
                 <div class="container">
                     <h1 class="mt32">401: Unauthorized Access!</h1>
+
                     <p>
                         The page you were looking for could not be
                         authorized.
@@ -308,7 +330,7 @@
                         Maybe you were looking for one of these
                         popular pages ?
                     </p>
-                    <pre class="hidden" t-esc="error"/>
+                    <pre t-if="editable" t-esc="error"/>
                     <ul>
                         <li><a href="/">Homepage</a></li>
                         <li><a href="/">Contact Us</a></li>
@@ -320,32 +342,33 @@
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
-                <t t-set="title">Contact us - <t t-raw="res_company.name"/></t>
+                <t t-set="title">Contact us -
+                    <t t-raw="res_company.name"></t>
+                </t>
                 <div class="container">
-                    <h2>Contact us</h2>
+                    <h1>Contact us</h1>
                     <div class="row">
-                        <div class="span8">
-                            <p>
-                                Contact us about anything related to our company or services.
-                            </p><p>
-                                We'll do our best to get back to you as soon as possible.
-                            </p>
+                        <div class="col-md-8">
+                            <div>
+                                <p>Contact us about anything related to our company or services.</p>
+                                <p>We'll do our best to get back to you as soon as possible.</p>
+                            </div>
                             <div class="text-center mt64" name="mail_button">
                                 <a t-att-href="'mailto:'+res_company.email" class="btn btn-primary">Send us an email</a>
                             </div>
                         </div>
-                        <div class="span4">
+                        <div class="col-md-4">
                             <address>
-                                <strong t-field="res_company.name">Name</strong><br/>
-                                <span t-field="res_company.street"/> <span t-field="res_company.state_id"/><br/>
-                                <span t-field="res_company.zip"/> <span t-field="res_company.city"/><br/>
-                                <span t-field="res_company.country_id"> </span><br/>
-                                <br/>
-                                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br/>
+                                <strong t-field="res_company.name">Name</strong><br />
+                                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
+                                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
+                                <span t-field="res_company.country_id"> </span><br />
+                                <br />
+                                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
                                 <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
                             </address>
-                            <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
-                                <img class="thumbnail" t-att-src="res_company.partner_id.google_map_img()"/>
+                             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
+                                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
                             </a>
                         </div>
                     </div>
@@ -355,52 +378,47 @@
 
         <template id="aboutus" page="True">
             <t t-call="website.layout">
-                <t t-set="title">About us - <t t-raw="res_company.name"/></t>
+                <t t-set="title">About us -
+                    <t t-raw="res_company.name"></t>
+                </t>
                 <div class="container">
                     <h2>About us</h2>
                     <div class="row">
-                        <div class="span4">
+                        <div class="col-md-4">
                             <h3>Our vision</h3>
-                            <p>
-                                Contact us about anything related to our company or services.
-                            </p><p>
-                                We'll do our best to get back to you as soon as possible.
-                            </p>
+                            <p>Contact us about anything related to our company or services.</p>
+                            <p>We'll do our best to get back to you as soon as possible.</p>
                         </div>
-                        <div class="span8">
-                        </div>
+                        <div class="col-md-8"></div>
                     </div>
                 </div>
             </t>
         </template>
 
         <template id="pager">
-            <div t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
-                <ul>
-                    <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' " >
-                        <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
-                    </li>
-                    <t t-foreach="pager['pages']" t-as="page">
-                        <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' ">
-                            <a t-att-href="page['url']" t-raw="page['num']"></a>
-                        </li>
-                    </t>
-                    <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' " >
-                        <a t-att-href=" pager['page_end']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
-                    </li>
-                </ul>
-            </div>
+            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
+                <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
+                     <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
+                </li>
+                <t t-foreach="pager['pages']" t-as="page">
+                    <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+                </t>
+                <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
+                    <a t-att-href=" pager['page_end']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+                </li>
+            </ul>
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" class="pull-right" t-if="editable" t-ignore="true">
-                <span t-attf-class="label label-success js_unpublish #{ '' if object.website_published else 'hidden' }">Unpublish</span>
-                <span t-attf-class="label label-important js_publish #{ 'hidden' if object.website_published else '' }">Publish</span>
+            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.id and object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
+                <span t-attf-class="label label-success css_publish">Publish</span>
+                <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
+                <span t-attf-class="label label-success css_published">Published</span>
+                <span t-attf-class="label label-danger css_unpublished">Unpublished</span>
             </a>
         </template>
 
         <template id="snippets">
-
             <div class='oe_snippet' data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
                 <div class='oe_snippet_thumbnail oe_label'>Darken</div>
             </div>
@@ -420,9 +438,9 @@
                 </div>
                 <section class="oe_snippet_body container">
                     <div class="row">
-                        <div class="span12 text-center">
-                            <h1 class='mt64'>Welcome To Your New Homepage,</h1>
-                            <h2 class='mt32 subheader'>where <b><em>everything</em></b> can be customized </h2>
+                        <div class="col-md-12 text-center">
+                            <h1 class="mt64">Welcome To Your New Homepage,</h1>
+                            <h2 class="mt32 subheader">where <b><em>everything</em></b> can be customized </h2>
                         </div>
                     </div>
                 </section>
@@ -431,40 +449,33 @@
             <div class='oe_snippet' data-snippet-id='three-collumns' data-action='insert' data-selector-siblings='#wrap .container'>
                 <section class="oe_snippet_body container">
                     <div class="row">
-                        <div class="span12 text-center">
-                            <h2 class='mt48'>Ut enim ad minim veniam</h2>
+                        <div class="col-md-12 text-center">
+                            <h2 class="mt48">Ut enim ad minim veniam</h2>
                         </div>
                     </div>
                     <div class="row mt32">
-                        <div class="span4">
-                            <img class='img-rounded' src="/website/static/src/img/china_thumb.jpg"/>
-                            <h4 class='mt16'>Cillum Dolore</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            </p>
+                        <div class="col-md-4">
+                            <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
+                            <h4 class="mt16">Cillum Dolore</h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat.</p>
                         </div>
-                        <div class="span4">
-                            <img class='img-rounded' src="/website/static/src/img/desert_thumb.jpg"/>
-                            <h4 class='mt16'>Mollit Anim</h4>
-                            <p>
-                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                deserunt mollit anim id est laborum
-                            </p>
+                        <div class="col-md-4">
+                            <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
+                            <h4 class="mt16">Mollit Anim</h4>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                         </div>
-                        <div class="span4">
-                            <img class='img-rounded' src="/website/static/src/img/deers_thumb.jpg"/>
-                            <h4 class='mt16'>Nemo Enim Ipsam</h4>
-                            <p>
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa 
-                                quae ab illo inventore veritatis et quasi architecto beatae vitae
-                                dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas 
-                            </p>
+                        <div class="col-md-4">
+                            <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
+                            <h4 class="mt16">Nemo Enim Ipsam</h4>
+                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                                veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
+                                ipsam voluptatem quia voluptas</p>
                         </div>
                     </div>
                 </section>
@@ -473,24 +484,19 @@
             <div class='oe_snippet' data-snippet-id='header-block' data-action='insert' data-selector-siblings='#wrap .container'>
                 <section class="container oe_snippet_body">
                     <div class="row">
-                        <div class="span5">
-                            <img class='img-rounded' src="/website/static/src/img/island.jpg"/>
+                        <div class="col-md-5">
+                            <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg"/>
                         </div>
-                        <div class="span6 offset1">
-                            <p class='mt16'>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                                ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            </p>
-                            <p>
-                                Duis aute irure dolor in reprehenderit in voluptate velit 
-                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                                occaecat cupidatat non proident, sunt in culpa qui officia 
-                                deserunt mollit anim id est laborum
-                            </p>
+                        <div class="col-md-6 col-lg-offset-1">
+                            <p class="mt16">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat.</p>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                             <div class="text-center">
-                                <a href="http://www.openerp.com/start" class="btn mt16 btn-large btn-primary">Call To  <em>Action</em></a>
+                                <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To  <em>Action</em></a>
                             </div>
                         </div>
                     </div>
@@ -513,51 +519,34 @@
                     <tr>
                         <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
                         <t t-foreach="objects">
-                        <th t-att-width="width">
-                            <div t-field="column_id.name" class="text-center"/>
-                        </th>
+                            <th t-att-width="width">
+                                <div t-field="column_id.name" class="text-center"></div>
+                            </th>
                         </t>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <t t-foreach="objects">
-
-                        <td class="js_kanban_col"
-                                t-att-data-template="template"
-                                t-att-data-domain="domain"
-                                t-att-data-page_count="page_count"
-                                t-att-data-model="model"
-                                t-att-data-step="step"
-                                t-att-data-orderby="orderby">
-                            <t t-foreach="object_ids" t-as="object_id">
-                                <t t-call="#{ template }"/>
-                            </t>
-
-                            <!-- pager -->
-                            <div t-if="1 != page_end" class="pagination pagination-centered">
-                                <ul>
-                                    <li t-attf-class="prev #{'active' if page == 1 else '' }" >
-                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a>
-                                    </li>
-                                    <t t-foreach="range(page_start, page_end+1)" t-as="p">
-                                    <li t-att-class=" 'active' if page == p else '' ">
-                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"/>
-                                    </li>
-                                    </t>
-                                    <li t-attf-class="next #{'active' if page == page_end else '' }" >
-                                        <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-
+                            <td class="js_kanban_col" t-att-data-template="template" t-att-data-domain="domain" t-att-data-page_count="page_count" t-att-data-model="model" t-att-data-step="step" t-att-data-orderby="orderby">
+                                <t t-foreach="object_ids" t-as="object_id">
+                                    <t t-call="#{ template }"></t>
+                                </t>
+                                <!-- pager -->
+                                <div t-if="1 != page_end" class="pagination pagination-centered">
+                                    <ul>
+                                        <li t-attf-class="prev #{'active' if page == 1 else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a></li>
+                                        <t t-foreach="range(page_start, page_end+1)" t-as="p">
+                                            <li t-att-class=" 'active' if page == p else '' "> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"></a></li>
+                                        </t>
+                                        <li t-attf-class="next #{'active' if page == page_end else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a></li>
+                                    </ul>
+                                </div>
+                            </td>
                         </t>
                     </tr>
                 </tbody>
             </table>
         </template>
-
-
      </data>
 </openerp>

@@ -508,7 +508,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         get_image_url: function(category){
-            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image_medium', id: category.id});
+            return instance.session.url('/web/binary/image', {model: 'product.public.category', field: 'image_medium', id: category.id});
         },
 
         renderElement: function(){
@@ -752,6 +752,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             });
             this.$('.button.reset_weight').click(function(){
+                self.$('input.weight').val('');
                 self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
