@@ -34,7 +34,7 @@
                             attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}">
                             <span attrs="{'invisible':[('model', '=', False)]}">
                                 Followers of
-                                <field name="record_name" readonly="1" class="oe_inline"/>
+                                <field name="record_name" readonly="1" class="oe_inline oe_compose_recipients"/>
                                 and
                             </span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."

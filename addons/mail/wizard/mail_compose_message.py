@@ -66,7 +66,6 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
-
         # get some important values from context
         composition_mode = context.get('default_composition_mode', context.get('mail.compose.message.mode'))
         model = context.get('default_model', context.get('active_model'))
@@ -78,7 +77,6 @@ class mail_compose_message(osv.TransientModel):
             result['active_domain'] = '%s' % context.get('active_domain')
         else:
             result['active_domain'] = ''
-
         # get default values according to the composition mode
         if composition_mode == 'reply':
             vals = self.get_message_data(cr, uid, message_id, context=context)
@@ -212,7 +210,8 @@ class mail_compose_message(osv.TransientModel):
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
         partner_ids += context.get('default_partner_ids', [])
-
+        if context.get('is_private',False) and message_data.author_id : #check message is private then add author also in partner list.
+            partner_ids += [message_data.author_id.id]
         # update the result
         result = {
             'record_name': message_data.record_name,

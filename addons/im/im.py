@@ -169,7 +169,7 @@ class im_message(osv.osv):
 
         # how fun it is to always need to reorder results from read
         mess_ids = self.search(cr, openerp.SUPERUSER_ID, ["&", ['id', '>', last], "|", ['from_id', '=', my_id], ['to_id', 'in', [my_id]]], order="id", context=context)
-        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "session_id", "date"], context=context)
+        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "session_id", "date", "technical"], context=context)
         index = {}
         for i in xrange(len(mess)):
             index[mess[i]["id"]] = mess[i]
@@ -182,12 +182,13 @@ class im_message(osv.osv):
         users_status = users.read(cr, openerp.SUPERUSER_ID, users_watch, ["im_status"], context=context)
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
-    def post(self, cr, uid, message, to_session_id, uuid=None, context=None):
+    def post(self, cr, uid, message, to_session_id, technical=False, uuid=None, context=None):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
         session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
         to_ids = [x.id for x in session.user_ids if x.id != my_id]
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': [(6, 0, to_ids)], 'session_id': to_session_id}, context=context)
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id,
+            'to_id': [(6, 0, to_ids)], 'session_id': to_session_id, 'technical': technical}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receivers': [my_id] + to_ids})
         return False
 
@@ -206,21 +207,34 @@ class im_session(osv.osv):
     }
 
     # Todo: reuse existing sessions if possible
-    def session_get(self, cr, uid, user_to, uuid=None, context=None):
+    def session_get(self, cr, uid, users_to, uuid=None, context=None):
         my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        users = [my_id] + users_to
+        domain = []
+        for user_to in users:
+            domain.append(('user_ids', 'in', [user_to]))
+        sids = self.search(cr, openerp.SUPERUSER_ID, domain, context=context, limit=1)
         session_id = None
-        if user_to:
-            # FP Note: does the ORM allows something better than this? == on many2many
-            sids = self.search(cr, openerp.SUPERUSER_ID, [('user_ids', 'in', [user_to]), ('user_ids', 'in', [my_id])], context=context, limit=1)
-            for session in self.browse(cr, uid, sids, context=context):
-                if len(session.user_ids) == 2:
-                    session_id = session.id
-                    break
+        for session in self.browse(cr, uid, sids, context=context):
+            if len(session.user_ids) == len(users):
+                session_id = session.id
+                break
         if not session_id:
             session_id = self.create(cr, openerp.SUPERUSER_ID, {
-                'user_ids': [(6, 0, [user_to, my_id])]
+                'user_ids': [(6, 0, users)]
             }, context=context)
         return self.read(cr, uid, session_id, context=context)
+
+    def add_to_session(self, cr, uid, session_id, user_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        session = self.read(cr, uid, session_id, context=context)
+        if my_id not in session.get("user_ids"):
+            raise Exception("Not allowed to modify a session when you are not in it.")
+        self.write(cr, uid, session_id, {"user_ids": [(4, user_id)]}, context=context)
+
+    def remove_me_from_session(self, cr, uid, session_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        self.write(cr, openerp.SUPERUSER_ID, session_id, {"user_ids": [(3, my_id)]}, context=context)
 
 class im_user(osv.osv):
     _name = "im.user"

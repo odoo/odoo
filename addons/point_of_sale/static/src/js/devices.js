@@ -25,12 +25,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };    
             this.custom_payment_status = this.default_payment_status;
 
-            this.connection = new instance.web.JsonRPC();
-            this.connection.setup(url);
+            this.connection = new instance.web.Session(undefined,url);
 
             this.bypass_proxy = false;
             this.notifications = {};
             
+        },
+        close: function(){
+            this.connection.destroy();
         },
         message : function(name,params){
             var ret = new $.Deferred();
