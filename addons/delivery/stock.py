@@ -123,16 +123,18 @@ class stock_picking(osv.osv):
             group=False, type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
         invoice_line_obj = self.pool.get('account.invoice.line')
         result = super(stock_picking, self).action_invoice_create(cr, uid,
                 ids, journal_id=journal_id, group=group, type=type,
                 context=context)
-        for picking in picking_obj.browse(cr, uid, result, context=context):
-            invoice = invoice_obj.browse(cr, uid, picking.id, context=context)
+        for picking in picking_obj.browse(cr, uid, ids, context=context):
+            invoice = invoice_obj.browse(cr, uid, result, context=context)
             invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
             if invoice_line:
                 invoice_line_obj.create(cr, uid, invoice_line)
                 invoice_obj.button_compute(cr, uid, [invoice.id], context=context)
+            move_obj.write(cr, uid, [x.id for x in picking.move_lines], {'invoice_state': 'invoiced'}, context=context)
         return result
     def _get_default_uom(self,cr,uid,c):
         uom_categ, uom_categ_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_categ_kgm')

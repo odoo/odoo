@@ -113,7 +113,7 @@ class stock_picking(osv.osv):
 
         store={
           'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
-          'stock.move': (__get_picking_move, ['picking_id'], 10),
+          'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),
         },
         ),
     }
