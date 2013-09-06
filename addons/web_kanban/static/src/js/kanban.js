@@ -1231,7 +1231,6 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
 });
 
 instance.web_kanban.fields_registry = new instance.web.Registry({});
-
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -384,7 +384,6 @@ QWeb2.Engine = (function() {
                 this.compiled_templates[template] = tcompiled;
                 return this.render(template, dict);
             } else {
-                console.log(this.compiled_templates, template);
                 return this.tools.exception("Template '" + template + "' not found");
             }
         },
