@@ -420,6 +420,11 @@ class product_product(osv.osv):
         pricelist = context.get('pricelist', False)
         partner = context.get('partner', False)
         if pricelist:
+            # Support context pricelists specified as display_name or ID for compatibility
+            if isinstance(pricelist, basestring):
+                pricelist_ids = self.pool.get('product.pricelist').name_search(
+                    cr, uid, pricelist, operator='=', context=context, limit=1)
+                pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
             for id in ids:
                 try:
                     price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
