@@ -3696,6 +3696,13 @@ Cuentas del plan
         <field name="property_stock_account_input_categ" ref="cuenta4111003000"/>
         <field name="property_stock_account_output_categ" ref="cuenta4511003000"/>
 	</record>
+	<record id="vauxoo_mx_chart_template_value" model="ir.values">
+        <field name="name">Plan de Cuentas para Mexico</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="vauxoo_mx_chart_template"/>
+        <field name="value" ref="base.MXN"/>
+    </record>
    
   
 </data>

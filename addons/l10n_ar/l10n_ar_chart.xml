@@ -253,7 +253,13 @@
 	  <field name="property_account_expense_categ" ref="61_01"/>
 	  <field name="property_account_income_categ" ref="411_01"/>
 	</record>	
-
+    <record id="ar_chart_template_value" model="ir.values">
+        <field name="name">Argentina - Plan de Cuentas</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="ar_chart_template"/>
+        <field name="value" ref="base.ARS"/>
+    </record>
 
   </data>
 

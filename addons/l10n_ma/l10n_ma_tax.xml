@@ -744,6 +744,13 @@
         <field name="bank_account_view_id" ref="pcg_514"/>
         
     </record>
+    <record id="l10n_kzc_temp_chart_value" model="ir.values">
+        <field name="name">compta Kazacube</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="l10n_kzc_temp_chart"/>
+        <field name="value" ref="base.MAD"/>
+    </record>
 
   <record model="account.tax.template" id="tva_exo">
     <field name="name">Exonere de TVA</field>

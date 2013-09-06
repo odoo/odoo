@@ -250,6 +250,13 @@
 	  <field name="property_account_expense_categ" ref="61_01"/>
 	  <field name="property_account_income_categ" ref="411_01"/>
 	</record>	
+	<record id="bo_chart_template_value" model="ir.values">
+        <field name="name">Bolivia - Plan de Cuentas</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="bo_chart_template"/>
+        <field name="value" ref="base.BOB"/>
+    </record>
 
 
   </data>

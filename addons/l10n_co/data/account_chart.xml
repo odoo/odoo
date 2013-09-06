@@ -103349,6 +103349,13 @@ participacion, de conformidad con las disposiciones legales vigentes.
         <field name="property_account_expense_categ" ref="chart529595999"/>
         <field name="property_account_income_categ" ref="chart413595999"/>
 	</record>
+	<record id="vauxoo_mx_chart_template_value" model="ir.values">
+        <field name="name">Unique Account Chart - PUC</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="vauxoo_mx_chart_template"/>
+        <field name="value" ref="base.COP"/>
+    </record>
    
 </data>
 </openerp>
