@@ -79,11 +79,9 @@ class view(osv.osv):
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
             string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
         'model_ids': fields.one2many('ir.model.data', 'res_id', auto_join=True),
-        'page': fields.boolean("Whether this view is a web page template (complete)"),
     }
     _defaults = {
         'priority': 16,
-        'page': False,
     }
     _order = "priority,name"
 
