@@ -2,11 +2,11 @@
   In order to test hr_timesheet Module in OpenERP, I make "Sign In/Sign Out for Project" to encode and
   track time spent on the different projects.
 -
-  I create employee "Quentin Paolino" as "User".
+  I create employee "Gilles Gravie" as "User".
 -
   !record {model: hr.employee, id: hr.employee_qdp}:
     address_home_id: base.res_partner_address_8
-    name: Quentin Paolino
+    name: Gilles Gravie
     parent_id: 'hr.employee_al'
     user_id: 'base.user_demo'
 -
@@ -22,7 +22,7 @@
   !python {model: hr.sign.in.project}: |
     import time
     uid = ref('base.user_demo')
-    new_id = self.create(cr, uid, {'emp_id': ref('hr.employee_qdp'), 'name': 'Quentin Paolino',
+    new_id = self.create(cr, uid, {'emp_id': ref('hr.employee_qdp'), 'name': 'Gilles Gravie',
     'server_date': time.strftime('%Y-%m-%d %H:%M:%S')})
     self.sign_in_result(cr, uid, [new_id], context)
 -
@@ -35,7 +35,8 @@
     new_id = self.create(cr, uid, {'account_id': ref('account.analytic_nebula'),'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S') ,
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
-    'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'present'})
+    'name': 'Gilles Gravie', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'present'})
+
     self.sign_out_result(cr, uid, [new_id], context)
 -
   My work for this project "Sednacom" is over and I stop working by clicking on "Stop Work" button of this wizard.
@@ -47,5 +48,5 @@
     new_id = self.create(cr, uid, {'account_id': ref('account.analytic_spark'), 'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(2)).strftime('%Y-%m-%d %H:%M:%S'),
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
-    'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
+    'name': 'Gilles Gravie', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
     self.sign_out_result_end(cr, uid, [new_id], context)

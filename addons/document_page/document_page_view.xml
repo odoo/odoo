@@ -45,7 +45,7 @@
                             <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
                         </group>
                         <group>
-                            <field name="write_uid" groups="base.group_no_one"/>
+                            <field name="write_uid" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
                             <field name="write_date" groups="base.group_no_one"/>
                             <field name="menu_id" groups="base.group_no_one"/>
                         </group>
