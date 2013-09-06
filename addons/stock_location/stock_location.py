@@ -34,6 +34,9 @@ class stock_location_route(osv.osv):
         'sequence': fields.integer('Sequence'),
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
+        'product_selectable': fields.boolean('Selectable on Product'),
+        'product_categ_selectable': fields.boolean('Selectable on Product Category'),
+        'warehouse_selectable': fields.boolean('Selectable on Warehouse'),
     }
     _defaults = {
         'sequence': lambda self,cr,uid,ctx: 0,
@@ -42,7 +45,7 @@ class stock_location_route(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Default Routes', help='Default route through the warehouse', required=True), 
+        'route_id': fields.many2one('stock.location.route', 'Default Routes', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse', required=True), 
     }
 
 
@@ -201,13 +204,13 @@ class product_removal_strategy(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes'),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"),
     }
 
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes'),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
         'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         #'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
     }
