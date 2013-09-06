@@ -156,24 +156,9 @@
 
         <template id="homepage" page="True">
             <t t-call="website.layout">
+                <div data-snippet-id="carousel"> TEST <br/> <br/> </div>
                 <section>
-                    <div id="myCarousel" class="carousel slide" data-interval="1000000">
-                        <div class="oe_carousel_options js_carousel_options" t-ignore="1" t-if="editable">
-                            <span class="label label-default js_add"><i class="icon-plus-sign"></i></span>
-                            <span class="label label-default js_remove"><i class="icon-minus-sign"></i></span>
-                            <select name="carousel-background" class="form-control">
-                                <option value="">Chose an other background</option>
-                                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
-                                <option value="/website/static/src/img/landscape.png">landscape</option>
-                                <option value="/website/static/src/img/aqua.jpg">aqua</option>
-                            </select>
-                            <select name="carousel-style" class="form-control">
-                                <option value="">Chose an other style</option>
-                                <option value="no_image">No image</option>
-                                <option value="image_left">Image left</option>
-                                <option value="image_right">Image right</option>
-                            </select>
-                        </div>
+                    <div id="myCarousel" data-snippet-id="carousel" class="carousel slide" data-interval="1000000">
                         <!-- Carousel items -->
                         <div class="carousel-inner">
                             <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
