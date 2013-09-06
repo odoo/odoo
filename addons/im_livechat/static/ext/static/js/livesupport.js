@@ -92,7 +92,7 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
             setTimeout(function() {
                 def.reject();
             }, 5000);
-            def.then(_.bind(this.chat, this), function() {
+            return def.then(_.bind(this.chat, this), function() {
                 im_common.notification(_t("It seems the connection to the server is encountering problems, please try again later."));
             });
         },
@@ -100,16 +100,18 @@ define(["openerp", "im_common", "underscore", "require", "jquery",
             var self = this;
             if (this.manager.conversations.length > 0)
                 return;
-            im_common.connection.model("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
-                if (! user_id) {
+            im_common.connection.model("im_livechat.channel").call("get_session", [this.channel, this.manager.me.get("uuid")]).then(function(session_id) {
+                if (! session_id) {
                     im_common.notification(_t("None of our collaborators seems to be available, please try again later."));
                     return;
                 }
-                self.manager.ensure_users([user_id]).then(function() {
-                    var conv = self.manager.activate_user(self.manager.get_user(user_id), true);
+                self.manager.activate_session(session_id, true).then(function(conv) {
                     if (self.options.defaultMessage) {
-                        conv.received_message({message: self.options.defaultMessage, 
-                            date: openerp.datetime_to_str(new Date())});
+                        conv.received_message({
+                            message: self.options.defaultMessage, 
+                            date: openerp.datetime_to_str(new Date()),
+                            from_id: [conv.get("users")[0].get("id"), "Unknown"]
+                        });
                     }
                 });
             });

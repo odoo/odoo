@@ -81,6 +81,67 @@ Please call me as soon as possible this afternoon!
 Sylvie
 """
 
+MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
+X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on mail1.grosbedon.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
+    HTML_MESSAGE,RCVD_IN_DNSWL_LOW autolearn=unavailable version=3.3.1
+Received: from mail-ie0-f173.google.com (mail-ie0-f173.google.com [209.85.223.173])
+    by mail1.grosbedon.com (Postfix) with ESMTPS id 9BBD7BFAAA
+    for <raoul@openerp.fr>; Fri, 23 Aug 2013 13:17:55 +0200 (CEST)
+Received: by mail-ie0-f173.google.com with SMTP id qd12so575130ieb.4
+        for <raoul@grosbedon.fr>; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20120113;
+        h=mime-version:date:message-id:subject:from:to:content-type;
+        bh=dMNHV52EC7GAa7+9a9tqwT9joy9z+1950J/3A6/M/hU=;
+        b=DGuv0VjegdSrEe36ADC8XZ9Inrb3Iu+3/52Bm+caltddXFH9yewTr0JkCRQaJgMwG9
+         qXTQgP8qu/VFEbCh6scu5ZgU1hknzlNCYr3LT+Ih7dAZVUEHUJdwjzUU1LFV95G2RaCd
+         /Lwff6CibuUvrA+0CBO7IRKW0Sn5j0mukYu8dbaKsm6ou6HqS8Nuj85fcXJfHSHp6Y9u
+         dmE8jBh3fHCHF/nAvU+8aBNSIzl1FGfiBYb2jCoapIuVFitKR4q5cuoodpkH9XqqtOdH
+         DG+YjEyi8L7uvdOfN16eMr7hfUkQei1yQgvGu9/5kXoHg9+Gx6VsZIycn4zoaXTV3Nhn
+         nu4g==
+MIME-Version: 1.0
+X-Received: by 10.50.124.65 with SMTP id mg1mr1144467igb.43.1377256674216;
+ Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+Received: by 10.43.99.71 with HTTP; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+Date: Fri, 23 Aug 2013 13:17:54 +0200
+Message-ID: <CAP76m_V4BY2F7DWHzwfjteyhW8L2LJswVshtmtVym+LUJ=rASQ@mail.gmail.com>
+Subject: Test mail multipart/mixed
+From: =?ISO-8859-1?Q?Raoul Grosbedon=E9e?= <ignasse.carambar@gmail.com>
+To: Followers of ASUSTeK-Joseph-Walters <raoul@grosbedon.fr>
+Content-Type: multipart/mixed; boundary=089e01536c4ed4d17204e49b8e96
+
+--089e01536c4ed4d17204e49b8e96
+Content-Type: multipart/alternative; boundary=089e01536c4ed4d16d04e49b8e94
+
+--089e01536c4ed4d16d04e49b8e94
+Content-Type: text/plain; charset=ISO-8859-1
+
+Should create a multipart/mixed: from gmail, *bold*, with attachment.
+
+-- 
+Marcel Boitempoils.
+
+--089e01536c4ed4d16d04e49b8e94
+Content-Type: text/html; charset=ISO-8859-1
+
+<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>-- <br>Marcel Boitempoils.</div>
+
+--089e01536c4ed4d16d04e49b8e94--
+--089e01536c4ed4d17204e49b8e96
+Content-Type: text/plain; charset=US-ASCII; name="test.txt"
+Content-Disposition: attachment; filename="test.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_hkpb27k00
+
+dGVzdAo=
+--089e01536c4ed4d17204e49b8e96--"""
+
 
 class TestMailgateway(TestMailBase):
 
@@ -247,6 +308,24 @@ class TestMailgateway(TestMailBase):
         # Test: mail_mail content
         self.assertEqual(mail.reply_to, 'someone@example.com',
                          'mail_mail: reply_to should equal the rpely_to given to create')
+
+    def test_09_message_parse(self):
+        """ Testing incoming emails parsing """
+        cr, uid = self.cr, self.uid
+
+        res = self.mail_thread.message_parse(cr, uid, MAIL_TEMPLATE_PLAINTEXT)
+        self.assertIn('Please call me as soon as possible this afternoon!', res.get('body', ''),
+                      'message_parse: missing text in text/plain body after parsing')
+
+        res = self.mail_thread.message_parse(cr, uid, MAIL_TEMPLATE)
+        self.assertIn('<p>Please call me as soon as possible this afternoon!</p>', res.get('body', ''),
+                      'message_parse: missing html in multipart/alternative body after parsing')
+
+        res = self.mail_thread.message_parse(cr, uid, MAIL_MULTIPART_MIXED)
+        self.assertNotIn('Should create a multipart/mixed: from gmail, *bold*, with attachment', res.get('body', ''),
+                         'message_parse: text version should not be in body after parsing multipart/mixed')
+        self.assertIn('<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>', res.get('body', ''),
+                      'message_parse: html version should be in body after parsing multipart/mixed')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_10_message_process(self):

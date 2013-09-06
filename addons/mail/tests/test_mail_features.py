@@ -294,7 +294,7 @@ class test_mail(TestMailBase):
         # Data creation
         # --------------------------------------------------
         # 0 - Update existing users-partners
-        self.res_users.write(cr, uid, [uid], {'email': 'a@a'})
+        self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notification_email_send': 'comment'})
         self.res_users.write(cr, uid, [self.user_raoul_id], {'email': 'r@r'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
