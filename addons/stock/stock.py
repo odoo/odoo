@@ -1950,7 +1950,10 @@ class stock_package(osv.osv):
     """
     _name = "stock.quant.package"
     _description = "Physical Packages"
-    _order = 'name'
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'name'
+    _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
@@ -1985,16 +1988,20 @@ class stock_package(osv.osv):
                 res.add(pack.parent_id.id)
         return list(res)
 
+    # TODO: Problem when package is empty!
+    #
     def _get_package_info(self, cr, uid, ids, name, args, context=None):
         default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id})
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
                 res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
+                res[pack.id]['owner_id'] = pack.quant_ids[0].owner_id and pack.quant_ids[0].owner_id.id or False
                 res[pack.id]['company_id'] = pack.quant_ids[0].company_id.id
             elif pack.children_ids:
-                res[pack.id]['location_id'] = pack.children_ids[0].location_id.id
-                res[pack.id]['company_id'] = pack.children_ids[0].company_id.id
+                res[pack.id]['location_id'] = pack.children_ids[0].location_id and pack.children_ids[0].location_id.id or False
+                res[pack.id]['owner_id'] = pack.children_ids[0].owner_id and pack.children_ids[0].owner_id.id or False
+                res[pack.id]['company_id'] = pack.children_ids[0].company_id and pack.children_ids[0].company_id.id or False
         return res
 
     _columns = {
@@ -2006,12 +2013,21 @@ class stock_package(osv.osv):
         'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
                                        'stock.quant': (_get_packages, ['location_id'], 10),
-                                       'stock.quant.package': (_get_packages_to_relocate, ['children_ids', 'quant_ids', 'parent_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
                                     }, readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
         'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item"),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),
-        'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package"),
+        'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package", 
+                                    store={
+                                       'stock.quant': (_get_packages, ['company_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
+                                    }, readonly=True),
+        'owner_id': fields.function(_get_package_info, type='many2one', relation='res.partner', string='Owner', multi="package",
+                                store={
+                                       'stock.quant': (_get_packages, ['owner_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
+                                    }, readonly=True),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')

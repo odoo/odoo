@@ -614,7 +614,7 @@
                                     <field name="lot_id" groups="stock.group_production_lot"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
-                                    <field name="product_qty"/>
+                                    <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
@@ -1725,6 +1725,7 @@
                             <group>
                             <field name="packaging_id"/>
                        	    <field name='company_id' groups="base.group_multi_company"/>
+                       	    <field name='owner_id' groups="stock.group_tracking_owner"/>
                             </group>
                             <group>
                             <field name="location_id"/>
