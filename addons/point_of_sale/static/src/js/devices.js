@@ -84,10 +84,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         weighting_start: function(){
             if(!this.weighting){
                 this.weighting = true;
-                if(!this.bypass_proxy){
-                    this.weight = 0;
-                    return this.message('weighting_start');
-                }
+                this.weight = 0;
+                return this.message('weighting_start');
+            }else{
+                console.error('Weighting already started!!!');
+                this.weight = 0;
             }
         },
 
@@ -96,6 +97,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
+            if(!this.weighting){
+                console.error('Weighting while not started!!!');
+            }
             this.message('weighting_read_kg',{})
                 .done(function(weight){
                     if(self.weighting){
@@ -123,9 +127,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         // the client has finished weighting products
         weighting_end: function(){
-            this.weight = 0;
-            this.weighting = false;
-            this.message('weighting_end');
+            if(this.weighting){
+                this.weight = 0;
+                this.weighting = false;
+                this.message('weighting_end');
+            }else{
+                console.error('Weighting already ended !!!');
+                this.weight = 0;
+            }
         },
 
         // the pos asks the client to pay 'price' units

@@ -192,8 +192,9 @@
             <div class="display">
                 <span class="weight">
                     <p>
-                        <t t-esc="widget.get_product_weight().toFixed(3)" />
-                        Kg
+                        <span class='js-weight'>
+                            <t t-esc="widget.get_product_weight_string()" />
+                        </span>
                     </p>
                 </span>
                 <span class="product-name">

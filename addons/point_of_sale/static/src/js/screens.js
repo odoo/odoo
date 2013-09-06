@@ -271,19 +271,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             var self = this;
-            var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
+            this.cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
 
-            this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
+            this.pos_widget.set_numpad_visible(this.show_numpad && this.cashier_mode);
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
-            this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !cashier_mode);
-            this.pos_widget.set_cashier_controls_visible(cashier_mode);
+            this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !this.cashier_mode);
+            this.pos_widget.set_cashier_controls_visible(this.cashier_mode);
 
-            if(cashier_mode && this.pos.iface_self_checkout){
+            if(this.cashier_mode && this.pos.iface_self_checkout){
                 this.pos_widget.client_button.show();
             }else{
                 this.pos_widget.client_button.hide();
             }
-            if(cashier_mode){
+            if(this.cashier_mode){
                 this.pos_widget.close_button.show();
             }else{
                 this.pos_widget.close_button.hide();
@@ -460,7 +460,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     clearInterval(this.intervalID);
                     self.pos_widget.screen_selector.set_current_screen(self.next_screen);
                 }
-            },100);
+            },50);
 
             this.add_action_button({
                     label: _t('Back'),
@@ -512,9 +512,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 var weight = self.pos.proxy.weighting_read_kg();
                 if(weight != self.weight){
                     self.weight = weight;
-                    self.renderElement();
+                    self.$('.js-weight').text(self.get_product_weight_string());
                 }
-            },100);
+            },50);
         },
         renderElement: function(){
             var self = this;
@@ -544,8 +544,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var product = this.get_product();
             return (product ? product.get('price') : 0) || 0;
         },
-        get_product_weight: function(){
-            return this.weight || 0;
+        get_product_weight_string: function(){
+            return (this.weight || 0).toFixed(3) + ' Kg';
         },
         close: function(){
             this._super();
@@ -740,7 +740,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ProductScreenWidget = module.ScreenWidget.extend({
         template:'ProductScreenWidget',
 
-        scale_screen: 'scale_invite',
+        scale_screen: 'scale',
+        client_scale_screen : 'scale_invite',
         client_next_screen:  'client_payment',
 
         show_numpad:     true,
@@ -754,7 +755,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_list_widget = new module.ProductListWidget(this,{
                 click_product_action: function(product){
                     if(product.get('to_weight') && self.pos.iface_electronic_scale){
-                        self.pos_widget.screen_selector.set_current_screen(self.scale_screen, {product: product});
+                        self.pos_widget.screen_selector.set_current_screen( self.cashier_mode ? self.scale_screen : self.client_scale_screen, {product: product});
                     }else{
                         self.pos.get('selectedOrder').addProduct(product);
                     }
