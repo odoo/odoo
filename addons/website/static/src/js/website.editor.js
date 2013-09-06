@@ -53,9 +53,69 @@
                     canUndo: false,
                     editorFocus: true,
                 });
-
             }
         });
+        CKEDITOR.plugins.add( 'tablebutton', {
+            requires: 'panelbutton,floatpanel',
+            init: function( editor ) {
+                var label = "Table";
+
+                editor.ui.add('TableButton', CKEDITOR.UI_PANELBUTTON, {
+                    label: label,
+                    title: label,
+                    // use existing 'table' icon
+                    icon: 'table',
+                    modes: { wysiwyg: true },
+                    editorFocus: true,
+                    // panel opens in iframe, @css is CSS file <link>-ed within
+                    // frame document, @attributes are set on iframe itself.
+                    panel: {
+                        css: '/website/static/src/css/editor.css',
+                        attributes: { 'role': 'listbox', 'aria-label': label, },
+                    },
+
+                    onBlock: function (panel, block) {
+                        block.autoSize = true;
+                        block.element.setHtml(openerp.qweb.render('website.editor.table.panel', {
+                            rows: 5,
+                            cols: 5,
+                        }));
+
+                        var $table = $(block.element.$).on('mouseenter', 'td', function (e) {
+                            var $e = $(e.target);
+                            var y = $e.index() + 1;
+                            var x = $e.closest('tr').index() + 1;
+
+                            $table
+                                .find('td').removeClass('selected').end()
+                                .find('tr:lt(' + String(x) + ')')
+                                .children().filter(function () { return $(this).index() < y; })
+                                .addClass('selected');
+                        }).on('click', 'td', function (e) {
+                            var $e = $(e.target);
+
+                            var table = new CKEDITOR.dom.element(
+                                $(openerp.qweb.render('website.editor.table', {
+                                    rows: $e.closest('tr').index() + 1,
+                                    cols: $e.index() + 1,
+                                }))[0]);
+
+                            editor.insertElement(table);
+                            setTimeout(function () {
+                                var firstCell = new CKEDITOR.dom.element(table.$.rows[0].cells[0]);
+                                var range = editor.createRange();
+                                range.moveToPosition(firstCell, CKEDITOR.POSITION_AFTER_START);
+                                range.select();
+                            }, 0);
+                        });
+
+                        block.element.getDocument().getBody().setStyle('overflow', 'hidden');
+                        CKEDITOR.ui.fire('ready', this);
+                    },
+                });
+            }
+        });
+
         var editor = new website.EditorBar();
         var $body = $(document.body);
         editor.prependTo($body);
@@ -262,7 +322,7 @@
                 autoParagraph: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [
@@ -278,7 +338,7 @@
                         "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
                     ]},{
                     name: 'special', items: [
-                        "Image", "Table"
+                        "Image", "TableButton"
                     ]},{
                     name: 'styles', items: [
                         "Styles"
