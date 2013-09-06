@@ -25,7 +25,6 @@ import sys
 import re
 import time
 
-import lxml.html
 from lxml import etree
 
 from openerp import tools
@@ -158,23 +157,6 @@ class view(osv.osv):
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
         return super(view, self).write(cr, uid, ids, vals, context)
-
-    def save(self, cr, uid, model, res_id, field, value, xpath=None, context=None):
-        """ Update the content of a field
-
-        :param str model:
-        :param int res_id:
-        :param str xpath: valid xpath to the tag to replace
-        """
-        model_obj = self.pool.get(model)
-        if xpath:
-            origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
-            origin_tree = etree.fromstring(origin.encode('utf-8'))
-            zone = origin_tree.xpath(xpath)[0]
-            zone.getparent().replace(zone, lxml.html.fromstring(value))
-            value = etree.tostring(origin_tree, encoding='utf-8')
-
-        model_obj.write(cr, uid, res_id, {field: value}, context=context)
 
     # default view selection
 
