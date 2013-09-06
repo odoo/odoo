@@ -231,7 +231,6 @@ class stock_quant(osv.osv):
                 result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             else:
                 raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
-        print 'Quant get result', result
         return result
 
     #
@@ -1441,7 +1440,7 @@ class stock_move(osv.osv):
                 done.append(move.id)
                 continue
             else:
-                qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+                qty = move.product_qty
                 dp = []
                 for m2 in move.move_orig_ids:
                     for q in m2.quant_ids:

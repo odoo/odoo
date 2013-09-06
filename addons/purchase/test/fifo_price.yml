@@ -190,7 +190,7 @@
   Process the reception of purchase order with usd
 -
   !python {model: stock.picking}: |
-    pick_obj = self.pool.get('stock.picking').browse(cr, uid, ref("purchase_order_fifo_usd"))
+    pick_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd")).picking_ids[0]
     pick_obj.do_partial(context=context)
 - 
   We create delivery order of 49.5 kg
