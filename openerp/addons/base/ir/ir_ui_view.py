@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import copy
-import itertools
 import logging
 import os
 import sys
@@ -28,13 +27,11 @@ import time
 
 import lxml.html
 from lxml import etree
-from functools import partial
 
 from openerp import tools
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc, qweb
 
