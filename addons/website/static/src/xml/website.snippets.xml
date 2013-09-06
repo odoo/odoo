@@ -5,17 +5,120 @@
         <a href="#" class="button js_add"><i class="icon icon-plus-sign"></i></a>
         <a href="#" class="button js_remove"><i class="icon icon-minus-sign"></i></a>
         <select name="carousel-background">
-            <option value="">Chose an other background</option>
             <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
             <option value="/website/static/src/img/landscape.png">landscape</option>
             <option value="/website/static/src/img/aqua.jpg">aqua</option>
         </select>
         <select name="carousel-style">
-            <option value="">Chose an other style</option>
             <option value="no_image">No image</option>
             <option value="image_left">Image left</option>
             <option value="image_right">Image right</option>
         </select>
     </t>
+
+    <div t-name="website.snippets.Builder.carousel" data-snippet-id='carousel' data-action='insert' data-selector-siblings='#wrap .container'>
+        <div class='oe_snippet_thumbnail oe_label'>carousel</div>
+        <div id="myCarousel" class="oe_snippet_body carousel slide" data-interval="100000">
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+                <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
+                    <div class="container">
+                        <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                            <h1>Create Awesome Websites</h1>
+                            <h3>Super easy, fully flexible</h3>
+                            <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Carousel nav -->
+            <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
+            <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
+        </div>
+    </div>
+
+    <div t-name="website.snippets.Builder.darken" data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
+        <div class='oe_snippet_thumbnail oe_label'>Darken</div>
+    </div>
+
+    <div t-name="website.snippets.Builder.surprise" data-snippet-id='surprise' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.vomify'>
+        <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
+    </div>
+
+    <div t-name="website.snippets.Builder.spacer" data-snippet-id='spacer' data-action='insert' data-selector-siblings='#wrap .container'>
+        <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
+        <div class="oe_snippet_body container mt32"></div>
+    </div>
+
+    <div t-name="website.snippets.Builder.title" data-snippet-id='title' data-action='insert' data-selector-siblings='#wrap .container'>
+        <div class='oe_snippet_thumbnail oe_label'>
+            Main Title
+        </div>
+        <section class="oe_snippet_body container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="mt64">Welcome To Your New Homepage,</h1>
+                    <h2 class="mt32 subheader">where <b><em>everything</em></b> can be customized </h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.Builder.three-collumns" data-snippet-id='three-collumns' data-action='insert' data-selector-siblings='#wrap .container'>
+        <section class="oe_snippet_body container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2 class="mt48">Ut enim ad minim veniam</h2>
+                </div>
+            </div>
+            <div class="row mt32">
+                <div class="col-md-4">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
+                    <h4 class="mt16">Cillum Dolore</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat.</p>
+                </div>
+                <div class="col-md-4">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
+                    <h4 class="mt16">Mollit Anim</h4>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                </div>
+                <div class="col-md-4">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
+                    <h4 class="mt16">Nemo Enim Ipsam</h4>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                        doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                        veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
+                        ipsam voluptatem quia voluptas</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.Builder.header-block" data-snippet-id='header-block' data-action='insert' data-selector-siblings='#wrap .container'>
+        <section class="container oe_snippet_body">
+            <div class="row">
+                <div class="col-md-5">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg"/>
+                </div>
+                <div class="col-md-6 col-lg-offset-1">
+                    <p class="mt16">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat.</p>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                    <div class="text-center">
+                        <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To  <em>Action</em></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
 </templates>

@@ -55,8 +55,7 @@
 
                     $snipped_id = $(event.currentTarget);
 
-                    if (typeof $snipped_id.data("snippet-editor") === 'undefined' &&
-                            website.snippet.editorRegistry[$snipped_id.data("snippet-id")]) {
+                    if (typeof $snipped_id.data("snippet-editor") === 'undefined') {
                         $snipped_id.data("snippet-editor", new website.snippet.editorRegistry[$snipped_id.data("snippet-id")](self, $snipped_id));
                     }
                     self.snippetFocus($snipped_id);
@@ -106,18 +105,14 @@
         start: function() {
             var self = this;
 
-            $.ajax({
-                type: "GET",
-                url:  "/page/website.snippets",
-                dataType: "text",
-                success: function(snippets){
-                    self.$el.html(snippets);
-                    self.$('.oe_snippet').each(function(index,snippet){
-                        self.make_snippet_draggable($(snippet));
-                    });
-                },
+            var snippets_template = [];
+            _.each(openerp.qweb.compiled_templates, function (val, key) {
+                if (key.indexOf('website.snippets.Builder.') === 0) {
+                    var $snippet = $(openerp.qweb.render(key)).addClass("oe_snippet");
+                    self.$el.append($snippet);
+                    self.make_snippet_draggable($snippet);
+                }
             });
-
         },
         path_eval: function(path){
             var obj = window;
@@ -455,6 +450,17 @@
     });
 
 
+    $(document).ready(function () {
+        $("[data-snippet-id]").each(function() {
+                var $snipped_id = $(this);
+                if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
+                        website.snippet.viewRegistry[$snipped_id.data("snippet-id")]) {
+                    $snipped_id.data("snippet-view", new website.snippet.viewRegistry[$snipped_id.data("snippet-id")]($snipped_id));
+                }
+            });
+    });
+
+
     website.snippet.editorRegistry = {};
     website.snippet.Editor = openerp.Widget.extend({
         init: function (parent, dom) {
@@ -506,61 +512,75 @@
         },
     });
 
+    
+
+
 
     website.snippet.editorRegistry.carousel = website.snippet.Editor.extend({
         template : "website.snippets.EditorBar.carousel",
         start : function () {
-            var self = this;
 
-            self.$(".js_add").on('click', function (e) {
-                e.preventDefault();
-                var $inner = self.$target.find('.carousel-inner');
-                var cycle = $inner.find('.item').size();
-                $inner.append(openerp.qweb.render('website.carousel'));
-                self.$target.carousel(cycle);
-            });
-
-
-            self.$(".js_remove").on('click', function (e) {
-                e.preventDefault();
-                var $inner = self.$target.find('.carousel-inner');
-                if ($inner.find('.item').size() > 1) {
-                    $inner
-                        .find('.item.active').remove().end()
-                        .find('.item:first').addClass('active');
-                    self.$target.carousel(0);
-                }
-            });
-
+            this.$(".js_add").on('click', this.on_add);
+            this.$(".js_remove").on('click', this.on_remove);
 
             var bg = this.$target.find('.carousel-inner .item.active').css('background-image').replace(/url\((.*)\)/g, '\$1');
-            this.$( 'select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
+            this.$('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
                 .prop('selected', true);
-            self.$('select[name="carousel-background"]').on('change', function () {
-                self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
-                $(this).val("");
+
+            this.$('select[name="carousel-background"]').on('change', function () {
+                this.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
             });
 
+            var style = false;
+            if (this.$target.find('.carousel-inner .item.active .container .content_image.col-lg-offset-1'))
+                style = 'image_right';
+            if (this.$target.find('.carousel-inner .item.active .container .content_image'))
+                style = 'image_left';
+            this.$('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
 
-            self.$('select[name="carousel-style"]').on('change', function () {
-                var $container = self.$target.find('.carousel-inner .item.active .container');
-                $('.content_image', $container).remove();
-                switch ($(this).val()) {
-                    case 'no_image':
-                        $('.content', $container).attr("class", "content");
-                        break;
-                    case 'image_left':
-                        $('.content', $container).attr("class", "content col-md-6")
-                            .before('<div class="content_image col-md-5"><img class="img-rounded img-responsive" src="/website/static/src/img/china.jpg"></div>');
+            this.$('select[name="carousel-style"]').on('change', this.on_bg_change);
+        },
+        on_add: function (e) {
+            e.preventDefault();
+            var $inner = this.$target.find('.carousel-inner');
+            var cycle = $inner.find('.item').size();
+            $inner.append(openerp.qweb.render('website.carousel'));
+            this.$target.carousel(cycle);
+        },
+        on_remove: function (e) {
+            e.preventDefault();
+            var $inner = this.$target.find('.carousel-inner');
+            if ($inner.find('.item').size() > 1) {
+                $inner
+                    .find('.item.active').remove().end()
+                    .find('.item:first').addClass('active');
+                this.$target.carousel(0);
+            }
+        },
+        on_bg_change: function (e) {
+            var $container = this.$target.find('.carousel-inner .item.active .container');
+            var img_url = $('.content_image img', $container).attr("src");
+            if (!img_url) {
+                img_url = this.img_url || "/website/static/src/img/china.jpg";
+            } else {
+                this.img_url = img_url;
+            }
+
+            $('.content_image', $container).remove();
+            switch ($(e.currentTarget).val()) {
+                case 'no_image':
+                    $('.content', $container).attr("class", "content");
                     break;
-                    case 'image_right':
-                        $('.content', $container).attr("class", "content col-md-6")
-                            .after('<div class="content_image col-md-5 col-lg-offset-1"><img class="img-rounded img-responsive" src="/website/static/src/img/china.jpg"></div>');
-                    break;
-                }
-                $(this).val("");
-            });
-        }
+                case 'image_left':
+                    $('.content', $container).attr("class", "content col-md-6")
+                        .before('<div class="content_image col-md-5"><img class="img-rounded img-responsive" src="'+img_url+'"></div>');
+                break;
+                case 'image_right':
+                    $('.content', $container).attr("class", "content col-md-6")
+                        .after('<div class="content_image col-md-5 col-lg-offset-1"><img class="img-rounded img-responsive" src="'+img_url+'"></div>');
+                break;
+            }
+        },
     });
 
 })();
