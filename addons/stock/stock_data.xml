@@ -120,6 +120,8 @@
         <record id="picking_type_internal" model="stock.picking.type">
             <field name="name">Internal Transfers</field>
             <field name="sequence_id" ref="seq_picking_type_internal"/>
+            <field name="default_location_src_id" ref="stock_location_stock"/>
+            <field name="default_location_dest_id" ref="stock_location_stock"/>
             <field name="code_id">internal</field>
         </record>
         
