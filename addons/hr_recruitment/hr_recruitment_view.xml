@@ -338,24 +338,22 @@
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
+                    <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_inline oe_link"/>
                 </div>
             </group>
-            <xpath expr="//group[@name='job_data']" position="after">
-                <group name="group_alias"
-                        attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <label for="alias_name" string="Email Alias"/>
-                    <div name="alias_def">
+            <xpath expr="//field[@name='department_id']" position="after">
+                    <label for="alias_name" string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
                         <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
                     </div>
-                </group>
             </xpath>
             <div name="buttons" position="inside">
                 <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
-                <button string="Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}"/>
+                <button name="attachment_tree_view" string="Documents" type="object"/>
             </div>
         </field>
     </record>
@@ -401,14 +399,14 @@
                                         <div class="oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
-                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
-                                        </div>
                                         <div class="oe_job oe_department">
                                             <field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
                                             </span>
+                                        </div>
+                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
+                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                         </div>
                                         
                                     </div>
@@ -418,20 +416,25 @@
                                                 <span t-if="record.application_count.value gt 1"><field name="application_count"/> Applications</span>
                                                 <span t-if="record.application_count.value lt 2"><field name="application_count"/> Application</span>
                                             </a>
+                                            <br/>
+                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object"> 
+                                                <span t-if="record.doc_count.raw_value gt 1"><field name="doc_count"/> Documents</span>
+                                                <span t-if="record.doc_count.raw_value lt 2"><field name="doc_count"/> Document</span>
+                                            </a>
                                         </div>
                                         <field state="recruit" name="no_of_recruitment" widget="justgage" options="{'label_field': 'no_of_hired_employee', 'action_change': 'action_employee_to_hire'}">Forecast</field>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">
-                                            <p>To start the recruitment, <b>click here</b></p>
+                                            <p><b>click here</b>, To start the recruitment</p>
                                             <img src="/hr_recruitment/static/src/img/down1.png"/>
                                         </div>
                                     </t>
                                     <div class="oe_launch_recruitment">
-                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
-                                        <a t-if="record.survey_id.raw_value"> | </a>
                                         <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
                                         <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
+                                        <a t-if="record.survey_id.raw_value"> | </a>
+                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
                                     </div>
                                     <div class="oe_kanban_footer_left oe_job_messages">
                                         <t t-raw="record.message_summary.raw_value"/>
@@ -453,7 +456,10 @@
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                "Click here to create a new job" or remove the filter on "In Recruitment". Define job position profile and manage all your recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
+                 Click here to create a new job or remove the filter on "On Recruitment" to recruit for an on hold job. 
+              </p>
+              <p>
+                Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
               </p>
             </field>
         </record>
