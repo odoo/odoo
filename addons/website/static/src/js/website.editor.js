@@ -192,11 +192,6 @@
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
-            //     .add(this.$buttons.save)
-            //     .parent().show();
-            //
-            // TODO: span edition changing edition state (save button)
             var $editables = $('[data-oe-model]')
                     .not('link, script')
                     // FIXME: propagation should make "meta" blocks non-editable in the first place...
