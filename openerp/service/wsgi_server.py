@@ -400,8 +400,6 @@ def application_unproxied(environ, start_response):
     if hasattr(threading.current_thread(), 'dbname'):
         del threading.current_thread().dbname
 
-    openerp.service.start_internal()
-
     # Try all handlers until one returns some result (i.e. not None).
     wsgi_handlers = [wsgi_xmlrpc_1, wsgi_xmlrpc, wsgi_xmlrpc_legacy, wsgi_webdav]
     wsgi_handlers += module_handlers
@@ -421,70 +419,6 @@ def application(environ, start_response):
         return werkzeug.contrib.fixers.ProxyFix(application_unproxied)(environ, start_response)
     else:
         return application_unproxied(environ, start_response)
-
-# The WSGI server, started by start_server(), stopped by stop_server().
-httpd = None
-
-def serve(interface, port, threaded):
-    """ Serve HTTP requests via werkzeug development server.
-
-    Calling this function is blocking, you might want to call it in its own
-    thread.
-    """
-
-    global httpd
-    if not openerp.evented:
-        httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
-    else:
-        from gevent.wsgi import WSGIServer
-        httpd = WSGIServer((interface, port), application)
-    httpd.serve_forever()
-
-def start_service():
-    """ Call serve() in its own thread.
-
-    The WSGI server can be shutdown with stop_server() below.
-    """
-    # TODO Change the xmlrpc_* options to http_*
-    interface = config['xmlrpc_interface'] or '0.0.0.0'
-    port = config['xmlrpc_port']
-    _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
-    if not openerp.evented:
-        threading.Thread(target=serve, args=(interface, port, True)).start()
-    else:
-        serve(interface, port, True)
-
-def stop_service():
-    """ Initiate the shutdown of the WSGI server.
-
-    The server is supposed to have been started by start_server() above.
-    """
-    if httpd:
-        if not openerp.evented:
-            httpd.shutdown()
-            close_socket(httpd.socket)
-        else:
-            import gevent
-            httpd.stop()
-            gevent.shutdown()
-
-def close_socket(sock):
-    """ Closes a socket instance cleanly
-
-    :param sock: the network socket to close
-    :type sock: socket.socket
-    """
-    try:
-        sock.shutdown(socket.SHUT_RDWR)
-    except socket.error, e:
-        # On OSX, socket shutdowns both sides if any side closes it
-        # causing an error 57 'Socket is not connected' on shutdown
-        # of the other side (or something), see
-        # http://bugs.python.org/issue4397
-        # note: stdlib fixed test, not behavior
-        if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
-            raise
-    sock.close()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

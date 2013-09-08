@@ -1,7 +1,7 @@
 #-----------------------------------------------------------
-# Multicorn, multiprocessing inspired by gunicorn
-# TODO rename class: Multicorn -> Arbiter ?
+# Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
+import datetime
 import errno
 import fcntl
 import logging
@@ -13,9 +13,13 @@ import select
 import signal
 import socket
 import sys
+import threading
 import time
+import traceback
 import subprocess
 import os.path
+
+import wsgi_server
 
 import werkzeug.serving
 try:
@@ -25,11 +29,238 @@ except ImportError:
 
 import openerp
 import openerp.tools.config as config
+from openerp.release import nt_service_name
 from openerp.tools.misc import stripped_sys_argv
 
 _logger = logging.getLogger(__name__)
 
-class Multicorn(object):
+SLEEP_INTERVAL = 60 # 1 min
+
+#----------------------------------------------------------
+# Common
+#----------------------------------------------------------
+
+class CommonServer(object):
+    def __init__(self, app):
+        # TODO Change the xmlrpc_* options to http_*
+        self.app = app
+        # config
+        self.interface = config['xmlrpc_interface'] or '0.0.0.0'
+        self.port = config['xmlrpc_port']
+        # runtime
+        self.pid = os.getpid()
+
+    def dumpstacks(self):
+        """ Signal handler: dump a stack trace for each existing thread."""
+        # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
+        # modified for python 2.5 compatibility
+        threads_info = dict([(th.ident, {'name': th.name,
+                                        'uid': getattr(th,'uid','n/a')})
+                                    for th in threading.enumerate()])
+        code = []
+        for threadId, stack in sys._current_frames().items():
+            thread_info = threads_info.get(threadId)
+            code.append("\n# Thread: %s (id:%s) (uid:%s)" % \
+                        (thread_info and thread_info['name'] or 'n/a',
+                         threadId,
+                         thread_info and thread_info['uid'] or 'n/a'))
+            for filename, lineno, name, line in traceback.extract_stack(stack):
+                code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+                if line:
+                    code.append("  %s" % (line.strip()))
+        _logger.info("\n".join(code))
+
+    def close_socket(self, sock):
+        """ Closes a socket instance cleanly
+        :param sock: the network socket to close
+        :type sock: socket.socket
+        """
+        try:
+            sock.shutdown(socket.SHUT_RDWR)
+        except socket.error, e:
+            # On OSX, socket shutdowns both sides if any side closes it
+            # causing an error 57 'Socket is not connected' on shutdown
+            # of the other side (or something), see
+            # http://bugs.python.org/issue4397
+            # note: stdlib fixed test, not behavior
+            if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
+                raise
+        sock.close()
+
+#----------------------------------------------------------
+# Threaded
+#----------------------------------------------------------
+
+class ThreadedServer(CommonServer):
+    def __init__(self, app):
+        super(ThreadedServer, self).__init__(app)
+        self.main_thread_id = threading.currentThread().ident
+        # Variable keeping track of the number of calls to the signal handler defined
+        # below. This variable is monitored by ``quit_on_signals()``.
+        self.quit_signals_received = 0
+
+        #self.socket = None
+        #self.queue = []
+        self.httpd = None
+
+    def signal_handler(self, sig, frame):
+        if sig in [signal.SIGINT,signal.SIGTERM]:
+            # shutdown on kill -INT or -TERM
+            self.quit_signals_received += 1
+            if self.quit_signals_received > 1:
+                # logging.shutdown was already called at this point.
+                sys.stderr.write("Forced shutdown.\n")
+                os._exit(0)
+        elif sig == signal.SIGHUP:
+            # restart on kill -HUP
+            openerp.phoenix = True
+            self.quit_signals_received += 1
+        elif sig == signal.SIGQUIT:
+            # dump stacks on kill -3
+            self.dumpstacks()
+
+    def cron_thread(self, number):
+        while True:
+            time.sleep(SLEEP_INTERVAL + number) # Steve Reich timing style
+            registries = openerp.modules.registry.RegistryManager.registries
+            _logger.debug('cron%d polling for jobs', number)
+            for db_name, registry in registries.items():
+                while True and registry.ready:
+                    acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                    if not acquired:
+                        break
+
+    def cron_spawn(self):
+        """ Start the above runner function in a daemon thread.
+
+        The thread is a typical daemon thread: it will never quit and must be
+        terminated when the main process exits - with no consequence (the processing
+        threads it spawns are not marked daemon).
+
+        """
+        # Force call to strptime just before starting the cron thread
+        # to prevent time.strptime AttributeError within the thread.
+        # See: http://bugs.python.org/issue7980
+        datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
+        for i in range(openerp.tools.config['max_cron_threads']):
+            def target():
+                self.cron_thread(i)
+            t = threading.Thread(target=target, name="openerp.service.cron.cron%d" % i)
+            t.setDaemon(True)
+            t.start()
+            _logger.debug("cron%d started!" % i)
+
+    def http_thread(self):
+        self.httpd = werkzeug.serving.make_server(self.interface, self.port, self.app, threaded=True)
+        self.httpd.serve_forever()
+
+    def http_spawn(self):
+        threading.Thread(target=self.http_thread).start()
+        _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
+
+    def start(self):
+        _logger.debug("Setting signal handlers")
+        if os.name == 'posix':
+            signal.signal(signal.SIGINT, self.signal_handler)
+            signal.signal(signal.SIGTERM, self.signal_handler)
+            signal.signal(signal.SIGCHLD, self.signal_handler)
+            signal.signal(signal.SIGHUP, self.signal_handler)
+            signal.signal(signal.SIGQUIT, self.signal_handler)
+        elif os.name == 'nt':
+            import win32api
+            win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
+        self.cron_spawn()
+        self.http_spawn()
+
+    def stop(self):
+        """ Shutdown the WSGI server. Wait for non deamon threads.
+        """
+        _logger.info("Initiating shutdown")
+        _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+
+        self.httpd.shutdown()
+        self.close_socket(self.httpd.socket)
+
+        # Manually join() all threads before calling sys.exit() to allow a second signal
+        # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
+        # threading.Thread.join() should not mask signals (at least in python 2.5).
+        me = threading.currentThread()
+        _logger.debug('current thread: %r', me)
+        for thread in threading.enumerate():
+            _logger.debug('process %r (%r)', thread, thread.isDaemon())
+            if thread != me and not thread.isDaemon() and thread.ident != main_thread_id:
+                while thread.isAlive():
+                    _logger.debug('join and sleep')
+                    # Need a busyloop here as thread.join() masks signals
+                    # and would prevent the forced shutdown.
+                    thread.join(0.05)
+                    time.sleep(0.05)
+
+        _logger.debug('--')
+        openerp.modules.registry.RegistryManager.delete_all()
+        logging.shutdown()
+
+    def run(self):
+        """ Start the http server and the cron thread then wait for a signal.
+
+        The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
+        a second one if any will force an immediate exit.
+        """
+        self.start()
+
+        # Wait for a first signal to be handled. (time.sleep will be interrupted
+        # by the signal handler.) The try/except is for the win32 case.
+        try:
+            while self.quit_signals_received == 0:
+                time.sleep(60)
+        except KeyboardInterrupt:
+            pass
+
+        self.stop()
+
+#----------------------------------------------------------
+# Gevent
+#----------------------------------------------------------
+
+class GeventServer(CommonServer):
+    def __init__(self, app):
+        super(GeventServer, self).__init__(app)
+        self.port = config['longpolling_port']
+        self.httpd = None
+
+    def watch_parent(self, beat=4):
+        import gevent
+        ppid = os.getppid()
+        while True:
+            if ppid != os.getppid():
+                pid = os.getpid()
+                _logger.info("LongPolling (%s) Parent changed", pid)
+                # suicide !!
+                os.kill(pid, signal.SIGTERM)
+                return
+            gevent.sleep(beat)
+
+    def start(self):
+        import gevent
+        from gevent.wsgi import WSGIServer
+        gevent.spawn(self.watch_parent)
+        self.httpd = WSGIServer((self.interface, self.port), self.app)
+        self.httpd.serve_forever()
+
+    def stop(self):
+        import gevent
+        self.httpd.stop()
+        gevent.shutdown()
+
+    def run(self):
+        self.start()
+        self.stop()
+
+#----------------------------------------------------------
+# Prefork
+#----------------------------------------------------------
+
+class Multicorn(CommonServer):
     """ Multiprocessing inspired by (g)unicorn.
     Multicorn currently uses accept(2) as dispatching method between workers
     but we plan to replace it by a more intelligent dispatcher to will parse
@@ -92,10 +323,8 @@ class Multicorn(object):
             sys.exit(0)
 
     def long_polling_spawn(self):
-        nargs = stripped_sys_argv('--pidfile')
-        cmd = nargs[0]
-        cmd = os.path.join(os.path.dirname(cmd), "openerp-long-polling")
-        nargs[0] = cmd
+        nargs = stripped_sys_argv('--pidfile','--workers')
+        nargs += ['--gevent']
         popen = subprocess.Popen(nargs)
         self.long_polling_pid = popen.pid
 
@@ -122,6 +351,13 @@ class Multicorn(object):
             sig = self.queue.pop(0)
             if sig in [signal.SIGINT,signal.SIGTERM]:
                 raise KeyboardInterrupt
+            elif sig == signal.SIGHUP:
+                # restart on kill -HUP
+                openerp.phoenix = True
+                raise KeyboardInterrupt
+            elif sig == signal.SIGQUIT:
+                # dump stacks on kill -3
+                self.dumpstacks()
 
     def process_zombie(self):
         # reap dead workers
@@ -211,7 +447,6 @@ class Multicorn(object):
         for pid in self.workers.keys():
             self.worker_kill(pid, signal.SIGTERM)
         self.socket.close()
-        openerp.cli.server.quit_signals_received = 1
 
     def run(self):
         self.start()
@@ -389,7 +624,7 @@ class WorkerCron(Worker):
     def sleep(self):
         # Really sleep once all the databases have been processed.
         if self.db_index == 0:
-            interval = 60 + self.pid % 10 # chorus effect
+            interval = SLEEP_INTERVAL + self.pid % 10 # chorus effect
             time.sleep(interval)
 
     def _db_list(self):
@@ -437,12 +672,66 @@ class WorkerCron(Worker):
         os.nice(10)     # mommy always told me to be nice with others...
         Worker.start(self)
         self.multi.socket.close()
-        openerp.service.start_internal()
 
         # chorus effect: make cron workers do not all start at first database
         mct = config['max_cron_threads']
         p = float(self.pid % mct) / mct
         self.db_index = int(len(self._db_list()) * p)
+
+#----------------------------------------------------------
+# start/stop public api
+#----------------------------------------------------------
+
+server = None
+
+def load_server_wide_modules():
+    for m in openerp.conf.server_wide_modules:
+        try:
+            openerp.modules.module.load_openerp_module(m)
+        except Exception:
+            msg = ''
+            if m == 'web':
+                msg = """
+The `web` module is provided by the addons found in the `openerp-web` project.
+Maybe you forgot to add those addons in your addons_path configuration."""
+            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
+
+def _reexec():
+    """reexecute openerp-server process with (nearly) the same arguments"""
+    if openerp.tools.osutil.is_running_as_nt_service():
+        subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
+    exe = os.path.basename(sys.executable)
+    args = stripped_sys_argv()
+    if not args or args[0] != exe:
+        args.insert(0, exe)
+    os.execv(sys.executable, args)
+
+def start():
+    """ Start the openerp http server and cron processor.
+    """
+    load_server_wide_modules()
+    if config['workers']:
+        openerp.multi_process = True
+        server = Multicorn(openerp.service.wsgi_server.application)
+    elif openerp.evented:
+        server = GeventServer(openerp.service.wsgi_server.application)
+    else:
+        server = ThreadedServer(openerp.service.wsgi_server.application)
+    server.run()
+
+    # like the legend of the phoenix, all ends with beginnings
+    if getattr(openerp, 'phoenix', False):
+        _reexec()
+    sys.exit(0)
+
+def restart_server():
+    """ Restart the server
+    """
+    if os.name == 'nt':
+        # run in a thread to let the current thread return response to the caller.
+        threading.Thread(target=_reexec).start()
+    else:
+        os.kill(server.pid, signal.SIGHUP)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

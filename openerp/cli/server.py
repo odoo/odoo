@@ -147,111 +147,14 @@ def import_translation():
     cr.commit()
     cr.close()
 
-# Variable keeping track of the number of calls to the signal handler defined
-# below. This variable is monitored by ``quit_on_signals()``.
-quit_signals_received = 0
-
-def signal_handler(sig, frame):
-    """ Signal handler: exit ungracefully on the second handled signal.
-
-    :param sig: the signal number
-    :param frame: the interrupted stack frame or None
-    """
-    global quit_signals_received
-    quit_signals_received += 1
-    if quit_signals_received > 1:
-        # logging.shutdown was already called at this point.
-        sys.stderr.write("Forced shutdown.\n")
-        os._exit(0)
-
-def dumpstacks(sig, frame):
-    """ Signal handler: dump a stack trace for each existing thread."""
-    # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
-    # modified for python 2.5 compatibility
-    threads_info = dict([(th.ident, {'name': th.name,
-                                    'uid': getattr(th,'uid','n/a')})
-                                for th in threading.enumerate()])
-    code = []
-    for threadId, stack in sys._current_frames().items():
-        thread_info = threads_info.get(threadId)
-        code.append("\n# Thread: %s (id:%s) (uid:%s)" % \
-                    (thread_info and thread_info['name'] or 'n/a',
-                     threadId,
-                     thread_info and thread_info['uid'] or 'n/a'))
-        for filename, lineno, name, line in traceback.extract_stack(stack):
-            code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
-            if line:
-                code.append("  %s" % (line.strip()))
-    _logger.info("\n".join(code))
-
-def setup_signal_handlers(signal_handler):
-    """ Register the given signal handler. """
-    SIGNALS = (signal.SIGINT, signal.SIGTERM)
-    if os.name == 'posix':
-        map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
-        signal.signal(signal.SIGQUIT, dumpstacks)
-    elif os.name == 'nt':
-        import win32api
-        win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
-
-def quit_on_signals():
-    """ Wait for one or two signals then shutdown the server.
-
-    The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
-    a second one if any will force an immediate exit.
-
-    """
-    # Wait for a first signal to be handled. (time.sleep will be interrupted
-    # by the signal handler.) The try/except is for the win32 case.
-    try:
-        while quit_signals_received == 0:
-            time.sleep(60)
-    except KeyboardInterrupt:
-        pass
-
-    config = openerp.tools.config
-    openerp.service.stop_services()
-
-    if getattr(openerp, 'phoenix', False):
-        # like the phoenix, reborn from ashes...
-        openerp.service._reexec()
-        return
-
-    if config['pidfile']:
-        os.unlink(config['pidfile'])
-    sys.exit(0)
-
-def watch_parent(beat=4):
-    import gevent
-    ppid = os.getppid()
-    while True:
-        if ppid != os.getppid():
-            pid = os.getpid()
-            _logger.info("LongPolling (%s) Parent changed", pid)
-            # suicide !!
-            os.kill(pid, signal.SIGTERM)
-            return
-        gevent.sleep(beat)
-
 def main(args):
     check_root_user()
     openerp.tools.config.parse_config(args)
-
-    if openerp.tools.config.options["gevent"]:
-        openerp.evented = True
-        _logger.info('Using gevent mode')
-        import gevent.monkey
-        gevent.monkey.patch_all()
-        import gevent_psycopg2
-        gevent_psycopg2.monkey_patch()
-
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()
 
     config = openerp.tools.config
-
-    setup_signal_handlers(signal_handler)
 
     if config["test_file"]:
         run_test_file(config['db_name'], config['test_file'])
@@ -265,28 +168,19 @@ def main(args):
         import_translation()
         sys.exit(0)
 
-    if not config["stop_after_init"]:
-        setup_pid_file()
-        # Some module register themselves when they are loaded so we need the
-        # services to be running before loading any registry.
-        if not openerp.evented:
-            if config['workers']:
-                openerp.service.start_services_workers()
-            else:
-                openerp.service.start_services()
-        else:
-            config['xmlrpc_port'] = config['longpolling_port']
-            import gevent
-            gevent.spawn(watch_parent)
-            openerp.service.start_services()
-
+    # preload registryies, needed for -u --stop_after_init
     rc = 0
     if config['db_name']:
         for dbname in config['db_name'].split(','):
             if not preload_registry(dbname):
                 rc += 1
 
-    if config["stop_after_init"]:
+    if not config["stop_after_init"]:
+        setup_pid_file()
+        openerp.service.workers.start()
+        if config['pidfile']:
+            os.unlink(config['pidfile'])
+    else:
         sys.exit(rc)
 
     _logger.info('OpenERP server is running, waiting for connections...')

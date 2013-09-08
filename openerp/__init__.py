@@ -27,9 +27,16 @@ import sys
 
 # Is the server running with gevent.
 evented = False
-if sys.modules.get("gevent") is not None:
-    evented = True
+for i in sys.argv:
+    if i.startswith('--gevent'):
+        evented = True
+        break
 
+if evented:
+    import gevent.monkey
+    gevent.monkey.patch_all()
+    import gevent_psycopg2
+    gevent_psycopg2.monkey_patch()
 
 # Make sure the OpenERP server runs in UTC. This is especially necessary
 # under Windows as under Linux it seems the real import of time is
