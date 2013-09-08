@@ -78,12 +78,17 @@
   I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice.
 -
   !python {model: hr.timesheet.invoice.create}: |
-    created=self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_0")], {"active_ids": [ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1")]})
+    created=self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_0")], {
+        "active_ids": [ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1")]
+    })
     invoice_pool = self.pool.get('account.invoice')
-    invoice_domain = created.get('domain')
-    invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
-    invoice_pool.write(cr, uid, invoice_ids, {'origin': 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ) })
-   
+    invoice_domain = created.get('domain', False)
+    if invoice_domain:
+        invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
+        invoice_pool.write(cr, uid, invoice_ids, {'origin': 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0"))\
+            + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ) })
+    else:
+        pass#Assert missed invoice in next section
 -
   I check that Invoice is created for this timesheet.
 -
