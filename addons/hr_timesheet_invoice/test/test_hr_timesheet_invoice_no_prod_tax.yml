@@ -82,7 +82,7 @@
     invoice_pool = self.pool.get('account.invoice')
     invoice_domain = created.get('domain')
     invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
-    invoice_pool.write(cr, uid, invoice_ids, {'origin': 'test_hr_timesheet_invoice_create_0_id_'+str( ref("hr_timesheet_invoice_create_0")) })
+    invoice_pool.write(cr, uid, invoice_ids, {'origin': 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ) })
    
 -
   I check that Invoice is created for this timesheet.
@@ -95,7 +95,7 @@
 
     invoice_obj = self.pool.get('account.invoice')
     invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner),
-           ('origin','=','test_hr_timesheet_invoice_create_0_id_'+str( ref("hr_timesheet_invoice_create_0")) )
+       ('origin', '=', 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ))
     ])
     
     invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
