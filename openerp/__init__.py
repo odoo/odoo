@@ -35,8 +35,8 @@ for i in sys.argv:
 if evented:
     import gevent.monkey
     gevent.monkey.patch_all()
-    import gevent_psycopg2
-    gevent_psycopg2.monkey_patch()
+    import psycogreen.gevent
+    psycogreen.gevent.patch_psycopg()
 
 # Make sure the OpenERP server runs in UTC. This is especially necessary
 # under Windows as under Linux it seems the real import of time is

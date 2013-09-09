@@ -30,9 +30,9 @@ def run(args):
         import gevent
         import gevent.monkey
         import gevent.wsgi
-        import gevent_psycopg2
+        import psycogreen.gevent
         gevent.monkey.patch_all()
-        gevent_psycopg2.monkey_patch()
+        psycogreen.gevent.patch_psycopg()
     import threading
     import openerp
     import openerp.cli.server
