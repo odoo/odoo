@@ -125,24 +125,8 @@
 
             init: function (editor) {
                 editor.widgets.add('oeref', {
-                    inline: true,
-                    // dialog: 'oeref',
-                    allowedContent: '[data-oe-type]',
                     editables: { text: '*' },
 
-                    init: function () {
-                        var element = this.element;
-                        this.setData({
-                            model: element.data('oe-model'),
-                            id: parseInt(element.data('oe-id'), 10),
-                            field: element.data('oe-field'),
-                        });
-                    },
-                    data: function () {
-                        this.element.data('oe-model', this.data.model);
-                        this.element.data('oe-id', this.data.id);
-                        this.element.data('oe-field', this.data.field);
-                    },
                     upcast: function (el) {
                         return el.attributes['data-oe-type'];
                     },
