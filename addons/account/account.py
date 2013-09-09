@@ -1654,9 +1654,11 @@ class account_move(osv.osv):
             else:
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
-                obj_move_line.write(cr, uid, line_ids, {
-                    'state': 'draft'
-                }, context, check=False)
+                not_draft_line_ids = list(set(line_ids) - set(line_draft_ids))
+                if not_draft_line_ids:
+                    obj_move_line.write(cr, uid, not_draft_line_ids, {
+                        'state': 'draft'
+                    }, context, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
             obj_move_line.create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
