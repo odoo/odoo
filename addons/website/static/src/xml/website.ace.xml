@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.ace_view_editor">
+        <div class="oe_ace_view_editor">
+            <div class="oe_ace_view_editor_title">
+                <button type="button" class="btn btn-default btn-small">Close</button>
+                <button data-action="save-view" type="button" class="btn btn-default btn-small">Save</button>
+                <select id="ace-view-list">
+                    <!-- filled in JS -->
+                </select>
+            </div>
+            <div id="ace-view-editor"/>
+        </div>
+    </t>
+    <t t-name="website.ace_view_option">
+        <option t-att-value="widget.view_id"><t t-esc="widget.view_name"/></option>
+    </t>
+</templates>

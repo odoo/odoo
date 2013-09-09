@@ -131,7 +131,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return True
 
     @website.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
-    def customize_template_get(self, xml_id):
+    def customize_template_get(self, xml_id, optional=True):
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
@@ -141,10 +141,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         done = {}
         result = []
         for v in views:
-            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id:
+            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
                 if v.inherit_option_id.id not in done:
                     result.append({
                         'name': v.inherit_option_id.name,
+                        'id': v.id,
                         'header': True,
                         'active': False
                     })
