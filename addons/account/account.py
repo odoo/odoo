@@ -3081,7 +3081,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #set currecy_id based on selected COA template using ir.vaalues else current users company's currency
             value_id = ir_values.search(cr, uid, [('model', '=', 'account.chart.template'), ('res_id', '=', chart_template_id)], limit=1, context=context)
             if value_id:
-                currency_id = int(ir_values.browse(cr, uid, val_id[0], context=context).value)
+                currency_id = int(ir_values.browse(cr, uid, value_id[0], context=context).value)
             else:
                 currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
             res['value'].update({'complete_tax_set': data.complete_tax_set, 'currency_id': currency_id})
