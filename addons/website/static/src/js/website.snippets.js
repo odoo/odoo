@@ -493,22 +493,21 @@
                 var height = parseInt($snippet.height() || 0);
                 var width = parseInt($snippet.width() || 0);
 
-                var $padding = $manipulator.find(".oe_boxsize").css({
+                var pcss = {
                     top: parseInt($snippet.css('padding-top')) + 'px',
                     bottom: parseInt($snippet.css('padding-bottom')) + 'px',
-                    //height: (height - (parseInt($snippet.css('padding-top')) || 0) - (parseInt($snippet.css('padding-bottom')) || 0)) + 'px',
                     left: parseInt($snippet.css('padding-left')) + 'px',
                     right: parseInt($snippet.css('padding-right')) + 'px',
-                    //width: (width - (parseInt($snippet.css('padding-left')) || 0) - (parseInt($snippet.css('padding-right')) || 0)) + 'px',
-                });
-                var $margin = $manipulator.find(".oe_margin").css({
+                };
+                var $padding = $manipulator.find(".oe_boxsize").css(pcss);
+
+                var mcss = {
                     top: -parseInt($snippet.css('margin-top')) + 'px',
                     bottom: -parseInt($snippet.css('margin-bottom')) + 'px',
-                    //height: (height + (parseInt($snippet.css('margin-top')) || 0) + (parseInt($snippet.css('margin-bottom')) || 0)) + 'px',
                     left: -parseInt($snippet.css('margin-left')) + 'px',
                     right: -parseInt($snippet.css('margin-right')) + 'px',
-                    //width: (width + (parseInt($snippet.css('margin-left')) || 0) + (parseInt($snippet.css('margin-right')) || 0)) + 'px',
-                });
+                };
+                var $margin = $manipulator.find(".oe_margin").css(mcss);
             }
             padding_margin_cover( this.$target.data('manipulator'),  this.$target);
 
@@ -526,12 +525,6 @@
                                 parseInt($snippet.css('padding-bottom') || 0),
                                 parseInt($snippet.css('padding-left') || 0),
                                 parseInt($snippet.css('padding-right') || 0)];
-                    var margin=[parseInt($snippet.css('margin-top') || 0),
-                                parseInt($snippet.css('margin-bottom') || 0),
-                                parseInt($snippet.css('margin-left') || 0),
-                                parseInt($snippet.css('margin-right') || 0)];
-                    var size = [parseInt($snippet.height() || 0),
-                                parseInt($snippet.width() || 0)];
 
                     $manipulator.addClass('oe_hover');
 
@@ -541,24 +534,16 @@
                         var dy = event.pageY - y;
 
                         if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
-                            $snippet.css('padding-top', (padding[0]-dy)+'px');
-                            if (padding[0]-dy < 0) {
-                                $snippet.css('margin-top', (margin[0]+(padding[0]-dy))+'px');
-                            }
+                            $snippet.css('padding-top', (padding[0]+dy)+'px');
                         }
                         if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
-                            $snippet.css('padding-bottom',(padding[1]+dy)+'px');
-                            if (padding[1]+dy < 0) {
-                                $snippet.css('margin-bottom', (margin[1]+(padding[1]+dy))+'px');
-                            }
+                            $snippet.css('padding-bottom',(padding[1]-dy)+'px');
                         }
                         if($handle.hasClass('w') || $handle.hasClass('sw') || $handle.hasClass('nw')){
                             $snippet.css('padding-left',(padding[2]+dx)+'px');
-                            //$snippet.css('width', (size[1]-dx)+'px');
                         }
                         if($handle.hasClass('e') || $handle.hasClass('se') || $handle.hasClass('ne')){
-                            $snippet.css('padding-right',(padding[3]+dx)+'px');
-                            //$snippet.css('width', (size[1]+dx)+'px');
+                            $snippet.css('padding-right',(padding[3]-dx)+'px');
                         }
                         website.snippet.cover_target($manipulator, $snippet);
                         padding_margin_cover($manipulator, $snippet);
