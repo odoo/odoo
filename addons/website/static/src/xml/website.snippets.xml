@@ -64,7 +64,7 @@
             <!-- Carousel items -->
             <div class="carousel-inner">
                 <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
-                    <div class="container">
+                    <div class="container" data-snippet-id="container">
                         <div class="content" style="padding-top: 90px; padding-bottom:45px;">
                             <h1>Create Awesome Websites</h1>
                             <h3>Super easy, fully flexible</h3>
@@ -90,11 +90,11 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.darken" data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
+    <div t-name="website.snippets.darken" data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container'>
         <div class='oe_snippet_thumbnail oe_label'>Darken</div>
     </div>
 
-    <div t-name="website.snippets.surprise" data-snippet-id='surprise' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.vomify'>
+    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-action='mutate' data-selector='#wrap .container'>
         <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
     </div>
 

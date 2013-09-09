@@ -42,7 +42,7 @@
             var self = this;
             var $snipped_id = false;
             var snipped_event_flag = false;
-            $("[data-snippet-id]").on('click', function (event) {
+            $("body").on('click', "[data-snippet-id]", function (event) {
                     if (snipped_event_flag) {
                         return;
                     }
@@ -188,14 +188,25 @@
                             $(this).removeClass("oe_hover");
                         },
                         drop:   function(){
-                            if( action === 'insert' ){
+                            var snipped_id = $snippet.data('snippet-id');
+                            if($snippet.find('.oe_snippet_body').size()){
                                 var $toInsert = $snippet.find('.oe_snippet_body').clone();
                                 $toInsert.removeClass('oe_snippet_body');
                                 $toInsert.addClass('oe_snippet_instance');
-                                $toInsert.data('snippet-id',$snippet.data('snippet-id'));
+                                $toInsert.attr('data-snippet-id', snipped_id);
                                 $(".oe_drop_zone.oe_hover").replaceWith($toInsert);
-                            }else if( action === 'mutate' ){
-                                self.path_eval($snippet.data('action-function'))( $(".oe_drop_zone.oe_hover").data('target') );
+                                var $target = $toInsert;
+
+                                self.deactivate_snippet_manipulators();
+                                self.activate_snippet_manipulators();
+                            } else {
+                                var $target = $(".oe_drop_zone.oe_hover").data('target');
+                            }
+
+                            if (website.snippet.editorRegistry[snipped_id]) {
+                                var snippet = new website.snippet.editorRegistry[snipped_id](this.parent, $target);
+                                snippet.build_snippet($target);
+                                $target.click();
                             }
                         },
                     });
@@ -449,6 +460,11 @@
             this.replaceElement($el);
         },
 
+        // create the snippet into the view
+        build_snippet: function () {
+
+        },
+
         /* onFocus
         *  called when the user click inside the snippet dom
         */
@@ -572,6 +588,11 @@
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.box.extend({
         template : "website.snippets.carousel",
+        build_snippet: function($target) {
+            var id = "myCarousel" + $("body .carousel").size();
+            $target.attr("id", id);
+            $target.find(".carousel-control").attr("href", "#"+id);
+        },
         start : function () {
             var self = this;
 
@@ -638,6 +659,39 @@
                 break;
             }
         },
+    });
+
+    website.snippet.editorRegistry.darken = website.snippet.Editor.extend({
+        build_snippet: function($target) {
+            $target.toggleClass('dark');
+            var $parent = $target.parent();
+            if($parent.hasClass('dark')){
+                $parent.replaceWith($target);
+            }else{
+                $target.replaceWith($("<div class='dark'></div>").append($target.clone()));
+            }
+        }
+    });
+
+    website.snippet.editorRegistry.vomify = website.snippet.Editor.extend({
+        build_snippet: function($target) {
+            var hue=0;
+            var beat = false;
+            var a = setInterval(function(){
+                $target.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
+            }, 10);
+            setTimeout(function(){
+                clearInterval(a);
+                setInterval(function(){
+                    var filter =  'hue-rotate('+hue+'deg)'+ (beat ? ' invert()' : '');
+                    $(document.documentElement).css({'-webkit-filter': filter}); hue += 5;
+                    if(hue % 35 === 0){
+                        beat = !beat;
+                    }
+                }, 10);
+            },5000);
+            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo($target);
+        }
     });
 
 })();

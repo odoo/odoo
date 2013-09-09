@@ -31,34 +31,6 @@
         return def;
     };
 
-    website.mutations = {
-        darken: function($el){
-            var $parent = $el.parent();
-            if($parent.hasClass('dark')){
-                $parent.replaceWith($el);
-            }else{
-                $el.replaceWith($("<div class='dark'></div>").append($el.clone()));
-            }
-        },
-        vomify: function($el){
-            var hue=0;
-            var beat = false;
-            var a = setInterval(function(){
-                $el.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
-            }, 10);
-            setTimeout(function(){
-                clearInterval(a);
-                setInterval(function(){
-                    var filter =  'hue-rotate('+hue+'deg)'+ (beat ? ' invert()' : '');
-                    $(document.documentElement).css({'-webkit-filter': filter}); hue += 5;
-                    if(hue % 35 === 0){
-                        beat = !beat;
-                    }
-                }, 10);
-            },5000);
-            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo($el);
-        },
-    };
 
     var all_ready = null;
     var dom_ready = website.dom_ready = $.Deferred();
