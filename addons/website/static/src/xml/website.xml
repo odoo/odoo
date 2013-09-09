@@ -2,29 +2,89 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-<t t-name="Website.EditorBar">
-    <ul class="oe_website_editorbar openerp">
-        <li><button data-action="edit" type="button">Edit</button></li>
-        <li><button data-action="save" type="button">Save</button></li>
-        <li><button data-action="cancel" type="button">Cancel</button></li>
-        <li class="oe_right"><button data-action="snippet" type="button"
-            >Building Blocks</button></li>
-    </ul>
-</t>
-<t t-name="Website.ActionGroup">
-    <div class="dropdown">
-        <button type="button" class="oe_button_list dropdown-toggle">
-            <t t-esc="widget.name"/>
-        </button>
-        <ul class="dropdown-menu" role="menu"/>
-    </div>
-</t>
-<t t-name="Website.Snipped.carousel">
-    <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
-        <div class='container'>
-            <h1 class='mt64'>Your New Banner Slide</h1>
-            <h2>With another convincing subtitle</h2>
+
+    <t t-name="website.editorbar">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div id="website-top-view">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-edit-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <form class="navbar-form navbar-left">
+                        <button type="button" data-action="edit"
+                                class="btn btn-primary">Edit</button>
+                    </form>
+                </div>
+                <div class="collapse navbar-collapse navbar-edit-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
+                        <li><a href="#">Translate</a></li>
+                        <li class="dropdown">
+                            <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" id="customize-menu">
+                                <!-- filled in JS -->
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/admin#action=website.action_module_website">Apps</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-</t>
+    </t>
+
+    <t t-name="website.mobile_preview">
+        <div class="modal fade oe_mobile_preview" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                        <h3 class="modal-title">Mobile preview</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.carousel">
+        <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
+            <div class='container'>
+                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                    <h1>Your New Banner Slide</h1>
+                    <h3>With another convincing subtitle</h3>
+                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippets">
+        <div class='oe_snippets hide'>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'>
+            <div class='oe_handle n'></div>
+            <div class='oe_handle ne'></div>
+            <div class='oe_handle e'></div>
+            <div class='oe_handle se'></div>
+            <div class='oe_handle s'></div>
+            <div class='oe_handle sw'></div>
+            <div class='oe_handle w'></div>
+            <div class='oe_handle nw'></div>
+        </div>
+    </t>
+
 </templates>

@@ -50,105 +50,111 @@
     margin-bottom: 0px !important
 
 /* Grid of unequally tall elements */
-.grid > [class*="span"]
+.grid > [class*="col-md"]
     display: inline-block
     float: none
     vertical-align: top
-    margin-right: -4px
     box-sizing: border-box
-    &.grid-align-top > [class*="span"]
+    &.grid-align-top > [class*="col-md"]
         vertical-align: top
-    &.grid-align-middle > [class*="span"]
+    &.grid-align-middle > [class*="col-md"]
         vertical-align: middle
-    &.grid-align-bottom > [class*="span"]
+    &.grid-align-bottom > [class*="col-md"]
         vertical-align: bottom
-
-/* Table with two collumns aligned on the center */
-.table-equalized
-    width: 100%
-    td:first-child
-        width: 50%
-        text-align: right
-        padding-right: 1em
-        vertical-align: bottom
-    td:last-child
-        width: 50%
-        text-align: left
-        vertical-align: bottom
-
-/* Theming pagination inside navbar */
-.navbar-inner > .pagination
-    margin: 6px 0
-    ul
-        position: relative
-        top: 2px
-        border: solid 2px rgba(0,0,0,0.05)
-        border-radius: 8px
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
 html,body
-    height: 100%
     box-sizing: border-box
-    position: relative
-
-#wrap
-    min-height: 100%
-    height: auto !important
     height: 100%
-    margin: 0 auto -300px
-    padding: 0 0 364px
-    box-sizing: border-box
 
+body
+    display: table
+    width: 100%
+
+header, #wrap, footer
+    display: table-row
+ 
 footer
-    box-sizing: border-box
-    height: 300px
-    background: rgb(239, 248, 248) // rgb(221, 235, 227)
-    padding-top: 64px
-    padding-bottom: 64px
-
-/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
-
-.subheader
-    letter-spacing: 3px   
-    font-weight: 300
-
-header.navbar-fixed-top
-    position: static
-
-.dark
+    height: 100%
     background: rgb(239, 248, 248)
-    padding: 64px
+    background: rgba(100, 200, 200, 0.1)
 
-h5
-    font-weight: bold 
-
-#myCarousel .item
-    min-height: 300px
-    color: white
-
-
-.nav > .pull-right
-    float: right !important //bugfix for flatly theme
-
-.thumbnail
-    background: white
+#footer_container
+    padding-top: 24px
+    padding-bottom: 12px
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
 .navbar .nav > li > p
     margin-bottom: 0px
 
-.navbar .nav > li  a
-    text-shadow: none
+// .navbar .nav > li  a
+//     text-shadow: none
 
-.navbar .nav > li  a 
-    float: none
-    padding: 15px 15px 15px
-    color: #ffffff
-    text-decoration: none
-    text-shadow: 0 1px 0 #2c3e50
+// .nav > li  a 
+//     display: block
 
-.nav > li  a 
-    display: block
+#myCarousel .item
+    color: white
 
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
+
+.dark
+    background: #eff8f8
+    background: rgba(100, 200, 200, 0.1)
+    -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset
+    -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset
+    box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset
+
+.nav-hierarchy
+    padding-left: 16px
+
+div#wrap
+    .carousel
+        top: -20px
+
+/* -- Hack for removing double scrollbar from mobile preview -- */
+div#mobile-preview.modal
+    overflow: hidden
+    overflow-y: hidden
+
+ul.nav-stacked > li > a
+    padding: 2px 15px
+
+#customize-menu
+    .dropdown-header
+        text-transform: uppercase
+
+/* ---- PUBLISH ---- */
+a[data-publish]
+    text-decoration: none !important
+    z-index: 2
+    .label
+        padding: 5px 8px
+    .css_unpublish, .css_publish, .css_unpublished, .css_published
+        display: none
+    &[data-publish='off']
+        .css_unpublished, &:hover .css_publish
+            display: inline
+        &:hover .css_unpublished
+            display: none
+    &[data-publish='on']
+        .css_published, &:hover .css_unpublish
+            display: inline
+        &:hover .css_published
+            display: none
+
+[data-publish='off']:not(a)
+    >:not([data-publish])
+        opacity: 0.5
+[data-publish]:not(a)
+    position: relative
+    overflow: visible
+    >[data-publish]
+        position: absolute
+        right: -6px
+        top: -10px
+        display: none
+    &:hover > [data-publish]
+        display: block

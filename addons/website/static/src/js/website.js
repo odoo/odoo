@@ -1,364 +1,166 @@
-openerp.website = function(instance) {
+(function() {
+    "use strict";
 
-instance.web.ActionManager.include({
-    // Temporary fix until un-webclientization of the editorbar
-    ir_actions_client: function (action) {
-        if (instance.web.client_actions.get_object(action.tag)) {
-            return this._super.apply(this, arguments);
-        } else {
-            console.warn("Action '%s' not found in registry", action.tag);
-            return $.when();
-        }
-    }
-});
+    var website = {};
+    // The following line can be removed in 2017
+    openerp.website = website;
 
-var _lt = instance.web._lt;
-var QWeb = instance.web.qweb;
-instance.website.EditorBar = instance.web.Widget.extend({
-    template: 'Website.EditorBar',
-    events: {
-        'click button[data-action=edit]': 'edit',
-        'click button[data-action=save]': 'save',
-        'click button[data-action=cancel]': 'cancel',
-        'click button[data-action=snippet]': 'snippet',
-    },
-    container: 'body',
-    init: function () {
-        this._super.apply(this, arguments);
-        this.saving_mutex = new $.Mutex();
-    },
-    start: function() {
-        var self = this;
+    var templates = website.templates = [
+        '/website/static/src/xml/website.xml'
+    ];
 
-        this.$('button[data-action]').prop('disabled', true)
-            .parent().hide();
-        this.$buttons = {
-            edit: this.$('button[data-action=edit]'),
-            save: this.$('button[data-action=save]'),
-            cancel: this.$('button[data-action=cancel]'),
-            snippet: this.$('button[data-action=snippet]'),
-        };
-        this.$buttons.edit.prop('disabled', false).parent().show();
-
-        self.snippet_start();
-
-        this.rte = new instance.website.RTE(this);
-        this.rte.on('change', this, this.proxy('rte_changed'));
-
-        return $.when(
-            this._super.apply(this, arguments),
-            this.rte.insertBefore(this.$buttons.snippet.parent())
-        );
-    },
-    edit: function () {
-        this.$buttons.edit.prop('disabled', true).parent().hide();
-        this.$buttons.cancel.add(this.$buttons.snippet)
-            //.prop('disabled', false)
-            .add(this.$buttons.save)
-            .prop('disabled', false)
-            .parent().show();
-        // TODO: span edition changing edition state (save button)
-        var $editables = $('[data-oe-model]')
-                .filter('div, p, li, section, header, footer')
-                .filter('[data-oe-xpath]')
-                .not('[data-oe-type]')
-                // FIXME: propagation should make "meta" blocks non-editable in the first place...
-                .not('.oe_snippet_editor')
-                .prop('contentEditable', true)
-                .addClass('oe_editable');
-        this.rte.start_edition($editables);
-    },
-    rte_changed: function () {
-        this.$buttons.save.prop('disabled', false);
-    },
-    save: function () {
-        var self = this;
-
-        var defs = _(CKEDITOR.instances).chain()
-            .filter(function (editor) { return editor.checkDirty(); })
-            .map(function (editor) {
-                console.log('Saving', editor);
-                // TODO: Add a queue with concurrency limit in webclient
-                // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
-                return self.saving_mutex.exec(function () {
-                    var $el = $(editor.element.$);
-                    return self.saveEditor(editor)
-                        .fail(function () {
-                            var data = $el.data();
-                            console.error(_.str.sprintf('Could not save %s(%d).%s', data.oeModel, data.oeId, data.oeField));
-                        });
-                });
-            }).value();
-        return $.when.apply(null, defs).then(function () {
-            window.location.reload();
-        });
-    },
-    /**
-     * Saves an RTE content, which always corresponds to a view section (?).
-     *
-     *
-     */
-    saveEditor: function (editor) {
-        var element = editor.element;
-        editor.destroy();
-        element.removeClass('cke_focus')
-               .removeClass('oe_editable')
-               .removeAttribute('contentEditable');
-        var data = element.getOuterHtml();
-        return new instance.web.Model('ir.ui.view').call('save', {
-            res_id: element.data('oe-id'),
-            xpath: element.data('oe-xpath'),
-            value: data,
-        });
-    },
-    cancel: function () {
-        window.location.reload();
-    },
-    setup_droppable: function () {
-        var self = this;
-        $('.oe_snippet_drop').remove();
-        var droppable = '<div class="oe_snippet_drop"></div>';
-        var $zone = $(':not(.oe_snippet) > .container');
-        $zone.after(droppable);//.after(droppable);
-
-        $(".oe_snippet_drop").droppable({
-            hoverClass: 'oe_accepting',
-            drop: function( event, ui ) {
-                console.log(event, ui, "DROP");
-
-                $(event.target).replaceWith($(ui.draggable).html());
-                $('.oe_selected').remove();
-                $('.oe_snippet_drop').remove();
-            }
-        });
-    },
-    snippet_start: function () {
-        var self = this;
-        $('.oe_snippet').draggable().click(function(ev) {
-            self.setup_droppable();
-            $(".oe_snippet_drop").show();
-            $('.oe_selected').removeClass('oe_selected');
-            $(ev.currentTarget).addClass('oe_selected');
-        });
-
-    },
-    snippet: function (ev) {
-        $('.oe_snippet_editor').toggle();
-    },
-});
-
-instance.website.RTE = instance.web.Widget.extend({
-    tagName: 'li',
-    id: 'oe_rte_toolbar',
-    className: 'oe_right oe_rte_toolbar',
-    // editor.ui.items -> possible commands &al
-    // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
-
-    start_edition: function ($elements) {
-        var self = this;
-        this.snippet_carousel();
-        $elements
-            .each(function () {
-                var $this = $(this);
-                var editor = CKEDITOR.inline(this, self._config());
-                editor.on('change', function () {
-                    self.trigger('change', this, null);
-                });
+    /* ----- TEMPLATE LOADING ---- */
+    website.add_template = function(template) {
+        templates.push(template);
+    };
+    website.load_templates = function(templates) {
+        var def = $.Deferred();
+        var count = templates.length;
+        templates.forEach(function(t) {
+            openerp.qweb.add_template(t, function(err) {
+                if (err) {
+                    def.reject();
+                } else {
+                    count--;
+                    if (count < 1) {
+                        def.resolve();
+                    }
+                }
             });
-    },
-
-    _current_editor: function () {
-        return CKEDITOR.currentInstance;
-    },
-    _config: function () {
-        var removed_plugins = [
-                // remove custom context menu
-                'contextmenu,tabletools,liststyle',
-                // magicline captures mousein/mouseout => draggable does not work
-                'magicline'
-        ];
-        return {
-            removePlugins: removed_plugins.join(','),
-            uiColor: '',
-            // Ensure no config file is loaded
-            customConfig: '',
-            // Disable ACF
-            allowedContent: true,
-            // Don't insert paragraphs around content in e.g. <li>
-            autoParagraph: false,
-            filebrowserImageUploadUrl: "/website/attach",
-            // Support for sharedSpaces in 4.x
-            extraPlugins: 'sharedspace,oeref',
-            // Place toolbar in controlled location
-            sharedSpaces: { top: 'oe_rte_toolbar' },
-            toolbar: [
-                {name: 'items', items: [
-                    "Bold", "Italic", "Underline", "Strike", "Subscript",
-                    "Superscript", "TextColor", "BGColor", "RemoveFormat",
-                    "Link", "Unlink", "Blockquote", "BulletedList",
-                    "NumberedList", "Image", "Indent", "Outdent",
-                    "JustifyLeft", "JustifyCenter", "JustifyRight",
-                    "JustifyBlock", "Table", "Font", "FontSize", "Format",
-                    "Styles"
-                ]}
-            ],
-            // styles dropdown in toolbar
-            stylesSet: [
-                // emphasis
-                {name: "Muted", element: 'span', attributes: {'class': 'text-muted'}},
-                {name: "Primary", element: 'span', attributes: {'class': 'text-primary'}},
-                {name: "Warning", element: 'span', attributes: {'class': 'text-warning'}},
-                {name: "Danger", element: 'span', attributes: {'class': 'text-danger'}},
-                {name: "Success", element: 'span', attributes: {'class': 'text-success'}},
-                {name: "Info", element: 'span', attributes: {'class': 'text-info'}}
-            ],
-        };
-    },
-    // TODO clean
-    snippet_carousel: function () {
-        var self = this;
-        $('.carousel .js_carousel_options .label').on('click', function (e) {
-            e.preventDefault();
-            var $button = $(e.currentTarget)
-            var $c = $button.parents(".carousel:first");
-
-            if($button.hasClass("js_add")) {
-                var cycle = $c.find(".carousel-inner .item").size();
-                $c.find(".carousel-inner").append(QWeb.render("Website.Snipped.carousel"));
-                $c.carousel(cycle);
-            }
-            else {
-                var cycle = $c.find(".carousel-inner .item.active").remove();
-                $c.find(".carousel-inner .item:first").addClass("active");
-                $c.carousel(0);
-                self.trigger('change', self, null);
-            }
         });
-        $('.carousel .js_carousel_options').show();
-    }
-});
+        return def;
+    };
 
-$(function(){
+    website.mutations = {
+        darken: function($el){
+            var $parent = $el.parent();
+            if($parent.hasClass('dark')){
+                $parent.replaceWith($el);
+            }else{
+                $el.replaceWith($("<div class='dark'></div>").append($el.clone()));
+            }
+        },
+        vomify: function($el){
+            var hue=0;
+            var beat = false;
+            var a = setInterval(function(){
+                $el.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
+            }, 10);
+            setTimeout(function(){
+                clearInterval(a);
+                setInterval(function(){
+                    var filter =  'hue-rotate('+hue+'deg)'+ (beat ? ' invert()' : '');
+                    $(document.documentElement).css({'-webkit-filter': filter}); hue += 5;
+                    if(hue % 35 === 0){
+                        beat = !beat;
+                    }
+                }, 10);
+            },5000);
+            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo($el);
+        },
+    };
 
-    function make_static(){
-        $('.oe_snippet_demo').removeClass('oe_new');
-        $('.oe_page *').off('mouseover mouseleave');
-        $('.oe_page .oe_selected').removeClass('oe_selected');
-    }
 
-    var selected_snippet = null;
-    function snippet_click(event){
-        if(selected_snippet){
-            selected_snippet.removeClass('oe_selected');
-            if(selected_snippet[0] === $(this)[0]){
-                selected_snippet = null;
-                event.preventDefault();
-                make_static();
+    var all_ready = null;
+    var dom_ready = website.dom_ready = $.Deferred();
+    $(dom_ready.resolve);
+
+    website.init_kanban = function ($kanban) {
+        $('.js_kanban_col', $kanban).each(function () {
+            var $col = $(this);
+            var $pagination = $('.pagination', $col);
+            if(!$pagination.size()) {
                 return;
             }
-        }
-        $(this).addClass('oe_selected');
-        selected_snippet = $(this);
-        make_editable();
-        event.preventDefault();
-    }
-    //$('.oe_snippet').click(snippet_click);
 
-    var hover_element = null;
+            var page_count =  $col.data('page_count');
+            var scope = $pagination.last().find("li").size()-2;
+            var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
 
-    function make_editable( constraint_after, constraint_inside ){
-        if(selected_snippet && selected_snippet.hasClass('oe_new')){
-            $('.oe_snippet_demo').addClass('oe_new');
-        }else{
-            $('.oe_snippet_demo').removeClass('oe_new');
-        }
-    
-        $('.oe_page *').off('mouseover');
-        $('.oe_page *').off('mouseleave');
-        $('.oe_page *').mouseover(function(event){
-            console.log('hover:',this);
-            if(hover_element){
-                hover_element.removeClass('oe_selected');
-                hover_element.off('click');
-            }
-            $(this).addClass('oe_selected');
-            $(this).click(append_snippet);
-            hover_element = $(this);
-            event.stopPropagation();
-        });
-        $('.oe_page *').mouseleave(function(){
-            if(hover_element && $(this) === hover_element){
-                hover_element = null;
-                $(this).removeClass('oe_selected');
-            }
-        });
-    }
+            var data = {
+                'domain': $col.data('domain'),
+                'model': $col.data('model'),
+                'template': $col.data('template'),
+                'step': $col.data('step'),
+                'orderby': $col.data('orderby')
+            };
 
-    function append_snippet(event){
-        console.log('click',this,event.button);
-        if(event.button === 0){
-            if(selected_snippet){
-                if(selected_snippet.hasClass('oe_new')){
-                    var new_snippet = $("<div class='oe_snippet'></div>");
-                    new_snippet.append($(this).clone());
-                    new_snippet.click(snippet_click);
-                    $('.oe_snippet.oe_selected').before(new_snippet);
-                }else{
-                    $(this).after($('.oe_snippet.oe_selected').contents().clone());
+            $pagination.on('click', 'a', function (ev) {
+                ev.preventDefault();
+                var $a = $(ev.target);
+                if($a.parent().hasClass('active')) {
+                    return;
                 }
-                selected_snippet.removeClass('oe_selected');
-                selected_snippet = null;
-                make_static();
-            }
-        }else if(event.button === 1){
-            $(this).remove();
-        }
-        event.preventDefault();
-    }
-});
 
-instance.web.ActionRedirect = function(parent, action) {
-    var url = $.deparam(window.location.href).url;
-    if (url) {
-        window.location.href = url;
-    }
-};
-instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
+                var page = +$a.attr("href").split(",").pop().split('-')[1];
+                data['page'] = page;
 
-instance.web.GoToWebsite = function(parent, action) {
-    window.location.href = window.location.href.replace(/[?#].*/, '').replace(/\/admin[\/]?$/, '');
-};
-instance.web.client_actions.add("website.gotowebsite", "instance.web.GoToWebsite");
-
-if (!window.CKEDITOR) { return; }
-
-CKEDITOR.plugins.add('oeref', {
-    requires: 'widget',
-
-    init: function (editor) {
-        editor.widgets.add('oeref', {
-            inline: true,
-            // dialog: 'oeref',
-            allowedContent: '[data-oe-type]',
-            editables: { text: '*' },
-
-            init: function () {
-                var element = this.element;
-                this.setData({
-                    model: element.data('oe-model'),
-                    id: parseInt(element.data('oe-id'), 10),
-                    field: element.data('oe-field'),
+                $.post('/website/kanban/', data, function (col) {
+                    $col.find("> .thumbnail").remove();
+                    $pagination.last().before(col);
                 });
-            },
-            data: function () {
-                this.element.data('oe-model', this.data.model);
-                this.element.data('oe-id', this.data.id);
-                this.element.data('oe-field', this.data.field);
-            },
-            upcast: function (el) {
-                return el.attributes['data-oe-type'];
-            },
+
+                var page_start = page - parseInt(Math.floor((scope-1)/2));
+                if (page_start < 1 ) page_start = 1;
+                var page_end = page_start + (scope-1);
+                if (page_end > page_count ) page_end = page_count;
+
+                if (page_end - page_start < scope) {
+                    page_start = page_end - scope > 0 ? page_end - scope : 1;
+                }
+
+                $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
+                $pagination.find('li.next a').attr("href", kanban_url_col+(page < page_end ? page+1 : page_end));
+                for(var i=0; i < scope; i++) {
+                    $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
+                }
+                $pagination.find('li.active').removeClass('active');
+                $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
+
+            });
+
         });
-    }
-});
-};
+    };
+
+    /**
+     * Returns a deferred resolved when the templates are loaded
+     * and the Widgets can be instanciated.
+     */
+    website.ready = function() {
+        if (!all_ready) {
+            all_ready = dom_ready.then(function () {
+                // TODO: load translations
+                return website.load_templates(templates);
+            });
+        }
+        return all_ready;
+    };
+
+    dom_ready.then(function () {
+        /* ----- PUBLISHING STUFF ---- */
+        $('[data-publish]:has([data-publish])').each(function () {
+            var $pub = $("[data-publish]", this);
+            if($pub.size())
+                $(this).attr("data-publish", $pub.attr("data-publish"));
+            else
+                $(this).removeAttr("data-publish");
+        });
+
+        $(document).on('click', '.js_publish', function (e) {
+            e.preventDefault();
+            var $data = $(":first", this).parents("[data-publish]");
+            $data.attr("data-publish", $data.first().attr("data-publish") == 'off' ? 'on' : 'off');
+            $.post('/website/publish', {'id': $(this).data('id'), 'object': $(this).data('object')}, function (result) {
+                $data.attr("data-publish", +result ? 'on' : 'off');
+            });
+        });
+
+        /* ----- KANBAN WEBSITE ---- */
+        $('.js_kanban').each(function () {
+            website.init_kanban(this);
+        });
+
+    });
+
+    return website;
+})();

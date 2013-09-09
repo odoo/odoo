@@ -1,13 +1,29 @@
-@charset "utf-8";
+/* ---- CKEditor Minimal Reset ---- */
+.navbar.navbar-inverse .cke_chrome {
+  border: none;
+}
+
+.navbar.navbar-inverse .cke_inner {
+  background: transparent;
+}
+
+.navbar.navbar-inverse .cke_top {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+}
+
+/* ---- OpenERP Style ---- */
 .oe_website_editorbar {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 10;
   display: block;
   width: 100%;
   padding: 2px;
-  margin: 0px;
+  margin: 0;
   z-index: 10000;
   background-color: #414141;
   background: -webkit-linear-gradient(#646060, #262626);
@@ -47,10 +63,252 @@
   outline: none !important;
 }
 
+.css_non_editable_mode_hidden {
+  display: none;
+}
+
 .oe_carousel_options {
   cursor: pointer;
   position: absolute;
   white-space: nowrap;
   z-index: 1;
   display: none;
+}
+.oe_carousel_options > * {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: 2px;
+}
+
+/* ---- EDITOR BAR ---- */
+table.editorbar-panel {
+  cursor: pointer;
+  width: 100%;
+}
+table.editorbar-panel td.selected {
+  background-color: #b1c9d9;
+}
+
+/* ---- RTE ---- */
+.oe_editable .btn {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  -o-user-select: auto;
+  user-select: auto;
+}
+
+/* ---- SNIPPET EDITOR ---- */
+.oe_snippets {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  max-height: 280px;
+  min-height: 140px;
+  background: #282828;
+  box-shadow: 0px 10px 10px -10px black inset;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.oe_snippet {
+  display: inline-block;
+  vertical-align: top;
+  background: white;
+  width: 120px;
+  height: 120px;
+  border-radius: 3px;
+  margin: 10px;
+  margin-right: 0px;
+  position: relative;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: move;
+}
+.oe_snippet .oe_snippet_thumbnail.oe_label {
+  text-align: center;
+  background: #747474;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  height: 100%;
+  line-height: 120px;
+  color: white;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95);
+}
+.oe_snippet .oe_snippet_body {
+  display: none;
+}
+.oe_snippet > * {
+  pointer-events: none;
+}
+.oe_snippet > *:first-child:not(.oe_snippet_thumbnail) {
+  display: block;
+  -webkit-transform-origin-x: 5px;
+  -webkit-transform-origin-y: 10px;
+  -webkit-transform: scale(0.095);
+}
+
+/* ---- SNIPPETS DROP ZONES ---- */
+.oe_drop_zone.oe_insert {
+  display: block;
+  height: 32px;
+  margin: -16px 0px;
+  -webkit-transition: margin 250ms linear;
+}
+.oe_drop_zone.oe_insert:first-child:not(:last-child) {
+  margin-top: -8px;
+  margin-bottom: -24px;
+}
+.oe_drop_zone.oe_insert:last-child:not(:first-child) {
+  margin-top: -24px;
+  margin-bottom: -8px;
+}
+.oe_drop_zone.oe_insert:before {
+  content: "";
+  display: block;
+  border-top: dashed 2px rgba(209, 178, 255, 0.72);
+  position: relative;
+  top: 16px;
+}
+.oe_drop_zone.oe_insert:first-child:not(:last-child):before {
+  top: 8px;
+}
+.oe_drop_zone.oe_insert:last-child:not(:first-child):before {
+  top: 24px;
+}
+.oe_drop_zone.oe_insert.oe_hover:before {
+  border-top: dashed 2px rgba(116, 255, 161, 0.72);
+}
+
+.oe_drop_zone.oe_overlay {
+  position: absolute;
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
+}
+
+.oe_drop_zone {
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
+}
+.oe_drop_zone.oe_hover {
+  background: rgba(0, 255, 133, 0.22);
+  z-index: 99;
+}
+
+/* ---- SNIPPET MANIPULATOR ---- */
+.oe_snippet_manipulator {
+  display: block;
+  position: absolute;
+  background: rgba(153, 0, 255, 0.1);
+  border-radius: 3px;
+  border: solid 1px rgba(153, 0, 255, 0.5);
+  opacity: 0;
+  transition: opacity 100ms linear;
+}
+.oe_snippet_manipulator > .oe_handle {
+  display: none;
+}
+.oe_snippet_manipulator:hover, .oe_snippet_manipulator.oe_hover {
+  opacity: 1;
+}
+.oe_snippet_manipulator:hover > .oe_handle, .oe_snippet_manipulator.oe_hover > .oe_handle {
+  display: block;
+}
+
+.oe_handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  background: white;
+  border: solid 1px rgba(153, 0, 255, 0.5);
+  box-sizing: border-box;
+  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+  margin: -8px;
+  cursor: move;
+  -webkit-transition: background 100ms linear;
+}
+.oe_handle:hover {
+  background: #9900ff;
+}
+
+.oe_handle.nw, .oe_handle.n, .oe_handle.ne {
+  top: 0px;
+}
+
+.oe_handle.ne, .oe_handle.e, .oe_handle.se {
+  left: auto;
+  right: 0px;
+}
+
+.oe_handle.sw, .oe_handle.s, .oe_handle.se {
+  top: auto;
+  bottom: 0px;
+}
+
+.oe_handle.nw, .oe_handle.w, .oe_handle.sw {
+  left: 0px;
+}
+
+/* ---- MOBILE PREVIEW ---- */
+.oe_mobile_preview.modal .modal-content {
+  height: 660px;
+  background-color: black;
+  border: 2px solid;
+  border-radius: 10px;
+  border-color: #1c1f1f;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width: 330px;
+}
+.oe_mobile_preview.modal .modal-content .modal-header {
+  background-color: black;
+  border-bottom: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.oe_mobile_preview.modal .modal-content .modal-header .modal-title {
+  color: #1c1f1f;
+}
+.oe_mobile_preview.modal .modal-content .modal-header .close {
+  color: lightgrey;
+  opacity: 1;
+}
+.oe_mobile_preview.modal .modal-content .modal-header .close:hover {
+  color: #e00101;
+  opacity: 1;
+}
+.oe_mobile_preview.modal .modal-content .modal-body {
+  background-color: black;
+  max-height: 600px;
+  padding: 0;
+  margin: 0;
+}
+.oe_mobile_preview.modal .modal-content .modal-body .oe_mobile_viewport {
+  width: 320px;
+  height: 568px;
+  padding: 5px;
+  border: none;
+}
+.oe_mobile_preview.modal .modal-content .modal-footer {
+  background-color: black;
+}
+
+/* ---- SEO TOOLS ---- */
+.oe_seo_configuration .modal-dialog {
+  width: 80%;
+}
+.oe_seo_configuration .oe_remove {
+  color: #e00101;
+}
+.oe_seo_configuration .oe_seo_suggestion {
+  cursor: pointer;
 }

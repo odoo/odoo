@@ -1,6 +1,7 @@
 {
     'name': 'E-Commerce',
-    'category': 'Sale',
+    'category': 'Website',
+    'summary': 'Sell Your Products Online',
     'version': '1.0',
     'description': """
 OpenERP E-Commerce
@@ -8,14 +9,14 @@ OpenERP E-Commerce
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'sale', 'point_of_sale'],
+    'depends': ['website', 'sale', 'product'],
     'data': [
-        'views/ecommerce.xml',
-        'views/pricelist.xml',
+        'website_sale_data.xml',
+        'views/website_sale.xml',
         'security/ir.model.access.csv',
-        'security/ecommerce.xml',
+        'security/website_sale.xml',
+        'website_sale_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
-    'auto_install': True,
 }

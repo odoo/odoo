@@ -1,0 +1,131 @@
+<templates id="template" xml:space="preserve">
+    <t t-extend="website.editorbar">
+        <t t-jquery="#website-top-view" t-operation="after">
+            <div class="navbar-inner" id="website-top-edit">
+                <form class="navbar-form pull-left">
+                    <button type="button" data-action="save"
+                            class="btn btn-primary">Save</button>
+                    <button type="button" data-action="cancel"
+                            class="btn">Cancel</button>
+                </form>
+                <ul class="nav navbar-nav pull-right">
+                    <li class="navbar-form"><button type="button" data-action="snippet" class="btn btn-primary">Building Blocks</button></li>
+                </ul>
+            </div>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title"><t t-esc="title"/></h3>
+                    </div>
+                    <div class="modal-body"><t t-raw="__content__"/></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Discard</button>
+                        <button type="button" class="btn btn-primary save">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.link">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Link to</t>
+            <form>
+                <ul class="list-group form-group">
+                    <li class="list-group-item active">
+                        <h3 class="list-group-item-heading">Page on your website</h3>
+                        <div class="input-group">
+                            <input type="text" class="form-control pages url-source"
+                                    placeholder="Create new page"/>
+                            <div class="input-group-btn existing dropdown">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Existing page <span class="caret"></span></button>
+                                <ul class="dropdown-menu pull-right"/>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="pull-right">
+                            <label>
+                                <input type="checkbox" class="window-new"/>
+                                Open in new window
+                            </label>
+                        </div>
+                        <h3 class="list-group-item-heading">Website URL</h3>
+                        <input type="text" class="form-control url url-source"
+                               placeholder="http://openerp.com"/>
+                    </li>
+                    <li class="list-group-item">
+                        <h3 class="list-group-item-heading">Email Address</h3>
+                        <input type="email" class="form-control email-address url-source"
+                               placeholder="you@yourwebsite.com"/>
+                    </li>
+                </ul>
+            </form>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.image">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Image:</t>
+            <div class="row">
+                <form method="POST" action="/website/attach"
+                      enctype="multipart/form-data"
+                      target="fileframe"
+                      class="col-sm-8">
+                    <div class="well">
+                        <!-- a href="#" class="pull-left">Find image</a -->
+                        <h3 class="list-group-item-heading">Image URL</h3>
+                        <input type="text" class="form-control url"
+                               placeholder="http://openerp.com"/>
+                    </div>
+                    <div class="text-center">
+                        <p class="">— or —</p>
+                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary btn-lg filepicker">
+                            Upload an image from your computer
+                        </button>
+                    </div>
+                    <p class="text-center">— or —</p>
+                    <div class="well">
+                        <h3 class="list-group-item-heading">Pick an existing attachment</h3>
+                        <div class="existing-attachments"/>
+                    </div>
+                    <input type="hidden" name="func"/>
+                </form>
+                <div class="col-sm-4">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
+                         class="pull-right img-rounded image-preview"
+                         width="100%"/>
+                </div>
+            </div>
+            <iframe src="about:blank" name="fileframe" class="hidden"/>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.image.existing">
+        <div class="existing-attachments">
+            <div class="row" t-foreach="rows" t-as="row">
+                <div class="col-md-4" t-foreach="row" t-as="attachment">
+                    <t t-set="url">/website/attachment/<t t-esc="attachment.id"/></t>
+                    <a t-att-href="url" class="thumbnail">
+                        <img t-att-src="url" t-att-alt="attachment.name"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.table.panel">
+        <table class="editorbar-panel">
+            <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+        </table>
+    </t>
+    <t t-name="website.editor.table">
+        <table class="table table-bordered table-responsive">
+            <tbody>
+                <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+            </tbody>
+        </table>
+    </t>
+</templates>
