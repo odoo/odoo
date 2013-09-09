@@ -151,7 +151,7 @@ class stock_picking(osv.osv):
             if move.procurement_id:            
                 sale_line = move.procurement_id.sale_line_id
                 sale = sale_line.order_id
-                user_id = self.user_id.id
+                user_id = sale.user_id and sale.user_id.id or False
                 partner = sale.partner_invoice_id
                 currency_id = sale.pricelist_id.currency_id.id
                 origin = sale.name
