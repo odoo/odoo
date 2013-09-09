@@ -326,7 +326,9 @@ class Multicorn(CommonServer):
 
     def long_polling_spawn(self):
         nargs = stripped_sys_argv('--pidfile','--workers')
-        nargs += ['--gevent']
+        cmd = nargs[0]
+        cmd = os.path.join(os.path.dirname(cmd), "openerp-gevent")
+        nargs[0] = cmd
         popen = subprocess.Popen(nargs)
         self.long_polling_pid = popen.pid
 
