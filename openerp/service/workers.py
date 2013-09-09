@@ -362,6 +362,12 @@ class Multicorn(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 self.dumpstacks()
+            elif sig == signal.SIGTTIN:
+                # increase number of workers
+                self.population += 1
+            elif sig == signal.SIGTTOUT:
+                # decrease number of workers
+                self.population -= 1
 
     def process_zombie(self):
         # reap dead workers
@@ -423,10 +429,14 @@ class Multicorn(CommonServer):
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
         self.pipe = self.pipe_new()
-        # set signal
+        # set signal handlers
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
+        signal.signal(signal.SIGHUP, self.signal_handler)
         signal.signal(signal.SIGCHLD, self.signal_handler)
+        signal.signal(signal.SIGQUIT, self.signal_handler)
+        signal.signal(signal.SIGTTIN, self.signal_handler)
+        signal.signal(signal.SIGTTOUT, self.signal_handler)
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
