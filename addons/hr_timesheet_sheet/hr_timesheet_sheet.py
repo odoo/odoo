@@ -371,7 +371,7 @@ class hr_attendance(osv.osv):
         for attendance in self.browse(cursor, user, ids, context=context):
 
             # Simulate timesheet in employee timezone
-            att_tz = timezone(attendance.employee_id.user_id.partner_id.tz)
+            att_tz = timezone(attendance.employee_id.user_id.partner_id.tz or 'utc')
 
             attendance_dt = datetime.strptime(attendance.name, DEFAULT_SERVER_DATETIME_FORMAT)
             att_tz_dt = pytz.utc.localize(attendance_dt)
