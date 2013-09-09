@@ -273,7 +273,7 @@
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
-                args: [element.data('oe-id'), element.data('oe-xpath'), data],
+                args: [element.data('oe-id'), data, element.data('oe-xpath')],
             });
         },
         cancel: function () {
