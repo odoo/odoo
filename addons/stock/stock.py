@@ -2955,8 +2955,8 @@ class stock_warehouse(osv.osv):
 
     def _default_lot_output_id(self, cr, uid, context=None):
         try:
-            lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+            lot_output_model, lot_output_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
         except (ValueError, orm.except_orm):
             # the user does not have read access on the location or it does not exists
             lot_output_id = False
