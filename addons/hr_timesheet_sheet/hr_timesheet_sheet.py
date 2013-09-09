@@ -502,7 +502,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 a.name::date as name,
                                 s.id as sheet_id,
                                 0.0 as total_timesheet,
-                                SUM(((EXTRACT(hour FROM a.name AT TIME ZONE 'UTC') * 60) + EXTRACT(minute FROM a.name AT TIME ZONE 'UTC')) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
+                                SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
                             from
                                 hr_attendance a
                                 LEFT JOIN hr_timesheet_sheet_sheet s
