@@ -17,13 +17,15 @@
     <div t-name="website.snippets.box" data-snippet-id='box'>
         
         <!-- editor bar to display inside the top edit bar -->
-        <li class='oe_snippet_editorbar'>
-            <i class='icon-move oe_icon js_move'></i>
-            <i class='icon-remove oe_icon js_remove'></i>
+        <li class='oe_snippet_editorbar box_resize'>
+            <a href="#" class="button js_box_move"><i class='icon icon-move'></i></a>
+            <a href="#" class="button js_box_remove"><i class="icon icon-remove"></i></a>
         </li>
 
         <!-- custom data for the widget -->
         <div class='oe_handles'>
+            <div class='oe_boxsize'></div>
+            <div class='oe_margin'></div>
             <div class='oe_handle n'></div>
             <div class='oe_handle ne'></div>
             <div class='oe_handle e'></div>

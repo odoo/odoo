@@ -197,6 +197,10 @@
   box-sizing: border-box;
   pointer-events: none;
 }
+.oe_snippet_manipulator .oe_boxsize, .oe_snippet_manipulator .oe_margin {
+  position: absolute;
+  pointer-events: none;
+}
 .oe_snippet_manipulator .oe_handle {
   display: none;
 }
@@ -204,13 +208,13 @@
   opacity: 1;
   cursor: pointer;
 }
-.oe_snippet_manipulator.oe_selected, .oe_snippet_manipulator.oe_active {
+.oe_snippet_manipulator.oe_selected, .oe_snippet_manipulator.oe_active, .oe_snippet_manipulator .oe_boxsize, .oe_snippet_manipulator .oe_margin {
   opacity: 1;
   background: transparent;
   border: dashed 1px rgba(153, 0, 255, 0.5);
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
 }
-.oe_snippet_manipulator.oe_selected > *, .oe_snippet_manipulator.oe_active > * {
+.oe_snippet_manipulator.oe_selected .oe_handle, .oe_snippet_manipulator.oe_active .oe_handle, .oe_snippet_manipulator .oe_boxsize .oe_handle, .oe_snippet_manipulator .oe_margin .oe_handle {
   pointer-events: auto;
 }
 .oe_snippet_manipulator .oe_buttons {

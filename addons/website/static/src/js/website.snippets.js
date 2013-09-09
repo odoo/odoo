@@ -482,11 +482,35 @@
 
     website.snippet.editorRegistry.box = website.snippet.Editor.extend({
         onFocus : function () {
-            this._super();
             var self = this;
-            this.$target.data('manipulator')
-                .append($(openerp.qweb.render("website.snippets.box")).find(".oe_handles").html())
-                .addClass('oe_active');
+            var $box = $(openerp.qweb.render("website.snippets.box"));
+
+            $box.find(".oe_snippet_editorbar").prependTo(this.parent.$('#website-top-edit .nav.pull-right'));
+
+            this.$target.data('manipulator').append($box.find(".oe_handles").html()).addClass('oe_active');
+
+            function padding_margin_cover ($manipulator, $snippet) {
+                var height = parseInt($snippet.height() || 0);
+                var width = parseInt($snippet.width() || 0);
+
+                var $padding = $manipulator.find(".oe_boxsize").css({
+                    top: parseInt($snippet.css('padding-top')) + 'px',
+                    bottom: parseInt($snippet.css('padding-bottom')) + 'px',
+                    //height: (height - (parseInt($snippet.css('padding-top')) || 0) - (parseInt($snippet.css('padding-bottom')) || 0)) + 'px',
+                    left: parseInt($snippet.css('padding-left')) + 'px',
+                    right: parseInt($snippet.css('padding-right')) + 'px',
+                    //width: (width - (parseInt($snippet.css('padding-left')) || 0) - (parseInt($snippet.css('padding-right')) || 0)) + 'px',
+                });
+                var $margin = $manipulator.find(".oe_margin").css({
+                    top: -parseInt($snippet.css('margin-top')) + 'px',
+                    bottom: -parseInt($snippet.css('margin-bottom')) + 'px',
+                    //height: (height + (parseInt($snippet.css('margin-top')) || 0) + (parseInt($snippet.css('margin-bottom')) || 0)) + 'px',
+                    left: -parseInt($snippet.css('margin-left')) + 'px',
+                    right: -parseInt($snippet.css('margin-right')) + 'px',
+                    //width: (width + (parseInt($snippet.css('margin-left')) || 0) + (parseInt($snippet.css('margin-right')) || 0)) + 'px',
+                });
+            }
+            padding_margin_cover( this.$target.data('manipulator'),  this.$target);
 
             this.$target.data('manipulator').find(".oe_handle").on('mousedown', function (event){
                     event.preventDefault();
@@ -537,6 +561,7 @@
                             //$snippet.css('width', (size[1]+dx)+'px');
                         }
                         website.snippet.cover_target($manipulator, $snippet);
+                        padding_margin_cover($manipulator, $snippet);
                     };
                     $('body').mousemove(body_mousemove);
 
@@ -549,13 +574,15 @@
                     };
                     $('body').mouseup(body_mouseup);
                 });
+            this._super();
         },
         onBlur : function () {
             this._super();
             this.$target.data('manipulator')
                 .removeClass('oe_active')
                 .empty();
-            },
+            this.parent.$('#website-top-edit .nav.pull-right > .box_resize').remove();
+        },
     });
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.box.extend({

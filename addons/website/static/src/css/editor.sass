@@ -177,17 +177,20 @@
     transition: opacity 100ms linear
     box-sizing: border-box
     pointer-events: none
+    .oe_boxsize, .oe_margin
+        position: absolute
+        pointer-events: none
     .oe_handle
         display: none
     &.oe_hover
         opacity: 1
         cursor: pointer
-    &.oe_selected, &.oe_active
+    &.oe_selected, &.oe_active, .oe_boxsize, .oe_margin
         opacity: 1
         background: transparent
         border: dashed 1px rgba(153, 0, 255, 0.5)
         box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
-        & > *
+        .oe_handle
             pointer-events: auto
     .oe_buttons
         display: none
