@@ -71,13 +71,15 @@ class website_mail(http.Controller):
                 return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, mail_group_id, blog_id)
 
         if 'body' in request.session and request.session.body:
+            context = request.context.copy()
+            context.update({'mail_create_nosubsrequest.cribe': True})
             request.registry['mail.group'].message_post(request.cr, request.uid, mail_group_id,
                     body=request.session.body,
                     parent_id=blog_id,
                     website_published=blog_id and True or False,
                     type='comment',
                     subtype='mt_comment',
-                    context=dict({'mail_create_nosubsrequest.cribe': True} + request.context))
+                    context=context)
             request.session.body = False
 
         if post.get('body'):
@@ -87,13 +89,15 @@ class website_mail(http.Controller):
 
     @website.route(['/blog/<int:mail_group_id>/new'], type='http', auth="public")
     def new_blog_post(self, mail_group_id=None, **post):
+        context = request.context.copy()
+        context.update({'mail_create_nosubsrequest.cribe': True})
         blog_id = request.registry['mail.group'].message_post(request.cr, request.uid, mail_group_id,
                 body=_("Blog content.<br/>Please edit this content then you can publish this blog."),
                 subject=_("Blog title"),
                 website_published=False,
                 type='comment',
                 subtype='mt_comment',
-                context=dict({'mail_create_nosubsrequest.cribe': True} + request.context))
+                context=context)
         return werkzeug.utils.redirect("/blog/%s/%s/" % (mail_group_id, blog_id))
 
     @website.route(['/blog/<int:mail_group_id>/subscribe', '/blog/<int:mail_group_id>/<int:blog_id>/subscribe'], type='http', auth="public")
