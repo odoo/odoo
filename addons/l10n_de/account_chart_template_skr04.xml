@@ -13,5 +13,12 @@
             <field name="property_account_expense_categ" ref="chart_skr04_5400"/>
             <field name="property_account_income_categ" ref="chart_skr04_4400"/>
         </record>
+        <record id="l10n_chart_de_skr04_value" model="ir.values">
+            <field name="name">Deutscher Kontenplan SKR04</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10n_chart_de_skr04"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
    </data>
 </openerp>

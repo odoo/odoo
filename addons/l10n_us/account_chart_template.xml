@@ -8,6 +8,13 @@
             <field name="complete_tax_set" eval="False" />
             <field name="currency_id" ref="base.USD"/>
         </record>
+        <record id="account_chart_template_basic_value" model="ir.values">
+            <field name="name">Basic Chart of Account</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_basic"/>
+            <field name="value" ref="base.USD"/>
+        </record>
 
         <record id="account_chart_template_cogs" model="account.chart.template">
             <field name="name">Cost of Goods sold</field>
@@ -16,23 +23,54 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="complete_tax_set" eval="False" />
         </record>
+        <record id="account_chart_template_cogs_value" model="ir.values">
+            <field name="name">Cost of Goods sold</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_cogs"/>
+            <field name="value" ref="base.USD"/>
+        </record>
+        
         <record id="account_chart_template_advertising" model="account.chart.template">
             <field name="name">Advertising</field>
             <field name="complete_tax_set" eval="False" />
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_cogs"/>
         </record>
+        <record id="account_chart_template_advertising_value" model="ir.values">
+            <field name="name">Advertising</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_advertising"/>
+            <field name="value" ref="base.USD"/>
+        </record>
+        
         <record id="account_chart_template_agriculture" model="account.chart.template">
             <field name="name">Agriculture</field>
             <field name="complete_tax_set" eval="False" />
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_basic"/>
         </record>
+        <record id="account_chart_template_agriculture_value" model="ir.values">
+            <field name="name">Agriculture</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_agriculture"/>
+            <field name="value" ref="base.USD"/>
+        </record>
+        
         <record id="account_chart_template_construction" model="account.chart.template">
             <field name="name">Construction Trades (Plumber, Electrician, HVAC, etc.)</field>
             <field name="complete_tax_set" eval="False" />
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_cogs"/>
+        </record>
+        <record id="account_chart_template_construction_value" model="ir.values">
+            <field name="name">Construction Trades (Plumber, Electrician, HVAC, etc.)</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_construction"/>
+            <field name="value" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_financial_service" model="account.chart.template">
@@ -41,12 +79,26 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_cogs"/>
         </record>
+        <record id="account_chart_template_financial_service_value" model="ir.values">
+            <field name="name">Financial Services other than Accounting or Bookkeeping</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_financial_service"/>
+            <field name="value" ref="base.USD"/>
+        </record>
 
         <record id="account_chart_template_general_service" model="account.chart.template">
             <field name="name">General Service-Based Business</field>
             <field name="complete_tax_set" eval="False" />
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_cogs"/>
+        </record>
+        <record id="account_chart_template_general_service_value" model="ir.values">
+            <field name="name">General Service-Based Business</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_general_service"/>
+            <field name="value" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_legal_service" model="account.chart.template">
@@ -55,12 +107,26 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_basic"/>
         </record>
+         <record id="account_chart_template_legal_service_value" model="ir.values">
+            <field name="name">Legal Services</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_legal_service"/>
+            <field name="value" ref="base.USD"/>
+        </record>
 
         <record id="account_chart_template_general_product" model="account.chart.template">
             <field name="name">General Product-Based Business</field>
             <field name="complete_tax_set" eval="False" />
             <field name="currency_id" ref="base.USD"/>
             <field name="parent_id" ref="account_chart_template_basic"/>
+        </record>
+        <record id="account_chart_template_general_product_value" model="ir.values">
+            <field name="name">General Product-Based Business</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_general_product"/>
+            <field name="value" ref="base.USD"/>
         </record>
     </data>
 </openerp>

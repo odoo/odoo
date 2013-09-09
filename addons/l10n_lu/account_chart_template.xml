@@ -14,6 +14,13 @@
             <field name="property_account_income_opening" ref="lu_2011_account_141"/>
             <field name="property_account_expense_opening" ref="lu_2011_account_141"/>
         </record>
+        <record id="lu_2011_chart_1_value" model="ir.values">
+            <field name="name">PCMN Luxembourg</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="lu_2011_chart_1"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
     
     </data>
 </openerp>
