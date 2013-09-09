@@ -14,7 +14,8 @@
         <record id="picking_type_dropship" model="stock.picking.type">
             <field name="name">dropship</field>
             <field name="sequence_id" ref="seq_picking_type_dropship"/>
-            <field name="code_id" ref="stock.picking_code_in"/>
+            <field name="code_id">incoming</field>
+            <field name="default_location_dest_id" ref="stock.stock_location_suppliers"/>
         </record>
         
         
@@ -22,7 +23,8 @@
         <record id="route_drop_shipping" model='stock.location.route'>
             <field name="name">Drop Shipping</field>
             <field name="sequence">3</field>
-            <field name="sale">True</field>
+            <field name="sale_selectable" eval="True"/>
+            <field name="product_categ_selectable" eval="True"/>
         </record>
 
         <record id="procurement_rule_drop_shipping" model="procurement.rule">
@@ -39,7 +41,9 @@
         <!-- Crossdock -->
         <record id="stock_location.route_warehouse0_crossdock" model='stock.location.route'>
             <field name="name">Crossdock</field>
-            <field name="sale">True</field>
+            <field name="sale_selectable" eval="True"/>
+            <field name="product_categ_selectable" eval="True"/>
+            
         </record>
         <record id="procurement_rule_customer0_xdock" model="procurement.rule">
             <field name="name"> Supplier → Output</field>
@@ -49,5 +53,7 @@
             <field name="route_id" ref="stock_location.route_warehouse0_crossdock"/>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
         </record>
+        
+        
     </data>
 </openerp>

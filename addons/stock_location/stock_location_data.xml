@@ -22,8 +22,9 @@
         -->
 
         <record id="route_warehouse0_mts" model='stock.location.route'>
-            <field name="name">Ship only</field>
+            <field name="name">Sale: Ship only</field>
             <field name="sequence">20</field>
+            <field name="warehouse_selectable" eval="True"/>
         </record>
 
 
@@ -49,8 +50,10 @@
         
         
         <record id="route_warehouse0_mto" model='stock.location.route'>
-            <field name="name">Produce or buy on Customer Order</field>
+            <field name="name">MTO</field>
             <field name="sequence">10</field>
+            <field name="product_selectable" eval="True"/>
+            <field name="product_categ_selectable" eval="True"/>
         </record>
 
         <record id="procurement_rule_customer0_mto" model="procurement.rule">
@@ -66,6 +69,8 @@
         <record id="route_warehouse0_crossdock" model='stock.location.route'>
             <field name="name">Crossdock</field>
             <field name="sequence">9</field>
+            <field name="product_categ_selectable" eval="True"/>
+            <field name="sale_selectable" eval="True"/>
         </record>
         
         <record id="procurement_rule_customer0_xdock" model="procurement.rule">
@@ -79,8 +84,9 @@
         </record>
         
         <record id="route_warehouse0_pack" model='stock.location.route'>
-            <field name="name">Pack + Ship</field>
+            <field name="name">Sale: Pack + Ship</field>
             <field name="sequence">15</field>
+            <field name="warehouse_selectable" eval="True"/>
         </record>
 
 
@@ -128,8 +134,9 @@
         
         <!-- Pick + pack + ship -->
         <record id="route_warehouse0_pickpack" model='stock.location.route'>
-            <field name="name">Pick + Pack + Ship</field>
+            <field name="name">Sale: Pick + Pack + Ship</field>
             <field name="sequence">20</field>
+            <field name="warehouse_selectable" eval="True"/>
         </record>
 
 

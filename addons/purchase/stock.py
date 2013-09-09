@@ -29,11 +29,13 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-    def action_done(self, cr ,uid, ids, context=None):
-        res = super(stock_move, self).action_done(cr, uid, ids, context)
-        wf_service = netsvc.LocalService('workflow')
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
+        from openerp import workflow
         for id in ids:
-            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+            workflow.trg_trigger(uid, 'stock.move', id, cr)
         return res
 
 #
@@ -44,7 +46,6 @@ class stock_picking(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
-        'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
 
     _defaults = {

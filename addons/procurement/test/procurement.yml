@@ -15,8 +15,8 @@
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
 -
-  I check that procurement order is done
+  I check that procurement order is in exception, as at first there isn't any suitable rule
 -
   !python {model: procurement.order}: |
     proc_order = self.browse(cr, uid, ref('procurement_order0'), context=context)
-    assert proc_order.state == 'done'
+    assert proc_order.state == 'exception'

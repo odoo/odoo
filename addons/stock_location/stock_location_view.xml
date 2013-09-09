@@ -17,7 +17,6 @@
                 </field>
                 <field name="group_id" position="before">
                 	<field name="procure_method"/>
-                	<field name="invoice_state"/>
                 	<field name="partner_address_id"/>
                 </field>
             </field>
@@ -128,7 +127,7 @@
 			<field name="arch" type="xml">
 				<group name="inventory" position="after">
 					<group string="Routes">
-						<field name="route_ids" colspan="4" nolabel="1" />
+						<field name="route_ids" colspan="4" nolabel="1" widget="many2many_tags"/>
 					</group>
 				</group>
 			</field>
@@ -143,7 +142,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//sheet" position="inside">
 					<group string="Strategy" colspan="4">
-						<field name="route_ids" colspan="4" nolabel="1" />
+						<field name="route_ids" colspan="4" nolabel="1" widget="many2many_tags"/>
 					</group>
 				</xpath>
 			</field>
@@ -157,14 +156,6 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="route_id"/>
                 </xpath>
-                <xpath expr="//group[last()]" position="after">
-                	<separator string="All Associated Routes"/>
-                	<field name="route_ids" nolabel="1" colspan="4">
-                		<tree string="All Routes">
-                		<field name="name"/>
-                		</tree>
-                	</field>
-                </xpath>
             </field>
         </record>
 
@@ -175,7 +166,9 @@
 				<tree string="Routes">
                     <field name="sequence" widget="handle" />
 					<field name="name"/>
-					<field name="warehouse_id"/>
+					<field name="product_categ_selectable"/>
+					<field name="product_selectable"/>
+					<field name="warehouse_selectable"/>
 				</tree>
 			</field>
 		</record>
@@ -188,7 +181,11 @@
 				<form string="Route">
 					<field name="name" />
 					<field name="sequence" groups="base.group_no_one"/>
-					<field name="warehouse_id"/>
+					<group>
+					<field name="product_categ_selectable"/>
+                    <field name="product_selectable"/>
+                    <field name="warehouse_selectable"/>
+					</group>
 					<group string="Push Rules" colspan="4" >
 						<field name="push_ids" colspan="4" nolabel="1"/>
                     </group>
@@ -200,7 +197,7 @@
 		</record>
 
 		<record id="action_routes_form" model="ir.actions.act_window">
-			<field name="name">Logistic Routes</field>
+			<field name="name">Routes</field>
 			<field name="res_model">stock.location.route</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
@@ -208,9 +205,9 @@
 			<field name="view_id" ref="stock_location_route_tree" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
-					Click to add a logistic route.
+					Click to add a route.
               </p>
-				<p>You can define here the main logistic routes that run through
+				<p>You can define here the main routes that run through
 					your warehouses and that define the flows of your products. These
 					routes can be assigned to a product, a product category or be fixed
 					on procurement or sales order. </p>

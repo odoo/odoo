@@ -127,8 +127,8 @@ class stock_picking(osv.osv):
         result = super(stock_picking, self).action_invoice_create(cr, uid,
                 ids, journal_id=journal_id, group=group, type=type,
                 context=context)
-        for picking in picking_obj.browse(cr, uid, result.keys(), context=context):
-            invoice = invoice_obj.browse(cr, uid, result[picking.id], context=context)
+        for picking in picking_obj.browse(cr, uid, result, context=context):
+            invoice = invoice_obj.browse(cr, uid, picking.id, context=context)
             invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
             if invoice_line:
                 invoice_line_obj.create(cr, uid, invoice_line)

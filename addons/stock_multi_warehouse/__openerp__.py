@@ -21,29 +21,26 @@
 
 
 {
-    'name': 'Delivery Costs',
+    'name': 'Multi-warehouse',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Warehousing',
     'description': """
-Allows you to add delivery methods in sale orders and picking.
-==============================================================
+This module supplements the Warehouse application with demo data for multiple warehouses
+========================================================================================
+It creates 3 warehouses
 
-You can define your own carrier and delivery grids for prices. When creating 
-invoices from picking, OpenERP is able to add and compute the shipping line.
-""",
+    """,
     'author': 'OpenERP SA',
-    'depends': ['sale', 'purchase', 'stock_account'],
-    'data': [
-        'security/ir.model.access.csv',
-        'delivery_report.xml',
-        'delivery_view.xml',
-        'partner_view.xml',
-        'delivery_data.xml'
+    'images': [],
+    'depends': ['stock_complex_routes'],
+    'data': ['stock_multi_warehouse.yml'],
+    'demo': [
+        
     ],
-    'demo': ['delivery_demo.xml'],
-    'test': ['test/delivery_cost.yml'],
     'installable': True,
+    'test': [
+    ],
     'auto_install': False,
-    'images': ['images/1_delivery_method.jpeg','images/2_delivery_pricelist.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

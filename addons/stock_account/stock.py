@@ -55,7 +55,7 @@ class procurement_order(osv.osv):
         res.update({'invoice_state': (procurement.rule_id.invoice_state in ('none', False) and procurement.invoice_state or procurement.rule_id.invoice_state) or 'none'})
         return res
     
-    defaults = {
+    _defaults = {
         'invoice_state': 'none'
         }
 

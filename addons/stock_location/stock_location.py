@@ -29,28 +29,23 @@ class stock_location_route(osv.osv):
     _description = "Inventory Routes"
     _order = 'sequence'
 
-    def _default_warehouse(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
-        return res and res[0] or False
-
     _columns = {
         'name': fields.char('Route Name', required=True),
         'sequence': fields.integer('Sequence'),
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
+        'product_selectable': fields.boolean('Selectable on Product'),
+        'product_categ_selectable': fields.boolean('Selectable on Product Category'),
+        'warehouse_selectable': fields.boolean('Selectable on Warehouse'),
     }
     _defaults = {
         'sequence': lambda self,cr,uid,ctx: 0,
-        'warehouse_id': _default_warehouse,
     }
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Default Logistic Route', help='Default route through the warehouse', required=True), 
-        'route_ids': fields.one2many('stock.location.route', 'warehouse_id', 'All Routes'),
+        'route_id': fields.many2one('stock.location.route', 'Default Routes', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse', required=True), 
     }
 
 
@@ -140,7 +135,6 @@ class procurement_rule(osv.osv):
     }
     _defaults = {
         'procure_method': 'make_to_stock',
-        'invoice_state': 'none',
         'propagate': True, 
         'delay': 0, 
     }
@@ -177,13 +171,10 @@ class procurement_order(osv.osv):
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
-        route_ids = [x.id for x in procurement.route_ids]
+        route_ids = [x.id for x in procurement.route_ids] + [x.id for x in procurement.product_id.route_ids] 
         res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
         if not res:
-            route_ids = [x.id for x in procurement.product_id.route_ids]
-            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
-            if not res:
-                res = self.pool.get('procurement.rule').search(cr, uid, domain, order='sequence', context=context)
+            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
         return res
 
 
@@ -213,13 +204,13 @@ class product_removal_strategy(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes'),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"),
     }
 
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes'),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
         'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         #'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
     }

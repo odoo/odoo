@@ -77,12 +77,6 @@
             <field name="location_id" ref="stock_location_company"/>
         </record>
 
-        
-        
-        
-                <!--
-            Picking types, sequences and codes
-         -->
 
         <!-- Sequences for picking types   -->
         <record id="seq_picking_type_in" model="ir.sequence">
@@ -106,24 +100,12 @@
             <field name="company_id" eval="False"/>
         </record>
         
-        <record id="picking_code_in" model="stock.picking.code">
-            <field name="name">Suppliers</field>
-        </record>
-        
-        <record id="picking_code_out" model="stock.picking.code">
-            <field name="name">Customers</field>
-        </record>
-        
-        <record id="picking_code_internal" model="stock.picking.code">
-            <field name="name">Internal</field>
-        </record>
-        
         <record id="picking_type_in" model="stock.picking.type">
             <field name="name">Receptions</field>
             <field name="sequence_id" ref="seq_picking_type_in"/>
             <field name="default_location_src_id" ref="stock_location_suppliers"/>
             <field name="default_location_dest_id" ref="stock_location_stock"/>
-            <field name="code_id" ref="picking_code_in"/>
+            <field name="code_id">incoming</field>
             <field name="auto_force_assign">True</field>
         </record>
         
@@ -132,13 +114,15 @@
             <field name="sequence_id" ref="seq_picking_type_out"/>
             <field name="default_location_src_id" ref="stock_location_stock"/>
             <field name="default_location_dest_id" ref="stock_location_customers"/>
-            <field name="code_id" ref="picking_code_out"/>
+            <field name="code_id">outgoing</field>
         </record>
         
         <record id="picking_type_internal" model="stock.picking.type">
             <field name="name">Internal Transfers</field>
             <field name="sequence_id" ref="seq_picking_type_internal"/>
-            <field name="code_id" ref="picking_code_internal"/>
+            <field name="default_location_src_id" ref="stock_location_stock"/>
+            <field name="default_location_dest_id" ref="stock_location_stock"/>
+            <field name="code_id">internal</field>
         </record>
         
         
@@ -228,9 +212,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
     -->
         <record id="warehouse0" model="stock.warehouse">
             <field model="res.company" name="name" search="[]" use="name"/>
-            <field name="lot_input_id" ref="stock_location_stock"/>
             <field name="lot_stock_id" ref="stock_location_stock"/>
-            <field name="lot_output_id" ref="stock_location_output"/>
         </record>
 
         <record id="sequence_mrp_op_type" model="ir.sequence.type">

@@ -109,8 +109,6 @@ class stock_move_scrap(osv.osv_memory):
             res.update({'product_id': move.product_id.id})
         if 'product_uom' in fields:
             res.update({'product_uom': move.product_uom.id})
-        if 'product_qty' in fields:
-            res.update({'product_qty': move.product_qty})
         if 'location_id' in fields:
             if scrap_location_id:
                 res.update({'location_id': scrap_location_id[0]})

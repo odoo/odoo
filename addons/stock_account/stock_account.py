@@ -70,7 +70,6 @@ class stock_quant(osv.osv):
             return line.cost * line.qty
         return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
 
-
     # FP Note: this is where we should post accounting entries for adjustment
     def _price_update(self, cr, uid, quant, newprice, context=None):
         super(stock_quant, self)._price_update(cr, uid, quant, newprice, context=context)
@@ -198,4 +197,45 @@ class stock_quant(osv.osv):
         return move_obj.create(cr, uid, {'journal_id': journal_id,
                                   'line_id': move_lines,
                                   'ref': move.picking_id and move.picking_id.name}, context=context)
+class stock_move(osv.osv):
+    _inherit = "stock.move"
 
+    def action_done(self, cr, uid, ids, context=None):
+        super(stock_move, self).action_done(cr, uid, ids, context=context)
+        self.product_price_update(cr, uid, ids, context=context)
+
+    def product_price_update(self, cr, uid, ids, context=None):
+        '''
+        This method adapts the price on the product when necessary
+        '''
+        product_obj = self.pool.get('product.product')
+        for move in self.browse(cr, uid, ids, context=context):
+            #adapt standard price on incomming moves if the product cost_method is 'average'
+            if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
+                product = move.product_id
+                company_currency_id = move.company_id.currency_id.id
+                ctx = {'currency_id': company_currency_id}
+                product_avail = product.qty_available
+                if product.qty_available <= 0:
+                    new_std_price = move.price_unit
+                else:
+                    # Get the standard price
+                    amount_unit = product.price_get('standard_price', context=ctx)[product.id]
+                    new_std_price = (amount_unit * (product_avail - move.product_qty) + (move.price_unit * move.product_qty)) / product_avail
+                # Write the field according to price type field
+                product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=context)
+
+            #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
+            #or an inventory loss is made using the last value used for an outgoing valuation.
+            if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
+                if any([q.qty <= 0 for q in move.quant_ids]):
+                    #if there is a negative quant, the standard price shouldn't be updated
+                    continue
+                #get the average price of the move
+                #Note: here we can't use the quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 cost has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+                average_valuation_price = 0.0
+                for q in move.quant_ids:
+                    average_valuation_price += q.qty * q.cost
+                average_valuation_price = average_valuation_price / move.product_qty
+                product_obj.write(cr, uid, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
+                self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)
