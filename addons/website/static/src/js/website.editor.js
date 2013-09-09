@@ -266,10 +266,10 @@
                    .removeClass('oe_editable')
                    .removeAttribute('contentEditable');
             var data = element.getOuterHtml();
-            return new openerp.web.Model('ir.ui.view').call('save', {
-                res_id: element.data('oe-id'),
-                xpath: element.data('oe-xpath'),
-                value: data,
+            return openerp.jsonRpc('/web/dataset/call', 'call', {
+                model: 'ir.ui.view',
+                method: 'save',
+                args: [element.data('oe-id'), element.data('oe-xpath'), data],
             });
         },
         cancel: function () {

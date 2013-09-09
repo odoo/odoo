@@ -50,19 +50,56 @@ class view(osv.osv):
                 result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
         return result
 
-    def save(self, cr, uid, model, res_id, field, value, xpath=None, context=None):
-        """ Update the content of a field
+
+
+    def extract_embedded_fields(self, cr, uid, arch, context=None):
+        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
+
+    def save_embedded_field(self, cr, uid, el, context=None):
+        embedded_id = int(el.get('data-oe-id'))
+        # FIXME: type conversions
+        self.pool[el.get('data-oe-model')].write(cr, uid, embedded_id, {
+            el.get('data-oe-field'): el.text
+        }, context=context)
+
+    def to_field_ref(self, cr, uid, el, context=None):
+        # FIXME: better ref?
+        return html.html_parser.makeelement(el.tag, attrib={
+            't-field': 'registry[%(model)r].browse(cr, uid, %(id)r).%(field)s' % {
+                'model': el.get('data-oe-model'),
+                'id': int(el.get('data-oe-id')),
+                'field': el.get('data-oe-field'),
+            }
+        })
+
+    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
+        arch = replacement
+        if section_xpath:
+            previous_arch = etree.fromstring(self.browse(cr, uid, view_id, context=context).arch.encode('utf-8'))
+            # ensure there's only one match
+            [previous_section] = previous_arch.xpath(section_xpath)
+            previous_section.getparent().replace(previous_section, replacement)
+            arch = previous_arch
+        return arch
+
+    def save(self, cr, uid, res_id, value, xpath=None, context=None):
+        """ Update a view section. The view section may embed fields to write
 
         :param str model:
         :param int res_id:
         :param str xpath: valid xpath to the tag to replace
         """
-        model_obj = self.pool.get(model)
-        if xpath:
-            origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
-            origin_tree = etree.fromstring(origin.encode('utf-8'))
-            zone = origin_tree.xpath(xpath)[0]
-            zone.getparent().replace(zone, html.fromstring(value))
-            value = etree.tostring(origin_tree, encoding='utf-8')
+        res_id = int(res_id)
 
-        model_obj.write(cr, uid, res_id, {field: value}, context=context)
+        arch_section = etree.fromstring(value)
+
+        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
+            self.save_embedded_field(cr, uid, el, context=context)
+
+            # transform embedded field back to t-field
+            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
+
+        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
+        self.write(cr, uid, res_id, {
+            'arch': etree.tostring(arch, encoding='utf-8').decode('utf-8')
+        }, context=context)
