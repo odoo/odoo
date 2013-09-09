@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
 import pytz
@@ -367,7 +367,6 @@ class hr_attendance(osv.osv):
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        utc_tz = pytz.utc
         res = {}.fromkeys(ids, False)
         for attendance in self.browse(cursor, user, ids, context=context):
 
