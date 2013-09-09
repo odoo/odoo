@@ -133,7 +133,7 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             key = group and picking.id or True
             for move in picking.move_lines:
-                if move.procurement_id and (move.procurement_id.invoice_state=='2binvoiced'):
+                if move.procurement_id and (move.procurement_id.invoice_state == '2binvoiced') or move.invoice_state == '2binvoiced':
                     if (move.state <> 'cancel') and not move.scrapped:
                         todo.setdefault(key, [])
                         todo[key].append(move)
@@ -146,12 +146,26 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         invoices = {}
         for move in moves:
-            sale_line = move.procurement_id.sale_line_id
-            sale = sale_line.order_id
-            partner = sale.partner_invoice_id
-
-            currency_id = sale.pricelist_id.currency_id.id
-            key = (partner.id, currency_id, sale.company_id.id, sale.user_id and sale.user_id.id or False)
+            company = move.company_id
+            account_analytic_id = False
+            if move.procurement_id:            
+                sale_line = move.procurement_id.sale_line_id
+                sale = sale_line.order_id
+                user_id = self.user_id.id
+                partner = sale.partner_invoice_id
+                currency_id = sale.pricelist_id.currency_id.id
+                origin = sale.name
+                account_analytic_id = sale.project_id and sale.project_id.id or False
+                unit_price = sale_line.price_unit
+                discount = sale_line.discount
+            else:
+                partner = move.picking_id.partner_id
+                currency_id = company.currency_id.id
+                user_id = uid
+                origin = move.picking_id.name
+                unit_price = move.product_id.list_price #TODO: use price_get
+                discount = 0
+            key = (partner.id, currency_id, company.id, user_id)
 
             if key not in invoices:
                 # Get account and payment terms
@@ -163,16 +177,16 @@ class stock_picking(osv.osv):
                     payment_term = partner.property_supplier_payment_term.id or False
 
                 invoice_id = invoice_obj.create(cr, uid, {
-                    'origin': sale.name,
+                    'origin': origin,
                     'date_invoice': context.get('date_inv', False),
-                    'user_id': sale.user_id and sale.user_id.id or False,
+                    'user_id': user_id,
                     'partner_id': partner.id,
                     'account_id': account_id,
                     'payment_term': payment_term,
                     'type': inv_type,
                     'fiscal_position': partner.property_account_position.id,
-                    'company_id': sale.company_id.id,
-                    'currency_id': sale.pricelist_id.currency_id.id,
+                    'company_id': company.id,
+                    'currency_id': currency_id,
                     'journal_id': journal_id,
                 }, context=context)
                 invoices[key] = invoice_id
@@ -206,22 +220,23 @@ class stock_picking(osv.osv):
                 'product_id': move.product_id.id,
                 'uos_id': uos_id,
                 'quantity': quantity,
-                'price_unit': sale_line.price_unit,
-                'discount': sale_line.discount,
-                'invoice_line_tax_id': [(6, 0, [x.id for x in sale_line.tax_id])],
-                'account_analytic_id': sale.project_id and sale.project_id.id or False,
+                'price_unit': unit_price,
+                'discount': discount,
+                #'invoice_line_tax_id': [(6, 0, [x.id for x in sale_line.tax_id])], TODO add me back
+                'account_analytic_id': account_analytic_id,
             }, context=context)
 
-            self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
-                'invoice_lines': [(4, invoice_line_id)]
-            }, context=context)
-            self.pool.get('sale.order').write(cr, uid, [sale.id], {
-                'invoice_ids': [(4, invoices[key])],
-            })
+            if move.procurement_id:
+                self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
+                    'invoice_lines': [(4, invoice_line_id)]
+                }, context=context)
+                self.pool.get('sale.order').write(cr, uid, [sale.id], {
+                    'invoice_ids': [(4, invoices[key])],
+                })
 
-            self.pool.get('procurement.order').write(cr, uid, [move.procurement_id.id], {
-                'invoice_state': 'invoiced',
-            }, context=context)
+                self.pool.get('procurement.order').write(cr, uid, [move.procurement_id.id], {
+                    'invoice_state': 'invoiced',
+                }, context=context)
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
