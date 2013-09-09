@@ -158,14 +158,29 @@ watch your stock valuation, and track production lots upstream and downstream (b
         -->
 
         <record id="procurement_rule_customer0" model="procurement.rule">
-            <field name="name">Stock > Customer</field>
+            <field name="name">Stock → Customer</field>
+            <field name="action">move</field>
+            <field name="location_src_id" ref="stock_location_stock"/>
+            <field name="location_id" ref="stock_location_customers"/>
+            <field name="picking_type_id" ref="picking_type_out"/>
+            <field name="procure_method">make_to_stock</field>
+        </record>
+
+    
+        <record id="route_warehouse0_mto" model='stock.location.route'>
+            <field name="name">MTO</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="procurement_rule_customer_mto" model="procurement.rule">
+            <field name="name">Stock → Customer</field>
             <field name="action">move</field>
             <field name="location_id" ref="stock_location_customers"/>
             <field name="location_src_id" ref="stock_location_stock"/>
             <field name="picking_type_id" ref="picking_type_out"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="route_id" ref="route_warehouse0_mto"/>
         </record>
-
-
 
         <!--
     Properties

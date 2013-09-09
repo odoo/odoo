@@ -6,17 +6,12 @@
             <field name="name">stock.procurement.rule.inherit.form</field>
             <field name="model">procurement.rule</field>
             <field name="inherit_id" ref="stock.view_procurement_rule_form"/>
-            
             <field name="arch" type="xml">
                 <field name="location_id" position="after">
-                	<field name="route_id"/>
-                	<field name="route_sequence"/>
-                	<field name="sequence"/>
                 	<field name="delay"/>
                 	<field name="propagate"/>
                 </field>
                 <field name="group_id" position="before">
-                	<field name="procure_method"/>
                 	<field name="partner_address_id"/>
                 </field>
             </field>
@@ -166,33 +161,28 @@
 				<tree string="Routes">
                     <field name="sequence" widget="handle" />
 					<field name="name"/>
-					<field name="product_categ_selectable"/>
 					<field name="product_selectable"/>
+                    <field name="product_categ_selectable"/>
 					<field name="warehouse_selectable"/>
 				</tree>
 			</field>
 		</record>
 
-		<record id="stock_location_route_form_view" model="ir.ui.view">
+		<record id="stock_location_route_form_view_inherit" model="ir.ui.view">
 			<field name="name">stock.location.route.form</field>
 			<field name="model">stock.location.route</field>
-			<field eval="7" name="priority" />
+			<field name="inherit_id" ref="stock.stock_location_route_form_view"/>
 			<field name="arch" type="xml">
-				<form string="Route">
-					<field name="name" />
-					<field name="sequence" groups="base.group_no_one"/>
-					<group>
-					<field name="product_categ_selectable"/>
-                    <field name="product_selectable"/>
-                    <field name="warehouse_selectable"/>
-					</group>
-					<group string="Push Rules" colspan="4" >
-						<field name="push_ids" colspan="4" nolabel="1"/>
+			    <xpath expr="//field[@name='sequence']" position="after">
+			        <group>
+                        <field name="product_categ_selectable"/>
+                        <field name="product_selectable"/>
+                        <field name="warehouse_selectable"/>
                     </group>
-                    <group string="Pull Rules" colspan="4" >
-						<field name="pull_ids" colspan="4" nolabel="1"/>
-					</group>
-				</form>
+                    <group string="Push Rules" colspan="4" >
+                        <field name="push_ids" colspan="4" nolabel="1"/>
+                    </group>
+			    </xpath>
 			</field>
 		</record>
 

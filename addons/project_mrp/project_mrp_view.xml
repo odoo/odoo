@@ -41,16 +41,6 @@
                 </field>
             </field>
         </record>
-        <record id="product_product_normal_form_supply_view" model="ir.ui.view">
-            <field name="name">product.normal.form.project_mrp.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='supply_method']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                </xpath>
-            </field>
-        </record>
     </data>
 </openerp>
 

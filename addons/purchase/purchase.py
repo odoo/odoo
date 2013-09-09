@@ -1122,9 +1122,8 @@ class procurement_order(osv.osv):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
-            if procurement.product_id.supply_method == 'buy' and self._check_supplier_info(cr, uid, [procurement.id], context=context):
-                rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
-                rule_id = rule_id and rule_id[0] or False
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
+            rule_id = rule_id and rule_id[0] or False
         return rule_id
 
     def _run(self, cr, uid, procurement, context=None):

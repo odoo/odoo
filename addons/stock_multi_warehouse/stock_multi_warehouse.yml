@@ -1,4 +1,7 @@
 -
+  !context
+    noupdate: 0
+-
   Create Two Customers
 -
   !record {model: res.partner, id: customer_1}:
@@ -180,6 +183,8 @@
 -
   !record {model: stock.location.route, id: route_wh_panama_main_ship}:
     name: Ship main panama
+    warehouse_selectable: True
+    product_selectable: False
     pull_ids:
         - invoice_state: none
           location_id: location_panama_main_output
@@ -200,6 +205,8 @@
 -
   !record {model: stock.location.route, id: route_wh_panama_santiago_ship}:
     name: Ship panama santiago
+    warehouse_selectable: True
+    product_selectable: False
     pull_ids:
         - invoice_state: none
           location_id: location_panama_santiago_output
@@ -215,7 +222,8 @@
           picking_type_id: picking_type_santiago_out
           procure_method: make_to_order
           action: move
-
+- 
+  Add routes to warehouses
 -
   !python {model: stock.warehouse}: |
     self.write(cr, uid, [ref('wh_panama_main')], {'route_id': ref('route_wh_panama_main_ship')}, context=context)

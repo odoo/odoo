@@ -33,6 +33,8 @@ import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
+
+
 #----------------------------------------------------------
 # Incoterms
 #----------------------------------------------------------
@@ -122,6 +124,28 @@ class stock_location(osv.osv):
     }
     def get_removal_strategy(self, cr, uid, location, product, context=None):
         return None
+
+
+#----------------------------------------------------------
+# Routes
+#----------------------------------------------------------
+
+class stock_location_route(osv.osv):
+    _name = 'stock.location.route'
+    _description = "Inventory Routes"
+    _order = 'sequence'
+
+    _columns = {
+        'name': fields.char('Route Name', required=True),
+        'sequence': fields.integer('Sequence'),
+        'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
+    }
+
+    _defaults = {
+        'sequence': lambda self,cr,uid,ctx: 0,
+    }
+
+
 
 #----------------------------------------------------------
 # Quants
@@ -2290,14 +2314,7 @@ class stock_warehouse_orderpoint(osv.osv):
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
 
-class product_template(osv.osv):
-    _inherit = "product.template"
-    _columns = {
-        'supply_method': fields.selection([('produce', 'Manufacture'), ('buy', 'Buy'), ('wait', 'None')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
-    }
-    _defaults = {
-        'supply_method': 'buy',
-    }
+
 
 class stock_picking_type(osv.osv):
     _name = "stock.picking.type"

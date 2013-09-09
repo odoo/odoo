@@ -573,18 +573,6 @@
             </field>
         </record>
 
-        <record id="product_product_normal_form_procurement_help_view" model="ir.ui.view">
-            <field name="name">product.normal.form.procurement.help.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
-            <field name="arch" type="xml">
-                <group name="procurement_help" position="inside">
-                    <!--TODO: Should add some procurement help here (something like route.description)-->
-                    <p> Procurement help </p>
-                </group>
-            </field>
-        </record>
-
         <record id="product_search_form_view_purchase" model="ir.ui.view">
             <field name="name">product.search.purchase.form</field>
             <field name="model">product.product</field>

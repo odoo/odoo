@@ -246,6 +246,17 @@ class sale_order(osv.osv):
             return finished
         elif mode == 'canceled':
             return canceled
+        
+        
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        date_planned = super(sale_order, self)._get_date_planned(cr, uid, order, line, start_date, context=context)
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
+
+    def _prepare_procurement_group(self, cr, uid, order, context=None):
+        res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
+        res.update({'move_type': order.picking_policy})
+        return res
 
 
     def action_ship_end(self, cr, uid, ids, context=None):

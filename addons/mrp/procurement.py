@@ -44,9 +44,8 @@ class procurement_order(osv.osv):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
-            if procurement.product_id.supply_method == 'manufacture':
-                rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)], context=context)
-                rule_id = rule_id and rule_id[0] or False
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)], context=context)
+            rule_id = rule_id and rule_id[0] or False
         return rule_id
 
     def _run(self, cr, uid, procurement, context=None):
@@ -92,7 +91,7 @@ class procurement_order(osv.osv):
 
     def get_phantom_bom_id(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.move_dest_id and procurement.move_dest_id.product_id.supply_method=='produce':
+            if procurement.move_dest_id:
                     phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
                         ('product_id', '=', procurement.move_dest_id.product_id.id),
                         ('bom_id', '=', False),
