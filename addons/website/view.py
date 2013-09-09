@@ -91,7 +91,7 @@ class view(osv.osv):
         """
         res_id = int(res_id)
 
-        arch_section = etree.fromstring(value)
+        arch_section = html.fromstring(value)
 
         for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
             self.save_embedded_field(cr, uid, el, context=context)
