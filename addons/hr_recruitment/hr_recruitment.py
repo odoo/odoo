@@ -182,6 +182,8 @@ class hr_applicant(osv.Model):
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                         domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+        'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage',
+                                         help='Stage of the applicant before being in the current stage. Used for lost cases analysis.'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
@@ -331,10 +333,8 @@ class hr_applicant(osv.Model):
         """
         if custom_values is None: custom_values = {}
         val = msg.get('from').split('<')[0]
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'partner_name':val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
@@ -392,13 +392,16 @@ class hr_applicant(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        # stage change: update date_last_stage_update
-        if 'stage_id' in vals:
-            vals['date_last_stage_update'] = fields.datetime.now()
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
-
+        # stage_id: track last stage before update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.datetime.now()
+            for applicant in self.browse(cr, uid, ids, context=None):
+                vals['last_stage_id'] = applicant.stage_id.id
+                res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
+            return res
         return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):

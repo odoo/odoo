@@ -71,6 +71,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
         },
 
+        // releases ressources holds by the model at the end of life of the posmodel
+        destroy: function(){
+            // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
+            // this.flush();
+            this.proxy.close();
+            this.barcode_reader.disconnect();
+        },
+
         // helper function to load data from the server
         fetch: function(model, fields, domain, ctx){
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()

@@ -56,11 +56,12 @@ class hr_recruitment_report(osv.Model):
         'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
         'salary_prop_avg' : fields.float("Avg. Proposed Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
         'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
-        'salary_exp_avg' : fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),        
+        'salary_exp_avg' : fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'available': fields.float("Availability"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
+        'last_stage_id': fields.many2one ('hr.recruitment.stage', 'Last Stage'),
     }
     
     def init(self, cr):
@@ -84,6 +85,7 @@ class hr_recruitment_report(osv.Model):
                      s.department_id,
                      s.priority,
                      s.stage_id,
+                     s.last_stage_id,
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
@@ -105,6 +107,7 @@ class hr_recruitment_report(osv.Model):
                      s.company_id,
                      s.user_id,
                      s.stage_id,
+                     s.last_stage_id,
                      s.type_id,
                      s.priority,
                      s.job_id,

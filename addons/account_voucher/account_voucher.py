@@ -884,6 +884,8 @@ class account_voucher(osv.osv):
         return res
 
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, date, amount, ttype, company_id, context=None):
+        if context is None:
+            context = {}
         if not journal_id:
             return False
         journal_pool = self.pool.get('account.journal')

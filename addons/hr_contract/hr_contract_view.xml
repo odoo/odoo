@@ -73,14 +73,15 @@
                 <form string="Contract" version="7.0">
                     <sheet>
                     <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Contract Reference"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="employee_id"/>
-                            <field name="job_id"/>
+                            <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                            <field name="job_id" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                         </group>
                         <group>
                             <field name="type_id"/>
