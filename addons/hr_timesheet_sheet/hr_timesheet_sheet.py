@@ -28,7 +28,7 @@ import pytz
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
@@ -376,10 +376,13 @@ class hr_attendance(osv.osv):
             attendance_dt = datetime.strptime(attendance.name, DEFAULT_SERVER_DATETIME_FORMAT)
             att_tz_dt = pytz.utc.localize(attendance_dt)
             att_tz_dt = att_tz_dt.astimezone(att_tz)
-            date_from = datetime.strftime(att_tz_dt, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = datetime.strftime(att_tz_dt.date(), DEFAULT_SERVER_DATETIME_FORMAT)
+            # We take only the date omiting the hours as we compare with timesheet
+            # date_from which is a date format thus using hours would lead to
+            # be out of scope of timesheet
+            att_tz_date_str = datetime.strftime(att_tz_dt, DEFAULT_SERVER_DATE_FORMAT)
             sheet_ids = sheet_obj.search(cursor, user,
-                [('date_to', '>=', date_to), ('date_from', '<=', date_from),
+                [('date_from', '<=', att_tz_date_str),
+                 ('date_to', '>=', att_tz_date_str),
                  ('employee_id', '=', attendance.employee_id.id)],
                 context=context)
             if sheet_ids:
