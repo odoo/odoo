@@ -202,12 +202,14 @@ class stock_move(osv.osv):
     _inherit = "stock.move"
 
     def action_done(self, cr, uid, ids, context=None):
-        self.product_price_update(cr, uid, ids, context=context)
+        self.product_price_update_before_done(cr, uid, ids, context=context)
         super(stock_move, self).action_done(cr, uid, ids, context=context)
+        self.product_price_update_after_done(cr, uid, ids, context=context)
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
+        move.refresh()
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
@@ -219,10 +221,7 @@ class stock_move(osv.osv):
         product_obj.write(cr, uid, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
         self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)
 
-    def product_price_update(self, cr, uid, ids, context=None):
-        '''
-        This method adapts the price on the product when necessary
-        '''
+    def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
         for move in self.browse(cr, uid, ids, context=context):
             #adapt standard price on incomming moves if the product cost_method is 'average'
@@ -236,10 +235,15 @@ class stock_move(osv.osv):
                 else:
                     # Get the standard price
                     amount_unit = product.price_get('standard_price', context=ctx)[product.id]
-                    new_std_price = (amount_unit * (product_avail - move.product_qty) + (move.price_unit * move.product_qty)) / product_avail
+                    new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
                 # Write the field according to price type field
                 product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=context)
 
+    def product_price_update_after_done(self, cr, uid, ids, context=None):
+        '''
+        This method adapts the price on the product when necessary
+        '''
+        for move in self.browse(cr, uid, ids, context=context):
             #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
             #or an inventory loss is made using the last value used for an outgoing valuation.
             if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
