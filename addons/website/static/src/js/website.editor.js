@@ -462,7 +462,7 @@
             this.$('input.pages').val($target.text()).change();
             // No #dropdown('close'), and using #dropdown('toggle') sur
             // #closest('.dropdown') makes the dropdown not work correctly
-            $target.closest('.open').removeClass('open')
+            $target.closest('.open').removeClass('open');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,

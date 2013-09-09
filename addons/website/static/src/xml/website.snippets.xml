@@ -1,23 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="website.snippets.EditorBar.carousel">
-        <a href="#" class="button js_add"><i class="icon icon-plus-sign"></i></a>
-        <a href="#" class="button js_remove"><i class="icon icon-minus-sign"></i></a>
-        <select name="carousel-background">
-            <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
-            <option value="/website/static/src/img/landscape.png">landscape</option>
-            <option value="/website/static/src/img/aqua.jpg">aqua</option>
-        </select>
-        <select name="carousel-style">
-            <option value="no_image">No image</option>
-            <option value="image_left">Image left</option>
-            <option value="image_right">Image right</option>
-        </select>
+    <!-- Editor -->
+
+    <t t-name="website.snippets">
+        <div class='oe_snippets hide'>
+        </div>
     </t>
 
-    <div t-name="website.snippets.Builder.carousel" data-snippet-id='carousel' data-action='insert' data-selector-siblings='#wrap .container'>
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'></div>
+    </t>
+
+    <!-- Snippets -->
+
+    <div t-name="website.snippets.box" data-snippet-id='box'>
+        
+        <!-- editor bar to display inside the top edit bar -->
+        <li class='oe_snippet_editorbar'>
+            <i class='icon-move oe_icon js_move'></i>
+            <i class='icon-remove oe_icon js_remove'></i>
+        </li>
+
+        <!-- custom data for the widget -->
+        <div class='oe_handles'>
+            <div class='oe_handle n'></div>
+            <div class='oe_handle ne'></div>
+            <div class='oe_handle e'></div>
+            <div class='oe_handle se'></div>
+            <div class='oe_handle s'></div>
+            <div class='oe_handle sw'></div>
+            <div class='oe_handle w'></div>
+            <div class='oe_handle nw'></div>
+        </div>
+    </div>
+
+    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-action='insert' data-selector-siblings='#wrap .container'>
+        
+        <!-- editor bar to display inside the top edit bar -->
+        <li class='oe_snippet_editorbar'>
+            <a href="#" class="button js_add"><i class="icon icon-plus-sign"></i></a>
+            <a href="#" class="button js_remove"><i class="icon icon-minus-sign"></i></a>
+            <select name="carousel-background">
+                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
+                <option value="/website/static/src/img/landscape.png">landscape</option>
+                <option value="/website/static/src/img/aqua.jpg">aqua</option>
+            </select>
+            <select name="carousel-style">
+                <option value="no_image">No image</option>
+                <option value="image_left">Image left</option>
+                <option value="image_right">Image right</option>
+            </select>
+        </li>
+
+        <!-- thumbnail to display inside the bottom widget list editor -->
         <div class='oe_snippet_thumbnail oe_label'>carousel</div>
+
+        <!-- body to insert after drag and drop thumbnail -->
         <div id="myCarousel" class="oe_snippet_body carousel slide" data-interval="100000">
             <!-- Carousel items -->
             <div class="carousel-inner">
@@ -35,22 +74,33 @@
             <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
             <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
         </div>
+
+        <!-- custom data for the widget -->
+        <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
+            <div class='container'>
+                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                    <h1>Your New Banner Slide</h1>
+                    <h3>With another convincing subtitle</h3>
+                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div t-name="website.snippets.Builder.darken" data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
+    <div t-name="website.snippets.darken" data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
         <div class='oe_snippet_thumbnail oe_label'>Darken</div>
     </div>
 
-    <div t-name="website.snippets.Builder.surprise" data-snippet-id='surprise' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.vomify'>
+    <div t-name="website.snippets.surprise" data-snippet-id='surprise' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.vomify'>
         <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
     </div>
 
-    <div t-name="website.snippets.Builder.spacer" data-snippet-id='spacer' data-action='insert' data-selector-siblings='#wrap .container'>
+    <div t-name="website.snippets.spacer" data-snippet-id='spacer' data-action='insert' data-selector-siblings='#wrap .container'>
         <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
         <div class="oe_snippet_body container mt32"></div>
     </div>
 
-    <div t-name="website.snippets.Builder.title" data-snippet-id='title' data-action='insert' data-selector-siblings='#wrap .container'>
+    <div t-name="website.snippets.title" data-snippet-id='title' data-action='insert' data-selector-siblings='#wrap .container'>
         <div class='oe_snippet_thumbnail oe_label'>
             Main Title
         </div>
@@ -64,7 +114,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.Builder.three-collumns" data-snippet-id='three-collumns' data-action='insert' data-selector-siblings='#wrap .container'>
+    <div t-name="website.snippets.three-collumns" data-snippet-id='three-collumns' data-action='insert' data-selector-siblings='#wrap .container'>
         <section class="oe_snippet_body container">
             <div class="row">
                 <div class="col-md-12 text-center">
@@ -99,7 +149,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.Builder.header-block" data-snippet-id='header-block' data-action='insert' data-selector-siblings='#wrap .container'>
+    <div t-name="website.snippets.header-block" data-snippet-id='header-block' data-action='insert' data-selector-siblings='#wrap .container'>
         <section class="container oe_snippet_body">
             <div class="row">
                 <div class="col-md-5">

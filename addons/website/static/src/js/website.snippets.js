@@ -12,8 +12,6 @@
             return this._super().then(function () {
 
                 this.$buttons.snippet = this.$('button[data-action=snippet]');
-                window.snippets = this.snippets = new website.snippet.BuildingBlock();
-                this.snippets.appendTo($(document.body));
 
             }.bind(this));
         },
@@ -23,23 +21,28 @@
             var instanceReady = false;
             this.rte.on('instanceReady', this, function () {
                 clearTimeout(instanceReady);
-                instanceReady = setTimeout(function () { self.snippetBind(); }, 0);
+                instanceReady = setTimeout(function () {
+                    self.activate_building_block_manipulators();
+                    self.activate_snippet_click_editor();
+                }, 0);
+
             });
             return res;
+        },
+
+        activate_building_block_manipulators: function () {
+            window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
+            this.snippets.appendTo($(document.body));
+            this.snippets.activate_snippet_manipulators();
         },
         snippet: function (ev) {
             this.snippets.toggle();
         },
-
-        snippetBind: function () {
+        activate_snippet_click_editor: function () {
             var self = this;
             var $snipped_id = false;
             var snipped_event_flag = false;
-            $("[data-snippet-id]")
-                .filter(function() {
-                    return !!website.snippet.editorRegistry[$(this).data("snippet-id")];
-                })
-                .on('click', function (event) {
+            $("[data-snippet-id]").on('click', function (event) {
                     if (snipped_event_flag) {
                         return;
                     }
@@ -51,24 +54,23 @@
                         return;
                     }
 
-                    self.snippetblur($snipped_id);
+                    self.snippet_blur($snipped_id);
 
                     $snipped_id = $(event.currentTarget);
 
                     if (typeof $snipped_id.data("snippet-editor") === 'undefined') {
-                        $snipped_id.data("snippet-editor", new website.snippet.editorRegistry[$snipped_id.data("snippet-id")](self, $snipped_id));
+                        $snipped_id.data("snippet-editor", new (website.snippet.editorRegistry[$snipped_id.data("snippet-id")] || website.snippet.editorRegistry.box)(self, $snipped_id));
                     }
-                    self.snippetFocus($snipped_id);
+                    self.snippet_focus($snipped_id);
                 });
             $("body > :not(:has(#website-top-view))").on('click', function (ev) {
                     if (!snipped_event_flag && $snipped_id) {
-                        self.snippetblur($snipped_id);
+                        self.snippet_blur($snipped_id);
                         $snipped_id = false;
                     }
                 });
         },
-
-        snippetblur: function ($snipped_id) {
+        snippet_blur: function ($snipped_id) {
             if ($snipped_id) {
                 if ($snipped_id.data("snippet-editor")) {
                     $snipped_id.data("snippet-editor").onBlur();
@@ -78,7 +80,7 @@
                 }
             }
         },
-        snippetFocus: function ($snipped_id) {
+        snippet_focus: function ($snipped_id) {
             if ($snipped_id) {
                 if ($snipped_id.data("snippet-view")) {
                     $snipped_id.data("snippet-view").onFocusEdit();
@@ -94,9 +96,20 @@
     
     website.snippet = {};
 
+    // puts $el at the same absolute position as $target
+    website.snippet.cover_target = function cover_target($el, $target){
+        $el.css({
+            'position': 'absolute',
+            'width': $target.outerWidth(),
+            'height': $target.outerHeight(),
+        });
+        $el.css($target.offset());
+    }
+
     website.snippet.BuildingBlock = openerp.Widget.extend({
         template: 'website.snippets',
-        init: function () {
+        init: function (parent) {
+            this.parent = parent;
             this._super.apply(this, arguments);
             if(!$('#oe_manipulators').length){
                 $("<div id='oe_manipulators'></div>").appendTo('body');
@@ -107,12 +120,17 @@
 
             var snippets_template = [];
             _.each(openerp.qweb.compiled_templates, function (val, key) {
-                if (key.indexOf('website.snippets.Builder.') === 0) {
+                if (key.indexOf('website.snippets.') === 0) {
                     var $snippet = $(openerp.qweb.render(key)).addClass("oe_snippet");
-                    self.$el.append($snippet);
-                    self.make_snippet_draggable($snippet);
+                    if ($snippet.data("action")) {
+                        self.$el.append($snippet);
+                        self.make_snippet_draggable($snippet);
+                    }
                 }
             });
+
+            this.bind_selected_manipulator();
+
         },
         path_eval: function(path){
             var obj = window;
@@ -121,6 +139,21 @@
                 obj = obj[path.shift()];
             }while(path.length && obj);
             return obj;
+        },
+
+        bind_selected_manipulator: function () {
+
+            var $selected_target = null;
+            $("body").mouseover(function (event){
+                var $target = $(event.srcElement).parents("[data-snippet-id]:first");
+                if($target.length && $selected_target != $target){
+                    if($selected_target){
+                        $selected_target.data('manipulator').removeClass('oe_selected');
+                    }
+                    $selected_target = $target;
+                    $target.data('manipulator').addClass('oe_selected');
+                }
+            });
         },
 
         // activate drag and drop for the snippets in the snippet toolbar
@@ -305,20 +338,10 @@
             for(var i = 0, len = $targets.length; i < len; i++){
                 var $target = $targets.eq(i);
                 var $zone = $(zone_template);
-                this.cover_target($zone,$target);
+                website.snippet.cover_target($zone,$target);
                 $zone.appendTo('#oe_manipulators');
                 $zone.data('target',$target);
             }
-        },
-
-        // puts $el at the same absolute position as $target
-        cover_target: function($el, $target){
-            $el.css({
-                'position': 'absolute',
-                'width': $target.outerWidth(),
-                'height': $target.outerHeight(),
-            });
-            $el.css($target.offset());
         },
 
         // activates the manipulator boxes (with resizing handles) for all snippets
@@ -326,82 +349,24 @@
             var self = this;
             // we generate overlay drop zones only to get an idea of where the snippet are, the drop
             // zones are replaced by manipulators
-            this.activate_overlay_zones('#wrap .container');
+            this.activate_overlay_zones('#wrap [data-snippet-id]');
 
-            var $active_manipulator = null;
-            var locked = false;
-
-            $('.oe_drop_zone').each(function(){;
+            $('.oe_drop_zone').each(function(){
 
                 var $zone = $(this);
                 var $snippet = $zone.data('target');
                 var $manipulator = $(openerp.qweb.render('website.snippet_manipulator'));
 
-                self.cover_target($manipulator, $zone);
+                website.snippet.cover_target($manipulator, $zone);
                 $manipulator.data('target',$snippet);
+                $snippet.data('manipulator',$manipulator);
                 $manipulator.appendTo('#oe_manipulators');
                 $zone.remove();
-
-                $manipulator.mouseover(function(){
-                    if(!locked && $active_manipulator != $manipulator){
-                        if($active_manipulator){
-                            $active_manipulator.removeClass('oe_selected');
-                        }
-                        $active_manipulator = $manipulator;
-                        $manipulator.addClass('oe_selected');
-                    }
+                $snippet.off("resize").on("resize", function () {
+                    self.deactivate_snippet_manipulators();
+                    self.activate_snippet_manipulators();
                 });
-                /*$manipulator.mouseleave(function(){
-                    if(!locked && $active_manipulator){
-                        $active_manipulator.removeClass('oe_selected');
-                        $active_manipulator = null;
-                    }
-                });*/
-                /*
-                $manipulator.click(function(){
-                    if($active_manipulator === $manipulator){
-                        selected = !selected;
-                        $manipulator.toggleClass('oe_selected',selected);
-                    }
-                });
-                */
 
-                $manipulator.find('.oe_handle').mousedown(function(event){
-                    locked = true;
-                    var $handle = $(this);
-                    var x = event.pageX;
-                    var y = event.pageY;
-
-                    var pt = $snippet.css('padding-top');
-                    var pb = $snippet.css('padding-bottom'); 
-                    pt = Number(pt.slice(0,pt.length - 2)) || 0; //FIXME something cleaner to remove 'px'
-                    pb = Number(pb.slice(0,pb.length - 2)) || 0;
-                    
-                    $manipulator.addClass('oe_hover');
-                    event.preventDefault();
-
-                    $('body').mousemove(function(event){
-                        var dx = event.pageX - x;
-                        var dy = event.pageY - y;
-                        event.preventDefault();
-                        if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
-                            $snippet.css('padding-top',pt-dy+'px');
-                            self.cover_target($manipulator,$snippet);
-                        }else if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
-                            $snippet.css('padding-bottom',pb+dy+'px');
-                            self.cover_target($manipulator,$snippet);
-                        }
-                    });
-
-                    $('body').mouseup(function(){
-                        locked = false;
-                        $('body').unbind('mousemove');
-                        $('body').unbind('mouseup');
-                        self.deactivate_snippet_manipulators();
-                        self.activate_snippet_manipulators();
-                    });
-                });
-                    
             });
         },
         deactivate_snippet_manipulators: function(){
@@ -410,17 +375,17 @@
         toggle: function(){
             if(this.$el.hasClass('hide')){
                 this.$el.removeClass('hide');
-                this.activate_snippet_manipulators();
+                //this.activate_snippet_manipulators();
             }else{
                 this.$el.addClass('hide');
-                this.deactivate_snippet_manipulators();
+                //this.deactivate_snippet_manipulators();
             }
         },
     });
 
 
-    website.snippet.viewRegistry = {};
-    website.snippet.View = openerp.Class.extend({
+    website.snippet.animationRegistry = {};
+    website.snippet.Animation = openerp.Class.extend({
         $: function () {
             return this.$el.find.apply(this.$el, arguments);
         },
@@ -454,8 +419,8 @@
         $("[data-snippet-id]").each(function() {
                 var $snipped_id = $(this);
                 if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
-                        website.snippet.viewRegistry[$snipped_id.data("snippet-id")]) {
-                    $snipped_id.data("snippet-view", new website.snippet.viewRegistry[$snipped_id.data("snippet-id")]($snipped_id));
+                        website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
+                    $snipped_id.data("snippet-view", new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id));
                 }
             });
     });
@@ -475,10 +440,12 @@
             var $el;
             if (this.template) {
                 $el = $(openerp.qweb.render(this.template, {widget: this}).trim());
+                this.$editor = $el.find(".oe_snippet_editorbar");
+                this.$thumbnail = $el.find(".oe_snippet_thumbnail");
+                this.$body = $el.find(".oe_snippet_body");
             } else {
                 $el = this._make_descriptive();
             }
-            $el = $('<li id="website-top-edit-snippet-option"></li>').append($el);
             this.replaceElement($el);
         },
 
@@ -486,14 +453,14 @@
         *  called when the user click inside the snippet dom
         */
         onFocus : function () {
-            this.$el.prependTo(this.parent.$('#website-top-edit .nav.pull-right'));
+            if(this.$editor) this.$editor.prependTo(this.parent.$('#website-top-edit .nav.pull-right'));
         },
 
         /* onFocus
         *  called when the user click outide the snippet dom
         */
         onBlur : function () {
-            this.$el.detach();
+            if(this.$editor) this.$editor.detach();
         },
 
         /* setOptions
@@ -512,23 +479,99 @@
         },
     });
 
-    
 
+    website.snippet.editorRegistry.box = website.snippet.Editor.extend({
+        onFocus : function () {
+            this._super();
+            var self = this;
+            this.$target.data('manipulator')
+                .append($(openerp.qweb.render("website.snippets.box")).find(".oe_handles").html())
+                .addClass('oe_active');
 
+            this.$target.data('manipulator').find(".oe_handle").on('mousedown', function (event){
+                    event.preventDefault();
 
-    website.snippet.editorRegistry.carousel = website.snippet.Editor.extend({
-        template : "website.snippets.EditorBar.carousel",
+                    var $handle = $(this);
+                    var $manipulator = self.$target.data('manipulator');
+                    var $snippet = self.$target;
+
+                    var x = event.pageX;
+                    var y = event.pageY;
+
+                    var padding=[parseInt($snippet.css('padding-top') || 0),
+                                parseInt($snippet.css('padding-bottom') || 0),
+                                parseInt($snippet.css('padding-left') || 0),
+                                parseInt($snippet.css('padding-right') || 0)];
+                    var margin=[parseInt($snippet.css('margin-top') || 0),
+                                parseInt($snippet.css('margin-bottom') || 0),
+                                parseInt($snippet.css('margin-left') || 0),
+                                parseInt($snippet.css('margin-right') || 0)];
+                    var size = [parseInt($snippet.height() || 0),
+                                parseInt($snippet.width() || 0)];
+
+                    $manipulator.addClass('oe_hover');
+
+                    var body_mousemove = function (event){
+                        event.preventDefault();
+                        var dx = event.pageX - x;
+                        var dy = event.pageY - y;
+
+                        if($handle.hasClass('n') || $handle.hasClass('nw') || $handle.hasClass('ne')){
+                            $snippet.css('padding-top', (padding[0]-dy)+'px');
+                            if (padding[0]-dy < 0) {
+                                $snippet.css('margin-top', (margin[0]+(padding[0]-dy))+'px');
+                            }
+                        }
+                        if($handle.hasClass('s') || $handle.hasClass('sw') || $handle.hasClass('se')){
+                            $snippet.css('padding-bottom',(padding[1]+dy)+'px');
+                            if (padding[1]+dy < 0) {
+                                $snippet.css('margin-bottom', (margin[1]+(padding[1]+dy))+'px');
+                            }
+                        }
+                        if($handle.hasClass('w') || $handle.hasClass('sw') || $handle.hasClass('nw')){
+                            $snippet.css('padding-left',(padding[2]+dx)+'px');
+                            //$snippet.css('width', (size[1]-dx)+'px');
+                        }
+                        if($handle.hasClass('e') || $handle.hasClass('se') || $handle.hasClass('ne')){
+                            $snippet.css('padding-right',(padding[3]+dx)+'px');
+                            //$snippet.css('width', (size[1]+dx)+'px');
+                        }
+                        website.snippet.cover_target($manipulator, $snippet);
+                    };
+                    $('body').mousemove(body_mousemove);
+
+                    var body_mouseup = function(){
+                        $('body').unbind('mousemove', body_mousemove);
+                        $('body').unbind('mouseup', body_mouseup);
+                        $snippet.trigger("resize");
+                        self.onBlur();
+                        self.onFocus();
+                    };
+                    $('body').mouseup(body_mouseup);
+                });
+        },
+        onBlur : function () {
+            this._super();
+            this.$target.data('manipulator')
+                .removeClass('oe_active')
+                .empty();
+            },
+    });
+
+    website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.box.extend({
+        template : "website.snippets.carousel",
         start : function () {
+            var self = this;
 
-            this.$(".js_add").on('click', this.on_add);
-            this.$(".js_remove").on('click', this.on_remove);
+            this.$editor.find(".js_add").on('click', this.on_add);
+            this.$editor.find(".js_remove").on('click', this.on_remove);
 
             var bg = this.$target.find('.carousel-inner .item.active').css('background-image').replace(/url\((.*)\)/g, '\$1');
-            this.$('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
+            this.$editor.find('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
                 .prop('selected', true);
 
-            this.$('select[name="carousel-background"]').on('change', function () {
-                this.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
+            this.$editor.find('select[name="carousel-background"]').on('change', function () {
+                self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
             });
 
             var style = false;
@@ -536,16 +579,17 @@
                 style = 'image_right';
             if (this.$target.find('.carousel-inner .item.active .container .content_image'))
                 style = 'image_left';
-            this.$('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
+            this.$editor.find('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
 
-            this.$('select[name="carousel-style"]').on('change', this.on_bg_change);
+            this.$editor.find('select[name="carousel-style"]').on('change', this.on_bg_change);
         },
         on_add: function (e) {
             e.preventDefault();
             var $inner = this.$target.find('.carousel-inner');
             var cycle = $inner.find('.item').size();
-            $inner.append(openerp.qweb.render('website.carousel'));
+            $inner.append(this.$('> .item'));
             this.$target.carousel(cycle);
+            this.$target.trigger("resize");
         },
         on_remove: function (e) {
             e.preventDefault();
@@ -555,6 +599,7 @@
                     .find('.item.active').remove().end()
                     .find('.item:first').addClass('active');
                 this.$target.carousel(0);
+                this.$target.trigger("resize");
             }
         },
         on_bg_change: function (e) {

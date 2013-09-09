@@ -117,6 +117,8 @@
         display: none
     & > *
         pointer-events: none
+    & > :not(.oe_snippet_body):not(.oe_snippet_thumbnail)
+        display: none !important
 
     & > *:first-child:not(.oe_snippet_thumbnail)
         display: block
@@ -174,22 +176,21 @@
     opacity: 0
     transition: opacity 100ms linear
     box-sizing: border-box
-    & > .oe_handle
+    pointer-events: none
+    .oe_handle
         display: none
     &.oe_hover
         opacity: 1
         cursor: pointer
-    &.oe_selected
+    &.oe_selected, &.oe_active
         opacity: 1
-        pointer-events: none
         background: transparent
         border: dashed 1px rgba(153, 0, 255, 0.5)
         box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
         & > *
             pointer-events: auto
-        & > .oe_handle
-            display: block
     .oe_buttons
+        display: none
         position: absolute
         right: 16px
         top: 16px
@@ -201,6 +202,10 @@
             display: inline-block
             padding: 8px
             cursor: pointer
+    &.oe_active
+        z-index: 100000
+        .oe_handle, .oe_buttons
+            display: block
 
 .oe_handle
     pointer-events: auto
@@ -215,7 +220,6 @@
     width: 16px
     height: 16px
     margin: -8px
-    cursor: move
     -webkit-transition: background 100ms linear
     &:hover
         background: rgb(153, 0, 255)
@@ -230,6 +234,23 @@
     bottom: 0px
 .oe_handle.nw,.oe_handle.w,.oe_handle.sw
     left: 0px
+.oe_handle.n
+    cursor: n-resize
+.oe_handle.ne
+    cursor: ne-resize
+.oe_handle.nw
+    cursor: nw-resize
+.oe_handle.s
+    cursor: s-resize
+.oe_handle.se
+    cursor: se-resize
+.oe_handle.sw
+    cursor: sw-resize
+.oe_handle.e
+    cursor: e-resize
+.oe_handle.w
+    cursor: w-resize
+
 
 /* ---- MOBILE PREVIEW ---- */
 
