@@ -107,13 +107,10 @@
   <story>
   <pto>
   <pto_header>
-    <blockTable colWidths="370.0,85.0,82.0" repeatRows="1" style="Table3">
+    <blockTable colWidths="455.0,82.0" repeatRows="1" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Quantity</para>
@@ -130,12 +127,12 @@
       <tr>
         <td>
           <para style="terp_default_Bold_9">Invoiced to</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.name or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and display_address(o.sale_id.partner_invoice_id) ]]</para>
+          <para style="terp_default_9">[[ o.origin and get_partner_invoice_info(o.origin)[0] or '' ]]</para>
+          <para style="terp_default_9">[[ o.origin and get_partner_invoice_info(o.origin)[1] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.partner_id and o.partner_id and o.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_id and o.partner_id and display_address(o.partner_id) ]]</para>
+          <para style="terp_default_9">[[ o.partner_id and o.partner_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_id and display_address(o.partner_id) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -165,7 +162,7 @@
     <blockTable colWidths="126.0,103.0,103.0,103.0,103.0" style="Table2">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ o.sale_id and o.sale_id.name ]]</para>
+          <para style="terp_default_Centre_8">[[ o.origin or '' ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(o.date,date_time=True) ]]</para>
@@ -184,13 +181,10 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="370.0,85.0,82.0" repeatRows="1" style="Table3">
+    <blockTable colWidths="455.0,82.0" repeatRows="1" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Quantity</para>
@@ -199,13 +193,10 @@
     </blockTable>
     <section>
       <para style="terp_default_1">[[repeatIn(o.move_lines,'line')]]</para>
-      <blockTable colWidths="370.0,85.0,83.0" style="Table4">
+      <blockTable colWidths="455.0,82.0" style="Table4">
         <tr>
           <td>
             <para style="terp_default_9">[[line.product_id.code ]] [[ line.product_id and line.product_id.name or '']]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_9">[[ (line.prodlot_id and (line.prodlot_id.name + (line.prodlot_id.ref and ('/' + line.prodlot_id.ref) or ''))) or ' ' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.product_qty) ]] [[ line.product_uom and line.product_uom.name ]]</para>
