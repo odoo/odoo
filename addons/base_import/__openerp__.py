@@ -26,7 +26,7 @@ Re-implement openerp's file import system:
     'author': 'OpenERP SA',
     'depends': ['web'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
     ],

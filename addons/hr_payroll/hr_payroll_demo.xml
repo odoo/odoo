@@ -63,12 +63,12 @@
             <field name="name">Provident Fund</field>
         </record>
 
-        <record id="hr_salary_rule_ca_paolino" model="hr.salary.rule">
+        <record id="hr_salary_rule_ca_gravie" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="600.0" name="amount_fix"/>
-            <field name="code">CAQP</field>
+            <field name="code">CAGG</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">Conveyance Allowance For Paolino</field>
+            <field name="name">Conveyance Allowance For Gravie</field>
             <field name="sequence" eval="15"/>
         </record>
 
@@ -117,9 +117,9 @@
         </record>
 
         <record id="structure_002" model="hr.payroll.structure">
-            <field name="code">MEQP</field>
-            <field name="name">Marketing Executive for Quentin Paolino</field>
-            <field eval="[(6, 0, [ref('hr_salary_rule_ca_paolino'), ref('hr_salary_rule_meal_voucher')])]" name="rule_ids"/>
+            <field name="code">MEGG</field>
+            <field name="name">Marketing Executive for Gilles Gravie</field>
+            <field eval="[(6, 0, [ref('hr_salary_rule_ca_gravie'), ref('hr_salary_rule_meal_voucher')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_001"/>
         </record>
@@ -152,14 +152,14 @@
             <field name="working_hours" ref="resource.timesheet_group1"/>
         </record>
 
-        <record id="hr_contract_quentin_paolino" model="hr.contract">
-            <field name="name">Contract For Quentin Paolino</field>
+        <record id="hr_contract_gilles_gravie" model="hr.contract">
+            <field name="name">Contract For Gilles Gravie</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
             <field name="struct_id" ref="hr_payroll.structure_002"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="notes">This is Quentin Paolino's contract</field>
+            <field name="notes">This is Gilles Gravie's contract</field>
             <field eval="5000.0" name="wage"/>
             <field name="working_hours" ref="resource.timesheet_group1"/>
         </record>
