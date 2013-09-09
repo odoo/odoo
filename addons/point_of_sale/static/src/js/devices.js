@@ -27,7 +27,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             this.connection = new instance.web.JsonRPC();
             this.connection.setup(url);
-
+            this.connection.session_id = _.uniqueId('posproxy');
             this.bypass_proxy = false;
             this.notifications = {};
             
