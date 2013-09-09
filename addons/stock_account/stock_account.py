@@ -202,8 +202,8 @@ class stock_move(osv.osv):
     _inherit = "stock.move"
 
     def action_done(self, cr, uid, ids, context=None):
-        super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update(cr, uid, ids, context=context)
+        super(stock_move, self).action_done(cr, uid, ids, context=context)
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
