@@ -41,6 +41,97 @@ SLEEP_INTERVAL = 60 # 1 min
 # Common
 #----------------------------------------------------------
 
+class AutoReload(object):
+    def __init__(self):
+        self.files = {}
+        import pyinotify
+        class EventHandler(pyinotify.ProcessEvent):
+            def __init__(self, autoreload):
+                self.autoreload = autoreload
+
+            def process_IN_CREATE(self, event):
+                _logger.debug('File created: %s', event.pathname)
+                self.autoreload.files[event.pathname] = 1
+
+            def process_IN_MODIFY(self, event):
+                _logger.debug('File modified: %s', event.pathname)
+                self.autoreload.files[event.pathname] = 1
+
+        self.wm = pyinotify.WatchManager()
+        self.handler = EventHandler(self)
+        self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
+        mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
+        for path in openerp.tools.config.options["addons_path"].split(','):
+            _logger.info('Watching addons folder %s', path)
+            self.wm.add_watch(path, mask, rec=True)
+
+    def process_data(self, touched_files):
+        # pyinotify notifier + fs modiciation tracker
+        from openerp.modules.module import load_information_from_description_file as load_manifest
+        addons_path = openerp.tools.config.options["addons_path"].split(',')
+        registries = openerp.modules.registry.RegistryManager.registries
+        keys = ['data', 'demo', 'test', 'init_xml', 'update_xml', 'demo_xml']
+        # This will only work for loaded registies, so we have to use  -d <database>
+        # al: proposed to move this code in the registry manager so it can be lazy
+        for db_name, registry in registries.items():
+            cr = registry.db.cursor()
+            try:
+                for tfile in touched_files:
+                    for path in addons_path:
+                        if tfile.startswith(path):
+                            # find out wich addons path the file belongs to
+                            # and extract it's module name
+                            right = tfile[len(path) + 1:].split('/')
+                            if len(right) < 2:
+                                continue
+                            module = right[0]
+                            relname = "/".join(right[1:])
+                            domain = [('name', '=', module), ('state', 'in', ['installed', 'to upgrade'])]
+                            if registry.get('ir.module.module').search(cr, openerp.SUPERUSER_ID, domain):
+                                manifest = load_manifest(module)
+                                kind = [key for key in keys if relname in manifest[key]]
+                                if kind:
+                                    _logger.info('Updating changed xml file: %s', tfile)
+                                    idref = {}
+                                    openerp.tools.convert_file(cr, module, relname, idref, mode='update', kind=kind[0])
+                cr.commit()
+            except Exception,e:
+                _logger.exception(e)
+            finally:
+                cr.close()
+
+    def process_python(self, files):
+        # process python changes
+        py_files = [i for i in files if i.endswith('.py')]
+        py_errors = []
+        # TODO keep python errors until they are ok
+        if py_files:
+            for i in py_files:
+                try:
+                    source = open(i, 'rb').read() + '\n'
+                    compile(source, i, 'exec')
+                except SyntaxError:
+                    py_errors.append(i)
+            if py_errors:
+                _logger.info('autoreload: python code change detected, errors found')
+                for i in py_errors:
+                    _logger.info('autoreload: SyntaxError %s',i)
+            else:
+                _logger.info('autoreload: python code updated, autoreload activated')
+                restart_server()
+
+    def check(self):
+        # Check if some files have been touched in the addons path.
+        # If true, check if the touched file belongs to an installed module
+        # in any of the database used in the registry manager.
+        while self.notifier.check_events(0):
+            self.notifier.read_events()
+            self.notifier.process_events()
+        l = self.files.keys()
+        self.files.clear()
+        self.process_data(l)
+        self.process_python(l)
+
 class CommonServer(object):
     def __init__(self, app):
         # TODO Change the xmlrpc_* options to http_*
@@ -101,8 +192,8 @@ class ThreadedServer(CommonServer):
         self.quit_signals_received = 0
 
         #self.socket = None
-        #self.queue = []
         self.httpd = None
+        self.autoreload = None
 
     def signal_handler(self, sig, frame):
         if sig in [signal.SIGINT,signal.SIGTERM]:
@@ -152,7 +243,11 @@ class ThreadedServer(CommonServer):
             _logger.debug("cron%d started!" % i)
 
     def http_thread(self):
-        self.httpd = werkzeug.serving.make_server(self.interface, self.port, self.app, threaded=True)
+        def app(e,s):
+            if self.autoreload:
+                self.autoreload.check()
+            return self.app(e,s)
+        self.httpd = werkzeug.serving.make_server(self.interface, self.port, app, threaded=True)
         self.httpd.serve_forever()
 
     def http_spawn(self):
@@ -172,6 +267,7 @@ class ThreadedServer(CommonServer):
             win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
         self.cron_spawn()
         self.http_spawn()
+        self.autoreload = AutoReload()
 
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
@@ -189,7 +285,7 @@ class ThreadedServer(CommonServer):
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if thread != me and not thread.isDaemon() and thread.ident != main_thread_id:
+            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:
                 while thread.isAlive():
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
@@ -262,11 +358,11 @@ class GeventServer(CommonServer):
 # Prefork
 #----------------------------------------------------------
 
-class Multicorn(CommonServer):
+class PreforkServer(CommonServer):
     """ Multiprocessing inspired by (g)unicorn.
-    Multicorn currently uses accept(2) as dispatching method between workers
-    but we plan to replace it by a more intelligent dispatcher to will parse
-    the first HTTP request line.
+    PreforkServer (aka Multicorn) currently uses accept(2) as dispatching
+    method between workers but we plan to replace it by a more intelligent
+    dispatcher to will parse the first HTTP request line.
     """
     def __init__(self, app):
         # config
@@ -617,12 +713,12 @@ class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     def __init__(self, app):
         werkzeug.serving.BaseWSGIServer.__init__(self, "1", "1", app)
     def server_bind(self):
-        # we dont bind beause we use the listen socket of Multicorn#socket
+        # we dont bind beause we use the listen socket of PreforkServer#socket
         # instead we close the socket
         if self.socket:
             self.socket.close()
     def server_activate(self):
-        # dont listen as we use Multicorn#socket
+        # dont listen as we use PreforkServer#socket
         pass
 
 class WorkerCron(Worker):
@@ -723,10 +819,11 @@ def _reexec():
 def start():
     """ Start the openerp http server and cron processor.
     """
+    global server
     load_server_wide_modules()
     if config['workers']:
         openerp.multi_process = True
-        server = Multicorn(openerp.service.wsgi_server.application)
+        server = PreforkServer(openerp.service.wsgi_server.application)
     elif openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
     else:
