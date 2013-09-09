@@ -239,7 +239,7 @@ class hr_applicant(osv.Model):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
-        'emp_id': fields.many2one('hr.employee', 'Employee'),
+        'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
         'attachments': fields.function(_compute_attachments, string='Number of Attachments', \
                                  type="integer"),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
