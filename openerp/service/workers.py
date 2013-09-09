@@ -18,6 +18,7 @@ import time
 import traceback
 import subprocess
 import os.path
+import platform
 
 import wsgi_server
 
@@ -245,6 +246,7 @@ class GeventServer(CommonServer):
         from gevent.wsgi import WSGIServer
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
+        _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         self.httpd.serve_forever()
 
     def stop(self):
