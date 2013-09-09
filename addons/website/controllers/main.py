@@ -57,8 +57,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
         view_model, view_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'default_page',
-            context=request.context)
+            request.cr, request.uid, 'website', 'default_page')
         newview_id = view.copy(
             request.cr, request.uid, view_id, context=request.context)
         newview = view.browse(
@@ -92,7 +91,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         view = request.registry['ir.ui.view']
 
         view_model, view_option_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme', context=request.context)
+            request.cr, request.uid, 'website', 'theme')
         views = view.search(
             request.cr, request.uid, [('inherit_id', '=', view_option_id)],
             context=request.context)
@@ -102,7 +101,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         if theme_id:
             module, xml_id = theme_id.split('.')
             view_model, view_id = imd.get_object_reference(
-                request.cr, request.uid, module, xml_id, context=request.context)
+                request.cr, request.uid, module, xml_id)
             view.write(request.cr, request.uid, [view_id],
                        {'inherit_id': view_option_id}, context=request.context)
 
@@ -135,7 +134,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def customize_template_get(self, xml_id):
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme', context=request.context)
+            request.cr, request.uid, 'website', 'theme')
 
         view = request.registry.get("ir.ui.view")
         views = view._views_get(request.cr, request.uid, xml_id, request.context)

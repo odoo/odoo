@@ -64,11 +64,9 @@ class website_crm_partner_assign(http.Controller):
         if not request.webcontext.is_public_user:
             partner_ids += partner_obj.search(request.cr, request.uid, [('id', '=', ref_id)], context=request.context)
 
-        context = request.context.copy()
-        context.update({'show_address': True})
         values = {
             'partner_id': partner_obj.browse(
                 request.cr, openerp.SUPERUSER_ID, partner_ids[0],
-                context=context),
+                context=dict(request.context, show_address=True)),
         }
         return request.webcontext.render("website_membership.details", values)

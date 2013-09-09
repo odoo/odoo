@@ -124,10 +124,10 @@ class website_event(http.Controller):
     @website.route(['/event/<int:event_id>'], type='http', auth="public")
     def event(self, event_id=None, **post):
         event_obj = request.registry['event.event']
-        context = request.context.copy()
-        context.update({'show_address': 1})
         values = {
-            'event_id': event_obj.browse(request.cr, request.uid, event_id, context),
+            'event_id': event_obj.browse(
+                            request.cr, request.uid, event_id,
+                            dict(request.context, show_address=1)),
             'message_ids': event_obj.browse(request.cr, request.uid, event_id, request.context).message_ids,
             'subscribe': post.get('subscribe'),
             'range': range

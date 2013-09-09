@@ -30,11 +30,8 @@ def get_order(order_id=None):
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, request.context)
         request.httprequest.session['ecommerce_order_id'] = order.id
 
-    context = request.context.copy()
-    context.update({
-        'pricelist': order.pricelist_id.id,
-    })
-    return order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=context)
+    return order_obj.browse(request.cr, SUPERUSER_ID, order_id,
+                            context=dict(request.context, pricelist=order.pricelist_id.id))
 
 def get_current_order():
     if request.httprequest.session.get('ecommerce_order_id'):
@@ -175,10 +172,7 @@ class Ecommerce(http.Controller):
         if not order:
             order = get_order()
 
-        context = request.context.copy()
-        context.update({
-            'pricelist': self.get_pricelist()
-        })
+        context = dict(request.context, pricelist=self.get_pricelist())
 
         quantity = 0
 
