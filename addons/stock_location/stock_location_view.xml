@@ -166,6 +166,9 @@
 				<tree string="Routes">
                     <field name="sequence" widget="handle" />
 					<field name="name"/>
+					<field name="product_categ_selectable"/>
+					<field name="product_selectable"/>
+					<field name="warehouse_selectable"/>
 				</tree>
 			</field>
 		</record>
@@ -178,6 +181,11 @@
 				<form string="Route">
 					<field name="name" />
 					<field name="sequence" groups="base.group_no_one"/>
+					<group>
+					<field name="product_categ_selectable"/>
+                    <field name="product_selectable"/>
+                    <field name="warehouse_selectable"/>
+					</group>
 					<group string="Push Rules" colspan="4" >
 						<field name="push_ids" colspan="4" nolabel="1"/>
                     </group>

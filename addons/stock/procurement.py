@@ -173,7 +173,7 @@ class procurement_order(osv.osv):
                 'product_uom': product.uom_id.id,
                 'location_id': location_id,
                 'company_id': warehouse.company_id.id,
-                'procure_method': 'make_to_order',}
+                }
 
     def create_automatic_op(self, cr, uid, context=None):
         """
@@ -204,7 +204,7 @@ class procurement_order(osv.osv):
 
                 product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
                 if product.supply_method == 'buy':
-                    location_id = warehouse.lot_input_id.id
+                    location_id = warehouse.lot_stock_id.id
                 elif product.supply_method == 'produce':
                     location_id = warehouse.lot_stock_id.id
                 else:
@@ -212,8 +212,8 @@ class procurement_order(osv.osv):
                 proc_id = proc_obj.create(cr, uid,
                             self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
                             context=context)
-                self.signal_button_confirm(cr, uid, [proc_id])
-                self.signal_button_check(cr, uid, [proc_id])
+                self.assign(cr, uid, [proc_id])
+                self.run(cr, uid, [proc_id])
         return True
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
@@ -229,7 +229,6 @@ class procurement_order(osv.osv):
                 'company_id': orderpoint.company_id.id,
                 'product_uom': orderpoint.product_uom.id,
                 'location_id': orderpoint.location_id.id,
-                'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
 
     def _product_virtual_get(self, cr, uid, order_point):

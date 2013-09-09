@@ -23,7 +23,8 @@
         <record id="route_drop_shipping" model='stock.location.route'>
             <field name="name">Drop Shipping</field>
             <field name="sequence">3</field>
-            <field name="sale">True</field>
+            <field name="sale_selectable" eval="True"/>
+            <field name="product_categ_selectable" eval="True"/>
         </record>
 
         <record id="procurement_rule_drop_shipping" model="procurement.rule">
@@ -40,7 +41,9 @@
         <!-- Crossdock -->
         <record id="stock_location.route_warehouse0_crossdock" model='stock.location.route'>
             <field name="name">Crossdock</field>
-            <field name="sale">True</field>
+            <field name="sale_selectable" eval="True"/>
+            <field name="product_categ_selectable" eval="True"/>
+            
         </record>
         <record id="procurement_rule_customer0_xdock" model="procurement.rule">
             <field name="name"> Supplier → Output</field>
@@ -50,5 +53,7 @@
             <field name="route_id" ref="stock_location.route_warehouse0_crossdock"/>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
         </record>
+        
+        
     </data>
 </openerp>
