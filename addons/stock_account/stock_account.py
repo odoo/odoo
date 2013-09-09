@@ -19,22 +19,12 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import time
-from operator import itemgetter
-from itertools import groupby
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
-from openerp import tools
-from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
-
-
 
 #----------------------------------------------------------
 # Stock Location
@@ -44,12 +34,12 @@ class stock_location(osv.osv):
     _inherit = "stock.location"
 
     _columns = {
-        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain = [('type','=','other')],
+        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain=[('type', '=', 'other')],
                                                    help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
                                                         "this account will be used to hold the value of products being moved from an internal location "
                                                         "into this location, instead of the generic Stock Output Account set on the product. "
                                                         "This has no effect for internal locations."),
-        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain = [('type','=','other')],
+        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain=[('type', '=', 'other')],
                                                    help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
                                                         "this account will be used to hold the value of products being moved out of this location "
                                                         "and into an internal location, instead of the generic Stock Output Account set on the product. "
@@ -62,7 +52,6 @@ class stock_location(osv.osv):
 
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
-
 
     def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
         #TODO: what in case of partner_id
@@ -170,7 +159,7 @@ class stock_quant(osv.osv):
                     'name': move.name,
                     'product_id': quant.product_id.id,
                     'quantity': quant.qty,
-                    'product_uom_id': quant.product_id.uom_id.id, 
+                    'product_uom_id': quant.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
@@ -181,7 +170,7 @@ class stock_quant(osv.osv):
                     'name': move.name,
                     'product_id': quant.product_id.id,
                     'quantity': quant.qty,
-                    'product_uom_id': quant.product_id.uom_id.id, 
+                    'product_uom_id': quant.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
@@ -197,12 +186,38 @@ class stock_quant(osv.osv):
         return move_obj.create(cr, uid, {'journal_id': journal_id,
                                   'line_id': move_lines,
                                   'ref': move.picking_id and move.picking_id.name}, context=context)
+
+    def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
+        move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
+        quant_neg_position = quant_neg.negative_dest_location_id.usage
+        remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
+        #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
+        #1) there isn't any negative quant anymore
+        #2) the product cost's method is 'real'
+        #3) we just fixed a negative quant caused by an outgoing shipment
+        if not remaining_to_solve_quant and move.product_id.cost_method == 'real' and quant_neg_position != 'internal':
+            self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
+
 class stock_move(osv.osv):
     _inherit = "stock.move"
 
     def action_done(self, cr, uid, ids, context=None):
         super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update(cr, uid, ids, context=context)
+
+    def _store_average_cost_price(self, cr, uid, move, context=None):
+        ''' move is a browe record '''
+        product_obj = self.pool.get('product.product')
+        if any([q.qty <= 0 for q in move.quant_ids]):
+            #if there is a negative quant, the standard price shouldn't be updated
+            return
+        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+        average_valuation_price = 0.0
+        for q in move.quant_ids:
+            average_valuation_price += q.qty * q.cost
+        average_valuation_price = average_valuation_price / move.product_qty
+        product_obj.write(cr, uid, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
+        self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)
 
     def product_price_update(self, cr, uid, ids, context=None):
         '''
@@ -228,14 +243,5 @@ class stock_move(osv.osv):
             #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
             #or an inventory loss is made using the last value used for an outgoing valuation.
             if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
-                if any([q.qty <= 0 for q in move.quant_ids]):
-                    #if there is a negative quant, the standard price shouldn't be updated
-                    continue
-                #get the average price of the move
-                #Note: here we can't use the quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 cost has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
-                average_valuation_price = 0.0
-                for q in move.quant_ids:
-                    average_valuation_price += q.qty * q.cost
-                average_valuation_price = average_valuation_price / move.product_qty
-                product_obj.write(cr, uid, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
-                self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)
+                #store the average price of the move on the move and product form
+                self._store_average_cost_price(cr, uid, move, context=context)

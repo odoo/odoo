@@ -167,6 +167,7 @@ class stock_quant(osv.osv):
 
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
+        'negative_dest_location_id': fields.many2one('stock.location', 'Destination Location', help='Technical field used to record the destination location of a move that created a negative quant'),
     }
 
     _defaults = {
@@ -260,6 +261,7 @@ class stock_quant(osv.osv):
             negative_vals['location_id'] = move.location_id.id
             negative_vals['qty'] = -qty
             negative_vals['cost'] = price_unit
+            negative_vals['negative_dest_location_id'] = move.location_dest_id.id
             negative_quant_id = self.create(cr, uid, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
 
@@ -283,6 +285,20 @@ class stock_quant(osv.osv):
                 move = m
         return move
 
+    def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
+        move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
+        self._quant_split(cr, uid, quant, qty, context=context)
+        remaining_to_solve_quant = self._quant_split(cr, uid, to_solve_quant, qty, context=context)
+        remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
+        #if the reconciliation was not complete, we need to link together the remaining parts
+        if remaining_to_solve_quant and remaining_neg_quant:
+            self.write(cr, uid, remaining_to_solve_quant.id, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+        #delete the reconciled quants, as it is replaced by the solving quant
+        self.unlink(cr, SUPERUSER_ID, [quant_neg.id, to_solve_quant.id], context=context)
+        #call move_single_quant to ensure recursivity if necessary and do the stock valuation
+        self.move_single_quant(cr, uid, quant, qty, move, context=context)
+        return remaining_to_solve_quant
+
     def _quant_reconcile_negative(self, cr, uid, quant, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
@@ -292,27 +308,14 @@ class stock_quant(osv.osv):
         if quant.location_id.usage != 'internal':
             return False
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty', '<', '0')], context=context)
-        result = False
         for quant_neg, qty in quants:
             if not quant_neg:
                 continue
-            result = True
             to_solve_quant = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', '!=', quant.id)], context=context)
             if not to_solve_quant:
                 continue
             to_solve_quant = self.browse(cr, uid, to_solve_quant[0], context=context)
-            move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
-            self._quant_split(cr, uid, quant, qty, context=context)
-            remaining_to_solve_quant = self._quant_split(cr, uid, to_solve_quant, qty, context=context)
-            remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
-            #if the reconciliation was not complete, we need to link together the remaining parts
-            if remaining_to_solve_quant and remaining_neg_quant:
-                self.write(cr, uid, remaining_to_solve_quant.id, {'propagated_from_id': remaining_neg_quant.id}, context=context)
-            #delete the reconciled quants, as it is replaced by the solving quant
-            self.unlink(cr, SUPERUSER_ID, [quant_neg.id, to_solve_quant.id], context=context)
-            #call move_single_quant to ensure recursivity if necessary and do the stock valuation
-            self.move_single_quant(cr, uid, quant, qty, move, context=context)
-        return result
+            self._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
 
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
@@ -1508,7 +1511,7 @@ class stock_move(osv.osv):
             #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
-            domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
+            domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id), ('qty', '>', 0)]
             prefered_order = 'reservation_id'
 #             if lot_id: 
 #                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
