@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-06 05:46+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-08-28 04:56+0000\n"
+"X-Generator: Launchpad (build 16738)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -42,7 +42,7 @@ msgstr "Konfigurasi Lainnya"
 #. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
-msgstr ""
+msgstr "DateTime"
 
 #. module: base
 #: code:addons/fields.py:652
@@ -51,6 +51,8 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
+"Argumen kedua dari field many2many %s harus merupakan tabel SQL ! Anda "
+"menggunakan %s, yang mana bukan table SQL."
 
 #. module: base
 #: field:ir.ui.view,arch:0
@@ -66,7 +68,7 @@ msgstr "Kontrol Penawaran, Pesanan Penjualan, Pengiriman & Faktur"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr ""
+msgstr "Tidak ada gap"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -76,7 +78,7 @@ msgstr "Bahasa Hungaria"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PY) / Español (PY)"
-msgstr ""
+msgstr "Bahasa Spanyol"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_project_management
@@ -84,27 +86,30 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Memungkinkan Anda untuk mengelola proyek dan tugas dengan cara melacaknya, "
+"menghasilkan perencanaan dan lain sebagainya ..."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Touchscreen Interface for Shops"
-msgstr ""
+msgstr "Antarmuka layar sentuh untuk digunakan di toko"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
 msgid "Indian Payroll"
-msgstr ""
+msgstr "Payroll untuk India"
 
 #. module: base
 #: help:ir.cron,model:0
 msgid ""
 "Model name on which the method to be called is located, e.g. 'res.partner'."
 msgstr ""
+"Sebutkan nama model yang mana metode ini akan dipanggil, misal 'res.partner'."
 
 #. module: base
 #: view:ir.module.module:0
 msgid "Created Views"
-msgstr "View Tercipta"
+msgstr "View yang diciptakan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_manufacturer
@@ -121,11 +126,24 @@ msgid ""
 "    * Product Attributes\n"
 "    "
 msgstr ""
+"\n"
+"Modul ini berfungsi untuk menambahkan nama produsen beserta atributnya pada "
+"formulir produk.\n"
+"============================================================================="
+"==\n"
+"\n"
+"Anda dapat mengisi data-data berikut pada produk:\n"
+"------------------------------------------------\n"
+"* Nama produsen\n"
+"* Nama produk produsen\n"
+"* Code produk produsen\n"
+"* Atribut produk\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params:0
 msgid "Supplementary arguments"
-msgstr ""
+msgstr "Argumen tambahan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_base_account
@@ -134,11 +152,14 @@ msgid ""
 "The module adds google user in res user.\n"
 "========================================\n"
 msgstr ""
+"\n"
+"Modul ini akan menambahkan google user dalam obyek res.user\n"
+"====================================================\n"
 
 #. module: base
 #: help:res.partner,employee:0
 msgid "Check this box if this contact is an Employee."
-msgstr ""
+msgstr "Centang kotak ini jika kontak adalah pegawai"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -147,6 +168,9 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
+"Sebuah domain (opsional) untuk membatasi nilai untuk field yang terelasi, "
+"dimana merupakan ekspresi Python yang mendefinisikan daftar triplet. Sebagai "
+"contoh: [('color', '=', 'merah')]"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -156,7 +180,7 @@ msgstr "Referensi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr ""
+msgstr "Belgia - Komunikasi terstruktur"
 
 #. module: base
 #: field:ir.actions.act_window,target:0
@@ -166,12 +190,12 @@ msgstr "Jendela Sasaran"
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
 msgid "Main Report File Path"
-msgstr ""
+msgstr "Path (lokasi) file laporan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_analytic_plans
 msgid "Sales Analytic Distribution"
-msgstr ""
+msgstr "Untuk mendistribusikan data analisis pada proses Penjualan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_invoice
@@ -203,12 +227,14 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
+"Sifat field basis tidak dapat diubah dengan cara ini! Silahkan "
+"memodifikasinya melalui kode Python, sebaiknya dibuat modul terpisah."
 
 #. module: base
 #: code:addons/osv.py:151
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Kesalahan"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -219,7 +245,7 @@ msgstr "ir.ui.view.custom"
 #: code:addons/base/ir/ir_model.py:374
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "Mengganti nama field \"%s\" tidak diperbolehkan"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -235,12 +261,12 @@ msgstr "dibuat"
 #. module: base
 #: field:ir.actions.report.xml,report_xsl:0
 msgid "XSL Path"
-msgstr ""
+msgstr "Lokasi file XSL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Turkey - Accounting"
-msgstr ""
+msgstr "Turki - Akunting"
 
 #. module: base
 #: field:ir.sequence,number_increment:0
@@ -256,12 +282,12 @@ msgstr "Struktur Perusahaan"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
-msgstr ""
+msgstr "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr ""
+msgstr "Multi Mata Uang"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl
@@ -277,7 +303,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale
 msgid "Sales Management"
-msgstr ""
+msgstr "Manajemen Penjualan"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -285,6 +311,7 @@ msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
 msgstr ""
+"Pengguna/user yang ditugaskan berhubungan dengan kontak ini, jika ada."
 
 #. module: base
 #: view:res.partner:0
@@ -299,7 +326,7 @@ msgstr "Jumlah Modul"
 #. module: base
 #: help:multi_company.default,company_dest_id:0
 msgid "Company to store the current record"
-msgstr ""
+msgstr "Perusahaan untuk menyimpan data ini"
 
 #. module: base
 #: field:res.partner.bank.type.field,size:0
@@ -312,6 +339,8 @@ msgid ""
 "Database ID of record to open in form view, when ``view_mode`` is set to "
 "'form' only"
 msgstr ""
+"Database ID dari data yang akan dibuka dalam tampilan formulir (form view), "
+"dimana \"view_mode\" diberi nilai \"form\"."
 
 #. module: base
 #: help:ir.values,key2:0
@@ -327,7 +356,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Nama bahasa harus unik"
 
 #. module: base
 #: selection:res.request,state:0
@@ -355,7 +384,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_customer_relationship_management
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Manajemen Hubungan Pelanggan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -377,40 +406,42 @@ msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
 msgstr ""
+"Sudah ada filter yang telah ditetapkan untuk  %(model)s, silakan hapus atau "
+"rubah dulu sebelum menetapkan nilai baru."
 
 #. module: base
 #: code:addons/orm.py:2649
 #, python-format
 msgid "Invalid group_by"
-msgstr ""
+msgstr "group_by salah"
 
 #. module: base
 #: field:ir.module.category,child_ids:0
 msgid "Child Applications"
-msgstr ""
+msgstr "Aplikasi Anak"
 
 #. module: base
 #: field:res.partner,credit_limit:0
 msgid "Credit Limit"
-msgstr ""
+msgstr "Batas Kredit"
 
 #. module: base
 #: field:ir.model.constraint,date_update:0
 #: field:ir.model.data,date_update:0
 #: field:ir.model.relation,date_update:0
 msgid "Update Date"
-msgstr "Tanggal Pembaharuan"
+msgstr "Pembaharuan Tanggal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_action_rule
 msgid "Automated Action Rules"
-msgstr ""
+msgstr "Aturan Aksi Otomatis"
 
 #. module: base
 #: view:ir.attachment:0
 #: field:ir.attachment,create_uid:0
 msgid "Owner"
-msgstr ""
+msgstr "Pemilik"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -420,7 +451,7 @@ msgstr "Sumber Obyek"
 #. module: base
 #: model:res.partner.bank.type,format_layout:base.bank_normal
 msgid "%(bank_name)s: %(acc_number)s"
-msgstr ""
+msgstr "%(bank_name)s: %(acc_number)s"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -445,6 +476,8 @@ msgid ""
 "Invalid date/time format directive specified. Please refer to the list of "
 "allowed directives, displayed when you edit a language."
 msgstr ""
+"Penetapan format data/time salah. Silakan contoh yang ditampilkan ketika "
+"mengedit bahasa."
 
 #. module: base
 #: code:addons/orm.py:4153
@@ -452,7 +485,7 @@ msgstr ""
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
-msgstr ""
+msgstr "Data yang akan Anda modifikasi sudah dihapus (Jenis Dokumen: %s)."
 
 #. module: base
 #: help:ir.actions.act_window,views:0
@@ -466,12 +499,12 @@ msgstr ""
 #. module: base
 #: field:ir.model.relation,name:0
 msgid "Relation Name"
-msgstr ""
+msgstr "Nama Relasi"
 
 #. module: base
 #: view:ir.rule:0
 msgid "Create Access Right"
-msgstr ""
+msgstr "Membuat Hak Akses"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -481,7 +514,7 @@ msgstr "Tuvalu"
 #. module: base
 #: field:ir.actions.configuration.wizard,note:0
 msgid "Next Wizard"
-msgstr ""
+msgstr "Wizard berikutnya"
 
 #. module: base
 #: field:res.lang,date_format:0
@@ -491,7 +524,7 @@ msgstr "Format Tanggal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_report_designer
 msgid "OpenOffice Report Designer"
-msgstr ""
+msgstr "Untuk mendesign Laporan dengan OpenOffice"
 
 #. module: base
 #: model:res.country,name:base.an

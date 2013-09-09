@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import copy
-import itertools
 import logging
 import os
 import sys
@@ -33,7 +32,6 @@ from openerp import tools
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc, qweb
 
@@ -161,58 +159,7 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
-    def extract_embedded_fields(self, cr, uid, arch, context=None):
-        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
-
-    def save_embedded_field(self, cr, uid, el, context=None):
-        embedded_id = int(el.get('data-oe-id'))
-        # FIXME: type conversions
-        self.pool[el.get('data-oe-model')].write(cr, uid, embedded_id, {
-            el.get('data-oe-field'): el.text
-        }, context=context)
-
-    def to_field_ref(self, cr, uid, el, context=None):
-        # FIXME: better ref?
-        return html.html_parser.makeelement(el.tag, attrib={
-            't-field': 'registry[%(model)r].browse(cr, uid, %(id)r).%(field)s' % {
-                'model': el.get('data-oe-model'),
-                'id': int(el.get('data-oe-id')),
-                'field': el.get('data-oe-field'),
-            }
-        })
-
-    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
-        arch = replacement
-        if section_xpath:
-            previous_arch = etree.fromstring(self.browse(cr, uid, view_id, context=context).arch.encode('utf-8'))
-            # ensure there's only one match
-            [previous_section] = previous_arch.xpath(section_xpath)
-            previous_section.getparent().replace(previous_section, replacement)
-            arch = previous_arch
-        return arch
-
-    def save(self, cr, uid, res_id, value, xpath=None, context=None):
-        """ Update a view section. The view section may embed fields to write
-
-        :param str model:
-        :param int res_id:
-        :param str xpath: valid xpath to the tag to replace
-        """
-        res_id = int(res_id)
-
-        arch_section = etree.fromstring(value)
-
-        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
-            self.save_embedded_field(cr, uid, el, context=context)
-
-            # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
-
-        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
-        self.write(cr, uid, res_id, {
-            'arch': etree.tostring(arch, encoding='utf-8').decode('utf-8')
-        }, context=context)
-
+    # default view selection
 
     def default_view(self, cr, uid, model, view_type, context=None):
         """ Fetches the default view for the provided (model, view_type) pair:
@@ -260,7 +207,6 @@ class view(osv.osv):
             ])
         view_ids = self.search(cr, uid, conditions, context=context)
 
-        # filter views based on user groups
         return [(view.arch, view.id)
                 for view in self.browse(cr, 1, view_ids, context)
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]

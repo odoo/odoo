@@ -872,7 +872,8 @@ form: module.record_id""" % (xml_id,)
             if el.get(field_name):
                 record.append(Field(
                     field_name, el.attrib.pop(field_name, None)))
-
+        if el.get('page'):
+            record.append(etree.Element('field', name="page", eval="True"))
         return self._tag_record(cr, record, data_node)
 
     def id_get(self, cr, id_str):

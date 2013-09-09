@@ -383,16 +383,18 @@ class browse_record(object):
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch:
+            if col._prefetch and not col.groups:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                fields_to_fetch = filter(lambda x: x[1]._classic_write and x[1]._prefetch, self._table._columns.items())
+                field_filter = lambda x: x[1]._classic_write and x[1]._prefetch and not x[1].groups
+                fields_to_fetch = filter(field_filter, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
-                fields_to_fetch += filter(lambda x: x[1]._classic_write and x[1]._prefetch, inherits)
+                fields_to_fetch += filter(field_filter, inherits)
             # otherwise we fetch only that field
             else:
                 fields_to_fetch = [(name, col)]
+
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
@@ -1802,13 +1804,19 @@ class BaseModel(object):
         # try to find a view_id if none provided
         if not view_id:
             # <view_type>_view_ref in context can be used to overrride the default view
-            view_ref = context.get(view_type + '_view_ref')
-            if view_ref and '.' in view_ref:
-                module, view_ref = view_ref.split('.', 1)
-                cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
-                view_ref_res = cr.fetchone()
-                if view_ref_res:
-                    view_id = view_ref_res[0]
+            view_ref_key = view_type + '_view_ref'
+            view_ref = context.get(view_ref_key)
+            if view_ref:
+                if '.' in view_ref:
+                    module, view_ref = view_ref.split('.', 1)
+                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                    view_ref_res = cr.fetchone()
+                    if view_ref_res:
+                        view_id = view_ref_res[0]
+                else:
+                    _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
+                        'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
+                        self._name)
             else:
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(cr, uid, self._name, view_type, context=context)
@@ -4886,17 +4894,16 @@ class BaseModel(object):
         :rtype: List of dictionaries.
 
         """
-        record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
+        record_ids = self.search(cr, uid, domain or [], offset=offset, limit=limit, order=order, context=context)
         if not record_ids:
             return []
-        result = self.read(cr, uid, record_ids, fields or [], context or {})
+        result = self.read(cr, uid, record_ids, fields, context=context)
+        if len(result) <= 1:
+            return result
+
         # reorder read
-        if len(result) >= 1:
-            index = {}
-            for r in result:
-                index[r['id']] = r
-            result = [index[x] for x in record_ids if x in index]
-        return result
+        index = dict((r['id'], r) for r in result)
+        return [index[x] for x in record_ids if x in index]
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """

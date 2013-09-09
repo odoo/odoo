@@ -7,35 +7,38 @@ import types
 
 import xml   # FIXME use lxml
 import xml.dom.minidom
+import traceback
+from openerp.osv import osv, orm
 
 _logger = logging.getLogger(__name__)
+
+BUILTINS = {
+    'False': False,
+    'None': None,
+    'True': True,
+    'abs': abs,
+    'bool': bool,
+    'dict': dict,
+    'filter': filter,
+    'len': len,
+    'list': list,
+    'map': map,
+    'max': max,
+    'min': min,
+    'reduce': reduce,
+    'repr': repr,
+    'round': round,
+    'set': set,
+    'str': str,
+    'tuple': tuple,
+}
 
 class QWebContext(dict):
     def __init__(self, data, undefined_handler=None):
         self.undefined_handler = undefined_handler
-        d = {
-            'True': True,
-            'False': False,
-            'None': None,
-            'str': str,
-            'globals': locals,
-            'locals': locals,
-            'bool': bool,
-            'dict': dict,
-            'list': list,
-            'tuple': tuple,
-            'map': map,
-            'abs': abs,
-            'min': min,
-            'max': max,
-            'reduce': reduce,
-            'filter': filter,
-            'round': round,
-            'len': len,
-            'set': set
-        }
-        d.update(data)
-        dict.__init__(self, d)
+        dic = BUILTINS.copy()
+        dic.update(data)
+        dict.__init__(self, dic)
         self['defined'] = lambda key: key in self
 
     def __getitem__(self, key):
@@ -93,7 +96,7 @@ class QWebXml(object):
         else:
             dom = xml.dom.minidom.parse(x)
         for n in dom.documentElement.childNodes:
-            if n.getAttribute('t-name'):
+            if n.nodeType == 1 and n.getAttribute('t-name'):
                 self._t[str(n.getAttribute("t-name"))] = n
 
     def get_template(self, name):
@@ -109,8 +112,10 @@ class QWebXml(object):
     def eval(self, expr, v):
         try:
             return eval(expr, None, v)
+        except (osv.except_osv, orm.except_orm), err:
+            raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
         except Exception:
-            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'" % (expr, v.get('__template__')))
+            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), traceback.format_exc()))
 
     def eval_object(self, expr, v):
         return self.eval(expr, v)
@@ -147,6 +152,11 @@ class QWebXml(object):
         if v is None:
             v = {}
         v['__template__'] = tname
+        stack = v.get('__stack__', [])
+        if stack:
+            v['__caller__'] = stack[-1]
+        stack.append(tname)
+        v['__stack__'] = stack
         v = QWebContext(v, self.undefined_handler)
         return self.render_node(self.get_template(tname), v)
 
@@ -175,6 +185,10 @@ class QWebXml(object):
                         t_att[an[2:]] = av
                 else:
                     g_att += ' %s="%s"' % (an, cgi.escape(av, 1))
+
+            if 'debug' in t_att:
+                debugger = t_att.get('debug', 'pdb')
+                __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
             if t_render:
                 if t_render in self._render_tag:
                     r = self._render_tag[t_render](self, e, t_att, g_att, v)
@@ -217,10 +231,12 @@ class QWebXml(object):
         if an.startswith("t-attf-"):
             att, val = an[7:], self.eval_format(av, v)
         elif an.startswith("t-att-"):
-            att, val = an[6:], self.eval_str(av, v)
+            att, val = an[6:], self.eval(av, v)
+            if isinstance(val, unicode):
+                val = val.encode("utf8")
         else:
             att, val = self.eval_object(av, v)
-        return ' %s="%s"' % (att, cgi.escape(val, 1))
+        return val and ' %s="%s"' % (att, cgi.escape(str(val), 1)) or " "
 
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
@@ -246,9 +262,7 @@ class QWebXml(object):
             var = t_att.get('as', expr).replace('.', '_')
             d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
-            if isinstance(enum, types.ListType):
-                size = len(enum)
-            elif isinstance(enum, types.TupleType):
+            if isinstance(enum, (types.ListType, types.TupleType)):
                 size = len(enum)
             elif hasattr(enum, 'count'):
                 size = enum.count()
@@ -267,15 +281,15 @@ class QWebXml(object):
                     d["%s_parity" % var] = 'odd'
                 else:
                     d["%s_parity" % var] = 'even'
-                if isinstance(i, types.DictType):
-                    d.update(i)
-                else:
+                if 'as' in t_att:
                     d[var] = i
+                elif isinstance(i, types.DictType):
+                    d.update(i)
                 ru.append(self.render_element(e, t_att, g_att, d))
                 index += 1
             return "".join(ru)
         else:
-            return "qweb: t-foreach %s not found." % expr
+            raise NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, v.get('__template__')))
 
     def render_tag_if(self, e, t_att, g_att, v):
         if self.eval_bool(t_att["if"], v):
@@ -289,7 +303,7 @@ class QWebXml(object):
         else:
             d = QWebContext(v.copy(), self.undefined_handler)
         d[0] = self.render_element(e, t_att, g_att, d)
-        return self.render(t_att["call"], d)
+        return self.render(self.eval_format(t_att["call"], d), d)
 
     def render_tag_set(self, e, t_att, g_att, v):
         if "value" in t_att:
