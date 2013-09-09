@@ -101,7 +101,7 @@ def check(cr, workitem, ident, transition, signal):
         return False
 
     uid = ident[0]
-    if uid != openerp.SUPERUSER_ID and transition['groups_id']:
+    if uid != openerp.SUPERUSER_ID and transition['group_id']:
         registry = openerp.registry(cr.dbname)
         user_groups = registry['res.users'].read(cr, uid, [uid], ['groups_id'])[0]['groups_id']
         if transition['group_id'] not in user_groups:
