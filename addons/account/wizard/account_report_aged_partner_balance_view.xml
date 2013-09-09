@@ -41,6 +41,13 @@
              <field name="target">new</field>
        </record>
 
+       <record model="ir.values" id="ir_values_account_aged_partner_balance">
+           <field name="key2" eval="'client_print_multi'"/>
+           <field name="model" eval="'res.partner'"/>
+           <field name="name">Print Aged Partner Balance</field>
+           <field name="value" eval="'ir.actions.act_window,%d'%action_account_aged_balance_view"/>
+       </record>
+
         <menuitem icon="STOCK_PRINT"
             name="Aged Partner Balance"
             action="action_account_aged_balance_view"
