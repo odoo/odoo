@@ -37,6 +37,7 @@
                     // than link or image (default=10)
                 }, null, null, 500);
 
+                //noinspection JSValidateTypes
                 editor.addCommand('link', {
                     exec: function (editor, data) {
                         link_dialog(editor);
@@ -45,6 +46,7 @@
                     canUndo: false,
                     editorFocus: true,
                 });
+                //noinspection JSValidateTypes
                 editor.addCommand('image', {
                     exec: function (editor, data) {
                         image_dialog(editor);
@@ -94,6 +96,7 @@
                         }).on('click', 'td', function (e) {
                             var $e = $(e.target);
 
+                            //noinspection JSPotentiallyInvalidConstructorUsage
                             var table = new CKEDITOR.dom.element(
                                 $(openerp.qweb.render('website.editor.table', {
                                     rows: $e.closest('tr').index() + 1,
@@ -102,6 +105,7 @@
 
                             editor.insertElement(table);
                             setTimeout(function () {
+                                //noinspection JSPotentiallyInvalidConstructorUsage
                                 var firstCell = new CKEDITOR.dom.element(table.$.rows[0].cells[0]);
                                 var range = editor.createRange();
                                 range.moveToPosition(firstCell, CKEDITOR.POSITION_AFTER_START);
@@ -318,8 +322,9 @@
                 title: false,
                 removePlugins: removed_plugins.join(','),
                 uiColor: '',
-                // Ensure no config file is loaded
-                customConfig: '',
+                // FIXME: currently breaks RTE?
+//                // Ensure no config file is loaded
+//                customConfig: '',
                 // Disable ACF
                 allowedContent: true,
                 // Don't insert paragraphs around content in e.g. <li>
@@ -441,11 +446,13 @@
                 var range = selection.getRanges(true)[0];
 
                 if (range.collapsed) {
+                    //noinspection JSPotentiallyInvalidConstructorUsage
                     var text = new CKEDITOR.dom.text(label || url);
                     range.insertNode(text);
                     range.selectNodeContents(text);
                 }
 
+                //noinspection JSPotentiallyInvalidConstructorUsage
                 new CKEDITOR.style({
                     type: CKEDITOR.STYLE_INLINE,
                     element: 'a',
@@ -681,7 +688,7 @@
         //       will not mark dirty on attribute changes (@class, img/@src,
         //       a/@href, ...)
         _(mutations).chain()
-                .filter(function (m) {
+            .filter(function (m) {
                 switch(m.type) {
                 case 'attributes': // ignore .cke_focus being added or removed
                     // if attribute is not a class, can't be .cke_focus change
