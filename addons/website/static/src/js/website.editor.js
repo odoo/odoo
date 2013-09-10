@@ -276,6 +276,11 @@
         // editor.ui.items -> possible commands &al
         // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
 
+        init: function (EditorBar) {
+            this.EditorBar = EditorBar;
+            this._super.apply(this, arguments);
+        },
+
         start_edition: function ($elements) {
             var self = this;
             $elements
@@ -285,6 +290,7 @@
                     var $node = $(node);
                     var editor = CKEDITOR.inline(this, self._config());
                     editor.on('instanceReady', function () {
+                        self.trigger('instanceReady');
                         observer.observe(node, OBSERVER_CONFIG);
                     });
                     $node.one('content_changed', function () {
@@ -512,7 +518,7 @@
             this.$('input.pages').val($target.text()).change();
             // No #dropdown('close'), and using #dropdown('toggle') sur
             // #closest('.dropdown') makes the dropdown not work correctly
-            $target.closest('.open').removeClass('open')
+            $target.closest('.open').removeClass('open');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
