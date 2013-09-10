@@ -44,7 +44,7 @@
             <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
             <field name="model">stock.location.route</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="after">
+                <xpath expr="//field[@name='warehouse_selectable']" position="after">
                     <field name="sale_selectable"/>
                 </xpath>
             </field>

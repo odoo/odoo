@@ -175,9 +175,13 @@
 			<field name="arch" type="xml">
 			    <xpath expr="//field[@name='sequence']" position="after">
 			        <group>
-                        <field name="product_categ_selectable"/>
-                        <field name="product_selectable"/>
-                        <field name="warehouse_selectable"/>
+                        <group>
+                            <field name="product_categ_selectable"/>
+                            <field name="product_selectable"/>
+                        </group>
+                        <group>
+                            <field name="warehouse_selectable"/>
+                        </group>
                     </group>
                     <group string="Push Rules" colspan="4" >
                         <field name="push_ids" colspan="4" nolabel="1"/>

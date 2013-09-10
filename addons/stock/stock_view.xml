@@ -1813,12 +1813,21 @@
             <field name="model">stock.location.route</field>
             <field eval="7" name="priority" />
             <field name="arch" type="xml">
-                <form string="Route">
-                    <field name="name"/>
+                <form string="Route" version="7.0">
+                    <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Route name"/>
+                        </h1>
+                        <h2>
+                        <field name="name" class="oe_inline"/>
+                    </h2>
+                    </div>
                     <field name="sequence" groups="base.group_no_one"/>
                     <group string="Pull Rules" colspan="4" >
                         <field name="pull_ids" colspan="4" nolabel="1"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
