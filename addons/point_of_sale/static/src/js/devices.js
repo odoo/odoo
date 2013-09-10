@@ -26,7 +26,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.custom_payment_status = this.default_payment_status;
 
             this.connection = new instance.web.Session(undefined,url);
-
+            this.connection.session_id = _.uniqueId('posproxy');
             this.bypass_proxy = false;
             this.notifications = {};
             
@@ -439,7 +439,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
             // barcode sequence in the typed keys, then act accordingly.
-            $('body').delegate('','keyup', function (e){
+            $('body').delegate('','keypress', function (e){
                 //console.log('keyup:'+String.fromCharCode(e.keyCode)+' '+e.keyCode,e);
                 //We only care about numbers
                 if (e.keyCode >= 48 && e.keyCode < 58){

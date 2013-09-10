@@ -137,16 +137,27 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
 
-    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
+    def _get_financial_report_ref(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
+        financial_report_ref = {}
+        for key, financial_report in [
+                    ('asset','account_financial_report_assets0'),
+                    ('liability','account_financial_report_liability0'),
+                    ('income','account_financial_report_income0'),
+                    ('expense','account_financial_report_expense0'),
+                ]:
+            try:
+                financial_report_ref[key] = obj_financial_report.browse(cr, uid,
+                    obj_data.get_object_reference(cr, uid, 'account', financial_report)[1],
+                    context=context)
+            except ValueError:
+                pass
+        return financial_report_ref
+
+    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        financial_report_ref = {
-            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
-            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
-            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
-            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
-        }
+        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = 'none'
             for key, financial_report in financial_report_ref.items():
@@ -157,15 +168,9 @@ class account_account_type(osv.osv):
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
         field_value = field_value or 'none'
-        obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
         #unlink if it exists somewhere in the financial reports related to BS or PL
-        financial_report_ref = {
-            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
-            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
-            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
-            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
-        }
+        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for key, financial_report in financial_report_ref.items():
             list_ids = [x.id for x in financial_report.account_type_ids]
             if account_type_id in list_ids:
@@ -1258,6 +1263,10 @@ class account_move(osv.osv):
             return [('id', 'in', tuple(ids))]
         return [('id', '=', '0')]
 
+    def _get_move_from_lines(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('account.move.line')
+        return [line.move_id.id for line in line_obj.browse(cr, uid, ids, context=context)]
+
     _columns = {
         'name': fields.char('Number', size=64, required=True),
         'ref': fields.char('Reference', size=64),
@@ -1267,7 +1276,10 @@ class account_move(osv.osv):
             help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
-        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
+        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store={
+            _name: (lambda self, cr,uid,ids,c: ids, ['line_id'], 10),
+            'account.move.line': (_get_move_from_lines, ['partner_id'],10)
+            }),
         'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Internal Note'),
@@ -1633,9 +1645,11 @@ class account_move(osv.osv):
             else:
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
-                obj_move_line.write(cr, uid, line_ids, {
-                    'state': 'draft'
-                }, context, check=False)
+                not_draft_line_ids = list(set(line_ids) - set(line_draft_ids))
+                if not_draft_line_ids:
+                    obj_move_line.write(cr, uid, not_draft_line_ids, {
+                        'state': 'draft'
+                    }, context, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
             obj_move_line.create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
