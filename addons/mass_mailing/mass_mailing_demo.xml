@@ -25,13 +25,13 @@
         <record id="mass_mail_segment_1" model="mail.mass_mailing.segment">
             <field name="name">First Newsletter</field>
             <field name="template_id" eval="ref('mass_mail_template_1')"/>
-            <field name="date" eval="(DateTime.today() - relativedelta(day=3)"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(day=3))"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
         </record>
         <record id="mass_mail_segment_2" model="mail.mass_mailing.segment">
             <field name="name">Second Newsletter</field>
             <field name="template_id" eval="ref('mass_mail_template_2')"/>
-            <field name="date" eval="(DateTime.today() - relativedelta(day=3)"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(day=3))"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
         </record>
 
