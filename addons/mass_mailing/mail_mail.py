@@ -36,6 +36,14 @@ class MailMail(osv.Model):
             'mass_mailing_segment_id', 'mass_mailing_campaign_id',
             type='many2one', ondelete='set null',
             relation='mail.mass_mailing.campaign',
+            string='Mass Mailing Campaign',
+            store=True, readonly=True,
+        ),
+        'template_id': fields.related(
+            'mass_mailing_segment_id', 'template_id',
+            type='many2one', ondelete='set null',
+            relation='email.template',
+            string='Email Template',
             store=True, readonly=True,
         ),
     }

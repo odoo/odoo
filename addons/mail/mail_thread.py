@@ -792,6 +792,7 @@ class mail_thread(osv.AbstractModel):
             bounce_match = tools.bounce_re.search(email_to)
             if bounce_match:
                 bounced_mail_id = bounce_match.group(1)
+                self.pool['mail.mail'].set_bounced(cr, uid, [bounced_mail_id], context=context)
                 if self.pool['mail.mail'].exists(cr, uid, bounced_mail_id):
                     mail = self.pool['mail.mail'].browse(cr, uid, bounced_mail_id, context=context)
                     bounced_model = mail.model
@@ -1426,7 +1427,8 @@ class mail_thread(osv.AbstractModel):
             # update original mail_mail if exists
             if type == 'email':
                 mail_mail_ids = self.pool['mail.mail'].search(cr, SUPERUSER_ID, [('mail_message_id', '=', parent_id)], context=context)
-                self.pool['mail.mail'].set_replied(cr, SUPERUSER_ID, mail_mail_ids, context=context)
+                if mail_mail_ids:
+                    self.pool['mail.mail'].set_replied(cr, SUPERUSER_ID, mail_mail_ids, context=context)
 
             message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
             # avoid loops when finding ancestors

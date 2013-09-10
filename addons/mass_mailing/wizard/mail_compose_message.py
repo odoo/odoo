@@ -28,24 +28,30 @@ class MailComposeMessage(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     _columns = {
-        'mass_mail_campaign_id': fields.many2one(
-            'mail.mass_mailing.campaign', 'Mass mailing campaign'
+        'use_mass_mailing_campaign': fields.boolean(
+            'Use mass mailing campaigns',
+        ),
+        'mass_mailing_campaign_id': fields.many2one(
+            'mail.mass_mailing.campaign', 'Mass mailing campaign',
+        ),
+        'mass_mailing_segment_id': fields.many2one(
+            'mail.mass_mailing.segment', 'Mass mailing segment',
+            domain="[('mass_mailing_campaign_id', '=', mass_mailing_campaign_id)]",
         ),
     }
 
-    def onchange_mass_mail_campaign_id(self, cr, uid, ids, mass_mail_campaign_id, context=None):
-        values = {}
-        if mass_mail_campaign_id:
-            campaign = self.pool['mail.mass_mailing.campaign'].browse(cr, uid, mass_mail_campaign_id, context=context)
-            if campaign and campaign.template_id:
-                values['template_id'] = campaign.template_id.id
-        return {'value': values}
+    _defaults = {
+        'use_mass_mailing_campaign': True,
+    }
 
-    def render_message(self, cr, uid, wizard, res_id, context=None):
+    def onchange_mass_mail_campaign_id(self, cr, uid, ids, mass_mail_campaign_id, context=None):
+        return {'value': {'mass_mailing_segment_id': False}}
+
+    def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
         """ Override method that generated the mail content by adding the mass
         mailing campaign, when doing pure email mass mailing. """
-        res = super(MailComposeMessage, self).render_message(cr, uid, wizard, res_id, context=context)
-        print res, wizard.mass_mail_campaign_id
-        if wizard.composition_mode == 'mass_mail' and wizard.mass_mail_campaign_id:  # TODO: which kind of mass mailing ?
-            res['mass_mailing_campaign_id'] = wizard.mass_mail_campaign_id.id
+        res = super(MailComposeMessage, self).render_message_batch(cr, uid, wizard, res_ids, context=context)
+        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_segment_id:  # TODO: which kind of mass mailing ?
+            for res_id in res_ids:
+                res[res_id]['mass_mailing_segment_id'] = wizard.mass_mailing_segment_id.id
         return res

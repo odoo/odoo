@@ -122,7 +122,7 @@
             <field name="name">mail.mass_mailing.segment.form</field>
             <field name="model">mail.mass_mailing.segment</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Campaign" version="7.0">
+                <form string="Mass Mailing Segment" version="7.0">
                     <sheet>
                         <group>
                             <group>
@@ -140,14 +140,38 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_form_readonly">
+            <field name="name">mail.mass_mailing.segment.form</field>
+            <field name="model">mail.mass_mailing.segment</field>
+            <field name="priority">18</field>
+            <field name="arch" type="xml">
+                <form string="Mass Mailing Segment" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="mass_mailing_campaign_id" readonly="True"/>
+                                <field name="template_id" readonly="True"/>
+                                <field name="domain" readonly="True"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_segment_kanban">
             <field name="name">mail.mass_mailing.segment.kanban</field>
             <field name="model">mail.mass_mailing.segment</field>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name='color'/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_segment">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_segment">
                                  <div class="oe_kanban_content">
                                     <div>
                                         <h3>

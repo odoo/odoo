@@ -14,6 +14,7 @@
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
                         <field name="use_active_domain" invisible="1"/>
+                        <field name="active_domain" invisible="1"/>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
@@ -32,9 +33,6 @@
                                 context="{'force_email':True, 'show_email':True}"/>
                         </div>
                         <!-- mass post / mass mailing -->
-                        <field name="active_domain"
-                            attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')],
-                                    'readonly': True}"/>
                         <field name="post"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="notify"

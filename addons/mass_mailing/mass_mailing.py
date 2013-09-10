@@ -184,7 +184,7 @@ class MassMailingSegment(osv.Model):
         'name': fields.char('Name', required=True),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
-            ondelete='cascade',
+            ondelete='cascade', required=True,
         ),
         'template_id': fields.many2one(
             'email.template', 'Email Template',
@@ -192,6 +192,10 @@ class MassMailingSegment(osv.Model):
         ),
         'domain': fields.char('Domain'),
         'date': fields.datetime('Date'),
+        'color': fields.related(
+            'mass_mailing_campaign_id', 'color',
+            type='integer', string='Color Index',
+        ),
         # mail_mail data
         'mail_ids': fields.one2many(
             'mail.mail', 'mass_mailing_segment_id',
@@ -233,4 +237,8 @@ class MassMailingSegment(osv.Model):
             string='Replied',
             type='char', multi='_get_monthly_statistics',
         ),
+    }
+
+    _defaults = {
+        'date': fields.datetime.now(),
     }

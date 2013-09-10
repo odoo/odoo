@@ -108,21 +108,24 @@ class mail_mail(osv.Model):
 
     def set_opened(self, cr, uid, ids, context=None):
         """ Set as opened """
-        for mail in self.browse(cr, uid, ids, context=context):
+        existing_ids = self.exists(cr, uid, ids, context=context)
+        for mail in self.browse(cr, uid, existing_ids, context=context):
             if not mail.opened:
                 self.write(cr, uid, [mail.id], {'opened': fields.datetime.now()}, context=context)
         return True
 
     def set_replied(self, cr, uid, ids, context=None):
         """ Set as replied """
-        for mail in self.browse(cr, uid, ids, context=context):
+        existing_ids = self.exists(cr, uid, ids, context=context)
+        for mail in self.browse(cr, uid, existing_ids, context=context):
             if not mail.replied:
                 self.write(cr, uid, [mail.id], {'replied': fields.datetime.now()}, context=context)
         return True
 
     def set_bounced(self, cr, uid, ids, context=None):
         """ Set as bounced """
-        for mail in self.browse(cr, uid, ids, context=context):
+        existing_ids = self.exists(cr, uid, ids, context=context)
+        for mail in self.browse(cr, uid, existing_ids, context=context):
             if not mail.bounced:
                 self.write(cr, uid, [mail.id], {'bounced': fields.datetime.now()}, context=context)
         return True
