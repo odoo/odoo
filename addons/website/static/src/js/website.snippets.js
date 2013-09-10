@@ -189,6 +189,11 @@
                         },
                         drop:   function(){
                             var snipped_id = $snippet.data('snippet-id');
+
+                            if (!$(".oe_drop_zone.oe_hover").length) {
+                                return false;
+                            }
+
                             if($snippet.find('.oe_snippet_body').size()){
                                 var $toInsert = $snippet.find('.oe_snippet_body').clone();
                                 $toInsert.removeClass('oe_snippet_body');

@@ -118,7 +118,11 @@
 
         var editor = new website.EditorBar();
         var $body = $(document.body);
-        editor.prependTo($body);
+        editor.prependTo($body).then(function () {
+            if (location.search.indexOf("unable_editor") >= 0) {
+                editor.edit();
+            }
+        });
         $body.css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
     };
         /* ----- TOP EDITOR BAR FOR ADMIN ---- */
@@ -241,7 +245,7 @@
                 defs.push(def);
             });
             return $.when.apply(null, defs).then(function () {
-                window.location.reload();
+                window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?/, '');
             });
         },
         saveElement: function ($el) {
@@ -264,7 +268,7 @@
             });
         },
         cancel: function () {
-            window.location.reload();
+            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?/, '');
         },
     });
 

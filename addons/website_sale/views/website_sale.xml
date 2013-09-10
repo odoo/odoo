@@ -48,7 +48,7 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span class="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span t-attf-class="my_cart_quantity badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
@@ -57,7 +57,7 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span class="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span t-attf-class="my_cart_quantity badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
@@ -73,7 +73,6 @@
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
             <div class="container oe_website_sale">
-                <a t-if="editable" href="/shop/add_product/" class="btn btn-default pull-right">Create New Product</a>
                 <div class="row">
                     <div class="col-md-12" id="shop_content">
                         <t t-raw="shop_content" />
@@ -121,6 +120,8 @@
             </t>
             <t t-set="title">Product</t>
             <t t-set="shop_content">
+                <a t-if="editable" t-attf-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-default pull-right">Create New Product</a>
+                <div t-if="editable" class="clearfix"/>
                 <t t-call="website.pager">
                     <t t-set="classname">pull-left</t>
                 </t>
@@ -182,18 +183,7 @@
                         <button class="btn btn-sm btn-success">Add to basket</button>
                     </form>
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <div t-if="editable" t-att-class="'well css_non_editable_mode_hidden'">
-                        <h2>Category<br/><small>Select the public category</small></h2>
-                        <select name="public_categ_id" class="form-control" t-att-data-id="product.id">
-                            <option value="0">Choose a Category</option>
-                            <t t-foreach="category_list" t-as="cat">
-                            <option t-att-value="cat[0]" t-att-selected="cat[0] == product.public_categ_id.id and 'selected'"><t t-esc="cat[1]"/></option>
-                            </t>
-                        </select>
-                        <h2>Short Description for Quotations<br/><small>Displayed in your shop categories and for quotations</small></h2>
-                        <div class="form-control" t-field="product.description_sale">Enter a short description for this product</div>
-                    </div>
-                    <div t-field="product.website_description">Enter a short Website description for this product</div>
+                    <div t-field="product.website_description">Replace this text with your Website product description</div>
                     <div>
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                         <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><t t-field="product.product_variant_ids[0].lst_price" /> €</h5>
@@ -397,7 +387,7 @@
                     </div>
                     <form class="col-md-8 form-horizontal" action="/shop/confirm_order/" method="post">
                         <div class=" row">
-                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="col-md-10">Billing Information</h3>
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Name and firstname</label>

@@ -105,15 +105,17 @@ class Website(openerp.addons.web.controllers.main.Home):
             view.write(request.cr, request.uid, [view_id],
                        {'inherit_id': view_option_id}, context=request.context)
 
-        return request.webcontext.render('website.themes', {'theme_changed': True})
+        return request.website.render('website.themes', {'theme_changed': True})
 
     @website.route('/page/<path:path>', type='http', auth="admin")
     def page(self, path, **kwargs):
-        request.webcontext['path'] = path
+        values = {
+            'path': path,
+        }
         try:
-            html = request.webcontext.render(path)
+            html = request.website.render(path, values)
         except ValueError:
-            html = request.webcontext.render('website.404')
+            html = request.website.render('website.404', values)
         return html
 
     @website.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
@@ -267,6 +269,6 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
-        return request.registry['website'].kanban_col(**post)
+        return request.website.kanban_col(**post)
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

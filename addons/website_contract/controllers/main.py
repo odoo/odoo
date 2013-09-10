@@ -11,7 +11,6 @@ class website_contract(http.Controller):
 
     @website.route(['/references/', '/references/page/<int:page>/'], type='http', auth="public")
     def references(self, page=0, **post):
-        website = request.registry['website']
         partner_obj = request.registry['res.partner']
         account_obj = request.registry['account.analytic.account']
 
@@ -31,10 +30,10 @@ class website_contract(http.Controller):
         # public partner profile
         partner_ids = partner_obj.search(
             request.cr, openerp.SUPERUSER_ID,
-            domain + [('website_published', '=', True)], request.context)
+            domain + [('website_published', '=', True)], context=request.context)
         google_map_partner_ids = ",".join([str(p) for p in partner_ids])
 
-        if not request.webcontext.is_public_user:
+        if not request.context['is_public_user']:
             # search without website_published
             partner_ids += partner_obj.search(request.cr, request.uid,
                                               domain, context=request.context)
@@ -49,7 +48,7 @@ class website_contract(http.Controller):
         countries.insert(0, {
             'country_id_count': country_count,
             'country_id': ("all", _("All Countries"))
-        }, context=request.context)
+        })
 
         if post.get("country", "all") != 'all':
             partner_ids = partner_obj.search(
@@ -60,7 +59,7 @@ class website_contract(http.Controller):
                 ], context=request.context)
 
         step = 20
-        pager = website.pager(url="/references/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
+        pager = request.website.pager(url="/references/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
         partner_ids = partner_obj.search(
             request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)],
             limit=step, offset=pager['offset'], context=request.context)
@@ -74,7 +73,7 @@ class website_contract(http.Controller):
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),
         }
-        return request.webcontext.render("website_contract.index", values)
+        return request.website.render("website_contract.index", values)
 
     @website.route(['/references/<int:ref_id>/'], type='http', auth="public")
     def references_ref(self, ref_id=0, **post):
@@ -84,12 +83,15 @@ class website_contract(http.Controller):
                 ('website_published', '=', True),
                 ('id', '=', ref_id)
             ], context=request.context)
-        if not request.webcontext.is_public_user:
+        if not request.context['is_public_user']:
             partner_ids += partner_obj.search(
                 request.cr, request.uid, [('id', '=', ref_id)],
                 context=request.context)
 
-        request.webcontext['partner_id'] = partner_obj.browse(
-            request.cr, openerp.SUPERUSER_ID, partner_ids[0],
-            dict(request.context + {'show_address': True}))
-        return request.webcontext.render("website_contract.details")
+        values = {
+            'partner_id': partner_obj.browse(
+                request.cr, openerp.SUPERUSER_ID, partner_ids[0],
+                dict(request.context, show_address=True)),
+        }
+
+        return request.website.render("website_contract.details", values)

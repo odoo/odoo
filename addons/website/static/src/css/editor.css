@@ -106,12 +106,17 @@ table.editorbar-panel td.selected {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  max-height: 280px;
-  min-height: 140px;
   background: #282828;
   box-shadow: 0px 10px 10px -10px black inset;
   overflow-y: auto;
   z-index: 100;
+}
+.oe_snippets .nav-pills {
+  padding: 3px 8px;
+  background: #444444;
+}
+.oe_snippets .nav-pills > li > a {
+  padding: 2px 10px !important;
 }
 
 .oe_snippet {
@@ -121,10 +126,10 @@ table.editorbar-panel td.selected {
   width: 120px;
   height: 120px;
   border-radius: 3px;
-  margin: 10px;
+  margin: 8px;
   margin-right: 0px;
   position: relative;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   -webkit-user-select: none;
   user-select: none;

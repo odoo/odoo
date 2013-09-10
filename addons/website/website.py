@@ -5,7 +5,6 @@ import simplejson
 import openerp
 from openerp.osv import osv, fields
 from openerp.addons.web import http
-from openerp.addons.web.controllers import main
 from openerp.addons.web.http import request
 import urllib
 import math
@@ -21,10 +20,10 @@ def route(*route_args, **route_kwargs):
         @http.route(*route_args, **route_kwargs)
         @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
         def wrap(*args, **kwargs):
-            if not hasattr(request, 'webcontext'):
-                request.webcontext = WebContext()
-                request.context['lang'] = request.webcontext['lang_selected']['code']
-
+            request.route_lang = None # WIP: decorator will support lang argument
+            if not hasattr(request, 'website'):
+                request.website = request.registry['website'].get_current()
+                request.website.preprocess_request(*args, **kwargs)
             return f(*args, **kwargs)
         return wrap
     return decorator
@@ -46,31 +45,15 @@ def urlplus(url, params):
         url += "%s=%s&" % (k, urllib.quote_plus(str(v)))
     return url
 
-class WebsiteError(Exception):
-    pass
-
-class WebContext(dict):
-    def __init__(self):
-        self.website = request.registry.get("website")
-        lang = request.httprequest.host.split('.')[0]
-        context = self.website.get_webcontext(lang=lang)
-        dict.__init__(self, context)
-    def __getattr__(self, name):
-        if hasattr(self.website, name):
-            return getattr(self.website, name)
-        elif name in self:
-            return self[name]
-        else:
-            raise AttributeError
-    def render(self, template, values=None):
-        context = self.copy()
-        if values:
-            context.update(values)
-        return self.website.render(template, context)
-
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
+    _columns = {
+        'name': fields.char('Domain'),
+        'company_id': fields.many2one('res.company', string="Company"),
+        'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
+        'default_lang_id': fields.many2one('res.lang', string="Default language"),
+    }
 
     public_user = None
 
@@ -80,100 +63,78 @@ class website(osv.osv):
             self.public_user = request.registry[ref[0]].browse(request.cr, openerp.SUPERUSER_ID, ref[1])
         return self.public_user
 
-    def get_lang_info(self, lang):
-        fields = ['id', 'name', 'code', 'website_default']
-        lang_obj = request.registry['res.lang']
-        languages = lang_obj.search_read(
-            request.cr, openerp.SUPERUSER_ID, [('website_activated', '=', True)], fields
-        )
-        activated = [lg['code'].lower() for lg in languages]
-        default = [lg['code'] for lg in languages if lg['website_default']]
-        default = default[0] if default else None
+    def get_lang(self):
+        website = request.registry['website'].get_current()
 
-        # Try to get the language from cookie
-        lang = lang or request.httprequest.cookies.get('lang', None)
-        if not lang or lang not in activated:
-            # Try to get the default language
-            if default:
-                lang = default
-            # Otherwise get the first activated language
-            elif activated:
-                lang = activated[0]
-            # Otherwise the language setup is broken
-            else:
-                raise WebsiteError("Could not aquire default language")
+        if hasattr(request, 'route_lang'):
+            lang = request.route_lang
+        else:
+            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
 
-        return {
-            'lang_list': languages,
-            'lang_default': default,
-            'lang_selected': (lg for lg in languages if lg['code'].lower() == lang.lower()).next(),
-        }
+        if lang not in [lg.code for lg in website.language_ids]:
+            lang = website.default_lang_id.code
 
-    def get_webcontext(self, additional_values=None, lang=None):
-        debug = 'debug' in request.params
-        is_logged = True
-        try:
-            request.session.check_security()
-        except: # TODO fme: check correct exception
-            is_logged = False
+        return lang
+
+    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
         is_public_user = request.uid == self.get_public_user().id
-
-        values = {
-            'debug': debug,
+        request.context.update({
             'is_public_user': is_public_user,
-            'editable': is_logged and not is_public_user,
-            'request': request,
-            'registry': request.registry,
-            'cr': request.cr,
-            'uid': request.uid,
-            'host_url': request.httprequest.host_url,
-            'res_company': request.registry['res.company'].browse(request.cr, openerp.SUPERUSER_ID, 1),
-            'json': simplejson,
-            'snipped': {
-                'kanban': self.kanban
-            },
-        }
-        values.update(self.get_lang_info(lang))
+            'editable': not is_public_user, # TODO: check perms
+        })
+        request.context['lang'] = self.get_lang()
 
-        if additional_values:
-            values.update(additional_values)
-        return values
+    def get_current(self):
+        # WIP, currently hard coded
+        return self.browse(request.cr, request.uid, 1)
 
-    def render(self, template, values=None):
+    def render(self, cr, uid, ids, template, values=None):
         view = request.registry.get("ir.ui.view")
         IMD = request.registry.get("ir.model.data")
 
-        if not values:
+        qweb_context = request.context.copy()
+
+        if values is None:
             values = {}
+
+        values.update({
+            'request': request,
+            'registry': request.registry,
+            'json': simplejson,
+            'website': request.website,
+            'res_company': request.website.company_id,
+        })
+
+        qweb_context.update(values)
         context = {
-            'inherit_branding': values.get('editable', False),
+            'inherit_branding': qweb_context.get('editable', False),
         }
 
         # check if xmlid of the template exists
         try:
             model, xmlid = template.split('.', 1)
-            model, id = IMD.get_object_reference(request.cr, request.uid, model, xmlid)
+            model, id = IMD.get_object_reference(cr, uid, model, xmlid)
         except ValueError:
             logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render('website.404', values)
- 
+            return self.render('website.404', qweb_context)
+
         # render template and catch error
         try:
-            return view.render(request.cr, request.uid, template, values, context=context)
+            return view.render(cr, uid, template, qweb_context, context=context)
         except (AccessError, AccessDenied), err:
             logger.error(err)
-            values['error'] = err[1]
+            qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render('website.401', values)
+            return self.render('website.401', qweb_context)
         except Exception:
-            values['traceback'] = traceback.format_exc()
-            logger.error("Website Rendering Error.\n\n%s" % values['traceback'])
-            if values['editable']:
-                return view.render(request.cr, request.uid, 'website.500', values, context=context)
+            qweb_context['traceback'] = traceback.format_exc()
+            logger.error("Website Rendering Error.\n\n%s" % qweb_context['traceback'])
+            if qweb_context['editable']:
+                return view.render(cr, uid, 'website.500', qweb_context, context=context)
             else:
-                return view.render(request.cr, request.uid, 'website.404', values, context=context)
+                return view.render(cr, uid, 'website.404', qweb_context, context=context)
 
-    def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
+    def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
@@ -228,7 +189,7 @@ class website(osv.osv):
             if xids[view['id']]
         ]
 
-    def kanban(self, model, domain, column, template, step=None, scope=None, orderby=None):
+    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None):
         step = step and int(step) or 10
         scope = scope and int(scope) or 5
         orderby = orderby or "name"
@@ -249,12 +210,12 @@ class website(osv.osv):
                 pages[int(col[0])] = int(col[1])
 
         objects = []
-        for group in model_obj.read_group(request.cr, request.uid, domain, ["id", column], groupby=column):
+        for group in model_obj.read_group(cr, uid, domain, ["id", column], groupby=column):
             obj = {}
 
             # browse column
             relation_id = group[column][0]
-            obj['column_id'] = relation_obj.browse(request.cr, request.uid, relation_id)
+            obj['column_id'] = relation_obj.browse(cr, uid, relation_id)
 
             obj['kanban_url'] = kanban_url
             for k, v in pages.items():
@@ -262,7 +223,7 @@ class website(osv.osv):
                     obj['kanban_url'] += "%s-%s" % (k, v)
 
             # pager
-            number = model_obj.search(request.cr, request.uid, group['__domain'], count=True)
+            number = model_obj.search(cr, uid, group['__domain'], count=True)
             obj['page_count'] = int(math.ceil(float(number) / step))
             obj['page'] = pages.get(relation_id) or 1
             if obj['page'] > obj['page_count']:
@@ -278,8 +239,8 @@ class website(osv.osv):
             obj['orderby'] = orderby
 
             # browse objects
-            object_ids = model_obj.search(request.cr, request.uid, group['__domain'], limit=step, offset=offset, order=orderby)
-            obj['object_ids'] = model_obj.browse(request.cr, request.uid, object_ids)
+            object_ids = model_obj.search(cr, uid, group['__domain'], limit=step, offset=offset, order=orderby)
+            obj['object_ids'] = model_obj.browse(cr, uid, object_ids)
 
             objects.append(obj)
 
@@ -288,29 +249,19 @@ class website(osv.osv):
             'range': range,
             'template': template,
         }
-        return request.webcontext.render("website.kanban_contain", values)
+        return request.website.render("website.kanban_contain", values)
 
-    def kanban_col(self, model, domain, page, template, step, orderby):
+    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby):
         html = ""
         model_obj = request.registry[model]
         domain = safe_eval(domain)
         step = int(step)
         offset = (int(page)-1) * step
-        object_ids = model_obj.search(request.cr, request.uid, domain, limit=step, offset=offset, order=orderby)
-        object_ids = model_obj.browse(request.cr, request.uid, object_ids)
+        object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
+        object_ids = model_obj.browse(cr, uid, object_ids)
         for object_id in object_ids:
-            html += request.webcontext.render(template, {'object_id': object_id})
+            html += request.website.render(template, {'object_id': object_id})
         return html
-
-class res_lang(osv.osv):
-    _inherit = "res.lang"
-
-    _columns = {
-        'website_activated': fields.boolean('Active on website'),
-        'website_default': fields.boolean('Website default language'),
-    }
-
-    # TODO: on write and create set website_default=False on other records if current is True
 
 class res_partner(osv.osv):
     _inherit = "res.partner"

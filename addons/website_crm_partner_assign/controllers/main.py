@@ -11,7 +11,6 @@ class website_crm_partner_assign(http.Controller):
 
     @website.route(['/partners/', '/partners/page/<int:page>/'], type='http', auth="public")
     def partners(self, page=0, **post):
-        website = request.registry['website']
         partner_obj = request.registry['res.partner']
 
         def dom_without(without):
@@ -66,7 +65,7 @@ class website_crm_partner_assign(http.Controller):
         })
 
         step = 20
-        pager = website.pager(url="/partners/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
+        pager = request.website.pager(url="/partners/", total=len(partner_ids), page=page, step=step, scope=7, url_args=post)
         partner_ids = partner_obj.search(
             request.cr, openerp.SUPERUSER_ID, [('id', 'in', partner_ids)],
             context=request.context, limit=step, offset=pager['offset'],
@@ -83,7 +82,7 @@ class website_crm_partner_assign(http.Controller):
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),
         }
-        return request.webcontext.render("website_crm_partner_assign.index", values)
+        return request.website.render("website_crm_partner_assign.index", values)
 
     @website.route(['/partners/<int:ref_id>/'], type='http', auth="public")
     def partners_ref(self, ref_id=0, **post):
@@ -93,13 +92,15 @@ class website_crm_partner_assign(http.Controller):
             [('website_published', '=', True), ('id', '=', ref_id)],
             context=request.context)
 
-        if not request.webcontext.is_public_user:
+        if not request.context['is_public_user']:
             partner_ids += partner_obj.search(
                 request.cr, request.uid, [('id', '=', ref_id)],
                 context=request.context)
 
-        request.webcontext['partner_id'] = partner_obj.browse(
-            request.cr, openerp.SUPERUSER_ID, partner_ids[0],
-            context=dict(request.context + {'show_address': True}))
+        values = {
+            'partner_id': partner_obj.browse(
+                request.cr, openerp.SUPERUSER_ID, partner_ids[0],
+                context=dict(request.context, show_address=True)),
+        }
 
-        return request.webcontext.render("website_crm_partner_assign.details")
+        return request.website.render("website_crm_partner_assign.details", values)
