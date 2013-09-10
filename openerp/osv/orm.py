@@ -3382,7 +3382,7 @@ class BaseModel(object):
                 unknown.append(key)
 
         if unknown:
-            _logger.warning("read() invoked with unknown fields: %s", sorted(unknown))
+            _logger.warning("%s.read() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
@@ -3894,7 +3894,7 @@ class BaseModel(object):
                 unknown.append(key)
 
         if unknown:
-            _logger.warning("write() invoked with unknown fields: %s", sorted(unknown))
+            _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
         # write old-style fields with (low-level) method _write
         if old_vals:
@@ -4173,7 +4173,7 @@ class BaseModel(object):
                 unknown.append(key)
 
         if unknown:
-            _logger.warning("create() invoked with unknown fields: %s", sorted(unknown))
+            _logger.warning("%s.create() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
