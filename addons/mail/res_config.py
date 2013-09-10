@@ -28,9 +28,18 @@ class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'alias_domain': fields.char('Alias Domain',
-                                     help="If you have setup a catch-all email domain redirected to "
-                                          "the OpenERP server, enter the domain name here."),
+        'alias_domain': fields.char(
+            'Alias Domain',
+            help="If you have setup a catch-all email domain redirected to the OpenERP server, enter the domain name here."
+        ),
+        'alias_bounce': fields.char(
+            'Return-Path for Emails',
+            help="Return-Path of send Emails. Used to compute bounced emails.",
+        ),
+        'alias_catchall': fields.char(
+            'Default Alias',
+            help='Default email alias',
+        ),
     }
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):
@@ -47,3 +56,21 @@ class project_configuration(osv.TransientModel):
         config_parameters = self.pool.get("ir.config_parameter")
         for record in self.browse(cr, uid, ids, context=context):
             config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', context=context)
+
+    def get_default_alias_bounce(self, cr, uid, ids, context=None):
+        alias_bounce = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.bounce.alias", context=context)
+        return {'alias_bounce': alias_bounce}
+
+    def set_alias_bounce(self, cr, uid, ids, context=None):
+        config_parameters = self.pool.get("ir.config_parameter")
+        for record in self.browse(cr, uid, ids, context=context):
+            config_parameters.set_param(cr, uid, "mail.bounce.alias", record.alias_bounce or '', context=context)
+
+    def get_default_alias_catchall(self, cr, uid, ids, context=None):
+        alias_catchall = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.alias", context=context)
+        return {'alias_catchall': alias_catchall}
+
+    def set_alias_catchall(self, cr, uid, ids, context=None):
+        config_parameters = self.pool.get("ir.config_parameter")
+        for record in self.browse(cr, uid, ids, context=context):
+            config_parameters.set_param(cr, uid, "mail.catchall.alias", record.alias_catchall or '', context=context)
