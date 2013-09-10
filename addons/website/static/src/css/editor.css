@@ -137,12 +137,16 @@ table.editorbar-panel td.selected {
   line-height: 120px;
   color: white;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95);
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset;
 }
 .oe_snippet .oe_snippet_body {
   display: none;
 }
 .oe_snippet > * {
   pointer-events: none;
+}
+.oe_snippet > :not(.oe_snippet_body):not(.oe_snippet_thumbnail) {
+  display: none !important;
 }
 .oe_snippet > *:first-child:not(.oe_snippet_thumbnail) {
   display: block;
@@ -202,35 +206,68 @@ table.editorbar-panel td.selected {
 .oe_snippet_manipulator {
   display: block;
   position: absolute;
-  background: rgba(153, 0, 255, 0.1);
+  background: transparent;
   border-radius: 3px;
-  border: solid 1px rgba(153, 0, 255, 0.5);
   opacity: 0;
   transition: opacity 100ms linear;
+  box-sizing: border-box;
+  pointer-events: none;
 }
-.oe_snippet_manipulator > .oe_handle {
+.oe_snippet_manipulator .oe_boxsize, .oe_snippet_manipulator .oe_margin {
+  position: absolute;
+  pointer-events: none;
+}
+.oe_snippet_manipulator .oe_handle {
   display: none;
 }
-.oe_snippet_manipulator:hover, .oe_snippet_manipulator.oe_hover {
+.oe_snippet_manipulator.oe_hover {
   opacity: 1;
+  cursor: pointer;
 }
-.oe_snippet_manipulator:hover > .oe_handle, .oe_snippet_manipulator.oe_hover > .oe_handle {
+.oe_snippet_manipulator.oe_selected, .oe_snippet_manipulator.oe_active, .oe_snippet_manipulator .oe_boxsize, .oe_snippet_manipulator .oe_margin {
+  opacity: 1;
+  background: transparent;
+  border: dashed 1px rgba(153, 0, 255, 0.5);
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
+}
+.oe_snippet_manipulator.oe_selected .oe_handle, .oe_snippet_manipulator.oe_active .oe_handle, .oe_snippet_manipulator .oe_boxsize .oe_handle, .oe_snippet_manipulator .oe_margin .oe_handle {
+  pointer-events: auto;
+}
+.oe_snippet_manipulator .oe_buttons {
+  display: none;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: #ad00ff;
+  color: white;
+  padding: 0px 2px;
+  border-radius: 3px;
+}
+.oe_snippet_manipulator .oe_buttons .oe_icon {
+  display: inline-block;
+  padding: 8px;
+  cursor: pointer;
+}
+.oe_snippet_manipulator.oe_active {
+  z-index: 100000;
+}
+.oe_snippet_manipulator.oe_active .oe_handle, .oe_snippet_manipulator.oe_active .oe_buttons {
   display: block;
 }
 
 .oe_handle {
+  pointer-events: auto;
   position: absolute;
   top: 50%;
   left: 50%;
   display: block;
   background: white;
-  border: solid 1px rgba(153, 0, 255, 0.5);
+  border: solid 1px #9900ff;
   box-sizing: border-box;
-  border-radius: 2px;
+  border-radius: 8px;
   width: 16px;
   height: 16px;
   margin: -8px;
-  cursor: move;
   -webkit-transition: background 100ms linear;
 }
 .oe_handle:hover {
@@ -253,6 +290,38 @@ table.editorbar-panel td.selected {
 
 .oe_handle.nw, .oe_handle.w, .oe_handle.sw {
   left: 0px;
+}
+
+.oe_handle.n {
+  cursor: n-resize;
+}
+
+.oe_handle.ne {
+  cursor: ne-resize;
+}
+
+.oe_handle.nw {
+  cursor: nw-resize;
+}
+
+.oe_handle.s {
+  cursor: s-resize;
+}
+
+.oe_handle.se {
+  cursor: se-resize;
+}
+
+.oe_handle.sw {
+  cursor: sw-resize;
+}
+
+.oe_handle.e {
+  cursor: e-resize;
+}
+
+.oe_handle.w {
+  cursor: w-resize;
 }
 
 /* ---- MOBILE PREVIEW ---- */
