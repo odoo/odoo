@@ -338,6 +338,7 @@ class QWebXml(object):
                         ('data-oe-id', str(record.id)),
                         ('data-oe-field', field),
                         ('data-oe-type', field_type),
+                        ('data-oe-expression', t_att['field']),
                     ]
                 )
         except AttributeError:
