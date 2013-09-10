@@ -251,6 +251,7 @@
             var element = editor.element;
             editor.destroy();
             element.removeClass('cke_focus')
+                   .removeClass('oe_dirty')
                    .removeClass('oe_editable')
                    .removeAttribute('contentEditable');
             var data = element.getOuterHtml();
