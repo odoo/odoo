@@ -12,8 +12,7 @@ class Website(osv.osv):
         project_obj = request.registry['project.project']
         project_ids = project_obj.search(cr, uid, [('privacy_visibility', "=", "public")], context=request.context)
 
-        # FIXME: namespace global rendering vars
-        request.context['project_ids'] = project_obj.browse(cr, uid, project_ids, request.context)
+        request.context['website_project_ids'] = project_obj.browse(cr, uid, project_ids, request.context)
 
         return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
 

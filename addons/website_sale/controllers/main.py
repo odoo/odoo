@@ -43,8 +43,7 @@ class Website(osv.osv):
     _inherit = "website"
     def preprocess_request(self, cr, uid, ids, *args, **kwargs):
         request.context.update({
-            'order': get_current_order(), # FIXME: namespace global rendering vars
-            # 'website_sale_get_current_order': get_current_order, # TODO: replace 'order' key in templates
+            'website_sale_order': get_current_order(),
         })
         return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
 

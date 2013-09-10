@@ -48,7 +48,8 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span t-attf-class="my_cart_quantity badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
+                                  t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
@@ -57,7 +58,8 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span t-attf-class="my_cart_quantity badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
+                                  t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
@@ -237,11 +239,11 @@
                                 <th>Quantity</th>
                             </tr>
                         </thead>
-                        <tbody t-if="not order or not order.order_line">
+                        <tbody t-if="not website_sale_order or not website_sale_order.order_line">
                             <tr><td colspan="4"><h3>Your cart is empty</h3></td></tr>
                         </tbody>
-                        <tbody t-if="order and order.order_line">
-                            <t t-foreach="order.order_line" t-as="line">
+                        <tbody t-if="website_sale_order and website_sale_order.order_line">
+                            <t t-foreach="website_sale_order.order_line" t-as="line">
                                 <tr>
                                     <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                     <td t-if="line.product_id.product_tmpl_id">
@@ -276,12 +278,12 @@
                             <col width="160"/>
                         </colgroup>
                         <thead>
-                            <tr> <th colspan="3">Subtotal </th>      <th><t t-esc="order and order.amount_untaxed or 0"/> €</th></tr>
-                            <tr> <th colspan="3">Taxes </th>         <th><t t-esc="order and order.amount_tax or 0"/> €</th></tr>
-                            <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="order and order.amount_total or 0"/> €</h4></th></tr>
+                            <tr> <th colspan="3">Subtotal </th>      <th><t t-esc="website_sale_order and website_sale_order.amount_untaxed or 0"/> €</th></tr>
+                            <tr> <th colspan="3">Taxes </th>         <th><t t-esc="website_sale_order and website_sale_order.amount_tax or 0"/> €</th></tr>
+                            <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="website_sale_order and website_sale_order.amount_total or 0"/> €</h4></th></tr>
                         </thead>
                     </table>
-                    <a t-if="order and order.order_line" href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
+                    <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
                 </div>
             </t>
         </t>
@@ -341,8 +343,8 @@
     </template>
     <template id="reduction_code" inherit_option_id="website_sale.mycart" name="Reduction Code">
         <xpath expr="//table[@id='mycart_total']" position="after">
-            <form t-if="order and order.order_line" class="well" action="/shop/mycart/" method="post">
-                <input name="promo" class='input' type="text" placeholder="Reduction Code..." t-att-value="order.pricelist_id.code or ''"/>
+            <form t-if="website_sale_order and website_sale_order.order_line" class="well" action="/shop/mycart/" method="post">
+                <input name="promo" class='input' type="text" placeholder="Reduction Code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
                 <button class="btn">Apply Code</button>
             </form>
         </xpath>
@@ -369,8 +371,8 @@
                                     <th>Qty.</th>
                                 </tr>
                             </thead>
-                            <tbody t-if="order.order_line">
-                                <t t-foreach="order.order_line" t-as="line">
+                            <tbody t-if="website_sale_order.order_line">
+                                <t t-foreach="website_sale_order.order_line" t-as="line">
                                     <tr>
                                         <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
@@ -379,9 +381,9 @@
                                 </t>
                             </tbody>
                             <tfoot>
-                                <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
-                                <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
-                                <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
+                                <tr><th>Untaxed Amount</th><td></td><td><t t-esc="website_sale_order.amount_untaxed"/> €</td></tr>
+                                <tr><th>Taxes</th><td></td><td><t t-esc="website_sale_order.amount_tax"/> €</td></tr>
+                                <tr><th>Total</th><td></td><td><t t-esc="website_sale_order.amount_total"/> €</td></tr>
                             </tfoot>
                         </table>
                     </div>
@@ -555,8 +557,8 @@
                                     <th>Qty.</th>
                                 </tr>
                             </thead>
-                            <tbody t-if="order.order_line">
-                                <t t-foreach="order.order_line" t-as="line">
+                            <tbody t-if="website_sale_order.order_line">
+                                <t t-foreach="website_sale_order.order_line" t-as="line">
                                     <tr>
                                         <td><t t-esc="line.name"/></td>
                                         <td><t t-esc="line.product_uom_qty"/></td>
@@ -565,9 +567,9 @@
                                 </t>
                             </tbody>
                             <tfoot>
-                                <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
-                                <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
-                                <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
+                                <tr><th>Untaxed Amount</th><td></td><td><t t-esc="website_sale_order.amount_untaxed"/> €</td></tr>
+                                <tr><th>Taxes</th><td></td><td><t t-esc="website_sale_order.amount_tax"/> €</td></tr>
+                                <tr><th>Total</th><td></td><td><t t-esc="website_sale_order.amount_total"/> €</td></tr>
                             </tfoot>
                         </table>
                     </div>

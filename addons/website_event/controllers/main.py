@@ -138,7 +138,7 @@ class website_event(http.Controller):
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
-        order = request.context['order'] # FIXME: namespace global rendering vars: website_sale_order
+        order = request.context['website_sale_order']
         if not order:
             order = website_sale.controllers.main.get_order()
 
