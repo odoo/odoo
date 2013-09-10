@@ -152,10 +152,11 @@
                         });
                         // Adding Static Menus
                         menu.append('<li class="divider"></li><li><a href="/page/website.themes">Change Theme</a></li>');
+                        menu.append('<li class="divider"></li><li><a data-action="ace" href="#">Advanced view editor</a></li>');
                     }
                 );
             });
-            menu.on('click', 'a', function (event) {
+            menu.on('click', 'a[data-action!=ace]', function (event) {
                 var view_id = $(event.currentTarget).data('view-id');
                 openerp.jsonRpc('/website/customize_template_toggle', 'call', {
                     'view_id': view_id

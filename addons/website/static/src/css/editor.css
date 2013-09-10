@@ -387,3 +387,39 @@ table.editorbar-panel td.selected {
 .oe_seo_configuration .oe_seo_suggestion {
   cursor: pointer;
 }
+
+/* ---- ACE EDITOR ---- */
+.oe_ace_view_editor {
+  position: fixed;
+  top: 51px;
+  right: 0;
+  z-index: 1000;
+  height: 100%;
+}
+.oe_ace_view_editor .oe_ace_view_editor_title {
+  width: 100%;
+  padding-left: 2px;
+  height: 34px;
+  background-color: #111111;
+}
+.oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
+  width: 50%;
+}
+.oe_ace_view_editor .ace_editor {
+  position: absolute;
+  top: 34px;
+  right: 0;
+  bottom: 51px;
+  left: 0;
+  width: 720px;
+}
+
+.oe_ace_closed {
+  width: 0;
+  transition: width 0.4s ease-in;
+}
+
+.oe_ace_open {
+  width: 720px;
+  transition: width 0.4s ease-in;
+}
