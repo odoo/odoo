@@ -58,13 +58,20 @@ class purchase_requisition(osv.osv):
             'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
     }
+
+    def _get_picking_in(self, cr, uid, context=None):
+        obj_data = self.pool.get('ir.model.data')
+        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1]
+
     _defaults = {
         'state': 'draft',
         'exclusive': 'multiple',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition', context=c),
         'user_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).id,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
+        'picking_type_id': _get_picking_in,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -142,12 +149,11 @@ class purchase_requisition(osv.osv):
             'date_order': requisition.date_end or fields.date.context_today(self, cr, uid, context=context),
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist,
-            #'location_id': location_id,
+            'location_id': requisition.picking_type_id.default_location_dest_id.id,
             'company_id': requisition.company_id.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'requisition_id': requisition.id,
             'notes': requisition.description,
-            'warehouse_id': requisition.warehouse_id.id if requisition.warehouse_id else False,
         }
 
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
