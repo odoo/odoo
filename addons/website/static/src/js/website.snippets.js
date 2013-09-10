@@ -417,7 +417,7 @@
         onBlurEdit : function () {},
 
         /* getOptions
-        *  get the options saved in the html view
+        *  Read data saved for your snippet animation.
         */
         getOptions: function () {
             var options = this.$el.data("snippet-options");
@@ -438,56 +438,77 @@
 
 
     website.snippet.editorRegistry = {};
-    website.snippet.Editor = openerp.Widget.extend({
+    website.snippet.Editor = openerp.Class.extend({
         init: function (parent, dom) {
             this.$target = $(dom);
             this.parent = parent;
-            this._super.apply(this, arguments);
-            this.renderElement();
+            this._readXMLData();
             this.start();
         },
 
-        renderElement: function() {
-            var $el;
+        /*
+        *  _readXMLData
+        *  Read data XML and set value into:
+        *  this.$el :
+        *       all xml data
+        *  this.$editor :
+        *       content of .oe_snippet_editorbar
+        *       Displayed into the editor bar on focus
+        *  this.$thumbnail :
+        *       content of .oe_snippet_thumbnail
+        *       Displayed in bottom editor menu, when the user click on "Building Blocks"
+        *  this.$body :
+        *       content of .oe_snippet_body
+        *       Insert into the view when the thumbnail is drag and droped into a drop zone
+        */
+        _readXMLData: function() {
             if (this.template) {
-                $el = $(openerp.qweb.render(this.template, {widget: this}).trim());
-                this.$editor = $el.find(".oe_snippet_editorbar");
-                this.$thumbnail = $el.find(".oe_snippet_thumbnail");
-                this.$body = $el.find(".oe_snippet_body");
-            } else {
-                $el = this._make_descriptive();
+                this.$el = $(openerp.qweb.render(this.template, {widget: this}).trim());
+                this.$editor = this.$el.find(".oe_snippet_editorbar");
+                this.$thumbnail = this.$el.find(".oe_snippet_thumbnail");
+                this.$body = this.$el.find(".oe_snippet_body");
             }
-            this.replaceElement($el);
         },
 
-        // create the snippet into the view
+        /*
+        * Start
+        * Method launch after the initialization of the snippet and after reading data XML
+        */
+        start : function () {
+        },
+
+        /*
+        *  build_snippet
+        *  This method is called just after that a thumbnail is drag and droped into a drop zone
+        *  (after the insertion of this.$body, if this.$body exists)
+        */
         build_snippet: function () {
 
         },
 
         /* onFocus
-        *  called when the user click inside the snippet dom
+        *  This method is called when the user click inside the snippet in the dom
         */
         onFocus : function () {
             if(this.$editor) this.$editor.prependTo(this.parent.$('#website-top-edit .nav.pull-right'));
         },
 
         /* onFocus
-        *  called when the user click outide the snippet dom
+        *  This method is called when the user click outide the snippet in the dom, after a focus
         */
         onBlur : function () {
             if(this.$editor) this.$editor.detach();
         },
 
         /* setOptions
-        *  saved the options in the html view
+        *  Use this method when you want to save some data for your snippet animation.
         */
         setOptions: function (options) {
             $target.attr("data-snippet-options", JSON.stringify(options));
         },
 
         /* getOptions
-        *  get the options saved in the html view
+        *  Read data saved for your snippet animation.
         */
         getOptions: function () {
             var options = this.$target.data("snippet-options");
