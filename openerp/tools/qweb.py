@@ -5,7 +5,6 @@ import re
 #from openerp.tools.safe_eval import safe_eval as eval
 
 import xml   # FIXME use lxml
-import xml.dom.minidom
 import traceback
 from openerp.osv import osv, orm
 
@@ -169,7 +168,7 @@ class QWebXml(object):
             t_att = {}
             for (an, av) in e.attributes.items():
                 an = str(an)
-                if isinstance(av, types.UnicodeType):
+                if isinstance(av, unicode):
                     av = av.encode("utf8")
                 else:
                     av = av.nodeValue.encode("utf8")
@@ -261,7 +260,7 @@ class QWebXml(object):
             var = t_att.get('as', expr).replace('.', '_')
             d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
-            if isinstance(enum, (types.ListType, types.TupleType)):
+            if isinstance(enum, (list, tuple)):
                 size = len(enum)
             elif hasattr(enum, 'count'):
                 size = enum.count()
@@ -282,7 +281,7 @@ class QWebXml(object):
                     d["%s_parity" % var] = 'even'
                 if 'as' in t_att:
                     d[var] = i
-                elif isinstance(i, types.DictType):
+                elif isinstance(i, dict):
                     d.update(i)
                 ru.append(self.render_element(e, t_att, g_att, d))
                 index += 1
