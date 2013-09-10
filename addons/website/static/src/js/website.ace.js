@@ -65,7 +65,8 @@
                 method: 'read',
                 args: [[this.$viewList.val()], ['arch']]
             }).then(function(result) {
-                var editingSession = new ace.EditSession(result[0].arch);
+                var prettyfied = vkbeautify.xml(result[0].arch, "    ");
+                var editingSession = new ace.EditSession(prettyfied + "\n");
                 editingSession.setMode("ace/mode/xml");
                 editingSession.setUndoManager(new ace.UndoManager());
                 editor.setSession(editingSession);
