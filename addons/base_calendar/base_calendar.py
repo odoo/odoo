@@ -1599,16 +1599,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
             data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
             if data.get('rrule_type') in ('daily', unicode('count')):
-                rel_date = relativedelta(day=data.get('count'))
+                rel_date = relativedelta(days=data.get('count')+1)
             elif data.get('rrule_type') in ('weekly', unicode('weekly')):
-                rel_date = relativedelta(days=data.get('count')*7)
+                rel_date = relativedelta(days=(data.get('count')+1)*7)
             elif data.get('rrule_type') in ('monthly', unicode('monthly')):
-                rel_date = relativedelta(month=data.get('count'))
+                rel_date = relativedelta(months=data.get('count')+1)
             elif data.get('rrule_type') in ('yearly', unicode('yearly')):
-                rel_date = relativedelta(year=data.get('count'))
+                rel_date = relativedelta(years=data.get('count')+1)
             end_date = data_date_deadline + rel_date
-            # have all virtual date, weekly condition, monthly condition
-            end_date += relativedelta(month=1)
         return end_date
 
     def create(self, cr, uid, vals, context=None):
