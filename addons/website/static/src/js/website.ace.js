@@ -14,13 +14,9 @@
             if (!editor) {
                 editor = new website.ace.ViewEditor();
                 editor.appendTo($(document.body));
-                setTimeout(function () {
-                    editor.show.call(editor);
-                }, 100);
             } else {
                 editor.show();
             }
-
         },
     });
 
@@ -70,33 +66,43 @@
             'click button[data-action=close]': 'hide',
         },
         start: function () {
+            var viewId = $(document.documentElement).data('view-xmlid');
+            this.$viewList = this.$('#ace-view-list');
             var self = this;
-            var currentView = $(document.documentElement).data('view-xmlid');
-            this.$viewList = this.$('#ace-view-list'),
-            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': currentView, 'optional': false })
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': viewId, 'optional': false })
                 .then(function(result) {
-                    _.each(result, function (view) {
-                        if (view.id) {
-                            new website.ace.ViewOption(self, view).appendTo(self.$viewList);
-                        }
-                    });
-                    var editor = ace.edit(self.$('#ace-view-editor')[0]);
-                    editor.setTheme("ace/theme/monokai");
-                    self.aceEditor = editor;
+                    if (result && result.length > 0) {
+                        _.each(result, function (view) {
+                            if (view.id) {
+                                new website.ace.ViewOption(self, view).appendTo(self.$viewList);
+                            }
+                        });
+                        var editor = ace.edit(self.$('#ace-view-editor')[0]);
+                        editor.setTheme("ace/theme/monokai");
+                        self.aceEditor = editor;
+                        self.show();
+                    } else {
+                        throw Error("Could not load view list");
+                    }
                 });
         },
         displayView: function () {
             var editor = this.aceEditor;
+            var viewId = this.$viewList.val();
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'read',
-                args: [[this.$viewList.val()], ['arch']]
+                args: [[viewId], ['arch']]
             }).then(function(result) {
-                var xml = new website.ace.XmlDocument(result[0].arch)
-                var editingSession = new ace.EditSession(xml.xml);
-                editingSession.setMode("ace/mode/xml");
-                editingSession.setUndoManager(new ace.UndoManager());
-                editor.setSession(editingSession);
+                if (result && result.length > 0) {
+                    var xml = new website.ace.XmlDocument(result[0].arch)
+                    var editingSession = new ace.EditSession(xml.xml);
+                    editingSession.setMode("ace/mode/xml");
+                    editingSession.setUndoManager(new ace.UndoManager());
+                    editor.setSession(editingSession);
+                } else {
+                    throw Error("Could not load view XML");
+                }
             });
         },
         formatXml: function () {
@@ -105,16 +111,18 @@
         },
         saveView: function () {
             var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
+            var viewId = this.$viewList.val();
             if (xml.isWellFormed()) {
                 openerp.jsonRpc('/web/dataset/call', 'call', {
                     model: 'ir.ui.view',
                     method: 'write',
-                    args: [[this.$viewList.val()], { 'arch':  xml.xml }]
+                    args: [[viewId], { 'arch':  xml.xml }]
                 }).then(function(result) {
                     window.location.reload();
                 });
             } else {
-                alert("Please check your XML structure!");
+                // TODO Improve feedback (e.g. update 'Save' button + tooltip)
+                alert("Malformed XML document");
             }
         },
         hide: function () {
