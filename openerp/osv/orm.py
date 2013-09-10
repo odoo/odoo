@@ -3368,17 +3368,25 @@ class BaseModel(object):
         self.check_access_rights(cr, user, 'read')
         fields = self.check_field_access_rights(cr, user, 'read', fields)
 
-        # split up fields into old-style and pure new-style ones
         if fields is None:
-            old_fields = set(self._columns)
-            new_fields = set(self._fields) - old_fields
-        else:
-            old_fields = set(fields) & set(self._columns)
-            new_fields = set(fields) - old_fields
+            fields = self._fields.keys()
+
+        # split up fields into old-style and pure new-style ones
+        old_fields, new_fields, unknown = [], [], []
+        for key in fields:
+            if key in self._columns:
+                old_fields.append(key)
+            elif key in self._fields:
+                new_fields.append(key)
+            else:
+                unknown.append(key)
+
+        if unknown:
+            _logger.warning("read() invoked with unknown fields: %s", sorted(unknown))
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
-        result = select._read_flat(list(old_fields), load=load)
+        result = select._read_flat(old_fields, load=load)
 
         # update record caches with old-style fields
         select._prepare_cache(old_fields)
@@ -3876,12 +3884,17 @@ class BaseModel(object):
             vals.pop(field, None)
 
         # split up fields into old-style and pure new-style ones
-        old_vals, new_vals = {}, {}
+        old_vals, new_vals, unknown = {}, {}, []
         for key, val in vals.iteritems():
             if key in self._columns:
                 old_vals[key] = val
-            else:
+            elif key in self._fields:
                 new_vals[key] = val
+            else:
+                unknown.append(key)
+
+        if unknown:
+            _logger.warning("write() invoked with unknown fields: %s", sorted(unknown))
 
         # write old-style fields with (low-level) method _write
         if old_vals:
@@ -4150,12 +4163,17 @@ class BaseModel(object):
             vals.pop(field, None)
 
         # split up fields into old-style and pure new-style ones
-        old_vals, new_vals = {}, {}
+        old_vals, new_vals, unknown = {}, {}, []
         for key, val in vals.iteritems():
             if key in self._all_columns:
                 old_vals[key] = val
-            else:
+            elif key in self._fields:
                 new_vals[key] = val
+            else:
+                unknown.append(key)
+
+        if unknown:
+            _logger.warning("create() invoked with unknown fields: %s", sorted(unknown))
 
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
