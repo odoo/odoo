@@ -77,14 +77,13 @@ class crm_meeting(osv.Model):
     def log_meeting_in_parent(self, cr, uid, ids, context=None):
         if context is None: 
             context = {}
-        parent_model = context.get('active_model',False)
-        parent_ids = context.get('active_ids', False)
-        if parent_model and parent_ids:
-            for meeting in self.browse(cr, uid, ids, context=context):
-                message = _("Meeting scheduled at '%s'<br> Subject: %s") % (meeting.date, meeting.name)
-                if meeting.duration:
-                    message = message+_("<br> Duration: %s hour(s)") % (str(meeting.duration))
-                self.pool.get(parent_model).message_post(cr, uid, parent_ids, body=message,context=context)
+        parent_model = context.get('active_model')
+        parent_ids = context.get('active_ids')
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("Meeting scheduled at '%s'<br> Subject: %s") % (meeting.date, meeting.name)
+            if meeting.duration:
+                message = message+_("<br> Duration: %s hour(s)") % (str(meeting.duration))
+            self.pool.get(parent_model).message_post(cr, uid, parent_ids, body=message,context=context)
         return True
 
 
