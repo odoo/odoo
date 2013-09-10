@@ -66,6 +66,7 @@
         events: {
             'change #ace-view-list': 'displayView',
             'click button[data-action=save]': 'saveView',
+            'click button[data-action=format]': 'formatXml',
             'click button[data-action=close]': 'hide',
         },
         start: function () {
@@ -92,11 +93,15 @@
                 args: [[this.$viewList.val()], ['arch']]
             }).then(function(result) {
                 var xml = new website.ace.XmlDocument(result[0].arch)
-                var editingSession = new ace.EditSession(xml.format());
+                var editingSession = new ace.EditSession(xml.xml);
                 editingSession.setMode("ace/mode/xml");
                 editingSession.setUndoManager(new ace.UndoManager());
                 editor.setSession(editingSession);
             });
+        },
+        formatXml: function () {
+            var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
+            this.aceEditor.setValue(xml.format());
         },
         saveView: function () {
             var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
