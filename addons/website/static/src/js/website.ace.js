@@ -55,32 +55,27 @@
                     });
                     var editor = ace.edit(self.$('#ace-view-editor')[0]);
                     editor.setTheme("ace/theme/monokai");
-                    editor.getSession().setMode("ace/mode/xml");
                     self.aceEditor = editor;
                 });
         },
         displayView: function () {
-            var self = this;
-            var viewId = self.$viewList.val();
+            var editor = this.aceEditor;
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'read',
-                args: [[viewId], ['arch']]
+                args: [[this.$viewList.val()], ['arch']]
             }).then(function(result) {
-                var viewXML = result[0].arch;
-                self.aceEditor.setValue(viewXML);
-                self.aceEditor.clearSelection();
-                self.aceEditor.navigateTo(0, 0);
+                var editingSession = new ace.EditSession(result[0].arch);
+                editingSession.setMode("ace/mode/xml");
+                editingSession.setUndoManager(new ace.UndoManager());
+                editor.setSession(editingSession);
             });
         },
         saveView: function () {
-            var self = this;
-            var viewId = self.$viewList.val();
-            var viewXML = self.aceEditor.getValue();
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'write',
-                args: [[viewId], { 'arch': viewXML }]
+                args: [[this.$viewList.val()], { 'arch': this.aceEditor.getValue() }]
             }).then(function(result) {
                 window.location.reload();
             });
