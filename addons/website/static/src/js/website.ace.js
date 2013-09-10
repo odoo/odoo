@@ -13,6 +13,7 @@
         launchAce: function () {
             if (!editor) {
                 editor = new website.ace.ViewEditor();
+                editor.hide();
                 editor.appendTo($(document.body));
             }
             editor.show();
@@ -34,7 +35,8 @@
         template: 'website.ace_view_editor',
         events: {
             'change #ace-view-list': 'displayView',
-            'click button[data-action=save-view]': 'saveView',
+            'click button[data-action=save]': 'saveView',
+            'click button[data-action=close]': 'hide',
         },
         start: function () {
             var self = this;
@@ -52,6 +54,7 @@
                     editor.getSession().setMode("ace/mode/xml");
                     self.aceEditor = editor;
                     self.displayView();
+                    self.show();
                 });
         },
         displayView: function () {
@@ -75,16 +78,18 @@
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'write',
-                args: [[viewId], { 'arch': viewId }]
+                args: [[viewId], { 'arch': viewXML }]
             }).then(function(result) {
                 window.location.reload();
             });
         },
         hide: function () {
-            // TODO Finish
+            this.$el.removeClass('oe_ace_open');
+            this.$el.addClass('oe_ace_closed');
         },
         show: function () {
-            // TODO Finish
+            this.$el.removeClass('oe_ace_closed');
+            this.$el.addClass('oe_ace_open');
         },
         destroy: function () {
             editor = null;

@@ -319,18 +319,30 @@ table.editorbar-panel td.selected {
   position: fixed;
   top: 51px;
   right: 0px;
-  width: 50%;
   height: 100%;
   z-index: 1000;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
-  height: 36px;
+  width: 100%;
+  padding-left: 2px;
+  height: 3em;
   background-color: #111111;
+}
+.oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
+  width: 50%;
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 36px;
+  top: 3em;
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+.oe_ace_closed {
+  width: 15px;
+}
+
+.oe_ace_open {
+  width: 50%;
 }

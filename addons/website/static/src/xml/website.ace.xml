@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.ace_view_editor">
         <div class="oe_ace_view_editor">
-            <div class="oe_ace_view_editor_title">
-                <button type="button" class="btn btn-default btn-small">Close</button>
-                <button data-action="save-view" type="button" class="btn btn-default btn-small">Save</button>
-                <select id="ace-view-list">
+            <div class="form-inline oe_ace_view_editor_title">
+                <select id="ace-view-list" class="form-control oe_view_list">
                     <!-- filled in JS -->
                 </select>
+                <button data-action="save" type="submit" class="btn btn-success">Save</button>
+                <button data-action="close" type="button" class="btn btn-info pull-right">Close</button>
             </div>
             <div id="ace-view-editor"/>
         </div>
