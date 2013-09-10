@@ -665,6 +665,7 @@ class stock_picking(osv.osv):
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
             self.pool.get("stock.picking").action_confirm(cr, uid, [picking.id], context=context)
+            self.action_confirm(cr, uid, [backorder_id], context=context)
             return backorder_id
         return False
 
