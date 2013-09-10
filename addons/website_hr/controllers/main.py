@@ -15,4 +15,4 @@ class website_hr(http.Controller):
             'employee_ids': hr_obj.browse(request.cr, request.uid, employee_ids,
                                           request.context)
         }
-        return request.webcontext.render("website.aboutus", values)
+        return request.website.render("website.aboutus", values)

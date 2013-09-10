@@ -69,16 +69,16 @@
                                         <ul class="nav navbar-nav navbar-right" id="top_menu">
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                             <li><a href="/admin">Sign in</a></li>
-                                            <li t-if="len(lang_list) &gt; 1" class="dropdown">
+                                            <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
                                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                                     <t t-esc="lang_selected['name']"/> <span class="caret"></span>
                                                 </a>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li t-foreach="lang_list" t-as="lg">
+                                                    <li t-foreach="website.language_ids" t-as="lg">
                                                         <a href="#" role="menuitem">
-                                                            <strong t-att-class="'icon-check' if lg['code'] == lang_selected['code']
+                                                            <strong t-att-class="'icon-check' if lg.code == lang
                                                                 else 'icon-check-empty'"></strong>
-                                                            <t t-esc="lg['name']"/>
+                                                            <t t-esc="lg.name"/>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -584,7 +584,7 @@
             <t t-set="step"><t t-esc="step or 0"/></t>
             <t t-set="scope"><t t-esc="scope or 0"/></t>
             <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
-            <t t-raw="snipped['kanban'](model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
+            <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
         </template>
 
         <template id="kanban_contain">

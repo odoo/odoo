@@ -387,7 +387,7 @@
                     </div>
                     <form class="col-md-8 form-horizontal" action="/shop/confirm_order/" method="post">
                         <div class=" row">
-                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
+                            <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="col-md-10">Billing Information</h3>
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Name and firstname</label>
