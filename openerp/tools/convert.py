@@ -869,11 +869,11 @@ form: module.record_id""" % (xml_id,)
         record.append(Field("qweb", name='type'))
         record.append(Field(el, name="arch", type="xml"))
         for field_name in ('inherit_id','inherit_option_id'):
-            if el.get(field_name):
-                record.append(Field(
-                    field_name, el.attrib.pop(field_name, None)))
-        if el.get('page'):
-            record.append(etree.Element('field', name="page", eval="True"))
+            value = el.attrib.pop(field_name, None)
+            if value: record.append(Field(name=field_name, ref=value))
+        if el.attrib.pop('page', None) == 'True':
+            record.append(Field(name="page", eval="True"))
+
         return self._tag_record(cr, record, data_node)
 
     def id_get(self, cr, id_str):
