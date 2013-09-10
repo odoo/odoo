@@ -26,6 +26,32 @@
 
     website.ace = {};
 
+    website.ace.XmlDocument = openerp.Class.extend({
+        init: function (text) {
+            this.xml = text;
+        },
+        isWellFormed: function () {
+            try {
+                if (document.implementation.createDocument) {
+                    var dom = new DOMParser().parseFromString(this.xml, "text/xml");
+                    return dom.getElementsByTagName("parsererror").length === 0;
+                } else if (window.ActiveXObject) {
+                    // TODO test in IE
+                    var msDom = new ActiveXObject("Microsoft.XMLDOM");
+                    msDom.async = false;
+                    return !msDom.loadXML(this.xml);
+                } else {
+                    throw Error("Not implemented");
+                }
+            } catch(exception) {
+                console.log(exception);
+            }
+        },
+        format: function () {
+            return vkbeautify.xml(this.xml, 4);
+        },
+    });
+
     website.ace.ViewOption = openerp.Widget.extend({
         template: 'website.ace_view_option',
         init: function (parent, options) {
@@ -65,21 +91,26 @@
                 method: 'read',
                 args: [[this.$viewList.val()], ['arch']]
             }).then(function(result) {
-                var prettyfied = vkbeautify.xml(result[0].arch, 4);
-                var editingSession = new ace.EditSession(prettyfied);
+                var xml = new website.ace.XmlDocument(result[0].arch)
+                var editingSession = new ace.EditSession(xml.format());
                 editingSession.setMode("ace/mode/xml");
                 editingSession.setUndoManager(new ace.UndoManager());
                 editor.setSession(editingSession);
             });
         },
         saveView: function () {
-            openerp.jsonRpc('/web/dataset/call', 'call', {
-                model: 'ir.ui.view',
-                method: 'write',
-                args: [[this.$viewList.val()], { 'arch': this.aceEditor.getValue() }]
-            }).then(function(result) {
-                window.location.reload();
-            });
+            var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
+            if (xml.isWellFormed()) {
+                openerp.jsonRpc('/web/dataset/call', 'call', {
+                    model: 'ir.ui.view',
+                    method: 'write',
+                    args: [[this.$viewList.val()], { 'arch':  xml.xml }]
+                }).then(function(result) {
+                    window.location.reload();
+                });
+            } else {
+                alert("Please check your XML structure!");
+            }
         },
         hide: function () {
             this.$el.removeClass('oe_ace_open');
