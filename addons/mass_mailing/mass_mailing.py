@@ -106,13 +106,15 @@ class MassMailingCampaign(osv.Model):
 
 
 class MassMailingSegment(osv.Model):
-    """ TODO """
+    """ MassMailingSegment models a segment for a mass mailign campaign. A segment
+    is an occurence of sending emails. """
+
     _name = 'mail.mass_mailing.segment'
     _description = 'Segment of a mass mailing campaign'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+    def __get_bar_values(self, cr, uid, id, obj, domain, read_fields, value_field, groupby_field, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
             This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
 
@@ -128,24 +130,22 @@ class MassMailingSegment(osv.Model):
                                                 }
                                             ]
         """
-        # month_begin = date.today().replace(day=1)
-        date_begin = date.today()
+        date_begin = datetime.strptime(self.browse(cr, uid, id, context=context).date, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
         section_result = [{'value': 0,
-                           'tooltip': (date_begin + relativedelta.relativedelta(days=-i)).strftime('%d %B %Y'),
-                           } for i in range(self._period_number - 1, -1, -1)]
+                           'tooltip': (date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y'),
+                           } for i in range(0, self._period_number)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
-            month_delta = relativedelta.relativedelta(date_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.days + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
+            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT).date()
+            timedelta = relativedelta.relativedelta(group_begin_date, date_begin)
+            section_result[timedelta.days] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
         return section_result
 
     def _get_monthly_statistics(self, cr, uid, ids, field_name, arg, context=None):
         """ TODO
         """
-        obj = self.pool.get('mail.mail')
-        res = dict.fromkeys(ids, False)
-        date_begin = date.today()
+        obj = self.pool['mail.mail']
+        res = {}
         context['datetime_format'] = {
             'opened': {
                 'interval': 'day',
@@ -158,13 +158,13 @@ class MassMailingSegment(osv.Model):
                 'display_format': 'dd MMMM YYYY'
             },
         }
-        groupby_begin = (date_begin + relativedelta.relativedelta(days=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
-            res[id] = dict()
-            domain = [('mass_mailing_segment_id', '=', id), ('opened', '>=', groupby_begin)]
-            res[id]['opened_monthly'] = self.__get_bar_values(cr, uid, obj, domain, ['opened'], 'opened_count', 'opened', context=context)
-            domain = [('mass_mailing_segment_id', '=', id), ('replied', '>=', groupby_begin)]
-            res[id]['replied_monthly'] = self.__get_bar_values(cr, uid, obj, domain, ['replied'], 'replied_count', 'replied', context=context)
+            res[id] = {}
+            date_begin = self.browse(cr, uid, id, context=context).date
+            domain = [('mass_mailing_segment_id', '=', id), ('opened', '>=', date_begin)]
+            res[id]['opened_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened', context=context)
+            domain = [('mass_mailing_segment_id', '=', id), ('replied', '>=', date_begin)]
+            res[id]['replied_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied', context=context)
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
@@ -225,7 +225,7 @@ class MassMailingSegment(osv.Model):
         # monthly ratio
         'opened_monthly': fields.function(
             _get_monthly_statistics,
-            string='Sent Emails',
+            string='Opened',
             type='char', multi='_get_monthly_statistics',
         ),
         'replied_monthly': fields.function(
