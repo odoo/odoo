@@ -137,14 +137,16 @@
                                 <h5 t-field="product.name"> </h5>
                                 <img class="img-rounded" t-att-src="product.img('image_small')"/>
                             </a>
-                            <small t-field="product.description_sale"></small>
+                            <small t-field="product.description_sale"/>
                             <span class="end">&amp;#133;</span><span class="fill"></span>
                         </div>
                         <div>
-                            <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                            <small class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</small>
-                            </t>
-                            <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
+                            <small t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price"
+                                    class="text-error" style="text-decoration: line-through;">
+                                <span t-field="product.product_variant_ids[0].lst_price"/>
+                                €
+                            </small>
+                            <b t-field="product.product_variant_ids[0].price" /> €
                         </div>
                         <div class="mb8 mt8">
                             <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to basket</a>
