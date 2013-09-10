@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import date, datetime
+from datetime import datetime
 from dateutil import relativedelta
 
 from openerp import tools
@@ -52,7 +52,7 @@ class MassMailingCampaign(osv.Model):
             segment_results = []
             for segment in campaign.segment_ids:
                 segment_object = {}
-                for attr in ['name', 'sent', 'opened', 'replied', 'bounced']:
+                for attr in ['name', 'sent', 'delivered', 'opened', 'replied', 'bounced']:
                     segment_object[attr] = getattr(segment, attr)
                 segment_results.append(segment_object)
             results[campaign.id] = segment_results
