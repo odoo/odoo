@@ -14,7 +14,9 @@
             if (!editor) {
                 editor = new website.ace.ViewEditor();
                 editor.appendTo($(document.body));
-                setTimeout(editor.show, 100);
+                setTimeout(function () {
+                    editor.show.call(editor);
+                }, 100);
             } else {
                 editor.show();
             }
@@ -55,8 +57,6 @@
                     editor.setTheme("ace/theme/monokai");
                     editor.getSession().setMode("ace/mode/xml");
                     self.aceEditor = editor;
-                    self.displayView();
-                    self.show();
                 });
         },
         displayView: function () {
@@ -92,6 +92,7 @@
         show: function () {
             this.$el.removeClass('oe_ace_closed');
             this.$el.addClass('oe_ace_open');
+            this.displayView();
         },
         destroy: function () {
             editor = null;
