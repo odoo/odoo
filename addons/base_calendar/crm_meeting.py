@@ -68,7 +68,9 @@ class crm_meeting(osv.Model):
         if context is None:
             context = {}
         meeting_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        if context.get('log_meeting_in_parent'):
+        parent_model = context.get('active_model',False)
+        parent_ids = context.get('active_ids', False)
+        if parent_model and parent_ids:
             self.log_meeting_in_parent(cr, uid, [meeting_id], context=context)
         return meeting_id
 

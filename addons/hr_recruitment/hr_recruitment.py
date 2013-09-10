@@ -295,7 +295,6 @@ class hr_applicant(osv.Model):
             'default_user_id': uid,
             'default_name': applicant.name,
             'default_categ_ids': category and [category.id] or False,
-            'log_meeting_in_parent': True,
         }
         return res
 
