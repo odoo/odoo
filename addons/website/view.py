@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from lxml import etree
+from lxml import etree, html
 from openerp.osv import osv, fields
 
 
@@ -9,6 +9,10 @@ class view(osv.osv):
     _columns = {
         'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
+        'page': fields.boolean("Whether this view is a web page template (complete)"),
+    }
+    _defaults = {
+        'page': False,
     }
 
     # Returns all views (called and inherited) related to a view
@@ -45,3 +49,20 @@ class view(osv.osv):
             if call_view not in stack_result:
                 result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
         return result
+
+    def save(self, cr, uid, model, res_id, field, value, xpath=None, context=None):
+        """ Update the content of a field
+
+        :param str model:
+        :param int res_id:
+        :param str xpath: valid xpath to the tag to replace
+        """
+        model_obj = self.pool.get(model)
+        if xpath:
+            origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
+            origin_tree = etree.fromstring(origin.encode('utf-8'))
+            zone = origin_tree.xpath(xpath)[0]
+            zone.getparent().replace(zone, html.fromstring(value))
+            value = etree.tostring(origin_tree, encoding='utf-8')
+
+        model_obj.write(cr, uid, res_id, {field: value}, context=context)

@@ -15,25 +15,23 @@ def get_order(order_id=None):
     context = {}
     if order_id:
         try:
-            order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
+            order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, request.context)
             order.pricelist_id
         except:
             order_id = None
     if not order_id:
         fields = [k for k, v in order_obj._columns.items()]
-        order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields)
+        order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields, request.context)
         if request.httprequest.session.get('ecommerce_pricelist'):
             order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
-        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
-        order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context={})['value'])
-        order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value)
-        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
+        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, request.context).partner_id.id
+        order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context=request.context)['value'])
+        order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value, request.context)
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, request.context)
         request.httprequest.session['ecommerce_order_id'] = order.id
 
-    context = {
-        'pricelist': order.pricelist_id.id,
-    }
-    return order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=context)
+    return order_obj.browse(request.cr, SUPERUSER_ID, order_id,
+                            context=dict(request.context, pricelist=order.pricelist_id.id))
 
 def get_current_order():
     if request.httprequest.session.get('ecommerce_order_id'):
@@ -82,17 +80,17 @@ class Ecommerce(http.Controller):
             domain += [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
 
         step = 20
-        product_count = len(product_obj.search(request.cr, request.uid, domain))
+        product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], context=request.context)
 
-        context = {'pricelist': self.get_pricelist()}
+        request.context['pricelist'] = self.get_pricelist()
 
         values = {
             'categories': self.get_categories(),
             'category_id': cat_id,
-            'products': product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=context),
+            'products': product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context),
             'search': post.get("search"),
             'pager': pager,
         }
@@ -108,12 +106,13 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.template')
         category_obj = request.registry.get('product.public.category')
 
-        context = {'pricelist': self.get_pricelist()}
-
-        category_list = category_obj.name_get(request.cr, request.uid, category_obj.search(request.cr, request.uid, [(1,'=',1)]))
+        category_ids = category_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
+        category_list = category_obj.name_get(request.cr, request.uid, category_ids, request.context)
         category_list = sorted(category_list, key=lambda category: category[1])
 
-        product = product_obj.browse(request.cr, request.uid, product_id, context=context)
+        request.context['pricelist'] = self.get_pricelist()
+
+        product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
         values = {
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
             'search': post.get("search"),
@@ -125,12 +124,14 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/add_product/'], type='http', auth="public")
     def add_product(self, **post):
-        product_id = request.registry.get('product.product').create(request.cr, request.uid, {'name': 'New Product'})
+        product_id = request.registry.get('product.product').create(request.cr, request.uid, {'name': 'New Product'}, request.context)
         return werkzeug.utils.redirect("/shop/product/%s/" % product_id)
 
     @website.route(['/shop/change_category/<product_id>/'], type='http', auth="public")
     def edit_product(self, product_id=0, **post):
-        request.registry.get('product.template').write(request.cr, request.uid, [int(product_id)], {'public_categ_id': int(post.get('public_categ_id', 0))})
+        request.registry.get('product.template').write(
+            request.cr, request.uid, [int(product_id)],
+            {'public_categ_id': int(post.get('public_categ_id', 0))}, request.context)
         return "1"
 
     def get_pricelist(self):
@@ -144,13 +145,13 @@ class Ecommerce(http.Controller):
         pricelist_id = False
         if code:
             pricelist_obj = request.registry.get('product.pricelist')
-            pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', code)])
+            pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', code)], context=request.context)
             if pricelist_ids:
                 pricelist_id = pricelist_ids[0]
 
         if not pricelist_id:
-            partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
-            pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], partner_id, context={})['value']['pricelist_id']
+            partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, request.context).partner_id.id
+            pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], partner_id, context=request.context)['value']['pricelist_id']
         
         request.httprequest.session['ecommerce_pricelist'] = pricelist_id
 
@@ -171,7 +172,7 @@ class Ecommerce(http.Controller):
         if not order:
             order = get_order()
 
-        context = {'pricelist': self.get_pricelist()}
+        context = dict(request.context, pricelist=self.get_pricelist())
 
         quantity = 0
 
@@ -230,7 +231,7 @@ class Ecommerce(http.Controller):
         if order:
             for line in order.order_line:
                 suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or [] for line in order.order_line]
-        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)])
+        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)], context=request.context)
         # select 3 random products
         suggested_products = []
         while len(suggested_products) < 3 and suggested_ids:
@@ -239,7 +240,7 @@ class Ecommerce(http.Controller):
 
         values = {
             'categories': self.get_categories(),
-            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products),
+            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products, request.context),
         }
         return request.webcontext.render("website_sale.mycart", values)
 
@@ -286,15 +287,15 @@ class Ecommerce(http.Controller):
 
         checkout = {}
         if not request.webcontext.is_public_user:
-            partner = user_obj.browse(request.cr, request.uid, request.uid).partner_id
+            partner = user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id
             partner_id = partner.id
             fields = ["name", "phone", "fax", "company", "email", "street", "city", "state_id", "zip", "country_id"]
-            checkout = user_obj.read(request.cr, SUPERUSER_ID, [partner_id], fields)[0]
+            checkout = user_obj.read(request.cr, SUPERUSER_ID, [partner_id], fields, request.context)[0]
             checkout['company'] = partner.parent_id and partner.parent_id.name or ''
 
-            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')])
+            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')], context=request.context)
             if shipping_ids:
-                for k,v in partner_obj.read(request.cr, request.uid, shipping_ids[0]).items():
+                for k,v in partner_obj.read(request.cr, request.uid, shipping_ids[0], request.context).items():
                     checkout['shipping_'+k] = v or ''
 
         checkout.update(request.session.setdefault('checkout', {}))
@@ -302,8 +303,10 @@ class Ecommerce(http.Controller):
             checkout[k] = v or ''
         values['checkout'] = checkout
 
-        values['countries'] = country_obj.browse(request.cr, SUPERUSER_ID, country_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)]))
-        values['states'] = country_state_obj.browse(request.cr, SUPERUSER_ID, country_state_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)]))
+        countries_ids = country_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
+        values['countries'] = country_obj.browse(request.cr, SUPERUSER_ID, countries_ids, request.context)
+        states_ids = country_state_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
+        values['states'] = country_state_obj.browse(request.cr, SUPERUSER_ID, states_ids, request.context)
 
         return request.webcontext.render("website_sale.checkout", values)
 
@@ -335,10 +338,10 @@ class Ecommerce(http.Controller):
         # search or create company
         company_id = None
         if post['company']:
-            company_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("name", "ilike", post['company']), ('is_company', '=', True)])
+            company_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("name", "ilike", post['company']), ('is_company', '=', True)], context=request.context)
             company_id = company_ids and company_ids[0] or None
             if not company_id:
-                company_id = partner_obj.create(request.cr, SUPERUSER_ID, {'name': post['company'], 'is_company': True})
+                company_id = partner_obj.create(request.cr, SUPERUSER_ID, {'name': post['company'], 'is_company': True}, request.context)
 
         partner_value = {
             'fax': post['fax'],
@@ -353,10 +356,10 @@ class Ecommerce(http.Controller):
             'state_id': post['state_id'],
         }
         if not request.webcontext.is_public_user:
-            partner_id = user_obj.browse(request.cr, request.uid, request.uid).partner_id.id
-            partner_obj.write(request.cr, request.uid, [partner_id], partner_value)
+            partner_id = user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id
+            partner_obj.write(request.cr, request.uid, [partner_id], partner_value, request.context)
         else:
-            partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value)
+            partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value, request.context)
 
         shipping_id = None
         if post.get('shipping_different'):
@@ -375,19 +378,19 @@ class Ecommerce(http.Controller):
             domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or False)
                 for key, value in shipping_value.items() if key in required_field + ["type", "parent_id"]]
 
-            shipping_ids = partner_obj.search(request.cr, SUPERUSER_ID, domain)
+            shipping_ids = partner_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
             if shipping_ids:
                 shipping_id = shipping_ids[0]
-                partner_obj.write(request.cr, SUPERUSER_ID, [shipping_id], shipping_value)
+                partner_obj.write(request.cr, SUPERUSER_ID, [shipping_id], shipping_value, request.context)
             else:
-                shipping_id = partner_obj.create(request.cr, SUPERUSER_ID, shipping_value)
+                shipping_id = partner_obj.create(request.cr, SUPERUSER_ID, shipping_value, request.context)
 
         order_value = {
             'partner_id': partner_id,
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], order.partner_id.id, context={})['value'])
+        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], order.partner_id.id, context=request.context)['value'])
         order.write(order_value)
 
         return werkzeug.utils.redirect("/shop/payment/")
@@ -405,8 +408,8 @@ class Ecommerce(http.Controller):
         }
 
         payment_obj = request.registry.get('portal.payment.acquirer')
-        payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)])
-        values['payments'] = payment_obj.browse(request.cr, SUPERUSER_ID, payment_ids)
+        payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)], context=request.context)
+        values['payments'] = payment_obj.browse(request.cr, SUPERUSER_ID, payment_ids, request.context)
         for payment in values['payments']:
             content = payment_obj.render(request.cr, SUPERUSER_ID, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
             payment._content = content

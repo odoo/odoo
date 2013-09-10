@@ -116,4 +116,16 @@
             </div>
         </div>
     </t>
+    <t t-name="website.editor.table.panel">
+        <table class="editorbar-panel">
+            <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+        </table>
+    </t>
+    <t t-name="website.editor.table">
+        <table class="table table-bordered table-responsive">
+            <tbody>
+                <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+            </tbody>
+        </table>
+    </t>
 </templates>
