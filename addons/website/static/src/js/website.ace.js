@@ -13,10 +13,12 @@
         launchAce: function () {
             if (!editor) {
                 editor = new website.ace.ViewEditor();
-                editor.hide();
                 editor.appendTo($(document.body));
+                setTimeout(editor.show, 100);
+            } else {
+                editor.show();
             }
-            editor.show();
+
         },
     });
 
