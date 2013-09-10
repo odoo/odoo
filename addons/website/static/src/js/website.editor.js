@@ -27,6 +27,9 @@
         // EDIT ALL THE THINGS
         CKEDITOR.dtd.$editable = $.extend(
             {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+        // Disable removal of empty elements on CKEDITOR activation. Empty
+        // elements are used for e.g. support of FontAwesome icons
+        CKEDITOR.dtd.$removeEmpty = {};
     }
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
