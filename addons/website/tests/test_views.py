@@ -74,12 +74,10 @@ class TestViewSaving(common.TransactionCase):
 
     def test_embedded_to_field_ref(self):
         View = self.registry('ir.ui.view')
-        embedded = h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))
+        embedded = h.SPAN("My Company", attrs(expression="bob"))
         self.eq(
             View.to_field_ref(self.cr, self.uid, embedded, context=None),
-            h.SPAN({'t-field': 'registry[%r].browse(cr, uid, %r).%s' % (
-                'res.company', 1, 'name'
-            )})
+            h.SPAN({'t-field': 'bob'})
         )
 
     def test_replace_arch(self):
@@ -127,8 +125,8 @@ class TestViewSaving(common.TransactionCase):
             h.H3("Column 2"),
             h.UL(
                 h.LI("wob wob wob"),
-                h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=1, field='name'))),
-                h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone'))),
+                h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=1, field='name', expression="bob"))),
+                h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund"))),
             )
         ), encoding='utf-8')
         View.save(self.cr, self.uid, res_id=self.view_id, value=replacement,
@@ -150,8 +148,36 @@ class TestViewSaving(common.TransactionCase):
                     h.H3("Column 2"),
                     h.UL(
                         h.LI("wob wob wob"),
-                        h.LI(h.SPAN({'t-field': "registry['res.company'].browse(cr, uid, 1).name"})),
-                        h.LI(h.SPAN({'t-field': "registry['res.company'].browse(cr, uid, 1).phone"}))
+                        h.LI(h.SPAN({'t-field': "bob"})),
+                        h.LI(h.SPAN({'t-field': "edmund"}))
+                    ))
+            )
+        )
+
+    def test_field_tail(self):
+        View = self.registry('ir.ui.view')
+        replacement = ET.tostring(
+            h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund")),
+                 "whop whop"
+        ), encoding="utf-8")
+        View.save(self.cr, self.uid, res_id = self.view_id, value=replacement,
+                  xpath='/div/div[2]/ul/li[3]')
+
+        self.eq(
+            ET.fromstring(View.browse(self.cr, self.uid, self.view_id).arch.encode('utf-8')),
+            h.DIV(
+                h.DIV(
+                    h.H3("Column 1"),
+                    h.UL(
+                        h.LI("Item 1"),
+                        h.LI("Item 2"),
+                        h.LI("Item 3"))),
+                h.DIV(
+                    h.H3("Column 2"),
+                    h.UL(
+                        h.LI("Item 1"),
+                        h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))),
+                        h.LI(h.SPAN({'t-field': "edmund"}), "whop whop"),
                     ))
             )
         )

@@ -63,14 +63,11 @@ class view(osv.osv):
         }, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
-        # FIXME: better ref?
-        return html.html_parser.makeelement(el.tag, attrib={
-            't-field': 'registry[%(model)r].browse(cr, uid, %(id)r).%(field)s' % {
-                'model': el.get('data-oe-model'),
-                'id': int(el.get('data-oe-id')),
-                'field': el.get('data-oe-field'),
-            }
+        out = html.html_parser.makeelement(el.tag, attrib={
+            't-field': el.get('data-oe-expression'),
         })
+        out.tail = el.tail
+        return out
 
     def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
         arch = replacement
