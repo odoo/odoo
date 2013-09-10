@@ -2641,11 +2641,26 @@ class BaseModel(object):
         fget = self.fields_get(cr, uid, fields)
         flist = ''
         group_count = group_by = groupby
+        group_by_params = {}
         if groupby:
             if fget.get(groupby):
                 groupby_type = fget[groupby]['type']
                 if groupby_type in ('date', 'datetime'):
-                    qualified_groupby_field = "to_char(%s,'yyyy-mm')" % qualified_groupby_field
+                    if context.get('datetime_format') and isinstance(context['datetime_format'], dict) \
+                            and context['datetime_format'].get(groupby) and isinstance(context['datetime_format'][groupby], dict):
+                        groupby_format = context['datetime_format'][groupby].get('groupby_format', 'yyyy-mm')
+                        display_format = context['datetime_format'][groupby].get('display_format', 'MMMM yyyy')
+                        interval = context['datetime_format'][groupby].get('interval', 'month')
+                    else:
+                        groupby_format = 'yyyy-mm'
+                        display_format = 'MMMM yyyy'
+                        interval = 'month'
+                    group_by_params = {
+                        'groupby_format': groupby_format,
+                        'display_format': display_format,
+                        'interval': interval,
+                    }
+                    qualified_groupby_field = "to_char(%s,%%s)" % qualified_groupby_field
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
@@ -2672,6 +2687,8 @@ class BaseModel(object):
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
+        if group_by_params and group_by_params.get('groupby_format'):
+            where_clause_params = [group_by_params['groupby_format']] + where_clause_params + [group_by_params['groupby_format']]
         where_clause = where_clause and ' WHERE ' + where_clause
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
@@ -2708,14 +2725,17 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7], '%Y-%m')
-                    days = calendar.monthrange(dt.year, dt.month)[1]
-
-                    date_value = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d')
+                    groupby_datetime = datetime.datetime.strptime(alldata[d['id']][groupby], '%Y-%m-%d')
                     d[groupby] = babel.dates.format_date(
-                        date_value, format='MMMM yyyy', locale=context.get('lang', 'en_US'))
-                    d['__domain'] = [(groupby, '>=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01', '%Y-%m-%d').strftime('%Y-%m-%d') or False),\
-                                     (groupby, '<=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days), '%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
+                        groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
+                    if group_by_params.get('interval') == 'day':
+                        domain_dt_begin = groupby_datetime.replace(hour=0, minute=0)
+                        domain_dt_end = groupby_datetime.replace(hour=23, minute=59, second=59)
+                    else:
+                        days = calendar.monthrange(groupby_datetime.year, groupby_datetime.month)[1]
+                        domain_dt_begin = groupby_datetime.replace(day=1)
+                        domain_dt_end = groupby_datetime.replace(day=days)
+                    d['__domain'] = [(group_by, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (group_by, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
