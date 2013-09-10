@@ -294,21 +294,29 @@
             return CKEDITOR.currentInstance;
         },
         _config: function () {
-            var removed_plugins = [
-                    // remove custom context menu
-                    'contextmenu,tabletools,liststyle',
-                    // magicline captures mousein/mouseout => draggable does not work
-                    'magicline'
+            // base plugins minus
+            // - magicline (captures mousein/mouseout -> breaks draggable)
+            // - contextmenu & tabletools (disable contextual menu)
+            // - bunch of unused plugins
+            var plugins = [
+                'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+                'clipboard', 'colorbutton', 'colordialog', 'dialogadvtab',
+                'elementspath', 'enterkey', 'entities', 'filebrowser',
+                'find', 'floatingspace','format', 'htmlwriter', 'iframe',
+                'image', 'indentblock', 'indentlist', 'justify', 'link',
+                'list', 'pastefromword', 'pastetext', 'preview',
+                'removeformat', 'resize', 'save', 'selectall', 'stylescombo',
+                'tab', 'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
             ];
             return {
                 // Disable auto-generated titles
                 // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
                 title: false,
-                removePlugins: removed_plugins.join(','),
+                plugins: plugins.join(','),
                 uiColor: '',
                 // FIXME: currently breaks RTE?
-//                // Ensure no config file is loaded
-//                customConfig: '',
+                // Ensure no config file is loaded
+                customConfig: '',
                 // Disable ACF
                 allowedContent: true,
                 // Don't insert paragraphs around content in e.g. <li>
