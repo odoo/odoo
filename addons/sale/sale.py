@@ -169,10 +169,13 @@ class sale_order(osv.osv):
             ('waiting_date', 'Waiting Schedule'),
             ('progress', 'Sales Order'),
             ('manual', 'Sale to Invoice'),
+            ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True, track_visibility='onchange',
-            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
+            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
@@ -668,9 +671,11 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
                     continue
-
-                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context))
-                proc_ids.append(proc_id)
+                
+                vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+                if vals:
+                    proc_id = procurement_obj.create(cr, uid, vals, context=context)
+                    proc_ids.append(proc_id)
 
             #Confirm procurement order such that rules will be applied on it
             procurement_obj.run(cr, uid, proc_ids, context=context)
@@ -687,6 +692,61 @@ class sale_order(osv.osv):
                             break
             order.write(val)
         return True
+
+    def action_ship_end(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for line in order.order_line:
+                if line.state == 'exception':
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'done'}, context=context)
+
+
+
+    # if mode == 'finished':
+    #   returns True if all lines are done, False otherwise
+    # if mode == 'canceled':
+    #   returns True if there is at least one canceled line, False otherwise
+    def test_state(self, cr, uid, ids, mode, *args):
+        assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
+        finished = True
+        canceled = False
+        write_done_ids = []
+        write_cancel_ids = []
+        for order in self.browse(cr, uid, ids, context={}):
+            #TODO: Need to rethink what happens when cancelling
+            for line in order.order_line:
+                states =  [x.state for x in line.procurement_ids]
+                cancel = all([x == 'cancel' for x in states])
+                doneorcancel = all([x in ('done', 'cancel') for x in states])
+                if cancel:
+                    canceled = True
+                    if line.state != 'exception':
+                            write_cancel_ids.append(line.id)
+                if not doneorcancel:
+                    finished = False 
+                if doneorcancel and not cancel:
+                    write_done_ids.append(line.id)
+
+        if write_done_ids:
+            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
+        if write_cancel_ids:
+            self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
+            
+        if mode == 'finished':
+            return finished
+        elif mode == 'canceled':
+            return canceled
+
+
+    def procurement_lines_get(self, cr, uid, ids, *args):
+        res = []
+        for order in self.browse(cr, uid, ids, context={}):
+            for line in order.order_line:
+                res += [x.id for x in line.procurement_ids]
+        return res
+
+
+
+
 
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
@@ -743,8 +803,6 @@ class sale_order_line(osv.osv):
                 'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)
             }),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
-         help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced."),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner',help="A partner to whom the particular product needs to be allotted."),
@@ -774,7 +832,6 @@ class sale_order_line(osv.osv):
         'product_uos_qty': 1,
         'sequence': 10,
         'state': 'draft',
-        'type': 'make_to_stock',
         'price_unit': 0.0,
         'delay': 0.0,
     }

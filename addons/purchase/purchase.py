@@ -152,7 +152,7 @@ class purchase_order(osv.osv):
 
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1]
+        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),

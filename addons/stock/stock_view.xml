@@ -1599,18 +1599,19 @@
             <field name="name">Orderpoints</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
-
+<!-->
         <record model="ir.ui.view" id="product_template_form_view_procurement">
             <field name="name">product.template.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
-                    <field name="route_ids" widget="many2many_tags"/>
+                <xpath expr="//field[@name='standard_price']" position="after" >
+                   <group name="procurement_help" col="1" groups="base.group_user">
+                       <field name="route_ids" widget="many2many_tags"/>
+                   </group>
                 </xpath>
             </field>
-        </record>
-
+        </record>-->
         <record id="product_search_form_view_procurment" model="ir.ui.view">
             <field name="name">product.search.procurment.form</field>
             <field name="model">product.product</field>
@@ -1628,9 +1629,11 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='general']" position="after" >
-                   <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
-                       <!--TODO: Should write explanation for different routes-->
+                   <newline/>
+                   <group>
+                       <field name="route_ids" widget="many2many_tags"/>
                    </group>
+                   <newline/>
                 </xpath>
                 
                 <xpath expr="//div[@name='buttons']" position="inside">
@@ -1639,10 +1642,6 @@
                     <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
                 
-                <xpath expr="//field[@name='type']" position="after">
-                    <field name="route_ids" widget="many2many_tags"/>
-                </xpath>
- 
                 <group name="procurement_uom" position="before">
                     <group name="delay" string="Delays">
                         <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>

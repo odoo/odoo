@@ -144,6 +144,7 @@ class purchase_requisition(osv.osv):
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
         supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
+        picking_type_in = self.pool.get("purchase.order")._get_picking_in(cr, uid, context=context)
         return {
             'origin': requisition.name,
             'date_order': requisition.date_end or fields.date.context_today(self, cr, uid, context=context),
@@ -154,6 +155,7 @@ class purchase_requisition(osv.osv):
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'requisition_id': requisition.id,
             'notes': requisition.description,
+            'picking_type_id': picking_type_in,
         }
 
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):

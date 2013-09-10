@@ -49,7 +49,7 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context) and procurement.task_id and procurement.task_id.state == 'done':
+        if self._is_procurement_task(cr, uid, procurement, context=context) and procurement.task_id and procurement.task_id.stage_id.closed:
             return True
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
@@ -70,6 +70,35 @@ class procurement_order(osv.osv):
             account = procurement.sale_line_id.order_id.project_id
             project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
             projects = project_project.browse(cr, uid, project_ids, context=context)
+            project = projects and projects[0] or False
+        return project
+
+    def _create_service_task(self, cr, uid, procurement, context=None):
+        project_task = self.pool.get('project.task')
+        project = self._get_project(cr, uid, procurement, context=context)
+        planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+        task_id = project_task.create(cr, uid, {
+            'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
+            'date_deadline': procurement.date_planned,
+            'planned_hours': planned_hours,
+            'remaining_hours': planned_hours,
+            'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
+            'user_id': procurement.product_id.product_manager.id,
+            'procurement_id': procurement.id,
+            'description': procurement.name + '\n',
+            'project_id': project and project.id or False,
+            'company_id': procurement.company_id.id,
+        },context=context)
+        self.write(cr, uid, [procurement.id], {'task_id': task_id, 'message':_('Task created.')}, context=context)
+        self.project_task_create_note(cr, uid, [procurement.id], context=context)
+        return task_id
+
+    def project_task_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = _("Task created")
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
+            if procurement.sale_line_id and procurement.sale_line_id.order_id:
+                procurement.sale_line_id.order_id.message_post(body=body)
 
 
 
@@ -98,10 +127,10 @@ class project_task(osv.osv):
     }
 
     def _validate_subflows(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        for task in self.browse(cr, uid, ids):
+        proc_obj = self.pool.get("procurement.order")
+        for task in self.browse(cr, uid, ids, context=context):
             if task.procurement_id:
-                wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
+                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """
@@ -124,9 +153,12 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
+        if not(line.product_id.type== "service" and not line.product_id.auto_create_task):
+            proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
                 uid, order, line, group_id = group_id, context=context)
-        proc_data['sale_line_id'] = line.id
+            proc_data['sale_line_id'] = line.id
+        else:
+            proc_data = False
         return proc_data
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):

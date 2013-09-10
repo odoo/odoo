@@ -190,6 +190,7 @@ class stock_picking(osv.osv):
             company = move.company_id
             origin = move.picking_id.name
             partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
+
             key = (partner.id, currency_id, company.id, user_id)
 
             if key not in invoices:

@@ -91,20 +91,6 @@ class sale_order(osv.osv):
         return vals
 
     _columns = {
-          'state': fields.selection([
-            ('draft', 'Draft Quotation'),
-            ('sent', 'Quotation Sent'),
-            ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('shipping_except', 'Shipping Exception'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done'),
-            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
-              \nThe exception status is automatically set when a cancel operation occurs \
-              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
-               but waiting for the scheduler to run on the order date.", select=True),
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
@@ -212,41 +198,7 @@ class sale_order(osv.osv):
                 self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
         return res
 
-    # if mode == 'finished':
-    #   returns True if all lines are done, False otherwise
-    # if mode == 'canceled':
-    #   returns True if there is at least one canceled line, False otherwise
-    def test_state(self, cr, uid, ids, mode, *args):
-        assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
-        finished = True
-        canceled = False
-        write_done_ids = []
-        write_cancel_ids = []
-        for order in self.browse(cr, uid, ids, context={}):
-            #TODO: Need to rethink what happens when cancelling
-            for line in order.order_line:
-                states =  [x.state for x in line.procurement_ids]
-                cancel = all([x == 'cancel' for x in states])
-                doneorcancel = all([x in ('done', 'cancel') for x in states])
-                if cancel:
-                    canceled = True
-                    if line.state != 'exception':
-                            write_cancel_ids.append(line.id)
-                if not doneorcancel:
-                    finished = False 
-                if doneorcancel and not cancel:
-                    write_done_ids.append(line.id)
 
-        if write_done_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
-        if write_cancel_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
-            
-        if mode == 'finished':
-            return finished
-        elif mode == 'canceled':
-            return canceled
-        
         
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         date_planned = super(sale_order, self)._get_date_planned(cr, uid, order, line, start_date, context=context)
@@ -258,8 +210,8 @@ class sale_order(osv.osv):
         res.update({'move_type': order.picking_policy})
         return res
 
-
     def action_ship_end(self, cr, uid, ids, context=None):
+        super(sale_order, self).action_ship_end(cr, uid, ids, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             val = {'shipped': True}
             if order.state == 'shipping_except':
@@ -269,14 +221,11 @@ class sale_order(osv.osv):
                         if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
                             val['state'] = 'manual'
                             break
-            for line in order.order_line:
-                towrite = []
-                if line.state == 'exception':
-                    towrite.append(line.id)
-                if towrite:
-                    self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'done'}, context=context)
             res = self.write(cr, uid, [order.id], val)
         return True
+
+
+
 
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
@@ -285,12 +234,7 @@ class sale_order(osv.osv):
                     return True
         return False
 
-    def procurement_lines_get(self, cr, uid, ids, *args):
-        res = []
-        for order in self.browse(cr, uid, ids, context={}):
-            for line in order.order_line:
-                res += [x.id for x in line.procurement_ids]
-        return res
+
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
@@ -397,7 +341,6 @@ class sale_order_line(osv.osv):
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
-        #res['value']['type'] = product_obj.procure_method
 
         #check if product is available, and if not: raise an error
         uom2 = False
