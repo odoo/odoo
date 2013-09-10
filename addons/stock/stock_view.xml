@@ -109,6 +109,7 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="e.g. Annual inventory"/></h1>
                     </div>
                     <group>
@@ -118,15 +119,15 @@
                         <group>
                             <field name="date"/>
                         </group>
-                        <div class="oe_grey" colspan="4">Specify filters to focus your inventory a on particular product, lot, pack and products owner</div>
+                        <div class="oe_grey" colspan="4">Specify filters to focus your inventory a on particular product, lot, pack and product's owner.</div>
                         <group>
-                            <field name="product_id" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="lot_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="product_id" domain="[('type','=','product')]"/>
+                            <field name="lot_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
-                            <field name="partner_id" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="package_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="partner_id"/>
+                            <field name="package_id"/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
@@ -134,7 +135,7 @@
                             <button name="set_checked_qty" states="confirm" string="⇒ Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
-                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)"  domain="[('type','=','product')]"/>
+                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)" domain="[('type','=','product')]"/>
                                     <field name="real_qty" readonly="1"/>
                                     <field name="product_qty" string="Checked Quantity"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>

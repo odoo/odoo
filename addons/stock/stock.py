@@ -1701,10 +1701,10 @@ class stock_inventory(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'product_id': fields.many2one('product.product', 'Product', help="Select Product to Specify filters to focus your inventory a on particular product"),
-        'package_id': fields.many2one('stock.quant.package', 'Pack', help="Select Pack to Specify filters to focus your inventory a on particular Pack"),
-        'partner_id': fields.many2one('res.partner', 'Owner', help="Select Owner to Specify filters to focus your inventory a on particular Owner"),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', help="Select Lot/Serial Number to Specify filters to focus your inventory a on particular Lot/Serial Number"),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Product to focus your inventory on a particular Product."),
+        'package_id': fields.many2one('stock.quant.package', 'Pack', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Pack to focus your inventory on a particular Pack."),
+        'partner_id': fields.many2one('res.partner', 'Owner', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Owner to focus your inventory on a particular Owner."),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number."),
         'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
     }
 
