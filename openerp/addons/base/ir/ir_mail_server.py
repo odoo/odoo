@@ -402,7 +402,8 @@ class ir_mail_server(osv.osv):
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
         from_rfc2822 = extract_rfc2822_addresses(smtp_from)
-        assert len(from_rfc2822) == 1, "Malformed 'Return-Path' or 'From' address - it may only contain plain ASCII characters"
+        assert len(set(from_rfc2822)) == 1, ("Malformed 'Return-Path' or 'From' address: %r - "
+                                             "It should contain one plain ASCII email") % smtp_from
         smtp_from = from_rfc2822[0]
         email_to = message['To']
         email_cc = message['Cc']
