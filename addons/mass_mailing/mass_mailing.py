@@ -41,6 +41,8 @@ class MassMailingCampaign(osv.Model):
                 'opened': len([mail for mail in campaign.mail_ids if mail.opened]),
                 'replied': len([mail for mail in campaign.mail_ids if mail.replied]),
                 'bounced': len([mail for mail in campaign.mail_ids if mail.bounced]),
+                # delivered: shouldn't be: all mails - (failed + bounced) ?
+                'delivered': len([mail for mail in campaign.mail_ids if mail.state == 'sent' and not mail.bounced]),
             }
         return results
 
@@ -73,11 +75,17 @@ class MassMailingCampaign(osv.Model):
             'mail.mail', 'mass_mailing_campaign_id',
             'Sent Emails',
         ),
+        'color': fields.integer('Color Index'),
         # stat fields
         'sent': fields.function(
             _get_statistics,
             string='Sent Emails',
             type='integer', multi='_get_statistics'
+        ),
+        'delivered': fields.function(
+            _get_statistics,
+            string='Delivered',
+            type='integer', multi='_get_statistics',
         ),
         'opened': fields.function(
             _get_statistics,
@@ -120,16 +128,16 @@ class MassMailingSegment(osv.Model):
                                                 }
                                             ]
         """
-        month_begin = date.today().replace(day=1)
+        # month_begin = date.today().replace(day=1)
+        date_begin = date.today()
         section_result = [{'value': 0,
-                           'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                           'tooltip': (date_begin + relativedelta.relativedelta(days=-i)).strftime('%d %B %Y'),
                            } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        print group_obj
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
-            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            month_delta = relativedelta.relativedelta(date_begin, group_begin_date)
+            section_result[self._period_number - (month_delta.days + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
         return section_result
 
     def _get_monthly_statistics(self, cr, uid, ids, field_name, arg, context=None):
@@ -137,8 +145,20 @@ class MassMailingSegment(osv.Model):
         """
         obj = self.pool.get('mail.mail')
         res = dict.fromkeys(ids, False)
-        month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_begin = date.today()
+        context['datetime_format'] = {
+            'opened': {
+                'interval': 'day',
+                'groupby_format': 'yyyy-mm-dd',
+                'display_format': 'dd MMMM YYYY'
+            },
+            'replied': {
+                'interval': 'day',
+                'groupby_format': 'yyyy-mm-dd',
+                'display_format': 'dd MMMM YYYY'
+            },
+        }
+        groupby_begin = (date_begin + relativedelta.relativedelta(days=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             res[id] = dict()
             domain = [('mass_mailing_segment_id', '=', id), ('opened', '>=', groupby_begin)]
@@ -153,6 +173,7 @@ class MassMailingSegment(osv.Model):
         for segment in self.browse(cr, uid, ids, context=context):
             results[segment.id] = {
                 'sent': len(segment.mail_ids),
+                'delivered': len([mail for mail in segment.mail_ids if mail.state == 'sent' and not mail.bounced]),
                 'opened': len([mail for mail in segment.mail_ids if mail.opened]),
                 'replied': len([mail for mail in segment.mail_ids if mail.replied]),
                 'bounced': len([mail for mail in segment.mail_ids if mail.bounced]),
@@ -180,6 +201,11 @@ class MassMailingSegment(osv.Model):
             _get_statistics,
             string='Sent Emails',
             type='integer', multi='_get_statistics'
+        ),
+        'delivered': fields.function(
+            _get_statistics,
+            string='Delivered',
+            type='integer', multi='_get_statistics',
         ),
         'opened': fields.function(
             _get_statistics,

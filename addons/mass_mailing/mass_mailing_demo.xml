@@ -25,31 +25,31 @@
         <record id="mass_mail_segment_1" model="mail.mass_mailing.segment">
             <field name="name">First Newsletter</field>
             <field name="template_id" eval="ref('mass_mail_template_1')"/>
-            <field name="date" eval="(DateTime.today() - relativedelta(month=2)).replace(day=1)"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(day=3)"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
         </record>
         <record id="mass_mail_segment_2" model="mail.mass_mailing.segment">
             <field name="name">Second Newsletter</field>
             <field name="template_id" eval="ref('mass_mail_template_2')"/>
-            <field name="date" eval="(DateTime.today() - relativedelta(month=1)).replace(day=1)"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(day=3)"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
         </record>
 
         <record id="mass_mail_email_1" model="mail.mail">
             <field name="mass_mailing_segment_id" eval="ref('mass_mail_segment_1')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=15)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="replied" eval="(DateTime.today() - relativedelta(days=10)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_2" model="mail.mail">
             <field name="mass_mailing_segment_id" eval="ref('mass_mail_segment_1')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_3" model="mail.mail">
             <field name="mass_mailing_segment_id" eval="ref('mass_mail_segment_1')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_4" model="mail.mail">
@@ -58,18 +58,18 @@
         </record>
         <record id="mass_mail_email_5" model="mail.mail">
             <field name="mass_mailing_segment_id" eval="ref('mass_mail_segment_1')"/>
-            <field name="bounced" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sent</field>
         </record>
 
         <record id="mass_mail_email_2_1" model="mail.mail">
             <field name="mass_mailing_segment_id" eval="ref('mass_mail_segment_2')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=15)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_2_2" model="mail.mail">
             <field name="mass_mailing_segment_id" eval="ref('mass_mail_segment_2')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sent</field>
         </record>
         <record id="mass_mail_email_2_3" model="mail.mail">

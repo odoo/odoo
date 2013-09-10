@@ -23,6 +23,7 @@
                         <group>
                             <field name="name"/>
                             <field name="sent"/>
+                            <field name="delivered"/>
                             <field name="opened"/>
                             <field name="replied"/>
                             <field name="bounced"/>
@@ -41,6 +42,7 @@
                 <kanban>
                     <field name="segment_kanban_ids"/>
                     <field name='sent'/>
+                    <field name='color'/>
                     <templates>
                         <t t-name="mass_mailing.segment">
                             <div>
@@ -66,16 +68,23 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <!-- <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"> -->
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_campaign">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing oe_kanban_mass_mailing_campaign">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
                                  <div class="oe_kanban_content">
                                     <h3>
                                         <field name="name"/>
                                     </h3>
                                     <div>
-                                        <field name="opened" widget="gauge" style="width:120px; height: 80px;"
+                                        <field name="delivered" widget="gauge" style="width:160px; height: 120px;"
                                             options="{'max_field': 'sent'}"/>
-                                        <field name="replied" widget="gauge" style="width:120px; height: 80px;"
+                                        <field name="opened" widget="gauge" style="width:160px; height: 120px;"
+                                            options="{'max_field': 'sent'}"/>
+                                        <field name="replied" widget="gauge" style="width:160px; height: 120px;"
                                             options="{'max_field': 'sent'}"/>
                                     </div>
                                     <t t-foreach='record.segment_kanban_ids.value' t-as='segment'>
