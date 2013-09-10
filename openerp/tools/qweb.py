@@ -1,7 +1,6 @@
 import cgi
 import logging
 import re
-import types
 
 #from openerp.tools.safe_eval import safe_eval as eval
 
@@ -320,15 +319,16 @@ class QWebXml(object):
         record, field = t_att["field"].rsplit('.', 1)
         record = self.eval_object(record, v)
 
-        inner = ""
+        inner = None
         field_type = record._model._all_columns[field].column._type
         try:
             if field_type == 'many2one':
                 field_data = record.read([field])[0].get(field)
-                inner = field_data and field_data[1] or ""
+                inner = field_data and field_data[1]
             else:
-                inner = getattr(record, field) or ""
-            if isinstance(inner, types.UnicodeType):
+                inner = getattr(record, field)
+
+            if isinstance(inner, unicode):
                 inner = inner.encode("utf8")
 
             if e.tagName != 't':
@@ -344,6 +344,6 @@ class QWebXml(object):
         except AttributeError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att, g_att, v, str(inner))
+        return self.render_element(e, t_att, g_att, v, str(inner or ""))
 
 # leave this, al.
