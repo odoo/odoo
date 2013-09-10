@@ -62,7 +62,7 @@
                         <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="origin" placeholder="e.g. OP0025" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="warehouse_id" widget="selection" groups="stock.group_locations" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="picking_type_id" widget="selection" groups="stock.group_locations" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
