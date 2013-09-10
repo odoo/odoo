@@ -2,11 +2,11 @@
     'use strict';
 
     var website = openerp.website;
+    // $.fn.data automatically parses value, '0'|'1' -> 0|1
+    website.is_editable = $(document.documentElement).data('editable');
 
     website.templates.push('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
-        // $.fn.data automatically parses value, '0'|'1' -> 0|1
-        website.is_editable = $(document.documentElement).data('editable');
         var is_smartphone = $(document.body)[0].clientWidth < 767;
 
         if (website.is_editable && !is_smartphone) {
@@ -21,6 +21,13 @@
         return new website.editor.ImageDialog(editor).appendTo(document.body);
     }
 
+    if (website.is_editable) {
+        // only enable editors manually
+        CKEDITOR.disableAutoInline = true;
+        // EDIT ALL THE THINGS
+        CKEDITOR.dtd.$editable = $.extend(
+            {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+    }
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
             requires: 'link,image',
