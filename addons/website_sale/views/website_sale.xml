@@ -48,7 +48,7 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span class="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span t-attf-class="my_cart_quantity badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
@@ -57,7 +57,7 @@
             <li>
                 <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span class="my_cart_quantity" t-attf-class="badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
+                    My cart <span t-attf-class="my_cart_quantity badge #{(not order or not order.get_total_quantity()) and 'hidden' or ''}" t-esc="order and order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
