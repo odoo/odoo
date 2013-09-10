@@ -315,13 +315,21 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #            they are part of the "currently installed" modules. They will
         #            be dropped in STEP 6 later, before restarting the loading
         #            process.
-        states_to_load = ['installed', 'to upgrade', 'to remove']
-        processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
-        processed_modules.extend(processed)
-        if update_module:
-            states_to_load = ['to install']
-            processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
-            processed_modules.extend(processed)
+        # IMPORTANT 2: We have to loop here until all relevant modules have been
+        #              processed, because in some rare cases the dependencies have
+        #              changed, and modules that depend on an uninstalled module
+        #              will not be processed on the first pass.
+        #              It's especially useful for migrations.
+        previously_processed = -1
+        while previously_processed < len(processed_modules):
+            previously_processed = len(processed_modules)
+            processed_modules += load_marked_modules(cr, graph,
+                ['installed', 'to upgrade', 'to remove'],
+                force, status, report, loaded_modules, update_module)
+            if update_module:
+                processed_modules += load_marked_modules(cr, graph,
+                    ['to install'], force, status, report,
+                    loaded_modules, update_module)
 
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
