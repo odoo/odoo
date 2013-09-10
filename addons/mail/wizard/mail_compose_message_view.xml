@@ -14,20 +14,11 @@
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
                         <field name="use_active_domain" invisible="1"/>
-                        <field name="active_domain" invisible="1"/>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="subject" placeholder="Subject..." required="True"/>
-                        <field name="post"
-                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="notify"
-                            attrs="{'invisible':['|', ('post', '!=', True), ('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="same_thread"
-                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="reply_to" placeholder="Email address te redirect replies..."
-                            attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
-                                    'required':[('same_thread', '!=', True)]}"/>
+                        <!-- classic message composer -->
                         <label for="partner_ids" string="Recipients"
                             attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}"/>
                         <div groups="base.group_user"
@@ -40,6 +31,19 @@
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
                         </div>
+                        <!-- mass post / mass mailing -->
+                        <field name="active_domain"
+                            attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')],
+                                    'readonly': True}"/>
+                        <field name="post"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="notify"
+                            attrs="{'invisible':['|', ('post', '!=', True), ('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="same_thread"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="reply_to" placeholder="Email address te redirect replies..."
+                            attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
+                                    'required':[('same_thread', '!=', True)]}"/>
                     </group>
                     <field name="body"/>
                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>

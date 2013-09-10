@@ -73,7 +73,7 @@ class test_message_compose(TestMail):
 
         # 1. Comment on pigs
         compose_id = mail_compose.create(cr, uid,
-            {'subject': 'Forget me subject', 'body': '<p>Dummy body</p>'},
+            {'subject': 'Forget me subject', 'body': '<p>Dummy body</p>', 'post': True},
             {'default_composition_mode': 'comment',
                 'default_model': 'mail.group',
                 'default_res_id': self.group_pigs_id,
@@ -101,7 +101,7 @@ class test_message_compose(TestMail):
             'default_template_id': email_template_id,
             'active_ids': [self.group_pigs_id, self.group_bird_id]
         }
-        compose_id = mail_compose.create(cr, uid, {'subject': 'Forget me subject', 'body': 'Dummy body'}, context)
+        compose_id = mail_compose.create(cr, uid, {'subject': 'Forget me subject', 'body': 'Dummy body', 'post': True}, context)
         compose = mail_compose.browse(cr, uid, compose_id, context)
         onchange_res = compose.onchange_template_id(email_template_id, 'comment', 'mail.group', self.group_pigs_id)['value']
         onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]
@@ -145,7 +145,7 @@ class test_message_compose(TestMail):
             'default_partner_ids': [p_a_id],
             'active_ids': [self.group_pigs_id, self.group_bird_id]
         }
-        compose_id = mail_compose.create(cr, uid, {'subject': 'Forget me subject', 'body': 'Dummy body'}, context)
+        compose_id = mail_compose.create(cr, uid, {'subject': 'Forget me subject', 'body': 'Dummy body', 'post': True}, context)
         compose = mail_compose.browse(cr, uid, compose_id, context)
         onchange_res = compose.onchange_template_id(email_template_id, 'mass_mail', 'mail.group', self.group_pigs_id)['value']
         onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]

@@ -134,8 +134,9 @@ class mail_compose_message(osv.TransientModel):
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
-        'post': lambda self, cr, uid, ctx={}: True,
-        'same_thread': lambda self, cr, uid, ctx={}: True,
+        'post': False,
+        'notify': False,
+        'same_thread': True,
     }
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
