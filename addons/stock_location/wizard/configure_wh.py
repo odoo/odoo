@@ -78,12 +78,15 @@ class stock_configure_wh(osv.osv_memory):
 
         #create route
         new_route_id = False
+
         route_data = {
             'name': obj.name+': Ship', 
             'warehouse_selectable': True,
             'product_selectable': False, 
         }
-        if wh_stock_loc != wh_output_stock_loc:
+        if obj.crossdock:
+            route_data['name'] = obj.name+': Crossdock'
+        elif wh_stock_loc != wh_output_stock_loc:
             if obj.packing:
                 route_data['name'] = obj.name+': Pick + Pack + Ship'
             else:
@@ -115,7 +118,7 @@ class stock_configure_wh(osv.osv_memory):
         #add pull rules to default route
         #ship pull rules
         pull_data = {
-            'name': obj.name+': Stock -> customer', 
+            'name': obj.name+': Stock -> Customer', 
             'location_src_id': wh_stock_loc, 
             'location_id': customer_loc, 
             'propagate': True, 
@@ -124,8 +127,26 @@ class stock_configure_wh(osv.osv_memory):
             'picking_type_id': internal_picking_id, 
             'procure_method': 'make_to_stock'
         }
+        if obj.crossdock:
+            cross_data = pull_data.copy()
+            cross_data.update({
+                'name': obj.name+': Output -> Customer',
+                'location_src_id': wh_output_stock_loc,
+                'picking_type_id': out_picking_id,
+                'procure_method': 'make_to_order',
+                })
+            pull_obj.create(cr, uid, vals=cross_data, context=context)
+
+            cross_data.update({
+                'name': obj.name+': Supplier -> Output',
+                'location_src_id': supplier_loc,
+                'location_id': wh_output_stock_loc,
+                'action': 'buy',
+                'picking_type_id': in_picking_id,
+                })
+            pull_obj.create(cr, uid, vals=cross_data, context=context)
         #ship rules
-        if wh_stock_loc == wh_output_stock_loc:
+        elif wh_stock_loc == wh_output_stock_loc:
             pull_obj.create(cr, uid, vals=pull_data, context=context)
         #pick-pack-ship rules
         elif obj.packing:
