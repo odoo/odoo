@@ -604,7 +604,7 @@
                                     <field name="lot_id" groups="stock.group_production_lot"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
-                                    <field name="product_qty"/>
+                                    <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
@@ -1475,10 +1475,14 @@
                             <group>
                                 <field name="location_src_id"/>
                                 <field name="location_id"/>
+                                <field name="route_id"/>
+                                <field name="route_sequence"/>
+                                <field name="sequence"/>
                             </group>
                             <group>
                                 <field name="action"/>
                                 <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                                <field name="procure_method" attrs="{'invisible': [('action', '!=', 'move')]}"/>
                                 <field name="group_id"/>
                             </group>
                         </group>
@@ -1592,7 +1596,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='type']" position="after">
-                    <field name="supply_method"/>
+                    <field name="route_ids" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -1625,8 +1629,8 @@
                     <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
                 
-                <xpath expr="//field[@name='standard_price']" position="before">
-                    <field name="supply_method" groups="base.group_user"/>
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="route_ids" widget="many2many_tags"/>
                 </xpath>
  
                 <group name="procurement_uom" position="before">
@@ -1715,6 +1719,7 @@
                             <group>
                             <field name="packaging_id"/>
                        	    <field name='company_id' groups="base.group_multi_company"/>
+                       	    <field name='owner_id' groups="stock.group_tracking_owner"/>
                             </group>
                             <group>
                             <field name="location_id"/>
@@ -1790,5 +1795,31 @@
             <field name="res_model">stock.quant.package</field>
         </record>
         <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view"/>
+        
+        
+        <!--Routes-->
+        <record id="stock_location_route_form_view" model="ir.ui.view">
+            <field name="name">stock.location.route.form</field>
+            <field name="model">stock.location.route</field>
+            <field eval="7" name="priority" />
+            <field name="arch" type="xml">
+                <form string="Route" version="7.0">
+                    <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Route name"/>
+                        </h1>
+                        <h2>
+                        <field name="name" class="oe_inline"/>
+                    </h2>
+                    </div>
+                    <field name="sequence" groups="base.group_no_one"/>
+                    <group string="Pull Rules" colspan="4" >
+                        <field name="pull_ids" colspan="4" nolabel="1"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
     </data>
 </openerp>

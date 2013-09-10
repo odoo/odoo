@@ -33,6 +33,8 @@ import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
+
+
 #----------------------------------------------------------
 # Incoterms
 #----------------------------------------------------------
@@ -123,6 +125,28 @@ class stock_location(osv.osv):
     def get_removal_strategy(self, cr, uid, location, product, context=None):
         return None
 
+
+#----------------------------------------------------------
+# Routes
+#----------------------------------------------------------
+
+class stock_location_route(osv.osv):
+    _name = 'stock.location.route'
+    _description = "Inventory Routes"
+    _order = 'sequence'
+
+    _columns = {
+        'name': fields.char('Route Name', required=True),
+        'sequence': fields.integer('Sequence'),
+        'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
+    }
+
+    _defaults = {
+        'sequence': lambda self,cr,uid,ctx: 0,
+    }
+
+
+
 #----------------------------------------------------------
 # Quants
 #----------------------------------------------------------
@@ -167,6 +191,7 @@ class stock_quant(osv.osv):
 
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
+        'negative_dest_location_id': fields.many2one('stock.location', 'Destination Location', help='Technical field used to record the destination location of a move that created a negative quant'),
     }
 
     _defaults = {
@@ -231,7 +256,6 @@ class stock_quant(osv.osv):
                 result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             else:
                 raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
-        print 'Quant get result', result
         return result
 
     #
@@ -261,6 +285,7 @@ class stock_quant(osv.osv):
             negative_vals['location_id'] = move.location_id.id
             negative_vals['qty'] = -qty
             negative_vals['cost'] = price_unit
+            negative_vals['negative_dest_location_id'] = move.location_dest_id.id
             negative_quant_id = self.create(cr, uid, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
 
@@ -284,6 +309,20 @@ class stock_quant(osv.osv):
                 move = m
         return move
 
+    def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
+        move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
+        self._quant_split(cr, uid, quant, qty, context=context)
+        remaining_to_solve_quant = self._quant_split(cr, uid, to_solve_quant, qty, context=context)
+        remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
+        #if the reconciliation was not complete, we need to link together the remaining parts
+        if remaining_to_solve_quant and remaining_neg_quant:
+            self.write(cr, uid, remaining_to_solve_quant.id, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+        #delete the reconciled quants, as it is replaced by the solving quant
+        self.unlink(cr, SUPERUSER_ID, [quant_neg.id, to_solve_quant.id], context=context)
+        #call move_single_quant to ensure recursivity if necessary and do the stock valuation
+        self.move_single_quant(cr, uid, quant, qty, move, context=context)
+        return remaining_to_solve_quant
+
     def _quant_reconcile_negative(self, cr, uid, quant, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
@@ -293,27 +332,14 @@ class stock_quant(osv.osv):
         if quant.location_id.usage != 'internal':
             return False
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty', '<', '0')], context=context)
-        result = False
         for quant_neg, qty in quants:
             if not quant_neg:
                 continue
-            result = True
             to_solve_quant = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', '!=', quant.id)], context=context)
             if not to_solve_quant:
                 continue
             to_solve_quant = self.browse(cr, uid, to_solve_quant[0], context=context)
-            move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
-            self._quant_split(cr, uid, quant, qty, context=context)
-            remaining_to_solve_quant = self._quant_split(cr, uid, to_solve_quant, qty, context=context)
-            remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
-            #if the reconciliation was not complete, we need to link together the remaining parts
-            if remaining_to_solve_quant and remaining_neg_quant:
-                self.write(cr, uid, remaining_to_solve_quant.id, {'propagated_from_id': remaining_neg_quant.id}, context=context)
-            #delete the reconciled quants, as it is replaced by the solving quant
-            self.unlink(cr, SUPERUSER_ID, [quant_neg.id, to_solve_quant.id], context=context)
-            #call move_single_quant to ensure recursivity if necessary and do the stock valuation
-            self.move_single_quant(cr, uid, quant, qty, move, context=context)
-        return result
+            self._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
 
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
@@ -345,6 +371,8 @@ class stock_quant(osv.osv):
         domain += [('product_id','=',product.id)] + domain
         res = []
         offset = 0
+        #id is added at the end of the order to make sure the order is always the same for quants created at the same second
+        orderby += ', id'
         while quantity > 0:
             quants = self.search(cr, uid, domain, order=orderby, limit=10, offset=offset, context=context)
             if not quants:
@@ -1441,7 +1469,7 @@ class stock_move(osv.osv):
                 done.append(move.id)
                 continue
             else:
-                qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+                qty = move.product_qty
                 dp = []
                 for m2 in move.move_orig_ids:
                     for q in m2.quant_ids:
@@ -1509,7 +1537,7 @@ class stock_move(osv.osv):
             #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
-            domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
+            domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id), ('qty', '>', 0)]
             prefered_order = 'reservation_id'
 #             if lot_id: 
 #                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
@@ -1956,7 +1984,10 @@ class stock_package(osv.osv):
     """
     _name = "stock.quant.package"
     _description = "Physical Packages"
-    _order = 'name'
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'name'
+    _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
@@ -1991,16 +2022,20 @@ class stock_package(osv.osv):
                 res.add(pack.parent_id.id)
         return list(res)
 
+    # TODO: Problem when package is empty!
+    #
     def _get_package_info(self, cr, uid, ids, name, args, context=None):
         default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id})
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
                 res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
+                res[pack.id]['owner_id'] = pack.quant_ids[0].owner_id and pack.quant_ids[0].owner_id.id or False
                 res[pack.id]['company_id'] = pack.quant_ids[0].company_id.id
             elif pack.children_ids:
-                res[pack.id]['location_id'] = pack.children_ids[0].location_id.id
-                res[pack.id]['company_id'] = pack.children_ids[0].company_id.id
+                res[pack.id]['location_id'] = pack.children_ids[0].location_id and pack.children_ids[0].location_id.id or False
+                res[pack.id]['owner_id'] = pack.children_ids[0].owner_id and pack.children_ids[0].owner_id.id or False
+                res[pack.id]['company_id'] = pack.children_ids[0].company_id and pack.children_ids[0].company_id.id or False
         return res
 
     _columns = {
@@ -2012,12 +2047,21 @@ class stock_package(osv.osv):
         'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
                                        'stock.quant': (_get_packages, ['location_id'], 10),
-                                       'stock.quant.package': (_get_packages_to_relocate, ['children_ids', 'quant_ids', 'parent_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
                                     }, readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
         'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item"),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),
-        'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package"),
+        'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package", 
+                                    store={
+                                       'stock.quant': (_get_packages, ['company_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
+                                    }, readonly=True),
+        'owner_id': fields.function(_get_package_info, type='many2one', relation='res.partner', string='Owner', multi="package",
+                                store={
+                                       'stock.quant': (_get_packages, ['owner_id'], 10),
+                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
+                                    }, readonly=True),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
@@ -2277,14 +2321,7 @@ class stock_warehouse_orderpoint(osv.osv):
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
 
-class product_template(osv.osv):
-    _inherit = "product.template"
-    _columns = {
-        'supply_method': fields.selection([('produce', 'Manufacture'), ('buy', 'Buy'), ('wait', 'None')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
-    }
-    _defaults = {
-        'supply_method': 'buy',
-    }
+
 
 class stock_picking_type(osv.osv):
     _name = "stock.picking.type"

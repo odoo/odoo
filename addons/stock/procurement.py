@@ -40,12 +40,27 @@ class procurement_rule(osv.osv):
         result = super(procurement_rule, self)._get_action(cr, uid, context=context)
         return result + [('move', 'Move From Another Location')]
 
+    def _get_rules(self, cr, uid, ids, context=None):
+        res = []
+        for route in self.browse(cr, uid, ids):
+            res += [x.id for x in route.pull_ids]
+        return res
+
     _columns = {
         'location_id': fields.many2one('stock.location', 'Destination Location'),
         'location_src_id': fields.many2one('stock.location', 'Source Location',
             help="Source location is action=move"),
+        'route_id': fields.many2one('stock.location.route', 'Route',
+            help="If route_id is False, the rule is global"),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence', store={'stock.location.route': (_get_rules, ['sequence'], 10)}),
+        'sequence': fields.integer('Sequence'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', 
             help="Picking Type determines the way the picking should be shown in the view, reports, ...")
+    }
+
+    _defaults = {
+        'procure_method': 'make_to_stock',
     }
 
 class procurement_order(osv.osv):
@@ -57,13 +72,18 @@ class procurement_order(osv.osv):
     }
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
-        '''method overwritten in stock_location that is used to search the best suitable rule'''
-        return self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
+        '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
+        route_ids = [x.id for x in procurement.product_id.route_ids] 
+        res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
+        if not res:
+            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
+        return res
+    
 
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
-            rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', '=', procurement.location_id.id)], context=context) #action=move
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', 'child_of', procurement.location_id.id)], context=context) #action=move
             rule_id = rule_id and rule_id[0] or False
         return rule_id
 
@@ -88,6 +108,7 @@ class procurement_order(osv.osv):
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             'procurement_id': procurement.id,
             'rule_id': procurement.rule_id.id,
+            'procure_method': procurement.rule_id.procure_method,
             'origin': procurement.origin,
             'picking_type_id': procurement.rule_id.picking_type_id.id,
         }
@@ -173,7 +194,7 @@ class procurement_order(osv.osv):
                 'product_uom': product.uom_id.id,
                 'location_id': location_id,
                 'company_id': warehouse.company_id.id,
-                'procure_method': 'make_to_order',}
+                }
 
     def create_automatic_op(self, cr, uid, context=None):
         """
@@ -203,17 +224,14 @@ class procurement_order(osv.osv):
                     continue
 
                 product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
-                if product.supply_method == 'buy':
-                    location_id = warehouse.lot_input_id.id
-                elif product.supply_method == 'produce':
-                    location_id = warehouse.lot_stock_id.id
-                else:
-                    continue
+
+                location_id = warehouse.lot_stock_id.id
+
                 proc_id = proc_obj.create(cr, uid,
                             self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
                             context=context)
-                self.signal_button_confirm(cr, uid, [proc_id])
-                self.signal_button_check(cr, uid, [proc_id])
+                self.assign(cr, uid, [proc_id])
+                self.run(cr, uid, [proc_id])
         return True
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
@@ -229,7 +247,6 @@ class procurement_order(osv.osv):
                 'company_id': orderpoint.company_id.id,
                 'product_uom': orderpoint.product_uom.id,
                 'location_id': orderpoint.location_id.id,
-                'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
 
     def _product_virtual_get(self, cr, uid, order_point):

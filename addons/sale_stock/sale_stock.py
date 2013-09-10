@@ -246,6 +246,17 @@ class sale_order(osv.osv):
             return finished
         elif mode == 'canceled':
             return canceled
+        
+        
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        date_planned = super(sale_order, self)._get_date_planned(cr, uid, order, line, start_date, context=context)
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
+
+    def _prepare_procurement_group(self, cr, uid, order, context=None):
+        res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
+        res.update({'move_type': order.picking_policy})
+        return res
 
 
     def action_ship_end(self, cr, uid, ids, context=None):
@@ -419,3 +430,33 @@ class sale_order_line(osv.osv):
         res.update({'warning': warning})
         return res
 
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+        if move.procurement_id and move.procurement_id.sale_line_id:
+            sale_line = move.procurement_id.sale_line_id
+            self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
+                'invoice_lines': [(4, invoice_line_id)]
+            }, context=context)
+            self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
+                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
+            })
+        return invoice_line_id
+
+    def _get_master_data(self, cr, uid, move, company, context=None):
+        if move.procurement_id and move.procurement_id.sale_line_id:
+            sale_order = move.procurement_id.sale_line_id.order_id
+            return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
+        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        if move.procurement_id and move.procurement_id.sale_line_id:
+            sale_line = move.procurement_id.sale_line_id
+            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
+            res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
+            res['price_unit'] = sale_line.price_unit
+            res['discount'] = sale_line.discount
+        return res

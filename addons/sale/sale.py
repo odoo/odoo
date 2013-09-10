@@ -640,8 +640,12 @@ class sale_order(osv.osv):
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
-        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned
+
+    def _prepare_procurement_group(self, cr, uid, order, context=None):
+        return {
+                'name': order.name, 'partner_id': order.partner_shipping_id.id, 
+            }
 
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
@@ -657,9 +661,9 @@ class sale_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
-            group_id = self.pool.get("procurement.group").create(cr, uid, {
-                'name': order.name, 'partner_id': order.partner_shipping_id.id, 'move_type': order.picking_policy
-            }, context=context)
+            vals = self._prepare_procurement_group(cr, uid, order, context=context)
+            group_id =  self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+            
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:

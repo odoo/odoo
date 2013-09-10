@@ -24,48 +24,56 @@
         <record id="route_warehouse0_mts" model='stock.location.route'>
             <field name="name">Sale: Ship only</field>
             <field name="sequence">20</field>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="product_selectable" eval="False"/>
         </record>
 
 
         <record id="procurement_rule_customer0_mts" model="procurement.rule">
-            <field name="name">Stock → output</field>
+            <field name="name">Stock → customer</field>
             <field name="action">move</field>
-            <field name="location_id" ref="stock.stock_location_output"/>
+            <field name="location_id" ref="stock.stock_location_customers"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_warehouse0_mts"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
 
-        <record id="procurement_rule_customer1_mts" model="procurement.rule">
-            <field name="name">Output → Customer</field>
+        <!-- Override from stock-->
+        <!--<record id="procurement_rule_customer_mto" model="procurement.rule">
+            <field name="name">Stock → Customer</field>
             <field name="action">move</field>
             <field name="location_id" ref="stock.stock_location_customers"/>
-            <field name="location_src_id" ref="stock.stock_location_output"/>
-            <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_mts"/>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
-        </record>
-        
-        
-        <record id="route_warehouse0_mto" model='stock.location.route'>
-            <field name="name">Produce or buy on Customer Order</field>
-            <field name="sequence">10</field>
+            <field name="procure_method">make_to_order</field>
+            <field name="route_id" ref="stock.route_warehouse0_mto"/>
+            <field name="product_categ_selectable" eval="True"/>
         </record>
 
+        <record id="route_warehouse0_mto" model='stock.location.route'>
+            <field name="name">MTO</field>
+            <field name="sequence">10</field>
+            <field name="product_categ_selectable" eval="True"/>
+        </record>-->
+
         <record id="procurement_rule_customer0_mto" model="procurement.rule">
-            <field name="name">Stock → output</field>
+            <field name="name">Stock → Customer</field>
             <field name="action">move</field>
-            <field name="location_id" ref="stock.stock_location_output"/>
+            <field name="location_id" ref="stock.stock_location_customers"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_mto"/>
+            <field name="route_id" ref="stock.route_warehouse0_mto"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
 
         <record id="route_warehouse0_crossdock" model='stock.location.route'>
             <field name="name">Crossdock</field>
             <field name="sequence">9</field>
+            <field name="product_categ_selectable" eval="True"/>
+            <field name="sale_selectable" eval="True"/>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="product_selectable" eval="False"/>
         </record>
         
         <record id="procurement_rule_customer0_xdock" model="procurement.rule">
@@ -81,13 +89,19 @@
         <record id="route_warehouse0_pack" model='stock.location.route'>
             <field name="name">Sale: Pack + Ship</field>
             <field name="sequence">15</field>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="product_selectable" eval="False"/>
         </record>
 
+        <record id="route_warehouse0_mto_pack" model='stock.location.route'>
+            <field name="name">MTO pack</field>
+            <field name="sequence">10</field>
+        </record>
 
         <record id="procurement_rule_customer0_pack" model="procurement.rule">
-            <field name="name">Stock → Pack</field>
+            <field name="name">Stock → Output</field>
             <field name="action">move</field>
-            <field name="location_id" ref="location_pack_zone"/>
+            <field name="location_id" ref="stock.stock_location_output"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_warehouse0_pack"/>
@@ -103,25 +117,15 @@
             <field name="route_id" ref="route_warehouse0_pack"/>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
         </record>
-        
-        <record id="procurement_rule_customer2_pack" model="procurement.rule">
-            <field name="name">Pack → Output</field>
-            <field name="action">move</field>
-            <field name="location_id" ref="stock.stock_location_output"/>
-            <field name="location_src_id" ref="location_pack_zone"/>
-            <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_pack"/>
-            <field name="picking_type_id" ref="stock.picking_type_internal"/>
-        </record>
 
 
         <record id="procurement_rule_customer0_mto_pack" model="procurement.rule">
-            <field name="name">Stock → pack</field>
+            <field name="name">Stock → Output MTO</field>
             <field name="action">move</field>
-            <field name="location_id" ref="location_pack_zone"/>
+            <field name="location_id" ref="stock.stock_location_output"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_mto"/>
+            <field name="route_id" ref="route_warehouse0_mto_pack"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
         
@@ -130,30 +134,21 @@
         <record id="route_warehouse0_pickpack" model='stock.location.route'>
             <field name="name">Sale: Pick + Pack + Ship</field>
             <field name="sequence">20</field>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="product_selectable" eval="False"/>
         </record>
 
 
         <record id="procurement_rule_customer0_pickpack" model="procurement.rule">
-            <field name="name">Stock → Pick</field>
+            <field name="name">Stock → Pack</field>
             <field name="action">move</field>
-            <field name="location_id" ref="location_pick_zone"/>
+            <field name="location_id" ref="location_pack_zone"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_warehouse0_pickpack"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
-
-
-        <record id="procurement_rule_customer3_pickpack" model="procurement.rule">
-            <field name="name">Pick → Pack</field>
-            <field name="action">move</field>
-            <field name="location_id" ref="location_pack_zone"/>
-            <field name="location_src_id" ref="location_pick_zone"/>
-            <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_pickpack"/>
-            <field name="picking_type_id" ref="stock.picking_type_internal"/>
-        </record>
-
+        
         <record id="procurement_rule_customer1_pickpack" model="procurement.rule">
             <field name="name">Output → Customer</field>
             <field name="action">move</field>
@@ -174,14 +169,18 @@
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
 
+        <record id="route_warehouse0_mto_pick" model='stock.location.route'>
+            <field name="name">MTO pick</field>
+            <field name="sequence">10</field>
+        </record>
 
-        <record id="procurement_rule_customer0_mto_pack" model="procurement.rule">
-            <field name="name">Stock → Pick</field>
+        <record id="procurement_rule_customer0_mto_pick" model="procurement.rule">
+            <field name="name">Stock → Pack MTO</field>
             <field name="action">move</field>
-            <field name="location_id" ref="location_pick_zone"/>
+            <field name="location_id" ref="location_pack_zone"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_mto"/>
+            <field name="route_id" ref="route_warehouse0_mto_pick"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
     </data>

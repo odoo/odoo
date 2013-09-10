@@ -41,57 +41,57 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         processed_ids = [move.id]
-        if move.product_id.supply_method == 'produce':
-            bis = bom_obj.search(cr, uid, [
-                ('product_id','=',move.product_id.id),
-                ('bom_id','=',False),
-                ('type','=','phantom')])
-            if bis:
-                factor = move.product_qty
-                bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
-                res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
-                state = 'confirmed'
-                if move.state == 'assigned':
-                    state = 'assigned'
-                for line in res[0]: 
-                    valdef = {
-                        'picking_id': move.picking_id.id,
-                        'product_id': line['product_id'],
-                        'product_uom': line['product_uom'],
-                        'product_qty': line['product_qty'],
-                        'product_uos': line['product_uos'],
-                        'product_uos_qty': line['product_uos_qty'],
-                        'move_dest_id': move.id,
-                        'state': state,
-                        'name': line['name'],
-                        'procurements': [],
-                    }
-                    mid = move_obj.copy(cr, uid, move.id, default=valdef)
-                    processed_ids.append(mid)
-                    prodobj = product_obj.browse(cr, uid, line['product_id'], context=context)
-                    proc_id = procurement_obj.create(cr, uid, {
-                        'name': (move.picking_id.origin or ''),
-                        'origin': (move.picking_id.origin or ''),
-                        'date_planned': move.date,
-                        'product_id': line['product_id'],
-                        'product_qty': line['product_qty'],
-                        'product_uom': line['product_uom'],
-                        'product_uos_qty': line['product_uos'] and line['product_uos_qty'] or False,
-                        'product_uos':  line['product_uos'],
-                        'location_id': move.location_id.id,
-                        'procure_method': prodobj.procure_method,
-                        'move_id': mid,
-                    })
-                    procurement_obj.signal_button_confirm(cr, uid, [proc_id])
-                    
-                move_obj.write(cr, uid, [move.id], {
-                    'location_dest_id': move.location_id.id, # dummy move for the kit
-                    'picking_id': False,
-                    'state': 'confirmed'
+ 
+        bis = bom_obj.search(cr, uid, [
+            ('product_id','=',move.product_id.id),
+            ('bom_id','=',False),
+            ('type','=','phantom')])
+        if bis:
+            factor = move.product_qty
+            bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
+            res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
+            state = 'confirmed'
+            if move.state == 'assigned':
+                state = 'assigned'
+            for line in res[0]: 
+                valdef = {
+                    'picking_id': move.picking_id.id,
+                    'product_id': line['product_id'],
+                    'product_uom': line['product_uom'],
+                    'product_qty': line['product_qty'],
+                    'product_uos': line['product_uos'],
+                    'product_uos_qty': line['product_uos_qty'],
+                    'move_dest_id': move.id,
+                    'state': state,
+                    'name': line['name'],
+                    'procurements': [],
+                }
+                mid = move_obj.copy(cr, uid, move.id, default=valdef)
+                processed_ids.append(mid)
+                prodobj = product_obj.browse(cr, uid, line['product_id'], context=context)
+                proc_id = procurement_obj.create(cr, uid, {
+                    'name': (move.picking_id.origin or ''),
+                    'origin': (move.picking_id.origin or ''),
+                    'date_planned': move.date,
+                    'product_id': line['product_id'],
+                    'product_qty': line['product_qty'],
+                    'product_uom': line['product_uom'],
+                    'product_uos_qty': line['product_uos'] and line['product_uos_qty'] or False,
+                    'product_uos':  line['product_uos'],
+                    'location_id': move.location_id.id,
+                    'procure_method': prodobj.procure_method,
+                    'move_id': mid,
                 })
-                procurement_ids = procurement_obj.search(cr, uid, [('move_id','=',move.id)], context)
-                procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
-                procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
+                procurement_obj.signal_button_confirm(cr, uid, [proc_id])
+                
+            move_obj.write(cr, uid, [move.id], {
+                'location_dest_id': move.location_id.id, # dummy move for the kit
+                'picking_id': False,
+                'state': 'confirmed'
+            })
+            procurement_ids = procurement_obj.search(cr, uid, [('move_id','=',move.id)], context)
+            procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
+            procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
     
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None):

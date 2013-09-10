@@ -20,21 +20,20 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
 #----------------------------------------------------------
 # Procurement Rule
 #----------------------------------------------------------
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
-    _columns= {
+    _columns = {
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
             required=False),
         }
-    
+
 #----------------------------------------------------------
 # Procurement Order
 #----------------------------------------------------------
@@ -43,18 +42,17 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
-        'invoice_state': fields.selection(
-          [("invoiced", "Invoiced"),
+        'invoice_state': fields.selection([("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-          ], "Invoice Control", required=True),
+         ], "Invoice Control", required=True),
         }
 
     def _run_move_create(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
         res.update({'invoice_state': (procurement.rule_id.invoice_state in ('none', False) and procurement.invoice_state or procurement.rule_id.invoice_state) or 'none'})
         return res
-    
+
     _defaults = {
         'invoice_state': 'none'
         }
@@ -70,14 +68,50 @@ class stock_move(osv.osv):
         'invoice_state': fields.selection([("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Control",
-            select=True, required=True, track_visibility='onchange', 
+            select=True, required=True, track_visibility='onchange',
             states={'draft': [('readonly', False)]}),
         }
-    _defaults= {
+    _defaults = {
         'invoice_state': lambda *args, **argv: 'none'
+    }
+
+    def _get_master_data(self, cr, uid, move, company, context=None):
+        ''' returns a tupple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
+        return move.picking_id.partner_id, uid, company.currency_id.id
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        return self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        fp_obj = self.pool.get('account.fiscal.position')
+        # Get account_id
+        if inv_type in ('out_invoice', 'out_refund'):
+            account_id = move.product_id.property_account_income.id
+            if not account_id:
+                account_id = move.product_id.categ_id.property_account_income_categ.id
+        else:
+            account_id = move.product_id.property_account_expense.id
+            if not account_id:
+                account_id = move.product_id.categ_id.property_account_expense_categ.id
+        fiscal_position = partner.property_account_position
+        account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
+
+        # set UoS if it's a sale and the picking doesn't have one
+        uos_id = move.product_uom.id
+        quantity = move.product_uom_qty
+        if move.product_uos:
+            uos_id = move.product_uos.id
+            quantity = move.product_uos_qty
+        return {
+            'name': move.name,
+            'account_id': account_id,
+            'product_id': move.product_id.id,
+            'uos_id': uos_id,
+            'quantity': quantity,
+            'price_unit': move.product_id.list_price,  # TODO: use price_get
+            'discount': 0.0,
+            'account_analytic_id': False,
         }
-
-
 
 #----------------------------------------------------------
 # Picking
@@ -90,9 +124,9 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             result[pick.id] = 'none'
             for move in pick.move_lines:
-                if move.invoice_state=='invoiced':
+                if move.invoice_state == 'invoiced':
                     result[pick.id] = 'invoiced'
-                elif move.invoice_state=='2binvoiced':
+                elif move.invoice_state == '2binvoiced':
                     result[pick.id] = '2binvoiced'
                     break
         return result
@@ -100,7 +134,7 @@ class stock_picking(osv.osv):
     def __get_picking_move(self, cr, uid, ids, context={}):
         res = []
         for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
-            if move.picking_id: 
+            if move.picking_id:
                 res.append(move.picking_id.id)
         return res
 
@@ -109,17 +143,23 @@ class stock_picking(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-          ], string="Invoice Control", required=True, 
+          ], string="Invoice Control", required=True,
 
         store={
-          'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
-          'stock.move': (__get_picking_move, ['picking_id'], 10),
+            'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
+            'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),
         },
         ),
     }
     _defaults = {
         'invoice_state': lambda *args, **argv: 'none'
     }
+
+    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
+        ''' This function simply creates the invoice from the given values. It is overriden in delivery module to add the delivery costs.
+        '''
+        invoice_obj = self.pool.get('account.invoice')
+        return invoice_obj.create(cr, uid, vals, context=context)
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
@@ -133,8 +173,8 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             key = group and picking.id or True
             for move in picking.move_lines:
-                if move.procurement_id and (move.procurement_id.invoice_state=='2binvoiced'):
-                    if (move.state <> 'cancel') and not move.scrapped:
+                if move.procurement_id and (move.procurement_id.invoice_state == '2binvoiced') or move.invoice_state == '2binvoiced':
+                    if (move.state != 'cancel') and not move.scrapped:
                         todo.setdefault(key, [])
                         todo[key].append(move)
         invoices = []
@@ -144,14 +184,13 @@ class stock_picking(osv.osv):
 
     def __invoice_create_line(self, cr, uid, moves, journal_id=False, inv_type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
+        move_obj = self.pool.get('stock.move')
         invoices = {}
         for move in moves:
-            sale_line = move.procurement_id.sale_line_id
-            sale = sale_line.order_id
-            partner = sale.partner_invoice_id
-
-            currency_id = sale.pricelist_id.currency_id.id
-            key = (partner.id, currency_id, sale.company_id.id, sale.user_id and sale.user_id.id or False)
+            company = move.company_id
+            origin = move.picking_id.name
+            partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
+            key = (partner.id, currency_id, company.id, user_id)
 
             if key not in invoices:
                 # Get account and payment terms
@@ -162,66 +201,33 @@ class stock_picking(osv.osv):
                     account_id = partner.property_account_payable.id
                     payment_term = partner.property_supplier_payment_term.id or False
 
-                invoice_id = invoice_obj.create(cr, uid, {
-                    'origin': sale.name,
+                invoice_vals = {
+                    'origin': origin,
                     'date_invoice': context.get('date_inv', False),
-                    'user_id': sale.user_id and sale.user_id.id or False,
+                    'user_id': user_id,
                     'partner_id': partner.id,
                     'account_id': account_id,
                     'payment_term': payment_term,
                     'type': inv_type,
                     'fiscal_position': partner.property_account_position.id,
-                    'company_id': sale.company_id.id,
-                    'currency_id': sale.pricelist_id.currency_id.id,
+                    'company_id': company.id,
+                    'currency_id': currency_id,
                     'journal_id': journal_id,
-                }, context=context)
+                }
+                invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
                 invoices[key] = invoice_id
 
-            # Get account_id
-            if inv_type in ('out_invoice', 'out_refund'):
-                account_id = move.product_id.property_account_income.id
-                if not account_id:
-                    account_id = move.product_id.categ_id.property_account_income_categ.id
-            else:
-                account_id = move.product_id.property_account_expense.id
-                if not account_id:
-                    account_id = move.product_id.categ_id.property_account_expense_categ.id
-            fp_obj = self.pool.get('account.fiscal.position')
-            fiscal_position = partner.property_account_position
-            account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
+            invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+            invoice_line_vals['invoice_id'] = invoices[key]
+            invoice_line_vals['origin'] = origin
 
-            # set UoS if it's a sale and the picking doesn't have one
-            if move.product_uos:
-                uos_id = move.product_uos.id
-                quantity = move.product_uos_qty
-            else:
-                uos_id = move.product_uom.id
-                quantity = move.product_uom_qty
+            move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 
-            invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-                'name': move.name,
-                'origin': move.picking_id and move.picking_id.origin or False,
-                'invoice_id': invoices[key],
-                'account_id': account_id,
-                'product_id': move.product_id.id,
-                'uos_id': uos_id,
-                'quantity': quantity,
-                'price_unit': sale_line.price_unit,
-                'discount': sale_line.discount,
-                'invoice_line_tax_id': [(6, 0, [x.id for x in sale_line.tax_id])],
-                'account_analytic_id': sale.project_id and sale.project_id.id or False,
-            }, context=context)
-
-            self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
-                'invoice_lines': [(4, invoice_line_id)]
-            }, context=context)
-            self.pool.get('sale.order').write(cr, uid, [sale.id], {
-                'invoice_ids': [(4, invoices[key])],
-            })
-
-            self.pool.get('procurement.order').write(cr, uid, [move.procurement_id.id], {
-                'invoice_state': 'invoiced',
-            }, context=context)
+            move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
+            if move.procurement_id:
+                self.pool.get('procurement.order').write(cr, uid, [move.procurement_id.id], {
+                    'invoice_state': 'invoiced',
+                }, context=context)
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()

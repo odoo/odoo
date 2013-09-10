@@ -33,9 +33,9 @@ It creates 3 warehouses
     'author': 'OpenERP SA',
     'images': [],
     'depends': ['stock_complex_routes'],
-    'data': ['stock_multi_warehouse.yml'],
+    'data': [],
     'demo': [
-        
+        'stock_multi_warehouse.yml'
     ],
     'installable': True,
     'test': [

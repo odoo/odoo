@@ -71,7 +71,6 @@ class stock_invoice_onshipping(osv.osv_memory):
     def open_invoice(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        print 'Create Invoice', context
         invoice_ids = self.create_invoice(cr, uid, ids, context=context)
         if not invoice_ids:
             raise osv.except_osv(_('Error!'), _('No invoice created!'))
@@ -97,7 +96,6 @@ class stock_invoice_onshipping(osv.osv_memory):
 
     def create_invoice(self, cr, uid, ids, context=None):
         context = context or {}
-
         picking_pool = self.pool.get('stock.picking')
         onshipdata_obj = self.read(cr, uid, ids, ['journal_id', 'group', 'invoice_date', 'inv_type'])
 

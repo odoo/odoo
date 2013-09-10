@@ -33,9 +33,9 @@ class stock_move(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
-        wf_service = netsvc.LocalService('workflow')
+        from openerp import workflow
         for id in ids:
-            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+            workflow.trg_trigger(uid, 'stock.move', id, cr)
         return res
 
 #

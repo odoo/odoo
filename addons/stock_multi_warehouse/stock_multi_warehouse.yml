@@ -1,4 +1,7 @@
 -
+  !context
+    noupdate: 0
+-
   Create Two Customers
 -
   !record {model: res.partner, id: customer_1}:
@@ -16,43 +19,43 @@
 - 
   Create Location structure of Warehouse Panama Santiago District
 - 
-  !record {model: stock.location, id: location_panama_santiago}:
+  !record {model: stock.location, id: location_wh1}:
     name: Panama Santiago District Warehouse
     location_id: location_panama
 - 
   Input
 - 
-  !record {model: stock.location, id: location_panama_santiago_input}:
+  !record {model: stock.location, id: location_wh1_input}:
     name: Input
-    location_id: location_panama_santiago
+    location_id: location_wh1
 - 
   Output
 - 
-  !record {model: stock.location, id: location_panama_santiago_output}:
+  !record {model: stock.location, id: location_wh1_output}:
     name: Output
-    location_id: location_panama_santiago
+    location_id: location_wh1
 - 
   Stock
 - 
-  !record {model: stock.location, id: location_panama_santiago_stock}:
+  !record {model: stock.location, id: location_wh1_stock}:
     name: Stock
-    location_id: location_panama_santiago
+    location_id: location_wh1
 
 -
-  !record {model: stock.location, id: location_panama_santiago_stock_area1}:
+  !record {model: stock.location, id: location_wh1_stock_area1}:
     name: Area1
-    location_id: location_panama_santiago_stock
+    location_id: location_wh1_stock
 
 -
-  !record {model: stock.location, id: location_panama_santiago_stock_area1_bin1}:
+  !record {model: stock.location, id: location_wh1_stock_area1_bin1}:
     name: Bin1
-    location_id: location_panama_santiago_stock_area1
+    location_id: location_wh1_stock_area1
 - 
   Create  warehouse Panama Santiago District
 - 
-  !record {model: stock.warehouse, id: wh_panama_santiago}:
+  !record {model: stock.warehouse, id: wh_wh1}:
     name: Panama Santiago District Warehouse
-    lot_stock_id: location_panama_santiago
+    lot_stock_id: location_wh1
 - 
   Create picking type in for this warehouse
 - 
@@ -60,8 +63,8 @@
     name: Reception
     code_id: incoming
     sequence_id: stock.seq_picking_type_in
-    warehouse_id: wh_panama_santiago
-    default_location_dest_id: location_panama_santiago_input 
+    warehouse_id: wh_wh1
+    default_location_dest_id: location_wh1_input 
 - 
   Create picking type out for this warehouse
 - 
@@ -69,8 +72,8 @@
     name: Deliveries
     code_id: outgoing
     sequence_id: stock.seq_picking_type_out
-    warehouse_id: wh_panama_santiago
-    default_location_src_id: location_panama_santiago_output
+    warehouse_id: wh_wh1
+    default_location_src_id: location_wh1_output
 - 
   Create picking type internal for this warehouse
 - 
@@ -78,44 +81,44 @@
     name: Internal
     code_id: internal
     sequence_id: stock.seq_picking_type_internal
-    warehouse_id: wh_panama_santiago
-    default_location_src_id: location_panama_santiago_input
-    default_location_dest_id: location_panama_santiago_stock
+    warehouse_id: wh_wh1
+    default_location_src_id: location_wh1_stock
+    default_location_dest_id: location_wh1_stock
 - 
   Create Location structure of Warehouse Panama Main
 - 
-  !record {model: stock.location, id: location_panama_main}:
+  !record {model: stock.location, id: location_wh2}:
     name: Panama Main Warehouse
     location_id: location_panama
 - 
   Input
 - 
-  !record {model: stock.location, id: location_panama_main_input}:
+  !record {model: stock.location, id: location_wh2_input}:
     name: Input
-    location_id: location_panama_main
+    location_id: location_wh2
 - 
   Output
 - 
-  !record {model: stock.location, id: location_panama_main_output}:
+  !record {model: stock.location, id: location_wh2_output}:
     name: Output
-    location_id: location_panama_main
+    location_id: location_wh2
 - 
   Stock
 - 
-  !record {model: stock.location, id: location_panama_main_stock}:
+  !record {model: stock.location, id: location_wh2_stock}:
     name: Stock
-    location_id: location_panama_main
+    location_id: location_wh2
 
 -
-  !record {model: stock.location, id: location_panama_main_stock_area2}:
+  !record {model: stock.location, id: location_wh2_stock_area2}:
     name: Area2
-    location_id: location_panama_main_stock
+    location_id: location_wh2_stock
 -
   Create  warehouse Panama main
 - 
-  !record {model: stock.warehouse, id: wh_panama_main}:
+  !record {model: stock.warehouse, id: wh_wh2}:
     name: Panama Main Warehouse
-    lot_stock_id: location_panama_main
+    lot_stock_id: location_wh2
 - 
   Create picking type in for warehouse panama main
 - 
@@ -123,8 +126,8 @@
     name: Reception
     code_id: incoming
     sequence_id: stock.seq_picking_type_in
-    warehouse_id: wh_panama_main
-    default_location_dest_id: location_panama_main_input 
+    warehouse_id: wh_wh2
+    default_location_dest_id: location_wh2_input 
 - 
   Create picking type out for warehouse panama main
 - 
@@ -132,8 +135,8 @@
     name: Deliveries
     code_id: outgoing
     sequence_id: stock.seq_picking_type_out
-    warehouse_id: wh_panama_main
-    default_location_src_id: location_panama_main_output
+    warehouse_id: wh_wh2
+    default_location_src_id: location_wh2_output
 - 
   Create picking type internal for warehouse panama main
 - 
@@ -141,56 +144,27 @@
     name: Internal
     code_id: internal
     sequence_id: stock.seq_picking_type_internal
-    warehouse_id: wh_panama_main
-    default_location_src_id: location_panama_main_input
-    default_location_dest_id: location_panama_main_stock
+    warehouse_id: wh_wh2
+    default_location_src_id: location_wh2_stock
+    default_location_dest_id: location_wh2_stock
 - 
-  Create Location structure of Warehouse Dubai
-- 
-  !record {model: stock.location, id: location_panama_main}:
-    name: Panama Main Warehouse
-    location_id: location_panama
-- 
-  Create United Arab Emirates in Location structure
-- 
-  !record {model: stock.location, id: location_uae}:
-    name: United Arab Emirates
-    location_id: stock.stock_location_locations
-- 
-  Create Location structure of Dubai Warehouse
-- 
-  !record {model: stock.location, id: location_dubai}:
-    name: Dubai Warehouse
-    location_id: location_uae
-    child_ids:
-      - name: Input
-      - name: Output
-      - name: Stock
-        child_ids:
-          - name: Area3
-- 
-  Create Dubai warehouse
-- 
-  !record {model: stock.warehouse, id: wh_dubai}:
-    name: Dubai Warehouse
-    lot_stock_id: location_dubai
-
--
   Create Ship Route for main panama warehouse
 -
-  !record {model: stock.location.route, id: route_wh_panama_main_ship}:
+  !record {model: stock.location.route, id: route_wh_wh2_ship}:
     name: Ship main panama
+    warehouse_selectable: True
+    product_selectable: False
     pull_ids:
         - invoice_state: none
-          location_id: location_panama_main_output
-          location_src_id: location_panama_main_stock
+          location_id: location_wh2_output
+          location_src_id: location_wh2_stock
           name: Panama Main Stock -> Panama Main Output
           procure_method: make_to_stock
           picking_type_id: picking_type_main_internal
           action: move
         - invoice_state: none
           location_id: stock.stock_location_customers
-          location_src_id: location_panama_main_output
+          location_src_id: location_wh2_output
           name: Panama Main Output -> Customer
           picking_type_id: picking_type_main_out
           procure_method: make_to_order
@@ -198,28 +172,31 @@
 -
   Create Ship Route for panama santiago warehouse
 -
-  !record {model: stock.location.route, id: route_wh_panama_santiago_ship}:
+  !record {model: stock.location.route, id: route_wh_wh1_ship}:
     name: Ship panama santiago
+    warehouse_selectable: True
+    product_selectable: False
     pull_ids:
         - invoice_state: none
-          location_id: location_panama_santiago_output
-          location_src_id: location_panama_santiago_stock
+          location_id: location_wh1_output
+          location_src_id: location_wh1_stock
           name: Santiago Stock -> Santiago Output
           procure_method: make_to_stock
           picking_type_id: picking_type_santiago_internal
           action: move
         - invoice_state: none
           location_id: stock.stock_location_customers
-          location_src_id: location_panama_santiago_output
+          location_src_id: location_wh1_output
           name: Santiago Output -> Customer
           picking_type_id: picking_type_santiago_out
           procure_method: make_to_order
           action: move
-
+- 
+  Add routes to warehouses
 -
   !python {model: stock.warehouse}: |
-    self.write(cr, uid, [ref('wh_panama_main')], {'route_id': ref('route_wh_panama_main_ship')}, context=context)
-    self.write(cr, uid, [ref('wh_panama_santiago')], {'route_id': ref('route_wh_panama_santiago_ship')}, context=context)
+    self.write(cr, uid, [ref('wh_wh2')], {'route_id': ref('route_wh_wh2_ship'), 'lot_stock_id': ref('location_wh2_stock')}, context=context)
+    self.write(cr, uid, [ref('wh_wh1')], {'route_id': ref('route_wh_wh1_ship'), 'lot_stock_id': ref('location_wh1_stock')}, context=context)
 -
   Create Products
 -
@@ -331,7 +308,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock1}:
     name: Inventory Stock 1
-    location_id: location_panama_santiago_stock
+    location_id: location_wh1_stock
 -
   I create the wizard to confirm the inventory
 -
@@ -350,14 +327,14 @@
     inventory_id: inventory_stock1
     product_id: product_A
     product_qty: 6
-    location_id: location_panama_santiago_stock
+    location_id: location_wh1_stock
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productB}:
     inventory_id: inventory_stock1
     product_id: product_B
     product_qty: 12
-    location_id: location_panama_santiago_stock
+    location_id: location_wh1_stock
 -
   I confirm Stock1 inventory
 -
@@ -368,7 +345,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock2}:
     name: Inventory Stock 2
-    location_id: location_panama_main_stock
+    location_id: location_wh2_stock
 -
   I fill Stock2 inventory
 -
@@ -382,21 +359,21 @@
     inventory_id: inventory_stock2
     product_id: product_A
     product_qty: 8
-    location_id: location_panama_main_stock
+    location_id: location_wh2_stock
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productB}:
     inventory_id: inventory_stock2
     product_id: product_B
     product_qty: 120
-    location_id: location_panama_main_stock
+    location_id: location_wh2_stock
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productC_1}:
     inventory_id: inventory_stock2
     product_id: product_C
     product_qty: 5
-    location_id: location_panama_main_stock
+    location_id: location_wh2_stock
     prod_lot_id: lot003
 
 -
@@ -404,7 +381,7 @@
     inventory_id: inventory_stock2
     product_id: product_C
     product_qty: 15
-    location_id: location_panama_main_stock
+    location_id: location_wh2_stock
     prod_lot_id: lot004
 -
   I confirm Stock2 inventory
@@ -416,7 +393,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock1_area1}:
     name: Inventory Stock1 area 1
-    location_id: location_panama_santiago_stock_area1
+    location_id: location_wh1_stock_area1
 -
   I fill Area1 inventory
 -
@@ -430,14 +407,14 @@
     inventory_id: inventory_stock1_area1
     product_id: product_D
     product_qty: 4
-    location_id: location_panama_santiago_stock_area1
+    location_id: location_wh1_stock_area1
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productD_2}:
     inventory_id: inventory_stock1_area1
     product_id: product_D
     product_qty: 5
-    location_id: location_panama_santiago_stock_area1
+    location_id: location_wh1_stock_area1
 -
   I confirm Area1 inventory
 -
@@ -448,7 +425,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock2_area2}:
     name: Inventory Stock2 area 2
-    location_id: location_panama_main_stock_area2
+    location_id: location_wh2_stock_area2
 -
   I fill Area2 inventory
 -
@@ -462,14 +439,14 @@
     inventory_id: inventory_stock2_area2
     product_id: product_D
     product_qty: 2
-    location_id: location_panama_main_stock_area2
+    location_id: location_wh2_stock_area2
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productD_2}:
     inventory_id: inventory_stock2_area2
     product_id: product_D
     product_qty: 3
-    location_id: location_panama_main_stock_area2
+    location_id: location_wh2_stock_area2
 -
   I confirm Area2 inventory
 -
@@ -481,7 +458,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock1_area1_bin1}:
     name: Inventory Stock1 area1 bin 1
-    location_id: location_panama_santiago_stock_area1_bin1
+    location_id: location_wh1_stock_area1_bin1
 -
   I fill Bin1 inventory
 -
@@ -495,7 +472,7 @@
     inventory_id: inventory_stock1_area1_bin1
     product_id: product_C
     product_qty: 3
-    location_id: location_panama_santiago_stock_area1_bin1
+    location_id: location_wh1_stock_area1_bin1
     prod_lot_id: lot001
 
 -
@@ -503,7 +480,7 @@
     inventory_id: inventory_stock1_area1_bin1
     product_id: product_C
     product_qty: 14
-    location_id: location_panama_santiago_stock_area1_bin1
+    location_id: location_wh1_stock_area1_bin1
     prod_lot_id: lot002
 -
   I confirm Bin1 inventory
@@ -515,7 +492,7 @@
 -
   !record {model: sale.order, id: so1}:
     partner_id: customer_1
-    warehouse_id: wh_panama_main
+    warehouse_id: wh_wh2
     order_line: 
       - product_id: product_A
         product_uom_qty: 7
@@ -529,7 +506,7 @@
 -
   !record {model: sale.order, id: so2}:
     partner_id: customer_1
-    warehouse_id: wh_panama_main
+    warehouse_id: wh_wh2
     order_line: 
       - product_id: product_E
         product_uom_qty: 5
@@ -543,7 +520,7 @@
 -
   !record {model: sale.order, id: so3}:
     partner_id: customer_2
-    warehouse_id: wh_panama_santiago
+    warehouse_id: wh_wh1
     order_line: 
       - product_id: product_A
         product_uom_qty: 5

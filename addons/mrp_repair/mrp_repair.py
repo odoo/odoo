@@ -157,6 +157,7 @@ class mrp_repair(osv.osv):
         'quotation_notes': fields.text('Quotation Notes'),
         'company_id': fields.many2one('res.company', 'Company'),
         'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired and create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view.", states={'confirmed':[('readonly',True)]}),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired': fields.boolean('Repaired', readonly=True),
         'amount_untaxed': fields.function(_amount_untaxed, string='Untaxed Amount',
@@ -501,7 +502,6 @@ class mrp_repair(osv.osv):
         res = {}
         move_obj = self.pool.get('stock.move')
         repair_line_obj = self.pool.get('mrp.repair.line')
-        seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
         for repair in self.browse(cr, uid, ids, context=context):
             for move in repair.operations:
@@ -517,7 +517,9 @@ class mrp_repair(osv.osv):
                 })
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
             if repair.deliver_bool:
-                pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
+                if not repair.picking_type_id:
+                    raise osv.except_osv(_('Warning!'), _('No picking type set.'))
+                pick_name = self.pool.get('ir.sequence').get_id(cr, uid, repair.picking_type_id.sequence_id.id, 'id', context=context)
                 picking = pick_obj.create(cr, uid, {
                     'name': pick_name,
                     'origin': repair.name,
@@ -526,7 +528,7 @@ class mrp_repair(osv.osv):
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'note': repair.internal_notes,
                     'invoice_state': 'none',
-                    'type': 'out',
+                    'picking_type_id': repair.picking_type_id.id,
                 })
                 move_id = move_obj.create(cr, uid, {
                     'name': repair.name,

@@ -187,7 +187,7 @@ class mrp_bom(osv.osv):
                 result[bom.id] = []
             if bom.bom_lines:
                 continue
-            ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
+            ok = ((name=='child_complete_ids'))
             if (bom.type=='phantom' or ok):
                 sids = bom_obj.search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
@@ -209,11 +209,10 @@ class mrp_bom(osv.osv):
                 continue
             if line.bom_lines or line.type == 'phantom':
                 continue
-            if line.product_id.supply_method == 'produce':
-                if line.product_id.procure_method == 'make_to_stock':
-                    res[line.id] = 'stock'
-                else:
-                    res[line.id] = 'order'
+            if line.product_id.procure_method == 'make_to_stock':
+                res[line.id] = 'stock'
+            else:
+                res[line.id] = 'order'
         return res
 
     _columns = {
@@ -454,11 +453,12 @@ class mrp_production(osv.osv):
 
     def _moves_assigned(self, cr, uid, ids, name, arg, context=None):
         """ Test whether all the consume lines are assigned """
-        res = True
+        res = {}
         for production in self.browse(cr, uid, ids, context=context):
+            res[production.id] = True
             states = [x.state != 'assigned' for x in production.move_lines if x]
             if any(states) or len(states) == 0:
-                return False
+                res[production.id] = False
         return res
 
 
