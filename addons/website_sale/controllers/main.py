@@ -122,10 +122,11 @@ class Ecommerce(http.Controller):
         }
         return request.webcontext.render("website_sale.product", values)
 
-    @website.route(['/shop/add_product/'], type='http', auth="public")
-    def add_product(self, **post):
-        product_id = request.registry.get('product.product').create(request.cr, request.uid, {'name': 'New Product'}, request.context)
-        return werkzeug.utils.redirect("/shop/product/%s/" % product_id)
+    @website.route(['/shop/add_product/', '/shop/category/<cat_id>/add_product/'], type='http', auth="public")
+    def add_product(self, cat_id=0, **post):
+        product_id = request.registry.get('product.product').create(request.cr, request.uid, 
+            {'name': 'New Product', 'public_categ_id': cat_id}, request.context)
+        return werkzeug.utils.redirect("/shop/product/%s/?unable_editor=1" % product_id)
 
     @website.route(['/shop/change_category/<product_id>/'], type='http', auth="public")
     def edit_product(self, product_id=0, **post):
