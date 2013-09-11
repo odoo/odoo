@@ -1,3 +1,4 @@
+@charset "utf-8";
 /* ---- CKEditor Minimal Reset ---- */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
@@ -100,7 +101,7 @@ table.editorbar-panel td.selected {
 }
 
 /* ---- SNIPPET EDITOR ---- */
-.oe_snippets {
+#oe_snippets {
   position: fixed;
   left: 0px;
   right: 0px;
@@ -199,11 +200,11 @@ table.editorbar-panel td.selected {
 }
 .oe_drop_zone.oe_hover {
   background: rgba(0, 255, 133, 0.22);
-  z-index: 99;
+  z-index: 97;
 }
 
 /* ---- SNIPPET MANIPULATOR ---- */
-.oe_snippet_manipulator {
+.oe_overlay {
   display: block;
   position: absolute;
   background: transparent;
@@ -213,45 +214,51 @@ table.editorbar-panel td.selected {
   box-sizing: border-box;
   pointer-events: none;
 }
-.oe_snippet_manipulator .oe_boxsize, .oe_snippet_manipulator .oe_margin {
-  position: absolute;
-  pointer-events: none;
+.oe_overlay .oe_handle {
+  display: none !important;
 }
-.oe_snippet_manipulator .oe_handle {
-  display: none;
-}
-.oe_snippet_manipulator.oe_hover {
+.oe_overlay.oe_hover {
   opacity: 1;
   cursor: pointer;
 }
-.oe_snippet_manipulator.oe_selected, .oe_snippet_manipulator.oe_active, .oe_snippet_manipulator .oe_boxsize, .oe_snippet_manipulator .oe_margin {
+.oe_overlay.oe_selected, .oe_overlay.oe_active {
   opacity: 1;
   background: transparent;
-  border: dashed 1px rgba(153, 0, 255, 0.5);
+  border-style: dashed;
+  border-width: 1px;
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
 }
-.oe_snippet_manipulator.oe_selected .oe_handle, .oe_snippet_manipulator.oe_active .oe_handle, .oe_snippet_manipulator .oe_boxsize .oe_handle, .oe_snippet_manipulator .oe_margin .oe_handle {
+.oe_overlay.oe_selected {
+  border-color: rgba(0, 153, 255, 0.5);
+}
+.oe_overlay.oe_active {
+  border-color: rgba(153, 0, 255, 0.5);
+}
+.oe_overlay.oe_active .oe_handle {
+  display: block !important;
   pointer-events: auto;
 }
-.oe_snippet_manipulator .oe_buttons {
+.oe_overlay .oe_overlay_options {
   display: none;
+  z-index: 99;
+}
+.oe_overlay .oe_overlay_options .oe_option {
+  pointer-events: auto;
   position: absolute;
-  right: 16px;
-  top: 16px;
-  background: #ad00ff;
-  color: white;
-  padding: 0px 2px;
-  border-radius: 3px;
 }
-.oe_snippet_manipulator .oe_buttons .oe_icon {
-  display: inline-block;
-  padding: 8px;
-  cursor: pointer;
+.oe_overlay .oe_overlay_options .oe_option.n {
+  top: 0px;
 }
-.oe_snippet_manipulator.oe_active {
-  z-index: 100000;
+.oe_overlay .oe_overlay_options .oe_option.e {
+  right: 0px;
 }
-.oe_snippet_manipulator.oe_active .oe_handle, .oe_snippet_manipulator.oe_active .oe_buttons {
+.oe_overlay .oe_overlay_options .oe_option.s {
+  bottom: 0px;
+}
+.oe_overlay .oe_overlay_options .oe_option.w {
+  left: 0px;
+}
+.oe_overlay.oe_active .oe_overlay_options {
   display: block;
 }
 
@@ -261,67 +268,56 @@ table.editorbar-panel td.selected {
   top: 50%;
   left: 50%;
   display: block;
-  background: white;
-  border: solid 1px #9900ff;
   box-sizing: border-box;
-  border-radius: 8px;
-  width: 16px;
-  height: 16px;
-  margin: -8px;
-  -webkit-transition: background 100ms linear;
-}
-.oe_handle:hover {
-  background: #9900ff;
-}
-
-.oe_handle.nw, .oe_handle.n, .oe_handle.ne {
-  top: 0px;
-}
-
-.oe_handle.ne, .oe_handle.e, .oe_handle.se {
-  left: auto;
-  right: 0px;
-}
-
-.oe_handle.sw, .oe_handle.s, .oe_handle.se {
-  top: auto;
-  bottom: 0px;
-}
-
-.oe_handle.nw, .oe_handle.w, .oe_handle.sw {
-  left: 0px;
+  width: 8px;
+  height: 8px;
+  margin: -4px;
 }
 
 .oe_handle.n {
-  cursor: n-resize;
-}
-
-.oe_handle.ne {
-  cursor: ne-resize;
-}
-
-.oe_handle.nw {
-  cursor: nw-resize;
-}
-
-.oe_handle.s {
+  left: 2px;
+  width: 100%;
+  top: 0px;
   cursor: s-resize;
 }
 
-.oe_handle.se {
-  cursor: se-resize;
-}
-
-.oe_handle.sw {
-  cursor: sw-resize;
-}
-
 .oe_handle.e {
-  cursor: e-resize;
+  left: auto;
+  top: 2px;
+  height: 100%;
+  right: 0px;
+  cursor: w-resize;
+}
+
+.oe_handle.s {
+  top: auto;
+  left: 2px;
+  width: 100%;
+  bottom: 0px;
+  cursor: n-resize;
 }
 
 .oe_handle.w {
-  cursor: w-resize;
+  top: 2px;
+  height: 100%;
+  left: 0px;
+  cursor: e-resize;
+}
+
+.s-resize-important, .s-resize-important * {
+  cursor: s-resize !important;
+}
+
+.n-resize-important, .n-resize-important * {
+  cursor: n-resize !important;
+}
+
+.e-resize-important, .e-resize-important * {
+  cursor: e-resize !important;
+}
+
+.w-resize-important, .w-resize-important * {
+  cursor: w-resize !important;
 }
 
 /* ---- MOBILE PREVIEW ---- */

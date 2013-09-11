@@ -184,14 +184,20 @@
                         </label><br/>
                         <button class="btn btn-sm btn-success">Add to basket</button>
                     </form>
-                    <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <div t-field="product.website_description">Replace this text with your Website product description</div>
-                    <div>
+                    <div class="pull-right">
                         <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                         <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><t t-field="product.product_variant_ids[0].lst_price" /> €</h5>
                         <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
                         </t>
                         <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price"><t t-field="product.product_variant_ids[0].lst_price" /> €</h4>
+                    </div>
+                    <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
+                    <div t-field="product.website_description">
+                        <div class="container mt32"></div>
+                        <div class="container" data-snippet-id="container">
+                            Replace this text with your Website product description
+                        </div>
+                        <div class="container mt32"></div>
                     </div>
                 </div>
             </t>
