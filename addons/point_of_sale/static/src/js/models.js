@@ -24,6 +24,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.proxy_queue = new module.JobQueue();         // used to prevent parallels communications to the proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
