@@ -346,12 +346,12 @@ class res_company(osv.osv):
     <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <stylesheet>
        <!-- Set here the default font to use for all <para> tags -->
-       <paraStyle name='Normal' fontName="DejaVu Sans"/>
+       <paraStyle name='Normal' fontName="DejaVu Sans Book"/>
     </stylesheet>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
-        <setFont name="DejaVu Sans" size="8"/>
+        <setFont name="DejaVu Sans Book" size="8"/>
         <drawString x="%s" y="%s"> [[ formatLang(time.strftime("%%Y-%%m-%%d"), date=True) ]]  [[ time.strftime("%%H:%%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
         <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
@@ -359,7 +359,7 @@ class res_company(osv.osv):
         <lines>%s</lines>
         <!-- Set here the default font to use for all <drawString> tags -->
         <!-- don't forget to change the 2 other occurence of <setFont> above if needed --> 
-        <setFont name="DejaVu Sans" size="8"/>
+        <setFont name="DejaVu Sans Book" size="8"/>
     </pageGraphics>
 </pageTemplate>
 </header>"""
@@ -384,13 +384,13 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <!-- Set here the default font to use for all <para> tags -->
-            <paraStyle name='Normal' fontName="DejaVu Sans"/>
+            <paraStyle name='Normal' fontName="DejaVu Sans Book"/>
             <paraStyle name="main_footer" fontSize="8.0" alignment="CENTER"/>
             <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
         <pageGraphics>
             <!-- Set here the default font to use for all <drawString> tags -->
-            <setFont name="DejaVu Sans" size="8"/>
+            <setFont name="DejaVu Sans Book" size="8"/>
             <!-- You Logo - Change X,Y,Width and Height -->
             <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
             <fill color="black"/>
@@ -441,7 +441,7 @@ class res_company(osv.osv):
         'rml_header2': _header2,
         'rml_header3': _header3,
         'logo':_get_logo,
-        'font':'DejaVu Sans'
+        'font':'DejaVu Sans Book'
     }
 
     _constraints = [
