@@ -318,9 +318,10 @@ class mrp_bom(osv.osv):
         """
         routing_obj = self.pool.get('mrp.routing')
         factor = factor / (bom.product_efficiency or 1.0)
-        factor = rounding(factor, bom.product_rounding)
-        if factor < bom.product_rounding:
-            factor = bom.product_rounding
+        max_rounding = max(bom.product_rounding, bom.product_uom.rounding)
+        factor = rounding(factor, max_rounding)
+        if factor < max_rounding:
+            factor = max_rounding
         result = []
         result2 = []
         phantom = False

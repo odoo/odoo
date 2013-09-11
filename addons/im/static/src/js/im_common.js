@@ -254,22 +254,25 @@ function declare($, _, openerp) {
         },
         received_messages: function(messages) {
             var self = this;
-            if (! this.get("window_focus") && messages.length >= 1) {
-                this.set("waiting_messages", this.get("waiting_messages") + messages.length);
-                this.ting.play();
-                this.create_ting();
-            }
             var defs = [];
+            var received = false;
             _.each(messages, function(message) {
                 if (! message.technical) {
                     defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
+                        received = true;
                         return conv.received_message(message);
                     }));
                 } else {
                     var json = JSON.parse(message.message);
+                    message.json = json;
                     defs.push($.when(im_common.technical_messages_handlers[json.type](self, message)));
                 }
             });
+            if (! this.get("window_focus") && received) {
+                this.set("waiting_messages", this.get("waiting_messages") + messages.length);
+                this.ting.play();
+                this.create_ting();
+            }
             return $.when.apply($, defs);
         },
         calc_positions: function() {
@@ -292,7 +295,7 @@ function declare($, _, openerp) {
         className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "keydown",
-            "click .oe_im_chatview_close": "destroy",
+            "click .oe_im_chatview_close": "close",
             "click .oe_im_chatview_header": "show_hide"
         },
         init: function(parent, c_manager, session_id, options) {
@@ -443,8 +446,8 @@ function declare($, _, openerp) {
                 return new Array(size - str.length + 1).join('0') + str;
             };
             date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
-            
-            this.last_bubble = $(openerp.qweb.render("im_common.conversation_bubble", {"items": items, "user": user, "time": date}));
+            var to_show = _.map(items, im_common.escape_keep_url);
+            this.last_bubble = $(openerp.qweb.render("im_common.conversation_bubble", {"items": to_show, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();
         },
@@ -456,13 +459,27 @@ function declare($, _, openerp) {
                 return;
             im_common.connection.model("im.session").call("add_to_session",
                     [this.session_id, user.get("id"), this.c_manager.me.get("uuid")]).then(_.bind(function() {
-                this.send_message(JSON.stringify({"type": "session_modified"}), true);
+                this.send_message(JSON.stringify({"type": "session_modified", "action": "added", "user_id": user.get("id")}), true);
             }, this));
         },
         focus: function() {
             this.$(".oe_im_chatview_input").focus();
             if (! this.shown)
                 this.show_hide();
+        },
+        close: function() {
+            var def = $.when();
+            if (this.get("users").length > 1) {
+                def = im_common.connection.model("im.session").call("remove_me_from_session",
+                        [this.session_id, this.c_manager.me.get("uuid")]).then(_.bind(function() {
+                    return this.send_message(JSON.stringify({"type": "session_modified", "action": "removed",
+                        "user_id": this.c_manager.me.get("id")}), true)
+                }, this))
+            }
+
+            return def.then(_.bind(function() {
+                this.destroy();
+            }, this));
         },
         destroy: function() {
             _.each(this.get("users"), function(user) {
@@ -479,9 +496,34 @@ function declare($, _, openerp) {
     im_common.technical_messages_handlers = {};
 
     im_common.technical_messages_handlers.session_modified = function(c_manager, message) {
-        c_manager.activate_session(message.session_id[0], true).then(function(conv) {
-            conv.refresh_users();
+        var def = $.when();
+        if (message.json.action === "added" && message.json.user_id === c_manager.me.get("id")) {
+            def = c_manager.activate_session(message.session_id[0], true);
+        }
+        return def.then(function() {
+            var conv = _.find(c_manager.conversations, function(conv) {return conv.session_id == message.session_id[0];});
+            if (conv)
+                return conv.refresh_users();
+            return undefined;
         });
+    };
+
+    var url_regex = /(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/gi;
+
+    im_common.escape_keep_url = function(str) {
+        var last = 0;
+        var txt = "";
+        while (true) {
+            var result = url_regex.exec(str);
+            if (! result)
+                break;
+            txt += _.escape(str.slice(last, result.index));
+            last = url_regex.lastIndex;
+            var url = _.escape(result[0]);
+            txt += '<a href="' + url + '">' + url + '</a>';
+        }
+        txt += str.slice(last, str.length);
+        return txt;
     };
 
     return im_common;
