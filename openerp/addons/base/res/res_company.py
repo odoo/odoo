@@ -32,15 +32,17 @@ from openerp.tools import config
 import platform
 import glob
 from openerp.report.render.rml2pdf import customfonts
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+import logging
+
+_logger = logging.getLogger('openerp')
+supported_fonts = []
 
 def get_font_list():
     _lst_font=[]
-    TTFSearchPath_Linux = customfonts.TTFSearchPath_Linux
-    TTFSearchPath_Darwin = customfonts.TTFSearchPath_Darwin
-    TTFSearchPath_Windows = customfonts.TTFSearchPath_Windows
     TTFSearchPathMap = customfonts.TTFSearchPathMap
     searchpath = []
-    select_font = []
     if config.get('fonts_search_path'):
         searchpath += map(str.strip, config.get('fonts_search_path').split(','))
 
@@ -49,7 +51,6 @@ def get_font_list():
         searchpath += TTFSearchPathMap[local_platform]
         
     searchpath += rl_config.TTFSearchPath
-    
     for dirglob in searchpath:
         dirglob = os.path.expanduser(dirglob)
         for dirname in glob.iglob(dirglob):
@@ -60,9 +61,15 @@ def get_font_list():
                     from PIL import ImageFont
                     if f.find('.ttf') != -1:
                         f_test = ImageFont.truetype(abs_filename, 1)
-                        font_family = f_test.font.family
                         font_familystyle = f_test.font.family +" "+ f_test.font.style.replace(" ","")
-                        _lst_font.append((font_familystyle,font_familystyle))
+                        if (font_familystyle,font_familystyle) not in _lst_font:
+                            try:
+                                pdfmetrics.registerFont(TTFont(font_familystyle, f))
+                                _lst_font.append((font_familystyle,font_familystyle))
+                            except:
+                                _logger.warning("Could not register Font %s",font_familystyle)
+    global supported_fonts 
+    supported_fonts.extend(_lst_font)
     return _lst_font
 
 class multi_company_default(osv.osv):
@@ -150,8 +157,10 @@ class res_company(osv.osv):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
     
     def _get_font(self, cr, uid, context=None):
-        font_list = get_font_list()
-        return font_list
+        global supported_fonts
+        if not supported_fonts:
+            get_font_list()
+        return supported_fonts
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
