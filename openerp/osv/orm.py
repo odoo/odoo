@@ -383,16 +383,18 @@ class browse_record(object):
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch:
+            if col._prefetch and not col.groups:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._table._columns.items())
+                field_filter = lambda x: x[1]._classic_write and x[1]._prefetch and not x[1].groups
+                fields_to_fetch = filter(field_filter, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
-                fields_to_fetch += filter(lambda x: x[1]._classic_write, inherits)
+                fields_to_fetch += filter(field_filter, inherits)
             # otherwise we fetch only that field
             else:
                 fields_to_fetch = [(name, col)]
+
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
@@ -1034,6 +1036,7 @@ class BaseModel(object):
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
+                '_prefetch': False,
                 #'select': int(field['select_level'])
             }
 
@@ -2198,7 +2201,8 @@ class BaseModel(object):
 
         sql_res = False
         parent_view_model = None
-        view_ref = context.get(view_type + '_view_ref')
+        view_ref_key = view_type + '_view_ref'
+        view_ref = context.get(view_ref_key)
         # Search for a root (i.e. without any parent) view.
         while True:
             if view_ref and not view_id:
@@ -2208,6 +2212,10 @@ class BaseModel(object):
                     view_ref_res = cr.fetchone()
                     if view_ref_res:
                         view_id = view_ref_res[0]
+                else:
+                    _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
+                        'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
+                        self._name)
 
             if view_id:
                 cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
@@ -5110,6 +5118,40 @@ class BaseModel(object):
                 result = cr.fetchone()
                 current_id = result[0] if result else None
                 if current_id == id:
+                    return False
+        return True
+
+    def _check_m2m_recursion(self, cr, uid, ids, field_name):
+        """
+        Verifies that there is no loop in a hierarchical structure of records,
+        by following the parent relationship using the **parent** field until a loop
+        is detected or until a top-level record is found.
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param ids: list of ids of records to check
+        :param field_name: field to check
+        :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
+        """
+
+        field = self._all_columns.get(field_name)
+        field = field.column if field else None
+        if not field or field._type != 'many2many' or field._obj != self._name:
+            # field must be a many2many on itself
+            raise ValueError('invalid field_name: %r' % (field_name,))
+
+        query = 'SELECT distinct "%s" FROM "%s" WHERE "%s" IN %%s' % (field._id2, field._rel, field._id1)
+        ids_parent = ids[:]
+        while ids_parent:
+            ids_parent2 = []
+            for i in range(0, len(ids_parent), cr.IN_MAX):
+                j = i + cr.IN_MAX
+                sub_ids_parent = ids_parent[i:j]
+                cr.execute(query, (tuple(sub_ids_parent),))
+                ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
+            ids_parent = ids_parent2
+            for i in ids_parent:
+                if i in ids:
                     return False
         return True
 

@@ -116,10 +116,13 @@ def _process_text(self, txt):
             result += tools.ustr(self.localcontext.get('translate', lambda x:x)(to_translate))
             if sps:
                 txt = None
-                expr = sps.pop(0)
-                txt = eval(expr, self.localcontext)
-                if txt and isinstance(txt, basestring):
-                    txt = tools.ustr(txt)
+                try:
+                    expr = sps.pop(0)
+                    txt = eval(expr, self.localcontext)
+                    if txt and isinstance(txt, basestring):
+                        txt = tools.ustr(txt)
+                except Exception:
+                    _logger.error("Failed to evaluate expression [[ %s ]] with context %r while rendering report, ignored.", expr, self.localcontext)
                 if isinstance(txt, basestring):
                     result += txt
                 elif txt and (txt is not None) and (txt is not False):

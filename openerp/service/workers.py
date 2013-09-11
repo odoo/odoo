@@ -196,7 +196,7 @@ class Multicorn(object):
 
     def stop(self, graceful=True):
         if self.long_polling_pid is not None:
-            self.worker_kill(self.long_polling_pid, signal.SIGTERM)
+            self.worker_kill(self.long_polling_pid, signal.SIGKILL)     # FIXME make longpolling process handle SIGTERM correctly
             self.long_polling_pid = None
         if graceful:
             _logger.info("Stopping gracefully")
@@ -392,14 +392,18 @@ class WorkerCron(Worker):
             interval = 60 + self.pid % 10 # chorus effect
             time.sleep(interval)
 
-    def process_work(self):
-        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
+    def _db_list(self):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
             db_names = openerp.service.db.exp_list(True)
+        return db_names
+
+    def process_work(self):
+        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
+        db_names = self._db_list()
         if len(db_names):
             self.db_index = (self.db_index + 1) % len(db_names)
             db_name = db_names[self.db_index]
@@ -407,14 +411,11 @@ class WorkerCron(Worker):
             if rpc_request_flag:
                 start_time = time.time()
                 start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
-            while True:
-                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                # TODO why isnt openerp.addons.base defined ?
-                import openerp.addons.base as base
-                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                if not acquired:
-                    openerp.modules.registry.RegistryManager.delete(db_name)
-                    break
+            
+            import openerp.addons.base as base
+            base.ir.ir_cron.ir_cron._acquire_job(db_name)
+            openerp.modules.registry.RegistryManager.delete(db_name)
+
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
                 openerp.sql_db.close_db(db_name)
@@ -433,8 +434,15 @@ class WorkerCron(Worker):
             self.db_index = 0
 
     def start(self):
+        os.nice(10)     # mommy always told me to be nice with others...
         Worker.start(self)
         self.multi.socket.close()
         openerp.service.start_internal()
+
+        # chorus effect: make cron workers do not all start at first database
+        mct = config['max_cron_threads']
+        p = float(self.pid % mct) / mct
+        self.db_index = int(len(self._db_list()) * p)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

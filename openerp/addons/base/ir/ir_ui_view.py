@@ -187,7 +187,7 @@ class view(osv.osv):
         if self.pool._init:
             # Module init currently in progress, only consider views from modules whose code was already loaded 
             query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                       WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
+                       WHERE v.inherit_id=%s AND v.model=%s AND (md.module IS NULL or md.module in %s)  
                        ORDER BY priority"""
             query_params = (view_id, model, tuple(self.pool._init_modules))
         else:

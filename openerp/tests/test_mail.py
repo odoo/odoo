@@ -23,145 +23,8 @@
 ##############################################################################
 
 import unittest2
+from . import test_mail_examples
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
-
-HTML_SOURCE = """
-<font size="2" style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">test1</font>
-<div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; font-style: normal; ">
-<b>test2</b></div><div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; ">
-<i>test3</i></div><div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; ">
-<u>test4</u></div><div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; ">
-<strike>test5</strike></div><div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">
-<font size="5">test6</font></div><div><ul><li><font color="#1f1f1f" face="monospace" size="2">test7</font></li><li>
-<font color="#1f1f1f" face="monospace" size="2">test8</font></li></ul><div><ol><li><font color="#1f1f1f" face="monospace" size="2">test9</font>
-</li><li><font color="#1f1f1f" face="monospace" size="2">test10</font></li></ol></div></div>
-<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><div><div><font color="#1f1f1f" face="monospace" size="2">
-test11</font></div></div></div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">
-<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><font color="#1f1f1f" face="monospace" size="2">
-test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></font></div></blockquote></blockquote>
-<font color="#1f1f1f" face="monospace" size="2"><a href="http://google.com">google</a></font>
-<a href="javascript:alert('malicious code')">test link</a>
-"""
-
-EDI_LIKE_HTML_SOURCE = """<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-    <p>Hello ${object.partner_id.name},</p>
-    <p>A new invoice is available for you: </p>
-    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
-       &nbsp;&nbsp;<strong>REFERENCES</strong><br />
-       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />
-       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />
-       &nbsp;&nbsp;Order reference: ${object.origin}<br />
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
-    </p>
-    <br/>
-    <p>It is also possible to directly pay with Paypal:</p>
-    <a style="margin-left: 120px;" href="${object.paypal_url}">
-        <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
-    </a>
-    <br/>
-    <p>If you have any question, do not hesitate to contact us.</p>
-    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
-    <br/>
-    <br/>
-    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
-            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
-    </div>
-    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
-        <span style="color: #222; margin-bottom: 5px; display: block; ">
-        ${object.company_id.street}<br/>
-        ${object.company_id.street2}<br/>
-        ${object.company_id.zip} ${object.company_id.city}<br/>
-        ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
-        </span>
-        <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
-            Phone:&nbsp; ${object.company_id.phone}
-        </div>
-        <div>
-            Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
-        </div>
-    </div>
-</div></body></html>"""
-
-TEXT_MAIL1 = """I contact you about our meeting for tomorrow. Here is the schedule I propose:
-9 AM: brainstorming about our new amazing business app</span></li>
-9.45 AM: summary
-10 AM: meeting with Fabien to present our app
-Is everything ok for you ?
---
-Administrator"""
-
-HTML_MAIL1 = """<div>
-<font><span>I contact you about our meeting for tomorrow. Here is the schedule I propose:</span></font>
-</div>
-<div><ul>
-<li><span>9 AM: brainstorming about our new amazing business app</span></li>
-<li><span>9.45 AM: summary</span></li>
-<li><span>10 AM: meeting with Fabien to present our app</span></li>
-</ul></div>
-<div><font><span>Is everything ok for you ?</span></font></div>"""
-
-GMAIL_REPLY1_SAN = """Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
-<li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you ?</div>
-<div><p>--<br>Administrator</p></div>
-
-<div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
-</blockquote></div><br></div>"""
-
-THUNDERBIRD_16_REPLY1_SAN = """    <div>On 11/08/2012 05:29 PM,
-      <a href="mailto:dummy@example.com">dummy@example.com</a> wrote:<br></div>
-    <blockquote>
-      <div>I contact you about our meeting for tomorrow. Here is the
-        schedule I propose:</div>
-      <div>
-        <ul><li>9 AM: brainstorming about our new amazing business
-            app&lt;/span&gt;&lt;/li&gt;</li>
-          <li>9.45 AM: summary</li>
-          <li>10 AM: meeting with Fabien to present our app</li>
-        </ul></div>
-      <div>Is everything ok for you ?</div>
-      <div>
-        <p>--<br>
-          Administrator</p>
-      </div>
-      <div>
-        <p>Log in our portal at:
-<a href="http://localhost:8069#action=login&amp;db=mail_1&amp;token=rHdWcUART5PhEnJRaXjH">http://localhost:8069#action=login&amp;db=mail_1&amp;token=rHdWcUART5PhEnJRaXjH</a></p>
-      </div>
-    </blockquote>
-    Ok for me. I am replying directly below your mail, using
-    Thunderbird, with a signature.<br><br>
-    Did you receive my email about my new laptop, by the way ?<br><br>
-    Raoul.<br><pre>-- 
-Raoul Grosbedonn&#233;e
-</pre>"""
-
-TEXT_TPL = """Salut Raoul!
-Le 28 oct. 2012 à 00:02, Raoul Grosbedon a écrit :
-
-> C'est sûr que je suis intéressé (quote)!
-
-Trouloulou pouet pouet. Je ne vais quand même pas écrire de vrais mails, non mais ho.
-
-> 2012/10/27 Bert Tartopoils :
->> Diantre, me disè-je en envoyant un message similaire à Martine, mais comment vas-tu (quote)?
->> 
->> A la base le contenu était un vrai mail, mais je l'ai quand même réécrit pour ce test, histoire de dire que, quand même, on ne met pas n'importe quoi ici. (quote)
->> 
->> Et sinon bon courage pour trouver tes clefs (quote).
->> 
->> Bert TARTOPOILS
->> bert.tartopoils@miam.miam
->> 
-> 
-> 
-> -- 
-> Raoul Grosbedon
-
-Bert TARTOPOILS
-bert.tartopoils@miam.miam
-"""
 
 
 class TestSanitizer(unittest2.TestCase):
@@ -223,22 +86,21 @@ class TestSanitizer(unittest2.TestCase):
             self.assertTrue('ha.ckers.org' not in html or 'http://ha.ckers.org/xss.css' in html, 'html_sanitize did not remove a malicious code in %s (%s)' % (content, html))
 
     def test_html(self):
-        sanitized_html = html_sanitize(HTML_SOURCE)
+        sanitized_html = html_sanitize(test_mail_examples.MISC_HTML_SOURCE)
         for tag in ['<div', '<b', '<i', '<u', '<strike', '<li', '<blockquote', '<a href']:
             self.assertIn(tag, sanitized_html, 'html_sanitize stripped too much of original html')
         for attr in ['javascript']:
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
-        emails =[("Charles <charles.bidule@truc.fr>", "Charles &lt;charles.bidule@truc.fr&gt;"), 
+        emails = [("Charles <charles.bidule@truc.fr>", "Charles &lt;charles.bidule@truc.fr&gt;"),
                 ("Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>", "Dupuis &lt;'tr/-: ${dupuis#$'@truc.baz.fr&gt;"),
                 ("Technical <service/technical+2@open.com>", "Technical &lt;service/technical+2@open.com&gt;"),
                 ("Div nico <div-nico@open.com>", "Div nico &lt;div-nico@open.com&gt;")]
         for email in emails:
             self.assertIn(email[1], html_sanitize(email[0]), 'html_sanitize stripped emails of original html')
 
-
     def test_edi_source(self):
-        html = html_sanitize(EDI_LIKE_HTML_SOURCE)
+        html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
         self.assertIn('div style="font-family: \'Lucica Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
             'html_sanitize removed valid style attribute')
         self.assertIn('<span style="color: #222; margin-bottom: 5px; display: block; ">', html,
@@ -251,36 +113,122 @@ class TestSanitizer(unittest2.TestCase):
 class TestCleaner(unittest2.TestCase):
     """ Test the email cleaner function that filters the content of incoming emails """
 
-    def test_html_email_clean(self):
-        # Test1: reply through gmail: quote in blockquote, signature --\nAdministrator
-        new_html = html_email_clean(GMAIL_REPLY1_SAN)
-        self.assertNotIn('blockquote', new_html, 'html_email_cleaner did not remove a blockquote')
-        self.assertNotIn('I contact you about our meeting', new_html, 'html_email_cleaner wrongly removed the quoted content')
-        self.assertNotIn('Administrator', new_html, 'html_email_cleaner did not erase the signature')
-        self.assertIn('Ok for me', new_html, 'html_email_cleaner erased too much content')
+    def test_00_basic_text(self):
+        """ html_email_clean test for signatures """
+        test_data = [
+            (
+                """This is Sparta!\n--\nAdministrator\n+9988776655""",
+                ['This is Sparta!'],
+                ['Administrator', '9988776655']
+            ), (
+                """<p>--\nAdministrator</p>""",
+                [],
+                ['--', 'Administrator']
+            ), (
+                """<p>This is Sparta!\n---\nAdministrator</p>""",
+                ['This is Sparta!'],
+                ['---', 'Administrator']
+            ), (
+                """<p>--<br>Administrator</p>""",
+                [],
+                []
+            ), (
+                """<p>This is Sparta!<br/>--<br>Administrator</p>""",
+                ['This is Sparta!'],
+                []
+            ), (
+                """This is Sparta!\n>Ah bon ?\nCertes\n> Chouette !\nClair""",
+                ['This is Sparta!', 'Certes', 'Clair'],
+                ['Ah bon', 'Chouette']
+            )
+        ]
+        for test, in_lst, out_lst in test_data:
+            new_html = html_email_clean(test, remove=True)
+            for text in in_lst:
+                self.assertIn(text, new_html, 'html_email_cleaner wrongly removed content')
+            for text in out_lst:
+                self.assertNotIn(text, new_html, 'html_email_cleaner did not remove unwanted content')
 
-        # Test2: reply through Tunderbird 16.0.2
-        new_html = html_email_clean(THUNDERBIRD_16_REPLY1_SAN)
-        self.assertNotIn('blockquote', new_html, 'html_email_cleaner did not remove a blockquote')
-        self.assertNotIn('I contact you about our meeting', new_html, 'html_email_cleaner wrongly removed the quoted content')
-        self.assertNotIn('Administrator', new_html, 'html_email_cleaner did not erase the signature')
-        self.assertNotIn('Grosbedonn', new_html, 'html_email_cleaner did not erase the signature')
-        self.assertIn('Ok for me', new_html, 'html_email_cleaner erased too much content')
+    def test_10_email_text(self):
+        """ html_email_clean test for text-based emails """
+        new_html = html_email_clean(test_mail_examples.TEXT_1, remove=True)
+        for ext in test_mail_examples.TEXT_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.TEXT_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-        # Test3: text email
-        new_html = html_email_clean(TEXT_MAIL1)
-        self.assertIn('I contact you about our meeting', new_html, 'html_email_cleaner wrongly removed the quoted content')
-        self.assertNotIn('Administrator', new_html, 'html_email_cleaner did not erase the signature')
+        new_html = html_email_clean(test_mail_examples.TEXT_2, remove=True)
+        for ext in test_mail_examples.TEXT_2_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.TEXT_2_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-        # Test4: more complex text email
-        new_html = html_email_clean(TEXT_TPL)
-        self.assertNotIn('quote', new_html, 'html_email_cleaner did not remove correctly plaintext quotes')
+    def test_20_email_html(self):
+        new_html = html_email_clean(test_mail_examples.HTML_1, remove=True)
+        for ext in test_mail_examples.HTML_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.HTML_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-        # Test5: False boolean for text must return empty string
+        new_html = html_email_clean(test_mail_examples.HTML_2, remove=True)
+        for ext in test_mail_examples.HTML_2_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.HTML_2_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+        # --- MAIL ORIGINAL --- -> can't parse this one currently, too much language-dependent
+        # new_html = html_email_clean(test_mail_examples.HTML_3, remove=False)
+        # for ext in test_mail_examples.HTML_3_IN:
+        #     self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        # for ext in test_mail_examples.HTML_3_OUT:
+        #     self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+    def test_30_email_msoffice(self):
+        new_html = html_email_clean(test_mail_examples.MSOFFICE_1, remove=True)
+        for ext in test_mail_examples.MSOFFICE_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.MSOFFICE_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+        new_html = html_email_clean(test_mail_examples.MSOFFICE_2, remove=True)
+        for ext in test_mail_examples.MSOFFICE_2_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.MSOFFICE_2_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+        new_html = html_email_clean(test_mail_examples.MSOFFICE_3, remove=True)
+        for ext in test_mail_examples.MSOFFICE_3_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.MSOFFICE_3_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+    def test_40_email_hotmail(self):
+        new_html = html_email_clean(test_mail_examples.HOTMAIL_1, remove=True)
+        for ext in test_mail_examples.HOTMAIL_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.HOTMAIL_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+    def test_50_email_gmail(self):
+        new_html = html_email_clean(test_mail_examples.GMAIL_1, remove=True)
+        for ext in test_mail_examples.GMAIL_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.GMAIL_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+    def test_60_email_thunderbird(self):
+        new_html = html_email_clean(test_mail_examples.THUNDERBIRD_1, remove=True)
+        for ext in test_mail_examples.THUNDERBIRD_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
+        for ext in test_mail_examples.THUNDERBIRD_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
+
+    def test_90_misc(self):
+        # False boolean for text must return empty string
         new_html = html_email_clean(False)
         self.assertEqual(new_html, False, 'html_email_cleaner did change a False in an other value.')
 
-        # Test6: Message with xml and doctype tags don't crash
+        # Message with xml and doctype tags don't crash
         new_html = html_email_clean(u'<?xml version="1.0" encoding="iso-8859-1"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n <head>\n  <title>404 - Not Found</title>\n </head>\n <body>\n  <h1>404 - Not Found</h1>\n </body>\n</html>\n')
         self.assertNotIn('encoding', new_html, 'html_email_cleaner did not remove correctly encoding attributes')
 
