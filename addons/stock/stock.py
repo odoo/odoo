@@ -914,6 +914,16 @@ class stock_picking(osv.osv):
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
                         stock_move_obj.split(cr, uid, mov, res2[move], context=context)
                 stock_move_obj.action_done(cr, uid, extra_moves + [x.id for x in orig_moves], context=context)
+                todo = []
+                for move in stock_move_obj.browse(cr, uid, extra_moves, context=context) + orig_moves:
+                    if move.state == 'draft':
+                        self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
+                            context=context)
+                        todo.append(move.id)
+                    elif move.state in ('assigned','confirmed'):
+                        todo.append(move.id)
+                if len(todo):
+                    self.pool.get('stock.move').action_done(cr, uid, todo, context=context)
             picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
         return True

@@ -104,7 +104,6 @@
   !python {model: stock.picking}: |
     self.action_confirm(cr, uid, [ref('delivery_order1')], context=context)
     self.action_assign(cr, uid, [ref('delivery_order1')])
-    self.force_assign(cr, uid, [ref('delivery_order1')], context=context)
 - 
   Instead of doing the 300 pieces, you decide to take pallet 1 (do not mention product in operation here) and 20 pieces from lot A and 10 pieces from pallet 3
 - 
@@ -113,12 +112,11 @@
     self.do_prepare_partial(cr, uid, [ref('delivery_order1')], context=context)
     delivery_id = self.browse(cr, uid, ref('delivery_order1'), context=context)
     for rec in delivery_id.pack_operation_ids:
-      if rec.package_id.name == 'Pallet 1' and rec.product_qty == 120:
-        stock_pack.write(cr, uid, rec.id, {'product_id': False}, context=context)
-      if rec.package_id.name == 'Pallet 2' and rec.lot_id.name == 'Lot A' :
-        stock_pack.write(cr, uid, rec.id, {'product_qty': 20}, context=context)
-      if rec.package_id.name == 'Pallet 3' and rec.product_qty == 60:
-        stock_pack.write(cr, uid, rec.id, {'product_qty': 10}, context=context)
+      if rec.package_id.name == 'Pallet 2':
+        lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product1')), ('name','=','Lot A')])
+        stock_pack.write(cr, uid, rec.id, {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0]}, context=context)
+      if rec.package_id.name == 'Pallet 3':
+        stock_pack.write(cr, uid, rec.id, {'product_id': ref('product1'),'product_qty': 10}, context=context)
 - 
   Process this picking
 - 
