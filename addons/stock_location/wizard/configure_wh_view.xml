@@ -7,19 +7,16 @@
             <field name="arch" type="xml">
               <form string="Configure Warehouse" version="7.0">
                 <sheet>
-                  <separator string="Warehouse Informations"/>
-                  <group>
-                    <group>
+                  <group string="Warehouse Information" colspan="4">
                       <field name="name"/>
                       <field name="code"/>
                       <field name="partner_id" invisible="1"/>
                       <field name="address_id" domain="[('parent_id', '=', partner_id)]" context="{'default_parent_id': partner_id}"/>
-                    </group>
-                    <group>
-                        <field name="reception_steps"/>
-                        <field name="delivery_steps" on_change="onchange_delivery_steps(delivery_steps)"/>
-                        <field name="packing" attrs="{'readonly': [('delivery_steps', '==', 'pick_pack_ship')]}"/>
-                    </group>
+                  </group>
+                  <group string="Logistics Information" colspan="4">
+                      <field name="reception_steps" widget='radio'/>
+                      <field name="delivery_steps" on_change="onchange_delivery_steps(delivery_steps)" widget='radio'/>
+                      <field name="packing" attrs="{'readonly': [('delivery_steps', '==', 'pick_pack_ship')]}"/>
                   </group>
                   <footer>
                       <button name="configure_wh" string="Configure Warehouse" type="object" class="oe_highlight"/>
