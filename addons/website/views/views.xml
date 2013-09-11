@@ -73,8 +73,10 @@
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                             <li><a href="/admin">Sign in</a></li>
                                             <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                <!-- TODO: use flags for language selection -->
+                                                <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
                                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                                    <t t-esc="lang_selected['name']"/> <span class="caret"></span>
+                                                    <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
                                                 </a>
                                                 <ul class="dropdown-menu" role="menu">
                                                     <li t-foreach="website.language_ids" t-as="lg">
