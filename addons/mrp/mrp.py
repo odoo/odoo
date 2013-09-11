@@ -632,7 +632,7 @@ class mrp_production(osv.osv):
             for line in results2:
                 line['production_id'] = production.id
                 workcenter_line_obj.create(cr, uid, line)
-        return len(results)
+        return results
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the production order and related stock moves.
@@ -658,6 +658,10 @@ class mrp_production(osv.osv):
         """
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
+
+        for production in self.browse(cr, uid, ids, context=context):
+            if not production.move_created_ids:
+                produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
 
         for (production_id,name) in self.name_get(cr, uid, ids):
             production = self.browse(cr, uid, production_id)
@@ -790,6 +794,7 @@ class mrp_production(osv.osv):
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
 
         wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce', cr)
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
         return True
 
@@ -849,9 +854,12 @@ class mrp_production(osv.osv):
         """
         res = True
         for production in self.browse(cr, uid, ids):
-            if not production.product_lines:
-                if not self.action_compute(cr, uid, [production.id]):
-                    res = False
+            boms = self.action_compute(cr, uid, [production.id])
+            res = False
+            for bom in boms:
+                product = self.pool.get('product.product').browse(cr, uid, bom['product_id'])
+                if product.type in ('product', 'consu'):
+                    res = True
         return res
 
     def _get_auto_picking(self, cr, uid, production):
@@ -1005,11 +1013,13 @@ class mrp_production(osv.osv):
 
             for line in production.product_lines:
                 consume_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
-                shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
+                if shipment_id:
+                    shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
-                self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
+                    self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
 
-            wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
+            if shipment_id:
+                wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
         return shipment_id
 
