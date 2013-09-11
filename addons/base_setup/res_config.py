@@ -24,13 +24,17 @@ import re
 import os
 from openerp.addons.base.res import res_company
 
+supported_fonts = []
+
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
     
     def _get_font(self, cr, uid, context=None):
-        font_list = res_company.get_font_list()
-        return font_list
+        global supported_fonts
+        if not supported_fonts:
+            supported_fonts.extend(res_company.get_font_list())
+        return supported_fonts
     
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
