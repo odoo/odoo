@@ -41,7 +41,7 @@ class stock_location_route(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Default Routes', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse'), #TODO: required = True? 
+        'route_id': fields.many2one('stock.location.route', 'Default Route', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse'),
     }
 
 
@@ -49,11 +49,11 @@ class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
     _columns = {
-        'name': fields.char('Operation', size=64),
+        'name': fields.char('Operation', size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'route_id': fields.many2one('stock.location.route', 'Route'),
-        'location_from_id' : fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
-        'location_dest_id' : fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
+        'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
@@ -281,16 +281,13 @@ class stock_move(osv.osv):
         self._push_apply(cr, uid, moves, context=context)
         return result
 
-
-
-    def _create_procurement(self, cr, uid, move, context=None):
+    def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         """
             Next to creating the procurement order, it will propagate the routes
         """
-        proc_id = super(stock_move, self)._create_procurement(cr, uid, move, context=context)
-        proc_obj = self.pool.get("procurement.order")
-        proc_obj.write(cr, uid, [proc_id], {'route_ids': [(4,x.id) for x in move.route_ids]}, context=context)
-        return proc_id
+        vals = super(stock_move, self)._prepare_procurement_from_move(cr, uid, move, context=context)
+        vals['route_ids'] = [(4, x.id) for x in move.route_ids]
+        return vals
 
 
 class stock_location(osv.osv):

@@ -1232,13 +1232,9 @@ class stock_move(osv.osv):
         'propagate': True,
     }
 
-    def _create_procurement(self, cr, uid, move, context=None):
-        """
-            This will create a procurement order
-        """
-        proc_obj = self.pool.get("procurement.order")
+    def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         origin = (move.group_id and (move.group_id.name+":") or "") +  (move.rule_id and move.rule_id.name or "/")
-        return proc_obj.create(cr, uid, {
+        return {
             'name': move.rule_id and move.rule_id.name or "/",
             'origin': origin,
             'company_id': move.company_id and move.company_id.id or False,
@@ -1251,7 +1247,14 @@ class stock_move(osv.osv):
             'location_id': move.location_id.id,
             'move_dest_id': move.id,
             'group_id': move.group_id and move.group_id.id or False,
-        })
+        }
+
+    def _create_procurement(self, cr, uid, move, context=None):
+        """
+            This will create a procurement order
+        """
+        proc_obj = self.pool.get("procurement.order")
+        return proc_obj.create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context))
 
     # Check that we do not modify a stock.move which is done
     def write(self, cr, uid, ids, vals, context=None):

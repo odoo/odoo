@@ -1449,6 +1449,17 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_procurement_tree_stock_inherit" model="ir.ui.view">
+            <field name="name">procurement.order.tree.stock.inherit</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="before">
+                    <field name="location_id"/>
+                </xpath>
+            </field>
+        </record>
+        
         
         
         

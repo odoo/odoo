@@ -11,19 +11,15 @@
                   <group>
                     <group>
                       <field name="name"/>
-                      <field name="address_id"/>
+                      <field name="code"/>
+                      <field name="partner_id" invisible="1"/>
+                      <field name="address_id" domain="[('parent_id', '=', partner_id)]" context="{'default_parent_id': partner_id}"/>
                     </group>
                     <group>
-                      <field name="crossdock" on_change="onchange_crossdock(crossdock)"/>
-                      <field name="packing" attrs="{'invisible': [('crossdock', '=', True)]}" on_change="onchange_packing(packing, internal_stock_loc_id)"/>
+                        <field name="reception_steps"/>
+                        <field name="delivery_steps" on_change="onchange_delivery_steps(delivery_steps)"/>
+                        <field name="packing" attrs="{'readonly': [('delivery_steps', '==', 'pick_pack_ship')]}"/>
                     </group>
-                  </group>
-                <separator string="Warehouse locations"/>
-                  <group>
-                      <field name="internal_stock_loc_id"/>
-                      <field name="input_stock_loc_id"/>
-                      <field name="output_stock_loc_id"/>
-                      <field name="packing_loc_id" attrs="{'invisible': [('packing', '=', False)], 'required': [('packing', '=', True)]}"/>
                   </group>
                   <footer>
                       <button name="configure_wh" string="Configure Warehouse" type="object" class="oe_highlight"/>
