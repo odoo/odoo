@@ -83,8 +83,6 @@
                             var $parent = self.$active_snipped_id.parents("[data-snippet-id]:first");
                             if ($parent.length) {
                                 $target = $parent;
-                            } else if (self.$active_snipped_id.get(0) === $target[0]) {
-                                return;
                             }
                         }
                     }
@@ -92,8 +90,8 @@
                     setTimeout(function () {snipped_event_flag = false;}, 0);
                     self.make_active($target);
                 });
-            $("body > :not(:has(#website-top-view)):not(#oe_manipulators)").on('mousedown', function (ev) {
-                    if (!snipped_event_flag) {
+            $("body > :not(:has(#website-top-view)):not(#oe_manipulators)").on('click', function (ev) {
+                    if (!snipped_event_flag && self.$active_snipped_id && !self.$active_snipped_id.parents("[data-snippet-id]:first")) {
                         self.make_active(false);
                     }
                 });
@@ -665,6 +663,7 @@
             $target.find(".carousel-control").attr("href", "#"+id);
         },
         start : function () {
+            this._super();
             var self = this;
 
             this.$editor.find(".js_add").on('click', this.on_add);
