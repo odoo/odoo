@@ -25,6 +25,8 @@
                         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
+                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+
                         <t t-if="editable">
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
                             <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
@@ -35,13 +37,13 @@
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
+
+                            <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
                         </t>
 
-                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
                         <t t-raw="head or ''"/>
                         <t t-call="website.theme"/>
 
