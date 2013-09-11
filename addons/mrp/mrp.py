@@ -657,15 +657,13 @@ class mrp_production(osv.osv):
         @return: True
         """
         move_obj = self.pool.get('stock.move')
-        self.write(cr, uid, ids, {'state': 'ready'}, context=context)
+        self.write(cr, uid, ids, {'state': 'ready'})
 
         for (production_id,name) in self.name_get(cr, uid, ids):
-            production = self.browse(cr, uid, production_id, context=context)
-            if not production.move_prod_id and not production.move_lines:
-                move_obj.write(cr, uid, [i.id for i in production.move_created_ids], {'state': 'assigned'}, context=context)
+            production = self.browse(cr, uid, production_id)
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
-                        {'location_id': production.location_dest_id.id}, context=context)
+                        {'location_id': production.location_dest_id.id})
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
@@ -879,7 +877,6 @@ class mrp_production(osv.osv):
                     'procure_method': production_line.product_id.procure_method,
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
-                    'sale_line_id': production.move_prod_id and production.move_prod_id.sale_line_id and production.move_prod_id.sale_line_id.id
                 })
         wf_service.trg_validate(uid, procurement_order._name, procurement_id, 'button_confirm', cr)
         return procurement_id
