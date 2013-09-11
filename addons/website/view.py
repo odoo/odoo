@@ -59,7 +59,8 @@ class view(osv.osv):
         embedded_id = int(el.get('data-oe-id'))
         # FIXME: type conversions
         self.pool[el.get('data-oe-model')].write(cr, uid, embedded_id, {
-            el.get('data-oe-field'): el.text
+            # FIXME: ckeditor parser does not follow HTML5 parsing, breaks block-level links
+            el.get('data-oe-field'): el.text_content()
         }, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
