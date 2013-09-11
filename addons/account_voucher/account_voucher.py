@@ -31,10 +31,10 @@ from openerp.report import report_sxw
 class res_currency(osv.osv):
     _inherit = "res.currency"
 
-    def _get_current_rate(self, cr, uid, ids, name, arg, context=None):
+    def _get_current_rate(self, cr, uid, ids, raise_on_no_rate=True, context=None):
         if context is None:
             context = {}
-        res = super(res_currency, self)._get_current_rate(cr, uid, ids, name, arg, context=context)
+        res = super(res_currency, self)._get_current_rate(cr, uid, ids, raise_on_no_rate, context=context)
         if context.get('voucher_special_currency') in ids and context.get('voucher_special_currency_rate'):
             res[context.get('voucher_special_currency')] = context.get('voucher_special_currency_rate')
         return res
