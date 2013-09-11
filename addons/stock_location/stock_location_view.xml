@@ -137,7 +137,8 @@
 			<field name="arch" type="xml">
 				<xpath expr="//sheet" position="inside">
 					<group string="Strategy" colspan="4">
-						<field name="route_ids" colspan="4" nolabel="1" widget="many2many_tags"/>
+						<field name="route_ids" colspan="4" widget="many2many_tags"/>
+						<field name="total_route_ids" widget="many2many_tags"/>
 					</group>
 				</xpath>
 			</field>

@@ -41,7 +41,7 @@ class stock_location_route(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Default Routes', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse', required=True), 
+        'route_id': fields.many2one('stock.location.route', 'Default Routes', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse'), #TODO: required = True? 
     }
 
 
@@ -151,7 +151,9 @@ class procurement_order(osv.osv):
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
-        route_ids = [x.id for x in procurement.route_ids] + [x.id for x in procurement.product_id.route_ids] 
+        categ_obj = self.pool.get("product.category")
+        categ_id = procurement.product_id.categ_id.id
+        route_ids = [x.id for x in procurement.route_ids] + [x.id for x in procurement.product_id.route_ids] + categ_obj.calculate_total_routes(cr, uid, [categ_id], False, False, context=context)[categ_id]
         res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
         if not res:
             res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
@@ -184,17 +186,33 @@ class product_removal_strategy(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"), #Adds domain
     }
 
 class product_category(osv.osv):
     _inherit = 'product.category'
+    
+    
+    def calculate_total_routes(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        route_obj = self.pool.get("stock.location.route")
+        for categ in self.browse(cr, uid, ids, context=context):
+            categ2 = categ
+            routes = [x.id for x in categ.route_ids]
+            while categ2.parent_id:
+                categ2 = categ2.parent_id
+                routes += [x.id for x in categ2.route_ids]
+            res[categ.id] = routes
+        return res
+        
     _columns = {
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
         'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         #'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
+        'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
     }
 
+    
 
 class stock_move_putaway(osv.osv):
     _name = 'stock.move.putaway'

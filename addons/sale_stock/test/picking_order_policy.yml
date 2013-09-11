@@ -38,7 +38,6 @@
         assert procurement.product_id.id == order_line.product_id.id, "Product is not correspond."
         assert procurement.product_qty == order_line.product_uom_qty, "Qty is not correspond."
         assert procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
-        assert procurement.move_ids[0].procure_method == order_line.type, "Procurement method is not correspond."
 -
   I check the details of delivery order after confirmed quotation.
 -
