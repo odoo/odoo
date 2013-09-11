@@ -650,6 +650,9 @@ class sale_order(osv.osv):
                 'name': order.name, 'partner_id': order.partner_shipping_id.id, 
             }
 
+    def _check_create_procurement(self, cr, uid, order, line, context=None):
+        return True
+
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
@@ -671,9 +674,8 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
                     continue
-                
-                vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
-                if vals:
+                if self._check_create_procurement(cr, uid, order, line, context=context):
+                    vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
 

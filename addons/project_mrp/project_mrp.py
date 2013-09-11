@@ -153,13 +153,17 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        if not(line.product_id.type== "service" and not line.product_id.auto_create_task):
-            proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
+        proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
                 uid, order, line, group_id = group_id, context=context)
+        if not(line.product_id.type== "service" and not line.product_id.auto_create_task):
             proc_data['sale_line_id'] = line.id
-        else:
-            proc_data = False
         return proc_data
+
+    def _check_create_procurement(self, cr, uid, order, line, context=None):
+        create = super(sale_order, self)._check_create_procurement(cr, uid, order, line, context=context)
+        if (line.product_id.type== "service" and not line.product_id.auto_create_task):
+            create = True
+        return create
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids:
