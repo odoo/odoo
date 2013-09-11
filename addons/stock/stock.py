@@ -2049,7 +2049,7 @@ class stock_package(osv.osv):
                                        'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
                                     }, readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
-        'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item"),
+        'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item", ondelete='restrict'),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),
         'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package", 
                                     store={
