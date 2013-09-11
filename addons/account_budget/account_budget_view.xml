@@ -111,7 +111,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_user']}"/>
                                 <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </group>
                             <group>

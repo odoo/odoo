@@ -33,7 +33,7 @@
             <field name="arch" type="xml">
                 <form string="Project User Allocation" version="7.0">
                     <group col="4">
-                        <field name="user_id"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                         <field name="phase_id"/>
                         <field name="project_id"/>
                         <field name="date_start"/>
@@ -49,7 +49,7 @@
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Project User Allocation">
-                    <field name="user_id"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                     <field name="phase_id"/>
                     <field name="project_id"/>
                 </tree>
@@ -175,7 +175,7 @@
                         <page string="Team Planning">
                             <field name="user_ids">
                                  <tree editable="bottom" string="Project Users">
-                                      <field name="user_id"/>
+                                      <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                                       <field name="date_start"/>
                                       <field name="date_end"/>
                                   </tree>
@@ -280,7 +280,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Start Month"/>
+                        <filter string="Start Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
                     </group>
                 </search>
             </field>
