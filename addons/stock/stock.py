@@ -672,11 +672,50 @@ class stock_picking(osv.osv):
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
+        pack_obj = self.pool.get("stock.quant.package")
+        quant_obj = self.pool.get("stock.quant")
         for picking in self.browse(cr, uid, picking_ids, context=context):
             for move in picking.move_lines:
                 if move.state != 'assigned': continue
+                #Check which of the reserved quants are entirely in packages (can be in separate method)
+                packages = list(set([x.package_id for x in move.reserved_quant_ids if x.package_id]))
+                done_packages = []
+                for pack in packages:
+                    cont = True
+                    good_pack = False
+                    test_pack = pack
+                    while cont:
+                        quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
+                        if all([x.reservation_id.id  == move.id for x in quant_obj.browse(cr, uid, quants, context=context) if x.reservation_id]):
+                            good_pack = test_pack.id
+                            if test_pack.parent_id:
+                                test_pack = test_pack.parent_id
+                            else:
+                                cont = False
+                        else:
+                            cont = False
+                    if good_pack:
+                        done_packages.append(good_pack)
+                done_packages = list(set(done_packages))
+
+                #Create package operations
+                reserved = set([x.id for x in move.reserved_quant_ids])
                 remaining_qty = move.product_qty
-                for quant in move.reserved_quant_ids:
+                for pack in pack_obj.browse(cr, uid, done_packages, context=context):
+                    quantl = pack_obj.get_content(cr, uid, [pack.id], context=context)
+                    for quant in quant_obj.browse(cr, uid, quantl, context=context):
+                        remaining_qty -= quant.qty
+                    quants = set(pack_obj.get_content(cr, uid, [pack.id], context=context))
+                    reserved -= quants
+                    pack_operation_obj.create(cr, uid, {
+                        'picking_id': picking.id,
+                        'package_id': pack.id,
+                        'product_qty': 1.0, 
+                    }, context=context)
+                
+                yet_to_reserve = list(reserved)
+                #Create operations based on quants
+                for quant in quant_obj.browse(cr, uid, yet_to_reserve, context=context):
                     qty = min(quant.qty, move.product_qty)
                     remaining_qty -= qty
                     pack_operation_obj.create(cr, uid, {
