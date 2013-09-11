@@ -189,11 +189,8 @@ class hr_applicant(osv.Model):
     def _compute_attachments(self, cr, uid, ids, fields, args, context=None):
         res = {}
         attachment_pool = self.pool.get('ir.attachment')
-        for applicant in self.browse(cr, uid, ids, context=context):
-            res[applicant.id] = 0
-            attach = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)], context=context)
-            if attach:
-                res[applicant.id] = len(attach)
+        for applicant in ids:
+            res[applicant] = attachment_pool.search_count(cr, uid, [('res_model', '=', 'hr.applicant'), ('res_id', '=', applicant)], context=context)
         return res
 
     _columns = {
@@ -240,7 +237,7 @@ class hr_applicant(osv.Model):
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
-        'attachments': fields.function(_compute_attachments, string='Number of Attachments', \
+        'attachment_number': fields.function(_compute_attachments, string='Number of Attachments', \
                                  type="integer"),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }

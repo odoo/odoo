@@ -242,7 +242,7 @@
                 <field name="department_id"/>
                 <field name="categ_ids"/>
                 <field name="message_summary"/>
-                <field name="attachments"/>
+                <field name="attachment_number"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -295,9 +295,9 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
-                                    <a t-if="record.attachments.raw_value == 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachments"/> Document</a> 
+                                    <a t-if="record.attachment_number.raw_value == 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Document</a> 
 							
-                                    <a t-if="record.attachments.raw_value gt 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachments"/> Documents</a> 
+                                    <a t-if="record.attachment_number.raw_value gt 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a> 
 
                                 </div>
                             

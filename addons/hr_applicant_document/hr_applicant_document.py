@@ -27,11 +27,11 @@ class hr_applicant(osv.osv):
         res = {}
         attachment_pool = self.pool.get('ir.attachment')
         for id in ids:
-            res[id] = 0
-            attachment_ids = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',id)], context=context)
-            if attachment_ids:
-                for attachment in attachment_pool.browse(cr, uid, attachment_ids, context=context):
-                    res[id] = attachment.index_content
+            res[id] = ''
+            attachment_ids = attachment_pool.search(cr, uid, [('res_model', '=', 'hr.applicant'), ('res_id', '=', id)], context=context)
+            for attachment in attachment_pool.browse(cr, uid, attachment_ids, context=context):
+                # adding index content of all attachments into one in order to find easily from all attachments 
+                res[id] += attachment.index_content or ''
         return res
 
     def _content_search(self, cursor, user, obj, name, args, context=None):
