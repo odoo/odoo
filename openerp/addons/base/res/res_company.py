@@ -27,24 +27,43 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
+from reportlab import rl_config
+from openerp.tools import config
+import platform
+import glob
+from openerp.report.render.rml2pdf import customfonts
 
-_select_font=[ ('DejaVu Sans',"DejaVu Sans"),
-        ('DejaVu Sans Bold',"DejaVu Sans Bold"),
-        ('DejaVu Sans Oblique',"DejaVu Sans Oblique"),
-        ('DejaVu Sans BoldOblique',"DejaVu Sans BoldOblique"),
-        ('Liberation Serif',"Liberation Serif"),
-        ('Liberation Serif Bold',"Liberation Serif Bold"),
-        ('Liberation Serif Italic',"Liberation Serif Italic"),
-        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
-        ('Liberation Serif',"Liberation Serif"),
-        ('Liberation Serif Bold',"Liberation Serif Bold"),
-        ('Liberation Serif Italic',"Liberation Serif Italic"),
-        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
-        ('FreeMono',"FreeMono"),
-        ('FreeMono Bold',"FreeMono Bold"),
-        ('FreeMono Oblique',"FreeMono Oblique"),
-        ('FreeMono BoldOblique',"FreeMono BoldOblique"),
-]
+def get_font_list():
+    _lst_font=[]
+    TTFSearchPath_Linux = customfonts.TTFSearchPath_Linux
+    TTFSearchPath_Darwin = customfonts.TTFSearchPath_Darwin
+    TTFSearchPath_Windows = customfonts.TTFSearchPath_Windows
+    TTFSearchPathMap = customfonts.TTFSearchPathMap
+    searchpath = []
+    select_font = []
+    if config.get('fonts_search_path'):
+        searchpath += map(str.strip, config.get('fonts_search_path').split(','))
+
+    local_platform = platform.system()
+    if local_platform in TTFSearchPathMap:
+        searchpath += TTFSearchPathMap[local_platform]
+        
+    searchpath += rl_config.TTFSearchPath
+    
+    for dirglob in searchpath:
+        dirglob = os.path.expanduser(dirglob)
+        for dirname in glob.iglob(dirglob):
+            abp = os.path.abspath(dirname)
+            if os.path.isdir(abp):
+                for f in os.listdir(abp):
+                    abs_filename = os.path.join(abp, f)
+                    from PIL import ImageFont
+                    if f.find('.ttf') != -1:
+                        f_test = ImageFont.truetype(abs_filename, 1)
+                        font_family = f_test.font.family
+                        font_familystyle = f_test.font.family +" "+ f_test.font.style.replace(" ","")
+                        _lst_font.append((font_familystyle,font_familystyle))
+    return _lst_font
 
 class multi_company_default(osv.osv):
     """
@@ -92,7 +111,7 @@ class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
-
+    
     def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
         """ Read the 'address' functional fields. """
         result = {}
@@ -129,6 +148,10 @@ class res_company(osv.osv):
         
     def _get_companies_from_partner(self, cr, uid, ids, context=None):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
+    
+    def _get_font(self, cr, uid, context=None):
+        font_list = get_font_list()
+        return font_list
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
@@ -165,7 +188,7 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
-        'font': fields.selection(_select_font, "Select Font",help="Set your favorite font into company header"),
+        'font': fields.selection(_get_font, "Font",help="Set your favorite font into company header"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
