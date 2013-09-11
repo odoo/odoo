@@ -5,6 +5,19 @@
 
     <t t-name="website.snippets">
         <div id='oe_snippets' class='hide'>
+            <ul class="nav nav-pills">
+              <li class="active"><a data-toggle="pill" href="#snippet_structure">Structure</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_content">Content</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_emphasize">Emphasize</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_style">Style</a></li>
+            </ul>
+            <div class="pill-content">
+                <div class="pill-pane active" id="snippet_structure"></div>
+                <div class="pill-pane" id="snippet_content"></div>
+                <div class="pill-pane" id="snippet_emphasize"></div>
+                <div class="pill-pane" id="snippet_style"></div>
+                <div class="pill-pane" id="snippet_unsorted"></div>
+            </div>
         </div>
     </t>
 
@@ -33,7 +46,7 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-action='insert' data-selector-siblings='.container'>
+    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='emphasize' data-action='insert' data-selector-siblings='.container'>
         
         <!-- editor bar to display inside the top edit bar -->
         <li class='oe_snippet_options'>
@@ -91,20 +104,20 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.darken" data-snippet-id='darken' data-action='mutate' data-selector='.container'>
+    <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-action='mutate' data-selector='.container'>
         <div class='oe_snippet_thumbnail oe_label'>Darken</div>
     </div>
 
-    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-action='mutate' data-selector='.container'>
+    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='Content' data-action='mutate' data-selector='.container'>
         <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
     </div>
 
-    <div t-name="website.snippets.spacer" data-snippet-id='spacer' data-action='insert' data-selector-siblings='.container'>
+    <div t-name="website.snippets.spacer" data-snippet-id='spacer' data-category='structure' data-action='insert' data-selector-siblings='.container'>
         <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
         <div class="oe_snippet_body container mt32"></div>
     </div>
 
-    <div t-name="website.snippets.title" data-snippet-id='title' data-action='insert' data-selector-siblings='.container'>
+    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-action='insert' data-selector-siblings='.container'>
         <div class='oe_snippet_thumbnail oe_label'>Main Title</div>
         <section class="oe_snippet_body container">
             <div class="row">
@@ -116,7 +129,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.three-collumns" data-snippet-id='three-collumns' data-action='insert' data-selector-siblings='.container'>
+    <div t-name="website.snippets.three-collumns" data-snippet-id='three-collumns' data-category='structure' data-action='insert' data-selector-siblings='.container'>
         <div class='oe_snippet_thumbnail oe_label'>three-collumns</div>
         <section class="oe_snippet_body container">
             <div class="row">
@@ -152,7 +165,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.header-block" data-snippet-id='header-block' data-action='insert' data-selector-siblings='.container'>
+    <div t-name="website.snippets.header-block" data-snippet-id='header-block' data-category='structure' data-action='insert' data-selector-siblings='.container'>
         <div class='oe_snippet_thumbnail oe_label'>header-block</div>
         <section class="container oe_snippet_body">
             <div class="row">

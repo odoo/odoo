@@ -60,7 +60,7 @@
                 if (key.indexOf('website.snippets.') === 0) {
                     var $snippet = $(openerp.qweb.render(key)).addClass("oe_snippet");
                     if ($snippet.data("action")) {
-                        self.$el.append($snippet);
+                        self.$el.find('#snippet_' + $snippet.data('category')).append($snippet);
                         self.make_snippet_draggable($snippet);
                     }
                 }
@@ -136,8 +136,8 @@
                 this.activate_overlay_zones($snipped_id);
                 var editor = website.snippet.editorRegistry[$snipped_id.data("snippet-id")] || website.snippet.Editor;
                 $snipped_id.data("snippet-editor", new editor(this, $snipped_id));
-                website.snippet.cover_target($snipped_id.data('overlay'), $snipped_id);
             }
+            website.snippet.cover_target($snipped_id.data('overlay'), $snipped_id);
         },
 
         path_eval: function(path){
@@ -301,10 +301,6 @@
                 }
             }
 
-            // Cleaning up unnecessary zones
-            $('#oe_snippets .oe_insert.oe_drop_zone').remove();   // no zone in the snippet selector ...
-            $('#website-top-view .oe_insert.oe_drop_zone').remove();   // no zone in the top bars ...
-            $('#website-top-edit .oe_insert.oe_drop_zone').remove();
             var count;
             do {
                 count = 0;
