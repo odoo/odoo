@@ -100,7 +100,7 @@ class report_xml(osv.osv):
             if r['report_rml'] or r['report_rml_content_data']:
                 report_sxw('report.'+r['report_name'], r['model'],
                         opj('addons',r['report_rml'] or '/'), header=r['header'])
-            if r['report_xsl']:
+            elif r['report_xsl'] and r['report_xml']:
                 report_rml('report.'+r['report_name'], r['model'],
                         opj('addons',r['report_xml']),
                         r['report_xsl'] and opj('addons',r['report_xsl']))
