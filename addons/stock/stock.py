@@ -913,9 +913,9 @@ class stock_picking(osv.osv):
                     if res2[move] > 0:
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
                         stock_move_obj.split(cr, uid, mov, res2[move], context=context)
-                stock_move_obj.action_done(cr, uid, extra_moves + [x.id for x in orig_moves], context=context)
                 todo = []
-                for move in stock_move_obj.browse(cr, uid, extra_moves, context=context) + orig_moves:
+                orig_moves = [x for x in orig_moves if x.reserved_quant_ids]
+                for move in orig_moves + stock_move_obj.browse(cr, uid, extra_moves, context=context):
                     if move.state == 'draft':
                         self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
                             context=context)
