@@ -662,9 +662,9 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             if not production.move_created_ids:
                 produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
-
-        for (production_id,name) in self.name_get(cr, uid, ids):
-            production = self.browse(cr, uid, production_id)
+                for scheduled in production.product_lines:
+                    self._make_production_line_procurement(cr, uid, scheduled, False, context=context)
+        
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
