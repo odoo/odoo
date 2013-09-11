@@ -264,7 +264,7 @@
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
-                args: [data.oeModel, data.oeId, data.oeField, html, xpath]
+                args: [data.oeModel, data.oeId, data.oeField, html, xpath, website.get_context()]
             });
         },
         cancel: function () {
@@ -549,7 +549,9 @@
                 model: 'website',
                 method: 'list_pages',
                 args: [],
-                kwargs: {}
+                kwargs: {
+                    context: website.get_context()
+                },
             });
         },
         fill_pages: function (results) {
@@ -653,6 +655,7 @@
                     fields: ['name'],
                     domain: [['res_model', '=', 'ir.ui.view']],
                     order: 'name',
+                    context: website.get_context(),
                 }
             });
         },

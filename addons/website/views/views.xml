@@ -13,7 +13,9 @@
 
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
-                <html t-att-data-editable="'1' if editable else '0'" t-att-data-view-xmlid="str(__stack__[0])">
+                <html t-att-lang="lang.replace('_', '-')"
+                      t-att-data-editable="'1' if editable else '0'"
+                      t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />

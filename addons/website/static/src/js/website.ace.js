@@ -99,7 +99,7 @@
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'read',
-                args: [[this.selectedViewId()], ['arch']],
+                args: [[this.selectedViewId()], ['arch'], website.get_context()],
             }).then(function(result) {
                 if (result && result.length > 0) {
                     var xml = new website.ace.XmlDocument(result[0].arch)
@@ -123,7 +123,7 @@
                 openerp.jsonRpc('/web/dataset/call', 'call', {
                     model: 'ir.ui.view',
                     method: 'write',
-                    args: [[this.selectedViewId()], { 'arch':  xml.xml }],
+                    args: [[this.selectedViewId()], { 'arch':  xml.xml }, website.get_context()],
                 }).then(function(result) {
                     self.reloadPage();
                 }).fail(function (error) {

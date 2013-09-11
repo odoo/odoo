@@ -9,6 +9,12 @@
         '/website/static/src/xml/website.xml'
     ];
 
+    website.get_context = function (dict) {
+        return _.extend({
+            lang: $('html').attr('lang').replace('-', '_')
+        }, dict);
+    };
+
     /* ----- TEMPLATE LOADING ---- */
     website.add_template = function(template) {
         templates.push(template);
