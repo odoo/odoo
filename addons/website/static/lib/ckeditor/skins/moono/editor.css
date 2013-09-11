@@ -1,0 +1,66 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+/*
+editor.css
+============
+
+This is he heart of the skin system. This is the file loaded by the editor to
+style all elements inside its main interface.
+
+To make it easier to maintain, instead of including all styles here, we import
+other files.
+*/
+
+/* "Reset" styles, necessary to avoid the editor UI being broken by external CSS. */
+@import url("reset.css");
+
+/* Styles the main interface structure (holding box). */
+@import url("mainui.css");
+
+/* Styles all "panels", which are the floating elements that appear when
+   opening toolbar combos, menu buttons, context menus, etc. */
+@import url("panel.css");
+
+/* Styles the color panel displayed by the color buttons. */
+@import url("colorpanel.css");
+
+/* Styles to toolbar. */
+@import url("toolbar.css");
+
+/* Styles menus, which are lists of selectable items (context menu, menu button). */
+@import url("menu.css");
+
+/* Styles toolbar combos. */
+@import url("richcombo.css");
+
+/* Styles the elements path bar, available at the bottom of the editor UI.*/
+@import url("elementspath.css");
+
+/* Contains hard-coded presets for "configurable-like" options of the UI
+   (e.g. display labels on specific buttons) */
+@import url("presets.css");
+
+/* Important!
+   To avoid showing the editor UI while its styles are still not available, the
+   editor creates it with visibility:hidden. Here, we restore the UI visibility. */
+.cke_chrome
+{
+	visibility: inherit;
+}
+
+/* For accessibility purposes, several "voice labels" are present in the UI.
+   These are usually <span> elements that show not be visible, but that are
+   used by screen-readers to announce other elements. Here, we hide these
+   <spans>, in fact. */
+.cke_voice_label
+{
+	display: none;
+}
+
+legend.cke_voice_label
+{
+	display: none;
+}

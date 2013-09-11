@@ -1,0 +1,430 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+/*
+toolbar.css (part of editor.css)
+==================================
+
+This files styles the CKEditor toolbar and its buttons. For toolbar combo
+styles, check richcombo.css.
+
+The toolbar is rendered as a big container (called toolbox), which contains
+smaller "toolbars". Each toolbar represents a group of items that cannot be
+separated. The following is the visual representation of the toolbox.
+
++-- .cke_toolbox ----------------------------------------------------------+
+| +-- .cke_toolbar --+ +-- .cke_toolbar --+ ... +-- .cke_toolbar_break --+ |
+| |                  | |                  |     |                        | |
+| +------------------+ +------------------+     +------------------------+ |
+| +-- .cke_toolbar --+ +-- .cke_toolbar --+ ...                            |
+| |                  | |                  |                                |
+| +------------------+ +------------------+                                |
++--------------------------------------------------------------------------+
+
+The following instead is the visual representation of a single toolbar:
+
++-- .cke_toolbar ----------------------------------------------------------------+
+| +-- .cke_toolbar_start --+ +-- .cke_toolgroup (*) --+ +-- .cke_toolbar_end --+ |
+| |                        | |                        | |                      | |
+| +------------------------+ +------------------------+ +----------------------+ |
++--------------------------------------------------------------------------------+
+(*) .cke_toolgroup is available only when the toolbar items can be grouped
+    (buttons). If the items can't be group (combos), this box is not available
+	and the items are rendered straight in that place.
+
+This file also styles toolbar buttons, which are rendered inside the above
+.cke_toolgroup containers. This is the visual representation of a button:
+
++-- .cke_button -------------------------------------+
+| +-- .cke_button_icon --+ +-- .cke_button_label --+ |
+| |                      | |                       | |
+| +----------------------+ +-----------------------+ |
++----------------------------------------------------+
+
+Special outer level classes used in this file:
+
+	.cke_hc: Available when the editor is rendered on "High Contrast".
+	.cke_rtl: Available when the editor UI is on RTL.
+*/
+
+/* The box that holds each toolbar. */
+.cke_toolbar
+{
+	float: left;
+}
+
+.cke_rtl .cke_toolbar
+{
+	float: right;
+}
+
+/* The box that holds buttons. */
+.cke_toolgroup
+{
+	float: left;
+	margin: 0 6px 5px 0;
+	border: 1px solid #a6a6a6;
+	border-bottom-color: #979797;
+
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+	box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+
+	background: #e4e4e4;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e4e4e4));
+	background-image: -moz-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: -webkit-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: -o-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: -ms-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: linear-gradient(top, #ffffff, #e4e4e4);
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#ffffff', endColorstr='#e4e4e4');
+}
+
+.cke_hc .cke_toolgroup
+{
+	border: 0;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.cke_rtl .cke_toolgroup *:first-child
+{
+	-moz-border-radius: 0 2px 2px 0;
+	-webkit-border-radius: 0 2px 2px 0;
+	border-radius: 0 2px 2px 0;
+}
+
+.cke_rtl .cke_toolgroup *:last-child
+{
+	-moz-border-radius: 2px 0 0 2px;
+	-webkit-border-radius: 2px 0 0 2px;
+	border-radius: 2px 0 0 2px;
+}
+
+.cke_rtl .cke_toolgroup
+{
+	float: right;
+	margin-left: 6px;
+	margin-right: 0;
+}
+
+/* A toolbar button . */
+a.cke_button
+{
+	display: inline-block;
+	height: 18px;
+	padding: 4px 6px;
+	outline: none;
+	cursor: default;
+	float: left;
+	border: 0;
+}
+
+.cke_rtl .cke_button
+{
+	float: right;
+}
+
+.cke_hc .cke_button
+{
+	border: 1px solid black;
+
+	/* Compensate the added border */
+	padding: 3px 5px;
+	margin: -2px 4px 0 -2px;
+}
+
+/* This class is applied to the button when it is "active" (pushed).
+   This style indicates that the feature associated with the button is active
+   i.e. currently writing in bold or when spell checking is enabled. */
+.cke_button_on
+{
+	-moz-box-shadow: 0 1px 5px rgba(0,0,0,.6) inset, 0 1px 0 rgba(0,0,0,.2);
+	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,.6) inset, 0 1px 0 rgba(0,0,0,.2);
+	box-shadow: 0 1px 5px rgba(0,0,0,.6) inset, 0 1px 0 rgba(0,0,0,.2);
+
+	background: #b5b5b5;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#cacaca));
+	background-image: -moz-linear-gradient(top, #aaa, #cacaca);
+	background-image: -webkit-linear-gradient(top, #aaa, #cacaca);
+	background-image: -o-linear-gradient(top, #aaa, #cacaca);
+	background-image: -ms-linear-gradient(top, #aaa, #cacaca);
+	background-image: linear-gradient(top, #aaa, #cacaca);
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#aaaaaa', endColorstr='#cacaca');
+}
+
+.cke_hc .cke_button_on,
+.cke_hc a.cke_button_off:hover,
+.cke_hc a.cke_button_off:focus,
+.cke_hc a.cke_button_off:active,
+.cke_hc a.cke_button_disabled:hover,
+.cke_hc a.cke_button_disabled:focus,
+.cke_hc a.cke_button_disabled:active
+{
+	border-width: 3px;
+
+	/* Compensate the border change */
+	padding: 1px 3px;
+}
+
+/* This class is applied to the button when the feature associated with the
+   button cannot be used (grayed-out).
+   i.e. paste button remains disabled when there is nothing in the clipboard to
+   be pasted. */
+.cke_button_disabled .cke_button_icon
+{
+	opacity: 0.3;
+}
+
+.cke_hc .cke_button_disabled
+{
+	opacity: 0.5;
+}
+
+a.cke_button_on:hover,
+a.cke_button_on:focus,
+a.cke_button_on:active
+{
+	-moz-box-shadow: 0 1px 6px rgba(0,0,0,.7) inset, 0 1px 0 rgba(0,0,0,.2);
+	-webkit-box-shadow: 0 1px 6px rgba(0,0,0,.7) inset, 0 1px 0 rgba(0,0,0,.2);
+	box-shadow: 0 1px 6px rgba(0,0,0,.7) inset, 0 1px 0 rgba(0,0,0,.2);
+}
+
+a.cke_button_off:hover,
+a.cke_button_off:focus,
+a.cke_button_off:active,
+a.cke_button_disabled:hover,
+a.cke_button_disabled:focus,
+a.cke_button_disabled:active
+{
+	-moz-box-shadow: 0 0 1px rgba(0,0,0,.3) inset;
+	-webkit-box-shadow: 0 0 1px rgba(0,0,0,.3) inset;
+	box-shadow: 0 0 1px rgba(0,0,0,.3) inset;
+
+	background: #ccc;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#ccc));
+	background-image: -moz-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: -webkit-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: -o-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: -ms-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: linear-gradient(top, #f2f2f2, #ccc);
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#f2f2f2', endColorstr='#cccccc');
+}
+
+/* The icon which is a visual representation of the button. */
+.cke_button_icon
+{
+	cursor: inherit;
+	background-repeat: no-repeat;
+	margin-top: 1px;
+	width: 16px;
+	height: 16px;
+	float: left;
+	display: inline-block;
+}
+
+.cke_rtl .cke_button_icon
+{
+	float: right;
+}
+
+.cke_hc .cke_button_icon
+{
+	display: none;
+}
+
+/* The label of the button that stores the name of the feature. By default,
+   labels are invisible. They can be revealed on demand though. */
+.cke_button_label
+{
+	display: none;
+	padding-left: 3px;
+	margin-top: 1px;
+	line-height: 17px;
+	vertical-align: middle;
+	float: left;
+	cursor: default;
+	color: #474747;
+	text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+.cke_rtl .cke_button_label
+{
+	padding-right: 3px;
+	padding-left: 0;
+	float: right;
+}
+
+.cke_hc .cke_button_label
+{
+	padding: 0;
+	display: inline-block;
+	font-size: 12px;
+}
+
+/* The small arrow available on buttons that can be expanded
+   (e.g. the color buttons). */
+.cke_button_arrow
+{
+	/* Arrow in CSS */
+	display: inline-block;
+	margin: 8px 0 0 1px;
+	width: 0;
+	height: 0;
+	cursor: default;
+	vertical-align: top;
+	border-left: 3px solid transparent;
+	border-right: 3px solid transparent;
+	border-top: 3px solid #474747;
+}
+
+.cke_rtl .cke_button_arrow
+{
+	margin-right: 5px;
+	margin-left: 0;
+}
+
+.cke_hc .cke_button_arrow
+{
+	font-size: 10px;
+	margin: 3px -2px 0 3px;
+	width: auto;
+	border: 0;
+}
+
+/* The vertical separator which is used within a single toolbar to split
+   buttons into sub-groups. */
+.cke_toolbar_separator
+{
+	float: left;
+	background-color: #c0c0c0;
+	background-color: rgba(0,0,0,.2);
+	margin: 5px 2px 0;
+	height: 18px;
+	width: 1px;
+
+	-webkit-box-shadow: 1px 0 1px rgba(255,255,255,.5);
+	-moz-box-shadow: 1px 0 1px rgba(255,255,255,.5);
+	box-shadow: 1px 0 1px rgba(255,255,255,.5);
+}
+
+.cke_rtl .cke_toolbar_separator
+{
+	float: right;
+
+	-webkit-box-shadow: -1px 0 1px rgba(255,255,255,.1);
+	-moz-box-shadow: -1px 0 1px rgba(255,255,255,.1);
+	box-shadow: -1px 0 1px rgba(255,255,255,.1);
+}
+
+.cke_hc .cke_toolbar_separator
+{
+	width: 0;
+	border-left: 1px solid;
+	margin: 1px 5px 0 0px;
+}
+
+/* The dummy element that breaks toolbars.
+   Once it is placed, the very next toolbar is moved to the new row. */
+.cke_toolbar_break
+{
+	display: block;
+	clear: left;
+}
+
+.cke_rtl .cke_toolbar_break
+{
+	clear: right;
+}
+
+/* The button, which when clicked hides (collapses) all the toolbars. */
+.cke_toolbox_collapser
+{
+	width: 12px;
+	height: 11px;
+	float: right;
+	margin: 11px 0 0;
+	font-size: 0;
+	cursor: default;
+	text-align: center;
+
+	border: 1px solid #a6a6a6;
+	border-bottom-color: #979797;
+
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+	box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+
+	background: #e4e4e4;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e4e4e4));
+	background-image: -moz-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: -webkit-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: -o-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: -ms-linear-gradient(top, #ffffff, #e4e4e4);
+	background-image: linear-gradient(top, #ffffff, #e4e4e4);
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#ffffff', endColorstr='#e4e4e4');
+}
+
+.cke_toolbox_collapser:hover
+{
+	background: #ccc;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#ccc));
+	background-image: -moz-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: -webkit-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: -o-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: -ms-linear-gradient(top, #f2f2f2, #ccc);
+	background-image: linear-gradient(top, #f2f2f2, #ccc);
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#f2f2f2', endColorstr='#cccccc');
+}
+
+.cke_toolbox_collapser.cke_toolbox_collapser_min
+{
+	margin: 0 2px 4px;
+}
+
+.cke_rtl .cke_toolbox_collapser
+{
+	float: left;
+}
+
+/* The CSS arrow, which belongs to the toolbar collapser. */
+.cke_toolbox_collapser .cke_arrow
+{
+	display: inline-block;
+
+	/* Pure CSS Arrow */
+	height: 0;
+	width: 0;
+	font-size: 0;
+	margin-top: 1px;
+	border-left: 3px solid transparent;
+	border-right: 3px solid transparent;
+	border-bottom: 3px solid #474747;
+	border-top: 3px solid transparent;
+}
+
+.cke_toolbox_collapser.cke_toolbox_collapser_min .cke_arrow
+{
+	margin-top: 4px;
+	border-bottom-color: transparent;
+	border-top-color: #474747;
+}
+
+.cke_hc .cke_toolbox_collapser .cke_arrow
+{
+	font-size: 8px;
+	width: auto;
+	border: 0;
+	margin-top: 0;
+	margin-right: 2px;
+}
