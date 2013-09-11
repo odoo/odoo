@@ -1,8 +1,6 @@
 (function () {
     'use strict';
 
-    var editor = null;
-
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.ace.xml');
 
@@ -11,12 +9,7 @@
             'click a[data-action=ace]': 'launchAce',
         }),
         launchAce: function () {
-            if (!editor) {
-                editor = new website.ace.ViewEditor();
-                editor.appendTo($(document.body));
-            } else {
-                editor.show();
-            }
+            new website.ace.ViewEditor(this).appendTo($(document.body));
         },
     });
 
@@ -63,36 +56,42 @@
             'change #ace-view-list': 'displayView',
             'click button[data-action=save]': 'saveView',
             'click button[data-action=format]': 'formatXml',
-            'click button[data-action=close]': 'hide',
+            'click button[data-action=close]': 'close',
         },
         start: function () {
-            var viewId = $(document.documentElement).data('view-xmlid');
-            this.$viewList = this.$('#ace-view-list');
             var self = this;
-            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': viewId, 'optional': false })
-                .then(function(result) {
-                    if (result && result.length > 0) {
-                        _.each(result, function (view) {
-                            if (view.id) {
-                                new website.ace.ViewOption(self, view).appendTo(self.$viewList);
-                            }
-                        });
-                        var editor = ace.edit(self.$('#ace-view-editor')[0]);
-                        editor.setTheme("ace/theme/monokai");
-                        self.aceEditor = editor;
-                        self.show();
-                    } else {
-                        throw Error("Could not load view list");
-                    }
-                });
+            var viewId = $(document.documentElement).data('view-xmlid');
+            openerp.jsonRpc('/website/customize_template_get', 'call', {
+                'xml_id': viewId,
+                'optional': false
+            }).then(function (views) {
+                self.loadViewList.call(self, views);
+            });
+        },
+        selectedViewId: function () {
+            return this.$('#ace-view-list').val();
+        },
+        loadViewList: function (views) {
+            var activeViews = _.filter(views, function (view) {
+               return view.active;
+            });
+            var $viewList = this.$('#ace-view-list');
+            _.each(activeViews, function (view) {
+                if (view.id) {
+                    new website.ace.ViewOption(this, view).appendTo($viewList);
+                }
+            });
+            var editor = ace.edit(this.$('#ace-view-editor')[0]);
+            editor.setTheme("ace/theme/monokai");
+            this.aceEditor = editor;
+            this.open();
         },
         displayView: function () {
             var editor = this.aceEditor;
-            var viewId = this.$viewList.val();
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'read',
-                args: [[viewId], ['arch']]
+                args: [[this.selectedViewId()], ['arch']]
             }).then(function(result) {
                 if (result && result.length > 0) {
                     var xml = new website.ace.XmlDocument(result[0].arch)
@@ -110,33 +109,43 @@
             this.aceEditor.setValue(xml.format());
         },
         saveView: function () {
+            var self = this;
             var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
-            var viewId = this.$viewList.val();
             if (xml.isWellFormed()) {
                 openerp.jsonRpc('/web/dataset/call', 'call', {
                     model: 'ir.ui.view',
                     method: 'write',
-                    args: [[viewId], { 'arch':  xml.xml }]
+                    args: [[this.selectedViewId()], { 'arch':  xml.xml }]
                 }).then(function(result) {
-                    window.location.reload();
+                    self.reloadPage();
+                }).fail(function (error) {
+                    self.displayError(error);
                 });
             } else {
-                // TODO Improve feedback (e.g. update 'Save' button + tooltip)
-                alert("Malformed XML document");
+                self.displayError();
             }
         },
-        hide: function () {
-            this.$el.removeClass('oe_ace_open');
-            this.$el.addClass('oe_ace_closed');
+        reloadPage: function () {
+            // TODO Reload { header + div#wrap + footer } only
+            window.location.reload();
         },
-        show: function () {
-            this.$el.removeClass('oe_ace_closed');
-            this.$el.addClass('oe_ace_open');
+        displayError: function (error) {
+            // TODO Improve feedback (e.g. update 'Save' button + tooltip)
+            alert("Malformed XML document");
+        },
+        open: function () {
+            var $close = this.$('.pull-right');
+            this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
+                $close.fadeIn(200);
+            }).removeClass('oe_ace_closed').addClass('oe_ace_open');
             this.displayView();
         },
-        destroy: function () {
-            editor = null;
-            this._super();
+        close: function () {
+            var self = this;
+            this.$('.pull-right').fadeOut(100);
+            this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
+                self.destroy.call(self);
+            }).removeClass('oe_ace_open').addClass('oe_ace_closed');
         },
     });
 

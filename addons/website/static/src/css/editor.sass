@@ -332,31 +332,40 @@ $remove_color: $icon_close
 
 /* ---- ACE EDITOR ---- */
 
+$ace_width: 720px
+$editorbar_height: 34px
+// TODO Fix => might break with themes
+$navbar_height: 51px
+
 .oe_ace_view_editor
     position: fixed
-    top: 51px
+    top: $navbar_height
     right: 0
     z-index: 1000
     height: 100%
     .oe_ace_view_editor_title
         width: 100%
         padding-left: 2px
-        height: 34px
+        height: $editorbar_height
         background-color: #111
         .oe_view_list
             width: 50%
+            height: $editorbar_height
+        .btn
+            height: $editorbar_height
+            padding: 0 4px 0 4px
     .ace_editor
         position: absolute
-        top: 34px
+        top: $editorbar_height
         right: 0
-        bottom: 51px
+        bottom: $navbar_height
         left: 0
-        width: 720px
+        width: $ace_width
 
 .oe_ace_closed
     width: 0
     transition: width 0.4s ease-in
 
 .oe_ace_open
-    width: 720px
+    width: $ace_width
     transition: width 0.4s ease-in
