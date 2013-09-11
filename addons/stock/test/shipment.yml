@@ -28,9 +28,8 @@
     backorder = self.browse(cr, uid, backorder_id)[0]
     for move_line in backorder.move_lines:
         assert move_line.product_qty == 10, "Qty in backorder does not correspond."
-        assert move_line.state == 'draft', "Move line of backorder should be draft."
+        assert (move_line.state == 'assigned' or move_line.state == 'waiting' or move_line.state == 'confirmed'), "Move line of backorder should be assigned, confirmed or waiting."
     context.update({'active_model': 'stock.picking', 'active_id': backorder_id[0], 'active_ids': backorder_id})
-    self.action_confirm(cr, uid, backorder_id, context=context)
 -
   I receive the remaining 10kgm Ice-cream from the backorder.
 -

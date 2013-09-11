@@ -1484,7 +1484,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="location_src_id"/>
+                                <field name="location_src_id" attrs="{'invisible': [('action', '!=', 'move')]}"/>
                                 <field name="location_id"/>
                                 <field name="route_id"/>
                                 <field name="route_sequence"/>

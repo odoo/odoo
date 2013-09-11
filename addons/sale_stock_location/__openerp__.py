@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Sales and Warehouse Management',
+    'name': 'Sales and Warehouse and Route Management',
     'version': '1.0',
     'category': 'Hidden',
     'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
