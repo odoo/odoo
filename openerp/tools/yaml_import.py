@@ -322,7 +322,7 @@ class YamlInterpreter(object):
 
             record_dict = self._create_record(model, fields, view_info, default=default)
             _logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool['ir.model.data']._update(self.cr, self.uid, record.model, \
+            id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
@@ -781,6 +781,7 @@ class YamlInterpreter(object):
 
     def process_url(self, node):
         self.validate_xml_id(node.id)
+
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
         id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
