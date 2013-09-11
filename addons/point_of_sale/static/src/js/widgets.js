@@ -752,6 +752,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             });
             this.$('.button.reset_weight').click(function(){
+                self.$('input.weight').val('');
                 self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
@@ -838,6 +839,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             instance.web.blockUI(); 
 
             this.pos = new module.PosModel(this.session);
+            this.pos.pos_widget = this;
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
@@ -952,6 +954,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_negative_price_popup = new module.ErrorNegativePricePopupWidget(this, {});
             this.error_negative_price_popup.appendTo($('.point-of-sale'));
 
+            this.error_no_client_popup = new module.ErrorNoClientPopupWidget(this, {});
+            this.error_no_client_popup.appendTo($('.point-of-sale'));
+
+            this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
+            this.error_invoice_transfer_popup.appendTo($('.point-of-sale'));
+
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
@@ -982,7 +990,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label: _t('Close'),
-                action: function(){ self.try_close(); },
+                action: function(){ self.close(); },
             });
             this.close_button.appendTo(this.$('#rightheader'));
 
@@ -1013,6 +1021,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error-session': this.error_session_popup,
                     'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
+                    'error-no-client': this.error_no_client_popup,
+                    'error-invoice-transfer': this.error_invoice_transfer_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
@@ -1090,15 +1100,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
         },
-        try_close: function() {
-            var self = this;
-            //TODO : do the close after the flush...
-            self.pos.flush()
-            self.close();
-        },
         close: function() {
             var self = this;
-            this.pos.barcode_reader.disconnect();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
@@ -1110,8 +1113,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }, this));
         },
         destroy: function() {
+            this.pos.destroy();
             instance.webclient.set_content_full_screen(false);
-            self.pos = undefined;
             this._super();
         }
     });

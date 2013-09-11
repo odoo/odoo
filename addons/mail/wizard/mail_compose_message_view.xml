@@ -12,6 +12,9 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
+                        <field name="mail_server_id" invisible="1"/>
+                        <field name="use_active_domain" invisible="1"/>
+                        <field name="active_domain" invisible="1"/>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
@@ -31,7 +34,7 @@
                             attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}">
                             <span attrs="{'invisible':[('model', '=', False)]}">
                                 Followers of
-                                <field name="record_name" readonly="1" class="oe_inline"/>
+                                <field name="record_name" readonly="1" class="oe_inline oe_compose_recipients"/>
                                 and
                             </span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."

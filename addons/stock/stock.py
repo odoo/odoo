@@ -25,7 +25,7 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
@@ -558,12 +558,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date='%s'
+                    date_expected='%s'
                 where
                     picking_id=%d """ % (value, pick.id)
-
             if pick.max_date:
-                sql_str += " and (date='" + pick.max_date + "' or date>'" + value + "')"
+                sql_str += " and (date_expected='" + pick.max_date + "')"
             cr.execute(sql_str)
         return True
 
@@ -580,11 +579,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date='%s'
+                    date_expected='%s'
                 where
                     picking_id=%s """ % (value, pick.id)
             if pick.min_date:
-                sql_str += " and (date='" + pick.min_date + "' or date<'" + value + "')"
+                sql_str += " and (date_expected='" + pick.min_date + "')"
             cr.execute(sql_str)
         return True
 
@@ -1692,7 +1691,12 @@ class stock_move(osv.osv):
             elif picking_type == 'out':
                 location_xml_id = 'stock_location_customers'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
+
         return location_id
 
     def _default_location_source(self, cr, uid, context=None):
@@ -1721,7 +1725,12 @@ class stock_move(osv.osv):
             elif picking_type in ('out', 'internal'):
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                    location_id = False
+
         return location_id
 
     def _default_destination_address(self, cr, uid, context=None):
@@ -1939,8 +1948,16 @@ class stock_move(osv.osv):
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
-        source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-        dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+        try:
+            source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+            self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            source_location = False
+        try:
+            dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+            self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
@@ -2036,7 +2053,10 @@ class stock_move(osv.osv):
             ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
             if picking:
                 # name of new picking according to its type
-                new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
+                if ptype == 'internal':
+                    new_pick_name = seq_obj.get(cr, uid,'stock.picking')
+                else :
+                    new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
                 pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
                 # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
@@ -2870,8 +2890,12 @@ class stock_inventory_line(osv.osv):
     }
 
     def _default_stock_location(self, cr, uid, context=None):
-        stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return stock_location.id
+        try:
+            location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+        except (orm.except_orm, ValueError):
+            location_id = False
+        return location_id
 
     _defaults = {
         'location_id': _default_stock_location
@@ -2909,12 +2933,22 @@ class stock_warehouse(osv.osv):
     }
 
     def _default_lot_input_stock_id(self, cr, uid, context=None):
-        lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return lot_input_stock.id
+        try:
+            lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+        except (ValueError, orm.except_orm):
+            # the user does not have read access on the location or it does not exists
+            lot_input_stock_id = False
+        return lot_input_stock_id
 
     def _default_lot_output_id(self, cr, uid, context=None):
-        lot_output = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output')
-        return lot_output.id
+        try:
+            lot_output_model, lot_output_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
+        except (ValueError, orm.except_orm):
+            # the user does not have read access on the location or it does not exists
+            lot_output_id = False
+        return lot_output_id
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
@@ -2967,6 +3001,18 @@ class stock_picking_in(osv.osv):
         # overridden in order to fire the workflow signal on given stock.picking workflow instance
         # instead of its own workflow (which is not existing)
         return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
+
+    def message_post(self, *args, **kwargs):
+        """Post the message on stock.picking to be able to see it in the form view when using the chatter"""
+        return self.pool.get('stock.picking').message_post(*args, **kwargs)
+
+    def message_subscribe(self, *args, **kwargs):
+        """Send the subscribe action on stock.picking model as it uses _name in request"""
+        return self.pool.get('stock.picking').message_subscribe(*args, **kwargs)
+
+    def message_unsubscribe(self, *args, **kwargs):
+        """Send the unsubscribe action on stock.picking model to match with subscribe"""
+        return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -3028,6 +3074,18 @@ class stock_picking_out(osv.osv):
         # overridden in order to fire the workflow signal on given stock.picking workflow instance
         # instead of its own workflow (which is not existing)
         return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
+
+    def message_post(self, *args, **kwargs):
+        """Post the message on stock.picking to be able to see it in the form view when using the chatter"""
+        return self.pool.get('stock.picking').message_post(*args, **kwargs)
+
+    def message_subscribe(self, *args, **kwargs):
+        """Send the subscribe action on stock.picking model as it uses _name in request"""
+        return self.pool.get('stock.picking').message_subscribe(*args, **kwargs)
+
+    def message_unsubscribe(self, *args, **kwargs):
+        """Send the unsubscribe action on stock.picking model to match with subscribe"""
+        return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),

@@ -23,13 +23,6 @@ from openerp.osv import fields,osv
 from openerp import tools
 from openerp.addons.crm import crm
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
 
 class crm_lead_report_assign(osv.osv):
     """ CRM Lead Report """
@@ -43,7 +36,6 @@ class crm_lead_report_assign(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -54,7 +46,7 @@ class crm_lead_report_assign(osv.osv):
         'date_assign': fields.date('Partner Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'probability': fields.float('Avg Probability',digits=(16,2),readonly=True, group_operator="avg"),
@@ -91,7 +83,6 @@ class crm_lead_report_assign(osv.osv):
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
-                    c.state,
                     c.date_assign,
                     c.user_id,
                     c.probability,
@@ -110,7 +101,7 @@ class crm_lead_report_assign(osv.osv):
                     c.planned_revenue*(c.probability/100) as probable_revenue, 
                     1 as nbr,
                     date_trunc('day',c.create_date) as create_date,
-                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.write_date-c.create_date))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM

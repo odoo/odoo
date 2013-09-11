@@ -37,7 +37,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     'website': 'http://www.openerp.com',
     'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
-        'base_status',
         'crm',
         'project',
     ],
@@ -56,7 +55,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'test/issue_users.yml',
         'test/subscribe_issue.yml',
         'test/issue_process.yml',
-        'test/cancel_issue.yml',
         'test/issue_demo.yml'
     ],
     'installable': True,

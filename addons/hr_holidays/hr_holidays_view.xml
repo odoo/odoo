@@ -22,7 +22,7 @@
                     <field name="holiday_status_id"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_name" string="Description" domain="[]" context="{'group_by':'name'}"/>
-                        <filter name="group_date_from" string="Start Date" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
+                        <filter name="group_date_from" string="Start Month" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
@@ -53,11 +53,14 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Leave Request" version="7.0">
+                <field name="can_reset" invisible="1"/>
                 <header>
+                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user"/>
+                    <button string="Reset to Draft" name="reset" type="workflow"
+                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet string="Leave Request">
@@ -98,11 +101,14 @@
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
                 <form string="Allocation Request" version="7.0">
+                <field name="can_reset" invisible="1"/>
                 <header>
+                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user"/>
+                    <button string="Reset to Draft" name="reset" type="workflow"
+                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
@@ -163,7 +169,7 @@
                         <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
                         <button string="Refuse" name="refuse" states="confirm,validate,draft" type="workflow" icon="gtk-no"/>
-                        <button string="Reset to New" name="set_to_draft" states="cancel" type="object" icon="gtk-convert"/>
+                        <button string="Reset to Draft" name="reset" states="confirm" type="workflow" groups="base.group_hr_manager"/>
                         <field name="state"/>
                     </header>
                     <group col="4">
@@ -351,8 +357,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
-            <field name="context">{'search_default_group_type': 1, 'search_default_validated': 1}</field>
-            <field name="domain">[('holiday_type','=','employee')]</field>
+            <field name="context">{'search_default_group_type': 1}</field>
+            <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 

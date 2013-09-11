@@ -36,7 +36,7 @@
         </record>
 
         <record model="pos.config" id="pos_config_main">
-            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal')])]" />
+            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal'), ref('account.check_journal')])]" />
         </record>
 
         <!-- Resource: pos.category -->
@@ -290,7 +290,7 @@
         <record id="peche" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">5.10</field>
-          <field name="name">Fishing</field>
+          <field name="name">Peaches</field>
           <field name="to_weight">True</field>
           <field name="ean13">2300001000008</field>
           <field name="pos_categ_id" ref="rouges_noyau_fruits"/>

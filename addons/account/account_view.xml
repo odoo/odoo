@@ -413,7 +413,7 @@
                         <page string="Advanced Settings">
                             <group>
                                 <group>
-                                    <field name="user_id"/>
+                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_user']}"/>
                                     <field name="sequence_id" required="0"/>
                                 </group>
                                 <group>
@@ -612,6 +612,13 @@
                             </field>
                         </page>
                     </notebook>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="balance_end" />
+                        </div>
+                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <div class="oe_clear"/>
                 </sheet>
                 </form>
             </field>
@@ -1399,7 +1406,7 @@
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Entries Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Month"/>
                     </group>
                 </search>
             </field>

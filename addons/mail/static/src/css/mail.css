@@ -53,6 +53,9 @@
 .openerp .oe_mail > .oe_thread{
     margin-left: 0px;
 }
+.openerp .oe_inline.oe_compose_recipients {
+    margin-top: -2px;
+}
 
 /* ---------------- MESSAGES ------------------ */
 
@@ -117,6 +120,9 @@
 .openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_body * {
     text-overflow:ellipsis;
     word-wrap: break-word;
+}
+.openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_body .oe_mail_cleaned {
+    display: none;
 }
 
 /* a) Indented Messages */
@@ -632,11 +638,10 @@
 }
 .openerp .oe_followers .oe_partner {
     height: 32px;
-    margin-right: 8px;
+    margin-right: 24px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    margin-right: 10px;
 }
 .openerp .oe_followers .oe_partner img{
     width: 32px;
@@ -649,7 +654,18 @@
     right: 0px;
     line-height: 20px;
 }
-
+.openerp .oe_followers .oe_edit_subtype{
+    cursor: pointer;
+    position: absolute;
+    right: 12px;
+    line-height: 20px;
+}
+.openerp .oe_followers .oe_partner .oe_hidden{
+    display: none;
+}
+.openerp.ui-dialog .ui-dialog-titlebar .ui-dialog-title{
+    padding-right: 20px;
+}
 .openerp .oe_followers .oe_show_more{
     cursor: pointer;
 }

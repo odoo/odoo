@@ -8,8 +8,6 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <filter icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]"/>
-                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="grade_id"/>
                     <field name="user_id"/>
@@ -36,9 +34,8 @@
                                 domain="[]" context="{'group_by':'grade_id'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" />
-                        <filter string="Assign Date" icon="terp-go-today" domain="[]" name="group_partner_date" context="{'group_by':'date_assign'}"/>
+                        <filter string="Assign Month" icon="terp-go-today" domain="[]" name="group_partner_date" context="{'group_by':'date_assign'}"/>
                         <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" />
                         <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" />
@@ -54,7 +51,6 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Lead Assign" type="bar">
-                    <field name="state"/>
                     <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
@@ -76,14 +72,13 @@
                 <field name="partner_id" invisible="1"/>
                 <field name="country_id" invisible="1"/>
                 <field name="day" invisible="1"/>
-                <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="priority"  invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
                 <field name="planned_revenue" sum="Planned Revenues"/>
-                <field name="delay_open" sum='Delay to open'/>
+                <field name="delay_open" sum='Delay to Assign'/>
                 <field name="delay_close" sum='Delay to close'/>
                 <field name="delay_expected"/>
                 <field name="probability" widget="progressbar"/>

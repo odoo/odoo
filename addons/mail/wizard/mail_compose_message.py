@@ -66,14 +66,17 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
-
         # get some important values from context
         composition_mode = context.get('default_composition_mode', context.get('mail.compose.message.mode'))
         model = context.get('default_model', context.get('active_model'))
         res_id = context.get('default_res_id', context.get('active_id'))
         message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
         active_ids = context.get('active_ids')
-
+        if 'active_domain' in context:  # not context.get() because we want to keep global [] domains
+            result['use_active_domain'] = True
+            result['active_domain'] = '%s' % context.get('active_domain')
+        else:
+            result['active_domain'] = ''
         # get default values according to the composition mode
         if composition_mode == 'reply':
             vals = self.get_message_data(cr, uid, message_id, context=context)
@@ -112,6 +115,8 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
+        'use_active_domain': fields.boolean('Use active domain'),
+        'active_domain': fields.char('Active domain', readonly=True),
         'post': fields.boolean('Post a copy in the document',
             help='Post a copy of the message on the document communication history.'),
         'notify': fields.boolean('Notify followers',
@@ -129,7 +134,6 @@ class mail_compose_message(osv.TransientModel):
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
-        'notify': lambda self, cr, uid, ctx={}: False,
         'post': lambda self, cr, uid, ctx={}: True,
         'same_thread': lambda self, cr, uid, ctx={}: True,
     }
@@ -206,7 +210,8 @@ class mail_compose_message(osv.TransientModel):
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
         partner_ids += context.get('default_partner_ids', [])
-
+        if context.get('is_private',False) and message_data.author_id : #check message is private then add author also in partner list.
+            partner_ids += [message_data.author_id.id]
         # update the result
         result = {
             'record_name': message_data.record_name,
@@ -238,8 +243,14 @@ class mail_compose_message(osv.TransientModel):
                 context['thread_model'] = wizard.model
                 active_model_pool = self.pool['mail.thread']
 
-            # wizard works in batch mode: [res_id] or active_ids
-            res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
+            # wizard works in batch mode: [res_id] or active_ids or active_domain
+            if mass_mail_mode and wizard.use_active_domain and wizard.model:
+                res_ids = self.pool[wizard.model].search(cr, uid, eval(wizard.active_domain), context=context)
+            elif mass_mail_mode and wizard.model and active_ids:
+                res_ids = active_ids
+            else:
+                res_ids = [wizard.res_id]
+
             for res_id in res_ids:
                 # mail.message values, according to the wizard options
                 post_values = {

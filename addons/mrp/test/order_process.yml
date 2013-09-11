@@ -110,6 +110,11 @@
                 procurement_ids = procurement.search(cr, uid, [('move_id','=',move_line.id)])
                 assert procurement_ids, "Procurement should be created for shipment line of raw materials."
                 shipment_procurement = procurement.browse(cr, uid, procurement_ids[0], context=context)
+                # procurement state should be `confirmed` at this stage, except if mrp_jit is installed, in which
+                # case it could already be in `running` or `exception` state (not enough stock)
+                expected_states = ('confirmed', 'running', 'exception')
+                assert shipment_procurement.state in expected_states, 'Procurement state is `%s` for %s, expected one of %s' % \
+                    (shipment_procurement.state, shipment_procurement.product_id.name, expected_states)
                 assert shipment_procurement.date_planned == date_planned, "Planned date is not correspond in procurement."
                 assert shipment_procurement.product_id.id == order_line.product_id.id, "Product is not correspond in procurement."
                 assert shipment_procurement.product_qty == order_line.product_qty, "Qty is not correspond in procurement."
@@ -166,6 +171,7 @@
     order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.state == 'in_production', 'Production order should be in production State.'
 -
+        move.action_consume(move.product_qty)
   I produce product.
 -
   !python {model: mrp.product.produce}: |

@@ -51,7 +51,6 @@ Dashboard for CRM will include:
     'depends': [
         'base_action_rule',
         'base_setup',
-        'base_status',
         'process',
         'mail',
         'email_template',
@@ -117,6 +116,7 @@ Dashboard for CRM will include:
         'test/crm_lead_onchange.yml',
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
+        'test/crm_lead_find_stage.yml',
     ],
     'css': [
         'static/src/css/crm.css'

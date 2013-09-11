@@ -78,14 +78,16 @@
   I cancel the account move which is in posted state and verifies that it gives warning message
 -
   !python {model: account.move}: |
+    from openerp.osv import osv
     inv_obj = self.pool.get('account.invoice')
     inv = inv_obj.browse(cr, uid, ref('account_invoice_supplier0'))
     try:
       mov_cancel = self.button_cancel(cr, uid, [inv.move_id.id], {'lang': u'en_US', 'tz': False,
         'active_model': 'ir.ui.menu', 'journal_type': 'purchase', 'active_ids': [ref('menu_action_invoice_tree2')],
         'type': 'in_invoice', 'active_id': ref('menu_action_invoice_tree2')})
-    except Exception, e:
-      assert e, 'Warning message has not been raised'
+      assert False, "This should never happen!"
+    except osv.except_osv:
+      pass
 -
   I verify that 'Period Sum' and 'Year sum' of the tax code are the expected values 
 -
