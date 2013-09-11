@@ -331,8 +331,11 @@
                 extraPlugins: 'sharedspace,customdialogs,tablebutton',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
-                toolbar: [
-                    {name: 'basicstyles', items: [
+                toolbar: [{
+                    name: 'clipboard', items: [
+                        "Undo"
+                    ]},{
+                        name: 'basicstyles', items: [
                         "Bold", "Italic", "Underline", "Strike", "Subscript",
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
