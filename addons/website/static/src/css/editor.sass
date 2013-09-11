@@ -340,11 +340,13 @@ $remove_color: $icon_close
 /* ---- ACE EDITOR ---- */
 
 $ace_width: 720px
-$editorbar_height: 34px
+$editorbar_height: 40px
 // TODO Fix => might break with themes
 $navbar_height: 51px
 
 .oe_ace_view_editor
+    transition: all 0.2s ease-in
+    opacity: 0.3
     position: fixed
     top: $navbar_height
     right: 0
@@ -352,14 +354,15 @@ $navbar_height: 51px
     height: 100%
     .oe_ace_view_editor_title
         width: 100%
-        padding-left: 2px
+        padding-top: 4px
+        padding-left: 4px
         height: $editorbar_height
-        background-color: #111
+        background: #2F3129
         .oe_view_list
             width: 50%
-            height: $editorbar_height
+            height: $editorbar_height - 8px
         .btn
-            height: $editorbar_height
+            height: $editorbar_height - 8px
             padding: 0 4px 0 4px
     .ace_editor
         position: absolute
@@ -368,11 +371,10 @@ $navbar_height: 51px
         bottom: $navbar_height
         left: 0
         width: $ace_width
-
-.oe_ace_closed
-    width: 0
-    transition: width 0.4s ease-in
-
-.oe_ace_open
-    width: $ace_width
-    transition: width 0.4s ease-in
+    &:hover
+        opacity: 1
+    &.oe_ace_open
+        width: $ace_width
+    &.oe_ace_closed
+        width: 0
+        opacity: 0

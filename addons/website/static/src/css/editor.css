@@ -390,6 +390,8 @@ table.editorbar-panel td.selected {
 
 /* ---- ACE EDITOR ---- */
 .oe_ace_view_editor {
+  transition: all 0.2s ease-in;
+  opacity: 0.3;
   position: fixed;
   top: 51px;
   right: 0;
@@ -398,33 +400,34 @@ table.editorbar-panel td.selected {
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
-  padding-left: 2px;
-  height: 34px;
-  background-color: #111111;
+  padding-top: 4px;
+  padding-left: 4px;
+  height: 40px;
+  background: #2f3129;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
-  height: 34px;
+  height: 32px;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .btn {
-  height: 34px;
+  height: 32px;
   padding: 0 4px 0 4px;
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 34px;
+  top: 40px;
   right: 0;
   bottom: 51px;
   left: 0;
   width: 720px;
 }
-
-.oe_ace_closed {
-  width: 0;
-  transition: width 0.4s ease-in;
+.oe_ace_view_editor:hover {
+  opacity: 1;
 }
-
-.oe_ace_open {
+.oe_ace_view_editor.oe_ace_open {
   width: 720px;
-  transition: width 0.4s ease-in;
+}
+.oe_ace_view_editor.oe_ace_closed {
+  width: 0;
+  opacity: 0;
 }

@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var globalEditor;
+
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.ace.xml');
 
@@ -9,7 +11,12 @@
             'click a[data-action=ace]': 'launchAce',
         }),
         launchAce: function () {
-            new website.ace.ViewEditor(this).appendTo($(document.body));
+            if (globalEditor) {
+                globalEditor.open();
+            } else {
+                globalEditor = new website.ace.ViewEditor(this);
+                globalEditor.appendTo($(document.body));
+            }
         },
     });
 
@@ -63,10 +70,11 @@
             var viewId = $(document.documentElement).data('view-xmlid');
             openerp.jsonRpc('/website/customize_template_get', 'call', {
                 'xml_id': viewId,
-                'optional': false
+                'optional': false,
             }).then(function (views) {
                 self.loadViewList.call(self, views);
             });
+            this.$el.hover();
         },
         selectedViewId: function () {
             return this.$('#ace-view-list').val();
@@ -91,7 +99,7 @@
             openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'read',
-                args: [[this.selectedViewId()], ['arch']]
+                args: [[this.selectedViewId()], ['arch']],
             }).then(function(result) {
                 if (result && result.length > 0) {
                     var xml = new website.ace.XmlDocument(result[0].arch)
@@ -115,7 +123,7 @@
                 openerp.jsonRpc('/web/dataset/call', 'call', {
                     model: 'ir.ui.view',
                     method: 'write',
-                    args: [[this.selectedViewId()], { 'arch':  xml.xml }]
+                    args: [[this.selectedViewId()], { 'arch':  xml.xml }],
                 }).then(function(result) {
                     self.reloadPage();
                 }).fail(function (error) {
@@ -134,16 +142,13 @@
             alert("Malformed XML document");
         },
         open: function () {
-            var $close = this.$('.pull-right');
-            this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
-                $close.fadeIn(200);
-            }).removeClass('oe_ace_closed').addClass('oe_ace_open');
+            this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
             this.displayView();
         },
         close: function () {
             var self = this;
-            this.$('.pull-right').fadeOut(100);
             this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
+                globalEditor = null;
                 self.destroy.call(self);
             }).removeClass('oe_ace_open').addClass('oe_ace_closed');
         },
