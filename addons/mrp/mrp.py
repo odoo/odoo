@@ -864,6 +864,9 @@ class mrp_production(osv.osv):
 
     def _get_auto_picking(self, cr, uid, production):
         return True
+    
+    def _hook_create_post_procurement(self, cr, uid, production, procurement_id, context=None):
+        return True
 
     def _make_production_line_procurement(self, cr, uid, production_line, shipment_move_id, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -886,6 +889,7 @@ class mrp_production(osv.osv):
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
                 })
+        self._hook_create_post_procurement(cr, uid, production, procurement_id, context=context)
         wf_service.trg_validate(uid, procurement_order._name, procurement_id, 'button_confirm', cr)
         return procurement_id
 

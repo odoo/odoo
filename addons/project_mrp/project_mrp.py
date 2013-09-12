@@ -109,4 +109,15 @@ class sale_order(osv.osv):
     }
 
 sale_order()
+
+class mrp_production(osv.osv):
+    _inherit = 'mrp.production'
+
+    def _hook_create_post_procurement(self, cr, uid, production, procurement_id, context=None):
+        res =  super(mrp_production, self)._hook_create_post_procurement(cr, uid, production, procurement_id, context)
+        procurement_order = self.pool.get('procurement.order')
+        procurement_order.write(cr, uid, procurement_id, {'sale_line_id': production.move_prod_id and production.move_prod_id.sale_line_id and production.move_prod_id.sale_line_id.id})
+        return procurement_id
+
+mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
