@@ -21,21 +21,17 @@
 
 from openerp.osv import fields, osv
 import re
-import os
-from openerp.addons.base.res import res_company
-
-supported_fonts = []
+from openerp.report.render.rml2pdf import customfonts
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
     
     def _get_font(self, cr, uid, context=None):
-        global supported_fonts
-        if not supported_fonts:
-            supported_fonts.extend(res_company.get_font_list())
-        return supported_fonts
-    
+        if not customfonts.supported_fonts:
+            customfonts.RegisterCustomFonts()
+        return customfonts.supported_fonts
+        
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
             help="""Work in multi-company environments, with appropriate security access between companies.
@@ -51,6 +47,10 @@ class base_config_settings(osv.osv_memory):
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
         'font': fields.selection(_get_font, "Select Font",help="Set your favorite font into company header"),
+    }
+    
+    _defaults= {
+        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font or 'DejaVuSans',
     }
     
     def open_company(self, cr, uid, ids, context=None):
@@ -76,7 +76,7 @@ class base_config_settings(osv.osv_memory):
         wizard = self.browse(cr, uid, ids)[0]
         if wizard.font:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            user.company_id.write({'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
+            user.company_id.write({'font':wizard.font,'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
         return {}
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
