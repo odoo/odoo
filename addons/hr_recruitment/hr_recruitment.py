@@ -471,8 +471,11 @@ class hr_job(osv.osv):
         
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
         """Calculate total attached CV per job"""
+        res = {}
         attachment_obj = self.pool.get('ir.attachment')
-        res = {id: attachment_obj.search(cr, uid, [('res_model', '=', 'hr.job'), ('res_id', '=', id)], count=True, context=context) for id in ids}
+        for job_id in ids:
+            res_ids = [job_id] + self.pool.get('hr.applicant').search(cr, uid, [('job_id', '=', job_id)], context=context)
+            res[job_id] = attachment_obj.search(cr, uid, [('res_model', 'in', ['hr.job', 'hr.applicant']), ('res_id', 'in', res_ids)], count=True, context=context)
         return res
 
     _columns = {
@@ -523,7 +526,8 @@ class hr_job(osv.osv):
         }
 
     def attachment_tree_view(self, cr, uid, ids, context):
-        domain = ['&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids)]
+        res_ids = ids + self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)
+        domain = ['&', ('res_model', 'in', ['hr.job', 'hr.applicant']), ('res_id', 'in', res_ids)]
         res_id = ids and ids[0] or False
         return {
             'name': _('Attachments'),
