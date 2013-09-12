@@ -330,20 +330,32 @@ class QWebXml(object):
             if isinstance(inner, unicode):
                 inner = inner.encode("utf8")
 
-            if e.tagName != 't':
-                g_att += ''.join(
-                    ' %s="%s"' % (name, cgi.escape(str(value), True))
-                    for name, value in [
-                        ('data-oe-model', record._model._name),
-                        ('data-oe-id', str(record.id)),
-                        ('data-oe-field', field),
-                        ('data-oe-type', field_type),
-                        ('data-oe-expression', t_att['field']),
-                    ]
-                )
+            if e.tagName == 't':
+                e.tagName = DEFAULT_TAG_BY_TYPE[field_type]
+
+            g_att += ''.join(
+                ' %s="%s"' % (name, cgi.escape(str(value), True))
+                for name, value in [
+                    ('data-oe-model', record._model._name),
+                    ('data-oe-id', str(record.id)),
+                    ('data-oe-field', field),
+                    ('data-oe-type', field_type),
+                    ('data-oe-expression', t_att['field']),
+                ]
+            )
         except AttributeError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
         return self.render_element(e, t_att, g_att, v, str(inner or ""))
+
+# If a t-field is set on a <t> element, by default only its text will be
+# rendered losing the information that it's a tag and completely breaking
+# edition => replace <t> by some default tag depending on field type
+DEFAULT_TAG_BY_TYPE = {
+    'int': 'span',
+    'float': 'span',
+    'char': 'span',
+    'many2one': 'span',
+}
 
 # leave this, al.
