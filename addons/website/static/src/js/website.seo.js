@@ -167,7 +167,6 @@
                     return word.replace(nameRegex, "").trim();
                 });
                 // TODO Order properly ?
-                cleanList.push(self.companyName);
                 _.each(_.uniq(cleanList), function (keyword) {
                     if (keyword) {
                         var suggestion = new website.seo.Suggestion(self, {
@@ -180,7 +179,7 @@
                     }
                 });
             }
-            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.word), addSuggestions);
+            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.word + " "), addSuggestions);
         },
     });
 
