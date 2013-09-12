@@ -23,19 +23,19 @@
     website.load_templates = function(templates) {
         var def = $.Deferred();
         var count = templates.length;
-        templates.forEach(function(t) {
-            openerp.qweb.add_template(t, function(err) {
-                if (err) {
-                    def.reject();
-                } else {
-                    count--;
-                    if (count < 1) {
-                        def.resolve();
+
+        var dones = _(templates).map(function (t) {
+            return new $.Deferred(function (d) {
+                openerp.qweb.add_template(t, function(err) {
+                    if (err) {
+                        d.reject(err);
+                    } else {
+                        d.resolve();
                     }
-                }
+                });
             });
         });
-        return def;
+        return $.when.apply(null, dones);
     };
 
 
