@@ -111,6 +111,7 @@
                 });
                 keyword.on('removed', null, function () {
                    self.trigger('list-not-full');
+                   self.trigger('removed', word);
                 });
                 keyword.appendTo(self.$el);
             }
@@ -146,15 +147,22 @@
         template: 'website.seo_list',
         init: function (parent, companyName) {
             this.companyName = companyName;
+            this.rootWords = [ companyName ];
             this._super(parent);
         },
         start: function () {
+            this.refresh();
+        },
+        refresh: function () {
             var self = this;
+            self.$el.empty();
             self.$el.append("Loading...");
-            // cf. https://github.com/ddm/seo
-            // TODO Try with /recommend/
-            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(self.companyName), function (list) {
-                self.$el.empty();
+            var requests = _.map(this.rootWords, function (word) {
+                // cf. https://github.com/ddm/seo
+                // TODO Try with /recommend/
+                return $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(word));
+            });
+            function addSuggestions (list) {
                 // TODO Improve algorithm + Ajust based on custom user keywords
                 var nameRegex = new RegExp(self.companyName, "gi");
                 var cleanList = _.map(list, function removeCompanyName (word) {
@@ -173,12 +181,36 @@
                         suggestion.appendTo(self.$el);
                     }
                 });
+            }
+            $.when.apply($, requests).then(function (result) {
+                self.$el.empty();
+                if (result && _.isArray(result[0])) {
+                    var suggestionLists = _.map(Array.prototype.slice.call(arguments), function (l) {
+                        return l[0];
+                    });
+                    _.each(suggestionLists, addSuggestions);
+                } else if (result && _.isString(result[0])) {
+                    addSuggestions(result);
+                }
             });
         },
         suggestions: function () {
             return this.$('.js_seo_suggestion').map(function () {
                 return $(this).data('keyword');
             });
+        },
+        addRootWord: function (word) {
+            this.rootWords.push(word);
+            this.refresh();
+        },
+        removeRootWord: function (word) {
+            this.rootWords = _.reject(this.rootWords, function (rootWord) {
+                return rootWord === word;
+            });
+            if (this.rootWords.length === 0) {
+                this.rootWords.push(companyName);
+            }
+            this.refresh();
         },
     });
 
@@ -235,14 +267,14 @@
             this.imageList = new website.seo.ImageList(this);
             this.imageList.appendTo($modal.find('.js_seo_image_list'));
             this.keywordList = new website.seo.KeywordList(this);
-            this.keywordList.on('list-full', null, function () {
+            this.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .attr('readonly', "readonly")
                     .attr('placeholder', "Remove a keyword first");
                 $modal.find('button[data-action=add]')
                     .prop('disabled', true).addClass('disabled');
             });
-            this.keywordList.on('list-not-full', null, function () {
+            this.keywordList.on('list-not-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .removeAttr('readonly').attr('placeholder', "");
                 $modal.find('button[data-action=add]')
@@ -253,6 +285,9 @@
             this.suggestionList = new website.seo.SuggestionList(this, companyName);
             this.suggestionList.on('selected', self, function (word) {
                self.acceptSuggestion(word);
+            });
+            this.keywordList.on('removed', self, function (word) {
+               this.suggestionList.removeRootWord(word);
             });
             this.suggestionList.appendTo($modal.find('.js_seo_suggestions_list'));
             $modal.modal();
@@ -296,6 +331,7 @@
             var $input = this.$('input[name=seo_page_keywords]');
             var keyword = _.isString(word) ? word : $input.val();
             this.keywordList.add(keyword, false);
+            this.suggestionList.addRootWord(keyword);
             $input.val("");
         },
         acceptSuggestion: function (suggestion) {
