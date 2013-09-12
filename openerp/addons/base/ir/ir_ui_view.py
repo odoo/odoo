@@ -21,6 +21,7 @@
 
 import logging
 from lxml import etree
+from operator import itemgetter
 import os
 
 from openerp import tools
@@ -279,6 +280,22 @@ class view(osv.osv):
                 'label' : labels,
                 'blank_nodes': blank_nodes,
                 'node_parent_field': _Model_Field,}
+
+    def _validate_custom_views(self, cr, uid, model):
+        """Validate architecture of custom views (= without xml id) for a given model.
+            This method is called at the end of registry update.
+        """
+        cr.execute("""SELECT max(v.id)
+                        FROM ir_ui_view v
+                   LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                       WHERE md.module IS NULL
+                         AND v.model = %s
+                    GROUP BY coalesce(v.inherit_id, v.id)
+                   """, (model,))
+
+        ids = map(itemgetter(0), cr.fetchall())
+        return self._check_xml(cr, uid, ids)
+
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'

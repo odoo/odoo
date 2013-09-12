@@ -414,12 +414,22 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 _logger.info('Reloading registry once more after uninstalling modules')
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
+        # STEP 7: verify custom views on every model
+        if update_module:
+            Views = registry['ir.ui.view']
+            custom_view_test = True
+            for model in registry.models.keys():
+                if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
+                    custom_view_test = False
+                    _logger.error('invalid custom view(s) for model %s', model)
+            report.record_result(custom_view_test)
+
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
         else:
             _logger.info('Modules loaded.')
 
-        # STEP 7: call _register_hook on every model
+        # STEP 8: call _register_hook on every model
         for model in registry.models.values():
             model._register_hook(cr)
 
