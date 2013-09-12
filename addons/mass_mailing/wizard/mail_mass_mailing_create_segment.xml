@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Wizard form view -->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_create_form">
+            <field name="name">mail.mass_mailing.segment.create.form</field>
+            <field name="model">mail.mass_mailing.segment.create</field>
+            <field name="arch" type="xml">
+                <form string="Create a Mass Mailing Segment" version="7.0">
+                    <group>
+                        <field name="model_model" invisible="1"/>
+                        <field name="domain" invisible="1"/>
+                        <p class="oe_grey" colspan="2"
+                            attrs="{'invisible': [('mass_mailing_campaign_id', '!=', False)]}">
+                            Please choose a mass mailing campaign that will hold the new segment.
+                        </p>
+                        <field name="mass_mailing_campaign_id"/>
+
+                        <p class="oe_grey" colspan="2"
+                            attrs="{'invisible': ['|', ('model_id', '!=', False), ('mass_mailing_campaign_id', '=', False)]}">
+                            Please choose a model on which you will run the mass mailing.
+                        </p>
+                        <field name="model_id"
+                            on_change="on_change_model_id(model_id, context)"
+                            attrs="{'invisible': [('mass_mailing_campaign_id', '=', False)]}"/>
+
+                        <p class="oe_grey" colspan="2"
+                            attrs="{'invisible': ['|', ('filter_id', '!=', False), ('model_id', '=', False)]}">
+                            Please choose a filter that will be applied on the model
+                            to find the records on which you will run the mass mailing.
+                        </p>
+                        <field name="filter_id"
+                            on_change="on_change_filter_id(filter_id, context)"
+                            attrs="{'invisible': [('model_id', '=', False)]}"/>
+
+                        <p class="oe_grey" colspan="2"
+                            attrs="{'invisible': ['|', ('template_id', '!=', False), ('filter_id', '=', False)]}">
+                            Please choose the template to use to render the emails
+                            to send.
+                        </p>
+                        <field name="template_id"
+                            attrs="{'invisible': [('filter_id', '=', False)]}"/>
+
+                        <p class="oe_grey" colspan="2"
+                            attrs="{'invisible': ['|', ('segment_name', '!=', False), ('template_id', '=', False)]}">
+                            Please choose the name of the campaign segment.
+                        </p>
+                        <field name="segment_name"
+                            attrs="{'invisible': [('template_id', '=', False)]}"/>
+
+                        <button name="launch_composer" type="object"
+                            string="Create segment and launch email composer"
+                            attrs="{'invisible': [('segment_name', '=', False)]}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_mail_mass_mailing_segment_create">
+            <field name="name">Create Mass Mailing Segment</field>
+            <field name="res_model">mail.mass_mailing.segment.create</field>
+            <field name="src_model">mail.mass_mailing.campaign</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

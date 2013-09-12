@@ -19,6 +19,10 @@
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                 <form string="Mass Mailing Campaign" version="7.0">
+                    <header>
+                        <button name="launch_segment_create_wizard" type="object"
+                            class="oe_highlight" string="Create a New Segment"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -28,6 +32,8 @@
                             <field name="replied"/>
                             <field name="bounced"/>
                         </group>
+                        <label for="segment_ids"/>
+                        <field name="segment_ids"/>
                     </sheet>
                 </form>
             </field>
@@ -114,6 +120,10 @@
             <field name="arch" type="xml">
                 <tree string="Mass Mailing Segments">
                     <field name="name"/>
+                    <field name="sent"/>
+                    <field name="delivered"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
                 </tree>
             </field>
         </record>

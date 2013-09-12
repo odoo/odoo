@@ -20,3 +20,4 @@
 ##############################################################################
 
 import mail_compose_message
+import mail_mass_mailing_create_segment

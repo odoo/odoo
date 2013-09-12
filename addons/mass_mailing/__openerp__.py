@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -37,6 +37,7 @@
         'mass_mailing_demo.xml',
         'mail_mail_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'wizard/mail_mass_mailing_create_segment.xml',
         'security/ir.model.access.csv',
     ],
     'js': [],

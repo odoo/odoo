@@ -41,17 +41,21 @@ class MailComposeMessage(osv.TransientModel):
     }
 
     _defaults = {
-        'use_mass_mailing_campaign': True,
+        'use_mass_mailing_campaign': False,
     }
 
-    def onchange_mass_mail_campaign_id(self, cr, uid, ids, mass_mail_campaign_id, context=None):
+    def onchange_mass_mail_campaign_id(self, cr, uid, ids, mass_mailing_campaign_id, mass_mail_segment_id, context=None):
+        if mass_mail_segment_id:
+            segment = self.pool['mail.mass_mailing.segment'].browse(cr, uid, mass_mail_segment_id, context=context)
+            if segment.mass_mailing_campaign_id.id == mass_mailing_campaign_id:
+                return {}
         return {'value': {'mass_mailing_segment_id': False}}
 
     def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
         """ Override method that generated the mail content by adding the mass
         mailing campaign, when doing pure email mass mailing. """
         res = super(MailComposeMessage, self).render_message_batch(cr, uid, wizard, res_ids, context=context)
-        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_segment_id:  # TODO: which kind of mass mailing ?
+        if wizard.composition_mode == 'mass_mail' and wizard.use_mass_mailing_campaign and wizard.mass_mailing_segment_id:  # TODO: which kind of mass mailing ?
             for res_id in res_ids:
                 res[res_id]['mass_mailing_segment_id'] = wizard.mass_mailing_segment_id.id
         return res

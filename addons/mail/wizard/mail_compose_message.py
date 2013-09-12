@@ -75,7 +75,7 @@ class mail_compose_message(osv.TransientModel):
         if 'active_domain' in context:  # not context.get() because we want to keep global [] domains
             result['use_active_domain'] = True
             result['active_domain'] = '%s' % context.get('active_domain')
-        else:
+        elif not result.get('active_domain'):
             result['active_domain'] = ''
         # get default values according to the composition mode
         if composition_mode == 'reply':

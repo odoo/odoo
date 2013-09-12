@@ -15,7 +15,7 @@
                     <div>
                         <group>
                             <field name="mass_mailing_campaign_id"
-                                on_change="onchange_mass_mail_campaign_id(mass_mailing_campaign_id)"
+                                on_change="onchange_mass_mail_campaign_id(mass_mailing_campaign_id, mass_mailing_segment_id, context)"
                                 attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('use_mass_mailing_campaign', '=', False)],
                                         'required': [('composition_mode', '=', 'mass_mail'), ('use_mass_mailing_campaign', '=', True)]}"/>
                             <field name="mass_mailing_segment_id"

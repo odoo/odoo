@@ -23,6 +23,7 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from openerp import tools
+from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
 
@@ -103,6 +104,23 @@ class MassMailingCampaign(osv.Model):
             type='integer', multi='_get_statistics'
         ),
     }
+
+    def launch_segment_create_wizard(self, cr, uid, ids, context=None):
+        ctx = dict(context)
+        ctx.update({
+            'default_mass_mailing_campaign_id': ids[0],
+        })
+        return {
+            'name': _('Create a Segment for the Campaign'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.mass_mailing.segment.create',
+            'views': [(False, 'form')],
+            'view_id': False,
+            'target': 'new',
+            'context': ctx,
+        }
 
 
 class MassMailingSegment(osv.Model):
