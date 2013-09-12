@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-03 05:05+0000\n"
-"X-Generator: Launchpad (build 16753)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:24+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -50,7 +50,7 @@ msgstr "Konto statistikker"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma/Open/Paid Invoices"
-msgstr ""
+msgstr "Proforma/Åbne/Betalte faktura"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -79,7 +79,7 @@ msgstr "Importér fra faktura eller betaling"
 #: code:addons/account/account_move_line.py:1210
 #, python-format
 msgid "Bad Account!"
-msgstr ""
+msgstr "Forkert konto!"
 
 #. module: account
 #: view:account.move:0
@@ -93,6 +93,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Fejl!\n"
+"Du kan ikke oprette rekursiv konto skabelon."
 
 #. module: account
 #. openerp-web
@@ -123,6 +125,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
+"Hvis det aktive felt sættes til falsk, kan du skjule betalings betingelse "
+"uden at slette den."
 
 #. module: account
 #: code:addons/account/account.py:641
@@ -151,7 +155,7 @@ msgstr "Advarsel!"
 #: code:addons/account/account.py:3197
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Diverse journal"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -179,21 +183,30 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette en bogførings periode.\n"
+"              </p><p>\n"
+"                En bogførings periode er typisk en måned eller et kvartal. "
+"Den\n"
+"                defineres normalt svarende til samme længde som en "
+"momsafregnings periode.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr ""
+msgstr "Fakturaer oprettet inden for de sidste 15 dage"
 
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr ""
+msgstr "Kolonne navn"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Antal cifre som bruges til konto kode"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -215,7 +228,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
-msgstr ""
+msgstr "Moms skabelon"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
@@ -235,12 +248,12 @@ msgstr "Belgiske rapporter"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "Valideret"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "Indtægt visning"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -253,7 +266,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Næste kredit nota nummer"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -266,17 +279,17 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
 msgid "Manual Recurring"
-msgstr ""
+msgstr "Manuel gentagelse"
 
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr ""
+msgstr "Slå skrivning fra"
 
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Select the Period for Analysis"
-msgstr ""
+msgstr "Vælg analyse periode"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -311,7 +324,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_budget:0
 msgid "Budget management"
-msgstr ""
+msgstr "Budget opsætning"
 
 #. module: account
 #: view:product.template:0
@@ -329,7 +342,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "Tillad flere valutaer"
 
 #. module: account
 #: code:addons/account/account_invoice.py:77
@@ -363,13 +376,13 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Sælger"
 
 #. module: account
 #: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
-msgstr ""
+msgstr "Ansvarlig"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -385,7 +398,7 @@ msgstr "Dato for oprettelse"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr ""
+msgstr "Indkøb Kreditnota"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -429,7 +442,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "Periode:"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -470,12 +483,12 @@ msgstr "Det beløb udtrykt i anden valgfri valuta."
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr ""
+msgstr "Tilgængelige mønter"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
 msgid "Enable Comparison"
-msgstr ""
+msgstr "Aktiver sammenligning"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -508,12 +521,12 @@ msgstr ""
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr ""
+msgstr "Godkend valgte faktura"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
@@ -528,7 +541,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr ""
+msgstr "Konto brugt i Journal"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -551,7 +564,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr ""
+msgstr "Kreditnota"
 
 #. module: account
 #: report:account.overdue:0
@@ -603,7 +616,7 @@ msgstr ""
 #: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "3 Monthly"
-msgstr ""
+msgstr "3 Pr. måned"
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
