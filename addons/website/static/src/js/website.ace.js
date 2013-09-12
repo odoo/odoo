@@ -77,7 +77,7 @@
             this.$el.hover();
         },
         selectedViewId: function () {
-            return this.$('#ace-view-list').val();
+            return parseInt(this.$('#ace-view-list').val(), 10);
         },
         loadViewList: function (views) {
             var activeViews = _.filter(views, function (view) {
