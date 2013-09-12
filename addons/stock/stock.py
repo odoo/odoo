@@ -498,6 +498,18 @@ class stock_picking(osv.osv):
                 res[pick.id] = True
         return res
 
+
+    def _get_group_id(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for pick in self.browse(cr, uid, ids, context=context):
+            if pick.move_lines and pick.move_lines[0].group_id:
+                res[pick.id] = pick.move_lines[0].group_id.id
+            else:
+                res[pick.id] = False
+        return res
+
+
+
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
@@ -539,6 +551,7 @@ class stock_picking(osv.osv):
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
+#         'group_id': fields.function(_get_group_id, type='many2one', store={'stock.move': (_get_pickings, ['picking_id', 'group_id'], 10)}), 
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -894,7 +907,7 @@ class stock_picking(osv.osv):
                         product = self.pool.get('product.product').browse(cr, uid, prod, context=context)
                         qty = res[0][ops][prod]
                         if qty > 0:
-                            #TODO: Maybe should try to reserve quants?
+                            #TODO: Maybe should try to reserve quants? / Make copy instead of create, but have to put move_dest_id False then e.g. link purchase order line?
                             quant = False
                             move_id = stock_move_obj.create(cr, uid, {
                                             'name': product.name,
@@ -1152,6 +1165,9 @@ class stock_move(osv.osv):
                 res.add(quant.reservation_id.id)
         return list(res)
 
+
+
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1221,7 +1237,7 @@ class stock_move(osv.osv):
                                          store = {'stock.move': (lambda self, cr, uid, ids, c={}: ids , ['product_uom_qty', 'product_uom', 'reserved_quant_ids'], 20), 
                                                   'stock.quant': (_get_move, ['reservation_id'], 10)}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        'group_id': fields.related('procurement_id', 'group_id', type='many2one', relation="procurement.group", string='Procurement Group'),
+        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
@@ -1434,9 +1450,9 @@ class stock_move(osv.osv):
         context = context or {}
         pick_obj = self.pool.get("stock.picking")
         picks = []
-        if move.group_id:
-            picks = pick_obj.search(cr, uid, [
-                ('group_id', '=', move.group_id.id),
+        group = move.group_id and move.group_id.id or False
+        picks = pick_obj.search(cr, uid, [
+                ('group_id', '=', group),
                 ('location_id', '=', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
                 ('state', 'in', ['confirmed', 'waiting'])], context=context)
@@ -1449,8 +1465,6 @@ class stock_move(osv.osv):
                 'move_type': move.group_id and move.group_id.move_type or 'one',
                 'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
                 'date_done': move.date_expected,
-                'state': 'confirmed',
-                'group_id': move.group_id and move.group_id.id or False,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }
             pick = pick_obj.create(cr, uid, values, context=context)
@@ -1747,6 +1761,7 @@ class stock_move(osv.osv):
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
             'state': move.state,
+            'move_dest_id': False,
             'reserved_quant_ids': []
         }
         new_move = self.copy(cr, uid, move.id, defaults)
@@ -1758,7 +1773,10 @@ class stock_move(osv.osv):
         }, context=context)
         
         if move.move_dest_id and move.propagate:
-            self.split(cr, uid, move.move_dest_id, qty, context=context)
+            new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
+            self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
+            
+        self.action_confirm(cr, uid, [new_move], context=context)
         return new_move
 
 class stock_inventory(osv.osv):

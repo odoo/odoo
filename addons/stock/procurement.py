@@ -112,6 +112,7 @@ class procurement_order(osv.osv):
             'procure_method': procurement.rule_id.procure_method,
             'origin': procurement.origin,
             'picking_type_id': procurement.rule_id.picking_type_id.id,
+            'group_id': procurement.group_id and procurement.group_id.id or False,
         }
 
     def _run(self, cr, uid, procurement, context=None):
