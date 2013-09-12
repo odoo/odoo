@@ -4589,5 +4589,13 @@
         <field name="property_account_income_categ" ref="ro_pcg_sale"/> <!-- 707 -->
 		    
 		</record>
+		
+        <record id="romania_chart_template_value" model="ir.values">
+            <field name="name">Romania - Chart of Accounts</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="romania_chart_template"/>
+            <field name="value" ref="base.ROL"/>
+        </record>
 </data>
 </openerp>
