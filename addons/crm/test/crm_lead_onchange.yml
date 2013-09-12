@@ -1,4 +1,3 @@
-
 -
   Sales manager create a lead record to call a partner onchange, stage onchange and mailing opt-in onchange method.
 -
@@ -24,8 +23,3 @@
   !record {model: crm.phonecall, id: crm_phonecall_5}:
     name: 'Bad time'
     partner_id: base.res_partner_5
--
-  Sales manager set the next stage to "New" for the lead.
--
-  !python {model: crm.lead}: |
-    self.stage_next(cr, uid, [ref("crm_case_4")], context={'stage_type': 'lead'})
