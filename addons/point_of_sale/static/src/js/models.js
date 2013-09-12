@@ -270,6 +270,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
         push_order: function(order) {
             var self = this;
+            this.proxy.log('push_order',order.export_as_JSON());
             var order_id = this.db.add_order(order.export_as_JSON());
             var pushed = new $.Deferred();
 
