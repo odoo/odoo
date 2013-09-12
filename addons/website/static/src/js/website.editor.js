@@ -245,7 +245,7 @@
                 defs.push(def);
             });
             return $.when.apply(null, defs).then(function () {
-                window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?/, '');
+                window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
             });
         },
         saveElement: function ($el) {
@@ -268,7 +268,7 @@
             });
         },
         cancel: function () {
-            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?/, '');
+            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
         },
     });
 

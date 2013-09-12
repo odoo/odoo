@@ -20,9 +20,12 @@
             this.snippets.appendTo($(document.body));
             return this._super.apply(this, arguments);
         },
-
         snippet: function (ev) {
             this.snippets.toggle();
+        },
+        save: function () {
+            $('body').trigger("save");
+            this._super();
         },
     });
 
@@ -42,6 +45,7 @@
 
     website.snippet.BuildingBlock = openerp.Widget.extend({
         template: 'website.snippets',
+        activeSnippets: [],
         init: function (parent) {
             this.parent = parent;
             this._super.apply(this, arguments);
@@ -79,7 +83,7 @@
                     }
                     var $target = $(event.currentTarget);
                     if (self.$active_snipped_id) {
-                        if (self.$active_snipped_id.get(0) == event.currentTarget || self.$active_snipped_id.has($target[0])) {
+                        if (self.$active_snipped_id[0] === $target[0] || $.contains(self.$active_snipped_id, $target[0])) {
                             var $parent = self.$active_snipped_id.parents("[data-snippet-id]:first");
                             if ($parent.length) {
                                 $target = $parent;
@@ -524,11 +528,11 @@
     });
 
 
-    website.snippet.editorRegistry.container = website.snippet.Editor.extend({
+    website.snippet.editorRegistry.resize = website.snippet.Editor.extend({
         start: function () {
             var self = this;
             this._super();
-            var $box = $(openerp.qweb.render("website.snippets.container"));
+            var $box = $(openerp.qweb.render("website.snippets.resize"));
 
             var resize_values = this.getSize();
             if (!resize_values.n) $box.find(".oe_handle.n").remove();
@@ -576,7 +580,7 @@
                     var resize = resize_values[compass];
                     if (!resize) return;
 
-                    var current = 0;
+                    var current = resize[2] || 0;
                     _.each(resize[0], function (val, key) {
                         if (self.$target.hasClass(val)) {
                             if (current)
@@ -589,7 +593,9 @@
                     self.parent.editor_busy = true;
 
                     var xy = event['page'+XY];
-                    var begin = resize[1][current];
+                    var begin = current;
+                    var beginClass = self.$target.attr("class");
+                    var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[0-9-]+'), 'g');
 
                     var cursor = $handle.css("cursor")+'-important';
                     $("body").addClass(cursor);
@@ -597,23 +603,26 @@
 
                     var body_mousemove = function (event){
                         event.preventDefault();
-                        var dd = event['page'+XY] - xy + begin;
+                        var dd = event['page'+XY] - xy + resize[1][begin];
                         var next = current+1 === resize[1].length ? current : (current+1);
                         var prev = current ? (current-1) : 0;
 
                         var change = false;
                         if (dd > (2*resize[1][next] + resize[1][current])/3) {
-                            self.$target.removeClass(resize[0][current]).addClass(resize[0][next]);
+                            self.$target.attr("class",self.$target.attr("class").replace(regClass, ''));
+                            self.$target.addClass(resize[0][next]);
                             current = next;
                             change = true;
                         }
                         if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
-                            self.$target.removeClass(resize[0][current]).addClass(resize[0][prev]);
+                            self.$target.attr("class",self.$target.attr("class").replace(regClass, ''));
+                            self.$target.addClass(resize[0][prev]);
                             current = prev;
                             change = true;
                         }
 
                         if (change) {
+                            self.on_resize(compass, beginClass, current);
                             website.snippet.cover_target(self.$overlay, self.$target);
                         }
                     };
@@ -624,34 +633,164 @@
                         $('body').unbind('mouseup', body_mouseup);
                         $("body").removeClass(cursor);
                         self.parent.editor_busy = false;
-                        self.onBlur();
-                        self.onFocus();
                     };
                     $('body').mouseup(body_mouseup);
                 });
         },
         getSize: function () {
             var grid = [0,4,8,16,32,48,64,92,128];
-            return {
+            this.grid = {
                 n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
                 s: [_.map(grid, function (v) {return 'mb'+v;}), grid]
             };
+            return this.grid;
+        },
+
+        /* on_resize
+        *  called when the box is resizing and the class change, before the cover_target
+        *  @compass: resize direction : 'n', 's', 'e', 'w'
+        *  @beginClass: attributes class at the begin
+        *  @current: curent increment in this.grid
+        */
+        on_resize: function (compass, beginClass, current) {
+
         }
     });
 
-    website.snippet.editorRegistry.colmd = website.snippet.editorRegistry.container.extend({
+    website.snippet.editorRegistry.colmd = website.snippet.editorRegistry.resize.extend({
         getSize: function () {
-            var size = this._super();
-            var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
+            this.grid = this._super();
             var width = this.$target.parents(".row:first").first().outerWidth();
-            size.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
-            var grid = [0,1,2,3,4,5,6,7,8,9,10,11];
-            size.w = [_.map(grid, function (v) {return 'col-lg-offset-'+v;}), _.map(grid, function (v) {return width/12*v;})];
-            return size;
+
+            var grid = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+            this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
+
+            var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
+            this.grid.w = [_.map(grid, function (v) {return 'col-lg-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
+
+            return this.grid;
+        },
+        resizeHeight: function () {
+            var height = 0;
+            var $parent = this.$target.parent();
+            var $cols = $parent.find('>');
+            $cols.css('height', '');
+            if ($cols.length <= 1) {
+                $parent.css('height', '');
+                return;
+            }
+            var both = '<div class="oe_remove_me" style="overflow: hidden; height: 0;">.</div>';
+            $parent.append(both).prepend(both);
+            $cols.each(function () {
+                if (height < $(this).outerHeight()) {
+                    height = $(this).outerHeight();
+                }
+            });
+            $parent.css('height', height + 'px');
+            $parent.find('.oe_remove_me').remove();
+            $cols.css('height', '99%');
+        },
+        on_resize: function (compass, beginClass, current) {
+            if (compass !== 'e' && compass !== 'w' )
+                return;
+
+            var self = this;
+            var currentClass = this.grid[compass][0][current];
+            var beginSize = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0) + Number(beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
+
+            // don't change the rigth border position when we change the offset (replace col size)
+            var colsize = compass === 'w' ?
+                    beginSize - Number(currentClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0) :
+                    Number(currentClass.match(/col-md-([0-9-]+)|$/)[1] || 0);
+            if (colsize > 12) colsize = 12;
+            if (colsize < 1) {
+                colsize = $.trim(self.$target.html()) === '' ? 0 : 1;
+            }
+            this.$target.attr("class",
+                this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-)([0-9-]+)/g, '') + ' col-md-' + colsize
+            );
+
+            // calculate col size (0 < size <= 12)
+            var size = 0;
+            var $parent = this.$target.parent();
+            _.each(this.grid.e[0], function (val) {
+                size += $parent.find('.' + val).length * Number(val.replace(/[^0-9]+/, ''));
+            });
+            _.each(this.grid.w[0], function (val) {
+                size += $parent.find('.' + val).length * Number(val.replace(/[^0-9]+/, ''));
+            });
+
+            function change_empty_col ($col) {
+                size -= Number($col.attr("class").match(/col-md-([0-9-]+)|$/)[1] || 0);
+                if (12 - size > 0) {
+                    $col.attr("class", $col.attr("class").replace(/\s*col-md-([0-9-]+)/g, '') + ' col-md-' + (12 - size));
+                    size = 12;
+                } else if($.trim($col.html()) === '') {
+                    $col.remove();
+                }
+            }
+
+            function insert_empty_col () {
+                var cleanClass = beginClass.replace(/\s*(col-lg-offset-|col-md-)([0-9-]+)/g, '');
+                var $insert = $('<div class="' + cleanClass + '" data-snippet-id="colmd"></div>');
+                $insert.addClass('col-md-'+(12-size));
+                size = 12;
+                return $insert;
+            }
+
+            // change previous or next col if empty
+            if (compass === 'w') {
+                var $prev = this.$target.prev();
+                if ($prev.length) {
+                    change_empty_col($prev);
+                }
+                if(size < 12 && size > 0) {
+                    this.$target.before(insert_empty_col());
+                }
+            } else {
+                var $next = this.$target.next();
+                if ($next.length) {
+                    change_empty_col($next);
+                }
+                if(size < 12 && size > 0) {
+                    this.$target.after(insert_empty_col());
+                }
+            }
+            if(size > 12 || size <= 0) {
+                this.$target.attr("class",
+                    this.$target.attr("class").replace(/\s*col-md-([0-9-]+)/g, '') + ' col-md-' + (size-12)
+                );
+            }
+
+            // remove empty col
+            if (this.$target.hasClass("col-md-0")) {
+                $('body').mouseup();
+                setTimeout(function () {
+                    self.$overlay.remove();
+                    var $div = self.$target.prev();
+                    if (!$div.length) {
+                        $div = self.$target.next();
+                    }
+                    self.$target.remove();
+                    self.parent.make_active($div);
+                },0);
+            }
+
+            setTimeout(function () {
+                self.resizeHeight();
+            },0);
+        },
+        start: function () {
+            var self = this;
+            this._super();
+            this.resizeHeight();
+            $("body").on("save", function () {
+                self.$target.parent().css('height', '').find('>').css('height', '');
+            });
         },
     });
 
-    website.snippet.editorRegistry.carousel = website.snippet.Editor.extend({
+    website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         template : "website.snippets.carousel",
         build_snippet: function($target) {
             var id = "myCarousel" + $("body .carousel").size();
