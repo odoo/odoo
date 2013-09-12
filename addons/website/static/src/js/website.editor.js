@@ -331,6 +331,8 @@
                 'tab', 'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
             ];
             return {
+                // FIXME
+                language: 'en',
                 // Disable auto-generated titles
                 // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
                 title: false,

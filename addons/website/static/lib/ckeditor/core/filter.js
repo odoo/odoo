@@ -108,7 +108,7 @@
 			var editor = this.editor = editorOrRules;
 			this.customConfig = true;
 
-			var allowedContent = editor.config.allowedContent
+			var allowedContent = editor.config.allowedContent;
 
 			// Disable filter completely by setting config.allowedContent = true.
 			if ( allowedContent === true ) {

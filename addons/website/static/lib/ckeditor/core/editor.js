@@ -705,7 +705,7 @@
 					function isFunction( f ) {
 						// For IE8 typeof fun == object so we cannot use it.
 						return !!( f && f.call && f.apply );
-					};
+					}
 
 					// Check if there is no element/elements input with name == "submit".
 					// If they exists they will overwrite form submit function (form.$.submit).

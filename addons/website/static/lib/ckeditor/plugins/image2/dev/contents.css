@@ -1,0 +1,32 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+figure.caption {
+	text-align: center;
+	border: solid 1px #ccc;
+	border-radius: 2px;
+	background: rgba(0,0,0,0.05);
+	padding: 10px;
+	margin: 10px 20px;
+	display: block; /* For IE8 */
+}
+
+figure.caption figcaption {
+	text-align: center;
+	display: block; /* For IE8 */
+}
+
+.cke_widget_wrapper:hover:after {
+	content: "id: " attr(data-widget-id);
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 2px 4px;
+	background: #EEE;
+	border: solid 1px #DDD;
+	border-radius: 2px;
+	color: #BBB;
+	font: bold 10px sans-serif;
+}

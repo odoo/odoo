@@ -237,56 +237,92 @@
 			/**
 			 * @see CKEDITOR.editor#insertElement
 			 */
-			insertElement: function( element ) {
-				beforeInsert( this );
+			insertElement: function( element, range ) {
+				if ( !range )
+					this.insertElementIntoSelection( element );
+				else
+					this.insertElementIntoRange( element, range );
+			},
 
+			/**
+			 * Inserts an element into the position in the editor determined by range.
+			 *
+			 * @param {CKEDITOR.dom.element} element The element to be inserted.
+			 * @param {CKEDITOR.dom.range} range The range as a place of insertion.
+			 * @returns {Boolean} Informs whether insertion was successful.
+			 */
+			insertElementIntoRange: function( element, range ) {
+				var editor = this.editor,
+					enterMode = editor.config.enterMode,
+					elementName = element.getName(),
+					isBlock = CKEDITOR.dtd.$block[ elementName ];
+
+				if ( range.checkReadOnly() )
+					return false;
+
+				// Remove the original contents, merge split nodes.
+				range.deleteContents( 1 );
+
+				// If we're inserting a block at dtd-violated position, split
+				// the parent blocks until we reach blockLimit.
+				var current, dtd;
+
+				if ( isBlock ) {
+					while ( ( current = range.getCommonAncestor( 0, 1 ) ) &&
+					        ( dtd = CKEDITOR.dtd[ current.getName() ] ) &&
+					        !( dtd && dtd[ elementName ] ) ) {
+
+						// Split up inline elements.
+						if ( current.getName() in CKEDITOR.dtd.span )
+							range.splitElement( current );
+
+						// If we're in an empty block which indicate a new paragraph,
+						// simply replace it with the inserting block.(#3664)
+						else if ( range.checkStartOfBlock() && range.checkEndOfBlock() ) {
+							range.setStartBefore( current );
+							range.collapse( true );
+							current.remove();
+						} else
+							range.splitBlock( enterMode == CKEDITOR.ENTER_DIV ? 'div' : 'p', editor.editable() );
+					}
+				}
+
+				// Insert the new node.
+				range.insertNode( element );
+
+				// Return true if insertion was successful.
+				return true;
+			},
+
+			/**
+			 * Inserts an element into the currently selected position in the editor.
+			 *
+			 * @param {CKEDITOR.dom.element} element The element to be inserted.
+			 */
+			insertElementIntoSelection: function( element ) {
 				var editor = this.editor,
 					enterMode = editor.activeEnterMode,
 					selection = editor.getSelection(),
 					ranges = selection.getRanges(),
 					elementName = element.getName(),
-					isBlock = CKEDITOR.dtd.$block[ elementName ];
+					isBlock = CKEDITOR.dtd.$block[ elementName ],
+					clone, lastElement, range;
 
-				var range, clone, lastElement;
+				// Prepare for the insertion.
+				beforeInsert( this );
 
-				for ( var i = ranges.length - 1; i >= 0; i-- ) {
+				// Insert the element into all ranges by cloning.
+				for ( var i = ranges.length; i--; ) {
 					range = ranges[ i ];
 
-					if ( !range.checkReadOnly() ) {
-						// Remove the original contents, merge split nodes.
-						range.deleteContents( 1 );
+					// Clone is an element for the first range.
+					clone = !i && element || element.clone( 1 );
 
-						clone = !i && element || element.clone( 1 );
-
-						// If we're inserting a block at dtd-violated position, split
-						// the parent blocks until we reach blockLimit.
-						var current, dtd;
-						if ( isBlock ) {
-							while ( ( current = range.getCommonAncestor( 0, 1 ) ) &&
-							        ( dtd = CKEDITOR.dtd[ current.getName() ] ) &&
-							        !( dtd && dtd[ elementName ] ) ) {
-								// Split up inline elements.
-								if ( current.getName() in CKEDITOR.dtd.span )
-									range.splitElement( current );
-								// If we're in an empty block which indicate a new paragraph,
-								// simply replace it with the inserting block.(#3664)
-								else if ( range.checkStartOfBlock() && range.checkEndOfBlock() ) {
-									range.setStartBefore( current );
-									range.collapse( true );
-									current.remove();
-								} else
-									range.splitBlock( enterMode == CKEDITOR.ENTER_DIV ? 'div' : 'p', editor.editable() );
-							}
-						}
-
-						// Insert the new node.
-						range.insertNode( clone );
-
-						// Save the last element reference so we can make the
-						// selection later.
-						if ( !lastElement )
-							lastElement = clone;
-					}
+					// Put the clone into a particular range.
+					// Save the last **successfully inserted** element reference
+					// so we can make the selection later.
+					if ( this.insertElementIntoRange( clone, range ) && !lastElement );
+						lastElement = clone;
 				}
 
 				if ( lastElement ) {
@@ -301,8 +337,7 @@
 							return isNotEmpty( node ) && !isBogus( node );
 						} );
 
-						if ( next && next.type == CKEDITOR.NODE_ELEMENT &&
-						     next.is( CKEDITOR.dtd.$block ) ) {
+						if ( next && next.type == CKEDITOR.NODE_ELEMENT && next.is( CKEDITOR.dtd.$block ) ) {
 
 							// If the next one is a text block, move cursor to the start of it's content.
 							if ( next.getDtd()[ '#' ] )
@@ -319,6 +354,7 @@
 					}
 				}
 
+				// Set up the correct selection.
 				selection.selectRanges( [ range ] );
 
 				// Do not scroll after inserting, because Opera may fail on certain element (e.g. iframe/iframe.html).

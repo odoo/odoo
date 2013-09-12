@@ -692,7 +692,7 @@ CKEDITOR.dom.range = function( root ) {
 					collapsed: collapsed,
 					is2: true // It's a createBookmark2 bookmark.
 				};
-			}
+			};
 		})(),
 
 		/**

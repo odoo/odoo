@@ -614,6 +614,9 @@
 				if ( !that.fire( 'dialog', dialog ) )
 					return;
 
+				// Make widget accessible beyond setup and commit.
+				dialog._.widget = that;
+
 				showListener = dialog.on( 'show', function() {
 					dialog.setupContent( that );
 				} );
@@ -826,7 +829,7 @@
 
 	NestedEditable.prototype = CKEDITOR.tools.extend( CKEDITOR.tools.prototypedCopy( CKEDITOR.dom.element.prototype ), {
 		setData: function( data ) {
-			var data = this.editor.dataProcessor.toHtml( data, {
+			data = this.editor.dataProcessor.toHtml( data, {
 				context: this.getName(),
 				filter: this.filter,
 				enterMode: this.filter ? this.filter.getAllowedEnterMode() : this.editor.enterMode

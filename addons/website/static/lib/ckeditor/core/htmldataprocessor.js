@@ -391,7 +391,7 @@
 						// Convert the filler into appropriate form.
 						else {
 							createFiller( isOutput ).insertAfter( node );
-							node.remove()
+							node.remove();
 						}
 					}
 
@@ -505,7 +505,7 @@
 
 	var dtd = CKEDITOR.dtd,
 		// Define orders of table elements.
-		tableOrder = [ 'caption', 'colgroup', 'col', 'thead', 'tfoot', 'tbody' ];
+		tableOrder = [ 'caption', 'colgroup', 'col', 'thead', 'tfoot', 'tbody' ],
 		// List of all block elements.
 		blockLikeTags = CKEDITOR.tools.extend( {}, dtd.$blockLimit, dtd.$block );
 

@@ -1,7 +1,9 @@
 CKEditor 4 Changelog
 ====================
 
-## CKEditor 4.3
+## CKEditor 4.3 beta
+
+* [#10708](http://dev.ckeditor.com/ticket/10708): New smileys.
 
 ## CKEditor 4.2.1
 

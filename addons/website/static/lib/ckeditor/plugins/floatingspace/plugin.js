@@ -272,7 +272,7 @@
 							alignSide == 'left' ? pageScrollX : -pageScrollX;
 
 					floatSpace.setStyle( alignSide, pixelate( ( mode == 'pin' ? pinnedOffsetX : dockedOffsetX ) + offset + scroll ) );
-				}
+				};
 			})();
 
 		if ( topHtml ) {
