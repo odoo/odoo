@@ -42,7 +42,19 @@
         });
         $el.css($target.offset());
     };
+    function hack_to_add_snippet_id () {
+        _.each(website.snippet.selector, function (val) {
+            $(val[0]).each(function() {
+                if ($(this).is("[data-snippet-id='"+ val[1]+"']"))
+                    $(this).removeAttr("data-snippet-id");
+                if (!$(this).is("[data-snippet-id]") && $(this).parents("[data-oe-model]").length)
+                    $(this).attr("data-snippet-id", val[1]);
+            });
+        });
+    }
 
+
+    website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
         template: 'website.snippets',
         activeSnippets: [],
@@ -55,6 +67,7 @@
             this.$active_snipped_id = false;
             this.active = false;
             this.parent_of_editable_box = "body > :not(:has(#website-top-view)):not(#oe_manipulators):not(#oe_snippets) ";
+            hack_to_add_snippet_id();
         },
         start: function() {
             var self = this;
@@ -226,15 +239,20 @@
                                 $toInsert.attr('data-snippet-id', snipped_id);
                                 $(".oe_drop_zone.oe_hover").after($toInsert);
                                 $target = $toInsert;
+                                hack_to_add_snippet_id();
                             } else {
                                 $target = $(".oe_drop_zone.oe_hover").data('target');
                             }
 
+                            if (website.snippet.animationRegistry[snipped_id]) {
+                                new website.snippet.animationRegistry[snipped_id]($target);
+                            }
                             if (website.snippet.editorRegistry[snipped_id]) {
                                 self.create_overlay($target);
                                 var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
                                 snippet.build_snippet($target);
                             }
+
                         },
                     });
                 },
@@ -399,8 +417,7 @@
             return this.$el.find.apply(this.$el, arguments);
         },
         init: function (dom) {
-            this.$el = $(dom);
-            this._super.apply(this, arguments);
+            this.$el = this.$target = $(dom);
         },
         /* onFocusEdit
         *  if they are an editor for this snippet-id 
@@ -423,8 +440,8 @@
         },
     });
 
-
     $(document).ready(function () {
+        hack_to_add_snippet_id();
         $("[data-snippet-id]").each(function() {
                 var $snipped_id = $(this);
                 if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
@@ -476,8 +493,16 @@
         *  This method is called after init and _readXMLData
         */
         start: function () {
+            var self = this;
             if(this.$editor) this.$editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w ul"));
             else this.$overlay.find(".oe_overlay_options .oe_option.n.w").hide();
+            this.$overlay.on('click', '.js_box_remove', function () {
+                self.$target.detach();
+                self.onBlur();
+                self.$target.remove();
+                return false;
+            });
+
         },
 
         /*
@@ -534,16 +559,6 @@
             if (!resize_values.w) $box.find(".oe_handle.w").remove();
             
             this.$overlay.append($box.find(".oe_handles").html());
-
-            var $editor = $box.find(".oe_snippet_options");
-            $editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w ul"));
-
-            $editor.on('click', '.js_box_remove', function () {
-                self.$target.detach();
-                self.onBlur();
-                self.$target.remove();
-            });
-
 
             this.$overlay.find(".oe_handle").on('mousedown', function (event){
                     event.preventDefault();
@@ -678,6 +693,8 @@
             }
         },
     });
+    website.snippet.selector.push([ _.map([1,2,3,4,5,6,7,8,9,10,11,12], function (v) {return '.row > .col-md-'+v;}).join(","), 'colmd']);
+
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         template : "website.snippets.carousel",
@@ -769,11 +786,13 @@
     });
 
     website.snippet.animationRegistry.vomify = website.snippet.Animation.extend({
-        build_snippet: function($target) {
+        init: function() {
+            this._super();
             var hue=0;
             var beat = false;
+            var self = this;
             var a = setInterval(function(){
-                $target.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
+                self.$target.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
             }, 10);
             setTimeout(function(){
                 clearInterval(a);
@@ -785,7 +804,7 @@
                     }
                 }, 10);
             },5000);
-            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo($target);
+            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo(self.$target);
         }
     });
 
