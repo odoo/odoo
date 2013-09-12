@@ -1774,18 +1774,18 @@ class stock_inventory(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'date': fields.datetime('Creation Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'date_done': fields.datetime('Date done'),
-        'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}),
-        'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves'),
-        'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'Confirmed'), ('done', 'Done')], 'Status', readonly=True, select=True),
+        'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
+        'date': fields.datetime('Creation Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
+        'date_done': fields.datetime('Date done', help="Inventory Validation Date."),
+        'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
+        'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves."),
+        'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'product_id': fields.many2one('product.product', 'Product'),
-        'package_id': fields.many2one('stock.quant.package', 'Pack'),
-        'partner_id': fields.many2one('res.partner', 'Owner'),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Product to focus your inventory on a particular Product."),
+        'package_id': fields.many2one('stock.quant.package', 'Pack', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Pack to focus your inventory on a particular Pack."),
+        'partner_id': fields.many2one('res.partner', 'Owner', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Owner to focus your inventory on a particular Owner."),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number."),
         'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
     }
 
@@ -1802,6 +1802,12 @@ class stock_inventory(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
         'location_id': _default_stock_location,
     }
+
+    def set_checked_qty(self , cr ,uid ,ids ,context=None):
+        inventory = self.browse(cr, uid, ids[0], context=context)
+        line_ids = [line.id for line in inventory.line_ids]
+        self.pool.get('stock.inventory.line').write(cr, uid, line_ids, {'product_qty': 0})
+        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1891,7 +1897,7 @@ class stock_inventory(osv.osv):
         #TODO test
         self.action_cancel_draft(cr, uid, ids, context=context)
 
-    def _prepare_inventory(self, cr, uid, ids, full_of_zeros=False, context=None):
+    def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
             #clean the existing inventory lines before redoing an inventory proposal
@@ -1900,8 +1906,6 @@ class stock_inventory(osv.osv):
             #compute the inventory lines and create them
             vals = self._get_inventory_lines(cr, uid, inventory, context=context)
             for product_line in vals:
-                if full_of_zeros:
-                    product_line['product_qty'] = 0
                 inventory_line_obj.create(cr, uid, product_line, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'})
 
@@ -1912,7 +1916,7 @@ class stock_inventory(osv.osv):
         domain = ' location_id in %s'
         args = (tuple(location_ids),)
         if inventory.partner_id:
-            domain += ' and partner_id = %s'
+            domain += ' and owner_id = %s'
             args += (inventory.partner_id.id,)
         if inventory.lot_id:
             domain += ' and lot_id = %s'
@@ -1950,6 +1954,7 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
+        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity'),
         'partner_id': fields.many2one('res.partner', 'Owner'),
     }
 
