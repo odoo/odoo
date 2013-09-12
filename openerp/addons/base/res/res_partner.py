@@ -508,6 +508,16 @@ class res_partner(osv.osv, format_address):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        #res.partner must only allow to set the company_id of a partner if it
+        #is the same as the company of all users that inherit from this partner
+        #(this is to allow the code from res_users to write to the partner!) or
+        #if setting the company_id to False (this is compatible with any user company)
+        if vals.get('company_id'):
+            for partner in self.browse(cr, uid, ids, context=context):
+                if partner.user_ids:
+                    user_companies = set([user.company_id.id for user in partner.user_ids])
+                    if len(user_companies) > 1 or vals['company_id'] not in user_companies:
+                        raise osv.except_osv(_("Warning"),_("You can not change the company as the partner/user has multiple user linked with different companies."))
         result = super(res_partner,self).write(cr, uid, ids, vals, context=context)
         for partner in self.browse(cr, uid, ids, context=context):
             self._fields_sync(cr, uid, partner, vals, context)
@@ -608,14 +618,15 @@ class res_partner(osv.osv, format_address):
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
             query_args = {'name': search_name}
-            limit_str = ''
+            query = ('''SELECT id FROM res_partner
+                         WHERE email ''' + operator + ''' %(name)s
+                            OR display_name ''' + operator + ''' %(name)s
+                      ORDER BY display_name
+                     ''')
             if limit:
-                limit_str = ' limit %(limit)s'
+                query += ' limit %(limit)s'
                 query_args['limit'] = limit
-            cr.execute('''SELECT partner.id FROM res_partner partner
-                          LEFT JOIN res_partner company ON partner.parent_id = company.id
-                          WHERE partner.email ''' + operator +''' %(name)s OR
-                                partner.display_name ''' + operator + ' %(name)s ' + limit_str, query_args)
+            cr.execute(query, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:

@@ -280,6 +280,13 @@ class res_users(osv.osv):
 
         return result
 
+    def create(self, cr, uid, vals, context=None):
+        user_id = super(res_users, self).create(cr, uid, vals, context=context)
+        user = self.browse(cr, uid, user_id, context=context)
+        if user.partner_id.company_id: 
+            user.partner_id.write({'company_id': user.company_id.id})
+        return user_id
+
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
@@ -294,7 +301,11 @@ class res_users(osv.osv):
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
         res = super(res_users, self).write(cr, uid, ids, values, context=context)
-
+        if 'company_id' in values:
+            for user in self.browse(cr, uid, ids, context=context):
+                # if partner is global we keep it that way
+                if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']: 
+                    user.partner_id.write({'company_id': user.company_id.id})
         # clear caches linked to the users
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         clear = partial(self.pool['ir.rule'].clear_cache, cr)

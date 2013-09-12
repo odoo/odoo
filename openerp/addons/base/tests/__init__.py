@@ -6,6 +6,7 @@ import test_menu
 import test_res_config
 import test_res_lang
 import test_search
+import test_views
 
 checks = [
     test_base,
@@ -16,4 +17,5 @@ checks = [
     test_res_config,
     test_res_lang,
     test_search,
+    test_views,
 ]
