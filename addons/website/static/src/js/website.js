@@ -10,8 +10,9 @@
     ];
 
     website.get_context = function (dict) {
+        var html = document.documentElement;
         return _.extend({
-            lang: $('html').attr('lang').replace('-', '_')
+            lang: html.getAttribute('lang').replace('-', '_')
         }, dict);
     };
 
