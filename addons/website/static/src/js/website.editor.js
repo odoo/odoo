@@ -547,7 +547,6 @@
     website.editor.ImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change .url-source': function (e) { this.changed($(e.target)); },
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
             },
