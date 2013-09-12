@@ -11,6 +11,11 @@
     except Exception, e:
         pass
 -
+  Only project manager can create Task for Issue, so let's check data with giving the access rights of manager.
+-
+  !context
+    uid: 'res_users_project_issue_manager'
+-
   I create Task for Issue.
 -
   !python {model: project.issue}: |

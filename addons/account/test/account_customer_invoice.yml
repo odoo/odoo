@@ -1,7 +1,10 @@
 -
   In order to test account invoice I create a new customer invoice
 -
-  I will create bank detail
+  I will create bank detail with using manager access rights because account manager can only create bank details. 
+-
+  !context
+    uid: 'res_users_account_manager'
 -
   !record {model: res.partner.bank, id: res_partner_bank_0}:
     state: bank
@@ -11,6 +14,11 @@
     footer: True
     bank: base.res_bank_1
     bank_name: Reserve
+-
+  Test with that user which have rights to make Invoicing and payment and who is accountant. 
+-
+  !context
+    uid: 'res_users_account_user'
 -
   I create a customer invoice
 -
