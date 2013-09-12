@@ -56,7 +56,7 @@
                         </div>
                         <div class="oe_kanban_group_title_text" t-att-title="widget.title"><t t-esc="widget.title"/></div>
                     </div>
-                    <ul class="oe_kanban_aggregates">
+                    <ul t-if="widget.group.get('length') &gt; 0" class="oe_kanban_aggregates">
                         <li t-foreach="widget.aggregates" t-as="aggregate">
                             <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
                         </li>
