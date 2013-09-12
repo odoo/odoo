@@ -125,11 +125,15 @@ class view(osv.osv):
         try:
             fvg = self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
             return fvg['arch']
-        except:
+        except Exception:
             _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
             return False
 
     def _check_xml(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context['check_view_ids'] = ids
+
         for view in self.browse(cr, uid, ids, context):
             # Sanity check: the view should not break anything upon rendering!
             view_arch_utf8 = self._check_render_view(cr, uid, view, context=context)
@@ -175,13 +179,15 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+
         user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
         if self.pool._init:
             # Module init currently in progress, only consider views from modules whose code was already loaded 
+            check_view_ids = context and context.get('check_view_ids') or (0,)
             query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                       WHERE v.inherit_id=%s AND v.model=%s AND (md.module IS NULL or md.module in %s)  
+                       WHERE v.inherit_id=%s AND v.model=%s AND (md.module in %s OR v.id in %s)
                        ORDER BY priority"""
-            query_params = (view_id, model, tuple(self.pool._init_modules))
+            query_params = (view_id, model, tuple(self.pool._init_modules), tuple(check_view_ids))
         else:
             # Modules fully loaded, consider all views
             query = """SELECT v.id FROM ir_ui_view v
