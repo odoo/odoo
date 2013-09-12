@@ -77,6 +77,10 @@
             this.type = this.types[options.type] || 'default';
             this._super(parent);
         },
+        start: function () {
+            this.suggestionList = new website.seo.SuggestionList(this, this.keyword);
+            this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
+        },
         destroy: function () {
             this.trigger('removed');
             this._super();
@@ -145,8 +149,8 @@
 
     website.seo.SuggestionList = openerp.Widget.extend({
         template: 'website.seo_list',
-        init: function (parent) {
-            this.rootWords = [];
+        init: function (parent, word) {
+            this.word = word;
             this._super(parent);
         },
         start: function () {
@@ -154,14 +158,9 @@
         },
         refresh: function () {
             var self = this;
-            self.$el.empty();
             self.$el.append("Loading...");
-            var requests = _.map(this.rootWords, function (word) {
-                // cf. https://github.com/ddm/seo
-                // TODO Try with /recommend/
-                return $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(word));
-            });
             function addSuggestions (list) {
+                self.$el.empty();
                 // TODO Improve algorithm + Ajust based on custom user keywords
                 var nameRegex = new RegExp(self.companyName, "gi");
                 var cleanList = _.map(list, function removeCompanyName (word) {
@@ -181,38 +180,7 @@
                     }
                 });
             }
-            var deferred = $.Deferred();
-            var suggestions = [];
-            $.when.apply($, requests).then(function (result) {
-                self.$el.empty();
-                if (result && _.isArray(result[0])) {
-                    var suggestionLists = _.map(Array.prototype.slice.call(arguments), function (l) {
-                        return l[0];
-                    });
-                    _.each(suggestionLists, function (newSuggestions) {
-                        suggestions = suggestions.concat(newSuggestions);
-                    });
-                    deferred.resolve(_.uniq(suggestions));
-                } else if (result && _.isString(result[0])) {
-                    deferred.resolve(_.uniq(result));
-                }
-            });
-            $.when(deferred).then(addSuggestions);
-        },
-        suggestions: function () {
-            return this.$('.js_seo_suggestion').map(function () {
-                return $(this).data('keyword');
-            });
-        },
-        addRootWord: function (word) {
-            this.rootWords.push(word);
-            this.refresh();
-        },
-        removeRootWord: function (word) {
-            this.rootWords = _.reject(this.rootWords, function (rootWord) {
-                return rootWord === word;
-            });
-            this.refresh();
+            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.word), addSuggestions);
         },
     });
 
@@ -283,14 +251,6 @@
                     .prop('disabled', false).removeClass('disabled');
             });
             this.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
-            this.suggestionList = new website.seo.SuggestionList(this, companyName);
-            this.suggestionList.on('selected', self, function (word) {
-               self.acceptSuggestion(word);
-            });
-            this.keywordList.on('removed', self, function (word) {
-               this.suggestionList.removeRootWord(word);
-            });
-            this.suggestionList.appendTo($modal.find('.js_seo_suggestions_list'));
             var companyName = pageParser.company().toLowerCase();
             this.addKeyword(companyName);
             $modal.modal();
@@ -299,13 +259,13 @@
             var tips = [];
             var self = this;
             function displayTip(message, type) {
-                new website.seo.Tip(this, {
+                new website.seo.Tip(self, {
                    message: message,
-                   type: type
+                   type: type,
                 }).appendTo(self.$('.js_seo_tips'));
             }
             var pageParser = parser || new website.seo.PageParser();
-            if (!pageParser.headers('h1').length === 0) {
+            if (pageParser.headers('h1').length === 0) {
                 tips.push({
                     type: 'warning',
                     message: "You don't have an &lt;h1&gt; tag on your page.",
@@ -334,12 +294,7 @@
             var $input = this.$('input[name=seo_page_keywords]');
             var keyword = _.isString(word) ? word : $input.val();
             this.keywordList.add(keyword, false);
-            this.suggestionList.addRootWord(keyword);
             $input.val("");
-        },
-        acceptSuggestion: function (suggestion) {
-            this.keywordList.add(suggestion, true);
-            this.suggestionList.addRootWord(suggestion);
         },
         update: function () {
             var data = {

@@ -27,21 +27,16 @@
             this.xml = text;
         },
         isWellFormed: function () {
-            try {
-                if (document.implementation.createDocument) {
-                    var dom = new DOMParser().parseFromString(this.xml, "text/xml");
-                    return dom.getElementsByTagName("parsererror").length === 0;
-                } else if (window.ActiveXObject) {
-                    // TODO test in IE
-                    var msDom = new ActiveXObject("Microsoft.XMLDOM");
-                    msDom.async = false;
-                    return !msDom.loadXML(this.xml);
-                } else {
-                    throw Error("Not implemented");
-                }
-            } catch(exception) {
-                console.log(exception);
+            if (document.implementation.createDocument) {
+                var dom = new DOMParser().parseFromString(this.xml, "text/xml");
+                return dom.getElementsByTagName("parsererror").length === 0;
+            } else if (window.ActiveXObject) {
+                // TODO test in IE
+                var msDom = new ActiveXObject("Microsoft.XMLDOM");
+                msDom.async = false;
+                return !msDom.loadXML(this.xml);
             }
+            return true;
         },
         format: function () {
             return vkbeautify.xml(this.xml, 4);
@@ -101,15 +96,11 @@
                 method: 'read',
                 args: [[this.selectedViewId()], ['arch'], website.get_context()],
             }).then(function(result) {
-                if (result && result.length > 0) {
-                    var xml = new website.ace.XmlDocument(result[0].arch)
-                    var editingSession = new ace.EditSession(xml.xml);
-                    editingSession.setMode("ace/mode/xml");
-                    editingSession.setUndoManager(new ace.UndoManager());
-                    editor.setSession(editingSession);
-                } else {
-                    throw Error("Could not load view XML");
-                }
+                var xml = new website.ace.XmlDocument(result[0].arch);
+                var editingSession = new ace.EditSession(xml.xml);
+                editingSession.setMode("ace/mode/xml");
+                editingSession.setUndoManager(new ace.UndoManager());
+                editor.setSession(editingSession);
             });
         },
         formatXml: function () {
