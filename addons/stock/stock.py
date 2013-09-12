@@ -1961,6 +1961,7 @@ class stock_inventory_line(osv.osv):
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
         found = False
+        uom_obj = self.pool.get('product.uom')
         
         for th_line in theorical_lines:
             #We try to match the inventory line with a theorical line with same product, lot and location and owner
@@ -1969,7 +1970,9 @@ class stock_inventory_line(osv.osv):
             #or match with same product (only if owner and lot are missing)
             if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id:
                 if (not inventory_line.prod_lot_id.id or th_line['prod_lot_id'] == inventory_line.prod_lot_id.id) and (not inventory_line.partner_id.id or th_line['partner_id'] == inventory_line.partner_id.id):
-                    th_line['product_qty'] -= inventory_line.product_qty
+                    uom_reference = inventory_line.product_id.uom_id
+                    real_qty = uom_obj._compute_qty_obj(cr, uid, inventory_line.product_uom_id, inventory_line.product_qty, uom_reference)
+                    th_line['product_qty'] -= real_qty
                     found = True
                     break
         #if it was still not found, we add it to the theorical lines so that it will create a stock move for it

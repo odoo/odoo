@@ -147,6 +147,9 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Stock Moves" attrs="{'invisible': [('state', '!=', 'done')]}">
+                            <field name="move_ids"/>
+                        </page>
                     </notebook>
                 </sheet>
                 </form>
