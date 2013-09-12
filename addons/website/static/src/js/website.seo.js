@@ -1,6 +1,5 @@
 (function () {
     'use strict';
-    // TODO l10n ?
 
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.seo.xml');
@@ -15,6 +14,139 @@
     });
 
     website.seo = {};
+
+    website.seo.Suggestion = openerp.Widget.extend({
+        template: 'website.seo_suggestion',
+        init: function (parent, keyword) {
+            this.keyword = keyword;
+            // cf. http://getbootstrap.com/components/#labels
+            // default, primary, success, info, warning, danger
+            this.type = 'default';
+            this._super(parent);
+        },
+    });
+
+    website.seo.SuggestionList = openerp.Widget.extend({
+        template: 'website.seo_list',
+        init: function (parent, word) {
+            this.word = word;
+            this._super(parent);
+        },
+        start: function () {
+            this.refresh();
+        },
+        refresh: function () {
+            var self = this;
+            self.$el.append("Loading...");
+            function addSuggestions (list) {
+                self.$el.empty();
+                // TODO Improve algorithm + Ajust based on custom user keywords
+                var nameRegex = new RegExp(self.companyName, "gi");
+                var cleanList = _.map(list, function removeCompanyName (word) {
+                    return word.replace(nameRegex, "").trim();
+                });
+                // TODO Order properly ?
+                _.each(_.uniq(cleanList), function (keyword) {
+                    if (keyword) {
+                        var suggestion = new website.seo.Suggestion(self, keyword);
+                        suggestion.appendTo(self.$el);
+                    }
+                });
+            }
+            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.word + " "), addSuggestions);
+        },
+    });
+
+    website.seo.Keyword = openerp.Widget.extend({
+        template: 'website.seo_keyword',
+        events: {
+            'click a[data-action=remove-keyword]': 'destroy',
+        },
+        maxWordsPerKeyword: 4, // TODO Check
+        init: function (parent, keyword) {
+            this.keyword = keyword;
+            // cf. http://getbootstrap.com/components/#labels
+            // default, primary, success, info, warning, danger
+            this.type = 'warning';
+            this._super(parent);
+        },
+        start: function () {
+            this.suggestionList = new website.seo.SuggestionList(this, this.keyword);
+            this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
+        },
+        destroy: function () {
+            this.trigger('removed');
+            this._super();
+        },
+    });
+
+    website.seo.KeywordList = openerp.Widget.extend({
+        template: 'website.seo_list',
+        maxKeywords: 10,
+        keywords: function () {
+            var result = [];
+            this.$('.js_seo_keyword').each(function () {
+                result.push($(this).data('keyword'));
+            });
+            return result;
+        },
+        isKeywordListFull: function () {
+            return this.keywords().length >= this.maxKeywords;
+        },
+        isExistingKeyword: function (word) {
+            return _.contains(this.keywords(), word);
+        },
+        add: function (candidate, suggested) {
+            var self = this;
+            // TODO Refine
+            var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
+            if (word && !self.isKeywordListFull() && !self.isExistingKeyword(word)) {
+                var type = suggested ? 'advised' : 'custom';
+                var keyword = new website.seo.Keyword(self, word);
+                keyword.on('removed', null, function () {
+                   self.trigger('list-not-full');
+                   self.trigger('removed', word);
+                });
+                keyword.appendTo(self.$el);
+            }
+            if (self.isKeywordListFull()) {
+                self.trigger('list-full');
+            }
+        },
+    });
+
+    website.seo.Image = openerp.Widget.extend({
+        template: 'website.seo_image',
+        init: function (parent, options) {
+            this.src = options.src;
+            this.alt = options.alt;
+            this._super(parent);
+        },
+    });
+
+
+    website.seo.ImageList = openerp.Widget.extend({
+        start: function () {
+            var self = this;
+            new website.seo.PageParser().images().each(function (index, image) {
+                new website.seo.Image(self, image).appendTo(self.$el);
+            });
+        },
+        images: function () {
+            var result = [];
+            this.$('input').each(function () {
+               var $input = $(this);
+               result.push({
+                   src: $input.attr('src'),
+                   alt: $input.val(),
+               });
+            });
+            return result;
+        },
+        add: function (image) {
+            new website.seo.Image(this, image).appendTo(this.$el);
+        },
+    });
 
     website.seo.PageParser = openerp.Class.extend({
         url: function () {
@@ -55,164 +187,6 @@
             // success, info, warning or danger
             this.type = options.type || 'info';
             this._super(parent);
-        },
-    });
-
-    website.seo.Keyword = openerp.Widget.extend({
-        template: 'website.seo_keyword',
-        events: {
-            'click a[data-action=remove-keyword]': 'destroy',
-        },
-        maxWordsPerKeyword: 4, // TODO Check
-        types: {
-            // cf. http://getbootstrap.com/components/#labels
-            // default, primary, success, info, warning, danger
-            perfect: 'success',
-            advised: 'primary',
-            used: 'warning',
-            custom: 'default',
-        },
-        init: function (parent, options) {
-            this.keyword = options.keyword;
-            this.type = this.types[options.type] || 'default';
-            this._super(parent);
-        },
-        start: function () {
-            this.suggestionList = new website.seo.SuggestionList(this, this.keyword);
-            this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
-        },
-        destroy: function () {
-            this.trigger('removed');
-            this._super();
-        },
-    });
-
-    website.seo.KeywordList = openerp.Widget.extend({
-        template: 'website.seo_list',
-        maxKeywords: 10,
-        keywords: function () {
-            var result = [];
-            this.$('.js_seo_keyword').each(function () {
-                result.push($(this).data('keyword'));
-            });
-            return result;
-        },
-        isKeywordListFull: function () {
-            return this.keywords().length >= this.maxKeywords;
-        },
-        isExistingKeyword: function (word) {
-            return _.contains(this.keywords(), word);
-        },
-        add: function (candidate, suggested) {
-            var self = this;
-            // TODO Refine
-            var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
-            if (word && !self.isKeywordListFull() && !self.isExistingKeyword(word)) {
-                var type = suggested ? 'advised' : 'custom';
-                var keyword = new website.seo.Keyword(self, {
-                    keyword: word,
-                    type: type,
-                });
-                keyword.on('removed', null, function () {
-                   self.trigger('list-not-full');
-                   self.trigger('removed', word);
-                });
-                keyword.appendTo(self.$el);
-            }
-            if (self.isKeywordListFull()) {
-                self.trigger('list-full');
-            }
-        },
-    });
-
-    website.seo.Suggestion = openerp.Widget.extend({
-        template: 'website.seo_suggestion',
-        events: {
-            'click .js_seo_suggestion': 'select'
-        },
-        types: {
-            // cf. http://getbootstrap.com/components/#labels
-            // default, primary, success, info, warning, danger
-            primary: 'primary',
-            secondary: 'info',
-
-        },
-        init: function (parent, options) {
-            this.keyword = options.keyword;
-            this.type = this.types[options.type || 'primary'];
-            this._super(parent);
-        },
-        select: function () {
-            this.trigger('selected');
-        },
-    });
-
-    website.seo.SuggestionList = openerp.Widget.extend({
-        template: 'website.seo_list',
-        init: function (parent, word) {
-            this.word = word;
-            this._super(parent);
-        },
-        start: function () {
-            this.refresh();
-        },
-        refresh: function () {
-            var self = this;
-            self.$el.append("Loading...");
-            function addSuggestions (list) {
-                self.$el.empty();
-                // TODO Improve algorithm + Ajust based on custom user keywords
-                var nameRegex = new RegExp(self.companyName, "gi");
-                var cleanList = _.map(list, function removeCompanyName (word) {
-                    return word.replace(nameRegex, "").trim();
-                });
-                // TODO Order properly ?
-                _.each(_.uniq(cleanList), function (keyword) {
-                    if (keyword) {
-                        var suggestion = new website.seo.Suggestion(self, {
-                            keyword: keyword
-                        });
-                        suggestion.on('selected', self, function () {
-                           self.trigger('selected', keyword);
-                        });
-                        suggestion.appendTo(self.$el);
-                    }
-                });
-            }
-            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.word + " "), addSuggestions);
-        },
-    });
-
-    website.seo.Image = openerp.Widget.extend({
-        template: 'website.seo_image',
-        init: function (parent, options) {
-            this.src = options.src;
-            this.alt = options.alt;
-            this._super(parent);
-        },
-    });
-
-
-    website.seo.ImageList = openerp.Widget.extend({
-        start: function () {
-            var self = this;
-            new website.seo.PageParser().images().each(function (index, image) {
-                new website.seo.Image(self, image).appendTo(self.$el);
-            });
-        },
-        images: function () {
-            var result = [];
-            this.$('input').each(function () {
-               var $input = $(this);
-               result.push({
-                   src: $input.attr('src'),
-                   alt: $input.val(),
-               });
-            });
-            return result;
-        },
-        add: function (image) {
-            new website.seo.Image(this, image).appendTo(this.$el);
         },
     });
 
