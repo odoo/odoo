@@ -22,13 +22,17 @@ $(document).ready(function () {
     $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
         var $input = $(this);
         var value = parseInt($input.val());
-        if (!isNaN(value)) {
-            $.get("./set_cart/", {'order_line_id': $(this).data('id'), 'set_number': value, 'json': true}, function (data) {
-                var data = JSON.parse(data);
-                set_my_cart_quantity(data[1]);
-                $input.val(data[0]);
-            });
-        }
+        if (isNaN(value)) value = 0;
+        $.get("./set_cart/", {'order_line_id': $input.data('id'), 'set_number': value, 'json': true}, function (data) {
+            var data = JSON.parse(data);
+            set_my_cart_quantity(data[1]);
+            $input.val(data[0]);
+            if (!+data[0]) {
+                $.get('/shop/remove_cart/', {'order_line_id': $input.data('id'), 'json': true,}, function (data) {
+                    location.reload();
+                });
+            }
+        });
     });
 
     $(".oe_website_sale #product_detail select[name='public_categ_id']").change(function () {
@@ -43,6 +47,9 @@ $(document).ready(function () {
         $link = $(ev.currentTarget);
         $.get($link.attr("href"), {'json': true}, function (data) {
             var data = JSON.parse(data);
+            if (!+data[0]) {
+                location.reload();
+            }
             set_my_cart_quantity(data[1]);
             $link.parent().find(".js_quantity").val(data[0]);
         });

@@ -11,7 +11,6 @@ class website_crm_partner_assign(http.Controller):
 
     @website.route(['/members/', '/members/page/<int:page>/'], type='http', auth="public")
     def members(self, page=0, **post):
-        website = request.registry['website']
         membership_obj = request.registry['membership.membership_line']
 
         def dom_without(without):
@@ -41,7 +40,7 @@ class website_crm_partner_assign(http.Controller):
         memberships.insert(0, {'membership_id_count': membership_obj.search(request.cr, request.uid, domain, count=True, context=request.context), 'membership_id': ("all", _("All Groups"))})
 
         step = 20
-        pager = website.pager(url="/members/", total=len(membership_ids), page=page, step=step, scope=7, url_args=post)
+        pager = request.website.pager(url="/members/", total=len(membership_ids), page=page, step=step, scope=7, url_args=post)
         membership_ids = membership_obj.search(
             request.cr, openerp.SUPERUSER_ID, [('id', 'in', membership_ids)],
             limit=step, offset=pager['offset'], order="membership_id ASC,date DESC",
@@ -55,20 +54,18 @@ class website_crm_partner_assign(http.Controller):
             'searches': post,
             'search_path': "?%s" % urllib.urlencode(post),
         }
-        return request.webcontext.render("website_membership.index", values)
+        return request.website.render("website_membership.index", values)
 
     @website.route(['/members/<int:ref_id>/'], type='http', auth="public")
     def partners_ref(self, ref_id=0, **post):
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)], context=request.context)
-        if not request.webcontext.is_public_user:
+        if not request.context['is_public_user']:
             partner_ids += partner_obj.search(request.cr, request.uid, [('id', '=', ref_id)], context=request.context)
 
-        context = request.context.copy()
-        context.update({'show_address': True})
         values = {
             'partner_id': partner_obj.browse(
                 request.cr, openerp.SUPERUSER_ID, partner_ids[0],
-                context=context),
+                context=dict(request.context, show_address=True)),
         }
-        return request.webcontext.render("website_membership.details", values)
+        return request.website.render("website_membership.details", values)

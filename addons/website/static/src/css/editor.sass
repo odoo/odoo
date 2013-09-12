@@ -74,11 +74,17 @@
 
 /* ---- EDITOR BAR ---- */
 
+.modal .tab-content
+    padding-top: 5px
+
 table.editorbar-panel
     cursor: pointer
     width: 100%
     td.selected
         background-color: #b1c9d9
+
+.modal .image-preview-container, .modal .image-preview
+    margin-bottom: 0.5em
 
 /* ---- RTE ---- */
 
@@ -93,7 +99,7 @@ table.editorbar-panel
 
 /* ---- SNIPPET EDITOR ---- */
 
-.oe_snippets
+#oe_snippets
     position: fixed
     left: 0px
     right: 0px
@@ -104,6 +110,13 @@ table.editorbar-panel
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
     z-index: 100
+    .nav-pills
+        padding: 3px 8px
+        background: #444444
+        > li > a
+            padding: 2px 10px !important
+    .pill-content
+        height: 140px
 
 .oe_snippet
     display: inline-block
@@ -129,11 +142,14 @@ table.editorbar-panel
         line-height: 120px
         color: white
         text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95)
+        box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
 
     .oe_snippet_body
         display: none
     & > *
         pointer-events: none
+    & > :not(.oe_snippet_body):not(.oe_snippet_thumbnail)
+        display: none !important
 
     & > *:first-child:not(.oe_snippet_thumbnail)
         display: block
@@ -179,52 +195,98 @@ table.editorbar-panel
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
-        z-index: 99
+        z-index: 97
 
 /* ---- SNIPPET MANIPULATOR ---- */
 
-.oe_snippet_manipulator
+.oe_overlay
     display: block
     position: absolute
-    background: rgba(153, 0, 255, 0.1)
+    background: transparent //rgba(153, 0, 255, 0.05)
     border-radius: 3px
-    border: solid 1px rgba(153, 0, 255, 0.5)
     opacity: 0
     transition: opacity 100ms linear
-    & > .oe_handle
-        display: none
-    &:hover,&.oe_hover
+    box-sizing: border-box
+    pointer-events: none
+    .oe_handle
+        display: none !important
+    &.oe_hover
         opacity: 1
-        & > .oe_handle
-            display: block
+        cursor: pointer
+    &.oe_selected, &.oe_active
+        opacity: 1
+        background: transparent
+        border-style: dashed
+        border-width: 1px
+        box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
+    &.oe_selected
+        border-color: rgba(0, 153, 255, 0.5)
+    &.oe_active
+        border-color: rgba(153, 0, 255, 0.5)
+        .oe_handle
+            display: block !important
+            pointer-events: auto
+
+    .oe_overlay_options
+        display: none
+        z-index: 99
+        .oe_option
+            pointer-events: auto
+            position: absolute
+            &.n
+                top: 0px
+            &.e
+                right: 0px
+            &.s
+                bottom: 0px
+            &.w
+                left: 0px
+    &.oe_active .oe_overlay_options
+        display: block
 
 .oe_handle
+    pointer-events: auto
     position: absolute
     top: 50%
     left: 50%
     display: block
-    background: rgba(255, 255, 255, 1)
-    border: solid 1px rgba(153, 0, 255, 0.5)
     box-sizing: border-box
-    border-radius: 2px
-    width: 16px
-    height: 16px
-    margin: -8px
-    cursor: move
-    -webkit-transition: background 100ms linear
-    &:hover
-        background: rgb(153, 0, 255)
+    width: 8px
+    height: 8px
+    margin: -4px
 
-.oe_handle.nw,.oe_handle.n,.oe_handle.ne
+.oe_handle.n
+    left: 2px
+    width: 100%
     top: 0px
-.oe_handle.ne,.oe_handle.e,.oe_handle.se
+    cursor: s-resize
+.oe_handle.e
     left: auto
+    top: 2px
+    height: 100%
     right: 0px
-.oe_handle.sw,.oe_handle.s,.oe_handle.se
+    cursor: w-resize
+.oe_handle.s
     top: auto
+    left: 2px
+    width: 100%
     bottom: 0px
-.oe_handle.nw,.oe_handle.w,.oe_handle.sw
+    cursor: n-resize
+.oe_handle.w
+    top: 2px
+    height: 100%
     left: 0px
+    cursor: e-resize
+
+.s-resize-important, .s-resize-important *
+    cursor: s-resize !important
+.n-resize-important, .n-resize-important *
+    cursor: n-resize !important
+.e-resize-important, .e-resize-important *
+    cursor: e-resize !important
+.w-resize-important, .w-resize-important *
+    cursor: w-resize !important
+
 
 /* ---- MOBILE PREVIEW ---- */
 
@@ -280,3 +342,45 @@ $remove_color: $icon_close
         color: $remove_color
     .oe_seo_suggestion
         cursor: pointer
+
+/* ---- ACE EDITOR ---- */
+
+$ace_width: 720px
+$editorbar_height: 40px
+// TODO Fix => might break with themes
+$navbar_height: 51px
+
+.oe_ace_view_editor
+    transition: all 0.2s ease-in
+    opacity: 0.3
+    position: fixed
+    top: $navbar_height
+    right: 0
+    z-index: 1000
+    height: 100%
+    .oe_ace_view_editor_title
+        width: 100%
+        padding-top: 4px
+        padding-left: 4px
+        height: $editorbar_height
+        background: #2F3129
+        .oe_view_list
+            width: 50%
+            height: $editorbar_height - 8px
+        .btn
+            height: $editorbar_height - 8px
+            padding: 0 4px 0 4px
+    .ace_editor
+        position: absolute
+        top: $editorbar_height
+        right: 0
+        bottom: $navbar_height
+        left: 0
+        width: $ace_width
+    &:hover
+        opacity: 1
+    &.oe_ace_open
+        width: $ace_width
+    &.oe_ace_closed
+        width: 0
+        opacity: 0

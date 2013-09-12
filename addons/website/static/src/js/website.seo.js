@@ -27,7 +27,7 @@
         },
         headers: function (tag) {
             return $('#wrap '+tag).map(function () {
-                    return $(this).text();
+                return $(this).text();
             });
         },
         images: function () {
@@ -70,11 +70,11 @@
             perfect: 'success',
             advised: 'primary',
             used: 'warning',
-            new: 'default',
+            custom: 'default',
         },
         init: function (parent, options) {
             this.keyword = options.keyword;
-            this.type = this.types[options.type || 'default'];
+            this.type = this.types[options.type] || 'default';
             this._super(parent);
         },
         destroy: function () {
@@ -88,16 +88,10 @@
         maxKeywords: 10,
         keywords: function () {
             var result = [];
-            this.$el.find('.js_seo_keyword').each(function () {
+            this.$('.js_seo_keyword').each(function () {
                 result.push($(this).data('keyword'));
             });
             return result;
-        },
-        suggestions: function () {
-            // TODO Refactor (Ugly)
-            return $('.js_seo_suggestion').map(function () {
-                return $(this).data('keyword');
-            });
         },
         isKeywordListFull: function () {
             return this.keywords().length >= this.maxKeywords;
@@ -105,22 +99,22 @@
         isExistingKeyword: function (word) {
             return _.contains(this.keywords(), word);
         },
-        add: function (candidate) {
+        add: function (candidate, suggested) {
             var self = this;
             // TODO Refine
             var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
-            if (word && !this.isKeywordListFull() && !this.isExistingKeyword(word)) {
-                var type = _.contains(this.suggestions(), word) ? 'advised' : 'new';
-                var keyword = new website.seo.Keyword(this, {
+            if (word && !self.isKeywordListFull() && !self.isExistingKeyword(word)) {
+                var type = suggested ? 'advised' : 'custom';
+                var keyword = new website.seo.Keyword(self, {
                     keyword: word,
                     type: type,
                 });
                 keyword.on('removed', null, function () {
                    self.trigger('list-not-full');
                 });
-                keyword.appendTo(this.$el);
+                keyword.appendTo(self.$el);
             }
-            if (this.isKeywordListFull()) {
+            if (self.isKeywordListFull()) {
                 self.trigger('list-full');
             }
         },
@@ -148,6 +142,46 @@
         },
     });
 
+    website.seo.SuggestionList = openerp.Widget.extend({
+        template: 'website.seo_list',
+        init: function (parent, companyName) {
+            this.companyName = companyName;
+            this._super(parent);
+        },
+        start: function () {
+            var self = this;
+            self.$el.append("Loading...");
+            // cf. https://github.com/ddm/seo
+            // TODO Try with /recommend/
+            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(self.companyName), function (list) {
+                self.$el.empty();
+                // TODO Improve algorithm + Ajust based on custom user keywords
+                var nameRegex = new RegExp(self.companyName, "gi");
+                var cleanList = _.map(list, function removeCompanyName (word) {
+                    return word.replace(nameRegex, "").trim();
+                });
+                // TODO Order properly ?
+                cleanList.push(self.companyName);
+                _.each(_.uniq(cleanList), function (keyword) {
+                    if (keyword) {
+                        var suggestion = new website.seo.Suggestion(self, {
+                            keyword: keyword
+                        });
+                        suggestion.on('selected', self, function () {
+                           self.trigger('selected', keyword);
+                        });
+                        suggestion.appendTo(self.$el);
+                    }
+                });
+            });
+        },
+        suggestions: function () {
+            return this.$('.js_seo_suggestion').map(function () {
+                return $(this).data('keyword');
+            });
+        },
+    });
+
     website.seo.Image = openerp.Widget.extend({
         template: 'website.seo_image',
         init: function (parent, options) {
@@ -167,7 +201,7 @@
         },
         images: function () {
             var result = [];
-            this.$el.find('input').each(function () {
+            this.$('input').each(function () {
                var $input = $(this);
                result.push({
                    src: $input.attr('src'),
@@ -192,16 +226,15 @@
         maxTitleSize: 65,
         maxDescriptionSize: 155,
         start: function () {
+            var self = this;
             var $modal = this.$el;
             var pageParser = new website.seo.PageParser();
             $modal.find('.js_seo_page_url').text(pageParser.url());
             $modal.find('input[name=seo_page_title]').val(pageParser.title());
             this.suggestImprovements(pageParser);
-            this.displayKeywordSuggestions(pageParser);
             this.imageList = new website.seo.ImageList(this);
             this.imageList.appendTo($modal.find('.js_seo_image_list'));
             this.keywordList = new website.seo.KeywordList(this);
-            this.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
             this.keywordList.on('list-full', null, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .attr('readonly', "readonly")
@@ -215,6 +248,13 @@
                 $modal.find('button[data-action=add]')
                     .prop('disabled', false).removeClass('disabled');
             });
+            this.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
+            var companyName = pageParser.company().toLowerCase();
+            this.suggestionList = new website.seo.SuggestionList(this, companyName);
+            this.suggestionList.on('selected', self, function (word) {
+               self.acceptSuggestion(word);
+            });
+            this.suggestionList.appendTo($modal.find('.js_seo_suggestions_list'));
             $modal.modal();
         },
         suggestImprovements: function (parser) {
@@ -224,7 +264,7 @@
                 new website.seo.Tip(this, {
                    message: message,
                    type: type
-                }).appendTo(self.$el.find('.js_seo_tips'));
+                }).appendTo(self.$('.js_seo_tips'));
             }
             var pageParser = parser || new website.seo.PageParser();
             if (!pageParser.headers('h1').length === 0) {
@@ -247,50 +287,24 @@
                 displayTip("Your page makup is appropriate for search engines.", 'success');
             }
         },
-        displayKeywordSuggestions: function (pageParser) {
-            var $modal = this.$el;
-            var self = this;
-            $modal.find('.js_seo_company_suggestions').append("Loading...");
-            var companyName = pageParser.company().toLowerCase();
-            // cf. https://github.com/ddm/seo
-            // TODO Try with /recommend/
-            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(companyName), function (list) {
-                $modal.find('.js_seo_company_suggestions').empty();
-                // TODO Improve algorithm + Ajust based on custom user keywords
-                var nameRegex = new RegExp(companyName, "gi");
-                var cleanList = _.map(list, function removeCompanyName (word) {
-                    return word.replace(nameRegex, "").trim();
-                });
-                // TODO Order properly ?
-                cleanList.push(companyName);
-                _.each(_.uniq(cleanList), function (keyword) {
-                    if (keyword) {
-                        var suggestion = new website.seo.Suggestion(self, {
-                            keyword: keyword
-                        });
-                        suggestion.on('selected', self, function () {
-                           self.addKeyword(keyword);
-                        });
-                        suggestion.appendTo($modal.find('.js_seo_company_suggestions'));
-                    }
-                });
-            });
-        },
         confirmKeyword: function (e) {
             if (e.keyCode == 13) {
-                this.addKeyword(this.$el.find('input[name=seo_page_keywords]').val());
+                this.addKeyword();
             }
         },
         addKeyword: function (word) {
-            var $input = this.$el.find('input[name=seo_page_keywords]');
+            var $input = this.$('input[name=seo_page_keywords]');
             var keyword = _.isString(word) ? word : $input.val();
-            this.keywordList.add(keyword);
+            this.keywordList.add(keyword, false);
             $input.val("");
+        },
+        acceptSuggestion: function (suggestion) {
+            this.keywordList.add(suggestion, true);
         },
         update: function () {
             var data = {
-                title: this.$el.find('input[name=seo_page_title]').val(),
-                description: this.$el.find('input[name=seo_page_title]').val(),
+                title: this.$('input[name=seo_page_title]').val(),
+                description: this.$('input[name=seo_page_title]').val(),
                 keywords: this.keywordList.keywords(),
                 images: this.imageList.images(),
             };

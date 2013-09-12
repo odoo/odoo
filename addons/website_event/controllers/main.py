@@ -18,7 +18,6 @@ class website_event(http.Controller):
 
     @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
     def events(self, page=1, **searches):
-        website = request.registry['website']
         event_obj = request.registry['event.event']
 
         searches.setdefault('date', 'all')
@@ -102,7 +101,7 @@ class website_event(http.Controller):
         event_count = event_obj.search(
             request.cr, request.uid, dom_without("none"), count=True,
             context=request.context)
-        pager = website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
+        pager = request.website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
         obj_ids = event_obj.search(
             request.cr, request.uid, dom_without("none"), limit=step,
             offset=pager['offset'], order="date_begin DESC", context=request.context)
@@ -119,20 +118,19 @@ class website_event(http.Controller):
             'search_path': "?%s" % urllib.urlencode(searches),
         }
 
-        return request.webcontext.render("website_event.index", values)
+        return request.website.render("website_event.index", values)
 
     @website.route(['/event/<int:event_id>'], type='http', auth="public")
     def event(self, event_id=None, **post):
         event_obj = request.registry['event.event']
-        context = request.context.copy()
-        context.update({'show_address': 1})
         values = {
-            'event_id': event_obj.browse(request.cr, request.uid, event_id, context),
+            'event_id': event_obj.browse(request.cr, request.uid, event_id,
+                                         dict(request.context, show_address=1)),
             'message_ids': event_obj.browse(request.cr, request.uid, event_id, request.context).message_ids,
             'subscribe': post.get('subscribe'),
             'range': range
         }
-        return request.webcontext.render("website_event.detail", values)
+        return request.website.render("website_event.detail", values)
 
     @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
     def add_cart(self, event_id=None, **post):
@@ -140,7 +138,7 @@ class website_event(http.Controller):
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
-        order = request.webcontext['order']
+        order = request.context['website_sale_order']
         if not order:
             order = website_sale.controllers.main.get_order()
 
@@ -191,8 +189,8 @@ class website_event(http.Controller):
         event_obj = request.registry['event.event']
         user_obj = request.registry['res.users']
 
-        if event_id and 'subscribe' in post and (post.get('email') or not request.webcontext.is_public_user):
-            if request.webcontext.is_public_user:
+        if event_id and 'subscribe' in post and (post.get('email') or not request.context['is_public_user']):
+            if request.context['is_public_user']:
                 partner_ids = partner_obj.search(
                     request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))],
                     context=request.context)
@@ -220,8 +218,8 @@ class website_event(http.Controller):
         event_obj = request.registry['event.event']
         user_obj = request.registry['res.users']
 
-        if event_id and 'unsubscribe' in post and (post.get('email') or not request.webcontext.is_public_user):
-            if request.webcontext.is_public_user:
+        if event_id and 'unsubscribe' in post and (post.get('email') or not request.context['is_public_user']):
+            if request.context['is_public_user']:
                 partner_ids = partner_obj.search(
                     request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))],
                     context=request.context)

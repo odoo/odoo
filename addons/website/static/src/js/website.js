@@ -9,6 +9,13 @@
         '/website/static/src/xml/website.xml'
     ];
 
+    website.get_context = function (dict) {
+        var html = document.documentElement;
+        return _.extend({
+            lang: html.getAttribute('lang').replace('-', '_')
+        }, dict);
+    };
+
     /* ----- TEMPLATE LOADING ---- */
     website.add_template = function(template) {
         templates.push(template);
@@ -16,48 +23,19 @@
     website.load_templates = function(templates) {
         var def = $.Deferred();
         var count = templates.length;
-        templates.forEach(function(t) {
-            openerp.qweb.add_template(t, function(err) {
-                if (err) {
-                    def.reject();
-                } else {
-                    count--;
-                    if (count < 1) {
-                        def.resolve();
+
+        var dones = _(templates).map(function (t) {
+            return new $.Deferred(function (d) {
+                openerp.qweb.add_template(t, function(err) {
+                    if (err) {
+                        d.reject(err);
+                    } else {
+                        d.resolve();
                     }
-                }
+                });
             });
         });
-        return def;
-    };
-
-    website.mutations = {
-        darken: function($el){
-            var $parent = $el.parent();
-            if($parent.hasClass('dark')){
-                $parent.replaceWith($el);
-            }else{
-                $el.replaceWith($("<div class='dark'></div>").append($el.clone()));
-            }
-        },
-        vomify: function($el){
-            var hue=0;
-            var beat = false;
-            var a = setInterval(function(){
-                $el.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
-            }, 10);
-            setTimeout(function(){
-                clearInterval(a);
-                setInterval(function(){
-                    var filter =  'hue-rotate('+hue+'deg)'+ (beat ? ' invert()' : '');
-                    $(document.documentElement).css({'-webkit-filter': filter}); hue += 5;
-                    if(hue % 35 === 0){
-                        beat = !beat;
-                    }
-                }, 10);
-            },5000);
-            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo($el);
-        },
+        return $.when.apply(null, dones);
     };
 
 

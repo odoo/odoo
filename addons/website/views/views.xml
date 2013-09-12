@@ -13,7 +13,9 @@
 
         <template id="layout">
                 &lt;!DOCTYPE html&gt;
-                <html t-att-data-editable="'1' if editable else '0'" t-att-data-view-xmlid="str(__stack__[0])">
+                <html t-att-lang="lang.replace('_', '-')"
+                      t-att-data-editable="'1' if editable else '0'"
+                      t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />
@@ -33,6 +35,8 @@
 
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
+                            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js"></script>
+                            <script type="text/javascript" src="//vkbeautify.googlecode.com/files/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
@@ -42,6 +46,7 @@
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                         </t>
 
                         <t t-raw="head or ''"/>
@@ -66,16 +71,18 @@
                                         <ul class="nav navbar-nav navbar-right" id="top_menu">
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                             <li><a href="/admin">Sign in</a></li>
-                                            <li t-if="len(lang_list) &gt; 1" class="dropdown">
+                                            <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                <!-- TODO: use flags for language selection -->
+                                                <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
                                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                                    <t t-esc="lang_selected['name']"/> <span class="caret"></span>
+                                                    <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
                                                 </a>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li t-foreach="lang_list" t-as="lg">
+                                                    <li t-foreach="website.language_ids" t-as="lg">
                                                         <a href="#" role="menuitem">
-                                                            <strong t-att-class="'icon-check' if lg['code'] == lang_selected['code']
+                                                            <strong t-att-class="'icon-check' if lg.code == lang
                                                                 else 'icon-check-empty'"></strong>
-                                                            <t t-esc="lg['name']"/>
+                                                            <t t-esc="lg.name"/>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -154,23 +161,7 @@
         <template id="homepage" page="True">
             <t t-call="website.layout">
                 <section>
-                    <div id="myCarousel" class="carousel slide" data-interval="1000000">
-                        <div class="oe_carousel_options js_carousel_options" t-ignore="1" t-if="editable">
-                            <span class="label label-default js_add"><i class="icon-plus-sign"></i></span>
-                            <span class="label label-default js_remove"><i class="icon-minus-sign"></i></span>
-                            <select name="carousel-background" class="form-control">
-                                <option value="">Chose an other background</option>
-                                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
-                                <option value="/website/static/src/img/landscape.png">landscape</option>
-                                <option value="/website/static/src/img/aqua.jpg">aqua</option>
-                            </select>
-                            <select name="carousel-style" class="form-control">
-                                <option value="">Chose an other style</option>
-                                <option value="no_image">No image</option>
-                                <option value="image_left">Image left</option>
-                                <option value="image_right">Image right</option>
-                            </select>
-                        </div>
+                    <div id="myCarousel" data-snippet-id="carousel" class="carousel slide" data-interval="1000000">
                         <!-- Carousel items -->
                         <div class="carousel-inner">
                             <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
@@ -190,9 +181,9 @@
                 </section>
 
                 <div>
-                    <section class="container">
+                    <section class="container" data-snippet-id="resize">
                         <div class="row">
-                            <div class="col-md-12 text-center">
+                            <div class="col-md-12 text-center" data-snippet-id="colmd">
                                  <h1>Welcome To Your New Homepage,</h1>
                                  <h2>where <b>everything</b> can be <em>customized</em></h2>
                             </div>
@@ -200,12 +191,12 @@
                     </section>
 
                     <div class="dark mt64">
-                        <section class="container">
+                        <section class="container" data-snippet-id="resize">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-5" data-snippet-id="colmd">
                                     <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg" />
                                 </div>
-                                <div class="col-md-6 col-lg-offset-1">
+                                <div class="col-md-6 col-lg-offset-1" data-snippet-id="colmd">
                                     <p class="mt16">
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                                         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -223,14 +214,14 @@
                         </section>
                     </div>
 
-                    <section class="container">
+                    <section class="container" data-snippet-id="resize">
                         <div class="row">
-                            <div class="col-md-12 text-center">
+                            <div class="col-md-12 text-center" data-snippet-id="colmd">
                                  <h2 class="mt48">Ut enim ad minim veniam</h2>
                             </div>
                         </div>
                         <div class="row mt32">
-                            <div class="col-md-4">
+                            <div class="col-md-4" data-snippet-id="colmd">
                                 <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg" />
                                 <h4 class="mt16">Cillum Dolore</h4>
                                 <p>
@@ -240,7 +231,7 @@
                                     consequat.
                                 </p>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" data-snippet-id="colmd">
                                 <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
                                 <h4 class="mt16">Mollit Anim</h4>
                                 <p>
@@ -249,7 +240,7 @@
                                     proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                                 </p>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" data-snippet-id="colmd">
                                 <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
                                 <h4 class="mt16">Nemo Enim Ipsam</h4>
                                 <p>
@@ -415,99 +406,11 @@
             </a>
         </template>
 
-        <template id="snippets">
-            <div class='oe_snippet' data-snippet-id='darken' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.darken'>
-                <div class='oe_snippet_thumbnail oe_label'>Darken</div>
-            </div>
-
-            <div class='oe_snippet' data-snippet-id='surprise' data-action='mutate' data-selector='#wrap .container' data-action-function='openerp.website.mutations.vomify'>
-                <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
-            </div>
-
-            <div class='oe_snippet' data-snippet-id='spacer' data-action='insert' data-selector-siblings='#wrap .container'>
-                <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
-                <div class="oe_snippet_body container mt32"></div>
-            </div>
-
-            <div class='oe_snippet' data-snippet-id='title' data-action='insert' data-selector-siblings='#wrap .container'>
-                <div class='oe_snippet_thumbnail oe_label'>
-                    Main Title
-                </div>
-                <section class="oe_snippet_body container">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <h1 class="mt64">Welcome To Your New Homepage,</h1>
-                            <h2 class="mt32 subheader">where <b><em>everything</em></b> can be customized </h2>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <div class='oe_snippet' data-snippet-id='' data-action='insert' data-selector-siblings='#wrap .container'>
-                <section class="oe_snippet_body container">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <h2 class="mt48">Ut enim ad minim veniam</h2>
-                        </div>
-                    </div>
-                    <div class="row mt32">
-                        <div class="col-md-4">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
-                            <h4 class="mt16">Cillum Dolore</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat.</p>
-                        </div>
-                        <div class="col-md-4">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
-                            <h4 class="mt16">Mollit Anim</h4>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                        </div>
-                        <div class="col-md-4">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
-                            <h4 class="mt16">Nemo Enim Ipsam</h4>
-                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                                doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
-                                veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                                ipsam voluptatem quia voluptas</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <div class='oe_snippet' name='Header' data-action='insert' data-selector-siblings='#wrap .container'>
-                <section class="container oe_snippet_body">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg"/>
-                        </div>
-                        <div class="col-md-6 col-lg-offset-1">
-                            <p class="mt16">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat.</p>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                            <div class="text-center">
-                                <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To  <em>Action</em></a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-        </template>
-
-
         <template id="kanban">
             <t t-set="step"><t t-esc="step or 0"/></t>
             <t t-set="scope"><t t-esc="scope or 0"/></t>
             <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
-            <t t-raw="snipped['kanban'](model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
+            <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
         </template>
 
         <template id="kanban_contain">
