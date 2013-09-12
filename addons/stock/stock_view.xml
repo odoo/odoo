@@ -134,15 +134,15 @@
                         <page string="Inventory Details" >
                             <button name="set_checked_qty" states="confirm" string="⇒ Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
-                                <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != real_qty">
-                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,parent.date)" domain="[('type','=','product')]"/>
-                                    <field name="real_qty" readonly="1"/>
+                                <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != th_qty">
+                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
+                                    <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="th_qty" readonly="1"/>
                                     <field name="product_qty" string="Checked Quantity"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
-                                    <field name="prod_lot_id"/>
-                                    <field name="package_id"/>
-                                    <field name="partner_id"/>
-                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                                     <field name="state" invisible="True"/>
                                 </tree>
                             </field>

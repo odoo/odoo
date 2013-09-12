@@ -121,8 +121,13 @@ class product_product(osv.osv):
         domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
         domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
         domain_quant += domain_products
-        if context.get('lot_id', False):
-            domain_quant.append(('lot_id','=',context['lot_id']))
+        if context.get('lot_id') or context.get('owner_id') or context.get('package_id'):
+            if context.get('lot_id'):
+                domain_quant.append(('lot_id','=',context['lot_id']))
+            if context.get('owner_id'):
+                domain_quant.append(('owner_id','=',context['owner_id']))
+            if context.get('package_id'):
+                domain_quant.append(('package_id','=',context['package_id']))
             moves_in  = []
             moves_out = []
         else:

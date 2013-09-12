@@ -1928,13 +1928,14 @@ class stock_inventory(osv.osv):
             domain += ' and package_id = %s'
             args += (inventory.package_id.id,)
         cr.execute('''
-           SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id
+           SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
            FROM stock_quant WHERE''' + domain + '''
-           GROUP BY product_id, location_id, lot_id, package_id
+           GROUP BY product_id, location_id, lot_id, package_id, partner_id
         ''', args)
         vals = []
         for product_line in cr.dictfetchall():
             product_line['inventory_id'] = inventory.id
+            product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
                 product_line['product_uom_id'] = product_obj.browse(cr, uid, product_line['product_id'], context=context).uom_id.id
             vals.append(product_line)
@@ -1950,11 +1951,11 @@ class stock_inventory_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'package_id': fields.many2one('stock.quant.package', 'Pack', select=True),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
+        'product_qty': fields.float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'real_qty':fields.related('product_id','qty_available', type='float', string='Real Quantity'),
+        'th_qty': fields.float('Theoretical Quantity', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Owner'),
     }
 
@@ -1983,7 +1984,7 @@ class stock_inventory_line(osv.osv):
             }
             theorical_lines.append(vals)
 
-    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False, context=None):
+    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, owner_id=False, lot_id=False, package_id=False, context=None):
         """ Changes UoM and name if product_id changes.
         @param location_id: Location id
         @param product: Changed product_id
@@ -1993,12 +1994,18 @@ class stock_inventory_line(osv.osv):
         context = context or {}
         if not product:
             return {'value': {'product_qty': 0.0, 'product_uom_id': False}}
-        context['location'] = location_id
-        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        uom = uom or obj_product.uom_id.id
-        amount = obj_product.qty_available
-        result = {'product_qty': amount, 'product_uom_id': uom}
-        return {'value': result}
+        uom_obj = self.pool.get('product.uom')
+        ctx=context.copy()
+        ctx['location'] = location_id
+        ctx['lot_id'] = lot_id
+        ctx['owner_id'] = owner_id
+        ctx['package_id'] = package_id
+        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
+        th_qty = obj_product.qty_available
+        if uom and uom != obj_product.uom_id.id:
+            uom_record = uom_obj.browse(cr, uid, uom, context=context)
+            th_qty = uom_obj._compute_qty_obj(cr, uid, obj_product.uom_id, th_qty, uom_record)
+        return {'value': {'product_qty': th_qty, 'th_qty': th_qty, 'product_uom_id': uom or obj_product.uom_id.id}}
 
 
 #----------------------------------------------------------
