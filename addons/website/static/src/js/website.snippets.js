@@ -34,13 +34,18 @@
     website.snippet = {};
 
     // puts $el at the same absolute position as $target
-    website.snippet.cover_target = function cover_target($el, $target){
+    website.snippet.cover_target = function ($el, $target){
         $el.css({
             'position': 'absolute',
             'width': $target.outerWidth(),
             'height': $target.outerHeight(),
         });
         $el.css($target.offset());
+    };
+    website.snippet.is_empty_dom = function ($dom) {
+        if ($.trim($dom.text()) !== '') return false;
+        if ($dom.find('area, base, command, embed, hr, img, input, keygen').length) return false;
+        return true;
     };
 
     website.snippet.BuildingBlock = openerp.Widget.extend({
@@ -704,7 +709,7 @@
                     Number(currentClass.match(/col-md-([0-9-]+)|$/)[1] || 0);
             if (colsize > 12) colsize = 12;
             if (colsize < 1) {
-                colsize = $.trim(self.$target.html()) === '' ? 0 : 1;
+                colsize = website.snippet.is_empty_dom(self.$target) ? 0 : 1;
             }
             this.$target.attr("class",
                 this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-)([0-9-]+)/g, '') + ' col-md-' + colsize
@@ -721,18 +726,20 @@
             });
 
             function change_empty_col ($col) {
-                size -= Number($col.attr("class").match(/col-md-([0-9-]+)|$/)[1] || 0);
-                if (12 - size > 0) {
+                var _size = Number($col.attr("class").match(/col-md-([0-9-]+)|$/)[1] || 0);
+                if (12 - (size - _size) > 0) {
+                    size -= _size;
                     $col.attr("class", $col.attr("class").replace(/\s*col-md-([0-9-]+)/g, '') + ' col-md-' + (12 - size));
                     size = 12;
-                } else if($.trim($col.html()) === '') {
+                } else if(website.snippet.is_empty_dom($col)) {
+                    size -= _size;
                     $col.remove();
                 }
             }
 
             function insert_empty_col () {
                 var cleanClass = beginClass.replace(/\s*(col-lg-offset-|col-md-)([0-9-]+)/g, '');
-                var $insert = $('<div class="' + cleanClass + '" data-snippet-id="colmd"></div>');
+                var $insert = $('<div class="' + cleanClass + '" data-snippet-id="colmd"><p><br/></p></div>');
                 $insert.addClass('col-md-'+(12-size));
                 size = 12;
                 return $insert;
