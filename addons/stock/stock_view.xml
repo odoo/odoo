@@ -58,6 +58,7 @@
                         <field name="product_qty"/>
                         <field name="product_uom_id" groups="product.group_uom"/>
                         <field domain="[('usage','=','internal')]" name="location_id"/>
+                        <field name="th_qty" readonly="1"/>
                         <button name="%(stock.action_view_stock_inventory_line_split)d"
                             string="Split Inventory Line"
                             type="action" icon="gtk-justify-fill"/>
