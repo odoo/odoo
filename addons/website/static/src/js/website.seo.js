@@ -145,9 +145,8 @@
 
     website.seo.SuggestionList = openerp.Widget.extend({
         template: 'website.seo_list',
-        init: function (parent, companyName) {
-            this.companyName = companyName;
-            this.rootWords = [ companyName ];
+        init: function (parent) {
+            this.rootWords = [];
             this._super(parent);
         },
         start: function () {
@@ -182,17 +181,23 @@
                     }
                 });
             }
+            var deferred = $.Deferred();
+            var suggestions = [];
             $.when.apply($, requests).then(function (result) {
                 self.$el.empty();
                 if (result && _.isArray(result[0])) {
                     var suggestionLists = _.map(Array.prototype.slice.call(arguments), function (l) {
                         return l[0];
                     });
-                    _.each(suggestionLists, addSuggestions);
+                    _.each(suggestionLists, function (newSuggestions) {
+                        suggestions = suggestions.concat(newSuggestions);
+                    });
+                    deferred.resolve(_.uniq(suggestions));
                 } else if (result && _.isString(result[0])) {
-                    addSuggestions(result);
+                    deferred.resolve(_.uniq(result));
                 }
             });
+            $.when(deferred).then(addSuggestions);
         },
         suggestions: function () {
             return this.$('.js_seo_suggestion').map(function () {
@@ -207,9 +212,6 @@
             this.rootWords = _.reject(this.rootWords, function (rootWord) {
                 return rootWord === word;
             });
-            if (this.rootWords.length === 0) {
-                this.rootWords.push(companyName);
-            }
             this.refresh();
         },
     });
@@ -281,7 +283,6 @@
                     .prop('disabled', false).removeClass('disabled');
             });
             this.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
-            var companyName = pageParser.company().toLowerCase();
             this.suggestionList = new website.seo.SuggestionList(this, companyName);
             this.suggestionList.on('selected', self, function (word) {
                self.acceptSuggestion(word);
@@ -290,6 +291,8 @@
                this.suggestionList.removeRootWord(word);
             });
             this.suggestionList.appendTo($modal.find('.js_seo_suggestions_list'));
+            var companyName = pageParser.company().toLowerCase();
+            this.addKeyword(companyName);
             $modal.modal();
         },
         suggestImprovements: function (parser) {
@@ -336,6 +339,7 @@
         },
         acceptSuggestion: function (suggestion) {
             this.keywordList.add(suggestion, true);
+            this.suggestionList.addRootWord(suggestion);
         },
         update: function () {
             var data = {
