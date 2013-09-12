@@ -552,14 +552,26 @@
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
+            'change select.image-style': 'preview_image',
             'click .existing-attachments a': 'select_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
             var el = selection && selection.getSelectedElement();
             this.element = null;
+
+            var $select = this.$('.image-style');
+            var $options = $select.children();
+            this.image_styles = $options.map(function () { return this.value; }).get();
+
             if (el && el.is('img')) {
                 this.element = el;
+                _(this.image_styles).each(function (style) {
+                    if (el.hasClass(style)) {
+                        $select.val(style);
+                    }
+                });
+                // set_image should follow setup of image style
                 this.set_image(el.getAttribute('src'));
             }
 
@@ -569,6 +581,7 @@
         },
         save: function () {
             var url = this.$('input.url').val();
+            var style = this.$('.image-style').val();
             var element, editor = this.editor;
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
@@ -582,7 +595,10 @@
                 }, 0);
             }
             element.setAttribute('src', url);
-            this._super();
+            $(element.$).removeClass(this.image_styles.join(' '));
+            if (style) { element.addClass(style); }
+
+            return this._super();
         },
 
         /**
@@ -620,7 +636,10 @@
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img.image-preview').attr('src', image);
+            this.$('img.image-preview')
+                .attr('src', image)
+                .removeClass(this.image_styles.join(' '))
+                .addClass(this.$('select.image-style').val());
         },
 
         fetch_existing: function () {
