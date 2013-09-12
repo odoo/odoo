@@ -17,12 +17,18 @@
 
     website.seo.Suggestion = openerp.Widget.extend({
         template: 'website.seo_suggestion',
+        events: {
+            'click .js_seo_suggestion': 'select',
+        },
         init: function (parent, keyword) {
             this.keyword = keyword;
             // cf. http://getbootstrap.com/components/#labels
             // default, primary, success, info, warning, danger
             this.type = 'default';
             this._super(parent);
+        },
+        select: function () {
+            this.trigger('selected', this.keyword);
         },
     });
 
@@ -49,6 +55,9 @@
                 _.each(_.uniq(cleanList), function (keyword) {
                     if (keyword) {
                         var suggestion = new website.seo.Suggestion(self, keyword);
+                        suggestion.on('selected', self, function (word) {
+                            self.trigger('selected', word);
+                        });
                         suggestion.appendTo(self.$el);
                     }
                 });
@@ -71,7 +80,11 @@
             this._super(parent);
         },
         start: function () {
-            this.suggestionList = new website.seo.SuggestionList(this, this.keyword);
+            var self = this;
+            self.suggestionList = new website.seo.SuggestionList(self, this.keyword);
+            self.suggestionList.on('selected', self, function (word) {
+                self.trigger('selected', word);
+            });
             this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
         },
         destroy: function () {
@@ -85,7 +98,7 @@
         maxKeywords: 10,
         keywords: function () {
             var result = [];
-            this.$('.js_seo_keyword').each(function () {
+            this.$('span.js_seo_keyword').each(function () {
                 result.push($(this).data('keyword'));
             });
             return result;
@@ -96,16 +109,18 @@
         isExistingKeyword: function (word) {
             return _.contains(this.keywords(), word);
         },
-        add: function (candidate, suggested) {
+        add: function (candidate) {
             var self = this;
             // TODO Refine
             var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
             if (word && !self.isKeywordListFull() && !self.isExistingKeyword(word)) {
-                var type = suggested ? 'advised' : 'custom';
                 var keyword = new website.seo.Keyword(self, word);
-                keyword.on('removed', null, function () {
+                keyword.on('removed', self, function () {
                    self.trigger('list-not-full');
                    self.trigger('removed', word);
+                });
+                keyword.on('selected', self, function (word) {
+                    self.trigger('selected', word);
                 });
                 keyword.appendTo(self.$el);
             }
@@ -202,30 +217,33 @@
         maxDescriptionSize: 155,
         start: function () {
             var self = this;
-            var $modal = this.$el;
+            var $modal = self.$el;
             var pageParser = new website.seo.PageParser();
             $modal.find('.js_seo_page_url').text(pageParser.url());
             $modal.find('input[name=seo_page_title]').val(pageParser.title());
-            this.suggestImprovements(pageParser);
-            this.imageList = new website.seo.ImageList(this);
-            this.imageList.appendTo($modal.find('.js_seo_image_list'));
-            this.keywordList = new website.seo.KeywordList(this);
-            this.keywordList.on('list-full', self, function () {
+            self.suggestImprovements(pageParser);
+            self.imageList = new website.seo.ImageList(self);
+            self.imageList.appendTo($modal.find('.js_seo_image_list'));
+            self.keywordList = new website.seo.KeywordList(self);
+            self.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .attr('readonly', "readonly")
                     .attr('placeholder', "Remove a keyword first");
                 $modal.find('button[data-action=add]')
                     .prop('disabled', true).addClass('disabled');
             });
-            this.keywordList.on('list-not-full', self, function () {
+            self.keywordList.on('list-not-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .removeAttr('readonly').attr('placeholder', "");
                 $modal.find('button[data-action=add]')
                     .prop('disabled', false).removeClass('disabled');
             });
-            this.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
+            self.keywordList.on('selected', self, function (word) {
+                self.keywordList.add(word);
+            });
+            self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
             var companyName = pageParser.company().toLowerCase();
-            this.addKeyword(companyName);
+            self.addKeyword(companyName);
             $modal.modal();
         },
         suggestImprovements: function (parser) {
@@ -266,7 +284,7 @@
         addKeyword: function (word) {
             var $input = this.$('input[name=seo_page_keywords]');
             var keyword = _.isString(word) ? word : $input.val();
-            this.keywordList.add(keyword, false);
+            this.keywordList.add(keyword);
             $input.val("");
         },
         update: function () {
