@@ -27,51 +27,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-from reportlab import rl_config
-from openerp.tools import config
-import platform
-import glob
 from openerp.report.render.rml2pdf import customfonts
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-import logging
-
-_logger = logging.getLogger('openerp')
-supported_fonts = []
-
-def get_font_list():
-    _lst_font=[]
-    TTFSearchPathMap = customfonts.TTFSearchPathMap
-    searchpath = []
-    if config.get('fonts_search_path'):
-        searchpath += map(str.strip, config.get('fonts_search_path').split(','))
-
-    local_platform = platform.system()
-    if local_platform in TTFSearchPathMap:
-        searchpath += TTFSearchPathMap[local_platform]
-        
-    searchpath += rl_config.TTFSearchPath
-    for dirglob in searchpath:
-        dirglob = os.path.expanduser(dirglob)
-        for dirname in glob.iglob(dirglob):
-            abp = os.path.abspath(dirname)
-            if os.path.isdir(abp):
-                for f in os.listdir(abp):
-                    abs_filename = os.path.join(abp, f)
-                    from PIL import ImageFont
-                    if f.find('.ttf') != -1:
-                        f_test = ImageFont.truetype(abs_filename, 1)
-                        font_familystyle = f_test.font.family +" "+ f_test.font.style.replace(" ","")
-                        if (font_familystyle,font_familystyle) not in _lst_font:
-                            try:
-                                pdfmetrics.registerFont(TTFont(font_familystyle, f))
-                                _lst_font.append((font_familystyle,font_familystyle))
-                            except:
-                                _logger.warning("Could not register Font %s",font_familystyle)
-    global supported_fonts 
-    supported_fonts.extend(_lst_font)
-    return _lst_font
-
+  
 class multi_company_default(osv.osv):
     """
     Manage multi company default value
@@ -157,10 +114,9 @@ class res_company(osv.osv):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
     
     def _get_font(self, cr, uid, context=None):
-        global supported_fonts
-        if not supported_fonts:
-            get_font_list()
-        return supported_fonts
+        if not customfonts.supported_fonts:
+            customfonts.RegisterCustomFonts()
+        return customfonts.supported_fonts
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
@@ -346,20 +302,20 @@ class res_company(osv.osv):
     <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <stylesheet>
        <!-- Set here the default font to use for all <para> tags -->
-       <paraStyle name='Normal' fontName="DejaVu Sans Book"/>
+       <paraStyle name='Normal' fontName="DejaVuSans"/>
     </stylesheet>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
-        <setFont name="DejaVu Sans Book" size="8"/>
+        <setFont name="DejaVuSans" size="8"/>
         <drawString x="%s" y="%s"> [[ formatLang(time.strftime("%%Y-%%m-%%d"), date=True) ]]  [[ time.strftime("%%H:%%M") ]]</drawString>
-        <setFont name="DejaVu Sans Bold" size="10"/>
+        <setFont name="DejaVuSansBold" size="10"/>
         <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
         <lines>%s</lines>
         <!-- Set here the default font to use for all <drawString> tags -->
         <!-- don't forget to change the 2 other occurence of <setFont> above if needed --> 
-        <setFont name="DejaVu Sans Book" size="8"/>
+        <setFont name="DejaVuSans" size="8"/>
     </pageGraphics>
 </pageTemplate>
 </header>"""
@@ -384,13 +340,13 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <!-- Set here the default font to use for all <para> tags -->
-            <paraStyle name='Normal' fontName="DejaVu Sans Book"/>
+            <paraStyle name='Normal' fontName="DejaVuSans"/>
             <paraStyle name="main_footer" fontSize="8.0" alignment="CENTER"/>
             <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
         <pageGraphics>
             <!-- Set here the default font to use for all <drawString> tags -->
-            <setFont name="DejaVu Sans Book" size="8"/>
+            <setFont name="DejaVuSans" size="8"/>
             <!-- You Logo - Change X,Y,Width and Height -->
             <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
             <fill color="black"/>
@@ -441,7 +397,7 @@ class res_company(osv.osv):
         'rml_header2': _header2,
         'rml_header3': _header3,
         'logo':_get_logo,
-        'font':'DejaVu Sans Book'
+        'font':'DejaVuSans'
     }
 
     _constraints = [
