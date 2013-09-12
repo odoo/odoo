@@ -34,12 +34,12 @@ class hr_applicant(osv.osv):
                 res[id] += attachment.index_content or ''
         return res
 
-    def _content_search(self, cursor, user, obj, name, args, context=None):
+    def _content_search(self, cr, user, obj, name, args, context=None):
         record_ids = []
         attachment_pool = self.pool.get('ir.attachment')
         args += [('res_model','=','hr.applicant')]
-        attachment_ids = attachment_pool.search(cursor, user, args, context=context)
-        for attachment in attachment_pool.browse(cursor, user, attachment_ids, context=context):
+        attachment_ids = attachment_pool.search(cr, user, args, context=context)
+        for attachment in attachment_pool.browse(cr, user, attachment_ids, context=context):
             if attachment.res_id not in record_ids:
                 record_ids.append(attachment.res_id)
         return [('id', 'in', record_ids)]
