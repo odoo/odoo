@@ -165,19 +165,18 @@
                 if (!self.active) {
                     return;
                 }
-                if (self.editor_busy) {
-                    if($selected_target){
-                        $selected_target.data('overlay').removeClass('oe_selected');
-                    }
-                }
                 var $target = $(event.srcElement).parents("[data-snippet-id]:first");
-                if($target.length && $selected_target != $target){
-                    if($selected_target){
-                        $selected_target.data('overlay').removeClass('oe_selected');
+                if($target.length && !self.editor_busy) {
+                    if($selected_target != $target){
+                        if($selected_target){
+                            $selected_target.data('overlay').removeClass('oe_selected');
+                        }
+                        $selected_target = $target;
+                        self.create_overlay($target);
+                        $target.data('overlay').addClass('oe_selected');
                     }
-                    $selected_target = $target;
-                    self.create_overlay($target);
-                    $target.data('overlay').addClass('oe_selected');
+                } else if($selected_target) {
+                    $selected_target.data('overlay').removeClass('oe_selected');
                 }
             });
         },
@@ -373,14 +372,7 @@
             $targets.each(function () {
                 var $target = $(this);
                 if (!$target.data('overlay')) {
-                    var $zone = $(
-                        '<div class="oe_overlay">'+
-                        '    <div class="oe_overlay_options">'+
-                        '        <ul class="oe_option n w"></ul>'+
-                        '        <ul class="oe_option n"></ul>'+
-                        '        <ul class="oe_option n e"></ul>'+
-                        '    </div>'+
-                        '</div>');
+                    var $zone = $(openerp.qweb.render('website.snippet_overlay'));
                     $zone.appendTo('#oe_manipulators');
                     $zone.data('target',$target);
                     $target.data('overlay',$zone);
@@ -489,7 +481,8 @@
         *  This method is called after init and _readXMLData
         */
         start: function () {
-            if(this.$editor) this.$editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w"));
+            if(this.$editor) this.$editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w ul"));
+            else this.$overlay.find(".oe_overlay_options .oe_option.n.w").hide();
         },
 
         /*
@@ -548,7 +541,7 @@
             this.$overlay.append($box.find(".oe_handles").html());
 
             var $editor = $box.find(".oe_snippet_options");
-            $editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w"));
+            $editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w ul"));
 
             $editor.on('click', '.js_box_remove', function () {
                 self.$target.detach();

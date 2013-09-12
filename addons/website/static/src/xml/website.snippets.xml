@@ -21,6 +21,24 @@
         </div>
     </t>
 
+    <t t-name="website.snippet_overlay">
+        <div class="oe_overlay">
+            <div class="oe_overlay_options">
+                <div class="dropdown oe_option n w">
+                    <a data-toggle="dropdown" href="#"><i class="icon icon-cog"></i></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"></ul>
+                </div>
+                <div class="oe_option n"><a href="#" class="js_box_move"><i class="icon icon-move"></i></a></div>
+                <div class="dropdown oe_option n e">
+                    <a data-toggle="dropdown" href="#"><i class="icon icon-remove"></i></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="website.snippet_manipulator">
         <div class='oe_snippet_manipulator'></div>
     </t>
@@ -28,15 +46,6 @@
     <!-- Snippets -->
 
     <div t-name="website.snippets.resize" data-snippet-id='resize'>
-        
-        <!-- editor bar to display inside the top edit bar -->
-        <li class='oe_snippet_options'>
-            <a href="#" class="button js_box_move"><i class='icon icon-move'></i></a>
-        </li>
-        <li class='oe_snippet_options'>
-            <a href="#" class="button js_box_remove"><i class="icon icon-remove"></i></a>
-        </li>
-
         <!-- custom data for the widget -->
         <div class='oe_handles'>
             <div class='oe_handle n'></div>
@@ -50,10 +59,18 @@
         
         <!-- editor bar to display inside the top edit bar -->
         <li class='oe_snippet_options'>
-            <a href="#" class="button js_add"><i class="icon icon-plus-sign"></i></a>
+            <a href="#" class="button js_add">Add layer</a>
         </li>
         <li class='oe_snippet_options'>
-            <a href="#" class="button js_remove"><i class="icon icon-minus-sign"></i></a>
+            <a href="#" class="button js_remove">Remove current layer</a>
+        </li>
+        <li>
+            <div class="dropdown">
+                <a data-toggle="dropdown" href="#">test</a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>inside</li>
+                </ul>
+            </div>
         </li>
         <li class='oe_snippet_options'>
             <select name="carousel-background">
@@ -112,7 +129,7 @@
         <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
     </div>
 
-    <div t-name="website.snippets.spacer" data-snippet-id='spacer' data-category='structure' data-action='insert' data-selector-siblings='.container'>
+    <div t-name="website.snippets.spacer" data-snippet-id='resize' data-category='structure' data-action='insert' data-selector-siblings='.container'>
         <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
         <div class="oe_snippet_body container mt32"></div>
     </div>

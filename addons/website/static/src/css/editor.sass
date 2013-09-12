@@ -25,7 +25,7 @@
     width: 100%
     padding: 2px
     margin: 0
-    z-index: 10000
+    z-index: 20000
     background-color: #414141
     background: -webkit-linear-gradient(#646060, #262626)
     box-sizing: border-box
@@ -109,7 +109,7 @@ table.editorbar-panel
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
-    z-index: 100
+    z-index: 20000
     .nav-pills
         padding: 3px 8px
         background: #444444
@@ -195,7 +195,7 @@ table.editorbar-panel
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
-        z-index: 97
+        z-index: 1001
 
 /* ---- SNIPPET MANIPULATOR ---- */
 
@@ -229,18 +229,27 @@ table.editorbar-panel
 
     .oe_overlay_options
         display: none
-        z-index: 99
+        z-index: 1002
         .oe_option
+            top: 50%
+            left: 50%
             pointer-events: auto
             position: absolute
+            display: block
+            z-index: 1002
             &.n
-                top: 0px
+                top: -11px
             &.e
-                right: 0px
+                left: auto
+                right: -6px
             &.s
-                bottom: 0px
+                top: auto
+                bottom: -10px
             &.w
-                left: 0px
+                left: -6px
+            > a
+                text-decoration: none
+                font-size: 1.2em
     &.oe_active .oe_overlay_options
         display: block
 
