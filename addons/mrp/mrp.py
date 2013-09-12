@@ -592,62 +592,69 @@ class mrp_production(osv.osv):
         self.write(cr, uid, ids, {'state': 'picking_except'})
         return True
     
-    def _compute(self, cr, uid, production, properties=None, context=None):
+    def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
+        """ Compute product_lines and workcenter_lines from BoM structure
+        @return dict: product_lines
+        """
+
         if properties is None:
             properties = []
-
+        res_product_lines = {}
         bom_obj = self.pool.get('mrp.bom')
         uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
 
-        #unlink product lines
-        p_ids = map(lambda x:x.id, production.product_lines)
-        prod_line_obj.unlink(cr, SUPERUSER_ID, p_ids, context=context)
-
-        #unlink workcenter lines
-        w_ids = map(lambda x:x.id, production.workcenter_lines)
-        workcenter_line_obj.unlink(cr, SUPERUSER_ID, w_ids, context=context)
-
-        # search BoM structure and route
-        bom_point = production.bom_id
-        bom_id = production.bom_id.id
-        if not bom_point:
-            bom_id = bom_obj._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
-            if bom_id:
-                bom_point = bom_obj.browse(cr, uid, bom_id)
-                routing_id = bom_point.routing_id.id or False
-                self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
-
-        if not bom_id:
-            raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
-
-        # get components and workcenter from BoM structure
-        factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-        res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
-        results = res[0] # product lines
-        results2 = res[1] # workcenters lines
-
-        # reset product lines in production order
-        for line in results:
-            line['production_id'] = production.id
-            prod_line_obj.create(cr, uid, line)
-
-        #reset workcenter lines in production order
-        for line in results2:
-            line['production_id'] = production.id
-            workcenter_line_obj.create(cr, uid, line)
-        return results
+        for production in self.browse(cr, uid, ids, context=context):
+            #unlink product_lines
+            p_ids = map(lambda x:x.id, production.product_lines)
+            prod_line_obj.unlink(cr, SUPERUSER_ID, p_ids, context=context)
+    
+            #unlink workcenter_lines
+            w_ids = map(lambda x:x.id, production.workcenter_lines)
+            workcenter_line_obj.unlink(cr, SUPERUSER_ID, w_ids, context=context)
+    
+            # search BoM structure and route
+            bom_point = production.bom_id
+            bom_id = production.bom_id.id
+            if not bom_point:
+                bom_id = bom_obj._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
+                if bom_id:
+                    bom_point = bom_obj.browse(cr, uid, bom_id)
+                    routing_id = bom_point.routing_id.id or False
+                    self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
+    
+            if not bom_id:
+                raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
+    
+            # get components and workcenter_lines from BoM structure
+            factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
+            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
+            results = res[0] # product_lines
+            results2 = res[1] # workcenter_lines
+    
+            # reset product_lines in production order
+            for line in results:
+                line['production_id'] = production.id
+                prod_line_obj.create(cr, uid, line)
+    
+            #reset workcenter_lines in production order
+            for line in results2:
+                line['production_id'] = production.id
+                workcenter_line_obj.create(cr, uid, line)
+            res_product_lines[production.id] = results
+        return res_product_lines
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
         """ Computes bills of material of a product.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
-        results = []
-        for production in self.browse(cr, uid, ids):
-            results = self._compute(cr, uid, production, properties=properties, context=context)
-        return len(results)
+        production_id = ids and ids[0] or False
+        res = False
+        if production_id:
+            res = len(self._action_compute_lines(cr, uid, [production_id], properties=properties, context=context)[production_id]) 
+        return res
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the production order and related stock moves.
@@ -869,7 +876,7 @@ class mrp_production(osv.osv):
         """
         res = True
         for production in self.browse(cr, uid, ids):
-            boms = self._compute(cr, uid, production)
+            boms = self._action_compute_lines(cr, uid, [production.id])[production.id]
             res = False
             for bom in boms:
                 product = self.pool.get('product.product').browse(cr, uid, bom['product_id'])
