@@ -52,6 +52,17 @@
     for move_created in order.move_created_ids:
         move_created.action_done()
 -
+  I produce product.
+-
+  !python {model: mrp.product.produce}: |
+    context.update({'active_id': ref('mrp_production_servicetype_mo1')})
+-
+  !record {model: mrp.product.produce, id: mrp_product_produce_1}:
+    mode: 'consume_produce'
+-
+  !python {model: mrp.product.produce}: |
+    self.do_produce(cr, uid, [ref('mrp_product_produce_1')], context=context)
+-
   I check production order after produced.
 -
   !python {model: mrp.production}: |
