@@ -594,12 +594,12 @@ class mrp_production(osv.osv):
     
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure
-        @return dict: product_lines
+        @return: product_lines
         """
 
         if properties is None:
             properties = []
-        res_product_lines = {}
+        results = []
         bom_obj = self.pool.get('mrp.bom')
         uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
@@ -607,11 +607,11 @@ class mrp_production(osv.osv):
 
         for production in self.browse(cr, uid, ids, context=context):
             #unlink product_lines
-            p_ids = map(lambda x:x.id, production.product_lines)
+            p_ids = [line.id for line in production.product_lines]
             prod_line_obj.unlink(cr, SUPERUSER_ID, p_ids, context=context)
     
             #unlink workcenter_lines
-            w_ids = map(lambda x:x.id, production.workcenter_lines)
+            w_ids = [line.id for line in production.workcenter_lines]
             workcenter_line_obj.unlink(cr, SUPERUSER_ID, w_ids, context=context)
     
             # search BoM structure and route
@@ -642,19 +642,14 @@ class mrp_production(osv.osv):
             for line in results2:
                 line['production_id'] = production.id
                 workcenter_line_obj.create(cr, uid, line)
-            res_product_lines[production.id] = results
-        return res_product_lines
+        return results
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
         """ Computes bills of material of a product.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
-        production_id = ids and ids[0] or False
-        res = False
-        if production_id:
-            res = len(self._action_compute_lines(cr, uid, [production_id], properties=properties, context=context)[production_id]) 
-        return res
+        return len(self._action_compute_lines(cr, uid, ids, properties=properties, context=context))
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the production order and related stock moves.
@@ -876,7 +871,7 @@ class mrp_production(osv.osv):
         """
         res = True
         for production in self.browse(cr, uid, ids):
-            boms = self._action_compute_lines(cr, uid, [production.id])[production.id]
+            boms = self._action_compute_lines(cr, uid, [production.id])
             res = False
             for bom in boms:
                 product = self.pool.get('product.product').browse(cr, uid, bom['product_id'])
