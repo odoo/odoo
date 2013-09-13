@@ -152,6 +152,9 @@ class product_product(osv.osv):
 class sale_order(osv.osv):
     _inherit = 'sale.order'
 
+    def _can_create_procurement(self, cr, uid, ids, context=None):
+        return True
+
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
                 uid, order, line, group_id = group_id, context=context)

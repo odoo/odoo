@@ -30,6 +30,10 @@ from openerp import SUPERUSER_ID
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
+
+    def _can_create_procurement(self, cr, uid, ids, context=None):
+        return True
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -156,6 +160,7 @@ class sale_order(osv.osv):
             'context': ctx,
         })
         return result
+
 
     # TODO: FP Note: I guess it's better to do:
     # if order_policy<>picking: super()

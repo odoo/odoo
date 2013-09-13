@@ -653,6 +653,9 @@ class sale_order(osv.osv):
     def _check_create_procurement(self, cr, uid, order, line, context=None):
         return True
 
+    def _can_create_procurement(self, cr, uid, ids, context=None):
+        return False
+
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
@@ -678,9 +681,8 @@ class sale_order(osv.osv):
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
-
-            #Confirm procurement order such that rules will be applied on it
-            procurement_obj.run(cr, uid, proc_ids, context=context)
+                    #Confirm procurement order such that rules will be applied on it
+                    procurement_obj.run(cr, uid, proc_ids, context=context)
             # FP NOTE: do we need this? isn't it the workflow that should set this
             val = {}
             if order.state == 'shipping_except':
@@ -713,7 +715,14 @@ class sale_order(osv.osv):
         canceled = False
         write_done_ids = []
         write_cancel_ids = []
+        if not self._can_create_procurement(cr, uid, ids, context={}):
+            for order in self.browse(cr, uid, ids, context={}):
+                for line in order.order_line:
+                    write_done_ids.append(line.id)
+            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
+            return True
         for order in self.browse(cr, uid, ids, context={}):
+
             #TODO: Need to rethink what happens when cancelling
             for line in order.order_line:
                 states =  [x.state for x in line.procurement_ids]
