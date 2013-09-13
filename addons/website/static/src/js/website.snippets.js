@@ -251,8 +251,8 @@
                             }
                             if (website.snippet.editorRegistry[snipped_id]) {
                                 self.create_overlay($target);
-                                var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
-                                snippet.build_snippet($target);
+                                $target.data("snippet-editor").build_snippet($target);
+                                setTimeout(function () {self.make_active($target);},0);
                             }
 
                         },
@@ -276,6 +276,7 @@
             var $snippet = get_snippet_from_id($instance.data('snippet-id'));
 
             $instance.draggable({
+                greedy: true,
                 helper:   'clone',
                 zIndex:   '1000',
                 appendTo: 'body',
@@ -510,6 +511,7 @@
         _drag_and_drop: function(){
             var self = this;
             this.$overlay.draggable({
+                greedy: true,
                 appendTo: 'body',
                 cursor: "move",
                 cursorAt: {
@@ -565,8 +567,6 @@
         *  (after the insertion of this.$body, if this.$body exists)
         */
         build_snippet: function ($target) {
-            var self = this;
-            setTimeout(function () {self.parent.make_active(self.$target);},0);
         },
 
         /* onFocus
@@ -766,14 +766,24 @@
             this.$editor.find(".js_add").on('click', this.on_add);
             this.$editor.find(".js_remove").on('click', this.on_remove);
 
+
+            //background
             var bg = this.$target.find('.carousel-inner .item.active').css('background-image').replace(/url\((.*)\)/g, '\$1');
-            this.$editor.find('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
-                .prop('selected', true);
+            var selected = this.$editor.find('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
+                .prop('selected', true).length;
+            if (!selected) {
+                this.$editor.find('.carousel-background input').val(bg);
+            }
 
-            this.$editor.find('select[name="carousel-background"]').on('change', function () {
-                self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
-            });
+            this.$editor.find('select[name="carousel-background"], input')
+                .on('click', function (event) {event.preventDefault(); return false;})
+                .on('change', function () {
+                    self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
+                    $(this).next().val("");
+                });
 
+
+            //style
             var style = false;
             if (this.$target.find('.carousel-inner .item.active .container .content_image.col-lg-offset-1'))
                 style = 'image_right';
