@@ -19,6 +19,8 @@
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />
+                        <meta name="description" value="" />
+                        <meta name="keywords" value="" />
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
@@ -168,7 +170,7 @@
                     <div class="carousel-inner">
                         <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
                             <div class="container">
-                                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                                <div class="content mt48 mb48" data-snippet-id='resize'>
                                     <h1>Create Awesome Websites</h1>
                                     <h3>Super easy, fully flexible</h3>
                                     <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>

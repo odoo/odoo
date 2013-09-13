@@ -191,6 +191,11 @@ table.editorbar-panel td.selected {
   height: 32px;
   margin: -16px 0px;
   -webkit-transition: margin 250ms linear;
+  width: 100%;
+  z-index: 1000;
+  position: absolute;
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
 }
 .oe_drop_zone.oe_insert:first-child:not(:last-child) {
   margin-top: -8px;
@@ -216,11 +221,11 @@ table.editorbar-panel td.selected {
 .oe_drop_zone.oe_insert.oe_hover:before {
   border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }
-
-.oe_drop_zone.oe_overlay {
+.oe_drop_zone.oe_insert.oe_vertical {
+  width: 16px;
+  display: inline-block;
   position: absolute;
-  background: rgba(153, 0, 255, 0.17);
-  border-radius: 3px;
+  margin: 0px !important;
 }
 
 .oe_drop_zone {
@@ -298,6 +303,9 @@ table.editorbar-panel td.selected {
 }
 .oe_overlay .oe_overlay_options .oe_move .js_box_move {
   margin-left: -50%;
+}
+.oe_overlay .oe_overlay_options .dropdown-menu select, .oe_overlay .oe_overlay_options .dropdown-menu input {
+  display: block;
 }
 .oe_overlay.oe_active .oe_overlay_options {
   display: block;
@@ -426,6 +434,10 @@ table.editorbar-panel td.selected {
 /* ---- ACE EDITOR ---- */
 .oe_ace_view_editor {
   transition: all 0.2s ease-in;
+  -webkit-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
   opacity: 0.3;
   position: fixed;
   top: 51px;
