@@ -28,9 +28,6 @@ class MailComposeMessage(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     _columns = {
-        'use_mass_mailing_campaign': fields.boolean(
-            'Use mass mailing campaigns',
-        ),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass mailing campaign',
         ),
@@ -40,22 +37,19 @@ class MailComposeMessage(osv.TransientModel):
         ),
     }
 
-    _defaults = {
-        'use_mass_mailing_campaign': False,
-    }
-
-    def onchange_mass_mail_campaign_id(self, cr, uid, ids, mass_mailing_campaign_id, mass_mailing_id, context=None):
-        if mass_mailing_id:
-            mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
-            if mass_mailing.mass_mailing_campaign_id.id == mass_mailing_campaign_id:
-                return {}
-        return {'value': {'mass_mailing_id': False}}
-
     def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
         """ Override method that generated the mail content by adding the mass
         mailing campaign, when doing pure email mass mailing. """
         res = super(MailComposeMessage, self).render_message_batch(cr, uid, wizard, res_ids, context=context)
-        if wizard.composition_mode == 'mass_mail' and wizard.use_mass_mailing_campaign and wizard.mass_mailing_id:  # TODO: which kind of mass mailing ?
-            for res_id in res_ids:
-                res[res_id]['mass_mailing_id'] = wizard.mass_mailing_id.id
+        if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_campaign_id:  # TODO: which kind of mass mailing ?
+            current_date = fields.datetime.now()
+            mass_mailing_id = self.pool['mail.mass_mailing'].create(
+                cr, uid, {
+                    'mass_mailing_campaign_id': wizard.mass_mailing_campaign_id.id,
+                    'name': '%s-%s' % (wizard.mass_mailing_campaign_id.name, current_date),
+                    'date': current_date,
+                    'domain': wizard.active_domain,
+                    'template_id': wizard.template_id and wizard.template_id.id or False,
+                }, context=context)
+            context['default_mass_mailing_id'] = mass_mailing_id
         return res

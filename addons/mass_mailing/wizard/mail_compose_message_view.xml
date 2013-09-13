@@ -9,24 +9,8 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='notify']" position="after">
-                    <field name="use_mass_mailing_campaign"
-                                attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
-                    <label for="mass_mailing_campaign_id" string=" "/>
-                    <div>
-                        <group>
-                            <field name="mass_mailing_campaign_id"
-                                on_change="onchange_mass_mail_campaign_id(mass_mailing_campaign_id, mass_mailing_id, context)"
-                                attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('use_mass_mailing_campaign', '=', False)],
-                                        'required': [('composition_mode', '=', 'mass_mail'), ('use_mass_mailing_campaign', '=', True)]}"/>
-                            <field name="mass_mailing_id"
-                                attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('use_mass_mailing_campaign', '=', False)],
-                                        'required': [('composition_mode', '=', 'mass_mail'), ('use_mass_mailing_campaign', '=', True)]}"
-                                context="{'default_mass_mailing_campaign_id': mass_mailing_campaign_id,
-                                          'default_template_id': template_id,
-                                          'default_domain': active_domain,
-                                          'form_view_ref': 'mass_mailing.view_mail_mass_mailing_form_readonly'}"/>
-                        </group>
-                    </div>
+                    <field name="mass_mailing_campaign_id"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
                 </xpath>
             </field>
         </record>
