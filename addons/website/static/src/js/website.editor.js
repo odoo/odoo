@@ -340,7 +340,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "Unlink", "Blockquote", "BulletedList",
+                        "Link", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
@@ -392,6 +392,9 @@
             return sup;
         },
         save: function () {
+            this.close();
+        },
+        close: function () {
             this.$el.modal('hide');
         },
     });
@@ -411,7 +414,8 @@
                     .addClass('active')
                     .siblings().removeClass('active')
                     .addBack().removeClass('has-error');
-            }
+            },
+            'click button.remove': 'remove_link',
         }),
         init: function (editor) {
             this._super(editor);
@@ -424,11 +428,27 @@
                 this.editor.getSelection().selectElement(element);
             }
             this.element = element;
+            if (element) {
+                this.add_removal_button();
+            }
 
             return $.when(
                 this.fetch_pages().done(this.proxy('fill_pages')),
                 this._super()
             ).done(this.proxy('bind_data'));
+        },
+        add_removal_button: function () {
+            this.$('.modal-footer').prepend(
+                openerp.qweb.render(
+                    'website.editor.dialog.link.footer-button'));
+        },
+        remove_link: function () {
+            var editor = this.editor;
+            // same issue as in make_link
+            setTimeout(function () {
+                editor.execCommand('unlink');
+            }, 0);
+            this.close();
         },
         /**
          * Greatly simplified version of CKEDITOR's
