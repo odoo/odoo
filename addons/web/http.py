@@ -1084,17 +1084,14 @@ def db_monodb(httprequest=None):
 
     dbs = db_list(True, httprequest)
 
-    # 1 try the db already in the session
+    # try the db already in the session
     db_session = httprequest.session.db
     if db_session in dbs:
         return db_session
 
-    # 2 if there is only one db in the db filters, take it
-    if len(dbs) == 1:
-        return dbs[0]
-
-    # 3 if there are multiple dbs, take the first one only if we can list them
-    if len(dbs) > 1 and config['list_db']:
+    # if dbfilters was specified when launching the server and there is
+    # only one possible db, we take that one
+    if openerp.tools.config['dbfilter'] != ".*" and len(dbs) == 1:
         return dbs[0]
     return None
 
