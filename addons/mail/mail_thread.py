@@ -1399,12 +1399,6 @@ class mail_thread(osv.AbstractModel):
             parent_id = message_ids and message_ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
-            # update original mail_mail if exists
-            if type == 'email':
-                mail_mail_ids = self.pool['mail.mail'].search(cr, SUPERUSER_ID, [('mail_message_id', '=', parent_id)], context=context)
-                if mail_mail_ids:
-                    self.pool['mail.mail'].set_replied(cr, SUPERUSER_ID, mail_mail_ids, context=context)
-
             message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
             # avoid loops when finding ancestors
             processed_list = []
