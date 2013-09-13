@@ -94,7 +94,7 @@ class sale_order_line(osv.osv):
     def _recalculate_product_values(self, cr, uid, ids, product_id=None, context=None):
         user_obj = self.pool.get('res.users')
         product_id = product_id or ids and self.browse(cr, uid, ids[0], context=context).product_id.id
-        return self.product_id_change(cr, uid, [],
+        return self.product_id_change(cr, SUPERUSER_ID, [],
             pricelist=context.pop('pricelist'),
             product=product_id,
             partner_id=user_obj.browse(cr, SUPERUSER_ID, uid).partner_id.id,

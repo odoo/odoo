@@ -17,7 +17,6 @@ class website_mail(http.Controller):
     @website.route(['/blog/', '/blog/<int:mail_group_id>/', '/blog/<int:mail_group_id>/<int:blog_id>/',
                 '/blog/page/<int:page>/', '/blog/<int:mail_group_id>/page/<int:page>/', '/blog/<int:mail_group_id>/<int:blog_id>/page/<int:page>/'], type='http', auth="public")
     def blog(self, mail_group_id=None, blog_id=None, page=0, **post):
-        website = request.registry['website']
         group_obj = request.registry['mail.group']
         message_obj = request.registry['mail.message']
         user_obj = request.registry['res.users']
@@ -28,17 +27,16 @@ class website_mail(http.Controller):
             'nav_list': dict(),
             'mail_group_id': mail_group_id,
             'subscribe': post.get('subscribe'),
-            'website': website,
         }
 
-        if not request.webcontext.is_public_user and mail_group_id:
-            message_follower_ids = group_obj.read(request.cr, request.uid, [mail_group_id], ['message_follower_ids'])[0]['message_follower_ids']
-            parent_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid).partner_id.id
+        if not request.context['is_public_user'] and mail_group_id:
+            message_follower_ids = group_obj.read(request.cr, request.uid, [mail_group_id], ['message_follower_ids'], request.context)[0]['message_follower_ids']
+            parent_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid, request.context).partner_id.id
             values['subscribe'] = parent_id in message_follower_ids
 
         domain = mail_group_id and [("res_id", "=", mail_group_id)] or []
 
-        for group in message_obj.read_group(request.cr, request.uid, domain + group_obj.get_domain_public_blog(request.cr, request.uid), ['subject', 'date'], groupby="date", orderby="create_date asc"):
+        for group in message_obj.read_group(request.cr, request.uid, domain + group_obj.get_domain_public_blog(request.cr, request.uid), ['subject', 'date'], groupby="date", orderby="create_date asc", context=request.context):
             year = group['date'].split(" ")[1]
             if not values['nav_list'].get(year):
                 values['nav_list'][year] = {'name': year, 'date_count': 0, 'months': []}
@@ -46,29 +44,28 @@ class website_mail(http.Controller):
             values['nav_list'][year]['months'].append(group)
 
         if blog_id:
-            values['blog_id'] = message_obj.browse(request.cr, request.uid, blog_id)
+            values['blog_id'] = message_obj.browse(request.cr, request.uid, blog_id, request.context)
         else:
             step = 20
-            message_count = len(group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc"))
-            pager = website.pager(url="/blog/%s/" % mail_group_id, total=message_count, page=page, step=step, scope=7)
-            message_ids = group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc", limit=step, offset=pager['offset'])
+            message_count = len(group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc", context=request.context))
+            pager = request.website.pager(url="/blog/%s/" % mail_group_id, total=message_count, page=page, step=step, scope=7)
+            message_ids = group_obj.get_public_message_ids(request.cr, request.uid, domain=domain, order="create_date desc", limit=step, offset=pager['offset'], context=request.context)
             values['pager'] = pager
-            values['blog_ids'] = message_obj.browse(request.cr, request.uid, message_ids)
+            values['blog_ids'] = message_obj.browse(request.cr, request.uid, message_ids, request.context)
 
-        return request.webcontext.render("website_mail.index", values)
+        return request.website.render("website_mail.index", values)
 
     @website.route(['/blog/nav'], type='http', auth="public")
     def nav(self, **post):
-        comment_ids = request.registry['mail.group'].get_public_message_ids(request.cr, request.uid, domain=safe_eval(post.get('domain')), order="create_date asc", limit=None)
-        return simplejson.dumps(request.registry['mail.message'].read(request.cr, request.uid, comment_ids, ['website_published', 'subject', 'res_id']))
+        comment_ids = request.registry['mail.group'].get_public_message_ids(request.cr, request.uid, domain=safe_eval(post.get('domain')), order="create_date asc", limit=None, context=request.context)
+        return simplejson.dumps(request.registry['mail.message'].read(request.cr, request.uid, comment_ids, ['website_published', 'subject', 'res_id'], request.context))
 
     @website.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="public")
     def blog_post(self, mail_group_id=None, blog_id=None, **post):
-        website = request.registry['website']
         url = request.httprequest.host_url
         if post.get('body'):
             request.session.body = post.get('body')
-            if request.webcontext.is_public_user:
+            if request.context['is_public_user']:
                 return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, mail_group_id, blog_id)
 
         if 'body' in request.session and request.session.body:
@@ -78,8 +75,7 @@ class website_mail(http.Controller):
                     website_published=blog_id and True or False,
                     type='comment',
                     subtype='mt_comment',
-                    context={'mail_create_nosubsrequest.cribe': True},
-                )
+                    context=dict(request.context, mail_create_nosubcribe=True))
             request.session.body = False
 
         if post.get('body'):
@@ -95,8 +91,7 @@ class website_mail(http.Controller):
                 website_published=False,
                 type='comment',
                 subtype='mt_comment',
-                context={'mail_create_nosubsrequest.cribe': True},
-            )
+                context=dict(request.context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect("/blog/%s/%s/" % (mail_group_id, blog_id))
 
     @website.route(['/blog/<int:mail_group_id>/subscribe', '/blog/<int:mail_group_id>/<int:blog_id>/subscribe'], type='http', auth="public")
@@ -105,15 +100,15 @@ class website_mail(http.Controller):
         group_obj = request.registry['mail.group']
         user_obj = request.registry['res.users']
 
-        if mail_group_id and 'subscribe' in post and (post.get('email') or not request.webcontext.is_public_user):
-            if request.webcontext.is_public_user:
-                partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
+        if mail_group_id and 'subscribe' in post and (post.get('email') or not request.context['is_public_user']):
+            if request.context['is_public_user']:
+                partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))], context=request.context)
                 if not partner_ids:
-                    partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": post.get('email'), "name": "Subscribe: %s" % post.get('email')})]
+                    partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": post.get('email'), "name": "Subscribe: %s" % post.get('email')}, request.context)]
             else:
-                partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
-            group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
-            group_obj.message_subscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
+                partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
+            group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read', request.context)
+            group_obj.message_subscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids, request.context)
 
         return self.blog(mail_group_id=mail_group_id, blog_id=blog_id, subscribe=post.get('email'))
 
@@ -123,12 +118,12 @@ class website_mail(http.Controller):
         group_obj = request.registry['mail.group']
         user_obj = request.registry['res.users']
 
-        if mail_group_id and 'unsubscribe' in post and (post.get('email') or not request.webcontext.is_public_user):
-            if request.webcontext.is_public_user:
-                partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))])
+        if mail_group_id and 'unsubscribe' in post and (post.get('email') or not request.context['is_public_user']):
+            if request.context['is_public_user']:
+                partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", post.get('email'))], context=request.context)
             else:
-                partner_ids = [user_obj.browse(request.cr, request.uid, request.uid).partner_id.id]
-            group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read')
-            group_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids)
+                partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
+            group_obj.check_access_rule(request.cr, request.uid, [mail_group_id], 'read', request.context)
+            group_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [mail_group_id], partner_ids, request.context)
 
         return self.blog(mail_group_id=mail_group_id, blog_id=blog_id, subscribe=None)

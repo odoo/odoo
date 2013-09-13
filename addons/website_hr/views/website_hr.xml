@@ -13,7 +13,7 @@
     <!-- Layout add nav and footer -->
 
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
+        <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
             <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
         </xpath>
     </template>
@@ -24,7 +24,6 @@
     <template id="aboutus" inherit_id="website.aboutus">
         <xpath expr="//div[@class='col-md-8']" position="inside">
             <t t-set="head">
-                <script type="text/javascript" src="/website_hr/static/src/js/website_hr.js"></script>
                 <t t-raw="head or ''"/>
             </t>
             <h3>Our team</h3>

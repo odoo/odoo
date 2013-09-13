@@ -127,7 +127,7 @@ footer {
   margin-bottom: 0px;
 }
 
-#myCarousel .item {
+.carousel .item {
   color: white;
 }
 
@@ -193,13 +193,12 @@ a[data-publish][data-publish='on']:hover .css_published {
 [data-publish]:not(a) {
   position: relative;
   overflow: visible;
+  /*&:hover > [data-publish] */
+  /*     display: block */
 }
 [data-publish]:not(a) > [data-publish] {
   position: absolute;
   right: -6px;
   top: -10px;
   display: none;
-}
-[data-publish]:not(a):hover > [data-publish] {
-  display: block;
 }

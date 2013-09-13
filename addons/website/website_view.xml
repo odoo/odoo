@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="default_website" model="website">
+            <field name="name">localhost</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
+            <field name="default_lang_id" ref="base.lang_en"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="action_website_form" model="ir.actions.act_window">
+            <field name="name">Websites</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">website</field>
+            <field name="view_type">form</field>
+            <field name="help">Create and manage the companies websites.</field>
+        </record>
+        <menuitem action="action_website_form" id="menu_action_website_form" parent="base.menu_res_company_global"/>
+
+        <record id="view_website_tree" model="ir.ui.view">
+            <field name="name">website.tree</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <tree string="Websites">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="default_lang_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_website_form" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <form string="Website" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="default_lang_id"/>
+                        </group>
+                        <group string="Website languages">
+                            <field name="language_ids" nolabel="1" mode="tree,form">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="translatable"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

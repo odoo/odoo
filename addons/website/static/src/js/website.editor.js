@@ -53,12 +53,76 @@
                     canUndo: false,
                     editorFocus: true,
                 });
-
             }
         });
+        CKEDITOR.plugins.add( 'tablebutton', {
+            requires: 'panelbutton,floatpanel',
+            init: function( editor ) {
+                var label = "Table";
+
+                editor.ui.add('TableButton', CKEDITOR.UI_PANELBUTTON, {
+                    label: label,
+                    title: label,
+                    // use existing 'table' icon
+                    icon: 'table',
+                    modes: { wysiwyg: true },
+                    editorFocus: true,
+                    // panel opens in iframe, @css is CSS file <link>-ed within
+                    // frame document, @attributes are set on iframe itself.
+                    panel: {
+                        css: '/website/static/src/css/editor.css',
+                        attributes: { 'role': 'listbox', 'aria-label': label, },
+                    },
+
+                    onBlock: function (panel, block) {
+                        block.autoSize = true;
+                        block.element.setHtml(openerp.qweb.render('website.editor.table.panel', {
+                            rows: 5,
+                            cols: 5,
+                        }));
+
+                        var $table = $(block.element.$).on('mouseenter', 'td', function (e) {
+                            var $e = $(e.target);
+                            var y = $e.index() + 1;
+                            var x = $e.closest('tr').index() + 1;
+
+                            $table
+                                .find('td').removeClass('selected').end()
+                                .find('tr:lt(' + String(x) + ')')
+                                .children().filter(function () { return $(this).index() < y; })
+                                .addClass('selected');
+                        }).on('click', 'td', function (e) {
+                            var $e = $(e.target);
+
+                            var table = new CKEDITOR.dom.element(
+                                $(openerp.qweb.render('website.editor.table', {
+                                    rows: $e.closest('tr').index() + 1,
+                                    cols: $e.index() + 1,
+                                }))[0]);
+
+                            editor.insertElement(table);
+                            setTimeout(function () {
+                                var firstCell = new CKEDITOR.dom.element(table.$.rows[0].cells[0]);
+                                var range = editor.createRange();
+                                range.moveToPosition(firstCell, CKEDITOR.POSITION_AFTER_START);
+                                range.select();
+                            }, 0);
+                        });
+
+                        block.element.getDocument().getBody().setStyle('overflow', 'hidden');
+                        CKEDITOR.ui.fire('ready', this);
+                    },
+                });
+            }
+        });
+
         var editor = new website.EditorBar();
         var $body = $(document.body);
-        editor.prependTo($body);
+        editor.prependTo($body).then(function () {
+            if (location.search.indexOf("unable_editor") >= 0) {
+                editor.edit();
+            }
+        });
         $body.css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
     };
         /* ----- TOP EDITOR BAR FOR ADMIN ---- */
@@ -88,10 +152,11 @@
                         });
                         // Adding Static Menus
                         menu.append('<li class="divider"></li><li><a href="/page/website.themes">Change Theme</a></li>');
+                        menu.append('<li class="divider"></li><li><a data-action="ace" href="#">Advanced view editor</a></li>');
                     }
                 );
             });
-            menu.on('click', 'a', function (event) {
+            menu.on('click', 'a[data-action!=ace]', function (event) {
                 var view_id = $(event.currentTarget).data('view-id');
                 openerp.jsonRpc('/website/customize_template_toggle', 'call', {
                     'view_id': view_id
@@ -132,11 +197,6 @@
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            // this.$buttons.cancel.add(this.$buttons.snippet).prop('disabled', false)
-            //     .add(this.$buttons.save)
-            //     .parent().show();
-            //
-            // TODO: span edition changing edition state (save button)
             var $editables = $('[data-oe-model]')
                     .not('link, script')
                     // FIXME: propagation should make "meta" blocks non-editable in the first place...
@@ -185,7 +245,7 @@
                 defs.push(def);
             });
             return $.when.apply(null, defs).then(function () {
-                window.location.reload();
+                window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
             });
         },
         saveElement: function ($el) {
@@ -204,11 +264,11 @@
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
-                args: [data.oeModel, data.oeId, data.oeField, html, xpath]
+                args: [data.oeModel, data.oeId, data.oeField, html, xpath, website.get_context()]
             });
         },
         cancel: function () {
-            window.location.reload();
+            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
         },
     });
 
@@ -220,6 +280,11 @@
         // editor.ui.items -> possible commands &al
         // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
 
+        init: function (EditorBar) {
+            this.EditorBar = EditorBar;
+            this._super.apply(this, arguments);
+        },
+
         start_edition: function ($elements) {
             var self = this;
             $elements
@@ -229,6 +294,7 @@
                     var $node = $(node);
                     var editor = CKEDITOR.inline(this, self._config());
                     editor.on('instanceReady', function () {
+                        self.trigger('instanceReady');
                         observer.observe(node, OBSERVER_CONFIG);
                     });
                     $node.one('content_changed', function () {
@@ -262,11 +328,14 @@
                 autoParagraph: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
-                toolbar: [
-                    {name: 'basicstyles', items: [
+                toolbar: [{
+                    name: 'clipboard', items: [
+                        "Undo"
+                    ]},{
+                        name: 'basicstyles', items: [
                         "Bold", "Italic", "Underline", "Strike", "Subscript",
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
@@ -278,7 +347,7 @@
                         "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"
                     ]},{
                     name: 'special', items: [
-                        "Image", "Table"
+                        "Image", "TableButton"
                     ]},{
                     name: 'styles', items: [
                         "Styles"
@@ -330,15 +399,11 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change .url-source': function (e) { this.changed($(e.target)); },
-            'click div.existing a': 'select_page',
         }),
         init: function (editor) {
             this._super(editor);
             // url -> name mapping for existing pages
             this.pages = Object.create(null);
-            // name -> url mapping for the same
-            this.pages_by_name = Object.create(null);
         },
         start: function () {
             var element;
@@ -397,24 +462,24 @@
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
-            var $e = this.$('.url-source').filter(function () { return !!this.value; });
+            var $active_tab = this.$('.tab-pane.active');
+
+            var $e = $active_tab.find('.url-source');
 
             var val = $e.val(), done = $.when();
-            if ($e.hasClass('email-address')) {
+            if ($active_tab.is('#link-email')) {
                 this.make_link('mailto:' + val, false, val);
-            } else if ($e.hasClass('pages')) {
-                // ``val`` is the *name* of the page
-                var url = this.pages_by_name[val];
-                if (!url) {
-                    // Create the page, get the URL back
-                    done = $.get(_.str.sprintf(
-                        '/pagenew/%s?noredirect', encodeURIComponent(val)))
-                        .then(function (response) {
-                            url = response;
-                        });
-                }
+            } else if ($active_tab.is('#link-existing')) {
+                self.make_link(val, false, this.pages[val]);
+            } else if ($active_tab.is('#link-new')) {
+                // Create the page, get the URL back
+                done = $.get(_.str.sprintf(
+                    '/pagenew/%s?noredirect', encodeURIComponent(val)))
+                    .then(function (response) {
+                        val = response;
+                    });
                 done.then(function () {
-                    self.make_link(url, false, val);
+                    self.make_link(val, false);
                 });
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
@@ -428,35 +493,18 @@
 
             var match, $control;
             if (match = /(mailto):(.+)/.exec(href)) {
-                $control = this.$('input.email-address').val(match[2]);
+                $control = this.$('#link-email input').val(match[2]);
             } else if(href in this.pages) {
-                $control = this.$('input.pages').val(this.pages[href]);
-            }
-            if (!$control) {
-                $control = this.$('input.url').val(href);
+                $control = this.$('#link-existing select').val(href);
+            } else {
+                $control = this.$('#link-external input:first').val(href);
             }
 
-            this.changed($control);
+            var tab_name = $control.closest('.tab-pane').attr('id');
+            this.$('.nav a[href="#' + tab_name + '"]').tab('show');
 
             this.$('input.window-new').prop(
                 'checked', this.element.getAttribute('target') === '_blank');
-        },
-        changed: function ($e) {
-            $e.closest('li.list-group-item').addClass('active')
-              .siblings().removeClass('active');
-            this.$('.url-source').not($e).val('');
-        },
-        /**
-         * Selected an existing page in dropdown
-         */
-        select_page: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $target = $(e.target);
-            this.$('input.pages').val($target.text()).change();
-            // No #dropdown('close'), and using #dropdown('toggle') sur
-            // #closest('.dropdown') makes the dropdown not work correctly
-            $target.closest('.open').removeClass('open')
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
@@ -480,37 +528,50 @@
                 model: 'website',
                 method: 'list_pages',
                 args: [],
-                kwargs: {}
+                kwargs: {
+                    context: website.get_context()
+                },
             });
         },
         fill_pages: function (results) {
             var self = this;
-            var $pages = this.$('div.existing ul').empty();
+            var pages = this.$('#link-existing-select')[0];
             _(results).each(function (result) {
                 self.pages[result.url] = result.name;
-                self.pages_by_name[result.name] = result.url;
-                var $link = $('<a>').attr('href', result.url).text(result.name);
-                $('<li>').append($link).appendTo($pages);
+
+                pages.options[pages.options.length] =
+                    new Option(result.name, result.url);
             });
         },
     });
     website.editor.ImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change .url-source': function (e) { this.changed($(e.target)); },
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
+            'change select.image-style': 'preview_image',
             'click .existing-attachments a': 'select_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
             var el = selection && selection.getSelectedElement();
             this.element = null;
+
+            var $select = this.$('.image-style');
+            var $options = $select.children();
+            this.image_styles = $options.map(function () { return this.value; }).get();
+
             if (el && el.is('img')) {
                 this.element = el;
+                _(this.image_styles).each(function (style) {
+                    if (el.hasClass(style)) {
+                        $select.val(style);
+                    }
+                });
+                // set_image should follow setup of image style
                 this.set_image(el.getAttribute('src'));
             }
 
@@ -520,6 +581,7 @@
         },
         save: function () {
             var url = this.$('input.url').val();
+            var style = this.$('.image-style').val();
             var element, editor = this.editor;
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
@@ -533,7 +595,10 @@
                 }, 0);
             }
             element.setAttribute('src', url);
-            this._super();
+            $(element.$).removeClass(this.image_styles.join(' '));
+            if (style) { element.addClass(style); }
+
+            return this._super();
         },
 
         /**
@@ -571,7 +636,10 @@
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img.image-preview').attr('src', image);
+            this.$('img.image-preview')
+                .attr('src', image)
+                .removeClass(this.image_styles.join(' '))
+                .addClass(this.$('select.image-style').val());
         },
 
         fetch_existing: function () {
@@ -584,6 +652,7 @@
                     fields: ['name'],
                     domain: [['res_model', '=', 'ir.ui.view']],
                     order: 'name',
+                    context: website.get_context(),
                 }
             });
         },

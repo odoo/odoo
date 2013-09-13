@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Editor -->
+
+    <t t-name="website.snippets">
+        <div id='oe_snippets' class='hide'>
+            <ul class="nav nav-pills">
+              <li class="active"><a data-toggle="pill" href="#snippet_structure">Structure</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_content">Content</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_emphasize">Emphasize</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_style">Style</a></li>
+            </ul>
+            <div class="pill-content">
+                <div class="pill-pane active" id="snippet_structure"></div>
+                <div class="pill-pane" id="snippet_content"></div>
+                <div class="pill-pane" id="snippet_emphasize"></div>
+                <div class="pill-pane" id="snippet_style"></div>
+                <div class="pill-pane" id="snippet_unsorted"></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_overlay">
+        <div class="oe_overlay">
+            <div class="oe_overlay_options">
+                <div class="dropdown oe_option n w">
+                    <a data-toggle="dropdown" href="#"><i class="icon icon-cog"></i></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"></ul>
+                </div>
+                <div class="oe_option n"><a href="#" class="js_box_move"><i class="icon icon-move"></i></a></div>
+                <div class="dropdown oe_option n e">
+                    <a data-toggle="dropdown" href="#"><i class="icon icon-remove"></i></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'></div>
+    </t>
+
+    <!-- Snippets -->
+
+    <div t-name="website.snippets.resize" data-snippet-id='resize'>
+        <!-- custom data for the widget -->
+        <div class='oe_handles'>
+            <div class='oe_handle n'></div>
+            <div class='oe_handle e'></div>
+            <div class='oe_handle w'></div>
+            <div class='oe_handle s'></div>
+        </div>
+    </div>
+
+    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='emphasize' data-action='insert' data-selector-siblings='.container'>
+        
+        <!-- editor bar to display inside the top edit bar -->
+        <li class='oe_snippet_options'>
+            <a href="#" class="button js_add">Add layer</a>
+        </li>
+        <li class='oe_snippet_options'>
+            <a href="#" class="button js_remove">Remove current layer</a>
+        </li>
+        <li>
+            <div class="dropdown">
+                <a data-toggle="dropdown" href="#">test</a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>inside</li>
+                </ul>
+            </div>
+        </li>
+        <li class='oe_snippet_options'>
+            <select name="carousel-background">
+                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
+                <option value="/website/static/src/img/landscape.png">landscape</option>
+                <option value="/website/static/src/img/aqua.jpg">aqua</option>
+            </select>
+        </li>
+        <li class='oe_snippet_options'>
+            <select name="carousel-style">
+                <option value="no_image">No image</option>
+                <option value="image_left">Image left</option>
+                <option value="image_right">Image right</option>
+            </select>
+        </li>
+
+        <!-- thumbnail to display inside the bottom widget list editor -->
+        <div class='oe_snippet_thumbnail oe_label'>carousel</div>
+
+        <!-- body to insert after drag and drop thumbnail -->
+        <div id="myCarousel" class="oe_snippet_body carousel slide" data-interval="10000">
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+                <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
+                    <div class="container">
+                        <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                            <h1>Create Awesome Websites</h1>
+                            <h3>Super easy, fully flexible</h3>
+                            <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Carousel nav -->
+            <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
+            <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
+        </div>
+
+        <!-- custom data for the widget -->
+        <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
+            <div class='container'>
+                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
+                    <h1>Your New Banner Slide</h1>
+                    <h3>With another convincing subtitle</h3>
+                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-action='mutate' data-selector='.container'>
+        <div class='oe_snippet_thumbnail oe_label'>Darken</div>
+    </div>
+
+    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='content' data-action='mutate' data-selector='.container'>
+        <div class="oe_snippet_body" style="display: none;"></div>
+        <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
+    </div>
+
+    <div t-name="website.snippets.spacer" data-snippet-id='resize' data-category='structure' data-action='insert' data-selector-siblings='.container'>
+        <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
+        <div class="oe_snippet_body container mt32"></div>
+    </div>
+
+    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-action='insert' data-selector-siblings='.container'>
+        <div class='oe_snippet_thumbnail oe_label'>Main Title</div>
+        <section class="oe_snippet_body container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="mt64">Welcome To Your New Homepage,</h1>
+                    <h2 class="mt32 subheader">where <b><em>everything</em></b> can be customized </h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.three-collumns" data-snippet-id='three-collumns' data-category='structure' data-action='insert' data-selector-siblings='.container'>
+        <div class='oe_snippet_thumbnail oe_label'>three-collumns</div>
+        <section class="oe_snippet_body container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2 class="mt48">Ut enim ad minim veniam</h2>
+                </div>
+            </div>
+            <div class="row mt32">
+                <div class="col-md-4">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
+                    <h4 class="mt16">Cillum Dolore</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat.</p>
+                </div>
+                <div class="col-md-4">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
+                    <h4 class="mt16">Mollit Anim</h4>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                </div>
+                <div class="col-md-4">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
+                    <h4 class="mt16">Nemo Enim Ipsam</h4>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                        doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                        veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
+                        ipsam voluptatem quia voluptas</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.header-block" data-snippet-id='header-block' data-category='structure' data-action='insert' data-selector-siblings='.container'>
+        <div class='oe_snippet_thumbnail oe_label'>header-block</div>
+        <section class="container oe_snippet_body">
+            <div class="row">
+                <div class="col-md-5">
+                    <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg"/>
+                </div>
+                <div class="col-md-6 col-lg-offset-1">
+                    <p class="mt16">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat.</p>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                    <div class="text-center">
+                        <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To  <em>Action</em></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</templates>

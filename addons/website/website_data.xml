@@ -1,35 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        <record id="res_lang_tree" model="ir.ui.view">
-            <field name="name">res.lang.tree website</field>
-            <field name="model">res.lang</field>
-            <field name="inherit_id" ref="base.res_lang_tree"/>
-            <field name="arch" type="xml">
-                <field name="active" position="after">
-                    <field name="website_activated"/>
-                    <field name="website_default"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="res_lang_form" model="ir.ui.view">
-            <field name="name">res.lang.form website</field>
-            <field name="model">res.lang</field>
-            <field name="inherit_id" ref="base.res_lang_form"/>
-            <field name="arch" type="xml">
-                <field name="active" position="after">
-                    <field name="website_activated"/>
-                    <field name="website_default"/>
-                </field>
-            </field>
-        </record>
-    </data>
-
     <data noupdate="1">
-        <record id="base.lang_en" model="res.lang">
-            <field name="website_activated">True</field>
-            <field name="website_default">True</field>
+        <record id="default_website" model="website">
+            <field name="name">www.dundermufflin.com</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
+            <field name="default_lang_id" ref="base.lang_en"/>
         </record>
 
         <record id="public_user" model="res.users">

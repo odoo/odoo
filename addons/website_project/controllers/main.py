@@ -8,13 +8,13 @@ from openerp.addons.website import website
 
 class Website(osv.osv):
     _inherit = "website"
-    def get_webcontext(self, values={}, **kw):
+    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
         project_obj = request.registry['project.project']
-        project_ids = project_obj.search(request.cr, request.uid, [('privacy_visibility', "=", "public")])
-        values.update({
-            'project_ids': project_obj.browse(request.cr, request.uid, project_ids),
-        })
-        return super(Website, self).get_webcontext(values, **kw)
+        project_ids = project_obj.search(cr, uid, [('privacy_visibility', "=", "public")], context=request.context)
+
+        request.context['website_project_ids'] = project_obj.browse(cr, uid, project_ids, request.context)
+
+        return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
 
 
 class website_project(http.Controller):
@@ -22,5 +22,5 @@ class website_project(http.Controller):
     @website.route(['/project/<int:project_id>/'], type='http', auth="public")
     def blog(self, project_id=None, **post):
         project_obj = request.registry['project.project']
-        project = project_obj.browse(request.cr, request.uid, project_id)
-        return request.webcontext.render("website_project.index", {'project_id': project})
+        project = project_obj.browse(request.cr, request.uid, project_id, request.context)
+        return request.website.render("website_project.index", {'project_id': project})

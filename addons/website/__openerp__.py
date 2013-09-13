@@ -16,5 +16,6 @@ OpenERP Website CMS
         'views/themes.xml',
         'views/res_config.xml',
         'website_data.xml',
+        'website_view.xml',
     ],
 }

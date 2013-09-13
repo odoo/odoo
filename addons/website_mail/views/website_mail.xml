@@ -12,7 +12,7 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+    <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
             <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
         </xpath>
@@ -35,9 +35,11 @@
                 <div class="row">
                    <div class="col-md-4" id="left_column">
                         <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">Add a new Blog</a>
-                        <div id="blog_subscribe">
+                        <div>
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
-                                <input placeholder="Email Address" type="email" name="email" class="input-medium" t-if="is_public_user"/>
+                                <div class="col-lg-7">
+                                    <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
+                                </div>
                                 <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
                             </form>
                             <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
@@ -68,11 +70,11 @@
                                         </small>
                                     </div>
                                 </li>
-                                <form id="post" t-attf-action="/blog/#{ blog_id.res_id }/#{ blog_id.id }/post#post" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
-                                    <textarea rows="4" placeholder="Your comment" class="col-md-7 form-control"></textarea>
-                                    <button type="submit" class="btn btn-default">Post your comment</button>
-                                </form>
                             </ul>
+                            <form id="post" t-attf-action="/blog/#{ blog_id.res_id }/#{ blog_id.id }/post#post" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
+                                <textarea rows="4" placeholder="Your comment" class="col-md-7 form-control"></textarea>
+                                <button type="submit" class="btn btn-default">Post your comment</button>
+                            </form>
                         </div>
                     </div>
 

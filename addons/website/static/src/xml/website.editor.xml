@@ -35,73 +35,87 @@
         <t t-call="website.editor.dialog">
             <t t-set="title">Link to</t>
             <form>
-                <ul class="list-group form-group">
-                    <li class="list-group-item active">
-                        <h3 class="list-group-item-heading">Page on your website</h3>
-                        <div class="input-group">
-                            <input type="text" class="form-control pages url-source"
-                                    placeholder="Create new page"/>
-                            <div class="input-group-btn existing dropdown">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Existing page <span class="caret"></span></button>
-                                <ul class="dropdown-menu pull-right"/>
-                            </div>
-                        </div>
+                <ul class="nav nav-pills nav-justified">
+                    <li class="active">
+                        <a href="#link-existing" data-toggle="pill">Your website</a>
                     </li>
-                    <li class="list-group-item">
+                    <li><a href="#link-new" data-toggle="pill">New page</a></li>
+                    <li><a href="#link-external" data-toggle="pill">External Page</a></li>
+                    <li><a href="#link-email" data-toggle="pill">Email Address</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="link-existing" class="tab-pane active form-group">
+                        <select id="link-existing-select"
+                                class="form-control url-source">
+                            <option disabled="disabled">Select existing page:</option>
+                        </select>
+                    </div>
+                    <div id="link-new" class="tab-pane form-group">
+                        <input type="text" class="form-control pages url-source"
+                                placeholder="Enter the name of the new page"/>
+                    </div>
+                    <div id="link-external" class="tab-pane">
+                        <input type="text" class="form-control url url-source"
+                               placeholder="example: http://openerp.com"/>
                         <div class="pull-right">
                             <label>
                                 <input type="checkbox" class="window-new"/>
                                 Open in new window
                             </label>
                         </div>
-                        <h3 class="list-group-item-heading">Website URL</h3>
-                        <input type="text" class="form-control url url-source"
-                               placeholder="http://openerp.com"/>
-                    </li>
-                    <li class="list-group-item">
-                        <h3 class="list-group-item-heading">Email Address</h3>
+                    </div>
+                    <div id="link-email" class="tab-pane">
                         <input type="email" class="form-control email-address url-source"
-                               placeholder="you@yourwebsite.com"/>
-                    </li>
-                </ul>
+                               placeholder="example: you@yourwebsite.com"/>
+                    </div>
+                </div>
             </form>
         </t>
     </t>
     <t t-name="website.editor.dialog.image">
         <t t-call="website.editor.dialog">
             <t t-set="title">Image:</t>
-            <div class="row">
-                <form method="POST" action="/website/attach"
-                      enctype="multipart/form-data"
-                      target="fileframe"
-                      class="col-sm-8">
-                    <div class="well">
-                        <!-- a href="#" class="pull-left">Find image</a -->
-                        <h3 class="list-group-item-heading">Image URL</h3>
-                        <input type="text" class="form-control url"
-                               placeholder="http://openerp.com"/>
-                    </div>
-                    <div class="text-center">
-                        <p class="">— or —</p>
-                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                        <button type="button" class="btn btn-primary btn-lg filepicker">
-                            Upload an image from your computer
-                        </button>
-                    </div>
-                    <p class="text-center">— or —</p>
-                    <div class="well">
-                        <h3 class="list-group-item-heading">Pick an existing attachment</h3>
-                        <div class="existing-attachments"/>
-                    </div>
-                    <input type="hidden" name="func"/>
-                </form>
-                <div class="col-sm-4">
+            <div>
+                <div class="image-preview-container">
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
                          class="pull-right img-rounded image-preview"
                          width="100%"/>
+                    <select class="form-control image-style">
+                        <option value="">No styling</option>
+                        <option value="img-rounded">Rounded corners</option>
+                        <option value="img-thumbnail">Box</option>
+                        <option value="img-circle">Circle</option>
+                    </select>
                 </div>
+                <form method="POST" action="/website/attach"
+                      enctype="multipart/form-data"
+                      target="fileframe">
+                    <ul class="nav nav-pills nav-justified">
+                        <li class="active"><a href="#image-upload" data-toggle="pill">
+                            Upload
+                        </a></li>
+                        <li><a href="#image-existing" data-toggle="pill">Your images</a></li>
+                        <li><a href="#image-external" data-toggle="pill">External Image</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="image-upload" class="tab-pane active form-group text-center">
+                            <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                            <button type="button" class="btn btn-primary btn-lg filepicker">
+                                Upload an image from your computer
+                            </button>
+                        </div>
+                        <div id="image-existing" class="tab-pane well">
+                            <div class="existing-attachments"/>
+                        </div>
+                        <div id="image-external" class="tab-pane well form-group">
+                            <input type="text" class="form-control url"
+                                   placeholder="e.g. http://goo.gl/EDC325"/>
+                        </div>
+                    </div>
+                    <input type="hidden" name="func"/>
+                </form>
+                <iframe src="about:blank" name="fileframe" class="hidden"/>
             </div>
-            <iframe src="about:blank" name="fileframe" class="hidden"/>
         </t>
     </t>
     <t t-name="website.editor.dialog.image.existing">
@@ -115,5 +129,17 @@
                 </div>
             </div>
         </div>
+    </t>
+    <t t-name="website.editor.table.panel">
+        <table class="editorbar-panel">
+            <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+        </table>
+    </t>
+    <t t-name="website.editor.table">
+        <table class="table table-bordered table-responsive">
+            <tbody>
+                <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+            </tbody>
+        </table>
     </t>
 </templates>
