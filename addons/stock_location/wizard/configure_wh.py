@@ -66,7 +66,7 @@ class stock_configure_wh(osv.osv_memory):
         """
         if context is None:
             context = {}
-        if ids and len(ids):
+        if ids and isinstance(ids, list):
             ids = ids[0]
 
         #TODO avoid running twice the config wizard for a given warehouse => don't create twice the same rule/route/location....

@@ -6,197 +6,81 @@
 -
   !record {model: res.partner, id: customer_1}:
     name: Customer 1
-
 -
   !record {model: res.partner, id: customer_2}:
     name: Customer 2
-- 
-  Create Panama in Location structure
-- 
-  !record {model: stock.location, id: location_panama}:
-    name: Panama
+-
+  Create new warehouse in Panama and configure it
+-
+  !record {model: res.partner, id: panama_address}:
+    name: 'Panama WH address'
+    parent_id: base.main_partner     
+-
+  !record {model: stock.location, id: view_location}:
+    name: 'Panama'
     location_id: stock.stock_location_locations
-- 
-  Create Location structure of Warehouse Panama Santiago District
-- 
-  !record {model: stock.location, id: location_wh1}:
-    name: Panama Santiago District Warehouse
-    location_id: location_panama
-- 
-  Input
-- 
-  !record {model: stock.location, id: location_wh1_input}:
-    name: Input
-    location_id: location_wh1
-- 
-  Output
-- 
-  !record {model: stock.location, id: location_wh1_output}:
-    name: Output
-    location_id: location_wh1
-- 
-  Stock
-- 
-  !record {model: stock.location, id: location_wh1_stock}:
-    name: Stock
-    location_id: location_wh1
-
+    usage: 'view' 
 -
-  !record {model: stock.location, id: location_wh1_stock_area1}:
-    name: Area1
-    location_id: location_wh1_stock
-
+  !record {model: stock.location, id: wh1_stock_id}:
+    name: 'WH1: Stock'
+    location_id: view_location
+    usage: 'internal'
 -
-  !record {model: stock.location, id: location_wh1_stock_area1_bin1}:
-    name: Bin1
-    location_id: location_wh1_stock_area1
-- 
-  Create  warehouse Panama Santiago District
-- 
-  !record {model: stock.warehouse, id: wh_wh1}:
-    name: Panama Santiago District Warehouse
-    lot_stock_id: location_wh1
-- 
-  Create picking type in for this warehouse
-- 
-  !record {model: stock.picking.type, id: picking_type_santiago_in}:
-    name: Reception
-    code_id: incoming
-    sequence_id: stock.seq_picking_type_in
-    warehouse_id: wh_wh1
-    default_location_dest_id: location_wh1_input 
-- 
-  Create picking type out for this warehouse
-- 
-  !record {model: stock.picking.type, id: picking_type_santiago_out}:
-    name: Deliveries
-    code_id: outgoing
-    sequence_id: stock.seq_picking_type_out
-    warehouse_id: wh_wh1
-    default_location_src_id: location_wh1_output
-- 
-  Create picking type internal for this warehouse
-- 
-  !record {model: stock.picking.type, id: picking_type_santiago_internal}:
-    name: Internal
-    code_id: internal
-    sequence_id: stock.seq_picking_type_internal
-    warehouse_id: wh_wh1
-    default_location_src_id: location_wh1_stock
-    default_location_dest_id: location_wh1_stock
-- 
-  Create Location structure of Warehouse Panama Main
-- 
-  !record {model: stock.location, id: location_wh2}:
-    name: Panama Main Warehouse
-    location_id: location_panama
-- 
-  Input
-- 
-  !record {model: stock.location, id: location_wh2_input}:
-    name: Input
-    location_id: location_wh2
-- 
-  Output
-- 
-  !record {model: stock.location, id: location_wh2_output}:
-    name: Output
-    location_id: location_wh2
-- 
-  Stock
-- 
-  !record {model: stock.location, id: location_wh2_stock}:
-    name: Stock
-    location_id: location_wh2
-
+  !record {model: stock.location, id: wh1_stock_id_area1}:
+    name: 'Area1'
+    location_id: wh1_stock_id
 -
-  !record {model: stock.location, id: location_wh2_stock_area2}:
-    name: Area2
-    location_id: location_wh2_stock
+  !record {model: stock.location, id: wh1_stock_id_area1_bin1}:
+    name: 'Bin1'
+    location_id: wh1_stock_id_area1
+-     
+  !record {model: stock.warehouse, id: wh1_id}:
+    name: 'WH1'
+    lot_stock_id: wh1_stock_id
+    partner_id: panama_address
 -
-  Create  warehouse Panama main
-- 
-  !record {model: stock.warehouse, id: wh_wh2}:
-    name: Panama Main Warehouse
-    lot_stock_id: location_wh2
-- 
-  Create picking type in for warehouse panama main
-- 
-  !record {model: stock.picking.type, id: picking_type_main_in}:
-    name: Reception
-    code_id: incoming
-    sequence_id: stock.seq_picking_type_in
-    warehouse_id: wh_wh2
-    default_location_dest_id: location_wh2_input 
-- 
-  Create picking type out for warehouse panama main
-- 
-  !record {model: stock.picking.type, id: picking_type_main_out}:
-    name: Deliveries
-    code_id: outgoing
-    sequence_id: stock.seq_picking_type_out
-    warehouse_id: wh_wh2
-    default_location_src_id: location_wh2_output
-- 
-  Create picking type internal for warehouse panama main
-- 
-  !record {model: stock.picking.type, id: picking_type_main_internal}:
-    name: Internal
-    code_id: internal
-    sequence_id: stock.seq_picking_type_internal
-    warehouse_id: wh_wh2
-    default_location_src_id: location_wh2_stock
-    default_location_dest_id: location_wh2_stock
-- 
-  Create Ship Route for main panama warehouse
+  !record {model: stock.configure.wh, id: panama_config_wiz}:
+    code: 'WH1'
+    reception_steps: 'three_steps'
+    delivery_steps: 'pick_pack_ship'
 -
-  !record {model: stock.location.route, id: route_wh_wh2_ship}:
-    name: Ship main panama
-    warehouse_selectable: True
-    product_selectable: False
-    pull_ids:
-        - invoice_state: none
-          location_id: location_wh2_output
-          location_src_id: location_wh2_stock
-          name: Panama Main Stock -> Panama Main Output
-          procure_method: make_to_stock
-          picking_type_id: picking_type_main_internal
-          action: move
-        - invoice_state: none
-          location_id: stock.stock_location_customers
-          location_src_id: location_wh2_output
-          name: Panama Main Output -> Customer
-          picking_type_id: picking_type_main_out
-          procure_method: make_to_order
-          action: move
+  !python {model: stock.configure.wh}: |
+    context = {'active_id': ref('wh1_id')}
+    self.configure_wh(cr, uid, ref('panama_config_wiz'), context=context)
 -
-  Create Ship Route for panama santiago warehouse
+  Create WH2 warehouse in Dubai and configure it
 -
-  !record {model: stock.location.route, id: route_wh_wh1_ship}:
-    name: Ship panama santiago
-    warehouse_selectable: True
-    product_selectable: False
-    pull_ids:
-        - invoice_state: none
-          location_id: location_wh1_output
-          location_src_id: location_wh1_stock
-          name: Santiago Stock -> Santiago Output
-          procure_method: make_to_stock
-          picking_type_id: picking_type_santiago_internal
-          action: move
-        - invoice_state: none
-          location_id: stock.stock_location_customers
-          location_src_id: location_wh1_output
-          name: Santiago Output -> Customer
-          picking_type_id: picking_type_santiago_out
-          procure_method: make_to_order
-          action: move
-- 
-  Add routes to warehouses
+  !record {model: res.partner, id: dubai_address}:
+    name: 'Dubai WH address'
+    parent_id: base.main_partner     
 -
-  !python {model: stock.warehouse}: |
-    self.write(cr, uid, [ref('wh_wh2')], {'route_id': ref('route_wh_wh2_ship'), 'lot_stock_id': ref('location_wh2_stock')}, context=context)
-    self.write(cr, uid, [ref('wh_wh1')], {'route_id': ref('route_wh_wh1_ship'), 'lot_stock_id': ref('location_wh1_stock')}, context=context)
+  !record {model: stock.location, id: view_location_dub}:
+    name: 'Dubai'
+    location_id: stock.stock_location_locations
+    usage: 'view' 
+-
+  !record {model: stock.location, id: wh2_stock_id}:
+    name: 'WH2: Stock'
+    location_id: view_location_dub
+    usage: 'internal'
+-
+  !record {model: stock.location, id: wh2_stock_id_area2}:
+    name: 'Area2'
+    location_id: wh2_stock_id
+-     
+  !record {model: stock.warehouse, id: wh2_id}:
+    name: 'WH2'
+    lot_stock_id: wh2_stock_id
+    partner_id: dubai_address
+-
+  !record {model: stock.configure.wh, id: dubai_config_wiz}:
+    code: 'WH2'
+    reception_steps: 'one_step'
+    delivery_steps: 'ship_only'
+-
+  !python {model: stock.configure.wh}: |
+    context = {'active_id': ref('wh2_id')}
+    self.configure_wh(cr, uid, ref('dubai_config_wiz'), context=context)
 -
   Create Products
 -
@@ -308,18 +192,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock1}:
     name: Inventory Stock 1
-    location_id: location_wh1_stock
--
-  I create the wizard to confirm the inventory
--
-  !record {model: stock.fill.inventory, id: inventory_wizard}:
-    set_stock_zero: False
--
-  I fill Stock1 inventory
--
-  !python {model: stock.inventory.line}: |
-    context = {'active_ids': [ref('inventory_stock1')]}
-    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+    location_id: wh1_stock_id
 -
   I add 2 inventory line for product A and B and say i have 6 and 12 products in stock
 -
@@ -327,14 +200,14 @@
     inventory_id: inventory_stock1
     product_id: product_A
     product_qty: 6
-    location_id: location_wh1_stock
+    location_id: wh1_stock_id
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productB}:
     inventory_id: inventory_stock1
     product_id: product_B
     product_qty: 12
-    location_id: location_wh1_stock
+    location_id: wh1_stock_id
 -
   I confirm Stock1 inventory
 -
@@ -345,13 +218,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock2}:
     name: Inventory Stock 2
-    location_id: location_wh2_stock
--
-  I fill Stock2 inventory
--
-  !python {model: stock.inventory.line}: |
-    context = {'active_ids': [ref('inventory_stock2')]}
-    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+    location_id: wh2_stock_id
 -
   I add 4 inventory lines for product A, B, C, C and say i have 8, 120, 5, 15 products in stock
 -
@@ -359,21 +226,21 @@
     inventory_id: inventory_stock2
     product_id: product_A
     product_qty: 8
-    location_id: location_wh2_stock
+    location_id: wh2_stock_id
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productB}:
     inventory_id: inventory_stock2
     product_id: product_B
     product_qty: 120
-    location_id: location_wh2_stock
+    location_id: wh2_stock_id
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productC_1}:
     inventory_id: inventory_stock2
     product_id: product_C
     product_qty: 5
-    location_id: location_wh2_stock
+    location_id: wh2_stock_id
     prod_lot_id: lot003
 
 -
@@ -381,7 +248,7 @@
     inventory_id: inventory_stock2
     product_id: product_C
     product_qty: 15
-    location_id: location_wh2_stock
+    location_id: wh2_stock_id
     prod_lot_id: lot004
 -
   I confirm Stock2 inventory
@@ -393,13 +260,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock1_area1}:
     name: Inventory Stock1 area 1
-    location_id: location_wh1_stock_area1
--
-  I fill Area1 inventory
--
-  !python {model: stock.inventory.line}: |
-    context = {'active_ids': [ref('inventory_stock1_area1')]}
-    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+    location_id: wh1_stock_id_area1
 -
   I add 2 inventory lines for product D, D and say i have 4, 5 products in stock
 -
@@ -407,14 +268,14 @@
     inventory_id: inventory_stock1_area1
     product_id: product_D
     product_qty: 4
-    location_id: location_wh1_stock_area1
+    location_id: wh1_stock_id_area1
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productD_2}:
     inventory_id: inventory_stock1_area1
     product_id: product_D
     product_qty: 5
-    location_id: location_wh1_stock_area1
+    location_id: wh1_stock_id_area1
 -
   I confirm Area1 inventory
 -
@@ -425,13 +286,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock2_area2}:
     name: Inventory Stock2 area 2
-    location_id: location_wh2_stock_area2
--
-  I fill Area2 inventory
--
-  !python {model: stock.inventory.line}: |
-    context = {'active_ids': [ref('inventory_stock2_area2')]}
-    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+    location_id: wh2_stock_id_area2
 -
   I add 2 inventory lines for product D, D and say i have 2, 3 products in stock
 -
@@ -439,14 +294,14 @@
     inventory_id: inventory_stock2_area2
     product_id: product_D
     product_qty: 2
-    location_id: location_wh2_stock_area2
+    location_id: wh2_stock_id_area2
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productD_2}:
     inventory_id: inventory_stock2_area2
     product_id: product_D
     product_qty: 3
-    location_id: location_wh2_stock_area2
+    location_id: wh2_stock_id_area2
 -
   I confirm Area2 inventory
 -
@@ -458,13 +313,7 @@
 -
   !record {model: stock.inventory, id: inventory_stock1_area1_bin1}:
     name: Inventory Stock1 area1 bin 1
-    location_id: location_wh1_stock_area1_bin1
--
-  I fill Bin1 inventory
--
-  !python {model: stock.inventory.line}: |
-    context = {'active_ids': [ref('inventory_stock1_area1_bin1')]}
-    self.pool.get('stock.fill.inventory').fill_inventory(cr, uid, [ref('inventory_wizard')], context=context)
+    location_id: wh1_stock_id_area1_bin1
 -
   I add 2 inventory lines for product C, C and say i have 3, 14 products in stock
 -
@@ -472,7 +321,7 @@
     inventory_id: inventory_stock1_area1_bin1
     product_id: product_C
     product_qty: 3
-    location_id: location_wh1_stock_area1_bin1
+    location_id: wh1_stock_id_area1_bin1
     prod_lot_id: lot001
 
 -
@@ -480,7 +329,7 @@
     inventory_id: inventory_stock1_area1_bin1
     product_id: product_C
     product_qty: 14
-    location_id: location_wh1_stock_area1_bin1
+    location_id: wh1_stock_id_area1_bin1
     prod_lot_id: lot002
 -
   I confirm Bin1 inventory
@@ -492,7 +341,7 @@
 -
   !record {model: sale.order, id: so1}:
     partner_id: customer_1
-    warehouse_id: wh_wh2
+    warehouse_id: wh2_id
     order_line: 
       - product_id: product_A
         product_uom_qty: 7
@@ -506,7 +355,7 @@
 -
   !record {model: sale.order, id: so2}:
     partner_id: customer_1
-    warehouse_id: wh_wh2
+    warehouse_id: wh2_id
     order_line: 
       - product_id: product_E
         product_uom_qty: 5
@@ -520,7 +369,7 @@
 -
   !record {model: sale.order, id: so3}:
     partner_id: customer_2
-    warehouse_id: wh_wh1
+    warehouse_id: wh1_id
     order_line: 
       - product_id: product_A
         product_uom_qty: 5
