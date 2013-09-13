@@ -1598,8 +1598,14 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
+        procu_todo = []
         pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
+            #if procurement associated to move, run check on procurement otherwise we have to wait for scheduler
+            #to run and put it in done and this break the sale workflow
+            if move.procurement_id:
+                procu_todo.append(move.procurement_id.id)
+                
             if move.picking_id:
                 pickings.add(move.picking_id.id)
             qty = move.product_qty
@@ -1628,6 +1634,8 @@ class stock_move(osv.osv):
                 if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        #run check on procurement
+        self.pool.get("procurement.order").check(cr, uid, procu_todo, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
