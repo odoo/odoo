@@ -31,4 +31,4 @@
 -
   !python {model: procurement.order}: |
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
-    assert procurement.purchase_id, 'RFQ should be generated!'
+    assert procurement.purchase_line_id, 'RFQ should be generated!'
