@@ -399,11 +399,15 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'change .url-source': function (e) { this.changed($(e.target)); },
+            'click div.existing a': 'select_page',
         }),
         init: function (editor) {
             this._super(editor);
             // url -> name mapping for existing pages
             this.pages = Object.create(null);
+            // name -> url mapping for the same
+            this.pages_by_name = Object.create(null);
         },
         start: function () {
             var element;
@@ -462,24 +466,24 @@
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
-            var $active_tab = this.$('.tab-pane.active');
-
-            var $e = $active_tab.find('.url-source');
+            var $e = this.$('.url-source').filter(function () { return !!this.value; });
 
             var val = $e.val(), done = $.when();
-            if ($active_tab.is('#link-email')) {
+            if ($e.hasClass('email-address')) {
                 this.make_link('mailto:' + val, false, val);
-            } else if ($active_tab.is('#link-existing')) {
-                self.make_link(val, false, this.pages[val]);
-            } else if ($active_tab.is('#link-new')) {
-                // Create the page, get the URL back
-                done = $.get(_.str.sprintf(
-                    '/pagenew/%s?noredirect', encodeURIComponent(val)))
-                    .then(function (response) {
-                        val = response;
-                    });
+            } else if ($e.hasClass('pages')) {
+                // ``val`` is the *name* of the page
+                var url = this.pages_by_name[val];
+                if (!url) {
+                    // Create the page, get the URL back
+                    done = $.get(_.str.sprintf(
+                        '/pagenew/%s?noredirect', encodeURIComponent(val)))
+                        .then(function (response) {
+                            url = response;
+                        });
+                }
                 done.then(function () {
-                    self.make_link(val, false);
+                    self.make_link(url, false, val);
                 });
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
@@ -493,18 +497,35 @@
 
             var match, $control;
             if (match = /(mailto):(.+)/.exec(href)) {
-                $control = this.$('#link-email input').val(match[2]);
+                $control = this.$('input.email-address').val(match[2]);
             } else if(href in this.pages) {
-                $control = this.$('#link-existing select').val(href);
-            } else {
-                $control = this.$('#link-external input:first').val(href);
+                $control = this.$('input.pages').val(this.pages[href]);
+            }
+            if (!$control) {
+                $control = this.$('input.url').val(href);
             }
 
-            var tab_name = $control.closest('.tab-pane').attr('id');
-            this.$('.nav a[href="#' + tab_name + '"]').tab('show');
+            this.changed($control);
 
             this.$('input.window-new').prop(
                 'checked', this.element.getAttribute('target') === '_blank');
+        },
+        changed: function ($e) {
+            $e.closest('li.list-group-item').addClass('active')
+              .siblings().removeClass('active');
+            this.$('.url-source').not($e).val('');
+        },
+        /**
+         * Selected an existing page in dropdown
+         */
+        select_page: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $target = $(e.target);
+            this.$('input.pages').val($target.text()).change();
+            // No #dropdown('close'), and using #dropdown('toggle') sur
+            // #closest('.dropdown') makes the dropdown not work correctly
+            $target.closest('.open').removeClass('open');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
@@ -535,43 +556,32 @@
         },
         fill_pages: function (results) {
             var self = this;
-            var pages = this.$('#link-existing-select')[0];
+            var $pages = this.$('div.existing ul').empty();
             _(results).each(function (result) {
                 self.pages[result.url] = result.name;
-
-                pages.options[pages.options.length] =
-                    new Option(result.name, result.url);
+                self.pages_by_name[result.name] = result.url;
+                var $link = $('<a>').attr('href', result.url).text(result.name);
+                $('<li>').append($link).appendTo($pages);
             });
         },
     });
     website.editor.ImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'change .url-source': function (e) { this.changed($(e.target)); },
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
-            'change select.image-style': 'preview_image',
             'click .existing-attachments a': 'select_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
             var el = selection && selection.getSelectedElement();
             this.element = null;
-
-            var $select = this.$('.image-style');
-            var $options = $select.children();
-            this.image_styles = $options.map(function () { return this.value; }).get();
-
             if (el && el.is('img')) {
                 this.element = el;
-                _(this.image_styles).each(function (style) {
-                    if (el.hasClass(style)) {
-                        $select.val(style);
-                    }
-                });
-                // set_image should follow setup of image style
                 this.set_image(el.getAttribute('src'));
             }
 
@@ -581,7 +591,6 @@
         },
         save: function () {
             var url = this.$('input.url').val();
-            var style = this.$('.image-style').val();
             var element, editor = this.editor;
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
@@ -595,10 +604,7 @@
                 }, 0);
             }
             element.setAttribute('src', url);
-            $(element.$).removeClass(this.image_styles.join(' '));
-            if (style) { element.addClass(style); }
-
-            return this._super();
+            this._super();
         },
 
         /**
@@ -636,10 +642,7 @@
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img.image-preview')
-                .attr('src', image)
-                .removeClass(this.image_styles.join(' '))
-                .addClass(this.$('select.image-style').val());
+            this.$('img.image-preview').attr('src', image);
         },
 
         fetch_existing: function () {
