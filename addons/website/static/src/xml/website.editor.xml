@@ -110,10 +110,16 @@
                     </div>
                     <input type="hidden" name="func"/>
                 </form>
-                <div class="col-sm-4">
+                <div class="col-sm-4 image-preview-container">
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
                          class="pull-right img-rounded image-preview"
                          width="100%"/>
+                    <select class="form-control image-style">
+                        <option value="">No styling</option>
+                        <option value="img-rounded">Rounded corners</option>
+                        <option value="img-thumbnail">Box</option>
+                        <option value="img-circle">Circle</option>
+                    </select>
                 </div>
             </div>
             <iframe src="about:blank" name="fileframe" class="hidden"/>
