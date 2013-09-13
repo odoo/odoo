@@ -197,6 +197,7 @@
                 helper: 'clone',
                 zIndex: '1000',
                 appendTo: 'body',
+                cursor: "move",
                 start: function(){
                     var action  = $snippet.data('action');
                     if( action === 'insert'){
@@ -485,8 +486,60 @@
                 this.$editor = this.$el.find(".oe_snippet_options");
                 this.$thumbnail = this.$el.find(".oe_snippet_thumbnail");
                 this.$body = this.$el.find(".oe_snippet_body");
+
+                var $options = this.$overlay.find(".oe_overlay_options");
+                this.$editor.prependTo($options.find(".oe_options ul"));
+                $options.find(".oe_label").text(this.$el.find('.oe_snippet_thumbnail.oe_label, .oe_snippet_thumbnail .oe_label').text());
             }
         },
+
+
+        // activate drag and drop for the snippets in the snippet toolbar
+        _drag_and_drop: function(){
+            var self = this;
+            var drop = false;
+            this.$overlay.draggable({
+                appendTo: 'body',
+                cursor: "move",
+                cursorAt: {
+                    top: self.$target.outerHeight()/2,
+                    left: self.$target.outerWidth()/2 },
+                distance: 20,
+                handle: ".js_box_move",
+                start: function(){
+                    self.parent.editor_busy = true;
+                    self.parent.activate_insertion_zones({
+                        siblings: self.$el ? self.$el.data('selector-siblings') : false,
+                        childs:   self.$el ? self.$el.data('selector-childs') : false,
+                    });
+                    self.$target.after("<div id='oe_pointer_drag_and_drop' style='display:none;'></div>");
+                    self.$target.detach();
+                    $("body").addClass('move-important');
+                    drop = false;
+                    $('.oe_drop_zone').droppable({
+                        hoverClass: "oe_hover",
+                        drop:   function(){
+                            if (!$(".oe_drop_zone.oe_hover").length) {
+                                return false;
+                            }
+                            $(".oe_drop_zone.oe_hover").after(self.$target);
+                            drop = true;
+                        },
+                    });
+                },
+                stop: function(){
+                    $("body").removeClass('move-important');
+                    $('.oe_drop_zone').droppable('destroy').remove();
+                    if (!drop) {
+                        $('#oe_pointer_drag_and_drop').after(self.$target);
+                    }
+                    $('#oe_pointer_drag_and_drop').remove();
+                    self.parent.editor_busy = false;
+                    setTimeout(function () {self.parent.make_active(self.$target);},0);
+                },
+            });
+        },
+
 
         /*
         *  start
@@ -494,15 +547,13 @@
         */
         start: function () {
             var self = this;
-            if(this.$editor) this.$editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w ul"));
-            else this.$overlay.find(".oe_overlay_options .oe_option.n.w").hide();
             this.$overlay.on('click', '.js_box_remove', function () {
                 self.$target.detach();
                 self.onBlur();
                 self.$target.remove();
                 return false;
             });
-
+            this._drag_and_drop();
         },
 
         /*
@@ -547,6 +598,7 @@
 
 
     website.snippet.editorRegistry.resize = website.snippet.Editor.extend({
+        template : "website.snippets.resize",
         start: function () {
             var self = this;
             this._super();
@@ -663,6 +715,7 @@
     });
 
     website.snippet.editorRegistry.colmd = website.snippet.editorRegistry.resize.extend({
+        template : "website.snippets.colmd",
         getSize: function () {
             this.grid = this._super();
             var width = this.$target.parents(".row:first").first().outerWidth();

@@ -202,8 +202,6 @@ table.editorbar-panel
     transition: opacity 100ms linear
     box-sizing: border-box
     pointer-events: none
-    .oe_handle
-        display: none !important
     &.oe_hover
         opacity: 1
         cursor: pointer
@@ -215,35 +213,39 @@ table.editorbar-panel
         box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
     &.oe_selected
         border-color: rgba(0, 153, 255, 0.5)
+    .oe_handle
+        display: none !important
     &.oe_active
         border-color: rgba(153, 0, 255, 0.5)
         .oe_handle
             display: block !important
             pointer-events: auto
+    .icon.btn
+        display: inline-block
 
     .oe_overlay_options
         display: none
         z-index: 1002
-        .oe_option
-            top: 50%
-            left: 50%
-            pointer-events: auto
+        .oe_options,.oe_label,.oe_move
             position: absolute
             display: block
             z-index: 1002
-            &.n
-                top: -11px
-            &.e
-                left: auto
-                right: -6px
-            &.s
-                top: auto
-                bottom: -10px
-            &.w
-                left: -6px
-            > a
-                text-decoration: none
-                font-size: 1.2em
+            top: -11px
+        .oe_options
+            pointer-events: auto
+            left: -14px
+        .oe_label
+            top: -8px
+            right: 6px
+            background: #fff
+            font-size: 75%
+            color: rgba(153, 0, 255, 0.5)
+            padding: 0 5px
+        .oe_move
+            pointer-events: auto
+            left: 50%
+            .js_box_move
+                margin-left: -50%
     &.oe_active .oe_overlay_options
         display: block
 
@@ -289,6 +291,8 @@ table.editorbar-panel
     cursor: e-resize !important
 .w-resize-important, .w-resize-important *
     cursor: w-resize !important
+.move-important, .move-important *
+    cursor: move !important
 
 
 /* ---- MOBILE PREVIEW ---- */
