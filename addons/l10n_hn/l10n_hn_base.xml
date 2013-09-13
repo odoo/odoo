@@ -18,6 +18,13 @@
             <field name="property_account_income_categ" ref="cta410101"/>
             <field name="property_account_expense_categ" ref="cta510101"/>
         </record>
+        <record id="cuentas_plantilla_value" model="ir.values">
+            <field name="name">Plantilla de cuentas de Honduras (sencilla)</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="cuentas_plantilla"/>
+            <field name="value" ref="base.HNL"/>
+        </record>
 
         <!-- Compras e ISV por Cobrar -->
 

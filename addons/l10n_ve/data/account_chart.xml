@@ -3316,5 +3316,12 @@
     <field name="property_account_expense_categ" ref="account_activa_account_7151001"/>
     <field name="property_account_income_categ" ref="account_activa_account_5111001"/>
   </record>
+  <record id="ve_chart_template_amd_value" model="ir.values">
+    <field name="name">Venezuelan - Account</field>
+    <field name="model">account.chart.template</field>
+    <field name="key">default</field>
+    <field name="res_id" ref="ve_chart_template_amd"/>
+    <field name="value" ref="base.VUB"/>
+  </record>
   </data>
 </openerp>

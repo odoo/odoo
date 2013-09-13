@@ -2519,6 +2519,13 @@
             <field name="property_account_expense" ref="chart5000"/>
             <field name="property_account_income" ref="chart4000"/>
         </record>
+        <record id="austria_chart_template_value" model="ir.values">
+            <field name="name">Austria - Chart of Accounts</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="austria_chart_template"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
         
         
     </data>

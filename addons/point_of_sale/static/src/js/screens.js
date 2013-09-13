@@ -762,9 +762,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_categories_widget.reset_category();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
-            if(this.pos.iface_vkeyboard){
-                this.pos_widget.onscreen_keyboard.connect();
-            }
 
             if(this.pos_widget.screen_selector.current_mode === 'client'){ 
                 this.add_action_button({
@@ -781,6 +778,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);
+            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+                this.pos_widget.onscreen_keyboard.hide();
+            }
         },
 
     });

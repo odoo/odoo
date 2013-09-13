@@ -150,6 +150,9 @@ function openerp_pos_db(instance, module){
             if(product.ean13){
                 str += '|' + product.ean13;
             }
+            if(product.default_code){
+                str += '|' + product.default_code;
+            }
             var packagings = this.packagings_by_product_id[product.id] || [];
             for(var i = 0; i < packagings.length; i++){
                 str += '|' + packagings[i].ean;

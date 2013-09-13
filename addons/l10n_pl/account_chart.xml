@@ -3203,6 +3203,13 @@
         <field name="property_account_expense_categ" ref="chart330020000"/>
         <field name="property_account_income_categ" ref="chart773010000"/>
     </record>
+    <record id="pl_chart_template_value" model="ir.values">
+        <field name="name">Polska - Plan kont</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="pl_chart_template"/>
+        <field name="value" ref="base.PLZ"/>
+    </record>
     
 </data>
 </openerp>
