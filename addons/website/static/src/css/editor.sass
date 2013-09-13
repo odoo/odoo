@@ -178,8 +178,12 @@ table.editorbar-panel
         top: 24px
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
-
-.oe_drop_zone.oe_overlay
+    &.oe_vertical
+        width: 16px
+        display: inline-block
+        position: absolute
+        margin: 0px !important
+    &.oe_overlay
     position: absolute
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px

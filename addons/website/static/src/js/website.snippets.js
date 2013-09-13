@@ -203,7 +203,8 @@
                     if( action === 'insert'){
                         self.activate_insertion_zones({
                             siblings: $snippet.data('selector-siblings'),
-                            childs:   $snippet.data('selector-childs')
+                            childs:   $snippet.data('selector-childs'),
+                            vertical_childs:   $snippet.data('selector-vertical-childs')
                         });
                     } else if( action === 'mutate' ){
 
@@ -284,7 +285,8 @@
 
                         self.activate_insertion_zones({
                             siblings: $snippet.data('selector-siblings'),
-                            child: $snippet.data('selector-childs')
+                            child: $snippet.data('selector-childs'),
+                            vertical_childs: $snippet.data('selector-vertical-childs')
                         });
 
                     }
@@ -299,28 +301,39 @@
         // selector.siblings -> will insert drop zones after and before selected elements
         activate_insertion_zones: function(selector){
             var self = this;
-            var child_selector   =  selector.childs   ?  this.parent_of_editable_box + (selector.childs).split(",").join(this.parent_of_editable_box) : false;
-            var sibling_selector =  selector.siblings ?  this.parent_of_editable_box + (selector.siblings).split(",").join(this.parent_of_editable_box)  : false;
+            var child_selector = selector.childs ? this.parent_of_editable_box + (selector.childs).split(",").join(this.parent_of_editable_box) : false;
+            var sibling_selector = selector.siblings ? this.parent_of_editable_box + (selector.siblings).split(",").join(this.parent_of_editable_box) : false;
+            var vertical_child_selector   =  selector.vertical_childs   ?  this.parent_of_editable_box + (selector.vertical_childs).split(",").join(this.parent_of_editable_box) : false;
+
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             if(child_selector){
-                var $zones = $(child_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
-                    $zones.eq(i).find('> *:not(.oe_drop_zone)').after(zone_template);
-                    $zones.eq(i).prepend(zone_template);
-                }
+                $(child_selector).each(function (){
+                    var $zone = $(this);
+                    $zone.find('> *:not(.oe_drop_zone):visible').after(zone_template);
+                    $zone.prepend(zone_template);
+                });
+            }
+
+            if(vertical_child_selector){
+                $(vertical_child_selector).each(function (){
+                    var $zone = $(this);
+                    var $template = $(zone_template).addClass("oe_vertical").css('height', $zone.outerHeight()+'px');
+                    $zone.find('> *:not(.oe_drop_zone):visible').after($template);
+                    $zone.prepend($template.clone());
+                });
             }
 
             if(sibling_selector){
-                var $zones = $(sibling_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
-                    if($zones.eq(i).prev('.oe_drop_zone').length === 0){
-                        $zones.eq(i).before(zone_template);
+                $(sibling_selector).each(function (){
+                    var $zone = $(this);
+                    if($zone.prev('.oe_drop_zone:visible').length === 0){
+                        $zone.before(zone_template);
                     }
-                    if($zones.eq(i).next('.oe_drop_zone').length === 0){
-                        $zones.eq(i).after(zone_template);
+                    if($zone.next('.oe_drop_zone:visible').length === 0){
+                        $zone.after(zone_template);
                     }
-                }
+                });
             }
 
             var count;
@@ -333,12 +346,12 @@
                 $zones = $('.oe_drop_zone > .oe_drop_zone').remove();   // no recusrive zones
                 count += $zones.length;
                 $zones.remove();
-            }while(count > 0);
+            } while (count > 0);
 
             // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = $('.oe_drop_zone');
-            for( var i = 0, len = $zones.length; i < len; i++ ){
-                var zone = $zones.eq(i);
+            var $zones = $('.oe_drop_zone:not(.oe_vertical)');
+            $zones.each(function (){
+                var zone = $(this);
                 var prev = zone.prev();
                 var next = zone.next();
                 var float_prev = zone.prev().css('float')   || 'none';
@@ -348,15 +361,14 @@
                 if(     (float_prev === 'left' || float_prev === 'right')
                     &&  (float_next === 'left' || float_next === 'right')  ){
                     zone.remove();
-                    continue;
+                    return;
                 }else if( !( disp_prev === null
                           || disp_next === null
                           || disp_prev === 'block'
                           || disp_next === 'block' )){
                     zone.remove();
-                    continue;
                 }
-            }
+            });
         },
 
         // generate drop zones covering the elements selected by the selector
@@ -497,7 +509,6 @@
         // activate drag and drop for the snippets in the snippet toolbar
         _drag_and_drop: function(){
             var self = this;
-            var drop = false;
             this.$overlay.draggable({
                 appendTo: 'body',
                 cursor: "move",
@@ -508,34 +519,26 @@
                 handle: ".js_box_move",
                 start: function(){
                     self.parent.editor_busy = true;
+                    self.$target.css("display", "none");
                     self.parent.activate_insertion_zones({
                         siblings: self.$el ? self.$el.data('selector-siblings') : false,
                         childs:   self.$el ? self.$el.data('selector-childs') : false,
+                        vertical_childs: self.$el ? self.$el.data('selector-vertical-childs') : false,
                     });
-                    self.$target.after("<div id='oe_pointer_drag_and_drop' style='display:none;'></div>");
-                    self.$target.detach();
                     $("body").addClass('move-important');
-                    drop = false;
                     $('.oe_drop_zone').droppable({
                         hoverClass: "oe_hover",
                         drop:   function(){
-                            if (!$(".oe_drop_zone.oe_hover").length) {
-                                return false;
-                            }
-                            $(".oe_drop_zone.oe_hover").after(self.$target);
-                            drop = true;
+                            $(this).after(self.$target);
                         },
                     });
                 },
                 stop: function(){
                     $("body").removeClass('move-important');
                     $('.oe_drop_zone').droppable('destroy').remove();
-                    if (!drop) {
-                        $('#oe_pointer_drag_and_drop').after(self.$target);
-                    }
-                    $('#oe_pointer_drag_and_drop').remove();
+                    self.$target.css("display", "");
                     self.parent.editor_busy = false;
-                    setTimeout(function () {self.parent.make_active(self.$target);},0);
+                    setTimeout(function () {self.parent.create_overlay(self.$target);},0);
                 },
             });
         },

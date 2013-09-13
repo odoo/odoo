@@ -172,6 +172,9 @@ table.editorbar-panel td.selected {
   height: 32px;
   margin: -16px 0px;
   -webkit-transition: margin 250ms linear;
+  position: absolute;
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
 }
 .oe_drop_zone.oe_insert:first-child:not(:last-child) {
   margin-top: -8px;
@@ -197,11 +200,11 @@ table.editorbar-panel td.selected {
 .oe_drop_zone.oe_insert.oe_hover:before {
   border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }
-
-.oe_drop_zone.oe_overlay {
+.oe_drop_zone.oe_insert.oe_vertical {
+  width: 16px;
+  display: inline-block;
   position: absolute;
-  background: rgba(153, 0, 255, 0.17);
-  border-radius: 3px;
+  margin: 0px !important;
 }
 
 .oe_drop_zone {
