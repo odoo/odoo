@@ -1,6 +1,81 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 
+    // the JobQueue schedules a sequence of 'jobs'. each job is
+    // a function returning a deferred. the queue waits for each job to finish 
+    // before launching the next. Each job can also be scheduled with a delay. 
+    // the  is used to prevent parallel requests to the proxy.
+
+    module.JobQueue = function(){
+        var queue = [];
+        var running = false;
+        var scheduled_end_time = 0;
+        var end_of_queue = (new $.Deferred()).resolve();
+        var stoprepeat = false;
+
+        var run = function(){
+            if(end_of_queue.state() === 'resolved'){
+                end_of_queue =  new $.Deferred();
+            }
+            if(queue.length > 0){
+                running = true;
+                var job = queue[0];
+                if(!job.opts.repeat || stoprepeat){
+                    queue.shift();
+                    stoprepeat = false;
+                }
+
+                // the time scheduled for this job
+                scheduled_end_time = (new Date()).getTime() + (job.opts.duration || 0);
+
+                // we run the job and put in def when it finishes
+                var def = job.fun() || (new $.Deferred()).resolve();
+                
+                // we don't care if a job fails ... 
+                def.always(function(){
+                    // we run the next job after the scheduled_end_time, even if it finishes before
+                    setTimeout(function(){
+                        run();
+                    }, Math.max(0, scheduled_end_time - (new Date()).getTime()) ); 
+                });
+            }else{
+                running = false;
+                end_of_queue.resolve();
+            }
+        };
+        
+        // adds a job to the schedule.
+        // opts : {
+        //    duration    : the job is guaranteed to finish no quicker than this (milisec)
+        //    repeat      : if true, the job will be endlessly repeated
+        //    important   : if true, the scheduled job cannot be canceled by a queue.clear()
+        // }
+        this.schedule  = function(fun, opts){
+            queue.push({fun:fun, opts:opts || {}});
+            if(!running){
+                run();
+            }
+        }
+
+        // remove all jobs from the schedule (except the ones marked as important)
+        this.clear = function(){
+            queue = _.filter(queue,function(job){job.opts.important === true}); 
+        };
+
+        // end the repetition of the current job
+        this.stoprepeat = function(){
+            stoprepeat = true;
+        };
+        
+        // returns a deferred that resolves when all scheduled 
+        // jobs have been run.
+        // ( jobs added after the call to this method are considered as well )
+        this.finished = function(){
+            return end_of_queue;
+        }
+
+    };
+
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
@@ -10,7 +85,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             options = options || {};
             url = options.url || 'http://localhost:8069';
             
-            this.weight = 0;
             this.weighting = false;
             this.debug_weight = 0;
             this.use_debug_weight = false;
@@ -26,7 +100,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.custom_payment_status = this.default_payment_status;
 
             this.connection = new instance.web.Session(undefined,url);
-
+            this.connection.session_id = _.uniqueId('posproxy');
             this.bypass_proxy = false;
             this.notifications = {};
             
@@ -35,18 +109,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.connection.destroy();
         },
         message : function(name,params){
-            var ret = new $.Deferred();
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-
-            this.connection.rpc('/pos/' + name, params || {}).done(function(result) {
-                ret.resolve(result);
-            }).fail(function(error) {
-                ret.reject(error);
-            });
-            return ret;
+            return this.connection.rpc('/pos/' + name, params || {});       
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 
@@ -82,13 +149,32 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //the client is starting to weight
         weighting_start: function(){
+            var ret = new $.Deferred();
             if(!this.weighting){
                 this.weighting = true;
-                if(!this.bypass_proxy){
-                    this.weight = 0;
-                    return this.message('weighting_start');
-                }
+                this.message('weighting_start').always(function(){
+                    ret.resolve();
+                });
+            }else{
+                console.error('Weighting already started!!!');
+                ret.resolve();
             }
+            return ret;
+        },
+
+        // the client has finished weighting products
+        weighting_end: function(){
+            var ret = new $.Deferred();
+            if(this.weighting){
+                this.weighting = false;
+                this.message('weighting_end').always(function(){
+                    ret.resolve();
+                });
+            }else{
+                console.error('Weighting already ended !!!');
+                ret.resolve();
+            }
+            return ret;
         },
 
         //returns the weight on the scale. 
@@ -96,17 +182,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
+            var ret = new $.Deferred();
             this.message('weighting_read_kg',{})
-                .done(function(weight){
-                    if(self.weighting){
-                        if(self.use_debug_weight){
-                            self.weight = self.debug_weight;
-                        }else{
-                            self.weight = weight;
-                        }
-                    }
+                .then(function(weight){
+                    ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
+                }, function(){ //failed to read weight
+                    ret.resolve(self.use_debug_weight ? self.debug_weight : 0.0);
                 });
-            return this.weight;
+            return ret;
         },
 
         // sets a custom weight, ignoring the proxy returned value. 
@@ -121,12 +204,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.debug_weight = 0;
         },
 
-        // the client has finished weighting products
-        weighting_end: function(){
-            this.weight = 0;
-            this.weighting = false;
-            this.message('weighting_end');
-        },
 
         // the pos asks the client to pay 'price' units
         payment_request: function(price){
@@ -439,7 +516,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
             // barcode sequence in the typed keys, then act accordingly.
-            $('body').delegate('','keyup', function (e){
+            $('body').delegate('','keypress', function (e){
                 //console.log('keyup:'+String.fromCharCode(e.keyCode)+' '+e.keyCode,e);
                 //We only care about numbers
                 if (e.keyCode >= 48 && e.keyCode < 58){
