@@ -24,7 +24,7 @@
                     <group name="shop">
                         <group>
                             <field name="payment_default_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field domain="[('type','=','sale')]" required="True" name="pricelist_id" groups="product.group_sale_pricelist"/>
                         </group>
                         <group>
                             <field name="project_id" groups="analytic.group_analytic_accounting"/>
