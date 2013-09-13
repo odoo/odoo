@@ -43,7 +43,7 @@
         from openerp import netsvc
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
-        purchase_id = procurement_order.purchase_id.id
+        purchase_id = procurement_order.purchase_line_id.order_id.id
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
 - 
