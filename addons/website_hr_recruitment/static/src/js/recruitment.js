@@ -13,7 +13,8 @@ $(function () {
                 parent.find('div:gt(0)').removeClass('hidden');
             }
         });
-        $(this).siblings('div').find('input[name=email]').attr("value", "");
+       
+        // $(this).siblings('div').find('input[name=email]').attr("value", "");
     });
     $(document).on('click', 'button[name=unsubscribe]', function (e) {
         var div = $(this).parent();
@@ -34,17 +35,23 @@ $(function () {
         var counting = row.find('td:first').find('span#counting');
         var msg = row.find('td:first').find('span#norecruit');
         var div = row.find('td:first').find('div#'+id+' div:first');
+        var job_post = row.find('td:first').find('span#job_post');
+        var no_job_post = row.find('td:first').find('span#no_job_post');
 
         var loadpublish = function () {
             return openerp.jsonRpc('/recruitment/published', 'call', {'id': id}).then(function (result) {
                 if (result['published']) {
                     msg.addClass('hidden');
+                    no_job_post.addClass('hidden');
                     counting.removeClass('hidden');
+                    job_post.removeClass('hidden');
                     counting.find('span#counting_num').html(result['count']);
                     div.addClass('hidden');
                 } else {
                     msg.removeClass('hidden');
+                    no_job_post.removeClass('hidden');
                     counting.addClass('hidden');
+                    job_post.addClass('hidden');
                     div.removeClass('hidden');
                 }
             });
