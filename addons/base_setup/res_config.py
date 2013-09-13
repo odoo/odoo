@@ -30,7 +30,7 @@ class base_config_settings(osv.osv_memory):
     def _get_font(self, cr, uid, context=None):
         if not customfonts.supported_fonts:
             customfonts.RegisterCustomFonts()
-        return customfonts.supported_fonts
+        return sorted(customfonts.supported_fonts)
         
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
