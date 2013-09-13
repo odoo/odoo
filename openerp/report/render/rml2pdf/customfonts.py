@@ -26,7 +26,6 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase import ttfonts
 import platform
 from reportlab import rl_config
-supported_fonts = []
 
 #.apidoc title: TTF Font Table
 
@@ -39,8 +38,29 @@ should have the same filenames, only need the code below).
 Due to an awful configuration that ships with reportlab at many Linux
 and Ubuntu distros, we have to override the search path, too.
 """
-
+supported_fonts = []
 _logger = logging.getLogger(__name__)
+
+CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
+        ('Helvetica',"DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
+        ('Helvetica',"DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
+        ('Helvetica',"DejaVu Sans BoldOblique", "DejaVuSans-BoldOblique.ttf", 'bolditalic'),
+        ('Times',"Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
+        ('Times',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
+        ('Times',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
+        ('Times',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
+        ('Times-Roman',"Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
+        ('Times-Roman',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
+        ('Times-Roman',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
+        ('Times-Roman',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
+        ('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
+        ('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
+        ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
+        ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
+
+        # Sun-ExtA can be downloaded from http://okuc.net/SunWb/
+        ('Sun-ExtA',"Sun-ExtA", "Sun-ExtA.ttf", 'normal'),
+]
 
 TTFSearchPath_Linux = [
             '/usr/share/fonts/truetype', # SuSE
@@ -72,26 +92,47 @@ TTFSearchPathMap = {
 
 def RegisterCustomFonts():
     searchpath = []
-    global supported_fonts
     local_platform = platform.system()
     if local_platform in TTFSearchPathMap:
         searchpath += TTFSearchPathMap[local_platform]
     # Append the original search path of reportlab (at the end)
     searchpath += rl_config.TTFSearchPath 
-    for dirname in searchpath:
-        if os.path.exists(dirname):
-            for filename in os.listdir(dirname):
-                if filename.lower().endswith('.ttf'):
-                    filename = os.path.join(dirname, filename)
-                    try:
-                        face = ttfonts.TTFontFace(filename)
-                        pdfmetrics.registerFont(ttfonts.TTFont(face.name, filename, asciiReadable=0))
-                        supported_fonts.append((face.name,face.name))
-                        _logger.debug("Found font %s at %s", face.name, filename)
-                    except:
-                        _logger.warning("Could not register Font %s",face.name)
+    addToPdfmetrics(searchpath)
     return True
 
+def addToPdfmetrics(path):
+    global supported_fonts
+    for dirname in path:
+        if os.path.exists(dirname):
+            for filename in [x for x in os.listdir(dirname) if x.lower().endswith('.ttf')]:
+                filepath = os.path.join(dirname, filename)
+                try:
+                    face = ttfonts.TTFontFace(filepath)
+                    font_info = ttfonts.TTFontFile(filepath)
+                    if (face.name,face.name) not in supported_fonts:
+                        pdfmetrics.registerFont(ttfonts.TTFont(face.name, filepath, asciiReadable=0))
+                        supported_fonts.append((face.name,face.name))
+                        CustomTTFonts.append((font_info.familyName,font_info.name,filename,font_info.styleName.lower().replace(" ","")))
+                    _logger.debug("Found font %s at %s", face.name, filename)
+                except:
+                    _logger.warning("Could not register Font %s",filename)
+    return True
+    
+def SetCustomFonts(rmldoc):
+    """ Map some font names to the corresponding TTF fonts
+
+        The ttf font may not even have the same name, as in
+        Times -> Liberation Serif.
+        This function is called once per report, so it should
+        avoid system-wide processing (cache it, instead).
+    """
+    global supported_fonts
+    if not supported_fonts:
+        RegisterCustomFonts()
+    for name, font, filename, mode in CustomTTFonts:
+        if os.path.isabs(filename) and os.path.exists(filename):
+            rmldoc.setTTFontMapping(name, font, filename, mode)
+    return True
 #eof
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
