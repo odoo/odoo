@@ -109,9 +109,9 @@ class MassMailingCampaign(osv.Model):
         ),
     }
 
-    # _defaults = {
-        # 'user_id': lambda self, cr, uid, ctx=None: uid,
-    # },
+    _defaults = {
+        'user_id': lambda self, cr, uid, ctx=None: uid,
+    }
 
     def launch_mass_mailing_create_wizard(self, cr, uid, ids, context=None):
         ctx = dict(context)
@@ -225,7 +225,7 @@ class MassMailing(osv.Model):
         # statistics data
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mass_mailing_id',
-            'Send Emails',
+            'Emails Statistics',
         ),
         'sent': fields.function(
             _get_statistics,
