@@ -400,14 +400,23 @@
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'change .url-source': function (e) { this.changed($(e.target)); },
-            'click div.existing a': 'select_page',
+            'mousedown': function (e) {
+                var $target = $(e.target).closest('.list-group-item');
+                if (!$target.length || $target.hasClass('active')) {
+                    // clicked outside groups, or clicked in active groups
+                    return;
+                }
+
+                $target
+                    .addClass('active')
+                    .siblings().removeClass('active')
+                    .addBack().removeClass('has-error');
+            }
         }),
         init: function (editor) {
             this._super(editor);
             // url -> name mapping for existing pages
             this.pages = Object.create(null);
-            // name -> url mapping for the same
-            this.pages_by_name = Object.create(null);
         },
         start: function () {
             var element;
@@ -466,25 +475,25 @@
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
-            var $e = this.$('.url-source').filter(function () { return !!this.value; });
+            var $e = this.$('.list-group-item.active .url-source');
+            var val = $e.val();
+            if (!val) {
+                $e.closest('.form-group').addClass('has-error');
+                return;
+            }
 
-            var val = $e.val(), done = $.when();
+            var done = $.when();
             if ($e.hasClass('email-address')) {
                 this.make_link('mailto:' + val, false, val);
+            } else if ($e.hasClass('existing')) {
+                self.make_link(val, false, this.pages[val]);
             } else if ($e.hasClass('pages')) {
-                // ``val`` is the *name* of the page
-                var url = this.pages_by_name[val];
-                if (!url) {
-                    // Create the page, get the URL back
-                    done = $.get(_.str.sprintf(
+                // Create the page, get the URL back
+                done = $.get(_.str.sprintf(
                         '/pagenew/%s?noredirect', encodeURIComponent(val)))
-                        .then(function (response) {
-                            url = response;
-                        });
-                }
-                done.then(function () {
-                    self.make_link(url, false, val);
-                });
+                    .then(function (response) {
+                        self.make_link(response, false, val);
+                    });
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
             }
@@ -499,7 +508,7 @@
             if (match = /(mailto):(.+)/.exec(href)) {
                 $control = this.$('input.email-address').val(match[2]);
             } else if(href in this.pages) {
-                $control = this.$('input.pages').val(this.pages[href]);
+                $control = this.$('select.existing').val(href);
             }
             if (!$control) {
                 $control = this.$('input.url').val(href);
@@ -511,21 +520,7 @@
                 'checked', this.element.getAttribute('target') === '_blank');
         },
         changed: function ($e) {
-            $e.closest('li.list-group-item').addClass('active')
-              .siblings().removeClass('active');
             this.$('.url-source').not($e).val('');
-        },
-        /**
-         * Selected an existing page in dropdown
-         */
-        select_page: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $target = $(e.target);
-            this.$('input.pages').val($target.text()).change();
-            // No #dropdown('close'), and using #dropdown('toggle') sur
-            // #closest('.dropdown') makes the dropdown not work correctly
-            $target.closest('.open').removeClass('open');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
@@ -556,12 +551,12 @@
         },
         fill_pages: function (results) {
             var self = this;
-            var $pages = this.$('div.existing ul').empty();
+            var pages = this.$('select.existing')[0];
             _(results).each(function (result) {
                 self.pages[result.url] = result.name;
-                self.pages_by_name[result.name] = result.url;
-                var $link = $('<a>').attr('href', result.url).text(result.name);
-                $('<li>').append($link).appendTo($pages);
+
+                pages.options[pages.options.length] =
+                        new Option(result.name, result.url);
             });
         },
     });
