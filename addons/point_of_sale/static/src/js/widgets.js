@@ -543,6 +543,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.renderElement();
                 self.search_and_categories(category);
             });
+            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+                this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
+            }
             this.search_and_categories();
         },
         
