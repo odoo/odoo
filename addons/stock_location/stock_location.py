@@ -153,7 +153,7 @@ class procurement_order(osv.osv):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
         categ_obj = self.pool.get("product.category")
         categ_id = procurement.product_id.categ_id.id
-        route_ids = [x.id for x in procurement.product_id.route_ids + procurement.product_id.categ_id.total_route_ids]
+        route_ids = [x.id for x in procurement.route_ids + procurement.product_id.route_ids + procurement.product_id.categ_id.total_route_ids]
         res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
         if not res:
             res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
