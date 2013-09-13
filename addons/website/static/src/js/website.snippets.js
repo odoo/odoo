@@ -197,12 +197,14 @@
                 helper: 'clone',
                 zIndex: '1000',
                 appendTo: 'body',
+                cursor: "move",
                 start: function(){
                     var action  = $snippet.data('action');
                     if( action === 'insert'){
                         self.activate_insertion_zones({
                             siblings: $snippet.data('selector-siblings'),
-                            childs:   $snippet.data('selector-childs')
+                            childs:   $snippet.data('selector-childs'),
+                            vertical_childs:   $snippet.data('selector-vertical-childs')
                         });
                     } else if( action === 'mutate' ){
 
@@ -283,7 +285,8 @@
 
                         self.activate_insertion_zones({
                             siblings: $snippet.data('selector-siblings'),
-                            child: $snippet.data('selector-childs')
+                            child: $snippet.data('selector-childs'),
+                            vertical_childs: $snippet.data('selector-vertical-childs')
                         });
 
                     }
@@ -298,28 +301,39 @@
         // selector.siblings -> will insert drop zones after and before selected elements
         activate_insertion_zones: function(selector){
             var self = this;
-            var child_selector   =  selector.childs   ?  this.parent_of_editable_box + (selector.childs).split(",").join(this.parent_of_editable_box) : false;
-            var sibling_selector =  selector.siblings ?  this.parent_of_editable_box + (selector.siblings).split(",").join(this.parent_of_editable_box)  : false;
+            var child_selector = selector.childs ? this.parent_of_editable_box + (selector.childs).split(",").join(this.parent_of_editable_box) : false;
+            var sibling_selector = selector.siblings ? this.parent_of_editable_box + (selector.siblings).split(",").join(this.parent_of_editable_box) : false;
+            var vertical_child_selector   =  selector.vertical_childs   ?  this.parent_of_editable_box + (selector.vertical_childs).split(",").join(this.parent_of_editable_box) : false;
+
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             if(child_selector){
-                var $zones = $(child_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
-                    $zones.eq(i).find('> *:not(.oe_drop_zone)').after(zone_template);
-                    $zones.eq(i).prepend(zone_template);
-                }
+                $(child_selector).each(function (){
+                    var $zone = $(this);
+                    $zone.find('> *:not(.oe_drop_zone):visible').after(zone_template);
+                    $zone.prepend(zone_template);
+                });
+            }
+
+            if(vertical_child_selector){
+                $(vertical_child_selector).each(function (){
+                    var $zone = $(this);
+                    var $template = $(zone_template).addClass("oe_vertical").css('height', $zone.outerHeight()+'px');
+                    $zone.find('> *:not(.oe_drop_zone):visible').after($template);
+                    $zone.prepend($template.clone());
+                });
             }
 
             if(sibling_selector){
-                var $zones = $(sibling_selector);
-                for( var i = 0, len = $zones.length; i < len; i++ ){
-                    if($zones.eq(i).prev('.oe_drop_zone').length === 0){
-                        $zones.eq(i).before(zone_template);
+                $(sibling_selector).each(function (){
+                    var $zone = $(this);
+                    if($zone.prev('.oe_drop_zone:visible').length === 0){
+                        $zone.before(zone_template);
                     }
-                    if($zones.eq(i).next('.oe_drop_zone').length === 0){
-                        $zones.eq(i).after(zone_template);
+                    if($zone.next('.oe_drop_zone:visible').length === 0){
+                        $zone.after(zone_template);
                     }
-                }
+                });
             }
 
             var count;
@@ -332,12 +346,12 @@
                 $zones = $('.oe_drop_zone > .oe_drop_zone').remove();   // no recusrive zones
                 count += $zones.length;
                 $zones.remove();
-            }while(count > 0);
+            } while (count > 0);
 
             // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = $('.oe_drop_zone');
-            for( var i = 0, len = $zones.length; i < len; i++ ){
-                var zone = $zones.eq(i);
+            var $zones = $('.oe_drop_zone:not(.oe_vertical)');
+            $zones.each(function (){
+                var zone = $(this);
                 var prev = zone.prev();
                 var next = zone.next();
                 var float_prev = zone.prev().css('float')   || 'none';
@@ -347,15 +361,14 @@
                 if(     (float_prev === 'left' || float_prev === 'right')
                     &&  (float_next === 'left' || float_next === 'right')  ){
                     zone.remove();
-                    continue;
+                    return;
                 }else if( !( disp_prev === null
                           || disp_next === null
                           || disp_prev === 'block'
                           || disp_next === 'block' )){
                     zone.remove();
-                    continue;
                 }
-            }
+            });
         },
 
         // generate drop zones covering the elements selected by the selector
@@ -485,8 +498,51 @@
                 this.$editor = this.$el.find(".oe_snippet_options");
                 this.$thumbnail = this.$el.find(".oe_snippet_thumbnail");
                 this.$body = this.$el.find(".oe_snippet_body");
+
+                var $options = this.$overlay.find(".oe_overlay_options");
+                this.$editor.prependTo($options.find(".oe_options ul"));
+                $options.find(".oe_label").text(this.$el.find('.oe_snippet_thumbnail.oe_label, .oe_snippet_thumbnail .oe_label').text());
             }
         },
+
+
+        // activate drag and drop for the snippets in the snippet toolbar
+        _drag_and_drop: function(){
+            var self = this;
+            this.$overlay.draggable({
+                appendTo: 'body',
+                cursor: "move",
+                cursorAt: {
+                    top: self.$target.outerHeight()/2,
+                    left: self.$target.outerWidth()/2 },
+                distance: 20,
+                handle: ".js_box_move",
+                start: function(){
+                    self.parent.editor_busy = true;
+                    self.$target.css("display", "none");
+                    self.parent.activate_insertion_zones({
+                        siblings: self.$el ? self.$el.data('selector-siblings') : false,
+                        childs:   self.$el ? self.$el.data('selector-childs') : false,
+                        vertical_childs: self.$el ? self.$el.data('selector-vertical-childs') : false,
+                    });
+                    $("body").addClass('move-important');
+                    $('.oe_drop_zone').droppable({
+                        hoverClass: "oe_hover",
+                        drop:   function(){
+                            $(this).after(self.$target);
+                        },
+                    });
+                },
+                stop: function(){
+                    $("body").removeClass('move-important');
+                    $('.oe_drop_zone').droppable('destroy').remove();
+                    self.$target.css("display", "");
+                    self.parent.editor_busy = false;
+                    setTimeout(function () {self.parent.create_overlay(self.$target);},0);
+                },
+            });
+        },
+
 
         /*
         *  start
@@ -494,15 +550,13 @@
         */
         start: function () {
             var self = this;
-            if(this.$editor) this.$editor.prependTo(this.$overlay.find(".oe_overlay_options .oe_option.n.w ul"));
-            else this.$overlay.find(".oe_overlay_options .oe_option.n.w").hide();
             this.$overlay.on('click', '.js_box_remove', function () {
                 self.$target.detach();
                 self.onBlur();
                 self.$target.remove();
                 return false;
             });
-
+            this._drag_and_drop();
         },
 
         /*
@@ -547,6 +601,7 @@
 
 
     website.snippet.editorRegistry.resize = website.snippet.Editor.extend({
+        template : "website.snippets.resize",
         start: function () {
             var self = this;
             this._super();
@@ -663,6 +718,7 @@
     });
 
     website.snippet.editorRegistry.colmd = website.snippet.editorRegistry.resize.extend({
+        template : "website.snippets.colmd",
         getSize: function () {
             this.grid = this._super();
             var width = this.$target.parents(".row:first").first().outerWidth();

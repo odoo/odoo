@@ -340,7 +340,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "Unlink", "Blockquote", "BulletedList",
+                        "Link", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
@@ -392,6 +392,9 @@
             return sup;
         },
         save: function () {
+            this.close();
+        },
+        close: function () {
             this.$el.modal('hide');
         },
     });
@@ -399,6 +402,20 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'change .url-source': function (e) { this.changed($(e.target)); },
+            'mousedown': function (e) {
+                var $target = $(e.target).closest('.list-group-item');
+                if (!$target.length || $target.hasClass('active')) {
+                    // clicked outside groups, or clicked in active groups
+                    return;
+                }
+
+                $target
+                    .addClass('active')
+                    .siblings().removeClass('active')
+                    .addBack().removeClass('has-error');
+            },
+            'click button.remove': 'remove_link',
         }),
         init: function (editor) {
             this._super(editor);
@@ -411,11 +428,27 @@
                 this.editor.getSelection().selectElement(element);
             }
             this.element = element;
+            if (element) {
+                this.add_removal_button();
+            }
 
             return $.when(
                 this.fetch_pages().done(this.proxy('fill_pages')),
                 this._super()
             ).done(this.proxy('bind_data'));
+        },
+        add_removal_button: function () {
+            this.$('.modal-footer').prepend(
+                openerp.qweb.render(
+                    'website.editor.dialog.link.footer-button'));
+        },
+        remove_link: function () {
+            var editor = this.editor;
+            // same issue as in make_link
+            setTimeout(function () {
+                editor.execCommand('unlink');
+            }, 0);
+            this.close();
         },
         /**
          * Greatly simplified version of CKEDITOR's
@@ -462,25 +495,25 @@
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
-            var $active_tab = this.$('.tab-pane.active');
+            var $e = this.$('.list-group-item.active .url-source');
+            var val = $e.val();
+            if (!val) {
+                $e.closest('.form-group').addClass('has-error');
+                return;
+            }
 
-            var $e = $active_tab.find('.url-source');
-
-            var val = $e.val(), done = $.when();
-            if ($active_tab.is('#link-email')) {
+            var done = $.when();
+            if ($e.hasClass('email-address')) {
                 this.make_link('mailto:' + val, false, val);
-            } else if ($active_tab.is('#link-existing')) {
+            } else if ($e.hasClass('existing')) {
                 self.make_link(val, false, this.pages[val]);
-            } else if ($active_tab.is('#link-new')) {
+            } else if ($e.hasClass('pages')) {
                 // Create the page, get the URL back
                 done = $.get(_.str.sprintf(
-                    '/pagenew/%s?noredirect', encodeURIComponent(val)))
+                        '/pagenew/%s?noredirect', encodeURIComponent(val)))
                     .then(function (response) {
-                        val = response;
+                        self.make_link(response, false, val);
                     });
-                done.then(function () {
-                    self.make_link(val, false);
-                });
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
             }
@@ -493,18 +526,21 @@
 
             var match, $control;
             if (match = /(mailto):(.+)/.exec(href)) {
-                $control = this.$('#link-email input').val(match[2]);
+                $control = this.$('input.email-address').val(match[2]);
             } else if(href in this.pages) {
-                $control = this.$('#link-existing select').val(href);
-            } else {
-                $control = this.$('#link-external input:first').val(href);
+                $control = this.$('select.existing').val(href);
+            }
+            if (!$control) {
+                $control = this.$('input.url').val(href);
             }
 
-            var tab_name = $control.closest('.tab-pane').attr('id');
-            this.$('.nav a[href="#' + tab_name + '"]').tab('show');
+            this.changed($control);
 
             this.$('input.window-new').prop(
                 'checked', this.element.getAttribute('target') === '_blank');
+        },
+        changed: function ($e) {
+            this.$('.url-source').not($e).val('');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
@@ -535,43 +571,32 @@
         },
         fill_pages: function (results) {
             var self = this;
-            var pages = this.$('#link-existing-select')[0];
+            var pages = this.$('select.existing')[0];
             _(results).each(function (result) {
                 self.pages[result.url] = result.name;
 
                 pages.options[pages.options.length] =
-                    new Option(result.name, result.url);
+                        new Option(result.name, result.url);
             });
         },
     });
     website.editor.ImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'change .url-source': function (e) { this.changed($(e.target)); },
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
-            'change select.image-style': 'preview_image',
             'click .existing-attachments a': 'select_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
             var el = selection && selection.getSelectedElement();
             this.element = null;
-
-            var $select = this.$('.image-style');
-            var $options = $select.children();
-            this.image_styles = $options.map(function () { return this.value; }).get();
-
             if (el && el.is('img')) {
                 this.element = el;
-                _(this.image_styles).each(function (style) {
-                    if (el.hasClass(style)) {
-                        $select.val(style);
-                    }
-                });
-                // set_image should follow setup of image style
                 this.set_image(el.getAttribute('src'));
             }
 
@@ -581,7 +606,6 @@
         },
         save: function () {
             var url = this.$('input.url').val();
-            var style = this.$('.image-style').val();
             var element, editor = this.editor;
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
@@ -595,10 +619,7 @@
                 }, 0);
             }
             element.setAttribute('src', url);
-            $(element.$).removeClass(this.image_styles.join(' '));
-            if (style) { element.addClass(style); }
-
-            return this._super();
+            this._super();
         },
 
         /**
@@ -636,10 +657,7 @@
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img.image-preview')
-                .attr('src', image)
-                .removeClass(this.image_styles.join(' '))
-                .addClass(this.$('select.image-style').val());
+            this.$('img.image-preview').attr('src', image);
         },
 
         fetch_existing: function () {
