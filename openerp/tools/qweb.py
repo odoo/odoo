@@ -352,7 +352,7 @@ class QWebXml(object):
 # rendered losing the information that it's a tag and completely breaking
 # edition => replace <t> by some default tag depending on field type
 DEFAULT_TAG_BY_TYPE = {
-    'int': 'span',
+    'integer': 'span',
     'float': 'span',
     'char': 'span',
     'many2one': 'span',
