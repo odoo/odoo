@@ -666,13 +666,25 @@
         },
     });
 
+    var IMAGES_PER_ROW = 3;
+    var IMAGES_ROWS = 3;
     website.editor.ExistingImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image.existing',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'click .existing-attachments a': 'select_existing',
+            'click .pager > li': function (e) {
+                e.preventDefault();
+                var $target = $(e.currentTarget);
+                if ($target.hasClass('disabled')) {
+                    return;
+                }
+                this.page += $target.hasClass('previous') ? -1 : 1;
+                this.display_attachments();
+            },
         }),
         init: function (parent) {
             this.image = null;
+            this.page = 0;
             this.parent = parent;
             this._super(parent.editor);
         },
@@ -684,7 +696,6 @@
         },
 
         fetch_existing: function () {
-            // FIXME: lazy load attachments?
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'ir.attachment',
                 method: 'search_read',
@@ -698,14 +709,29 @@
             });
         },
         fetched_existing: function (records) {
+            this.records = records;
+            this.display_attachments();
+        },
+        display_attachments: function () {
+            var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
+
+            var from = this.page * per_screen;
+            var records = this.records;
+
             // Create rows of 3 records
             var rows = _(records).chain()
-                .groupBy(function (_, index) { return Math.floor(index / 3); })
+                .slice(from, from + per_screen)
+                .groupBy(function (_, index) { return Math.floor(index / IMAGES_PER_ROW); })
                 .values()
                 .value();
+
             this.$('.existing-attachments').replaceWith(
                 openerp.qweb.render(
                     'website.editor.dialog.image.existing.content', {rows: rows}));
+            this.$('.pager')
+                .find('li.previous').toggleClass('disabled', (from === 0)).end()
+                .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
+
         },
         select_existing: function (e) {
             e.preventDefault();
