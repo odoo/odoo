@@ -239,12 +239,14 @@
                                 var $toInsert = $snippet.find('.oe_snippet_body').clone();
                                 $toInsert.removeClass('oe_snippet_body');
                                 $toInsert.attr('data-snippet-id', snipped_id);
-                                $(".oe_drop_zone.oe_hover").after($toInsert);
+                                $(".oe_drop_zone.oe_hover").first().after($toInsert);
                                 $target = $toInsert;
                                 hack_to_add_snippet_id();
                             } else {
-                                $target = $(".oe_drop_zone.oe_hover").data('target');
+                                $target = $(".oe_drop_zone.oe_hover").first().data('target');
                             }
+                            
+                            $('.oe_drop_zone').droppable('destroy').remove();
 
                             if (website.snippet.animationRegistry[snipped_id]) {
                                 new website.snippet.animationRegistry[snipped_id]($target);
