@@ -27,10 +27,7 @@ class stock_configure_wh(osv.osv_memory):
     _description = "Configure New WH"
 
     _columns = {
-        'name': fields.char('Warehouse Name', required=True),
         'code': fields.char('Warehouse Unique Identifier', size=5, required=True),
-        'partner_id': fields.many2one('res.partner', 'Partner Related to the company', help='technical field used for usability reason (domain+default value)'),
-        'address_id': fields.many2one('res.partner', 'Warehouse Address'),
         'reception_steps': fields.selection([
             ('one_step', 'Receive goods directly in stock (1 step)'),
             ('two_steps', 'Unload in input location then go to stock (2 steps)'),
@@ -45,7 +42,6 @@ class stock_configure_wh(osv.osv_memory):
     _defaults = {
         'reception_steps': 'one_step',
         'delivery_steps': 'ship_only',
-        'partner_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.partner_id.id,
     }
 
     def onchange_delivery_steps(self, cr, uid, ids, delivery_steps, context=None):
@@ -73,6 +69,7 @@ class stock_configure_wh(osv.osv_memory):
         if ids and len(ids):
             ids = ids[0]
 
+        #TODO avoid running twice the config wizard for a given warehouse => don't create twice the same rule/route/location....
         data_obj = self.pool.get('ir.model.data')
         seq_obj = self.pool.get('ir.sequence')
         picking_type_obj = self.pool.get('stock.picking.type')
@@ -83,22 +80,13 @@ class stock_configure_wh(osv.osv_memory):
         wh_obj = self.pool.get('stock.warehouse')
         obj = self.browse(cr, uid, ids, context=context)
 
-        #create the warehouse locations
-        try:
-            parent_location_id = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1]
-        except:
-            parent_location_id = False
-        wh_view_location_id = location_obj.create(cr, uid, {
-            'name': obj.name,
-            'usage': 'view',
-            'location_id': parent_location_id
-        }, context=context)
-        wh_stock_loc_id = location_obj.create(cr, uid, {
-            'name': _('Stock'),
-            'usage': 'internal',
-            'location_id': wh_view_location_id
-        }, context=context)
-        wh_stock_loc = location_obj.browse(cr, uid, wh_stock_loc_id, context=context)
+        warehouse_id = context.get('active_id', context.get('active_ids') and context.get('active_ids')[0] or False)
+        if not warehouse_id:
+            raise osv.except_osv(_('Error!'), _('Can\'t find the warehouse to configure. The wizard cannot be used'))
+
+        warehouse = wh_obj.browse(cr, uid, warehouse_id, context=context)
+        wh_view_location_id = warehouse.lot_stock_id.location_id.id
+        wh_stock_loc = warehouse.lot_stock_id
         wh_input_stock_loc = wh_output_stock_loc = wh_pack_stock_loc = wh_qc_stock_loc = wh_stock_loc
         if obj.reception_steps != 'one_step':
             wh_input_stock_loc_id = location_obj.create(cr, uid, {
@@ -152,23 +140,20 @@ class stock_configure_wh(osv.osv_memory):
 
         #create warehouse
         wh_data = {
-            'name': obj.name,
-            'partner_id': obj.address_id and obj.address_id.id or False,
-            'lot_stock_id': wh_stock_loc.id,
             'route_id': default_route_id,
             #TODO what about 'code' ....
         }
-        new_wh_id = wh_obj.create(cr, uid, vals=wh_data, context=context)
+        wh_obj.write(cr, uid, warehouse_id, vals=wh_data, context=context)
 
         #create in, out, internal picking types for warehouse
         #First create new sequence
-        in_seq_id = seq_obj.create(cr, uid, values={'name': obj.name + _(' Picking in'), 'prefix': obj.code + '\IN\\', 'padding': 5}, context=context)
-        out_seq_id = seq_obj.create(cr, uid, values={'name': obj.name + _(' Picking out'), 'prefix': obj.code + '\OUT\\', 'padding': 5}, context=context)
-        internal_seq_id = seq_obj.create(cr, uid, values={'name': obj.name + _(' Picking internal'), 'prefix': obj.code + '\INT\\', 'padding': 5}, context=context)
+        in_seq_id = seq_obj.create(cr, uid, values={'name': warehouse.name + _(' Picking in'), 'prefix': obj.code + '\IN\\', 'padding': 5}, context=context)
+        out_seq_id = seq_obj.create(cr, uid, values={'name': warehouse.name + _(' Picking out'), 'prefix': obj.code + '\OUT\\', 'padding': 5}, context=context)
+        internal_seq_id = seq_obj.create(cr, uid, values={'name': warehouse.name + _(' Picking internal'), 'prefix': obj.code + '\INT\\', 'padding': 5}, context=context)
         #then create picking_types
         in_picking_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
-            'warehouse_id': new_wh_id,
+            'warehouse_id': warehouse_id,
             'code_id': 'incoming',
             'auto_force_assign': True,
             'sequence_id': in_seq_id,
@@ -176,7 +161,7 @@ class stock_configure_wh(osv.osv_memory):
             'default_location_dest_id': wh_input_stock_loc.id}, context=context)
         out_picking_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Delivery Orders'),
-            'warehouse_id': new_wh_id,
+            'warehouse_id': warehouse_id,
             'code_id': 'outgoing',
             'sequence_id': out_seq_id,
             'delivery': True,
@@ -184,7 +169,7 @@ class stock_configure_wh(osv.osv_memory):
             'default_location_dest_id': customer_loc.id}, context=context)
         internal_picking_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Internal Transfers'),
-            'warehouse_id': new_wh_id,
+            'warehouse_id': warehouse_id,
             'code_id': 'internal',
             'sequence_id': internal_seq_id,
             'default_location_src_id': wh_stock_loc.id,
@@ -213,13 +198,13 @@ class stock_configure_wh(osv.osv_memory):
 
             route_name, values = routes_dict[obj.reception_steps]
             new_route_id = route_obj.create(cr, uid, vals={
-                'name': self._format_routename(cr, uid, obj, route_name, context=context),
+                'name': self._format_routename(cr, uid, warehouse, route_name, context=context),
                 'product_categ_selectable': True,
                 'product_selectable': False,
             }, context=context)
             for from_loc, dest_loc, pick_type_id in values:
                 push_data = {
-                    'name': self._format_rulename(cr, uid, obj, from_loc, dest_loc, context=context),
+                    'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
                     'location_from_id': from_loc.id,
                     'location_dest_id': dest_loc.id,
                     'route_id': new_route_id,
@@ -232,16 +217,16 @@ class stock_configure_wh(osv.osv_memory):
 
         #create pull rules for delivery, which include all routes in MTS on the warehouse and a specific route MTO to be set on the product
         route_name, values = routes_dict[obj.delivery_steps]
-        route_obj.write(cr, uid, default_route_id, {'name': self._format_routename(cr, uid, obj, route_name, context=context)}, context=context)
+        route_obj.write(cr, uid, default_route_id, {'name': self._format_routename(cr, uid, warehouse, route_name, context=context)}, context=context)
         mto_route_id = route_obj.create(cr, uid, vals={
-            'name': self._format_routename(cr, uid, obj, route_name, context=context) + _(' (MTO)'),
+            'name': self._format_routename(cr, uid, warehouse, route_name, context=context) + _(' (MTO)'),
             'warehouse_selectable': False,
             'product_selectable': True,
         })
         first_rule = True
         for from_loc, dest_loc, pick_type_id in values:
             pull_obj.create(cr, uid, {
-                'name': self._format_rulename(cr, uid, obj, from_loc, dest_loc, context=context),
+                'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
                 'location_src_id': from_loc.id,
                 'location_id': dest_loc.id,
                 'route_id': default_route_id,
@@ -251,7 +236,7 @@ class stock_configure_wh(osv.osv_memory):
             }, context=context)
             if first_rule:
                 pull_obj.create(cr, uid, {
-                    'name': self._format_rulename(cr, uid, obj, from_loc, dest_loc, context=context),
+                    'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
                     'location_src_id': from_loc.id,
                     'location_id': dest_loc.id,
                     'route_id': mto_route_id,
@@ -265,7 +250,7 @@ class stock_configure_wh(osv.osv_memory):
         #create a route for cross dock operations, that can be set on products and product categories
         route_name, values = routes_dict['crossdock']
         crossdock_route_id = route_obj.create(cr, uid, vals={
-            'name': self._format_routename(cr, uid, obj, route_name, context=context),
+            'name': self._format_routename(cr, uid, warehouse, route_name, context=context),
             'warehouse_selectable': False,
             'product_selectable': True,
             'product_categ_selectable': True,
@@ -273,7 +258,7 @@ class stock_configure_wh(osv.osv_memory):
         first_rule = True
         for from_loc, dest_loc, pick_type_id in values:
             pull_obj.create(cr, uid, {
-                'name': self._format_rulename(cr, uid, obj, from_loc, dest_loc, context=context),
+                'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
                 'location_src_id': from_loc.id,
                 'location_id': dest_loc.id,
                 'route_id': crossdock_route_id,

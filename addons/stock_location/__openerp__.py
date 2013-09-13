@@ -100,8 +100,7 @@ You can use the demo data as follow:
              'stock_location_view.xml',
              'stock_location_data.xml', 
              'security/stock_location_security.xml', 
-             'security/ir.model.access.csv',
-             'res_config_view.xml'],
+             'security/ir.model.access.csv'],
     'demo': [
         'stock_location_demo_cpu1.xml',
         'stock_location_demo_cpu3.yml',

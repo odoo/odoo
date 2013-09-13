@@ -8,10 +8,7 @@
               <form string="Configure Warehouse" version="7.0">
                 <sheet>
                   <group string="Warehouse Information" colspan="4">
-                      <field name="name"/>
                       <field name="code"/>
-                      <field name="partner_id" invisible="1"/>
-                      <field name="address_id" domain="[('parent_id', '=', partner_id)]" context="{'default_parent_id': partner_id}"/>
                   </group>
                   <group string="Logistics Information" colspan="4">
                       <field name="reception_steps" widget='radio'/>

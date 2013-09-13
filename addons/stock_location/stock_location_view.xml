@@ -188,7 +188,8 @@
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="route_id"/>
+                    <field name="route_id" attrs="{'invisible': [('route_id', '=', False)]}"/>
+                    <button name="%(action_view_stock_configure_wh)d" string="Configure this warehouse" type="action" attrs="{'invisible': [('route_id', '!=', False)]}"/>
                 </xpath>
             </field>
         </record>
