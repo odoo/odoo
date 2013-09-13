@@ -263,19 +263,23 @@ class stock_quant(osv.osv):
     # Create a negative quant in the source location if it's an internal location
     # Reconcile a positive quant with a negative is possible
     #
-    def _quant_create(self, cr, uid, qty, move, lot_id = False, context=None):
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, force_location=False, context=None):
         # FP Note: TODO: compute the right price according to the move, with currency convert
         # QTY is normally already converted to main product's UoM
+        if context is None:
+            context = {}
         price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
+        location = force_location or move.location_dest_id
         vals = {
             'product_id': move.product_id.id,
-            'location_id': move.location_dest_id.id,
+            'location_id': location.id,
             'qty': qty,
             'cost': price_unit,
             'history_ids': [(4, move.id)],
             'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'company_id': move.company_id.id,
             'lot_id': lot_id,
+            'owner_id': owner_id,
         }
 
         if move.location_id.usage == 'internal':
@@ -1247,9 +1251,6 @@ class stock_move(osv.osv):
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
         'availability': fields.function(_get_product_availability, type='float', string='Availability'),
         }
-    
-    
-
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1562,6 +1563,9 @@ class stock_move(osv.osv):
         """
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
+            if move.state == 'done':
+                raise osv.except_osv(_('Operation Forbidden!'),
+                        _('You cannot cancel a stock move that has been set to \'Done\'.'))
             if move.reserved_quant_ids:
                 self.pool.get("stock.quant").quants_unreserve(cr, uid, move, context=context)
             if move.move_dest_id:
@@ -1860,6 +1864,8 @@ class stock_inventory(osv.osv):
     def _create_stock_move(self, cr, uid, inventory, todo_line, context=None):
         stock_move_obj = self.pool.get('stock.move')
         product_obj = self.pool.get('product.product')
+        quant_obj = self.pool.get('stock.quant')
+        location_obj = self.pool.get('stock.location')
         inventory_location_id = product_obj.browse(cr, uid, todo_line['product_id'], context=context).property_stock_inventory.id
         vals = {
             'name': _('INV:') + (inventory.name or ''),
@@ -1868,6 +1874,7 @@ class stock_inventory(osv.osv):
             'date': inventory.date,
             'company_id': inventory.company_id.id,
             'inventory_id': inventory.id,
+            'state': 'assigned',
          }
 
         if todo_line['product_qty'] < 0:
@@ -1880,7 +1887,21 @@ class stock_inventory(osv.osv):
             vals['location_id'] = todo_line['location_id']
             vals['location_dest_id'] = inventory_location_id
             vals['product_uom_qty'] = todo_line['product_qty']
-        stock_move_obj.create(cr, uid, vals, context=context)
+        move_id = stock_move_obj.create(cr, uid, vals, context=context)
+        move = stock_move_obj.browse(cr, uid, move_id, context=context)
+        #create the quants, and set the quants on the move
+        source_location = location_obj.browse(cr, uid, vals['location_id'], context=context)
+        product = self.pool.get('product.product').browse(cr, uid, vals['product_id'], context=context)
+        dom = [('owner_id', '=', todo_line.get('partner_id')), ('lot_id', '=', todo_line.get('prod_lot_id')), ('qty', '>', 0)]
+        quant_ids = []
+        for quant, qty in quant_obj.quants_get(cr, uid, source_location, product, vals['product_uom_qty'], domain=dom, context=context):
+            if quant:
+                #split
+                quant_obj._quant_split(cr, uid, quant, qty, context=context)
+            else:
+                quant = quant_obj._quant_create(cr, uid, qty, move, lot_id=todo_line.get('prod_lot_id'), owner_id=todo_line.get('partner_id'), force_location=move.location_id, context=context)
+            quant_ids.append(quant.id)
+        quant_obj.write(cr, uid, quant_ids, {'reservation_id': move_id}, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
         """ Checks the inventory and computes the stock move to do
@@ -1952,6 +1973,10 @@ class stock_inventory(osv.osv):
         ''', args)
         vals = []
         for product_line in cr.dictfetchall():
+            #replace the None the dictionary by False, because falsy values are tested later on
+            for key, value in product_line.items():
+                if value == None:
+                    product_line[key] = False
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
@@ -1978,21 +2003,17 @@ class stock_inventory_line(osv.osv):
     }
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
+        #TODO : package_id management !
         found = False
         uom_obj = self.pool.get('product.uom')
-        
         for th_line in theorical_lines:
-            #We try to match the inventory line with a theorical line with same product, lot and location and owner
-            #or match with same product and lot (only if owner is missing)
-            #or match with same product and owner (only if lot is missing)
-            #or match with same product (only if owner and lot are missing)
-            if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id:
-                if (not inventory_line.prod_lot_id.id or th_line['prod_lot_id'] == inventory_line.prod_lot_id.id) and (not inventory_line.partner_id.id or th_line['partner_id'] == inventory_line.partner_id.id):
-                    uom_reference = inventory_line.product_id.uom_id
-                    real_qty = uom_obj._compute_qty_obj(cr, uid, inventory_line.product_uom_id, inventory_line.product_qty, uom_reference)
-                    th_line['product_qty'] -= real_qty
-                    found = True
-                    break
+            #We try to match the inventory line with a theorical line with same product, lot, location and owner
+            if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and th_line['prod_lot_id'] == inventory_line.prod_lot_id.id and th_line['partner_id'] == inventory_line.partner_id.id:
+                uom_reference = inventory_line.product_id.uom_id
+                real_qty = uom_obj._compute_qty_obj(cr, uid, inventory_line.product_uom_id, inventory_line.product_qty, uom_reference)
+                th_line['product_qty'] -= real_qty
+                found = True
+                break
         #if it was still not found, we add it to the theorical lines so that it will create a stock move for it
         if not found:
             vals = {
@@ -2002,6 +2023,7 @@ class stock_inventory_line(osv.osv):
                 'product_uom_id': inventory_line.product_id.uom_id.id,
                 'product_qty': -inventory_line.product_qty,
                 'prod_lot_id': inventory_line.prod_lot_id.id,
+                'partner_id': inventory_line.partner_id.id,
             }
             theorical_lines.append(vals)
 

@@ -105,7 +105,7 @@
                     <button name="prepare_inventory" states="draft" string="Start Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                     <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                    <button name="action_cancel_inventory" states="confirm,done" string="Cancel Inventory" type="object"/>
+                    <button name="action_cancel_inventory" states="confirm" string="Cancel Inventory" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
                 <sheet>
@@ -139,7 +139,7 @@
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
                                     <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
                                     <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
                                     <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
                                     <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
                                     <field name="th_qty" readonly="1"/>
@@ -1527,7 +1527,7 @@
                     <field name="lot_id"/>
                     <field name="owner_id"/>
                     <group expand='0' string='Filters'>
-                        <filter string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
+                        <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                        <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>
@@ -1545,7 +1545,7 @@
         
         <record model="ir.actions.act_window" id="quantsact">
             <field name="name">Quants</field>
-            <field name="context">{'search_default_productgroup':'1'}</field>
+            <field name="context">{'search_default_productgroup':'1', 'search_default_internal_loc': 1}</field>
             <field name="res_model">stock.quant</field>
         </record>
 
@@ -1575,7 +1575,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Quants">
+                <tree string="Quants" create="0">
                     <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>
