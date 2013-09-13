@@ -3122,8 +3122,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 #in order to set default chart which was last created set max of ids.
                 chart_id = max(ids)
                 if context.get("default_charts"):
-                    data_id = data_obj.search(cr, uid, [('model', '=', 'account.chart.template'), ('module', '=', context.get("default_charts"))], context=context)
-                    chart_id = data_obj.browse(cr, uid, data_id[0], context=context).res_id
+                    data_ids = data_obj.search(cr, uid, [('model', '=', 'account.chart.template'), ('module', '=', context.get("default_charts"))], limit=1, context=context)
+                    if data_ids:
+                        chart_id = data_obj.browse(cr, uid, data_ids[0], context=context).res_id
                 res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': chart_id})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
