@@ -1,5 +1,8 @@
 -
-  I Unlink the Lead.
+  Only Sales manager Unlink the Lead so test with Manager's access rights'.
+-
+  !context
+    uid: 'crm_res_users_salesmanager'
 -
   !python {model: crm.lead}: |
      self.unlink(cr, uid, [ref("crm_case_4")])

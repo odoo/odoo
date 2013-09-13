@@ -31,6 +31,11 @@
         assert line.product_uom_id.id == procurement.product_uom.id, "UOM is not correspond."
         assert line.product_qty == procurement.product_qty, "Quantity is not correspond."
 -
+  Give access rights of Purchase Requisition User to open requisition
+-
+  !context
+    uid: 'res_users_purchase_requisition_user'
+-
   I open another requisition.
 -
   !python {model: purchase.requisition}: |

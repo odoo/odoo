@@ -1,5 +1,8 @@
 -
-  Now I confirm the Quotation with "Pay before delivery" policy.
+  Now I confirm the Quotation with "Pay before delivery" policy with access rights of salesman.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_4}
 -
