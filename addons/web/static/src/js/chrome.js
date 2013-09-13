@@ -805,10 +805,11 @@ instance.web.redirect = function(url, wait) {
 
     var load = function() {
         var old = "" + window.location;
-        if (old === url) {
-            window.location.reload();
-        } else {
-            window.location.href = url;
+        var old_no_hash = old.split("#")[0];
+        var url_no_hash = url.split("#")[0];
+        location.assign(url);
+        if (old_no_hash === url_no_hash) {
+            location.reload(true);
         }
     };
 
