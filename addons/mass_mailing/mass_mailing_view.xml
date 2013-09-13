@@ -39,8 +39,6 @@
             </field>
         </record>
 
-
-        <!-- CRM Lead Kanban View  -->
         <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_kanban">
             <field name="name">mail.mass_mailing.campaign.kanban</field>
             <field name="model">mail.mass_mailing.campaign</field>
@@ -150,29 +148,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_form_readonly">
-            <field name="name">mail.mass_mailing.form</field>
-            <field name="model">mail.mass_mailing</field>
-            <field name="priority">18</field>
-            <field name="arch" type="xml">
-                <form string="Mass Mailing" version="7.0">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="date" readonly="True"/>
-                            </group>
-                            <group>
-                                <field name="mass_mailing_campaign_id" readonly="True"/>
-                                <field name="template_id" readonly="True"/>
-                                <field name="domain" readonly="True"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
             <field name="name">mail.mass_mailing.kanban</field>
             <field name="model">mail.mass_mailing</field>
@@ -236,6 +211,43 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
+        <!--  MAIL MAIL STATISTICS !-->
+        <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
+            <field name="name">mail.mail.statistics.tree</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <tree string="Mail Statistics">
+                    <field name="mail_mail_id"/>
+                    <field name="message_id"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_form">
+            <field name="name">mail.mail.statistics.form</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <form string="Mail Statistics" version="7.0">
+                    <group>
+                        <field name="mail_mail_id"/>
+                        <field name="message_id"/>
+                        <field name="opened"/>
+                        <field name="replied"/>
+                        <field name="bounced"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
+            <field name="name">Mail Statistics</field>
+            <field name="res_model">mail.mail.statistics</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <!-- Top menu item -->
         <menuitem name="Marketing" id="base.marketing_menu" sequence="85"/>
 
@@ -248,6 +260,11 @@
         <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
             parent="mass_mailing_campaign" sequence="2"
             action="action_view_mass_mailings"/>
+
+        <!-- Add in Technical/Email -->
+        <menuitem name="Mail Statistics" id="menu_email_statistics"
+            parent="base.menu_email" sequence="50"
+            action="action_view_mail_mail_statistics"/>
 
     </data>
 </openerp>
