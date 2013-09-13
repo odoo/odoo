@@ -96,6 +96,10 @@
     website.seo.KeywordList = openerp.Widget.extend({
         template: 'website.seo_list',
         maxKeywords: 10,
+        init: function (parent, htmlPage) {
+            this.htmlPage = htmlPage;
+            this._super(parent);
+        },
         keywords: function () {
             var result = [];
             this.$('span.js_seo_keyword').each(function () {
@@ -143,7 +147,7 @@
     website.seo.ImageList = openerp.Widget.extend({
         start: function () {
             var self = this;
-            new website.seo.PageParser().images().each(function (index, image) {
+            new website.seo.HtmlPage().images().each(function (index, image) {
                 new website.seo.Image(self, image).appendTo(self.$el);
             });
         },
@@ -163,14 +167,29 @@
         },
     });
 
-    website.seo.PageParser = openerp.Class.extend({
+    website.seo.HtmlPage = openerp.Class.extend({
         url: function () {
             var url = window.location.href;
             var hashIndex = url.indexOf('#');
             return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
         },
         title: function () {
-            return $(document.title).text();
+            return $('title').text();
+        },
+        changeTitle: function (title) {
+            $('title').text(title);
+        },
+        description: function () {
+            return $('meta[name=description]').attr('value');
+        },
+        changeDescription: function (description) {
+            return $('meta[name=description]').attr('value', description);
+        },
+        keywords: function () {
+            return $('meta[name=keywords]').attr('value').split(",");
+        },
+        changeKeywords: function (keywords) {
+            return $('meta[name=keywords]').attr('value', keyword.join(","));
         },
         headers: function (tag) {
             return $('#wrap '+tag).map(function () {
@@ -208,23 +227,26 @@
     website.seo.Configurator = openerp.Widget.extend({
         template: 'website.seo_configuration',
         events: {
-            'keypress input[name=seo_page_keywords]': 'confirmKeyword',
+            'keyup input[name=seo_page_keywords]': 'confirmKeyword',
+            'keyup input[name=seo_page_title]': 'titleChanged',
+            'keyup textarea[name=seo_page_description]': 'descriptionChanged',
             'click button[data-action=add]': 'addKeyword',
             'click button[data-action=update]': 'update',
-            'hidden.bs.modal': 'destroy'
+            'hidden.bs.modal': 'destroy',
         },
         maxTitleSize: 65,
         maxDescriptionSize: 155,
         start: function () {
             var self = this;
             var $modal = self.$el;
-            var pageParser = new website.seo.PageParser();
-            $modal.find('.js_seo_page_url').text(pageParser.url());
-            $modal.find('input[name=seo_page_title]').val(pageParser.title());
-            self.suggestImprovements(pageParser);
+            var htmlPage = this.htmlPage = new website.seo.HtmlPage();
+            $modal.find('.js_seo_page_url').text(htmlPage.url());
+            $modal.find('input[name=seo_page_title]').val(htmlPage.title());
+            $modal.find('textarea[name=seo_page_description]').val(htmlPage.description());
+            self.suggestImprovements(htmlPage);
             self.imageList = new website.seo.ImageList(self);
             self.imageList.appendTo($modal.find('.js_seo_image_list'));
-            self.keywordList = new website.seo.KeywordList(self);
+            self.keywordList = new website.seo.KeywordList(self, htmlPage);
             self.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .attr('readonly', "readonly")
@@ -242,7 +264,7 @@
                 self.keywordList.add(word);
             });
             self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
-            var companyName = pageParser.company().toLowerCase();
+            var companyName = htmlPage.company().toLowerCase();
             self.addKeyword(companyName);
             $modal.modal();
         },
@@ -255,14 +277,14 @@
                    type: type,
                 }).appendTo(self.$('.js_seo_tips'));
             }
-            var pageParser = parser || new website.seo.PageParser();
-            if (pageParser.headers('h1').length === 0) {
+            var htmlPage = parser || new website.seo.HtmlPage();
+            if (htmlPage.headers('h1').length === 0) {
                 tips.push({
                     type: 'warning',
                     message: "You don't have an &lt;h1&gt; tag on your page.",
                 });
             }
-            if (pageParser.headers('h1').length > 1) {
+            if (htmlPage.headers('h1').length > 1) {
                 tips.push({
                     type: 'warning',
                     message: "You have more than one &lt;h1&gt; tag on your page.",
@@ -289,13 +311,28 @@
         },
         update: function () {
             var data = {
-                title: this.$('input[name=seo_page_title]').val(),
-                description: this.$('input[name=seo_page_title]').val(),
+                title: this.htmlPage.title(),
+                description: this.htmlPage.description(),
                 keywords: this.keywordList.keywords(),
                 images: this.imageList.images(),
             };
             console.log(data);
             // TODO Persist changes
+            this.$el.modal('hide');
+        },
+        titleChanged: function () {
+            var self = this;
+            setTimeout(function () {
+                var title = self.$('input[name=seo_page_title]').val();
+                self.htmlPage.changeTitle(title);
+            }, 1);
+        },
+        descriptionChanged: function () {
+            var self = this;
+            setTimeout(function () {
+                var description = self.$('textarea[name=seo_page_description]').attr('value');
+                self.htmlPage.changeDescription(description);
+            }, 1);
         },
     });
 })();
