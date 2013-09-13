@@ -677,7 +677,7 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
                     continue
-                if self._check_create_procurement(cr, uid, order, line, context=context):
+                if self._can_create_procurement(cr, uid, ids, context=context) and self._check_create_procurement(cr, uid, order, line, context=context):
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
