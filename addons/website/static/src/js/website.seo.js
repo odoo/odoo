@@ -22,9 +22,12 @@
         },
         init: function (parent, keyword) {
             this.keyword = keyword;
+            var keywordRegex = new RegExp(this.keyword, "gi");
+            var pageText = $('body').children().not('.js_seo_configuration').text();
+            var isKeywordInBody = keywordRegex.test(pageText);
             // cf. http://getbootstrap.com/components/#labels
             // default, primary, success, info, warning, danger
-            this.type = 'default';
+            this.type = isKeywordInBody ? 'info' : 'default';
             this._super(parent);
         },
         select: function () {
@@ -96,8 +99,7 @@
     website.seo.KeywordList = openerp.Widget.extend({
         template: 'website.seo_list',
         maxKeywords: 10,
-        init: function (parent, htmlPage) {
-            this.htmlPage = htmlPage;
+        init: function (parent) {
             this._super(parent);
         },
         keywords: function () {
@@ -246,7 +248,7 @@
             self.suggestImprovements(htmlPage);
             self.imageList = new website.seo.ImageList(self);
             self.imageList.appendTo($modal.find('.js_seo_image_list'));
-            self.keywordList = new website.seo.KeywordList(self, htmlPage);
+            self.keywordList = new website.seo.KeywordList(self);
             self.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .attr('readonly', "readonly")
