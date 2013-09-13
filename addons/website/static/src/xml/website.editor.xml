@@ -95,23 +95,18 @@
                       enctype="multipart/form-data"
                       target="fileframe"
                       class="col-sm-8">
+                    <div class="text-center">
+                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary btn-lg filepicker">
+                            Upload an image from your computer
+                        </button>
+                        <p class="">— or —</p>
+                    </div>
                     <div class="well">
                         <!-- a href="#" class="pull-left">Find image</a -->
                         <h3 class="list-group-item-heading">Image URL</h3>
                         <input type="text" class="form-control url"
                                placeholder="http://openerp.com"/>
-                    </div>
-                    <div class="text-center">
-                        <p class="">— or —</p>
-                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                        <button type="button" class="btn btn-primary btn-lg filepicker">
-                            Upload an image from your computer
-                        </button>
-                    </div>
-                    <p class="text-center">— or —</p>
-                    <div class="well">
-                        <h3 class="list-group-item-heading">Pick an existing attachment</h3>
-                        <div class="existing-attachments"/>
                     </div>
                     <input type="hidden" name="func"/>
                 </form>
