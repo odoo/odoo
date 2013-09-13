@@ -5,7 +5,6 @@ import openerp
 from openerp import SUPERUSER_ID
 import openerp.addons.web.http as http
 from openerp.addons.web.controllers.main import content_disposition
-from openerp.addons.web.http import request
 
 
 class MailController(http.Controller):
@@ -38,10 +37,3 @@ class MailController(http.Controller):
             except psycopg2.Error:
                 pass
         return True
-
-    @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='admin')
-    def track_read_email(self, mail_id):
-        """ Email tracking. """
-        mail_mail = request.registry.get('mail.mail')
-        mail_mail.set_opened(request.cr, request.uid, [mail_id])
-        return False

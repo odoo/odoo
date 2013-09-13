@@ -3,17 +3,17 @@
     <data>
 
         <!-- Wizard form view -->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_create_form">
-            <field name="name">mail.mass_mailing.segment.create.form</field>
-            <field name="model">mail.mass_mailing.segment.create</field>
+        <record model="ir.ui.view" id="view_mail_mass_mailing_create_form">
+            <field name="name">mail.mass_mailing.create.form</field>
+            <field name="model">mail.mass_mailing.create</field>
             <field name="arch" type="xml">
-                <form string="Create a Mass Mailing Segment" version="7.0">
+                <form string="Create a Mass Mailing" version="7.0">
                     <group>
                         <field name="model_model" invisible="1"/>
                         <field name="domain" invisible="1"/>
                         <p class="oe_grey" colspan="2"
                             attrs="{'invisible': [('mass_mailing_campaign_id', '!=', False)]}">
-                            Please choose a mass mailing campaign that will hold the new segment.
+                            Please choose a mass mailing campaign that will hold the new mailing.
                         </p>
                         <field name="mass_mailing_campaign_id"/>
 
@@ -43,23 +43,23 @@
                             attrs="{'invisible': [('filter_id', '=', False)]}"/>
 
                         <p class="oe_grey" colspan="2"
-                            attrs="{'invisible': ['|', ('segment_name', '!=', False), ('template_id', '=', False)]}">
-                            Please choose the name of the campaign segment.
+                            attrs="{'invisible': ['|', ('name', '!=', False), ('template_id', '=', False)]}">
+                            Please choose the name of the mailing.
                         </p>
-                        <field name="segment_name"
+                        <field name="name"
                             attrs="{'invisible': [('template_id', '=', False)]}"/>
 
                         <button name="launch_composer" type="object"
-                            string="Create segment and launch email composer"
-                            attrs="{'invisible': [('segment_name', '=', False)]}"/>
+                            string="Create mailing and launch email composer"
+                            attrs="{'invisible': [('name', '=', False)]}"/>
                     </group>
                 </form>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_mail_mass_mailing_segment_create">
-            <field name="name">Create Mass Mailing Segment</field>
-            <field name="res_model">mail.mass_mailing.segment.create</field>
+        <record model="ir.actions.act_window" id="action_mail_mass_mailing_create">
+            <field name="name">Create Mass Mailing</field>
+            <field name="res_model">mail.mass_mailing.create</field>
             <field name="src_model">mail.mass_mailing.campaign</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

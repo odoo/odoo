@@ -62,17 +62,6 @@ class mail_mail(osv.Model):
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
             help='Mail has been created to notify people of an existing mail.message'),
-        # Bounce and tracking
-        'opened': fields.datetime(
-            'Opened',
-            help='Date when this email has been opened for the first time.'),
-        'replied': fields.datetime(
-            'Replied',
-            help='Date when this email has been replied for the first time.'),
-        'bounced': fields.datetime(
-            'Bounced',
-            help='Date when this email has bounced.'
-        ),
     }
 
     _defaults = {
@@ -105,30 +94,6 @@ class mail_mail(osv.Model):
 
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-
-    def set_opened(self, cr, uid, ids, context=None):
-        """ Set as opened """
-        existing_ids = self.exists(cr, uid, ids, context=context)
-        for mail in self.browse(cr, uid, existing_ids, context=context):
-            if not mail.opened:
-                self.write(cr, uid, [mail.id], {'opened': fields.datetime.now()}, context=context)
-        return True
-
-    def set_replied(self, cr, uid, ids, context=None):
-        """ Set as replied """
-        existing_ids = self.exists(cr, uid, ids, context=context)
-        for mail in self.browse(cr, uid, existing_ids, context=context):
-            if not mail.replied:
-                self.write(cr, uid, [mail.id], {'replied': fields.datetime.now()}, context=context)
-        return True
-
-    def set_bounced(self, cr, uid, ids, context=None):
-        """ Set as bounced """
-        existing_ids = self.exists(cr, uid, ids, context=context)
-        for mail in self.browse(cr, uid, existing_ids, context=context):
-            if not mail.bounced:
-                self.write(cr, uid, [mail.id], {'bounced': fields.datetime.now()}, context=context)
-        return True
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
@@ -200,15 +165,6 @@ class mail_mail(osv.Model):
         else:
             return None
 
-    def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
-        if not mail.auto_delete:
-            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-            track_url = urljoin(base_url, 'mail/track/%d/blank.gif' % mail.id)
-            print base_url, track_url
-            return '<img src="%s" alt=""/>' % track_url
-        else:
-            return ''
-
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
         """ If subject is void and record_name defined: '<Author> posted on <Resource>'
 
@@ -233,11 +189,8 @@ class mail_mail(osv.Model):
 
         # generate footer
         link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
-        tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
         if link:
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
-        if tracking_url:
-            body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):

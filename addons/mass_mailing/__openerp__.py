@@ -21,6 +21,7 @@
 
 {
     'name': 'Mass Mailing Campaigns',
+    'description': """TODO""",
     'version': '1.0',
     'author': 'OpenERP',
     'website': 'http://www.openerp.com',
@@ -31,11 +32,10 @@
         'web_kanban_gauge',
         'web_kanban_sparkline',
     ],
-    'description': """TODO""",
     'data': [
+        'mail_data.xml',
         'mass_mailing_view.xml',
         'mass_mailing_demo.xml',
-        'mail_mail_view.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_mass_mailing_create_segment.xml',
         'security/ir.model.access.csv',

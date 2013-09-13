@@ -38,42 +38,46 @@ class MassMailingCampaign(osv.Model):
         results = dict.fromkeys(ids, False)
         for campaign in self.browse(cr, uid, ids, context=context):
             results[campaign.id] = {
-                'sent': len(campaign.mail_ids),
-                'opened': len([mail for mail in campaign.mail_ids if mail.opened]),
-                'replied': len([mail for mail in campaign.mail_ids if mail.replied]),
-                'bounced': len([mail for mail in campaign.mail_ids if mail.bounced]),
+                'sent': len(campaign.statistics_ids),
                 # delivered: shouldn't be: all mails - (failed + bounced) ?
-                'delivered': len([mail for mail in campaign.mail_ids if mail.state == 'sent' and not mail.bounced]),
+                'delivered': len([stat for stat in campaign.statistics_ids if not stat.bounced]),  # stat.state == 'sent' and
+                'opened': len([stat for stat in campaign.statistics_ids if stat.opened]),
+                'replied': len([stat for stat in campaign.statistics_ids if stat.replied]),
+                'bounced': len([stat for stat in campaign.statistics_ids if stat.bounced]),
             }
         return results
 
-    def _get_segment_kanban_ids(self, cr, uid, ids, name, arg, context=None):
+    def _get_mass_mailing_kanban_ids(self, cr, uid, ids, name, arg, context=None):
         results = dict.fromkeys(ids, '')
         for campaign in self.browse(cr, uid, ids, context=context):
-            segment_results = []
-            for segment in campaign.segment_ids:
-                segment_object = {}
+            mass_mailing_results = []
+            for mass_mailing in campaign.mass_mailing_ids:
+                mass_mailing_object = {}
                 for attr in ['name', 'sent', 'delivered', 'opened', 'replied', 'bounced']:
-                    segment_object[attr] = getattr(segment, attr)
-                segment_results.append(segment_object)
-            results[campaign.id] = segment_results
+                    mass_mailing_object[attr] = getattr(mass_mailing, attr)
+                mass_mailing_results.append(mass_mailing_object)
+            results[campaign.id] = mass_mailing_results
         return results
 
     _columns = {
         'name': fields.char(
             'Campaign Name', required=True,
         ),
-        'segment_ids': fields.one2many(
-            'mail.mass_mailing.segment', 'mass_mailing_campaign_id',
-            'Segments',
+        'user_id': fields.many2one(
+            'res.users', 'Responsible',
+            required=True,
         ),
-        'segment_kanban_ids': fields.function(
-            _get_segment_kanban_ids,
-            type='text', string='Segments (kanban data)',
-            help='This field has for purpose to gather data about segment to display them in kanban view as nested kanban views is not possible currently',
+        'mass_mailing_ids': fields.one2many(
+            'mail.mass_mailing', 'mass_mailing_campaign_id',
+            'Mass Mailings',
         ),
-        'mail_ids': fields.one2many(
-            'mail.mail', 'mass_mailing_campaign_id',
+        'mass_mailing_kanban_ids': fields.function(
+            _get_mass_mailing_kanban_ids,
+            type='text', string='Mass Mailings (kanban data)',
+            help='This field has for purpose to gather data about mass mailings to display them in kanban view as nested kanban views is not possible currently',
+        ),
+        'statistics_ids': fields.one2many(
+            'mail.mail.statistics', 'mass_mailing_campaign_id',
             'Sent Emails',
         ),
         'color': fields.integer('Color Index'),
@@ -105,17 +109,21 @@ class MassMailingCampaign(osv.Model):
         ),
     }
 
-    def launch_segment_create_wizard(self, cr, uid, ids, context=None):
+    # _defaults = {
+        # 'user_id': lambda self, cr, uid, ctx=None: uid,
+    # },
+
+    def launch_mass_mailing_create_wizard(self, cr, uid, ids, context=None):
         ctx = dict(context)
         ctx.update({
             'default_mass_mailing_campaign_id': ids[0],
         })
         return {
-            'name': _('Create a Segment for the Campaign'),
+            'name': _('Create a Mass Mailing for the Campaign'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'mail.mass_mailing.segment.create',
+            'res_model': 'mail.mass_mailing.create',
             'views': [(False, 'form')],
             'view_id': False,
             'target': 'new',
@@ -123,12 +131,12 @@ class MassMailingCampaign(osv.Model):
         }
 
 
-class MassMailingSegment(osv.Model):
-    """ MassMailingSegment models a segment for a mass mailign campaign. A segment
-    is an occurence of sending emails. """
+class MassMailing(osv.Model):
+    """ MassMailing models a wave of emails for a mass mailign campaign.
+    A mass mailing is an occurence of sending emails. """
 
-    _name = 'mail.mass_mailing.segment'
-    _description = 'Segment of a mass mailing campaign'
+    _name = 'mail.mass_mailing'
+    _description = 'Wave of sending emails'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
 
@@ -162,7 +170,7 @@ class MassMailingSegment(osv.Model):
     def _get_monthly_statistics(self, cr, uid, ids, field_name, arg, context=None):
         """ TODO
         """
-        obj = self.pool['mail.mail']
+        obj = self.pool['mail.mail.statistics']
         res = {}
         context['datetime_format'] = {
             'opened': {
@@ -179,22 +187,22 @@ class MassMailingSegment(osv.Model):
         for id in ids:
             res[id] = {}
             date_begin = self.browse(cr, uid, id, context=context).date
-            domain = [('mass_mailing_segment_id', '=', id), ('opened', '>=', date_begin)]
+            domain = [('mass_mailing_id', '=', id), ('opened', '>=', date_begin)]
             res[id]['opened_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened', context=context)
-            domain = [('mass_mailing_segment_id', '=', id), ('replied', '>=', date_begin)]
+            domain = [('mass_mailing_id', '=', id), ('replied', '>=', date_begin)]
             res[id]['replied_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied', context=context)
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
         results = dict.fromkeys(ids, False)
-        for segment in self.browse(cr, uid, ids, context=context):
-            results[segment.id] = {
-                'sent': len(segment.mail_ids),
-                'delivered': len([mail for mail in segment.mail_ids if mail.state == 'sent' and not mail.bounced]),
-                'opened': len([mail for mail in segment.mail_ids if mail.opened]),
-                'replied': len([mail for mail in segment.mail_ids if mail.replied]),
-                'bounced': len([mail for mail in segment.mail_ids if mail.bounced]),
+        for mass_mailing in self.browse(cr, uid, ids, context=context):
+            results[mass_mailing.id] = {
+                'sent': len(mass_mailing.statistics_ids),
+                'delivered': len([stat for stat in mass_mailing.statistics_ids if not stat.bounced]),  # mail.state == 'sent' and
+                'opened': len([stat for stat in mass_mailing.statistics_ids if stat.opened]),
+                'replied': len([stat for stat in mass_mailing.statistics_ids if stat.replied]),
+                'bounced': len([stat for stat in mass_mailing.statistics_ids if stat.bounced]),
             }
         return results
 
@@ -214,9 +222,9 @@ class MassMailingSegment(osv.Model):
             'mass_mailing_campaign_id', 'color',
             type='integer', string='Color Index',
         ),
-        # mail_mail data
-        'mail_ids': fields.one2many(
-            'mail.mail', 'mass_mailing_segment_id',
+        # statistics data
+        'statistics_ids': fields.one2many(
+            'mail.mail.statistics', 'mass_mailing_id',
             'Send Emails',
         ),
         'sent': fields.function(
@@ -260,3 +268,95 @@ class MassMailingSegment(osv.Model):
     _defaults = {
         'date': fields.datetime.now(),
     }
+
+
+class MailMailStats(osv.Model):
+    """ MailMailStats models the statistics collected about emails. Those statistics
+    are stored in a separated model and table to avoid bloating the mail_mail table
+    with statistics values. This also allows to delete emails send with mass mailing
+    without loosing the statistics about them. """
+
+    _name = 'mail.mail.statistics'
+    _description = 'Email Statistics'
+    _rec_name = 'message_id'
+    _order = 'message_id'
+
+    _columns = {
+        'mail_mail_id': fields.integer(
+            'Mail ID',
+            help='ID of the related mail_mail. This field is an integer field because'
+                 'the related mail_mail can be deleted separately from its statistics.'
+        ),
+        'message_id': fields.char(
+            'Message-ID', required=True,
+        ),
+        # campaign / wave data
+        'mass_mailing_id': fields.many2one(
+            'mail.mass_mailing', 'Mass Mailing',
+            ondelete='set null',
+        ),
+        'mass_mailing_campaign_id': fields.related(
+            'mass_mailing_id', 'mass_mailing_campaign_id',
+            type='many2one', ondelete='set null',
+            relation='mail.mass_mailing.campaign',
+            string='Mass Mailing Campaign',
+            store=True, readonly=True,
+        ),
+        'template_id': fields.related(
+            'mass_mailing_id', 'template_id',
+            type='many2one', ondelete='set null',
+            relation='email.template',
+            string='Email Template',
+            store=True, readonly=True,
+        ),
+        # Bounce and tracking
+        'opened': fields.datetime(
+            'Opened',
+            help='Date when this email has been opened for the first time.'),
+        'replied': fields.datetime(
+            'Replied',
+            help='Date when this email has been replied for the first time.'),
+        'bounced': fields.datetime(
+            'Bounced',
+            help='Date when this email has bounced.'
+        ),
+    }
+
+    def set_opened(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
+        """ Set as opened """
+        if not ids and mail_mail_ids:
+            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids)], context=context)
+        elif not ids and mail_message_ids:
+            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids)], context=context)
+        else:
+            ids = []
+        for stat in self.browse(cr, uid, ids, context=context):
+            if not stat.opened:
+                self.write(cr, uid, [stat.id], {'opened': fields.datetime.now()}, context=context)
+        return True
+
+    def set_replied(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
+        """ Set as replied """
+        if not ids and mail_mail_ids:
+            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids)], context=context)
+        elif not ids and mail_message_ids:
+            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids)], context=context)
+        else:
+            ids = []
+        for stat in self.browse(cr, uid, ids, context=context):
+            if not stat.replied:
+                self.write(cr, uid, [stat.id], {'replied': fields.datetime.now()}, context=context)
+        return True
+
+    def set_bounced(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
+        """ Set as bounced """
+        if not ids and mail_mail_ids:
+            ids = self.search(cr, uid, [('mail_mail_id', 'in', mail_mail_ids)], context=context)
+        elif not ids and mail_message_ids:
+            ids = self.search(cr, uid, [('message_id', 'in', mail_message_ids)], context=context)
+        else:
+            ids = []
+        for stat in self.browse(cr, uid, ids, context=context):
+            if not stat.bounced:
+                self.write(cr, uid, [stat.id], {'bounced': fields.datetime.now()}, context=context)
+        return True

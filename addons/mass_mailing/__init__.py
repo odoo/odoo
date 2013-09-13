@@ -22,3 +22,4 @@
 import mass_mailing
 import mail_mail
 import wizard
+import controllers

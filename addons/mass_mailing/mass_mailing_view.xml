@@ -20,8 +20,8 @@
             <field name="arch" type="xml">
                 <form string="Mass Mailing Campaign" version="7.0">
                     <header>
-                        <button name="launch_segment_create_wizard" type="object"
-                            class="oe_highlight" string="Create a New Segment"/>
+                        <button name="launch_mass_mailing_create_wizard" type="object"
+                            class="oe_highlight" string="Create a New Mailing"/>
                     </header>
                     <sheet>
                         <group>
@@ -32,8 +32,8 @@
                             <field name="replied"/>
                             <field name="bounced"/>
                         </group>
-                        <label for="segment_ids"/>
-                        <field name="segment_ids"/>
+                        <label for="mass_mailing_ids"/>
+                        <field name="mass_mailing_ids"/>
                     </sheet>
                 </form>
             </field>
@@ -46,29 +46,29 @@
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="segment_kanban_ids"/>
+                    <field name="mass_mailing_kanban_ids"/>
                     <field name='sent'/>
                     <field name='color'/>
                     <templates>
-                        <t t-name="mass_mailing.segment">
+                        <t t-name="mass_mailing.mass_mailing">
                             <div>
-                                <h4><t t-raw="segment.name"/></h4>
+                                <h4><t t-raw="mass_mailing.name"/></h4>
                             </div>
                             <div>
                                 <p class="oe_mail_stats">
-                                    <span class="oe_mail_result"><t t-raw="segment.sent"/></span><br />
+                                    <span class="oe_mail_result"><t t-raw="mass_mailing.sent"/></span><br />
                                     Sent
                                 </p>
                                 <p class="oe_mail_stats">
-                                    <span class="oe_mail_result"><t t-raw="segment.delivered"/></span><br />
+                                    <span class="oe_mail_result"><t t-raw="mass_mailing.delivered"/></span><br />
                                     Delivered
                                 </p>
                                 <p class="oe_mail_stats">
-                                    <span class="oe_mail_result"><t t-raw="segment.opened"/></span><br />
+                                    <span class="oe_mail_result"><t t-raw="mass_mailing.opened"/></span><br />
                                     Opened
                                 </p>
                                 <p class="oe_mail_stats">
-                                    <span class="oe_mail_result"><t t-raw="segment.replied"/></span><br />
+                                    <span class="oe_mail_result"><t t-raw="mass_mailing.replied"/></span><br />
                                     Replied
                                 </p>
                             </div>
@@ -93,8 +93,8 @@
                                         <field name="replied" widget="gauge" style="width:160px; height: 120px;"
                                             options="{'max_field': 'sent'}"/>
                                     </div>
-                                    <t t-foreach='record.segment_kanban_ids.value' t-as='segment'>
-                                        <t t-call="mass_mailing.segment"/>
+                                    <t t-foreach='record.mass_mailing_kanban_ids.value' t-as='mass_mailing'>
+                                        <t t-call="mass_mailing.mass_mailing"/>
                                     </t>
                                 </div>
                                 <div class="oe_clear"></div>
@@ -112,13 +112,13 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <!--  MASS MAILING SEGMENTS !-->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_tree">
-            <field name="name">mail.mass_mailing.segment.tree</field>
-            <field name="model">mail.mass_mailing.segment</field>
+        <!--  MASS MAILING !-->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_tree">
+            <field name="name">mail.mass_mailing.tree</field>
+            <field name="model">mail.mass_mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailing Segments">
+                <tree string="Mass Mailings">
                     <field name="name"/>
                     <field name="sent"/>
                     <field name="delivered"/>
@@ -128,11 +128,11 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_form">
-            <field name="name">mail.mass_mailing.segment.form</field>
-            <field name="model">mail.mass_mailing.segment</field>
+        <record model="ir.ui.view" id="view_mail_mass_mailing_form">
+            <field name="name">mail.mass_mailing.form</field>
+            <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Segment" version="7.0">
+                <form string="Mass Mailing" version="7.0">
                     <sheet>
                         <group>
                             <group>
@@ -150,12 +150,12 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_form_readonly">
-            <field name="name">mail.mass_mailing.segment.form</field>
-            <field name="model">mail.mass_mailing.segment</field>
+        <record model="ir.ui.view" id="view_mail_mass_mailing_form_readonly">
+            <field name="name">mail.mass_mailing.form</field>
+            <field name="model">mail.mass_mailing</field>
             <field name="priority">18</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Segment" version="7.0">
+                <form string="Mass Mailing" version="7.0">
                     <sheet>
                         <group>
                             <group>
@@ -173,9 +173,9 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_segment_kanban">
-            <field name="name">mail.mass_mailing.segment.kanban</field>
-            <field name="model">mail.mass_mailing.segment</field>
+        <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
+            <field name="name">mail.mass_mailing.kanban</field>
+            <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name='color'/>
@@ -229,9 +229,9 @@
             </field>
         </record>
 
-        <record id="action_view_mass_mailing_segments" model="ir.actions.act_window">
-            <field name="name">Mass Mailing Segments</field>
-            <field name="res_model">mail.mass_mailing.segment</field>
+        <record id="action_view_mass_mailings" model="ir.actions.act_window">
+            <field name="name">Mass Mailings</field>
+            <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
@@ -245,9 +245,9 @@
         <menuitem name="Campaigns" id="menu_email_campaigns"
             parent="mass_mailing_campaign" sequence="1"
             action="action_view_mass_mailing_campaigns"/>
-        <menuitem name="Segments" id="menu_email_segments"
+        <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
             parent="mass_mailing_campaign" sequence="2"
-            action="action_view_mass_mailing_segments"/>
+            action="action_view_mass_mailings"/>
 
     </data>
 </openerp>

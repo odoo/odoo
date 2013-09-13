@@ -778,7 +778,6 @@ class mail_thread(osv.AbstractModel):
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
         fallback_model = model
-        bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
 
         # Get email.message.Message variables for future processing
         message_id = message.get('Message-Id')
@@ -786,25 +785,6 @@ class mail_thread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
-
-        # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
-        if bounce_alias in email_to:
-            bounce_match = tools.bounce_re.search(email_to)
-            if bounce_match:
-                bounced_mail_id = bounce_match.group(1)
-                self.pool['mail.mail'].set_bounced(cr, uid, [bounced_mail_id], context=context)
-                if self.pool['mail.mail'].exists(cr, uid, bounced_mail_id):
-                    mail = self.pool['mail.mail'].browse(cr, uid, bounced_mail_id, context=context)
-                    bounced_model = mail.model
-                    bounced_thread_id = mail.res_id
-                else:
-                    bounced_model = bounce_match.group(2)
-                    bounced_thread_id = int(bounce_match.group(3)) if bounce_match.group(3) else 0
-                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id)
-                if bounced_model and bounced_model in self.pool and hasattr(self.pool[bounced_model], 'message_receive_bounce'):
-                    self.pool[bounced_model].message_receive_bounce(cr, uid, [bounced_thread_id], mail_id=bounced_mail_id, context=context)
-                return []
 
         # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
@@ -894,6 +874,40 @@ class mail_thread(osv.AbstractModel):
             "No possible route found for incoming message from %s to %s (Message-Id %s:)." \
             "Create an appropriate mail.alias or force the destination model." % (email_from, email_to, message_id)
 
+    def message_route_process(self, cr, uid, msg, routes, context=None):
+        # postpone setting msg.partner_ids after message_post, to avoid double notifications
+        partner_ids = msg.pop('partner_ids', [])
+        thread_id = False
+        for model, thread_id, custom_values, user_id, alias in routes:
+            if self._name == 'mail.thread':
+                context.update({'thread_model': model})
+            if model:
+                model_pool = self.pool[model]
+                assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
+                    "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
+                    (msg['message_id'], model)
+
+                # disabled subscriptions during message_new/update to avoid having the system user running the
+                # email gateway become a follower of all inbound messages
+                nosub_ctx = dict(context, mail_create_nosubscribe=True, mail_create_nolog=True)
+                if thread_id and hasattr(model_pool, 'message_update'):
+                    model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
+                else:
+                    thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=nosub_ctx)
+            else:
+                assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
+                model_pool = self.pool.get('mail.thread')
+            if not hasattr(model_pool, 'message_post'):
+                context['thread_model'] = model
+                model_pool = self.pool['mail.thread']
+            new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
+
+            if partner_ids:
+                # postponed after message_post, because this is an external message and we don't want to create
+                # duplicate emails due to notifications
+                self.pool.get('mail.message').write(cr, uid, [new_msg_id], {'partner_ids': partner_ids}, context=context)
+        return thread_id
+
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
                         thread_id=None, context=None):
@@ -946,8 +960,7 @@ class mail_thread(osv.AbstractModel):
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments:
             msg.pop('attachments', None)
-        # postpone setting msg.partner_ids after message_post, to avoid double notifications
-        partner_ids = msg.pop('partner_ids', [])
+
         if msg.get('message_id'):   # should always be True as message_parse generate one if missing
             existing_msg_ids = self.pool.get('mail.message').search(cr, SUPERUSER_ID, [
                                                                 ('message_id', '=', msg.get('message_id')),
@@ -959,36 +972,7 @@ class mail_thread(osv.AbstractModel):
 
         # find possible routes for the message
         routes = self.message_route(cr, uid, msg_txt, msg, model, thread_id, custom_values, context=context)
-        thread_id = False
-        for model, thread_id, custom_values, user_id, alias in routes:
-            if self._name == 'mail.thread':
-                context.update({'thread_model': model})
-            if model:
-                model_pool = self.pool[model]
-                assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
-                    "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                        (msg['message_id'], model)
-
-                # disabled subscriptions during message_new/update to avoid having the system user running the
-                # email gateway become a follower of all inbound messages
-                nosub_ctx = dict(context, mail_create_nosubscribe=True, mail_create_nolog=True)
-                if thread_id and hasattr(model_pool, 'message_update'):
-                    model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
-                else:
-                    thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=nosub_ctx)
-            else:
-                assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
-                model_pool = self.pool.get('mail.thread')
-            if not hasattr(model_pool, 'message_post'):
-                context['thread_model'] = model
-                model_pool = self.pool['mail.thread']
-            new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
-
-            if partner_ids:
-                # postponed after message_post, because this is an external message and we don't want to create
-                # duplicate emails due to notifications
-                self.pool.get('mail.message').write(cr, uid, [new_msg_id], {'partner_ids': partner_ids}, context=context)
-
+        thread_id = self.message_route_process(cr, uid, msg, routes, context=context)
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -1043,15 +1027,6 @@ class mail_thread(osv.AbstractModel):
         if update_vals:
             self.write(cr, uid, ids, update_vals, context=context)
         return True
-
-    def message_receive_bounce(self, cr, uid, ids, mail_id=None, context=None):
-        """Called by ``message_process`` when a bounce email (such as Undelivered
-        Mail Returned to Sender) is received for an existing thread. The default
-        behavior is to check is an integer  ``message_bounce`` column exists.
-        If it is the case, its content is incremented. """
-        if self._all_columns.get('message_bounce'):
-            for obj in self.browse(cr, uid, ids, context=context):
-                self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 
     def _message_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
@@ -1303,8 +1278,8 @@ class mail_thread(osv.AbstractModel):
         return result
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None,
-                        content_subtype='html', **kwargs):
+                     subtype=None, parent_id=False, attachments=None, context=None,
+                     content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
 

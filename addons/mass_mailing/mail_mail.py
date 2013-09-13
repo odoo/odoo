@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,11 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+from urlparse import urljoin
+
+from openerp import tools
+from openerp import SUPERUSER_ID
+from openerp.osv import osv
 
 
 class MailMail(osv.Model):
@@ -27,23 +31,29 @@ class MailMail(osv.Model):
     _name = 'mail.mail'
     _inherit = ['mail.mail']
 
-    _columns = {
-        'mass_mailing_segment_id': fields.many2one(
-            'mail.mass_mailing.segment', 'Mass Mailing Segment',
-            ondelete='set null',
-        ),
-        'mass_mailing_campaign_id': fields.related(
-            'mass_mailing_segment_id', 'mass_mailing_campaign_id',
-            type='many2one', ondelete='set null',
-            relation='mail.mass_mailing.campaign',
-            string='Mass Mailing Campaign',
-            store=True, readonly=True,
-        ),
-        'template_id': fields.related(
-            'mass_mailing_segment_id', 'template_id',
-            type='many2one', ondelete='set null',
-            relation='email.template',
-            string='Email Template',
-            store=True, readonly=True,
-        ),
-    }
+    def create(self, cr, uid, values, context=None):
+        """ Override mail_mail creation to create an entry in mail.mail.statistics """
+        # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
+        mail_id = super(MailMail, self).create(cr, uid, values, context=context)
+        message_id = self.browse(cr, SUPERUSER_ID, mail_id).message_id
+        self.pool['mail.mail.statistics'].create(
+            cr, uid, {
+                'mail_mail_id': mail_id,
+                'message_id': message_id,
+            }, context=context)
+        return mail_id
+
+    def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        track_url = urljoin(base_url, 'mail/track/%d/blank.gif' % mail.id)
+        return '<img src="%s" alt=""/>' % track_url
+
+    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+        """ Override to add the tracking URL to the body. """
+        body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+
+        # generate tracking URL
+        tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
+        if tracking_url:
+            body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
+        return body

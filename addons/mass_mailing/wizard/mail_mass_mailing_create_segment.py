@@ -24,11 +24,11 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 
-class MailMassMailingSegmentCreate(osv.TransientModel):
-    """Wizard to help creating mass mailing segments for a campaign. """
+class MailMassMailingCreate(osv.TransientModel):
+    """Wizard to help creating mass mailing waves for a campaign. """
 
-    _name = 'mail.mass_mailing.segment.create'
-    _description = 'Mass mailing segment creation'
+    _name = 'mail.mass_mailing.create'
+    _description = 'Mass mailing creation'
 
     _columns = {
         'mass_mailing_campaign_id': fields.many2one(
@@ -55,11 +55,11 @@ class MailMassMailingSegmentCreate(osv.TransientModel):
             'email.template', 'Template', required=True,
             domain="[('model_id', '=', model_id)]",
         ),
-        'segment_name': fields.char(
-            'Segment name', required=True,
+        'name': fields.char(
+            'Name', required=True,
         ),
-        'mass_mailing_segment_id': fields.many2one(
-            'mail.mass_mailing.segment', 'Mass Mailing Segment',
+        'mass_mailing_id': fields.many2one(
+            'mail.mass_mailing', 'Mass Mailing',
         ),
     }
 
@@ -80,23 +80,23 @@ class MailMassMailingSegmentCreate(osv.TransientModel):
             domain = False
         return {'value': {'domain': domain}}
 
-    def create_segment(self, cr, uid, ids, context=None):
-        """ Create a segment based on wizard data, and update the wizard """
+    def create_mass_mailing(self, cr, uid, ids, context=None):
+        """ Create a mass mailing based on wizard data, and update the wizard """
         for wizard in self.browse(cr, uid, ids, context=context):
-            segment_values = {
-                'name': wizard.segment_name,
+            mass_mailing_values = {
+                'name': wizard.name,
                 'mass_mailing_campaign_id': wizard.mass_mailing_campaign_id.id,
                 'domain': wizard.domain,
                 'template_id': wizard.template_id.id,
             }
-            segment_id = self.pool['mail.mass_mailing.segment'].create(cr, uid, segment_values, context=context)
-            self.write(cr, uid, [wizard.id], {'mass_mailing_segment_id': segment_id}, context=context)
+            mass_mailing_id = self.pool['mail.mass_mailing'].create(cr, uid, mass_mailing_values, context=context)
+            self.write(cr, uid, [wizard.id], {'mass_mailing_id': mass_mailing_id}, context=context)
         return True
 
     def launch_composer(self, cr, uid, ids, context=None):
-        """ Main wizard action: create a new segment and launch the mail.compose.message
+        """ Main wizard action: create a new mailing and launch the mail.compose.message
         email composer with wizard data. """
-        self.create_segment(cr, uid, ids, context=context)
+        self.create_mass_mailing(cr, uid, ids, context=context)
 
         wizard = self.browse(cr, uid, ids[0], context=context)
         ctx = dict(context)
@@ -107,7 +107,7 @@ class MailMassMailingSegmentCreate(osv.TransientModel):
             'default_use_active_domain': True,
             'default_active_domain': wizard.domain,
             'default_mass_mailing_campaign_id': wizard.mass_mailing_campaign_id.id,
-            'default_mass_mailing_segment_id': wizard.mass_mailing_segment_id.id,
+            'default_mass_mailing_id': wizard.mass_mailing_id.id,
         })
         return {
             'name': _('Compose Email for Mass Mailing'),
