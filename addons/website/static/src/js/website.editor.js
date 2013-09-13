@@ -589,7 +589,7 @@
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
-            'click .existing-attachments a': 'select_existing',
+            'click a[href=#existing]': 'browse_existing',
         }),
         start: function () {
             var selection = this.editor.getSelection();
@@ -600,9 +600,7 @@
                 this.set_image(el.getAttribute('src'));
             }
 
-            return $.when(
-                this._super(),
-                this.fetch_existing().then(this.proxy('fetched_existing')));
+            return this._super();
         },
         save: function () {
             var url = this.$('input.url').val();
@@ -660,6 +658,29 @@
             this.$('img.image-preview').attr('src', image);
         },
 
+        browse_existing: function (e) {
+            e.preventDefault();
+            new website.editor.ExistingImageDialog(this).appendTo(document.body);
+        },
+    });
+
+    website.editor.ExistingImageDialog = website.editor.Dialog.extend({
+        template: 'website.editor.dialog.image.existing',
+        events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'click .existing-attachments a': 'select_existing',
+        }),
+        init: function (parent) {
+            this.image = null;
+            this.parent = parent;
+            this._super(parent.editor);
+        },
+
+        start: function () {
+            return $.when(
+                this._super(),
+                this.fetch_existing().then(this.proxy('fetched_existing')));
+        },
+
         fetch_existing: function () {
             // FIXME: lazy load attachments?
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -681,11 +702,21 @@
                 .values()
                 .value();
             this.$('.existing-attachments').replaceWith(
-                openerp.qweb.render('website.editor.dialog.image.existing', {rows: rows}));
+                openerp.qweb.render(
+                    'website.editor.dialog.image.existing.content', {rows: rows}));
         },
         select_existing: function (e) {
             e.preventDefault();
-            this.set_image(e.currentTarget.getAttribute('href'));
+            this.$('a.thumbnail.selected').removeClass('selected');
+
+            $(e.currentTarget).addClass('selected');
+        },
+        save: function () {
+            var link = this.$('a.thumbnail.selected').attr('href');
+            if (link) {
+                this.parent.set_image(link);
+            }
+            this._super();
         },
     });
 

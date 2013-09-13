@@ -103,7 +103,7 @@
                         <p class="">— or —</p>
                     </div>
                     <div class="well">
-                        <!-- a href="#" class="pull-left">Find image</a -->
+                        <a href="#existing" class="pull-right">Browse your images</a>
                         <h3 class="list-group-item-heading">Image URL</h3>
                         <input type="text" class="form-control url"
                                placeholder="http://openerp.com"/>
@@ -120,6 +120,14 @@
         </t>
     </t>
     <t t-name="website.editor.dialog.image.existing">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Pick an existing attachment:</t>
+            <div class="well">
+                <div class="existing-attachments"/>
+            </div>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.image.existing.content">
         <div class="existing-attachments">
             <div class="row" t-foreach="rows" t-as="row">
                 <div class="col-md-4" t-foreach="row" t-as="attachment">
