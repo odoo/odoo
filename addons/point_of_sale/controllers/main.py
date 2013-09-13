@@ -3,12 +3,17 @@ import logging
 import simplejson
 import os
 import openerp
+import time
+import random
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
 class PointOfSaleController(http.Controller):
+    def __init__(self):
+        self.scale = 'closed'
+        self.scale_weight = 0.0
 
     @http.route('/pos/app', type='http', auth='admin')
     def app(self):
@@ -64,6 +69,10 @@ class PointOfSaleController(http.Controller):
 
         return m
 
+    @http.route('/pos/test_connection', type='json', auth='admin')
+    def test_connection(self):
+        return
+
     @http.route('/pos/scan_item_success', type='json', auth='admin')
     def scan_item_success(self, ean):
         """
@@ -98,18 +107,38 @@ class PointOfSaleController(http.Controller):
 
     @http.route('/pos/weighting_start', type='json', auth='admin')
     def weighting_start(self):
-        print "weighting_start"
+        if self.scale == 'closed':
+            print "Opening (Fake) Connection to Scale..."
+            self.scale = 'open'
+            self.scale_weight = 0.0
+            time.sleep(0.1)
+            print "... Scale Open."
+        else:
+            print "WARNING: Scale already Connected !!!"
         return 
 
     @http.route('/pos/weighting_read_kg', type='json', auth='admin')
     def weighting_read_kg(self):
-        print "weighting_read_kg"
-        return 3.14
+        if self.scale == 'open':
+            print "Reading Scale..."
+            time.sleep(0.025)
+            self.scale_weight += 0.01
+            print "... Done."
+            return self.scale_weight
+        else:
+            print "WARNING: Reading closed scale !!!"
+            return 0.0
 
     @http.route('/pos/weighting_end', type='json', auth='admin')
     def weighting_end(self):
-        print "weighting_end"
-        return 
+        if self.scale == 'open':
+            print "Closing Connection to Scale ..."
+            self.scale = 'closed'
+            self.scale_weight = 0.0
+            time.sleep(0.1)
+            print "... Scale Closed."
+        else:
+            print "WARNING: Scale already Closed !!!"
 
     @http.route('/pos/payment_request', type='json', auth='admin')
     def payment_request(self, price):

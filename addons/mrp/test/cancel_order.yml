@@ -1,4 +1,9 @@
 -
+  MRP user can cancelled Production Order, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_mrp_user'
+-
   I first confirm order for PC Assemble SC349.
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_test1}

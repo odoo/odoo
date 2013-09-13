@@ -27,7 +27,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from openerp.tools import float_compare
 from openerp.tools.translate import _
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp import SUPERUSER_ID
 
 #----------------------------------------------------------
@@ -318,9 +318,10 @@ class mrp_bom(osv.osv):
         """
         routing_obj = self.pool.get('mrp.routing')
         factor = factor / (bom.product_efficiency or 1.0)
-        factor = rounding(factor, bom.product_rounding)
-        if factor < bom.product_rounding:
-            factor = bom.product_rounding
+        max_rounding = max(bom.product_rounding, bom.product_uom.rounding)
+        factor = rounding(factor, max_rounding)
+        if factor < max_rounding:
+            factor = max_rounding
         result = []
         result2 = []
         phantom = False
@@ -816,7 +817,10 @@ class mrp_production(osv.osv):
                 account = wc.costs_hour_account_id.id
                 if value and account:
                     amount += value
-                    analytic_line_obj.create(cr, uid, {
+                    # we user SUPERUSER_ID as we do not garantee an mrp user
+                    # has access to account analytic lines but still should be
+                    # able to produce orders
+                    analytic_line_obj.create(cr, SUPERUSER_ID, {
                         'name': wc_line.name + ' (H)',
                         'amount': value,
                         'account_id': account,
@@ -832,7 +836,7 @@ class mrp_production(osv.osv):
                 account = wc.costs_cycle_account_id.id
                 if value and account:
                     amount += value
-                    analytic_line_obj.create(cr, uid, {
+                    analytic_line_obj.create(cr, SUPERUSER_ID, {
                         'name': wc_line.name+' (C)',
                         'amount': value,
                         'account_id': account,

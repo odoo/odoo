@@ -522,7 +522,7 @@ function declare($, _, openerp) {
             var url = _.escape(result[0]);
             txt += '<a href="' + url + '">' + url + '</a>';
         }
-        txt += str.slice(last, str.length);
+        txt += _.escape(str.slice(last, str.length));
         return txt;
     };
 
