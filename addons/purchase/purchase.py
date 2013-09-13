@@ -682,7 +682,7 @@ class purchase_order(osv.osv):
             'picking_type_id': type_id, 
         }
 
-    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
+    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         ''' prepare the stock move data from the PO line '''
         type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
         price_unit = order_line.price_unit
@@ -710,6 +710,7 @@ class purchase_order(osv.osv):
             'company_id': order.company_id.id,
             'price_unit': price_unit,
             'picking_type_id': type_id, 
+            'group_id': group_id, 
         }
 
     def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):
@@ -736,11 +737,19 @@ class purchase_order(osv.osv):
             picking_id = stock_picking.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
         todo_moves = []
         stock_move = self.pool.get('stock.move')
+        
+        new_group = False
+        if any([(x.group_id == False) for x in order_lines]):
+            new_group = self.pool.get("procurement.group").create(cr, uid, {'name':order.name, 'partner_id': order.partner_id.id}, context=context)
+        
+        
         for order_line in order_lines:
             if not order_line.product_id:
                 continue
+            
             if order_line.product_id.type in ('product', 'consu'):
-                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context))
+                group_id = order_line.group_id and order_line.group_id.id or new_group
+                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context))
                 if order_line.move_dest_id:
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
@@ -957,6 +966,8 @@ class purchase_order_line(osv.osv):
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
         'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
+        'procurement_ids': fields.one2many('procurement.order', 'purchase_line_id', string='Associated procurements'),
+        'group_id': fields.related('procurement_ids', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'),
     }
     _defaults = {
         'product_qty': lambda *a: 1.0,
@@ -1115,7 +1126,7 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
+        'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order'),
     }
 
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
@@ -1133,7 +1144,7 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.purchase_id and procurement.purchase_id.shipped:  # TOCHECK: does it work for several deliveries?
+        if procurement.purchase_line_id and procurement.purchase_line_id.order_id.shipped:  # TOCHECK: does it work for several deliveries?
             return True
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
@@ -1290,7 +1301,8 @@ class procurement_order(osv.osv):
                     'payment_term_id': partner.property_supplier_payment_term.id or False,
                 }
                 res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
-                self.write(cr, uid, [procurement.id], {'purchase_id': res[procurement.id]})
+                procurement_line = self.pool.get('purchase.order').browse(cr, uid, res[procurement.id]).order_line[0].id
+                self.write(cr, uid, [procurement.id], {'purchase_line_id': procurement_line}, context=context)
                 pass_ids += [procurement.id]
         if pass_ids:
             self.message_post(cr, uid, pass_ids, body=_("Draft Purchase Order created"), context=context)

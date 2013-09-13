@@ -153,7 +153,7 @@ class procurement_order(osv.osv):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
         categ_obj = self.pool.get("product.category")
         categ_id = procurement.product_id.categ_id.id
-        route_ids = [x.id for x in procurement.route_ids] + [x.id for x in procurement.product_id.route_ids] + categ_obj.calculate_total_routes(cr, uid, [categ_id], False, False, context=context)[categ_id]
+        route_ids = [x.id for x in procurement.product_id.route_ids + procurement.product_id.categ_id.total_route_ids]
         res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'route_sequence, sequence', context=context)
         if not res:
             res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
@@ -186,7 +186,7 @@ class product_removal_strategy(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"), #Adds domain
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"), #Adds domain
     }
 
 class product_category(osv.osv):
@@ -249,7 +249,7 @@ class stock_move(osv.osv):
         for move in moves:
             if not move.move_dest_id:
                 categ_id = move.product_id.categ_id.id
-                routes = [x.id for x in move.product_id.route_ids] + categ_obj.calculate_total_routes(cr, uid, [categ_id], False, False, context=context)[categ_id]
+                routes = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
                 rules = push_obj.search(cr, uid, [('route_id', 'in', routes), ('location_from_id', '=', move.location_dest_id.id)], context=context)
                 if rules: 
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
