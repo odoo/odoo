@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-12-18 18:16+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 04:55+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 04:53+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: project
 #: view:project.project:0
@@ -84,7 +84,7 @@ msgid "Start Task"
 msgstr "Start taak"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
@@ -137,8 +137,8 @@ msgstr ""
 "ingevoegd."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -403,7 +403,7 @@ msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "De gedelegeerde gebruiker moet worden gespecificeerd"
@@ -483,7 +483,7 @@ msgstr "Delegeren"
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
-msgstr "Datum gemaakt"
+msgstr "Aanmaakdatum"
 
 #. module: project
 #: view:res.partner:0
@@ -1264,9 +1264,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Berekend als: Gebruikte uren + resterende uren."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -1274,7 +1274,7 @@ msgstr "%s (kopie)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Taakstadium gewijzigd"
+msgstr "Fase taak gewijzigd"
 
 #. module: project
 #: view:project.task:0
@@ -1475,7 +1475,7 @@ msgstr ""
 "projectleider tijdens conceptfase."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Bijlagen"
@@ -1612,7 +1612,7 @@ msgid "Overpassed Tasks"
 msgstr "Overschreden taken"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1675,7 +1675,7 @@ msgid "CHECK: "
 msgstr "CONTROLEER: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "U dient gebruikers aan het project '%s' toe te wijzen!"
@@ -1919,7 +1919,7 @@ msgid "Starting Date"
 msgstr "Begindatum"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2086,7 +2086,7 @@ msgid "Reevaluation Task"
 msgstr "Taak herevalueren"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Verwijder eerst het project dat aan deze kostenplaats is gekoppeld"
@@ -2113,7 +2113,7 @@ msgstr "projecten waarvan ik manager ben"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr "Gereed voor ogende fase"
+msgstr "Gereed voor volgende fase"
 
 #. module: project
 #: field:project.task.type,case_default:0
@@ -2139,7 +2139,7 @@ msgid ""
 "project. It will not assign this stage to existing projects."
 msgstr ""
 "Indien u dit veld aanvinkt, wordt de fase standaard voorgesteld voor ieder "
-"nieuw project. het zal deze fase niet toewijzen aan bestaande projecten."
+"nieuw project. deze fase wordt niet toegewezen aan bestaande projecten."
 
 #. module: project
 #: field:project.task,partner_id:0

@@ -271,19 +271,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             var self = this;
-            var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
+            this.cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
 
-            this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
+            this.pos_widget.set_numpad_visible(this.show_numpad && this.cashier_mode);
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
-            this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !cashier_mode);
-            this.pos_widget.set_cashier_controls_visible(cashier_mode);
+            this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !this.cashier_mode);
+            this.pos_widget.set_cashier_controls_visible(this.cashier_mode);
 
-            if(cashier_mode && this.pos.iface_self_checkout){
+            if(this.cashier_mode && this.pos.iface_self_checkout){
                 this.pos_widget.client_button.show();
             }else{
                 this.pos_widget.client_button.hide();
             }
-            if(cashier_mode){
+            if(this.cashier_mode){
                 this.pos_widget.close_button.show();
             }else{
                 this.pos_widget.close_button.hide();
@@ -441,7 +441,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
         template: 'ErrorInvoiceTransferPopupWidget',
     });
-
+                
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
 
@@ -451,30 +451,35 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+            var queue = this.pos.proxy_queue;
 
-            self.pos.proxy.weighting_start();
-
-            this.intervalID = setInterval(function(){
-                var weight = self.pos.proxy.weighting_read_kg();
-                if(weight > 0.001){
-                    clearInterval(this.intervalID);
-                    self.pos_widget.screen_selector.set_current_screen(self.next_screen);
-                }
-            },100);
+            queue.schedule(function(){
+                return self.pos.proxy.weighting_start();
+            },{ unclearable: true });
+            
+            queue.schedule(function(){
+                return self.pos.proxy.weighting_read_kg().then(function(weight){
+                    if(weight > 0.001){
+                        self.pos_widget.screen_selector.set_current_screen(self.next_screen);
+                    }
+                });
+            },{duration: 100, repeat: true});
 
             this.add_action_button({
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
-                        clearInterval(this.intervalID);
                         self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
                     }
                 });
         },
         close: function(){
             this._super();
-            clearInterval(this.intervalID);
-            this.pos.proxy.weighting_end();
+            var self = this;
+            this.pos.proxy_queue.clear();
+            this.pos.proxy_queue.schedule(function(){
+                return self.pos.proxy.weighting_end();
+            },{ unclearable: true });
         },
     });
 
@@ -486,9 +491,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show: function(){
             this._super();
-            this.renderElement();
             var self = this;
+            var queue = this.pos.proxy_queue;
 
+            this.set_weight(0);
+            this.renderElement();
 
             this.add_action_button({
                     label: _t('Back'),
@@ -507,14 +514,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     },
                 });
             
-            this.pos.proxy.weighting_start();
-            this.intervalID = setInterval(function(){
-                var weight = self.pos.proxy.weighting_read_kg();
-                if(weight != self.weight){
-                    self.weight = weight;
-                    self.renderElement();
-                }
-            },100);
+            queue.schedule(function(){
+                return self.pos.proxy.weighting_start()
+            },{ unclearable: true });
+            
+            queue.schedule(function(){
+                return self.pos.proxy.weighting_read_kg().then(function(weight){
+                    self.set_weight(weight);
+                });
+            },{duration:50, repeat: true});
+
         },
         renderElement: function(){
             var self = this;
@@ -544,54 +553,24 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var product = this.get_product();
             return (product ? product.get('price') : 0) || 0;
         },
-        get_product_weight: function(){
-            return this.weight || 0;
+        set_weight: function(weight){
+            this.weight = weight;
+            this.$('.js-weight').text(this.get_product_weight_string());
+        },
+        get_product_weight_string: function(){
+            return (this.weight || 0).toFixed(3) + ' Kg';
         },
         close: function(){
+            var self = this;
             this._super();
-            clearInterval(this.intervalID);
-            this.pos.proxy.weighting_end();
+
+            this.pos.proxy_queue.clear();
+            this.pos.proxy_queue.schedule(function(){
+                self.pos.proxy.weighting_end();
+            },{ unclearable: true });
         },
     });
 
-    // the JobQueue schedules a sequence of 'jobs'. each job is
-    // a function returning a deferred. the queue waits for each job to finish 
-    // before launching the next. Each job can also be scheduled with a delay. 
-    // the queue jobqueue is used to prevent parallel requests to the payment terminal.
-
-    module.JobQueue = function(){
-        var queue = [];
-        var running = false;
-        var run = function(){
-            if(queue.length > 0){
-                running = true;
-                var job = queue.shift();
-                setTimeout(function(){
-                    var def = job.fun();
-                    if(def){
-                        def.done(run);
-                    }else{
-                        run();
-                    }
-                },job.delay || 0);
-            }else{
-                running = false;
-            }
-        };
-        
-        // adds a job to the schedule.
-        this.schedule  = function(fun, delay){
-            queue.push({fun:fun, delay:delay});
-            if(!running){
-                run();
-            }
-        }
-
-        // remove all jobs from the schedule
-        this.clear = function(){
-            queue = [];
-        };
-    };
 
     module.ClientPaymentScreenWidget =  module.ScreenWidget.extend({
         template:'ClientPaymentScreenWidget',
@@ -740,7 +719,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ProductScreenWidget = module.ScreenWidget.extend({
         template:'ProductScreenWidget',
 
-        scale_screen: 'scale_invite',
+        scale_screen: 'scale',
+        client_scale_screen : 'scale_invite',
         client_next_screen:  'client_payment',
 
         show_numpad:     true,
@@ -754,7 +734,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_list_widget = new module.ProductListWidget(this,{
                 click_product_action: function(product){
                     if(product.get('to_weight') && self.pos.iface_electronic_scale){
-                        self.pos_widget.screen_selector.set_current_screen(self.scale_screen, {product: product});
+                        self.pos_widget.screen_selector.set_current_screen( self.cashier_mode ? self.scale_screen : self.client_scale_screen, {product: product});
                     }else{
                         self.pos.get('selectedOrder').addProduct(product);
                     }
@@ -770,9 +750,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_categories_widget.reset_category();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
-            if(this.pos.iface_vkeyboard){
-                this.pos_widget.onscreen_keyboard.connect();
-            }
 
             if(this.pos_widget.screen_selector.current_mode === 'client'){ 
                 this.add_action_button({
@@ -789,6 +766,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);
+            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+                this.pos_widget.onscreen_keyboard.hide();
+            }
         },
 
     });

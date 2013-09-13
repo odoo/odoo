@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:31+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:55+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -58,6 +58,8 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"صورة متوسطة الحجم للموظف. يتم تغيير حجم تلقائيا كصورة 128x128px، مع الحفاظ "
+"على نسبة الجانب. استخدام هذا الحقل في عروض النافذة أو بعض عروض كانبان."
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -110,7 +112,7 @@ msgstr "هذه الخانة تستخدم لصورة الموظف، أكبر حج
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "يتم تثبيت وحدة hr_holidays."
 
 #. module: hr
 #: view:hr.job:0
@@ -153,7 +155,7 @@ msgstr "خطأّ! لا يمكنك انشاء فئات متداخلة."
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "يتم تثبيت وحدة hr_recruitment."
 
 #. module: hr
 #: view:hr.employee:0
@@ -164,12 +166,12 @@ msgstr "الميلاد"
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "الكلمات الدليلية للموظف"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Launch Recruitement"
-msgstr ""
+msgstr "تشغيل التوظيف"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
@@ -204,7 +206,7 @@ msgstr "ادارة المهارات"
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "يتم تثبيت وحدة hr_timesheet_sheet."
 
 #. module: hr
 #: view:hr.employee:0
@@ -219,7 +221,7 @@ msgstr "منصب"
 #. module: hr
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "إذا فحص الرسائل الجديدة تتطلب انتباهكم."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -299,6 +301,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"صورة صغيرة الحجم من الموظف. يتم تغيير حجم تلقائيا كصورة 64x64px، مع الحفاظ "
+"على نسبة الجانب. استخدام هذا الحقل في أي مكان مطلوب صورة صغيرة."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -313,7 +317,7 @@ msgstr "عدد الموظفين المتوقع توظيفهم."
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
 msgid "Open HR Menu"
-msgstr ""
+msgstr "افتح القائمة HR"
 
 #. module: hr
 #: help:hr.job,message_summary:0
@@ -321,6 +325,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل "
+"إدراجها في عروض كانبان."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
@@ -328,6 +334,8 @@ msgid ""
 "This installs the module account_analytic_analysis, which will install sales "
 "management too."
 msgstr ""
+"يتم تثبيت وحدة account_analytic_analysis، الذي سيقوم بتثبيت إدارة المبيعات "
+"أيضا."
 
 #. module: hr
 #: view:board.board:0
@@ -415,6 +423,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               انقر لتحديد موقف وظيفة جديدة.\n"
+"             </p><p\n"
+"               وتستخدم المناصب المهمة لتحديد الوظائف ومتطلباتها.\n"
+"               يمكنك تتبع من عدد العاملين لديك لكل وظيفة\n"
+"               وضع ومتابعة تطور وفق ما تعدون\n"
+"               للمستقبل.\n"
+"             </p><p>\n"
+"              يمكنك إرفاق دراسة استقصائية لموقف وظيفة. سيتم استخدامه في\n"
+"              عملية التوظيف لتقييم المتقدمين لهذه الوظيفة\n"
+"              موقف.\n"
+"            </ P>\n"
+"            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -427,21 +448,23 @@ msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "يتم تثبيت وحدة hr_evaluation."
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "خطأ! لا يمكنك إنشاء التسلسل الهرمي العودي من الموظف ."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "يتم تثبيت وحدة hr_attendance."
 
 #. module: hr
 #: field:hr.employee,image_small:0
@@ -462,12 +485,12 @@ msgstr "الوسوم"
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "يتم تثبيت وحدة hr_contract."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Related User"
-msgstr ""
+msgstr "مستخدم مرتبط"
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -731,7 +754,7 @@ msgstr "عمليات التوظيف تحت الاجراء"
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr ""
+msgstr "السماح بالفواتير على أساس الجداول الزمنية (سيتم تثبيت تطبيق البيع)"
 
 #. module: hr
 #: view:hr.employee.category:0

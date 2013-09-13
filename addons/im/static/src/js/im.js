@@ -18,7 +18,8 @@
                 im_common.notification = function(message) {
                     instance.client.do_warn(message);
                 };
-                im_common.connection = openerp.session;
+                // TODO: allow to use a different host for the chat
+                im_common.connection = new openerp.Session(self, null, {session_id: openerp.session.session_id});
 
                 var im = new instance.im.InstantMessaging(self);
                 im.appendTo(instance.client.$el);
@@ -54,6 +55,7 @@
             this.set("current_search", "");
             this.users = [];
             this.c_manager = new im_common.ConversationManager(this);
+            window.im_conversation_manager = this.c_manager;
             this.on("change:right_offset", this.c_manager, _.bind(function() {
                 this.c_manager.set("right_offset", this.get("right_offset"));
             }, this));
@@ -70,7 +72,15 @@
 
             var self = this;
 
-            return this.c_manager.start_polling();
+            return this.c_manager.start_polling().then(function() {
+                self.c_manager.on("new_conversation", self, function(conv) {
+                    conv.$el.droppable({
+                        drop: function(event, ui) {
+                            self.add_user(conv, ui.draggable.data("user"));
+                        }
+                    });
+                });
+            });
         },
         calc_box: function() {
             var $topbar = instance.client.$(".oe_topbar");
@@ -86,15 +96,18 @@
             var users = new instance.web.Model("im.user");
             var self = this;
             return this.user_search_dm.add(users.call("search_users", [this.get("current_search"), ["name", "user_id", "uuid", "im_status"],
-                    USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(result) {
-                self.c_manager.add_to_user_cache(result);
+                    USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(users) {
+                var logged_users = _.filter(users, function(u) { return !!u.im_status; });
+                var non_logged_users = _.filter(users, function(u) { return !u.im_status; });
+                users = logged_users.concat(non_logged_users);
+                self.c_manager.add_to_user_cache(users);
                 self.$(".oe_im_input").val("");
                 var old_users = self.users;
                 self.users = [];
-                _.each(result, function(user) {
+                _.each(users, function(user) {
                     var widget = new instance.im.UserWidget(self, self.c_manager.get_user(user.id));
                     widget.appendTo(self.$(".oe_im_users"));
-                    widget.on("activate_user", self, self.activate_user);
+                    widget.on("activate_user", self, function(user) {self.c_manager.chat_with_users([user]);});
                     self.users.push(widget);
                 });
                 _.each(old_users, function(user) {
@@ -124,8 +137,8 @@
             }
             this.shown = ! this.shown;
         },
-        activate_user: function(user) {
-            this.c_manager.activate_user(user, true);
+        add_user: function(conversation, user) {
+            conversation.add_user(user);
         },
     });
 
@@ -140,6 +153,8 @@
             this.user.add_watcher();
         },
         start: function() {
+            this.$el.data("user", this.user);
+            this.$el.draggable({helper: "clone"});
             var change_status = function() {
                 this.$(".oe_im_user_online").toggle(this.user.get("im_status") === true);
             };
@@ -154,5 +169,9 @@
             this._super();
         },
     });
+
+    im_common.technical_messages_handlers.force_kitten = function() {
+        openerp.webclient.to_kitten();
+    };
 
 })();

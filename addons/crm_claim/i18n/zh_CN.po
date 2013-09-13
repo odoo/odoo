@@ -9,20 +9,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-12-14 13:47+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:44+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:21+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
 msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
-msgstr ""
+msgstr "此阶段是不可见的。例如：状态栏或看板视图中，在该阶段中 不存在可显示的记录。"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -50,7 +50,7 @@ msgstr "允许配置接收邮件服务器，并从接收的邮件里创建索赔
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
 msgid "Claim stages"
-msgstr ""
+msgstr "索赔阶段"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -336,7 +336,7 @@ msgstr "日期"
 #. module: crm_claim
 #: help:crm.claim,email_from:0
 msgid "Destination email for email gateway."
-msgstr ""
+msgstr "目的邮件地址"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:194
@@ -356,7 +356,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Settle"
-msgstr ""
+msgstr "解决"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
@@ -491,7 +491,7 @@ msgstr "客户抱怨"
 #. module: crm_claim
 #: view:crm.claim.stage:0
 msgid "Claim Stage"
-msgstr ""
+msgstr "索赔阶段"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -525,7 +525,7 @@ msgstr "普通"
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "用于阶段的排序，数字越小越好。"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -577,6 +577,8 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"当案例被创建时,状态设置为'草稿'。如果按理是在处理过程中，状态设置为'打开'。如果案例已经完成时，状态设置为'完成'。如果案例需要审核时，状态设置为'等"
+"待'."
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -603,7 +605,7 @@ msgstr "关闭"
 msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
-msgstr ""
+msgstr "负责的销售团队。定义一个负责的用户和Email 账户"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -624,7 +626,7 @@ msgstr "索赔日期"
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "总览"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -634,7 +636,7 @@ msgstr "索赔分类"
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr ""
+msgstr "适用于所有团队"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -673,7 +675,7 @@ msgstr "索赔"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Company"
-msgstr ""
+msgstr "我的公司"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -769,7 +771,7 @@ msgstr "决定采取的行动"
 #. module: crm_claim
 #: field:crm.claim.stage,case_refused:0
 msgid "Refused stage"
-msgstr ""
+msgstr "拒绝阶段"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -800,7 +802,7 @@ msgstr "2月"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -826,22 +828,22 @@ msgstr "我的业务"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "解决"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "消息和通信记录"
 
 #. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
-msgstr ""
+msgstr "从收进的邮件中创建索赔"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序号"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -875,12 +877,12 @@ msgstr "正在处理的抱怨"
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr ""
+msgstr "在阶段和邮件地址建连接。设置后，将限制当前的阶段选择的销售团队。"
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
-msgstr ""
+msgstr "拒绝特定的阶段完成"
 
 #~ msgid "Probability"
 #~ msgstr "概率"

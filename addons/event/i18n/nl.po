@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-12-01 16:02+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:04+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:09+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: event
 #: view:event.event:0
@@ -55,7 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
+msgstr "Het za"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -161,6 +161,8 @@ msgstr "Evenement analyse"
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
+"Het zal de deze standaard maximale waarde selecteren als u dit evenement "
+"kiest"
 
 #. module: event
 #: view:report.event.registration:0
@@ -288,6 +290,8 @@ msgstr "Relatie"
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
+"Het zal de deze standaard minimale waarde selecteren als u dit evenement "
+"kiest"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -341,6 +345,8 @@ msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
 msgstr ""
+"Het zal de deze standaard bevestiging registratie e-mail selecteren als u "
+"dit evenement kiest"
 
 #. module: event
 #: view:event.event:0
@@ -576,6 +582,11 @@ msgid ""
 "status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Als een evenement is aangemaakt is de status 'Concept'. Indien het evenement "
+"is bevestigd voor de specifieke data, dan wordt de status gezet op "
+"'Bevestigd'. Als het evenement is geweest, dan wordt de status gezet op "
+"'Gereed'. Als het evenement is geannuleerd, dan wordt de status gezet op "
+"'Geannuleerd'"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -591,6 +602,16 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Klik voor het aanmaken van een nieuw evenement.\n"
+"             </p><p>\n"
+"               OpenERP helpt u bij het plannen en efficient organiseren van "
+"uw evenmenten:\n"
+"               volg de inschrijvingen en deelnemers, automatiseer de "
+"bevestigings e-mails,\n"
+"               verkoop toegansbewijzen, etc.\n"
+"             </p>\n"
+"           "
 
 #. module: event
 #: help:event.event,register_max:0
@@ -599,6 +620,9 @@ msgid ""
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
 msgstr ""
+"U kunt voor iedere evenement een maximum aantal registraties instellen. "
+"Indien u te veel registraties heeft, kunt u, uw evenement niet bevestigen "
+"(vul 0 in om deze regel niet toe te passen)"
 
 #. module: event
 #: field:event.event,user_id:0
@@ -613,6 +637,9 @@ msgid ""
 "expected minimum/maximum. Please reconsider those limits before going "
 "further."
 msgstr ""
+"Het totaal aantal van '%s' bevestigde registraties van dit evenement komt "
+"niet overeen met het ingestelde minimum/maximum aantal. Controleer deze "
+"waardes voordat u verder gaat."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
@@ -620,11 +647,13 @@ msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
 msgstr ""
+"Indien u een e-mail sjabloon instelt, zal iedere deelnemer deze e-mail "
+"ontvangen welke het bevestigen van het evenement aangeeft."
 
 #. module: event
 #: view:board.board:0
 msgid "Events Filling By Status"
-msgstr ""
+msgstr "Evenementen gefilterd op status"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -726,6 +755,15 @@ msgid ""
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
+"\n"
+"        <p>Hallo ${object.name},</p>\n"
+"        <p>Het evenement ${object.event_id.name} waarvoor u, zich heeft "
+"geregistreerd is bevestigd en wordt gehouden op "
+"${object.event_id.date_begin} t/m ${object.event_id.date_end}.\n"
+"        Voor meer informatie kunt u contact opnemen met onze evenementen "
+"afdeling.</p>\n"
+"        <p>Bedankt voor uw inschrijving!</p>\n"
+"        <p>Met vriendelijke groet,</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -830,6 +868,8 @@ msgid ""
 "This field contains the template of the mail that will be automatically sent "
 "each time a registration for this event is confirmed."
 msgstr ""
+"Dit veld bevat het sjabloon van de e-mail welke automatisch wordt verstuurt "
+"iedere keer als een registratie voor dit evenement is bevestigd."
 
 #. module: event
 #: view:event.event:0
@@ -847,6 +887,8 @@ msgstr "Fout ! Sluitingsdatum kan niet voor startdatum liggen."
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
+"U dient te wachten tot de startdag van het evenement om deze actie te kunnen "
+"uitvoeren."
 
 #. module: event
 #: selection:event.event,state:0
@@ -1023,6 +1065,8 @@ msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
 msgstr ""
+"Het zal de deze standaard bevestiging evenement e-mail selecteren als u dit "
+"evenement kiest"
 
 #. module: event
 #: view:report.event.registration:0

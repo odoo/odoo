@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:23+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:42+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -121,7 +121,7 @@ msgid "March"
 msgstr "Marec"
 
 #. module: sale
-#: code:addons/sale/sale.py:567
+#: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Najprej prekliči vse račune, vezane na ta prodajni nalog."
@@ -286,9 +286,9 @@ msgstr "Projekt"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:368
-#: code:addons/sale/sale.py:509
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:363
+#: code:addons/sale/sale.py:504
+#: code:addons/sale/sale.py:598
 #: code:addons/sale/sale.py:763
 #: code:addons/sale/sale.py:780
 #, python-format
@@ -412,7 +412,7 @@ msgid "Tax"
 msgstr "Davek"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #: code:addons/sale/sale.py:820
 #: code:addons/sale/sale.py:983
 #, python-format
@@ -428,7 +428,7 @@ msgid ""
 "list process (Shipping Exception).\n"
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
-msgstr ""
+msgstr "Status ponudbe ali prodajnega naloga."
 
 #. module: sale
 #: field:sale.report,date_confirm:0
@@ -465,7 +465,7 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -489,8 +489,8 @@ msgid "Contract Features"
 msgstr "Lastnost pogodbe"
 
 #. module: sale
-#: code:addons/sale/sale.py:288
-#: code:addons/sale/sale.py:586
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -510,12 +510,12 @@ msgstr "Omogoča fakturiranje postavk prodajnega naloga."
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Pozicija prodajnega naročila"
+msgstr "Postavka prodajnega naloga"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "Znesek Avansa"
+msgstr "Znesek predplačila"
 
 #. module: sale
 #: help:sale.order,invoice_exists:0
@@ -829,7 +829,7 @@ msgid "Sales Order done"
 msgstr "Prodajni nalog zaključen"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr "Prosim, določite dnevnik prodaje za to podjetje: \"%s\" (id:%d)."
@@ -882,7 +882,7 @@ msgid "Sales Make Invoice"
 msgstr "Prodaja Izdela Račun"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:307
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Opozorilo cenika !"
@@ -893,7 +893,7 @@ msgid "Discount (%)"
 msgstr "Popust (%)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -935,7 +935,7 @@ msgstr "Upravljanje pogodb"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Shipped"
-msgstr "Poslano"
+msgstr "Odpremljeno"
 
 #. module: sale
 #: view:sale.report:0
@@ -960,7 +960,7 @@ msgid "Category of Product"
 msgstr "Skupina izdelka"
 
 #. module: sale
-#: code:addons/sale/sale.py:566
+#: code:addons/sale/sale.py:564
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Prodajni nalog ni mogoče preklicati."
@@ -1015,7 +1015,7 @@ msgid "Open Sale Menu"
 msgstr "Odpri meni prodaje"
 
 #. module: sale
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Ni možno potrditi prodajnega naloga brez postavk"
@@ -1082,7 +1082,7 @@ msgstr "Pogodba / Analitično"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr "Čaka na uvrstitev"
+msgstr "Čakalni seznam"
 
 #. module: sale
 #: field:sale.order,note:0
@@ -1340,7 +1340,7 @@ msgstr "Sklic na dokument, ki je ustvaril zahtevo za prodajni nalog."
 #: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr "Ne najdem veljavne pozicije cenika!"
+msgstr "Ne najdem veljavne postavke cenika!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:113
@@ -1421,7 +1421,7 @@ msgid "TVA :"
 msgstr "DDV"
 
 #. module: sale
-#: code:addons/sale/sale.py:449
+#: code:addons/sale/sale.py:444
 #, python-format
 msgid "Customer Invoices"
 msgstr "Izdani računi"
@@ -1447,7 +1447,7 @@ msgid "Sales"
 msgstr "Prodaja"
 
 #. module: sale
-#: code:addons/sale/sale.py:309
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1490,7 +1490,8 @@ msgid "Invoice address :"
 msgstr "Naslov za račun:"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:124
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
 #, python-format
@@ -1576,7 +1577,7 @@ msgid "Shipping address :"
 msgstr "Naslov za odpremo:"
 
 #. module: sale
-#: code:addons/sale/sale.py:510
+#: code:addons/sale/sale.py:505
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -2063,8 +2064,9 @@ msgid "Manual In Progress"
 msgstr "Ročno v Delu"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
-#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
 msgstr "Opozorilo!"
@@ -2183,7 +2185,7 @@ msgstr "Prodajni nalog pripravljen za fakturiranje"
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Računi na osnovi postavk prodajnega naloga"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0

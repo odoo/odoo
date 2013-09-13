@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:45+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:23+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -36,6 +36,8 @@ msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
 msgstr ""
+"Ова својство ја дефинира листата на исклучоците датум/време за компонентата "
+"рекурсивен календар."
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -61,7 +63,7 @@ msgstr "Непознато"
 #: help:calendar.todo,recurrency:0
 #: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Состанок кој се повторува"
 
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
@@ -112,7 +114,7 @@ msgstr "Корисници"
 #: field:crm.meeting,day:0
 #: selection:crm.meeting,select1:0
 msgid "Date of month"
-msgstr ""
+msgstr "Датум од месецот"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
@@ -192,7 +194,7 @@ msgstr "Основен аларм"
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
 msgid "The users that the original request was delegated to"
-msgstr ""
+msgstr "Корисници на кои е делегирано оригиналното барање"
 
 #. module: base_calendar
 #: field:calendar.attendee,ref:0
@@ -248,7 +250,7 @@ msgid "To"
 msgstr "До"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1260
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -256,7 +258,7 @@ msgstr "Грешка!"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Chair Person"
-msgstr ""
+msgstr "Претседател"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -273,7 +275,7 @@ msgstr "Процедура"
 #: field:calendar.todo,recurrent_id:0
 #: field:crm.meeting,recurrent_id:0
 msgid "Recurrent ID"
-msgstr ""
+msgstr "Повторувачка ID"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -310,7 +312,7 @@ msgstr "Тема на состанокот"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "End of Recurrence"
-msgstr ""
+msgstr "Крај на повторливоста"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -325,7 +327,7 @@ msgstr "Опција за повторување"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day where repeat the meeting"
-msgstr ""
+msgstr "Изберете ден кога ќе се повтори состанокот"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -349,7 +351,7 @@ msgstr "Датум на завршување"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
-msgstr ""
+msgstr "Опционо учество"
 
 #. module: base_calendar
 #: help:crm.meeting,message_summary:0
@@ -363,9 +365,9 @@ msgstr ""
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
 #: code:addons/base_calendar/base_calendar.py:441
-#: code:addons/base_calendar/base_calendar.py:1013
 #: code:addons/base_calendar/base_calendar.py:1015
-#: code:addons/base_calendar/base_calendar.py:1460
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "Внимание!"
@@ -378,6 +380,8 @@ msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
 msgstr ""
+"Доколку активното поле е означено, ќе можете да ја сокриете информацијата за "
+"аларм за настанот без да ја отстраните."
 
 #. module: base_calendar
 #: field:calendar.alarm,repeat:0
@@ -446,7 +450,7 @@ msgstr "Потврди"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_todo
 msgid "Calendar Task"
-msgstr ""
+msgstr "Календарска задача"
 
 #. module: base_calendar
 #: field:calendar.event,su:0
@@ -468,7 +472,7 @@ msgstr "Детали за потсетникот"
 #. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
 msgid "Delegrated From"
-msgstr ""
+msgstr "Делегирано од"
 
 #. module: base_calendar
 #: selection:calendar.event,select1:0
@@ -521,10 +525,10 @@ msgstr "Изврши"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
 msgid "Event alarm information"
-msgstr ""
+msgstr "Информација за аларм за настан"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr "Бројот не може да биде негативен или 0."
@@ -556,7 +560,7 @@ msgstr "Видливост"
 #. module: base_calendar
 #: field:calendar.attendee,rsvp:0
 msgid "Required Reply?"
-msgstr ""
+msgstr "Дали е потребен е одговор?"
 
 #. module: base_calendar
 #: field:calendar.event,base_calendar_url:0
@@ -725,7 +729,7 @@ msgstr "Сопственик"
 #: help:calendar.todo,rrule_type:0
 #: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Дозволете настанот автоматски да се повторува во овој интервал"
 
 #. module: base_calendar
 #: model:ir.ui.menu,name:base_calendar.mail_menu_calendar
@@ -743,10 +747,11 @@ msgid "Declined"
 msgstr "Одбиено"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1460
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
+"Групирање по датум не е поддржано, наместо тоа употребете календарски приказ."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -870,7 +875,7 @@ msgstr "Статус"
 #. module: base_calendar
 #: help:calendar.attendee,email:0
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "Е-пошта на поканета личност"
 
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet1
@@ -931,12 +936,12 @@ msgstr "Покани"
 #: view:calendar.event:0
 #: view:crm.meeting:0
 msgid "The"
-msgstr ""
+msgstr "The"
 
 #. module: base_calendar
 #: field:crm.meeting,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Напиши датум"
 
 #. module: base_calendar
 #: field:calendar.attendee,delegated_from:0
@@ -975,7 +980,7 @@ msgstr "Ноември"
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr ""
+msgstr "Ги покажува групите на кои припаѓа учесникот"
 
 #. module: base_calendar
 #: field:calendar.event,mo:0
@@ -998,7 +1003,7 @@ msgstr "Октомври"
 #: selection:calendar.todo,state:0
 #: view:crm.meeting:0
 msgid "Uncertain"
-msgstr ""
+msgstr "Неизвесно"
 
 #. module: base_calendar
 #: constraint:calendar.event:0
@@ -1059,7 +1064,7 @@ msgstr "Активно"
 #: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Не може да дуплирате календарски учесник."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1078,6 +1083,8 @@ msgid ""
 "Duration' and 'Repeat' are both optional, but if one occurs, so MUST the "
 "other"
 msgstr ""
+"'Времетраење' и 'Повотри' се опциони, но доколку се појави едното, мора и "
+"другото"
 
 #. module: base_calendar
 #: help:calendar.attendee,role:0
@@ -1093,6 +1100,7 @@ msgstr "Делегирано на"
 #: help:calendar.alarm,action:0
 msgid "Defines the action to be invoked when an alarm is triggered"
 msgstr ""
+"Ја дефинира акцијата која треба да биде повикана кога е активиран алармот"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1118,6 +1126,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"Доколку активното поле е означено, ќе можете да ја сокриете информацијата за "
+"аларм за настанот без да ја отстраните."
 
 #. module: base_calendar
 #: field:calendar.event,end_type:0
@@ -1197,6 +1207,8 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
+"Дава покомплетен                             опис на календарската "
+"компонента, од онаа                             дадена во \"РЕЗИМЕ\""
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1209,7 +1221,7 @@ msgid "Select Weekdays"
 msgstr "Избери работни денови"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1519
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1293,7 +1305,7 @@ msgstr "Потврдени настани"
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
 msgid "URI Reference"
-msgstr ""
+msgstr "URI Референца"
 
 #. module: base_calendar
 #: field:calendar.alarm,description:0
@@ -1379,12 +1391,12 @@ msgstr ""
 #. module: base_calendar
 #: selection:crm.meeting,state:0
 msgid "Unconfirmed"
-msgstr "Нопотврдено"
+msgstr "Непотврдено"
 
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
 msgid "Specify the user that is acting on behalf of the calendar user"
-msgstr ""
+msgstr "Означува корисник кој делува во име на календарски корисник"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1417,7 +1429,7 @@ msgstr "Име"
 #: field:calendar.todo,exdate:0
 #: field:crm.meeting,exdate:0
 msgid "Exception Date/Times"
-msgstr ""
+msgstr "Датум/Времиња на исклучок"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1425,6 +1437,8 @@ msgid ""
 "Contains the text to be                      used as the message subject for "
 "email                      or contains the text to be used for display"
 msgstr ""
+"Содржи текст кој треба да биде                      употребен како тема на "
+"пораката за email                      содржи текст за прикажување"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_mail_message
@@ -1441,7 +1455,7 @@ msgstr "Аларм"
 #. module: base_calendar
 #: field:calendar.attendee,sent_by_uid:0
 msgid "Sent By User"
-msgstr ""
+msgstr "Испратено од корисник"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -1466,10 +1480,10 @@ msgstr "Период на повторување"
 #: field:calendar.todo,week_list:0
 #: field:crm.meeting,week_list:0
 msgid "Weekday"
-msgstr ""
+msgstr "Ден од недела"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1013
+#: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Interval cannot be negative."
 msgstr "Интервалот не може да биде негативен"
@@ -1524,7 +1538,7 @@ msgstr "Информации за учесник"
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "ID на ресурс"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
@@ -1548,7 +1562,7 @@ msgstr "Секвенца"
 #: help:calendar.todo,alarm_id:0
 #: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr ""
+msgstr "Подесува аларм во ова време, пред да се појави настанот"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1597,7 +1611,7 @@ msgstr "Времетраење"
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Датум на активирање"
 
 #. module: base_calendar
 #: help:calendar.alarm,attach:0

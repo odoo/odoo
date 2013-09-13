@@ -12,7 +12,8 @@
                 </div>
                 <div id="rightheader">
                     <div id="order-selector">
-                        <button class="neworder-button">+</button>
+                        <button class="neworder-button square">➕</button>
+                        <button class="deleteorder-button square">➖</button>
                         <ol id="orders"></ol>
                     </div>
                     <!-- here goes header buttons -->
@@ -93,10 +94,10 @@
             <button class="input-button number-char">9</button>
             <button class="mode-button" data-mode='price'>Price</button>
             <br />
-            <button class="input-button" id="numpad-minus" >+/-</button>
+            <button class="input-button numpad-minus" >+/-</button>
             <button class="input-button number-char">0</button>
             <button class="input-button number-char">.</button>
-            <button class="input-button" id="numpad-backspace">
+            <button class="input-button numpad-backspace">
                 <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
             <br />
@@ -191,8 +192,9 @@
             <div class="display">
                 <span class="weight">
                     <p>
-                        <t t-esc="widget.get_product_weight().toFixed(3)" />
-                        Kg
+                        <span class='js-weight'>
+                            <t t-esc="widget.get_product_weight_string()" />
+                        </span>
                     </p>
                 </span>
                 <span class="product-name">
@@ -591,6 +593,11 @@
             Shop: <t t-esc="widget.shop_obj.name"/><br />
             <br />
             <table>
+                <colgroup>
+                    <col width='50%' />
+                    <col width='25%' />
+                    <col width='25%' />
+                </colgroup>
                 <tr t-foreach="widget.currentOrderLines.toArray()" t-as="orderline">
                     <td>
                         <t t-esc="orderline.get_product().get('name')"/>
