@@ -13,6 +13,7 @@ $(function () {
                 parent.find('div:gt(0)').removeClass('hidden');
             }
         });
+        $(this).siblings('div').find('input[name=email]').attr("value", "");
     });
     $(document).on('click', 'button[name=unsubscribe]', function (e) {
         var div = $(this).parent();

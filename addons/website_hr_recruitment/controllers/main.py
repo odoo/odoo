@@ -34,7 +34,7 @@ class website_hr_recruitment(http.Controller):
             'vals': vals,
             'no_of_jobs': len(hr_job_obj.browse(request.cr, request.uid, jobpost_ids)),
         }
-        return request.webcontext.render("website_hr_recruitment.index", values)
+        return request.website.render("website_hr_recruitment.index", values)
 
     @website.route(['/job/detail/<id>'], type='http', auth="public")
     def detail(self, id=0):
@@ -43,7 +43,7 @@ class website_hr_recruitment(http.Controller):
         values = {
             'job': request.registry['hr.job'].browse(request.cr, request.uid, id)
         }
-        return request.webcontext.render("website_hr_recruitment.detail", values)
+        return request.website.render("website_hr_recruitment.detail", values)
 
     @website.route(['/job/success'], type='http', auth="admin")
     def success(self, **post):
@@ -62,7 +62,7 @@ class website_hr_recruitment(http.Controller):
         values = {
                 'jobid': post['job_id']
            }
-        return request.webcontext.render("website_hr_recruitment.thankyou", values)
+        return request.website.render("website_hr_recruitment.thankyou", values)
 
     @website.route('/recruitment/message_get_subscribed', type='json', auth="admin")
     def message_get_subscribed(self, email, id, mail_group_id):
