@@ -25,7 +25,7 @@
     width: 100%
     padding: 2px
     margin: 0
-    z-index: 10000
+    z-index: 20000
     background-color: #414141
     background: -webkit-linear-gradient(#646060, #262626)
     box-sizing: border-box
@@ -74,17 +74,11 @@
 
 /* ---- EDITOR BAR ---- */
 
-.modal .tab-content
-    padding-top: 5px
-
 table.editorbar-panel
     cursor: pointer
     width: 100%
     td.selected
         background-color: #b1c9d9
-
-.modal .image-preview-container, .modal .image-preview
-    margin-bottom: 0.5em
 
 /* ---- RTE ---- */
 
@@ -109,7 +103,7 @@ table.editorbar-panel
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
-    z-index: 100
+    z-index: 20000
     .nav-pills
         padding: 3px 8px
         background: #444444
@@ -166,6 +160,8 @@ table.editorbar-panel
     height: 32px
     margin: -16px 0px
     -webkit-transition: margin 250ms linear
+    width: 100%
+    z-index: 1000
     &:first-child:not(:last-child)
         margin-top: -8px
         margin-bottom: -24px
@@ -184,8 +180,12 @@ table.editorbar-panel
         top: 24px
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
-
-.oe_drop_zone.oe_overlay
+    &.oe_vertical
+        width: 16px
+        display: inline-block
+        position: absolute
+        margin: 0px !important
+    &.oe_overlay
     position: absolute
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px
@@ -195,7 +195,7 @@ table.editorbar-panel
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
-        z-index: 97
+        z-index: 1001
 
 /* ---- SNIPPET MANIPULATOR ---- */
 
@@ -208,8 +208,6 @@ table.editorbar-panel
     transition: opacity 100ms linear
     box-sizing: border-box
     pointer-events: none
-    .oe_handle
-        display: none !important
     &.oe_hover
         opacity: 1
         cursor: pointer
@@ -221,26 +219,41 @@ table.editorbar-panel
         box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
     &.oe_selected
         border-color: rgba(0, 153, 255, 0.5)
+    .oe_handle
+        display: none !important
     &.oe_active
         border-color: rgba(153, 0, 255, 0.5)
         .oe_handle
             display: block !important
             pointer-events: auto
+    .icon.btn
+        display: inline-block
 
     .oe_overlay_options
         display: none
-        z-index: 99
-        .oe_option
-            pointer-events: auto
+        z-index: 1002
+        .oe_options,.oe_label,.oe_move
             position: absolute
-            &.n
-                top: 0px
-            &.e
-                right: 0px
-            &.s
-                bottom: 0px
-            &.w
-                left: 0px
+            display: block
+            z-index: 1002
+            top: -11px
+        .oe_options
+            pointer-events: auto
+            left: -14px
+        .oe_label
+            top: -8px
+            right: 6px
+            background: #fff
+            font-size: 75%
+            color: rgba(153, 0, 255, 0.5)
+            padding: 0 5px
+        .oe_move
+            pointer-events: auto
+            left: 50%
+            .js_box_move
+                margin-left: -50%
+        .dropdown-menu select,.dropdown-menu input
+            display: block
     &.oe_active .oe_overlay_options
         display: block
 
@@ -286,6 +299,8 @@ table.editorbar-panel
     cursor: e-resize !important
 .w-resize-important, .w-resize-important *
     cursor: w-resize !important
+.move-important, .move-important *
+    cursor: move !important
 
 
 /* ---- MOBILE PREVIEW ---- */
