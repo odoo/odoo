@@ -808,7 +808,7 @@ instance.web.redirect = function(url, wait) {
         if (old === url) {
             window.location.reload();
         } else {
-            window.location = url;
+            window.location.href = url;
         }
     };
 
