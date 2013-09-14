@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 /* ---- CKEditor Minimal Reset ---- */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
@@ -197,9 +197,6 @@ table.editorbar-panel td.selected {
   -webkit-transition: margin 250ms linear;
   width: 100%;
   z-index: 1000;
-  position: absolute;
-  background: rgba(153, 0, 255, 0.17);
-  border-radius: 3px;
 }
 .oe_drop_zone.oe_insert:first-child:not(:last-child) {
   margin-top: -8px;
@@ -230,6 +227,11 @@ table.editorbar-panel td.selected {
   display: inline-block;
   position: absolute;
   margin: 0px !important;
+}
+.oe_drop_zone.oe_insert.oe_overlay {
+  position: absolute;
+  background: rgba(153, 0, 255, 0.17);
+  border-radius: 3px;
 }
 
 .oe_drop_zone {

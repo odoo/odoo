@@ -166,7 +166,10 @@
                 <h3 class="panel-title">OpenERP Features</h3>
             </div>
             <div class="panel-body">
-                OpenERP's collaborative and realtime project management helps your team get work done. Keep track of everything, from the big picture to the minute details, from the customer contract to the billing.
+                OpenERP's collaborative and realtime project management helps
+                your team get work done. Keep track of everything, from the big
+                picture to the minute details, from the customer contract to
+                the billing.
             </div>
         </div>
     </div>
@@ -181,13 +184,13 @@
         <div class="oe_snippet_body container mt32"></div>
     </div>
 
-    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-action='insert' data-selector-siblings='.container'>
-        <div class='oe_snippet_thumbnail oe_label'>Main Title</div>
+    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-action='insert' data-selector-childs='#wrap, [data-oe-type=html]'>
+        <div class='oe_snippet_thumbnail oe_label'>Title</div>
         <section class="oe_snippet_body container">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <h1 class="mt64">Welcome To Your New Homepage,</h1>
-                    <h2 class="mt32 subheader">where <b><em>everything</em></b> can be customized </h2>
+                    <h1>Your Great Title</h1>
+                    <h2 class="text-muted">a slogan reinforcing the title</h2>
                 </div>
             </div>
         </section>

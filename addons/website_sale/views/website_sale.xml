@@ -205,8 +205,8 @@
     </template>
     <template id="recommended_products" inherit_id="website_sale.product" inherit_option_id="website_sale.product" name="Recommended Products">
         <xpath expr="//div[@id='product_detail']" position="inside">
-            <div class="well mt32" t-if="product.recommended_products()">
-                <h4>Customers who have bought this item also bought</h4>
+            <div class="mt32" t-if="product.recommended_products()">
+                <h3>Customers who have bought this product also bought:</h3>
                 <div class='row mt16' style="margin-left: 15px !important;">
                 <t t-foreach="product.recommended_products()" t-as="product">
                     <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>

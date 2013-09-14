@@ -304,7 +304,7 @@
         // selector.siblings -> will insert drop zones after and before selected elements
         activate_insertion_zones: function(selector){
             var self = this;
-            var child_selector = selector.childs ? this.parent_of_editable_box + (selector.childs).split(",").join(this.parent_of_editable_box) : false;
+            var child_selector = selector.childs;
             var sibling_selector = selector.siblings ? this.parent_of_editable_box + (selector.siblings).split(",").join(this.parent_of_editable_box) : false;
             var vertical_child_selector   =  selector.vertical_childs   ?  this.parent_of_editable_box + (selector.vertical_childs).split(",").join(this.parent_of_editable_box) : false;
 
