@@ -74,12 +74,15 @@
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
-            <div class="container oe_website_sale">
-                <div class="row">
-                    <div class="col-md-12" id="shop_content">
-                        <t t-raw="shop_content" />
-                    </div>
-                </div>
+            <div id="wrap">
+              <div class="oe_structure"> </div>
+              <div class="container oe_website_sale">
+                  <div class="row">
+                      <div class="col-md-12" id="shop_content">
+                          <t t-raw="shop_content" />
+                      </div>
+                  </div>
+              </div>
             </div>
         </t>
     </template>
@@ -355,11 +358,12 @@
 
     <template id="checkout">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Shop - Checkout</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Shop - Checkout</t>
+          <div id="wrap">
             <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-md-4">
@@ -536,16 +540,18 @@
                     </form>
                 </div>
             </div>
+          </div>
         </t>
     </template>
 
     <template id="payment">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Shop - Payment</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Shop - Payment</t>
+          <div id="wrap">
             <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-md-4">
@@ -591,6 +597,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </t>
     </template>
  </data>

@@ -16,10 +16,14 @@
     <template id="layout" name="References Layout">
         <t t-call="website.layout">
             <t t-set="title">References</t>
-            <div class="container">
-                <div class="row">
-                    <t t-raw="ref_content" />
+            <div id="wrap">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <t t-raw="ref_content" />
+                    </div>
                 </div>
+                <div class="oe_structure"/>
             </div>
         </t>
     </template>

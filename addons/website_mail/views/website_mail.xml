@@ -25,12 +25,13 @@
 
     <template id="index" name="Blogs" page="True">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
-                <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Blog</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
+              <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Blog</t>
+          <div id="wrap">
             <div class="container mt48 js_website_mail">
                 <div class="row">
                    <div class="col-md-4" id="left_column">
@@ -104,6 +105,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </t>
     </template>
 

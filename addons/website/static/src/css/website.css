@@ -140,13 +140,13 @@ footer {
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
-#wrap:empty, [data-oe-type=html]:empty {
+.oe_structure:empty, [data-oe-type=html]:empty {
   background-image: url("/website/static/src/img/drag_here.png");
   background-repeat: no-repeat;
   background-position: center top;
 }
 
-#wrap:empty:before, [data-oe-type=html]:empty:before {
+.oe_structure:empty:before, [data-oe-type=html]:empty:before {
   content: "Drag Building Blocks Here";
   text-align: center;
   display: block;

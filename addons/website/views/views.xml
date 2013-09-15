@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                         </header>
-                        <div t-raw="0" id="wrap"></div>
+                        <t t-raw="0"/>
                         <footer>
                             <div class="container" id="footer_container">
                                 <div class="row">
@@ -160,16 +160,21 @@
         </template>
 
         <template id="homepage" page="True">
-            <t t-call="website.layout"></t>
+            <t t-call="website.layout">
+              <div id="wrap" class="oe_structure"></div>
+            </t>
         </template>
 
         <template id="default_page">
-            <t t-call="website.layout"></t>
+            <t t-call="website.layout">
+              <div id="wrap" class="oe_structure"></div>
+            </t>
         </template>
 
 
         <template id="404">
             <t t-call="website.layout">
+              <div id="wrap">
                 <div class="container" t-if="editable and path">
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
@@ -179,26 +184,31 @@
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
                 <hr />
-                <div class="container">
-                    <h1 class="mt32">404: Page not found!</h1>
-                    <p>
-                        The page you were looking for could not be found; it is possible you have
-                        typed the address incorrectly, but it has most probably been removed due
-                        to the recent website reorganisation.
-                    </p>
-                    <p>Maybe you were looking for one of these popular pages ?</p>
-                    <ul>
-                        <li><a href="/">Homepage</a></li>
-                        <li><a href="/">Contact Us</a></li>
-                    </ul>
+                <div class="oe_structure">
+                    <div class="container">
+                        <h1 class="mt32">404: Page not found!</h1>
+                        <p>
+                            The page you were looking for could not be found; it is possible you have
+                            typed the address incorrectly, but it has most probably been removed due
+                            to the recent website reorganisation.
+                        </p>
+                        <p>Maybe you were looking for one of these popular pages ?</p>
+                        <ul>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/">Contact Us</a></li>
+                        </ul>
+                    </div>
                 </div>
+              </div>
             </t>
         </template>
 
         <template id="500">
             <t t-call="website.layout">
-                <div class="container">
-                    <h1 class="mt32">500: Internal Server Error!</h1>
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <h1 class="container mt32">500: Internal Server Error!</h1>
+                    </div>
                     <pre t-if="editable" t-esc="traceback"/>
                 </div>
             </t>
@@ -206,9 +216,9 @@
 
         <template id="401">
             <t t-call="website.layout">
+              <div id="wrap">
                 <div class="container">
                     <h1 class="mt32">401: Unauthorized Access!</h1>
-
                     <p>
                         The page you were looking for could not be
                         authorized.
@@ -222,20 +232,22 @@
                         <li><a href="/">Contact Us</a></li>
                     </ul>
                 </div>
+              </div>
             </t>
         </template>
 
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
-                <t t-set="title">Contact us -
-                    <t t-raw="res_company.name"></t>
-                </t>
+              <t t-set="title">Contact us -
+                  <t t-raw="res_company.name"></t>
+              </t>
+              <div id="wrap">
                 <div class="container">
                     <h1>Contact us</h1>
                     <div class="row">
                         <div class="col-md-8">
-                            <div>
+                            <div class="oe_structure">
                                 <p>Contact us about anything related to our company or services.</p>
                                 <p>We'll do our best to get back to you as soon as possible.</p>
                             </div>
@@ -259,14 +271,15 @@
                         </div>
                     </div>
                 </div>
+              </div>
             </t>
         </template>
 
         <template id="aboutus" page="True">
             <t t-call="website.layout">
-                <t t-set="title">About us -
-                    <t t-raw="res_company.name"></t>
-                </t>
+              <t t-set="title">About <t t-raw="res_company.name"></t>
+              </t>
+              <div id="wrap" class="oe_structure">
                 <div class="container">
                     <h2>About us</h2>
                     <div class="row">
@@ -278,6 +291,7 @@
                         <div class="col-md-8"></div>
                     </div>
                 </div>
+              </div>
             </t>
         </template>
 
