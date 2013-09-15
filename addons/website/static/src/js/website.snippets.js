@@ -765,8 +765,8 @@
             this._super();
             var self = this;
 
-            this.$editor.find(".js_add").on('click', this.on_add);
-            this.$editor.find(".js_remove").on('click', this.on_remove);
+            this.$editor.find(".js_add").on('click', self, this.on_add);
+            this.$editor.find(".js_remove").on('click', self, this.on_remove);
 
 
             //background
@@ -805,19 +805,19 @@
         },
         on_add: function (e) {
             e.preventDefault();
-            var $inner = this.$target.find('.carousel-inner');
+            var $inner = e.data.$target.find('.carousel-inner');
             var cycle = $inner.find('.item').size();
-            $inner.append(this.$('> .item'));
-            this.$target.carousel(cycle);
+            $inner.find('.item.active').clone().removeClass('active').appendTo($inner);
+            e.data.$target.carousel(cycle);
         },
         on_remove: function (e) {
             e.preventDefault();
-            var $inner = this.$target.find('.carousel-inner');
+            var $inner = e.data.$target.find('.carousel-inner');
             if ($inner.find('.item').size() > 1) {
                 $inner
                     .find('.item.active').remove().end()
                     .find('.item:first').addClass('active');
-                this.$target.carousel(0);
+                e.data.$target.carousel(0);
             }
         },
     });
