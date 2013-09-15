@@ -787,13 +787,21 @@
 
             //style
             var style = false;
-            if (this.$target.find('.carousel-inner .item.active .container .content_image.col-lg-offset-1'))
-                style = 'image_right';
-            if (this.$target.find('.carousel-inner .item.active .container .content_image'))
-                style = 'image_left';
+	    var el = this.$target.find('.carousel-inner');
+            if (el.hasClass('text_only'))
+                style = 'text_only';
+            if (el.hasClass('image_text'))
+                style = 'image_text';
+            if (el.hasClass('text_image'))
+                style = 'text_image';
+
             this.$editor.find('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
 
-            this.$editor.find('select[name="carousel-style"]').on('change', this.on_bg_change);
+            this.$editor.find('select[name="carousel-style"]').on('change', function(e) {
+                var $container = self.$target.find('.carousel-inner .item.active');
+	        $container.removeClass('image_text text_image text_only')
+	        $container.addClass($(e.currentTarget).val())
+	    });
         },
         on_add: function (e) {
             e.preventDefault();
@@ -810,30 +818,6 @@
                     .find('.item.active').remove().end()
                     .find('.item:first').addClass('active');
                 this.$target.carousel(0);
-            }
-        },
-        on_bg_change: function (e) {
-            var $container = this.$target.find('.carousel-inner .item.active .container');
-            var img_url = $('.content_image img', $container).attr("src");
-            if (!img_url) {
-                img_url = this.img_url || "/website/static/src/img/china.jpg";
-            } else {
-                this.img_url = img_url;
-            }
-
-            $('.content_image', $container).remove();
-            switch ($(e.currentTarget).val()) {
-                case 'no_image':
-                    $('.content', $container).attr("class", "content");
-                    break;
-                case 'image_left':
-                    $('.content', $container).attr("class", "content col-md-6")
-                        .before('<div class="content_image col-md-5"><img class="img-rounded img-responsive" src="'+img_url+'"></div>');
-                break;
-                case 'image_right':
-                    $('.content', $container).attr("class", "content col-md-6")
-                        .after('<div class="content_image col-md-5 col-lg-offset-1"><img class="img-rounded img-responsive" src="'+img_url+'"></div>');
-                break;
             }
         },
     });

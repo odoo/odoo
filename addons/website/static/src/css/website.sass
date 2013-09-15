@@ -127,8 +127,51 @@ footer
 // .nav > li  a 
 //     display: block
 
-.carousel .item
-    color: white
+.carousel-inner .item
+    height: 100%
+
+.carousel
+    .carousel-caption
+        h1, h2, h3
+            margin-top: 10px
+            margin-bottom: 10px
+    .carousel-image
+        right: 10%
+        left: 50%
+        top: 5%
+        bottom: 5%
+        position: absolute
+        text-align: center
+        img
+            height: 100%
+            margin: 0 auto
+    .item.text_image
+        .carousel-caption
+            left: auto
+            right: auto
+            bottom: 10%
+            text-align: left
+            padding: 20px
+            background: rgba(0, 0, 0, 0.4)
+    .item.text_only
+        .carousel-image
+            display: none
+        .carousel-caption
+            left: 10%
+            right: 10%
+            top: 10%
+            text-align: center
+    .item.image_text
+        .carousel-caption
+            left: auto
+            text-align: left
+            right: 10%
+            bottom: 10%
+            padding: 20px
+            background: rgba(0, 0, 0, 0.4)
+        .carousel-image
+            right: 50%
+            left: 10%
 
 /* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
 

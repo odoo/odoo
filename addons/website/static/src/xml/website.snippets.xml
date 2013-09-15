@@ -56,16 +56,16 @@
                 <input class="form-control input-sm" type="text" placeholder="http://...."/>
             </a>
         </li>
-        <!--li class='oe_snippet_options'>
+        <li class='oe_snippet_options'>
             <a class="carousel-style">
                 Style
                 <select class="form-control" name="carousel-style">
-                    <option value="no_image">No image</option>
-                    <option value="image_left">Image left</option>
-                    <option value="image_right">Image right</option>
+                    <option value="text_only">Text Only</option>
+                    <option value="image_text">Image - Text</option>
+                    <option value="text_image">Text - Image</option>
                 </select>
             </a>
-        </li-->
+        </li>
 
         <!-- thumbnail to display inside the bottom widget list editor -->
         <div class='oe_snippet_thumbnail oe_label'>Banner</div>
@@ -73,13 +73,18 @@
         <!-- body to insert after drag and drop thumbnail -->
         <div id="myCarousel" class="oe_snippet_body carousel slide" data-interval="10000">
             <!-- Carousel items -->
-            <div class="carousel-inner">
-                <div class="item active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
+            <div class="carousel-inner" style="height: 280px">
+                <div class="item text_only active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
                     <div class="container">
-                        <div class="content mt48 mb48" data-snippet-id='resize'>
+                        <div class="carousel-caption content">
                             <h1>Create Awesome Websites</h1>
                             <h3>Super easy, fully flexible</h3>
-                            <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                            <p>
+                                <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
+                            </p>
+                        </div>
+                        <div class="carousel-image">
+                            <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                         </div>
                     </div>
                 </div>
@@ -87,17 +92,6 @@
             <!-- Carousel nav -->
             <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
             <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
-        </div>
-
-        <!-- custom data for the widget -->
-        <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
-            <div class='container'>
-                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
-                    <h1>Your New Banner Slide</h1>
-                    <h3>With another convincing subtitle</h3>
-                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -212,7 +206,7 @@
 
     <div t-name="website.snippets.jumbotron" data-snippet-id='jumbotron' data-category='structure' data-action='insert' data-selector-childs='#wrap, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Jumbotron</div>
-        <section class="oe_snippet_body jumbotron">
+        <section class="oe_snippet_body jumbotron mt16 mb16">
             <div class="container">
                 <h1>Sell Online. Easily.</h1>
                 <p>
@@ -229,7 +223,7 @@
 
     <div t-name="website.snippets.text-block" data-snippet-id='text-block' data-category='structure' data-action='insert' data-selector-childs='#wrap, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Text Block</div>
-        <section class="oe_snippet_body">
+        <section class="oe_snippet_body mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt16 mb32">
@@ -258,7 +252,7 @@
 
     <div t-name="website.snippets.big-picture" data-snippet-id='big-picture' data-category='structure' data-action='insert' data-selector-childs='#wrap, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Big Picture</div>
-        <section class="oe_snippet_body dark">
+        <section class="oe_snippet_body dark mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt32 mb16">
@@ -289,7 +283,7 @@
 
     <div t-name="website.snippets.three-columns" data-snippet-id='three-columns' data-category='structure' data-action='insert' data-selector-childs='#wrap, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Three Columns</div>
-        <section class="oe_snippet_body">
+        <section class="oe_snippet_body mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt16 mb16">
