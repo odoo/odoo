@@ -787,7 +787,7 @@
 
             //style
             var style = false;
-	    var el = this.$target.find('.carousel-inner');
+	    var el = this.$target.find('.carousel-inner .item.active');
             if (el.hasClass('text_only'))
                 style = 'text_only';
             if (el.hasClass('image_text'))
