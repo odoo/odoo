@@ -841,14 +841,6 @@
     website.snippet.editorRegistry.darken = website.snippet.Editor.extend({
         build_snippet: function($target) {
             $target.toggleClass('dark');
-            var $parent = $target.parent();
-            if($parent.hasClass('dark')){
-                $parent.replaceWith($target);
-            }else{
-                $parent = $("<div class='dark'></div>");
-                $target.after($parent);
-                $parent.append($target);
-            }
             this._super();
         }
     });
