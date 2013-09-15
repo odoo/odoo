@@ -123,6 +123,23 @@ footer {
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
+#wrap:empty, [data-oe-type=html]:empty {
+  background-image: url("/website/static/src/img/drag_here.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+#wrap:empty:before, [data-oe-type=html]:empty:before {
+  content: "Drag Building Blocks Here";
+  text-align: center;
+  display: block;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  color: grey;
+  font-size: 24px;
+}
+
+/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .navbar .nav > li > p {
   margin-bottom: 0px;
 }
