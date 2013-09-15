@@ -99,7 +99,7 @@
         <div class='oe_snippet_thumbnail oe_label'>Darken</div>
     </div>
 
-    <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-action='insert' data-selector-siblings='div p'>
+    <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-action='insert' data-selector-siblings='div p h1 h2 h3 blockquote'>
         <div class='oe_snippet_thumbnail oe_label'>Well</div>
         <div class="oe_snippet_body well">
             Manage your sales funnel with no effort with OpenERP CRM. Attract
@@ -108,18 +108,18 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.quote" data-snippet-id='quote' data-category='content' data-action='insert' data-selector-siblings='div p'>
+    <div t-name="website.snippets.quote" data-snippet-id='quote' data-category='content' data-action='insert' data-selector-siblings='div p h1 h2 h3 blockquote'>
         <div class='oe_snippet_thumbnail oe_label'>Quote</div>
         <blockquote class="oe_snippet_body">
             <p>
                 OpenERP provides essential platform for our project management.
-                Things are better organized and much more visible with it.
+                Things are better organized and more visible with it.
             </p>
-            <small class="pull-right">John Doe, CEO</small>
+            <small>John Doe, CEO</small>
         </blockquote>
     </div>
 
-    <div t-name="website.snippets.panel" data-snippet-id='panel' data-category='content' data-action='insert' data-selector-siblings='div p'>
+    <div t-name="website.snippets.panel" data-snippet-id='panel' data-category='content' data-action='insert' data-selector-siblings='div p h1 h2 h3 blockquote'>
         <div class='oe_snippet_thumbnail oe_label'>Panel</div>
         <div class="oe_snippet_body panel panel-default">
             <div class="panel-heading">
@@ -371,5 +371,106 @@
         </section>
     </div>
 
+    <div t-name="website.snippets.pricing" data-snippet-id='pricing' data-category='emphasize' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_thumbnail oe_label'>Pricing</div>
+        <section class="oe_snippet_body">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center mt16 mb32">
+                    <h2>Our Offers</h2>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Beginner</h2>
+                          <p style="margin: 0" class="text-muted">
+                              Starter package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">450</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 8 hours</li>
+                        <li class="list-group-item">Screen: 2.5 inch</li>
+                        <li class="list-group-item">Weight: 1.1 ounces</li>
+                        <li class="list-group-item">No support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Professional</h2>
+                          <p style="margin: 0">
+                              Enterprise package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">590</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 12 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Limited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Expert</h2>
+                          <p style="margin: 0" class="text-muted">
+                              The top of the top
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">890</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 20 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Unlimited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+        </section>
+    </div>
 
 </templates>
