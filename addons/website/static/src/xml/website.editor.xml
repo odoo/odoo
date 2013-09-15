@@ -119,6 +119,7 @@
                         <option value="img-rounded">Rounded corners</option>
                         <option value="img-thumbnail">Box</option>
                         <option value="img-circle">Circle</option>
+                        <option value="shadow">Shadow</option>
                     </select>
                 </div>
             </div>
@@ -161,4 +162,45 @@
             </tbody>
         </table>
     </t>
+
+    <!-- Snippets -->
+
+    <t t-name="website.snippets">
+        <div id='oe_snippets' class='hide'>
+            <ul class="nav nav-pills">
+              <li class="active"><a data-toggle="pill" href="#snippet_structure">Structure</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_content">Content</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_emphasize">Emphasize</a></li>
+              <li class=""><a data-toggle="pill" href="#snippet_style">Style</a></li>
+            </ul>
+            <div class="pill-content">
+                <div class="pill-pane active" id="snippet_structure"></div>
+                <div class="pill-pane" id="snippet_content"></div>
+                <div class="pill-pane" id="snippet_emphasize"></div>
+                <div class="pill-pane" id="snippet_style"></div>
+                <div class="pill-pane" id="snippet_unsorted"></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_overlay">
+        <div class="oe_overlay">
+            <div class="oe_overlay_options">
+                <div class="dropdown oe_options">
+                    <i data-toggle="dropdown" class="btn btn-primary icon icon-cog"></i>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li class="divider"></li>
+                        <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
+                    </ul>
+                </div>
+                <div class="oe_label"></div>
+                <div class="oe_move"><i class="js_box_move icon btn btn-primary icon-move"></i></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'></div>
+    </t>
+
 </templates>

@@ -85,7 +85,7 @@
     </template>
     <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
                     <t t-foreach="categories" t-as="category">
@@ -95,7 +95,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='shop_content']" position="attributes">
-            <attribute name="class">col-md-8</attribute>
+            <attribute name="class">col-md-9</attribute>
         </xpath>
     </template>
 
@@ -192,13 +192,7 @@
                         <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price"><t t-field="product.product_variant_ids[0].lst_price" /> €</h4>
                     </div>
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <div t-field="product.website_description">
-                        <div class="container mt32"></div>
-                        <div class="container" data-snippet-id="container">
-                            Replace this text with your Website product description
-                        </div>
-                        <div class="container mt32"></div>
-                    </div>
+                    <div t-field="product.website_description"></div>
                 </div>
             </t>
         </t>
