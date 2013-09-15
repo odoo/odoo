@@ -116,7 +116,7 @@ class website(osv.osv):
             model, id = IMD.get_object_reference(cr, uid, model, xmlid)
         except ValueError:
             logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render('website.404', qweb_context)
+            return self.render(cr, uid, ids, 'website.404', qweb_context)
 
         # render template and catch error
         try:
@@ -125,7 +125,7 @@ class website(osv.osv):
             logger.error(err)
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render('website.401', qweb_context)
+            return self.render(cr, uid, ids, 'website.401', qweb_context)
         except Exception:
             qweb_context['traceback'] = traceback.format_exc()
             logger.error("Website Rendering Error.\n\n%s" % qweb_context['traceback'])
