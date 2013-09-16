@@ -798,9 +798,9 @@ class mrp_production(osv.osv):
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 rest_qty = (subproduct_factor * production.product_qty) - produced_qty
 
-                if rest_qty < production_qty:
+                if rest_qty < (subproduct_factor * production_qty):
                     prod_name = produce_product.product_id.name_get()[0][1]
-                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % (production_qty, prod_name, rest_qty))
+                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
