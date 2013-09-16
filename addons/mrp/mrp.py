@@ -733,6 +733,10 @@ class mrp_production(osv.osv):
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
 
+        wf_service = netsvc.LocalService("workflow")
+        if not production.move_lines:
+            wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce', cr)
+
         produced_qty = 0
         for produced_product in production.move_created_ids2:
             if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
@@ -810,8 +814,6 @@ class mrp_production(osv.osv):
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
 
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce', cr)
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
         return True
 
