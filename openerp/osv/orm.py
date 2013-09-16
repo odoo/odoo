@@ -2739,13 +2739,16 @@ class BaseModel(object):
                     groupby_datetime = datetime.datetime.strptime(alldata[d['id']][groupby], '%Y-%m-%d')
                     d[groupby] = babel.dates.format_date(
                         groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
-                    if group_by_params.get('interval') == 'day':
-                        domain_dt_begin = groupby_datetime.replace(hour=0, minute=0)
-                        domain_dt_end = groupby_datetime.replace(hour=23, minute=59, second=59)
-                    else:
+                    if group_by_params.get('interval') == 'month':
                         days = calendar.monthrange(groupby_datetime.year, groupby_datetime.month)[1]
                         domain_dt_begin = groupby_datetime.replace(day=1)
                         domain_dt_end = groupby_datetime.replace(day=days)
+                    elif group_by_params.get('interval') == 'day':
+                        domain_dt_begin = groupby_datetime.replace(hour=0, minute=0)
+                        domain_dt_end = groupby_datetime.replace(hour=23, minute=59, second=59)
+                    else:
+                        domain_dt_begin = groupby_datetime.replace(month=1, day=1)
+                        domain_dt_end = groupby_datetime.replace(month=12, day=31)
                     d['__domain'] = [(group_by, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (group_by, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
