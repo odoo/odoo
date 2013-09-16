@@ -593,6 +593,11 @@
             Shop: <t t-esc="widget.shop_obj.name"/><br />
             <br />
             <table>
+                <colgroup>
+                    <col width='50%' />
+                    <col width='25%' />
+                    <col width='25%' />
+                </colgroup>
                 <tr t-foreach="widget.currentOrderLines.toArray()" t-as="orderline">
                     <td>
                         <t t-esc="orderline.get_product().get('name')"/>
