@@ -172,7 +172,8 @@ CKEDITOR.resourceManager.prototype = {
 		var loaded = this.loaded,
 			registered = this.registered,
 			urls = [],
-			urlsNames = {};
+			urlsNames = {},
+			resources = {};
 
 		// Loop through all names.
 		for ( var i = 0; i < names.length; i++ ) {
@@ -188,7 +189,8 @@ CKEDITOR.resourceManager.prototype = {
 				if ( !( url in urlsNames ) )
 					urlsNames[ url ] = [];
 				urlsNames[ url ].push( name );
-			}
+			} else
+				resources[ name ] = this.get( name );
 		}
 
 		CKEDITOR.scriptLoader.load( urls, function( completed, failed ) {
@@ -201,16 +203,11 @@ CKEDITOR.resourceManager.prototype = {
 				var nameList = urlsNames[ completed[ i ] ];
 				for ( var j = 0; j < nameList.length; j++ ) {
 					var name = nameList[ j ];
+					resources[ name ] = this.get( name );
 
 					loaded[ name ] = 1;
 				}
 			}
-            var resources = {};
-            for ( var k = 0; k < names.length; ++k ) {
-                var name_ = names[ k ];
-                if ( !name_ ) continue;
-                resources[ name_ ] = this.get( name_ );
-            }
 
 			callback.call( scope, resources );
 		}, this );

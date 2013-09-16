@@ -33,18 +33,20 @@
     }
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
-            requires: 'link,image',
+//            requires: 'link,image',
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
-                    if (evt.data.dialog === 'link') {
-                        delete evt.data.dialog;
-                        link_dialog(editor);
-                    } else if(evt.data.dialog === 'image') {
-                        delete evt.data.dialog;
+                    var element = evt.data.element;
+                    if (element.is('img') && !element.data( 'cke-realelement' ) && !element.isReadOnly()) {
                         image_dialog(editor);
+                        return;
                     }
-                    // priority should be smaller than dialog (999) but bigger
-                    // than link or image (default=10)
+
+                    element = get_selected_link(editor) || evt.data.element;
+                    if (element.isReadOnly() || !element.is('a')) { return; }
+
+                    editor.getSelection().selectElement(element);
+                    link_dialog(editor);
                 }, null, null, 500);
 
                 //noinspection JSValidateTypes
@@ -64,6 +66,19 @@
                     },
                     canUndo: false,
                     editorFocus: true,
+                });
+
+                editor.ui.addButton('Link', {
+                    label: 'Link',
+                    command: 'link',
+                    toolbar: 'links,10',
+                    icon: '/website/static/lib/ckeditor/plugins/link/icons/link.png',
+                });
+                editor.ui.addButton('Image', {
+                    label: 'Image',
+                    command: 'image',
+                    toolbar: 'insert,10',
+                    icon: '/website/static/lib/ckeditor/plugins/image/icons/image.png',
                 });
             }
         });
@@ -325,7 +340,7 @@
                 'clipboard', 'colorbutton', 'colordialog', 'dialogadvtab',
                 'elementspath', 'enterkey', 'entities', 'filebrowser',
                 'find', 'floatingspace','format', 'htmlwriter', 'iframe',
-                'image', 'indentblock', 'indentlist', 'justify', 'link',
+                'indentblock', 'indentlist', 'justify',
                 'list', 'pastefromword', 'pastetext', 'preview',
                 'removeformat', 'resize', 'save', 'selectall', 'stylescombo',
                 'tab', 'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
@@ -465,7 +480,11 @@
             var editor = this.editor;
             // same issue as in make_link
             setTimeout(function () {
-                editor.execCommand('unlink');
+                editor.removeStyle(new CKEDITOR.style({
+                    element: 'a',
+                    type: CKEDITOR.STYLE_INLINE,
+                    alwaysRemoveElement: true,
+                }));
             }, 0);
             this.close();
         },
@@ -568,17 +587,7 @@
          * if the editor is set directly on a link it will thus not work.
          */
         get_selected_link: function () {
-            var sel = this.editor.getSelection(),
-                el = sel.getSelectedElement();
-            if (el && el.is('a')) { return el; }
-
-            var range = sel.getRanges(true)[0];
-            if (!range) { return null; }
-
-            range.shrink(CKEDITOR.SHRINK_TEXT);
-            return this.editor.elementPath(range.getCommonAncestor())
-                              .contains('a');
-
+            return get_selected_link(this.editor);
         },
         fetch_pages: function () {
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -709,6 +718,19 @@
             this.set_image(e.currentTarget.getAttribute('href'));
         },
     });
+
+    function get_selected_link(editor) {
+        var sel = editor.getSelection(),
+            el = sel.getSelectedElement();
+        if (el && el.is('a')) { return el; }
+
+        var range = sel.getRanges(true)[0];
+        if (!range) { return null; }
+
+        range.shrink(CKEDITOR.SHRINK_TEXT);
+        return editor.elementPath(range.getCommonAncestor())
+                          .contains('a');
+    }
 
 
     var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
