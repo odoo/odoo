@@ -125,6 +125,7 @@ table.editorbar-panel td.selected {
 
 /* ---- SNIPPET EDITOR ---- */
 #oe_snippets {
+  display: none;
   position: fixed;
   left: 0px;
   right: 0px;
@@ -145,6 +146,10 @@ table.editorbar-panel td.selected {
 }
 #oe_snippets .pill-content {
   height: 140px;
+}
+
+#website-top-navbar:hover #oe_snippets {
+  display: block;
 }
 
 .oe_snippet {

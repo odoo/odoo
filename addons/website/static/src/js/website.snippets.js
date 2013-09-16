@@ -7,8 +7,7 @@
     website.EditorBar.include({
         edit: function () {
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
-            this.snippets.insertAfter(this.$el);
-            this.snippets.show();
+            this.snippets.appendTo(this.$el);
             return this._super.apply(this, arguments);
         },
         save: function () {
@@ -96,14 +95,10 @@
             $el.css($target.offset());
         },
         show: function () {
-            this.$el.css('margin-top', '0px');
-            $('body').trigger('resize');
-            $("body").css('padding-top', '220px');
+            this.$el.css("display", "");
         },
         hide: function () {
-            this.$el.css('margin-top', '-170px');
-            $("body").css('padding-top', '50px');
-            $('body').trigger('resize');
+            this.$el.hide();
         },
 
         bind_snippet_click_editor: function () {

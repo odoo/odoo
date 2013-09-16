@@ -116,7 +116,9 @@ table.editorbar-panel
 
 /* ---- SNIPPET EDITOR ---- */
 
+
 #oe_snippets
+    display: none
     position: fixed
     left: 0px
     right: 0px
@@ -134,6 +136,9 @@ table.editorbar-panel
             padding: 2px 10px !important
     .pill-content
         height: 140px
+
+#website-top-navbar:hover #oe_snippets
+    display: block
 
 .oe_snippet
     display: inline-block
