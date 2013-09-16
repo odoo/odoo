@@ -35,17 +35,20 @@
     'data': [
         'mail_data.xml',
         'mass_mailing_view.xml',
-        'mass_mailing_demo.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_mass_mailing_create_segment.xml',
         'security/ir.model.access.csv',
     ],
-    'js': [],
+    'js': [
+        'static/src/js/mass_mailing.js',
+    ],
     'qweb': [],
     'css': [
         'static/src/css/mass_mailing.css'
     ],
-    'demo': [],
+    'demo': [
+        'mass_mailing_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
 }
