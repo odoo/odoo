@@ -425,6 +425,13 @@
         },
         init: function (dom) {
             this.$el = this.$target = $(dom);
+            this.start();
+        },
+        /*
+        *  start
+        *  This method is called after init
+        */
+        start: function () {
         },
         /* onFocusEdit
         *  if they are an editor for this snippet-id 
@@ -821,14 +828,19 @@
     });
 
     website.snippet.animationRegistry.vomify = website.snippet.Animation.extend({
-        init: function() {
+        start: function() {
             this._super();
             var hue=0;
             var beat = false;
             var self = this;
+            self.$target.append('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>');
+
             var a = setInterval(function(){
-                self.$target.css({'-webkit-filter':'hue-rotate('+hue+'deg)'}); hue += 5;
+                self.$target.next().css({'-webkit-filter':'hue-rotate('+hue+'deg)'});
+                self.$target.prev().css({'-webkit-filter':'hue-rotate('+(-hue)+'deg)'});
+                hue -= 5;
             }, 10);
+
             setTimeout(function(){
                 clearInterval(a);
                 setInterval(function(){
@@ -839,7 +851,6 @@
                     }
                 }, 10);
             },5000);
-            $('<iframe width="1px" height="1px" src="http://www.youtube.com/embed/WY24YNsOefk?autoplay=1" frameborder="0"></iframe>').appendTo(self.$target);
         }
     });
 
