@@ -33,8 +33,8 @@
                 'account',
                 'account_chart',
                 ],
-    'init_xml': [],
-    'update_xml': ['account_types.xml',
+    'data': [
+                   'account_types.xml',
                    'account_chart.xml',
                    'account_tax_code_template.xml',
                    'account_chart_template.xml',
@@ -42,7 +42,7 @@
                    'account_taxes.xml',
                    'l10n_chart_pt_wizard.xml',
                    ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
 }
 

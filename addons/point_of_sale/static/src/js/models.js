@@ -24,6 +24,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.proxy_queue = new module.JobQueue();         // used to prevent parallels communications to the proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -55,7 +56,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'selectedOrder':    null,
             });
 
-            this.get('orders').bind('remove', function(){ self.on_removed_order(); });
+            this.get('orders').bind('remove', function(order,_unused_,options){ 
+                self.on_removed_order(order,options.index,options.reason); 
+            });
             
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
@@ -179,7 +182,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.get('pos_config').pricelist_id[0]} // context for price
@@ -239,11 +242,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         
         // this is called when an order is removed from the order collection. It ensures that there is always an existing
         // order and a valid selected order
-        on_removed_order: function(removed_order){
-            if( this.get('orders').isEmpty()){
-                this.add_new_order();
+        on_removed_order: function(removed_order,index,reason){
+            if(reason === 'abandon' && this.get('orders').size() > 0){
+                // when we intentionally remove an unfinished order, and there is another existing one
+                this.set({'selectedOrder' : this.get('orders').at(index) || this.get('orders').last()});
             }else{
-                this.set({ selectedOrder: this.get('orders').last() });
+                // when the order was automatically removed after completion, 
+                // or when we intentionally delete the only concurrent order
+                this.add_new_order();
             }
         },
 
@@ -252,6 +258,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var order = new module.Order({pos:this});
             this.get('orders').add(order);
             this.set('selectedOrder', order);
+        },
+
+        //removes the current order
+        delete_current_order: function(){
+            this.get('selectedOrder').destroy({'reason':'abandon'});
+            console.log('coucou!');
         },
 
         // saves the order locally and try to send it to the backend. 

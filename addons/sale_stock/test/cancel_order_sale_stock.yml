@@ -1,12 +1,16 @@
 -
-  In order to test the cancel sale order.
+  In order to test the cancel sale order with that user which have salesman rights.
   First I confirm order.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_8}
 -
   I send delivery in two shipments, so I am doing a partial delivery order.
 -
   !python {model: stock.picking}: |
+    context={}
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
     first_picking = self.browse(cr, uid, delivery_orders[-1], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
@@ -21,11 +25,21 @@
     last_delivery_order_id = delivery_orders[-1]
     self.pool.get('stock.picking').signal_button_cancel(cr, uid, [last_delivery_order_id])
 -
+  Only Stock User can change data related warehouse therefore test with that user which have stcok user rights,
+-
+  !context
+    uid: 'res_stock_user'
+-
   I run the scheduler.
 -
   !python {model: procurement.order}: |
 
      self.run_scheduler(cr, uid)
+-
+  Salesman can also check order therefore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   I check order status in "Ship Exception".
 -

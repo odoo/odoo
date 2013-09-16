@@ -232,6 +232,10 @@ class im_session(osv.osv):
             raise Exception("Not allowed to modify a session when you are not in it.")
         self.write(cr, uid, session_id, {"user_ids": [(4, user_id)]}, context=context)
 
+    def remove_me_from_session(self, cr, uid, session_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        self.write(cr, openerp.SUPERUSER_ID, session_id, {"user_ids": [(3, my_id)]}, context=context)
+
 class im_user(osv.osv):
     _name = "im.user"
 
