@@ -401,7 +401,7 @@
                                         <div class="oe_job oe_name oe_kanban_ellipsis">
                                             <field name="name"/>
                                         </div>
-                                        <div class="oe_job oe_department">
+                                        <div class="oe_job oe_department oe_kanban_ellipsis">
                                             <field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
@@ -424,7 +424,9 @@
                                                 <span t-if="record.doc_count.raw_value lt 2"><field name="doc_count"/> Document</span>
                                             </a>
                                         </div>
-                                        <field state="recruit" name="no_of_recruitment" widget="justgage" options="{'label_field': 'no_of_hired_employee', 'action_change': 'action_employee_to_hire'}">Forecast</field>
+                                        <div class="oe_job_justgage">
+                                            <field state="recruit" name="no_of_hired_employee" widget="gauge" style="width:160px; height: 120px;" options="{'action_change': 'action_employee_to_hire', 'max_field': 'no_of_recruitment', 'label': 'Hired Employees', 'input_value_field': 'no_of_recruitment'}"> </field>
+                                        </div>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">
