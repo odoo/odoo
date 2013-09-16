@@ -65,8 +65,13 @@
                 $("<div id='oe_manipulators'></div>").appendTo('body');
             }
             this.$active_snipped_id = false;
-            this.parent_of_editable_box = "body > :not(:has(#website-top-view)):not(#oe_manipulators):not(#oe_snippets) ";
             hack_to_add_snippet_id();
+        },
+        dom_filter: function (dom) {
+            var $errordom = $("#oe_manipulators, #website-top-navbar");
+            return $(dom).filter(function () {
+                return $.contains($errordom, this) || $.inArray(this, $errordom);
+            });
         },
         start: function() {
             var self = this;
@@ -310,13 +315,13 @@
         activate_insertion_zones: function(selector){
             var self = this;
             var child_selector = selector.childs;
-            var sibling_selector = selector.siblings ? this.parent_of_editable_box + (selector.siblings).split(",").join(this.parent_of_editable_box) : false;
-            var vertical_child_selector   =  selector.vertical_childs   ?  this.parent_of_editable_box + (selector.vertical_childs).split(",").join(this.parent_of_editable_box) : false;
+            var sibling_selector = selector.siblings;
+            var vertical_child_selector   =  selector.vertical_childs;
 
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             if(child_selector){
-                $(child_selector).each(function (){
+                self.dom_filter(child_selector).each(function (){
                     var $zone = $(this);
                     $zone.find('> *:not(.oe_drop_zone):visible').after(zone_template);
                     $zone.prepend(zone_template);
@@ -324,7 +329,7 @@
             }
 
             if(vertical_child_selector){
-                $(vertical_child_selector).each(function (){
+                self.dom_filter(vertical_child_selector).each(function (){
                     var $zone = $(this);
                     var $template = $(zone_template).addClass("oe_vertical").css('height', $zone.outerHeight()+'px');
                     $zone.find('> *:not(.oe_drop_zone):visible').after($template);
@@ -333,7 +338,7 @@
             }
 
             if(sibling_selector){
-                $(sibling_selector).each(function (){
+                self.dom_filter(sibling_selector).each(function (){
                     var $zone = $(this);
                     if($zone.prev('.oe_drop_zone:visible').length === 0){
                         $zone.before(zone_template);
@@ -382,11 +387,7 @@
         // generate drop zones covering the elements selected by the selector
         // we generate overlay drop zones only to get an idea of where the snippet are, the drop
         activate_overlay_zones: function(selector){
-            selector = selector || '[data-snippet-id]';
-            if (typeof selector === 'string')
-                selector = this.parent_of_editable_box + selector.split(",").join(", " + this.parent_of_editable_box);
-
-            var $targets = $(selector);
+            var $targets = this.dom_filter(selector || '[data-snippet-id]');
             var self = this;
             
             function is_visible($el){
