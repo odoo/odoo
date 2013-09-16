@@ -4,8 +4,7 @@
   !record {model: product.category, id: product.product_category_001}:
     name : Lifo Category
     removal_strategy_ids: 
-      - product_categ_id: product.product_category_1
-        method: lifo
+      - method: lifo
         location_id: stock.stock_location_stock
 -
   Set a product as using lifo price
@@ -14,7 +13,7 @@
     default_code: LIFO
     name: LIFO Ice Cream
     type: product
-    categ_id: product.product_category_1
+    categ_id: product.product_category_001
     list_price: 100.0
     standard_price: 70.0
     uom_id: product.product_uom_kgm
@@ -99,7 +98,7 @@
     product_uom: product.product_uom_kgm
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
-    product_qty: 20.0
+    product_uom_qty: 20.0
     picking_type_id: stock.picking_type_out
 - 
   I assign this outgoing shipment 
