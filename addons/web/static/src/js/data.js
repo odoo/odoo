@@ -61,18 +61,19 @@ instance.web.Query = instance.web.Class.extend({
     },
     _execute: function () {
         var self = this;
-        return this._model.call('search_read', {
+        return instance.session.rpc('/web/dataset/search_read', {
+            model: this._model.name,
+            fields: this._fields || false,
             domain: instance.web.pyeval.eval('domains',
                     [this._model.domain(this._filter)]),
-            fields: this._fields || false,
-            offset: this._offset,
-            limit: this._limit,
-            order: instance.web.serialize_sort(this._order_by),
             context: instance.web.pyeval.eval('contexts',
                     [this._model.context(this._context)]),
+            offset: this._offset,
+            limit: this._limit,
+            sort: instance.web.serialize_sort(this._order_by)
         }).then(function (results) {
             self._count = results.length;
-            return results;
+            return results.records;
         }, null);
     },
     /**
@@ -450,7 +451,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         // TODO: reorder results to match ids list
         return this._model.call('read',
             [ids, fields || false],
-            {context: this._model.context(options.context)});
+            {context: this.get_context(options.context)});
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its

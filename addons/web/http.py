@@ -617,8 +617,13 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
 
         if uid is None:
-            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password,
-                request.httprequest.environ])
+            wsgienv = request.httprequest.environ
+            env = dict(
+                base_location=request.httprequest.url_root.rstrip('/'),
+                HTTP_HOST=wsgienv['HTTP_HOST'],
+                REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            )
+            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
         self.db = db
@@ -931,7 +936,7 @@ class Root(object):
             if httprequest.session.should_save:
                 self.session_store.save(httprequest.session)
             if not explicit_session and hasattr(response, 'set_cookie'):
-                response.set_cookie('session_id', httprequest.session.sid)
+                response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
             return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:
@@ -1079,17 +1084,14 @@ def db_monodb(httprequest=None):
 
     dbs = db_list(True, httprequest)
 
-    # 1 try the db already in the session
+    # try the db already in the session
     db_session = httprequest.session.db
     if db_session in dbs:
         return db_session
 
-    # 2 if there is only one db in the db filters, take it
-    if len(dbs) == 1:
-        return dbs[0]
-
-    # 3 if there are multiple dbs, take the first one only if we can list them
-    if len(dbs) > 1 and config['list_db']:
+    # if dbfilters was specified when launching the server and there is
+    # only one possible db, we take that one
+    if openerp.tools.config['dbfilter'] != ".*" and len(dbs) == 1:
         return dbs[0]
     return None
 
