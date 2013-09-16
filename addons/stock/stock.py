@@ -236,7 +236,7 @@ class stock_quant(osv.osv):
         self._quant_reconcile_negative(cr, uid, quant, context=context)
         return quant
 
-    def quants_get(self, cr, uid, location, product, qty, domain=None, prefered_order=False, reservedcontext=None, context=None):
+    def quants_get(self, cr, uid, location, product, qty, domain=None, prefered_order=False, reservedcontext=None, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """
         Use the removal strategies of product to search for the correct quants
         If you inherit, put the super at the end of your method.
@@ -247,12 +247,16 @@ class stock_quant(osv.osv):
         :lot_id NOT USED YET !
         """
         result = []
-        domain = domain or [('qty','>',0.0)]
+        domain = domain or [('qty', '>', 0.0)]
+        if restrict_partner_id:
+            domain += [('owner_id', '=', restrict_partner_id)]
+        if restrict_lot_id:
+            domain += [('lot_id', '=', restrict_lot_id)]
         if location:
             removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
-            if removal_strategy=='fifo':
+            if removal_strategy == 'fifo':
                 result += self._quants_get_fifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
-            elif removal_strategy=='lifo':
+            elif removal_strategy == 'lifo':
                 result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             else:
                 raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
@@ -1044,7 +1048,6 @@ class stock_production_lot(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants'),
         'create_date': fields.datetime('Creation Date'),
-#         'partner_id': fields.many2one('res.partner', 'Owner'),
     }
     _defaults = {
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
@@ -1250,6 +1253,8 @@ class stock_move(osv.osv):
         'origin_returned_move_id': fields.many2one('stock.move', 'Origin return move', help='move that created the return move'),
         'returned_move_ids': fields.one2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move'),
         'availability': fields.function(_get_product_availability, type='float', string='Availability'),
+        'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'"),
+        'restrict_partner_id': fields.many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'"),
         }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1544,7 +1549,7 @@ class stock_move(osv.osv):
                         dp.append(str(q.id))
                         qty -= q.qty
                 domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
-                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = dp and ('id not in ('+','.join(dp)+')') or False, context=context)
+                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = dp and ('id not in ('+','.join(dp)+')') or False, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 #Will only reserve physical quants, no negative
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                 # the total quantity is provided by existing quants
@@ -1865,15 +1870,17 @@ class stock_inventory(osv.osv):
             if not inv.move_ids:
                 self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
-            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
+            #the action_done on stock_move has to be done in 2 steps:
+            #first, we start moving the products from stock to inventory loss
+            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids if x.location_id.usage == 'internal'], context=context)
+            #then, we move from inventory loss. This 2 steps process is needed because some moved quant may need to be put again in stock
+            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids if x.location_id.usage != 'internal'], context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
     def _create_stock_move(self, cr, uid, inventory, todo_line, context=None):
         stock_move_obj = self.pool.get('stock.move')
         product_obj = self.pool.get('product.product')
-        quant_obj = self.pool.get('stock.quant')
-        location_obj = self.pool.get('stock.location')
         inventory_location_id = product_obj.browse(cr, uid, todo_line['product_id'], context=context).property_stock_inventory.id
         vals = {
             'name': _('INV:') + (inventory.name or ''),
@@ -1883,6 +1890,8 @@ class stock_inventory(osv.osv):
             'company_id': inventory.company_id.id,
             'inventory_id': inventory.id,
             'state': 'assigned',
+            'restrict_lot_id': todo_line.get('prod_lot_id'),
+            'restrict_partner_id': todo_line.get('partner_id'),
          }
 
         if todo_line['product_qty'] < 0:
@@ -1895,21 +1904,7 @@ class stock_inventory(osv.osv):
             vals['location_id'] = todo_line['location_id']
             vals['location_dest_id'] = inventory_location_id
             vals['product_uom_qty'] = todo_line['product_qty']
-        move_id = stock_move_obj.create(cr, uid, vals, context=context)
-        move = stock_move_obj.browse(cr, uid, move_id, context=context)
-        #create the quants, and set the quants on the move
-        source_location = location_obj.browse(cr, uid, vals['location_id'], context=context)
-        product = self.pool.get('product.product').browse(cr, uid, vals['product_id'], context=context)
-        dom = [('owner_id', '=', todo_line.get('partner_id')), ('lot_id', '=', todo_line.get('prod_lot_id')), ('qty', '>', 0)]
-        quant_ids = []
-        for quant, qty in quant_obj.quants_get(cr, uid, source_location, product, vals['product_uom_qty'], domain=dom, context=context):
-            if quant:
-                #split
-                quant_obj._quant_split(cr, uid, quant, qty, context=context)
-            else:
-                quant = quant_obj._quant_create(cr, uid, qty, move, lot_id=todo_line.get('prod_lot_id'), owner_id=todo_line.get('partner_id'), force_location=move.location_id, context=context)
-            quant_ids.append(quant.id)
-        quant_obj.write(cr, uid, quant_ids, {'reservation_id': move_id}, context=context)
+        return stock_move_obj.create(cr, uid, vals, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
         """ Checks the inventory and computes the stock move to do
