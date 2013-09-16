@@ -20,6 +20,10 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
         }
         var val = this.field.value;
         var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
+        var input_value = value;
+        if (this.options.input_value_field) {
+            input_value = this.getParent().record[this.options.input_value_field].raw_value;
+        }
         var title = this.$node.html() || this.field.string;
         // var unique_id = _.uniqueId("JustGage");
 
@@ -66,7 +70,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                 if (!self.$el.find(".oe_justgage_edit").size()) {
                     $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
                     $div.css(css);
-                    $input = $('<input/>').val(value);
+                    $input = $('<input/>').val(input_value);
                     $input.css({
                         'text-align': 'center',
                         'margin': 'auto',
@@ -104,7 +108,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                 flag_open = true;
             });
 
-            if (!+value) {
+            if (!+input_value) {
                 $svg.fadeTo(0, 0.3);
                 $div = $('<div/>').text(_t("Click to change value"));
                 $div.css(css);
