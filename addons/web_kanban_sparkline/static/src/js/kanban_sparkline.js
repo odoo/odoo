@@ -20,15 +20,18 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
                     barWidth: 4,
                     barSpacing: 1,
                     barColor: '#96d854',
-                    tooltipFormat: '{{offset:offset}} {{value}}',
+                    tooltipFormat: self.set_offset(),
                     tooltipValueLookups: {
                         'offset': tooltips
                     }
                 }, self.options);
             self.$el.sparkline(value, sparkline_options);
-            self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
+            self.$el.tipsy({'delayIn': self.options.delayIn || 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
         }, 0);
     },
+    set_offset: function(){
+        return '{{offset:offset}} {{value}}';
+    }
 });
 
 instance.web_kanban.fields_registry.add("sparkline_bar", "instance.web_kanban.SparklineBarWidget");
