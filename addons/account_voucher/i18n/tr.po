@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:33+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:59+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -27,7 +27,7 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:369
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Borç Silme"
@@ -131,13 +131,13 @@ msgid "Voucher Statistics"
 msgstr "Fiş İstatistikleri"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
 msgstr ""
-"Hali hazırda bazı kalemlerin uzlaşmasını yaptığınızdan dolay günlüğü "
+"Hali hazırda bazı kalemlerin uzlaşmasını yaptığınızdan dolayı yevmiyeyi "
 "değiştiremezsiniz!"
 
 #. module: account_voucher
@@ -232,8 +232,8 @@ msgid "Journal Item"
 msgstr "Yevmiye Kalemi"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
-#: code:addons/account_voucher/account_voucher.py:981
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -257,10 +257,10 @@ msgstr "Diğer Bilgiler"
 #: selection:account.voucher,state:0
 #: selection:sale.receipt.report,state:0
 msgid "Cancelled"
-msgstr "İptal Edilmiş"
+msgstr "İptal Edildi"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -311,10 +311,10 @@ msgid "Tax"
 msgstr "Vergi"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Invalid Action!"
-msgstr "Geçersiz Eylem!"
+msgstr "Geçersiz İşlem!"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
@@ -364,7 +364,7 @@ msgid "Import Invoices"
 msgstr "Faturaları İçe aktar"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Yanlış fiş kalemi"
@@ -383,7 +383,7 @@ msgid "Receipt"
 msgstr "Makbuz"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -407,7 +407,7 @@ msgstr "Dönem"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:211
+#: code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Tedarikçi"
@@ -428,10 +428,10 @@ msgid "Debit"
 msgstr "Borç"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid "Unable to change journal !"
-msgstr "Günlük değştirelemiyor !"
+msgstr "Yevmiye değştirelemiyor !"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -549,10 +549,10 @@ msgid "Pay Invoice"
 msgstr "Fatura Ödeme"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
-msgstr "Hesap kodu ve Vergi kodu yok !"
+msgstr "Hesap kodu ve Vergi kodu yok!"
 
 #. module: account_voucher
 #: field:account.voucher,tax_amount:0
@@ -614,15 +614,15 @@ msgid "To Review"
 msgstr "İncelenecek"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1039
-#: code:addons/account_voucher/account_voucher.py:1194
+#: code:addons/account_voucher/account_voucher.py:1120
+#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1286
 #, python-format
 msgid "change"
 msgstr "değiştir"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1106
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -680,6 +680,7 @@ msgstr "Ay"
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Para Birimi"
@@ -723,7 +724,7 @@ msgid "Reconcile Payment Balance"
 msgstr "Bakiye Ödemesini Uzlaştır"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:975
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "Configuration Error !"
 msgstr "Yapılandırma Hatası!"
@@ -750,7 +751,7 @@ msgstr "Satınalma Fişi"
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -788,7 +789,7 @@ msgid "October"
 msgstr "Ekim"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:976
+#: code:addons/account_voucher/account_voucher.py:1068
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Lütfen seçilen günlüğün seri numarasını etkinleştirin !"
@@ -817,7 +818,7 @@ msgstr "Satış Makbuzları"
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir Takipçi mi"
+msgstr "Bir İzleyicidir"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -868,7 +869,7 @@ msgid "Previous Payments ?"
 msgstr "Öncek Ödemeler ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "Ödemek istediğiniz fatura artık geçerli değil."
@@ -900,7 +901,7 @@ msgid "Active"
 msgstr "Etkin"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:982
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Günlük için lütfen bir seri no tanımlayın."
@@ -1028,11 +1029,11 @@ msgid "Journal Items"
 msgstr "Yevmiye Kalemleri"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
-"Bu günlükte lütfen varsayılan alacak/borç hesaplarını tanımlayın - \"%s\"."
+"Bu yevmiyede lütfen varsayılan alacak/borç hesaplarını tanımlayın - \"%s\"."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1250,7 +1251,7 @@ msgid ""
 msgstr "Fişin tutarı hesap özeti kalemindeki ile aynı tutarda olmalı."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Hali hazırda açık ya da ödenmiş olan fiş(ler) silinemiyor."
@@ -1300,7 +1301,7 @@ msgstr "Satış Makbuzları İstatistikleri"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
-msgstr "Paydaş"
+msgstr "İş Ortağı"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
@@ -1313,8 +1314,8 @@ msgid "Status <b>changed</b>"
 msgstr "Durum <b>değişti</b>"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Yetersiz Yapılandırma!"

@@ -36,13 +36,6 @@ def _employee_get(obj, cr, uid, context=None):
 
 class hr_expense_expense(osv.osv):
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if not default: default = {}
-        default.update({'date_confirm': False, 'date_valid': False, 'user_valid': False})
-        return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
-
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
         res= {}
         for expense in self.browse(cr, uid, ids, context=context):
@@ -116,7 +109,11 @@ class hr_expense_expense(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default.update(account_move_id=False)
+        default.update(
+            account_move_id=False,
+            date_confirm=False,
+            date_valid=False,
+            user_valid=False)
         return super(hr_expense_expense, self).copy(cr, uid, id, default=default, context=context)
 
     def unlink(self, cr, uid, ids, context=None):

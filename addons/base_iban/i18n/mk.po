@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:00+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:02+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -25,14 +25,14 @@ msgid ""
 "valid payments"
 msgstr ""
 "\n"
-"Ве молиме дефинирајте BIC/Swift код за банка за IBAN тип на сметка за "
-"извршување на плаќања."
+"Ве молиме дефинирајте BIC/Swift код на банка за банкарски тип на сметка IBAN "
+"за да направите валидни плаќања."
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:141
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it"
-msgstr "IBAN-от не ја поминува проверката за валидност. Проверете го."
+msgstr "IBAN-от не ја поминува проверката за валидност. Потврдете го."
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
@@ -47,12 +47,12 @@ msgstr "bank_bic"
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
 msgid "zip"
-msgstr "zip"
+msgstr "Поштенски број"
 
 #. module: base_iban
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
-msgstr "Интернационален број на банкарска сметка"
+msgstr "Број на меѓународна банкарска сметка"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -81,7 +81,7 @@ msgstr "IBAN"
 #: code:addons/base_iban/base_iban.py:142
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "IBAN-от е невалиде, треба да започнува со кодот на државата"
+msgstr "IBAN-от е невалиден, треба да започнува со кодот на државата"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban

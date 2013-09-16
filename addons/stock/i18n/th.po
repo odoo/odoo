@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 04:59+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 04:59+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -122,8 +122,8 @@ msgid "Product Moves"
 msgstr "เคลื่อนย้ายสินค้า"
 
 #. module: stock
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #, python-format
 msgid "Please provide proper quantity."
 msgstr ""
@@ -131,14 +131,14 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "การควบคุมสินค้าคงคลัง"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
 msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
-msgstr ""
+msgstr "ตัวเลขอ้างอิงภายใน ในกรณีที่แตกต่างจากซี่รี่นัมเบอร์ของผู้ผลิต"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
@@ -186,7 +186,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:report.stock.move,day:0
 msgid "Day"
-msgstr ""
+msgstr "วันที่"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
@@ -208,7 +208,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Incoming"
-msgstr ""
+msgstr "รับเข้า"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:223
@@ -344,9 +344,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:768
-#: code:addons/stock/stock.py:2475
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2473
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -417,7 +417,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
 msgid "Suppliers"
-msgstr ""
+msgstr "ผู้จำหน่าย"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -474,6 +474,7 @@ msgstr ""
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 #: selection:stock.picking.in,state:0
+#: report:stock.picking.list:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
 msgstr ""
@@ -482,10 +483,11 @@ msgstr ""
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
-msgstr ""
+msgstr "พร้อมใช้"
 
 #. module: stock
 #: view:stock.picking:0
@@ -553,7 +555,7 @@ msgstr ""
 #: code:addons/stock/product.py:196
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "ผลิตภัณฑ์ "
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
@@ -648,7 +650,7 @@ msgstr ""
 #: field:stock.picking.in,move_lines:0
 #: field:stock.picking.out,move_lines:0
 msgid "Internal Moves"
-msgstr ""
+msgstr "เคลื่อนย้ายสต็อกภายใน"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -664,7 +666,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 #: field:stock.move,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "การบรรจุหีบห่อ"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list_in
@@ -737,7 +739,7 @@ msgstr ""
 #: field:stock.location,complete_name:0
 #: field:stock.location,name:0
 msgid "Location Name"
-msgstr ""
+msgstr "ชื่อที่ตั้ง"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -771,7 +773,7 @@ msgstr ""
 #: report:stock.picking.list:0
 #: field:stock.picking.out,state:0
 msgid "Status"
-msgstr ""
+msgstr "สถานะ"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -782,7 +784,7 @@ msgstr ""
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "August"
-msgstr ""
+msgstr "สิงหาคม"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_tracking_form
@@ -800,13 +802,13 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "To Do"
-msgstr ""
+msgstr "สิ่งที่จะทำ"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "June"
-msgstr ""
+msgstr "มิถุนายน"
 
 #. module: stock
 #: help:product.product,track_incoming:0
@@ -838,7 +840,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,child_ids:0
 msgid "Contains"
-msgstr ""
+msgstr "มีคำว่า"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
@@ -865,7 +867,7 @@ msgstr ""
 #: field:stock.picking.in,message_summary:0
 #: field:stock.picking.out,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "สรุป"
 
 #. module: stock
 #: view:product.category:0
@@ -887,7 +889,7 @@ msgid "Time"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:447
+#: code:addons/stock/product.py:449
 #, python-format
 msgid "Future Receptions"
 msgstr ""
@@ -895,12 +897,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,priority:0
 msgid "Urgent"
-msgstr ""
+msgstr "เร่งด่วน"
 
 #. module: stock
 #: selection:stock.picking.out,state:0
 msgid "Delivered"
-msgstr ""
+msgstr "ส่งมอบแล้ว"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -922,12 +924,12 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "- update"
-msgstr ""
+msgstr "- ปรับปรุง"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "น้ำหนัก"
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -992,7 +994,7 @@ msgid "Change Product Quantity"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:463
+#: code:addons/stock/product.py:465
 #, python-format
 msgid "Future P&L"
 msgstr ""
@@ -1030,7 +1032,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Details"
-msgstr ""
+msgstr "รายละเอียด"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -1042,7 +1044,7 @@ msgstr ""
 #: report:lot.stock.overview_all:0
 #: field:stock.move,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "ราคาต่อหน่วย"
 
 #. module: stock
 #: field:stock.move,date_expected:0
@@ -1063,7 +1065,7 @@ msgstr ""
 #: field:stock.partial.move.line,currency:0
 #: field:stock.partial.picking.line,currency:0
 msgid "Currency"
-msgstr ""
+msgstr "สกุลเงิน"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1169,7 +1171,7 @@ msgstr ""
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr ""
+msgstr "มุมมอง"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -1189,7 +1191,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,loc_row:0
 msgid "Row"
-msgstr ""
+msgstr "แถว"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1282,7 +1284,7 @@ msgid "Supplier"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2859
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1474,7 +1476,7 @@ msgid "To be refunded/invoiced"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2450
+#: code:addons/stock/stock.py:2448
 #, python-format
 msgid "You can only delete draft moves."
 msgstr ""
@@ -1517,7 +1519,7 @@ msgid "Additional Info"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2648
+#: code:addons/stock/stock.py:2653
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr ""
@@ -1609,6 +1611,9 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,date:0
 #: field:stock.move,create_date:0
+#: field:stock.picking,date:0
+#: field:stock.picking.in,date:0
+#: field:stock.picking.out,date:0
 #: field:stock.production.lot,date:0
 #: field:stock.tracking,date:0
 msgid "Creation Date"
@@ -1724,7 +1729,7 @@ msgid "Stock Invoice Onshipping"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2475
+#: code:addons/stock/stock.py:2473
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr ""
@@ -1873,7 +1878,7 @@ msgid "Shelf 2"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #, python-format
 msgid "You cannot remove a lot line."
 msgstr ""
@@ -1897,7 +1902,7 @@ msgid "Localization"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:459
+#: code:addons/stock/product.py:461
 #, python-format
 msgid "Delivered Qty"
 msgstr ""
@@ -2177,7 +2182,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:449
+#: code:addons/stock/product.py:451
 #, python-format
 msgid "Received Qty"
 msgstr ""
@@ -2244,8 +2249,8 @@ msgid "Customer Locations"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2449
-#: code:addons/stock/stock.py:2858
+#: code:addons/stock/stock.py:2448
+#: code:addons/stock/stock.py:2863
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -2469,7 +2474,7 @@ msgid "Warehouse board"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:469
+#: code:addons/stock/product.py:471
 #, python-format
 msgid "Future Qty"
 msgstr ""
@@ -2591,7 +2596,7 @@ msgid "Move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:465
+#: code:addons/stock/product.py:467
 #, python-format
 msgid "P&L Qty"
 msgstr ""
@@ -3154,7 +3159,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2496
+#: code:addons/stock/stock.py:2501
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr ""
@@ -3173,6 +3178,7 @@ msgstr ""
 #: selection:stock.move,state:0
 #: view:stock.picking:0
 #: view:stock.picking.in:0
+#: report:stock.picking.list:0
 msgid "Done"
 msgstr ""
 
@@ -3553,7 +3559,7 @@ msgid "Inventory Move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:475
+#: code:addons/stock/product.py:477
 #, python-format
 msgid "Future Productions"
 msgstr ""
@@ -3739,7 +3745,7 @@ msgstr ""
 #: code:addons/stock/product.py:167
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #: code:addons/stock/stock.py:790
 #: code:addons/stock/stock.py:1190
 #: code:addons/stock/stock.py:1199
@@ -3749,7 +3755,8 @@ msgstr ""
 #: code:addons/stock/stock.py:2252
 #: code:addons/stock/stock.py:2255
 #: code:addons/stock/stock.py:2258
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2481
+#: code:addons/stock/stock.py:2590
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3906,7 +3913,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2590
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
@@ -3982,7 +3989,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2811
+#: code:addons/stock/stock.py:2816
 #, python-format
 msgid "INV:"
 msgstr ""
@@ -4033,7 +4040,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:457
+#: code:addons/stock/product.py:459
 #, python-format
 msgid "Future Deliveries"
 msgstr ""
@@ -4309,7 +4316,7 @@ msgid "November"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:471
+#: code:addons/stock/product.py:473
 #, python-format
 msgid "Unplanned Qty"
 msgstr ""
@@ -4361,7 +4368,7 @@ msgid "Move History (parent moves)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:453
+#: code:addons/stock/product.py:455
 #, python-format
 msgid "Future Stock"
 msgstr ""
@@ -4563,7 +4570,7 @@ msgid "Location Content"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:477
+#: code:addons/stock/product.py:479
 #, python-format
 msgid "Produced Qty"
 msgstr ""

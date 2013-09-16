@@ -10,6 +10,7 @@
 
     <record id="group_purchase_requisition_user" model="res.groups">
         <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('purchase.group_purchase_user'))]"/>
         <field name="category_id" ref="module_category_purchase_requisition"/>
     </record>
 

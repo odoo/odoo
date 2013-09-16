@@ -62,10 +62,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         start: function() {
             this.state.bind('change:mode', this.changedMode, this);
             this.changedMode();
-            this.$el.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
-            this.$el.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
-            this.$el.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
-            this.$el.find('button.mode-button').click(_.bind(this.clickChangeMode, this));
+            this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
+            this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
+            this.$el.find('.number-char').click(_.bind(this.clickAppendNewChar, this));
+            this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
         },
         clickDeleteLastChar: function() {
             return this.state.deleteLastChar();
@@ -189,8 +189,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }else if( mode === 'price'){
                     order.getSelectedLine().set_unit_price(val);
                 }
-        	} else {
-        	    this.pos.get('selectedOrder').destroy();
         	}
         },
         change_selected_order: function() {
@@ -362,27 +360,22 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.order = options.order;
             this.order.bind('destroy',function(){ self.destroy(); });
             this.order.bind('change', function(){ self.renderElement(); });
-            this.pos.bind('change:selectedOrder', _.bind( function(pos) {
-                var selectedOrder;
-                selectedOrder = pos.get('selectedOrder');
-                if (this.order === selectedOrder) {
-                    this.setButtonSelected();
-                }
-            }, this));
+            this.pos.bind('change:selectedOrder', function() {
+                self.renderElement();
+            }, this);
         },
         renderElement:function(){
             this._super();
             this.$('button.select-order').off('click').click(_.bind(this.selectOrder, this));
             this.$('button.close-order').off('click').click(_.bind(this.closeOrder, this));
+            if( this.order === this.pos.get('selectedOrder') ){
+                this.$el.addClass('selected-order');
+            }
         },
         selectOrder: function(event) {
             this.pos.set({
                 selectedOrder: this.order
             });
-        },
-        setButtonSelected: function() {
-            $('.selected-order').removeClass('selected-order');
-            this.$el.addClass('selected-order');
         },
         closeOrder: function(event) {
             this.order.destroy();
@@ -550,6 +543,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.renderElement();
                 self.search_and_categories(category);
             });
+            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+                this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
+            }
             this.search_and_categories();
         },
         
@@ -848,16 +844,23 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
             this.image_cache = new module.ImageCache(); // for faster products image display
+
         },
       
         start: function() {
             var self = this;
             return self.pos.ready.done(function() {
+                $('.oe_tooltip').remove();  // remove tooltip from the start session button
+
                 self.build_currency_template();
                 self.renderElement();
                 
                 self.$('.neworder-button').click(function(){
                     self.pos.add_new_order();
+                });
+
+                self.$('.deleteorder-button').click(function(){
+                    self.pos.delete_current_order();
                 });
                 
                 //when a new order is created, add an order button widget
@@ -990,7 +993,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label: _t('Close'),
-                action: function(){ self.try_close(); },
+                action: function(){ self.close(); },
             });
             this.close_button.appendTo(this.$('#rightheader'));
 
@@ -1100,15 +1103,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
         },
-        try_close: function() {
-            var self = this;
-            //TODO : do the close after the flush...
-            self.pos.flush()
-            self.close();
-        },
         close: function() {
             var self = this;
-            this.pos.barcode_reader.disconnect();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
@@ -1120,8 +1116,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }, this));
         },
         destroy: function() {
+            this.pos.destroy();
             instance.webclient.set_content_full_screen(false);
-            self.pos = undefined;
             this._super();
         }
     });

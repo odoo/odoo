@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:48+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:29+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -28,6 +28,7 @@ msgstr "publisher_warranty.contract"
 
 #. module: mail
 #: field:mail.compose.message,author_id:0
+#: view:mail.mail:0
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "Szerző"
@@ -142,7 +143,7 @@ msgstr "Olvasatlan üzenetek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:296
+#: code:addons/mail/static/src/xml/mail.xml:313
 #, python-format
 msgid "show"
 msgstr "mutat"
@@ -159,7 +160,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1019
+#: code:addons/mail/static/src/js/mail.js:1029
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr "Valóban törölni kívánja ezt az üzenetet?"
@@ -177,13 +178,13 @@ msgstr "Csoportok keresése"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:159
+#: code:addons/mail/static/src/js/mail_followers.js:157
 #, python-format
 msgid "followers"
 msgstr "követők"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:726
+#: code:addons/mail/mail_message.py:737
 #, python-format
 msgid "Access Denied"
 msgstr "Hozzáférés megtagadva"
@@ -212,7 +213,7 @@ msgid "Support"
 msgstr "Támogatás"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:727
+#: code:addons/mail/mail_message.py:738
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -279,8 +280,8 @@ msgstr "Tárgyalási csoport"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:98
-#: code:addons/mail/static/src/xml/mail.xml:110
+#: code:addons/mail/static/src/xml/mail.xml:96
+#: code:addons/mail/static/src/xml/mail.xml:108
 #, python-format
 msgid "uploading"
 msgstr "feltöltés"
@@ -366,13 +367,13 @@ msgstr "Követés leállítása"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:295
+#: code:addons/mail/static/src/xml/mail.xml:312
 #, python-format
 msgid "show one more message"
 msgstr "mutass még egy üzenetet"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:74
+#: code:addons/mail/mail_mail.py:75
 #: code:addons/mail/res_users.py:69
 #, python-format
 msgid "Invalid Action!"
@@ -433,7 +434,6 @@ msgstr "Rendszerüzenet"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
-#: view:mail.mail:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -486,7 +486,7 @@ msgstr "Küldés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:155
+#: code:addons/mail/static/src/js/mail_followers.js:153
 #, python-format
 msgid "No followers"
 msgstr "Nincs követő"
@@ -517,8 +517,8 @@ msgstr "Archívum"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:97
-#: code:addons/mail/static/src/xml/mail.xml:109
+#: code:addons/mail/static/src/xml/mail.xml:95
+#: code:addons/mail/static/src/xml/mail.xml:107
 #, python-format
 msgid "Delete this attachment"
 msgstr "Törli ezt a mellékletet"
@@ -533,7 +533,7 @@ msgstr "Válasz"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:157
+#: code:addons/mail/static/src/js/mail_followers.js:155
 #, python-format
 msgid "One follower"
 msgstr "Egy követő"
@@ -591,7 +591,7 @@ msgstr "Címzettek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:142
+#: code:addons/mail/static/src/xml/mail.xml:140
 #, python-format
 msgid "<<<"
 msgstr "<<<"
@@ -685,7 +685,7 @@ msgid "Move to Inbox"
 msgstr "Bejövő üzenetekbe mozgatás"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:165
+#: code:addons/mail/wizard/mail_compose_message.py:193
 #, python-format
 msgid "Re:"
 msgstr "Vissza:"
@@ -714,7 +714,7 @@ msgstr "A követett forrás modellje"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:320
+#: code:addons/mail/static/src/xml/mail.xml:337
 #, python-format
 msgid "like"
 msgstr "tetszik"
@@ -762,7 +762,7 @@ msgid "on"
 msgstr "ezen:"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:915
+#: code:addons/mail/mail_message.py:926
 #, python-format
 msgid ""
 "The following partners chosen as recipients for the email have no email "
@@ -844,7 +844,7 @@ msgid "Send Now"
 msgstr "Küldés most"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:74
+#: code:addons/mail/mail_mail.py:75
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
@@ -867,7 +867,7 @@ msgstr "Fénykép"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:56
+#: code:addons/mail/static/src/xml/mail.xml:54
 #: code:addons/mail/static/src/xml/mail.xml:191
 #: view:mail.compose.message:0
 #: view:mail.wizard.invite:0
@@ -983,7 +983,7 @@ msgstr "Értesítés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:650
+#: code:addons/mail/static/src/js/mail.js:654
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Kérem egészítse ki a partner információkat"
@@ -1153,7 +1153,7 @@ msgstr "Kiterjesztett szűrők…"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:122
+#: code:addons/mail/static/src/xml/mail.xml:120
 #, python-format
 msgid "To:"
 msgstr "Címzett:"
@@ -1177,7 +1177,7 @@ msgstr "Alapértelmezett"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:294
+#: code:addons/mail/static/src/xml/mail.xml:311
 #, python-format
 msgid "show more message"
 msgstr "mutassa a többi üzenetet"
@@ -1236,7 +1236,7 @@ msgstr "Kedvenc"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:296
+#: code:addons/mail/static/src/xml/mail.xml:313
 #, python-format
 msgid "more messages"
 msgstr "több üzenet"
@@ -1321,7 +1321,7 @@ msgstr "Csillagos üzenet amely a teendők levélládába megy"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:125
+#: code:addons/mail/static/src/xml/mail.xml:123
 #: view:mail.compose.message:0
 #, python-format
 msgid "Followers of"
@@ -1369,8 +1369,8 @@ msgstr "Teljes vállalat"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:131
-#: code:addons/mail/static/src/xml/mail.xml:278
+#: code:addons/mail/static/src/xml/mail.xml:129
+#: code:addons/mail/static/src/xml/mail.xml:292
 #: view:mail.compose.message:0
 #, python-format
 msgid "and"
@@ -1388,7 +1388,7 @@ msgstr "Létrehozás hónapja"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:306
+#: code:addons/mail/static/src/xml/mail.xml:323
 #, python-format
 msgid "Compose new Message"
 msgstr "Új üzenet létrehozása"
@@ -1477,7 +1477,7 @@ msgid "Outgoing mail server"
 msgstr "Kimenő levelező szerver"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:919
+#: code:addons/mail/mail_message.py:930
 #, python-format
 msgid "Partners email addresses not found"
 msgstr "A partnerek e-mail címei nem találhatóak"
@@ -1554,7 +1554,7 @@ msgstr "Visszahelyezés a feladatokhoz"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:128
+#: code:addons/mail/static/src/xml/mail.xml:126
 #, python-format
 msgid "this document"
 msgstr "ez a dokumentum"
@@ -1590,7 +1590,7 @@ msgstr "Üzenetek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:141
+#: code:addons/mail/static/src/xml/mail.xml:139
 #, python-format
 msgid "others..."
 msgstr "mások..."
@@ -1677,7 +1677,7 @@ msgstr "Ide vonatkozó dokumentum modell"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:321
+#: code:addons/mail/static/src/xml/mail.xml:338
 #, python-format
 msgid "unlike"
 msgstr "nem tetszik"
