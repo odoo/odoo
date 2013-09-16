@@ -2010,6 +2010,10 @@ class stock_inventory_line(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Owner'),
     }
 
+    _defaults = {
+        'product_qty': 1,
+    }
+
     def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
         #TODO : package_id management !
         found = False
@@ -2056,7 +2060,7 @@ class stock_inventory_line(osv.osv):
         if uom and uom != obj_product.uom_id.id:
             uom_record = uom_obj.browse(cr, uid, uom, context=context)
             th_qty = uom_obj._compute_qty_obj(cr, uid, obj_product.uom_id, th_qty, uom_record)
-        return {'value': {'product_qty': th_qty, 'th_qty': th_qty, 'product_uom_id': uom or obj_product.uom_id.id}}
+        return {'value': {'th_qty': th_qty, 'product_uom_id': uom or obj_product.uom_id.id}}
 
 
 #----------------------------------------------------------
