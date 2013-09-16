@@ -18,13 +18,13 @@
         <div class='oe_snippet_thumbnail oe_label'>Margin resize</div>
     </div>
 
-    <div t-name="website.snippets.colmd" data-snippet-id='colmd' data-action='insert' data-selector-vertical-childs='.row'>
+    <div t-name="website.snippets.colmd" data-snippet-id='colmd' data-selector-vertical-childs='.row'>
         <div class='oe_snippet_thumbnail oe_label'>Column</div>
     </div>
 
     <!-- Structure Snippets -->
 
-    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         
         <!-- editor bar to display inside the top edit bar -->
         <li class='oe_snippet_options'>
@@ -95,11 +95,11 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-action='mutate' data-selector='section, .container'>
+    <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-selector='section'>
         <div class='oe_snippet_thumbnail oe_label'>Darken</div>
     </div>
 
-    <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-action='insert' data-selector-siblings='div p h1 h2 h3 blockquote'>
+    <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-selector-siblings='div p h1 h2 h3 blockquote'>
         <div class='oe_snippet_thumbnail oe_label'>Well</div>
         <div class="oe_snippet_body well">
             Manage your sales funnel with no effort with OpenERP CRM. Attract
@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.quote" data-snippet-id='quote' data-category='content' data-action='insert' data-selector-siblings='div p h1 h2 h3 blockquote'>
+    <div t-name="website.snippets.quote" data-snippet-id='quote' data-category='content' data-selector-siblings='div p h1 h2 h3 blockquote'>
         <div class='oe_snippet_thumbnail oe_label'>Quote</div>
         <blockquote class="oe_snippet_body">
             <p>
@@ -119,7 +119,7 @@
         </blockquote>
     </div>
 
-    <div t-name="website.snippets.panel" data-snippet-id='panel' data-category='content' data-action='insert' data-selector-siblings='div p h1 h2 h3 blockquote'>
+    <div t-name="website.snippets.panel" data-snippet-id='panel' data-category='content' data-selector-siblings='div p h1 h2 h3 blockquote'>
         <div class='oe_snippet_thumbnail oe_label'>Panel</div>
         <div class="oe_snippet_body panel panel-default">
             <div class="panel-heading">
@@ -134,12 +134,12 @@
         </div>
     </div>
 
-    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='content' data-action='mutate' data-selector='.container'>
+    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='content' data-selector='.container'>
         <div class="oe_snippet_body" style="display: none;"></div>
         <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
     </div>
 
-    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Title</div>
         <section class="oe_snippet_body container">
             <div class="row">
@@ -151,7 +151,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.text-image" data-snippet-id='text-image' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.text-image" data-snippet-id='text-image' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Text-Image</div>
         <section class="oe_snippet_body dark">
             <div class="container">
@@ -178,7 +178,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.image-text" data-snippet-id='image-text' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.image-text" data-snippet-id='image-text' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Image-Text</div>
         <section class="oe_snippet_body">
             <div class="container">
@@ -204,7 +204,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.jumbotron" data-snippet-id='jumbotron' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.jumbotron" data-snippet-id='jumbotron' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Jumbotron</div>
         <section class="oe_snippet_body jumbotron mt16 mb16">
             <div class="container">
@@ -221,7 +221,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.text-block" data-snippet-id='text-block' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.text-block" data-snippet-id='text-block' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Text Block</div>
         <section class="oe_snippet_body mt16 mb16">
             <div class="container">
@@ -250,7 +250,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.big-picture" data-snippet-id='big-picture' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.big-picture" data-snippet-id='big-picture' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Big Picture</div>
         <section class="oe_snippet_body dark mt16 mb16">
             <div class="container">
@@ -281,7 +281,7 @@
     </div>
 
 
-    <div t-name="website.snippets.three-columns" data-snippet-id='three-columns' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.three-columns" data-snippet-id='three-columns' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Three Columns</div>
         <section class="oe_snippet_body mt16 mb16">
             <div class="container">
@@ -333,7 +333,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.image-gallery" data-snippet-id='image-gallery' data-category='structure' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.image-gallery" data-snippet-id='image-gallery' data-category='structure' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Image Gallery</div>
         <section class="oe_snippet_body">
             <div class="container">
@@ -371,7 +371,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.pricing" data-snippet-id='pricing' data-category='business' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.pricing" data-snippet-id='pricing' data-category='business' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Comparisons</div>
         <section class="oe_snippet_body">
             <div class="container">
@@ -473,7 +473,7 @@
         </section>
     </div>
 
-    <div t-name="website.snippets.cta" data-snippet-id='cta' data-category='business' data-action='insert' data-selector-childs='.oe_structure, [data-oe-type=html]'>
+    <div t-name="website.snippets.cta" data-snippet-id='cta' data-category='business' data-selector-childs='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Call-to-actions</div>
         <section class="oe_snippet_body dark">
             <div class="container">

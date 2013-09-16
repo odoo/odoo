@@ -76,7 +76,7 @@
             _.each(openerp.qweb.compiled_templates, function (val, key) {
                 if (key.indexOf('website.snippets.') === 0) {
                     var $snippet = $(openerp.qweb.render(key)).addClass("oe_snippet");
-                    if ($snippet.data("action")) {
+                    if ($snippet.data("snippet-id")) {
                         self.$el.find('#snippet_' + $snippet.data('category')).append($snippet);
                         self.make_snippet_draggable($snippet);
                     }
@@ -199,15 +199,24 @@
                 appendTo: 'body',
                 cursor: "move",
                 start: function(){
-                    var action  = $snippet.data('action');
+                    var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
                     if( action === 'insert'){
+                        if (!$snippet.data('selector-siblings') && !$snippet.data('selector-childs') && !$snippet.data('selector-vertical-childs')) {
+                            console.debug($snippet.data("snippet-id") + " have oe_snippet_body class and have not for insert action"+
+                                "data-selector-siblings, data-selector-childs or data-selector-vertical-childs tag for mutate action");
+                            return;
+                        }
                         self.activate_insertion_zones({
                             siblings: $snippet.data('selector-siblings'),
                             childs:   $snippet.data('selector-childs'),
                             vertical_childs:   $snippet.data('selector-vertical-childs')
                         });
-                    } else if( action === 'mutate' ){
 
+                    } else if( action === 'mutate' ){
+                        if (!$snippet.data('selector')) {
+                            console.debug($snippet.data("snippet-id") + " have not oe_snippet_body class and have not data-selector tag");
+                            return;
+                        }
                         var $targets = self.activate_overlay_zones($snippet.data('selector'));
                         $targets.each(function(){
                             var $clone = $(this).data('overlay').clone();
@@ -235,7 +244,7 @@
                             }
 
                             var $target = false;
-                            if($snippet.find('.oe_snippet_body').size()){
+                            if(action === 'insert'){
                                 var $toInsert = $snippet.find('.oe_snippet_body').clone();
                                 $toInsert.removeClass('oe_snippet_body');
                                 $toInsert.attr('data-snippet-id', snipped_id);
@@ -277,30 +286,6 @@
             return $('.oe_snippet').filter(function(){
                     return $(this).data('snippet-id') === id;
                 }).first();
-        },
-        // WIP
-        make_draggable_instance: function($instance){
-            var self = this;
-            var $snippet = get_snippet_from_id($instance.data('snippet-id'));
-
-            $instance.draggable({
-                greedy: true,
-                helper:   'clone',
-                zIndex:   '1000',
-                appendTo: 'body',
-                start: function(){
-                    var action = $snippet.data('action');
-                    if(action === 'insert'){
-
-                        self.activate_insertion_zones({
-                            siblings: $snippet.data('selector-siblings'),
-                            child: $snippet.data('selector-childs'),
-                            vertical_childs: $snippet.data('selector-vertical-childs')
-                        });
-
-                    }
-                }
-            });
         },
 
         // Create element insertion drop zones. two css selectors can be provided
@@ -385,7 +370,7 @@
         activate_overlay_zones: function(selector){
             selector = selector || '[data-snippet-id]';
             if (typeof selector === 'string')
-                selector = this.parent_of_editable_box + selector.split(",").join(this.parent_of_editable_box);
+                selector = this.parent_of_editable_box + selector.split(",").join(", " + this.parent_of_editable_box);
 
             var $targets = $(selector);
             
