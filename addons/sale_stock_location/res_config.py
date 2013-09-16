@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,29 +19,17 @@
 #
 ##############################################################################
 
-{
-    'name': 'Sales and Warehouse and Route Management',
-    'version': '1.0',
-    'category': 'Hidden',
-    'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
-    'description': """
-Manage sales quotations and stock_location
-==========================================
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
-This adds a route on the sales order and sales order line (mini module)
+class sale_configuration(osv.osv_memory):
+    _inherit = 'sale.config.settings'
 
-""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'images': [],
-    'depends': ['sale', 'stock_location'],
-    'init_xml': [],
-    'update_xml': ['sale_stock_location_view.xml', 
-                   'security/sale_stock_location_security.xml',
-                   'res_config_view.xml'],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'auto_install': True,
-}
+    _columns = {
+        'group_route_so_lines': fields.boolean('Choose MTO, Dropship, ... on sale order lines',
+            implied_group='sale_stock_location.group_route_so_lines',
+            help="Allows you to set route on sale order lines."),
+    }
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
