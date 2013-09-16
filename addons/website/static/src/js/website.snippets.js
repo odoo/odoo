@@ -5,50 +5,51 @@
     website.templates.push('/website/static/src/xml/website.snippets.xml');
 
     website.EditorBar.include({
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click button[data-action=snippet]': 'snippet',
-        }),
-        start: function () {
-            return this._super().then(function () {
-
-                this.$buttons.snippet = this.$('button[data-action=snippet]');
-
-            }.bind(this));
-        },
         edit: function () {
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
-            this.snippets.appendTo($(document.body));
+            this.snippets.insertAfter(this.$el);
+            this.snippets.show();
             return this._super.apply(this, arguments);
         },
-        snippet: function (ev) {
-            this.snippets.toggle();
-        },
         save: function () {
-            $('body').trigger("save");
+            remove_added_snippet_id();
             this._super();
         },
+    });
+
+
+    $(document).ready(function () {
+        hack_to_add_snippet_id();
+        $("[data-snippet-id]").each(function() {
+                var $snipped_id = $(this);
+                if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
+                        website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
+                    $snipped_id.data("snippet-view", new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id));
+                }
+            });
     });
 
     /* ----- SNIPPET SELECTOR ---- */
     
     website.snippet = {};
 
+
     // puts $el at the same absolute position as $target
-    website.snippet.cover_target = function ($el, $target){
-        $el.css({
-            'position': 'absolute',
-            'width': $target.outerWidth(),
-            'height': $target.outerHeight(),
-        });
-        $el.css($target.offset());
-    };
     function hack_to_add_snippet_id () {
         _.each(website.snippet.selector, function (val) {
             $(val[0]).each(function() {
-                if ($(this).is("[data-snippet-id='"+ val[1]+"']"))
-                    $(this).removeAttr("data-snippet-id");
-                if (!$(this).is("[data-snippet-id]") && $(this).parents("[data-oe-model]").length)
+                if (!$(this).is("[data-snippet-id]") && $(this).parents("[data-oe-model]").length) {
                     $(this).attr("data-snippet-id", val[1]);
+                }
+            });
+        });
+    }
+    function remove_added_snippet_id () {
+        _.each(website.snippet.selector, function (val) {
+            $(val[0]).each(function() {
+                if ($(this).is("[data-snippet-id='"+ val[1]+"']")) {
+                    $(this).removeAttr("data-snippet-id");
+                }
             });
         });
     }
@@ -65,7 +66,6 @@
                 $("<div id='oe_manipulators'></div>").appendTo('body');
             }
             this.$active_snipped_id = false;
-            this.active = false;
             this.parent_of_editable_box = "body > :not(:has(#website-top-view)):not(#oe_manipulators):not(#oe_snippets) ";
             hack_to_add_snippet_id();
         },
@@ -85,13 +85,32 @@
 
             this.bind_selected_manipulator();
             this.bind_snippet_click_editor();
+            this.activate_overlay_zones();
+        },
+        cover_target: function ($el, $target){
+            $el.css({
+                'position': 'absolute',
+                'width': $target.outerWidth(),
+                'height': $target.outerHeight(),
+            });
+            $el.css($target.offset());
+        },
+        show: function () {
+            this.$el.css('margin-top', '0px');
+            $('body').trigger('resize');
+            $("body").css('padding-top', '220px');
+        },
+        hide: function () {
+            this.$el.css('margin-top', '-170px');
+            $("body").css('padding-top', '50px');
+            $('body').trigger('resize');
         },
 
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag = false;
             $("body").on('click', "[data-snippet-id]", function (event) {
-                    if (!self.active || snipped_event_flag) {
+                    if (snipped_event_flag) {
                         return;
                     }
                     var $target = $(event.currentTarget);
@@ -151,10 +170,10 @@
         create_overlay: function ($snipped_id) {
             if (typeof $snipped_id.data("snippet-editor") === 'undefined') {
                 this.activate_overlay_zones($snipped_id);
-                var editor = website.snippet.editorRegistry[$snipped_id.data("snippet-id")] || website.snippet.Editor;
+                var editor = website.snippet.editorRegistry[$snipped_id.data("snippet-id")] || website.snippet.editorRegistry.resize;
                 $snipped_id.data("snippet-editor", new editor(this, $snipped_id));
             }
-            website.snippet.cover_target($snipped_id.data('overlay'), $snipped_id);
+            this.cover_target($snipped_id.data('overlay'), $snipped_id);
         },
 
         path_eval: function(path){
@@ -170,9 +189,6 @@
             var self = this;
             var $selected_target = null;
             $("body").mouseover(function (event){
-                if (!self.active) {
-                    return;
-                }
                 var $target = $(event.srcElement).parents("[data-snippet-id]:first");
                 if($target.length && !self.editor_busy) {
                     if($selected_target != $target){
@@ -199,6 +215,8 @@
                 appendTo: 'body',
                 cursor: "move",
                 start: function(){
+                    self.hide();
+
                     var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
                     if( action === 'insert'){
                         if (!$snippet.data('selector-siblings') && !$snippet.data('selector-childs') && !$snippet.data('selector-vertical-childs')) {
@@ -277,6 +295,7 @@
                 },
                 stop: function(){
                     $('.oe_drop_zone').droppable('destroy').remove();
+                    self.show();
                 },
             });
         },
@@ -373,6 +392,7 @@
                 selector = this.parent_of_editable_box + selector.split(",").join(", " + this.parent_of_editable_box);
 
             var $targets = $(selector);
+            var self = this;
             
             function is_visible($el){
                 return     $el.css('display')    != 'none'
@@ -398,23 +418,16 @@
                     $target.data('overlay',$zone);
 
                     $target.on("DOMNodeInserted DOMNodeRemoved DOMSubtreeModified", function () {
-                        website.snippet.cover_target($zone, $target);
+                        self.cover_target($zone, $target);
+                    });
+                    $('body').on("resize", function () {
+                        self.cover_target($zone, $target);
                     });
                 }
-                website.snippet.cover_target($target.data('overlay'), $target);
+                self.cover_target($target.data('overlay'), $target);
             });
             return $targets;
-        },
-
-        toggle: function(){
-            this.active = !this.active;
-            if(this.active){
-                this.$el.removeClass('hide');
-                this.activate_overlay_zones();
-            } else {
-                this.$el.addClass('hide');
-            }
-        },
+        }
     });
 
 
@@ -452,17 +465,6 @@
             var options = this.$el.data("snippet-options");
             return options ? JSON.parse(options) : undefined;
         },
-    });
-
-    $(document).ready(function () {
-        hack_to_add_snippet_id();
-        $("[data-snippet-id]").each(function() {
-                var $snipped_id = $(this);
-                if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
-                        website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
-                    $snipped_id.data("snippet-view", new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id));
-                }
-            });
     });
 
 
@@ -520,6 +522,7 @@
                 distance: 20,
                 handle: ".js_box_move",
                 start: function(){
+                    self.parent.hide();
                     self.parent.editor_busy = true;
                     self.$target.css("display", "none");
                     self.parent.activate_insertion_zones({
@@ -541,6 +544,7 @@
                     self.$target.css("display", "");
                     self.parent.editor_busy = false;
                     setTimeout(function () {self.parent.create_overlay(self.$target);},0);
+                    self.parent.show();
                 },
             });
         },
@@ -683,7 +687,7 @@
 
                         if (change) {
                             self.on_resize(compass, beginClass, current);
-                            website.snippet.cover_target(self.$overlay, self.$target);
+                            self.parent.cover_target(self.$overlay, self.$target);
                         }
                     };
                     $('body').mousemove(body_mousemove);

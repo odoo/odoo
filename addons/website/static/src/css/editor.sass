@@ -120,13 +120,13 @@ table.editorbar-panel
     position: fixed
     left: 0px
     right: 0px
-    bottom: 0px
+    top: 50px
     max-height: 280px
     min-height: 140px
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
     overflow-y: auto
-    z-index: 20000
+    z-index: 1010
     .nav-pills
         padding: 3px 8px
         background: #444444
@@ -249,6 +249,34 @@ table.editorbar-panel
         .oe_handle
             display: block !important
             pointer-events: auto
+            &:before
+                position: relative
+                top: 50%
+                left: 50%
+                display: block
+                background: rgba(255, 255, 255, 1)
+                border: solid 1px rgba(153, 0, 255, 1)
+                border-radius: 8px
+                width: 16px
+                height: 16px
+                margin: -8px
+                padding-left: 1px
+                font-size: 14px
+                line-height: 14px
+                color: rgba(153, 0, 255, 1)
+                -webkit-transition: background 100ms linear
+            &:hover:before
+                background: rgba(153, 0, 255, 1)
+                color: #fff
+        .oe_handle.e:before
+            content: "⇨"
+        .oe_handle.s:before
+            content: "⇩"
+        .oe_handle.w:before
+            content: "⇦"
+        .oe_handle.n:before
+            content: "⇧"
+
     .icon.btn
         display: inline-block
 

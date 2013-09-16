@@ -128,13 +128,13 @@ table.editorbar-panel td.selected {
   position: fixed;
   left: 0px;
   right: 0px;
-  bottom: 0px;
+  top: 50px;
   max-height: 280px;
   min-height: 140px;
   background: #282828;
   box-shadow: 0px 10px 10px -10px black inset;
   overflow-y: auto;
-  z-index: 20000;
+  z-index: 1010;
 }
 #oe_snippets .nav-pills {
   padding: 3px 8px;
@@ -277,6 +277,39 @@ table.editorbar-panel td.selected {
 .oe_overlay.oe_active .oe_handle {
   display: block !important;
   pointer-events: auto;
+}
+.oe_overlay.oe_active .oe_handle:before {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  display: block;
+  background: white;
+  border: solid 1px #9900ff;
+  border-radius: 8px;
+  width: 16px;
+  height: 16px;
+  margin: -8px;
+  padding-left: 1px;
+  font-size: 14px;
+  line-height: 14px;
+  color: #9900ff;
+  -webkit-transition: background 100ms linear;
+}
+.oe_overlay.oe_active .oe_handle:hover:before {
+  background: #9900ff;
+  color: white;
+}
+.oe_overlay.oe_active .oe_handle.e:before {
+  content: "⇨";
+}
+.oe_overlay.oe_active .oe_handle.s:before {
+  content: "⇩";
+}
+.oe_overlay.oe_active .oe_handle.w:before {
+  content: "⇦";
+}
+.oe_overlay.oe_active .oe_handle.n:before {
+  content: "⇧";
 }
 .oe_overlay .icon.btn {
   display: inline-block;
