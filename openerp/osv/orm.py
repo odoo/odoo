@@ -2601,7 +2601,18 @@ class BaseModel(object):
         :param list groupby: fields by which the records will be grouped
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
-        :param dict context: context arguments, like lang, time zone
+        :param dict context: context arguments, like lang, time zone. A special
+                             context key exist for datetime fields : ``datetime_format``.
+                             context[``datetime_format``] = {
+                                'field_name': {
+                                    groupby_format: format for to_char (default: yyyy-mm)
+                                    display_format: format for displaying the value
+                                                    in the result (default: MMM yyyy)
+                                    interval: day, month or year; used for begin
+                                              and end date of group_by intervals
+                                              computation (default: month)
+                                }
+                             }
         :param list orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
