@@ -214,14 +214,14 @@
             return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
         },
         title: function () {
-            return $('title').text();
+            return $('title').text().trim();
         },
         changeTitle: function (title) {
             $('title').text(title);
             this.trigger('title-changed', title);
         },
         description: function () {
-            return $('meta[name=description]').attr('value');
+            return $('meta[name=description]').attr('value').trim();
         },
         changeDescription: function (description) {
             $('meta[name=description]').attr('value', description);
