@@ -7,6 +7,7 @@
         categ_id: product.product_category_1
         list_price: 100.0
         standard_price: 70.0
+        type: product
         seller_ids:
           - delay: 1
             name: base.res_partner_2
@@ -63,6 +64,9 @@
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 
     !python {model: stock.quant}: |
-        quant_id = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200)])
+        quant_id = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('product_id', '=', ref("drop_shop_product"))])
+        print quant_id, [(x.qty, x.product_id.name) for x in self.browse(cr, uid, quant_id)]
+        quant_id = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
+        print quant_id, [(x.qty, x.product_id.name) for x in self.browse(cr, uid, quant_id)]
         assert len(self.browse(cr, uid, quant_id)[0].history_ids) == 1
         assert len(quant_id) == 1
