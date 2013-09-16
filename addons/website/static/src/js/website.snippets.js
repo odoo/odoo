@@ -176,14 +176,14 @@
                 var $target = $(event.srcElement).parents("[data-snippet-id]:first");
                 if($target.length && !self.editor_busy) {
                     if($selected_target != $target){
-                        if($selected_target){
+                        if($selected_target && $selected_target.data('overlay')){
                             $selected_target.data('overlay').removeClass('oe_selected');
                         }
                         $selected_target = $target;
                         self.create_overlay($target);
                         $target.data('overlay').addClass('oe_selected');
                     }
-                } else if($selected_target) {
+                } else if($selected_target && $selected_target.data('overlay')) {
                     $selected_target.data('overlay').removeClass('oe_selected');
                 }
             });
@@ -242,21 +242,27 @@
                                 $(".oe_drop_zone.oe_hover").first().after($toInsert);
                                 $target = $toInsert;
                                 hack_to_add_snippet_id();
-                            } else {
-                                $target = $(".oe_drop_zone.oe_hover").first().data('target');
-                            }
-                            
-                            $('.oe_drop_zone').droppable('destroy').remove();
 
-                            if (website.snippet.animationRegistry[snipped_id]) {
-                                new website.snippet.animationRegistry[snipped_id]($target);
-                            }
-                            if (website.snippet.editorRegistry[snipped_id]) {
+                                if (website.snippet.animationRegistry[snipped_id]) {
+                                    new website.snippet.animationRegistry[snipped_id]($target);
+                                }
+
                                 self.create_overlay($target);
                                 $target.data("snippet-editor").build_snippet($target);
-                                setTimeout(function () {self.make_active($target);},0);
+
+                            } else {
+                                $target = $(".oe_drop_zone.oe_hover").first().data('target');
+
+                                self.create_overlay($target);
+                                if (website.snippet.editorRegistry[snipped_id]) {
+                                    var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
+                                    snippet.build_snippet($target);
+                                }
                             }
 
+                            $('.oe_drop_zone').remove();
+
+                            setTimeout(function () {self.make_active($target);},0);
                         },
                     });
                 },
@@ -787,7 +793,7 @@
 
             //style
             var style = false;
-	    var el = this.$target.find('.carousel-inner .item.active');
+            var el = this.$target.find('.carousel-inner .item.active');
             if (el.hasClass('text_only'))
                 style = 'text_only';
             if (el.hasClass('image_text'))
@@ -799,9 +805,9 @@
 
             this.$editor.find('select[name="carousel-style"]').on('change', function(e) {
                 var $container = self.$target.find('.carousel-inner .item.active');
-	        $container.removeClass('image_text text_image text_only')
-	        $container.addClass($(e.currentTarget).val())
-	    });
+                $container.removeClass('image_text text_image text_only');
+                $container.addClass($(e.currentTarget).val());
+            });
         },
         on_add: function (e) {
             e.preventDefault();

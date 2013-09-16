@@ -78,6 +78,11 @@ img.shadow
 h1.text-muted, h2.text-muted, h3.text-muted
     margin-top: 10px
 
+/* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
+
+.navbar.navbar-default.navbar-static-top
+    margin-bottom: 0
+
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
 html,body
@@ -184,10 +189,6 @@ footer
 
 .nav-hierarchy
     padding-left: 16px
-
-div#wrap
-    > .carousel:first-child, > .jumbotron:first-child
-        top: -20px
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
