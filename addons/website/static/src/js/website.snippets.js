@@ -512,7 +512,7 @@
                 appendTo: 'body',
                 cursor: "move",
                 cursorAt: {
-                    top: self.$target.outerHeight()/2,
+                    top: 0,
                     left: self.$target.outerWidth()/2 },
                 distance: 20,
                 handle: ".js_box_move",
@@ -544,6 +544,17 @@
             });
         },
 
+        _clone: function () {
+            var self = this;
+            this.$overlay.on('click', '.js_box_clone', function () {
+                var $clone = self.$target.clone(false);
+                self.$target.after($clone);
+                setTimeout(function () {
+                    self.parent.create_overlay($clone);
+                    self.parent.make_active($clone);
+                },0);
+            });
+        },
 
         /*
         *  start
@@ -558,6 +569,7 @@
                 return false;
             });
             this._drag_and_drop();
+            this._clone();
         },
 
         /*
