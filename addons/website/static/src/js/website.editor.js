@@ -80,6 +80,8 @@
                     toolbar: 'insert,10',
                     icon: '/website/static/lib/ckeditor/plugins/image/icons/image.png',
                 });
+
+                editor.setKeystroke(CKEDITOR.CTRL + 76 /*L*/, 'link');
             }
         });
         CKEDITOR.plugins.add( 'tablebutton', {
