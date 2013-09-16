@@ -55,4 +55,3 @@
     partner = picking[0].partner_id.id
     inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
     assert inv_ids, 'No Invoice is generated!'
-

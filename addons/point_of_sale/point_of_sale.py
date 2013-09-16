@@ -663,7 +663,7 @@ class pos_order(osv.osv):
 
     def _get_out_picking_type(self, cr, uid, context=None):
         try:
-            picking_type = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context)
+            picking_type = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id
         except:
             picking_type = False
         return picking_type
