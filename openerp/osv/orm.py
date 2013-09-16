@@ -383,16 +383,18 @@ class browse_record(object):
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch:
+            if col._prefetch and not col.groups:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                fields_to_fetch = filter(lambda x: x[1]._classic_write and x[1]._prefetch, self._table._columns.items())
+                field_filter = lambda x: x[1]._classic_write and x[1]._prefetch and not x[1].groups
+                fields_to_fetch = filter(field_filter, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
-                fields_to_fetch += filter(lambda x: x[1]._classic_write and x[1]._prefetch, inherits)
+                fields_to_fetch += filter(field_filter, inherits)
             # otherwise we fetch only that field
             else:
                 fields_to_fetch = [(name, col)]
+
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
@@ -2199,7 +2201,8 @@ class BaseModel(object):
 
         sql_res = False
         parent_view_model = None
-        view_ref = context.get(view_type + '_view_ref')
+        view_ref_key = view_type + '_view_ref'
+        view_ref = context.get(view_ref_key)
         # Search for a root (i.e. without any parent) view.
         while True:
             if view_ref and not view_id:
@@ -2209,6 +2212,10 @@ class BaseModel(object):
                     view_ref_res = cr.fetchone()
                     if view_ref_res:
                         view_id = view_ref_res[0]
+                else:
+                    _logger.warning('%r requires a fully-qualified external id (got: %r for model %s). '
+                        'Please use the complete `module.view_id` form instead.', view_ref_key, view_ref,
+                        self._name)
 
             if view_id:
                 cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model

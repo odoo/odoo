@@ -37,7 +37,6 @@ There are two types of views:
 
 .. note:: Since OpenERP 4.1, form views can also contain graphs. 
 
-
 Form views
 ----------
 
@@ -388,6 +387,33 @@ The easiest method to compute real statistics on objects is:
 You can get en example in all modules of the form: report\_.... Example: report_crm. 
 
 
+Controlling view actions
+------------------------
+
+When defining a view, the following attributes can be added on the
+opening element of the view (i.e. ``<form>``, ``<tree>``...)
+
+``create``
+        set to ``false`` to hide the link / button which allows to create a new
+        record.
+
+``delete``
+        set to ``false`` to hide the link / button which allows to remove a
+        record.
+
+``edit``
+        set to ``false`` to hide the link / button which allows to
+        edit a record. 
+
+
+These attributes are available on form, tree, kanban and gantt
+views. They are normally automatically set from the access rights of
+the users, but can be forced globally in the view definition. A
+possible use case for these attributes is to define an inner tree view
+for a one2many relation inside a form view, in which the user cannot
+add or remove related records, but only edit the existing ones (which
+are presumably created through another way, such as a wizard). 
+
 
 Calendar Views
 --------------
@@ -679,6 +705,7 @@ toolbar
 	in a separate toolbar area. When you click on an entry in the toolbar, all
 	its descendants will be displayed in the main tree. The value is ignored
 	for flat lists.
+
 
 Grouping Elements
 +++++++++++++++++
@@ -1351,12 +1378,22 @@ When you add a one2many field in a form view, you do something like this :
 
 If you want to specify the views to use, you can add a *context* attribute, and
 specify a view id for each type of view supported, exactly like the action's 
-*view_id* attribute:
+*view_id* attribute, except that the provided view id must always be
+fully-qualified with the module name, even if it belongs to the same module:
 
 .. code-block:: xml
 
     <field name="order_line" colspan="4" nolabel="1"
-           context="{'form_view_ref' : 'module.view_id', 'tree_view_ref' : 'model.view_id'}"/>
+           context="{'form_view_ref': 'module.view_id',
+                     'tree_view_ref': 'module.view_id'}"/>
+
+.. note::
+
+   You *have to* put the module name in the view_id, because this
+   is evaluated when the view is displayed, and not when the XML file
+   is parsed, so the module name information is not available. Failing
+   to do so will result in the default view being selected (see
+   below).
 
 If you don't specify the views, OpenERP will choose one in this order :
 
