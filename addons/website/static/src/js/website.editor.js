@@ -187,7 +187,7 @@
 
             return $.when(
                 this._super.apply(this, arguments),
-                this.rte.prependTo(this.$('#website-top-edit .nav.pull-right'))
+                this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
             );
         },
         edit: function () {

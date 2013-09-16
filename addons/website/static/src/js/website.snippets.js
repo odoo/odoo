@@ -6,8 +6,12 @@
 
     website.EditorBar.include({
         edit: function () {
+            var self = this;
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
+            this.$el.find('[data-action="snippet"]').click(function () {
+                self.snippets.$el.toggle();
+            });
             return this._super.apply(this, arguments);
         },
         save: function () {
@@ -100,7 +104,7 @@
             $el.css($target.offset());
         },
         show: function () {
-            this.$el.css("display", "");
+            this.$el.show();
         },
         hide: function () {
             this.$el.hide();
