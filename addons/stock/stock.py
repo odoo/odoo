@@ -2474,7 +2474,7 @@ class stock_picking_type(osv.osv):
         for id in ids:
             created_domain = [
                 ('picking_type_id', '=', id),
-                ('state', 'not in', ['draft', 'cancel']),
+                ('state', 'not in', ['done', 'cancel']),
                 ('date', '>=', groupby_begin),
                 ('date', '<', groupby_end),
             ]
@@ -2484,15 +2484,17 @@ class stock_picking_type(osv.osv):
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
         obj = self.pool.get('stock.picking')
         domains = {
+            'count_picking_draft': [('state', '=', 'draft')],
             'count_picking_waiting': [('state','=','confirmed')],
-            'count_picking': [('state','=','assigned')],
-            'count_picking_late': [('min_date','<', time.strftime('%Y-%m-%d %H:%M:%S'))],
-            'count_picking_backorders': [('backorder_id','<>', False)],
+            'count_picking_ready': [('state','=','assigned')],
+            'count_picking': [('state','in',('assigned','waiting','confirmed'))],
+            'count_picking_late': [('min_date','<', time.strftime('%Y-%m-%d %H:%M:%S')), ('state','in',('assigned','waiting','confirmed'))],
+            'count_picking_backorders': [('backorder_id','<>', False), ('state','!=','done')],
         }
         result = {}
         for field in domains:
             data = obj.read_group(cr, uid, domains[field] +
-                [('state', 'not in',('done','cancel','draft')), ('picking_type_id', 'in', ids)],
+                [('state', 'not in',('done','cancel')), ('picking_type_id', 'in', ids)],
                 ['picking_type_id'], ['picking_type_id'], context=context)
             count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
             for tid in ids:
@@ -2500,7 +2502,7 @@ class stock_picking_type(osv.osv):
         for tid in ids:
             if result[tid]['count_picking']:
                 result[tid]['rate_picking_late'] = result[tid]['count_picking_late'] *100 / result[tid]['count_picking']
-                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] *100 / result[tid]['count_picking']
+                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] *100 / (result[tid]['count_picking'] + result[tid]['count_picking_draft'])
             else:
                 result[tid]['rate_picking_late'] = 0
                 result[tid]['rate_picking_backorders'] = 0
@@ -2586,6 +2588,10 @@ class stock_picking_type(osv.osv):
             type='string',
             string='Scheduled pickings per week'),
 
+        'count_picking_draft': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+        'count_picking_ready': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
         'count_picking': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
         'count_picking_waiting': fields.function(_get_picking_count,

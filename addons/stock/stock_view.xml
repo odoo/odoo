@@ -645,6 +645,7 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Internal Moves"/>
                     <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
@@ -665,6 +666,41 @@
                 </search>
             </field>
         </record>
+
+        <record id="action_picking_tree_draft" model="ir.actions.act_window">
+            <field name="name">Draft Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_draft': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
+
+        <record id="action_picking_tree_ready" model="ir.actions.act_window">
+            <field name="name">Ready Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_available': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
+
 
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
             <field name="name">Waiting Transfers</field>
@@ -1231,7 +1267,8 @@
                 <kanban version="7.0" class="oe_background_grey">
                     <field name="complete_name"/>
                     <field name="color"/>
-                    <field name="count_picking"/>
+                    <field name="count_picking_ready"/>
+                    <field name="count_picking_draft"/>
                     <field name="count_picking_waiting"/>
                     <field name="count_picking_late"/>
                     <field name="count_picking_backorders"/>
@@ -1260,11 +1297,21 @@
                                     </div>
                                     <div class="oe_items_list oe_kanban_ellipsis">
                                         <div>
-                                            <a name="%(action_picking_tree)d" type="action">
-                                                <field name="count_picking"/> Ready
+                                            <a name="%(action_picking_tree_draft)d" type="action">
+                                                <field name="count_picking_draft"/> Draft
                                             </a>
-                                            <t t-if="record.count_picking.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree)d" type="action">
+                                            <t t-if="record.count_picking_draft.raw_value &gt; 0">
+                                            <a name="%(action_picking_tree_draft)d" type="action">
+                                                <field name="weekly_picking" widget="stock_sparkline">Weekly Moves</field>
+                                            </a>
+                                            </t>
+                                        </div>
+                                        <div>
+                                            <a name="%(action_picking_tree_ready)d" type="action">
+                                                <field name="count_picking_ready"/> Ready
+                                            </a>
+                                            <t t-if="record.count_picking_ready.raw_value &gt; 0">
+                                            <a name="%(action_picking_tree_ready)d" type="action">
                                                 <field name="weekly_picking" widget="stock_sparkline">Weekly Moves</field>
                                             </a>
                                             </t>
