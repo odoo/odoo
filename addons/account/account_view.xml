@@ -2275,6 +2275,39 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Cash Control">
+                            <group col="2" expand="1">
+                                <group string="Opening Cash Control" attrs="{'invisible' : [('state', '!=', 'draft')]}">
+                                    <field name="opening_details_ids" colspan="2" nolabel="1">
+                                        <tree string="Opening Cashbox Lines" editable="bottom">
+                                            <field name="pieces"/>
+                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                            <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <group string="Opening Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                        <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
+                                            <tree string="Opening Cashbox Lines" editable="bottom">
+                                                <field name="pieces"/>
+                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                                <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group string="Closing Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                        <field name="closing_details_ids" colspan="2" nolabel="1">
+                                            <tree string="Closing Cashbox Lines" editable="bottom">
+                                                <field name="pieces" readonly="1" />
+                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
+                                                <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
@@ -2304,39 +2337,6 @@
                                     <field name="note"/>
                                 </form>
                             </field>
-                        </page>
-                        <page string="Cash Control">
-                            <group col="2" expand="1">
-                                <group string="Opening Cash Control" attrs="{'invisible' : [('state', '!=', 'draft')]}">
-                                    <field name="opening_details_ids" colspan="2" nolabel="1">
-                                        <tree string="Opening Cashbox Lines" editable="bottom">
-                                            <field name="pieces"/>
-                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
-                                            <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
-                                        </tree>
-                                    </field>    
-                                </group>
-                                <group>
-                                    <group string="Opening Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                        <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
-                                            <tree string="Opening Cashbox Lines" editable="bottom">
-                                                <field name="pieces"/>
-                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
-                                                <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
-                                            </tree>
-                                        </field>
-                                    </group>
-                                    <group string="Closing Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                        <field name="closing_details_ids" colspan="2" nolabel="1">
-                                            <tree string="Closing Cashbox Lines" editable="bottom">
-                                                <field name="pieces" readonly="1" />
-                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
-                                                <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
-                                            </tree>
-                                        </field>
-                                    </group>
-                                </group>
-                            </group>
                         </page>
                         <page string="Journal Entries" attrs="{'invisible': [('state','!=','confirm')]}">
                             <field name="move_line_ids" string="Journal Entries"/>
