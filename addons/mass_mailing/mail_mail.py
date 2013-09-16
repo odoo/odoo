@@ -23,7 +23,7 @@ from urlparse import urljoin
 
 from openerp import tools
 from openerp import SUPERUSER_ID
-from openerp.osv import osv
+from openerp.osv import osv, fields
 
 
 class MailMail(osv.Model):
@@ -31,16 +31,25 @@ class MailMail(osv.Model):
     _name = 'mail.mail'
     _inherit = ['mail.mail']
 
+    _columns = {
+        'track': fields.boolean('Use tracking'),
+    }
+
+    _defaults = {
+        'track': False,
+    }
+
     def create(self, cr, uid, values, context=None):
         """ Override mail_mail creation to create an entry in mail.mail.statistics """
         # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
         mail_id = super(MailMail, self).create(cr, uid, values, context=context)
-        message_id = self.browse(cr, SUPERUSER_ID, mail_id).message_id
-        self.pool['mail.mail.statistics'].create(
-            cr, uid, {
-                'mail_mail_id': mail_id,
-                'message_id': message_id,
-            }, context=context)
+        mail = self.browse(cr, SUPERUSER_ID, mail_id)
+        if mail.track:
+            self.pool['mail.mail.statistics'].create(
+                cr, uid, {
+                    'mail_mail_id': mail_id,
+                    'message_id': mail.message_id,
+                }, context=context)
         return mail_id
 
     def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
@@ -53,7 +62,8 @@ class MailMail(osv.Model):
         body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
 
         # generate tracking URL
-        tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
-        if tracking_url:
-            body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
+        if mail.track:
+            tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
+            if tracking_url:
+                body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body

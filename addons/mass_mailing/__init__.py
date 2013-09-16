@@ -21,5 +21,6 @@
 
 import mass_mailing
 import mail_mail
+import mail_thread
 import wizard
 import controllers

@@ -8,5 +8,5 @@ class MassMailController(http.Controller):
     def track_mail_open(self, mail_id):
         """ Email tracking. """
         mail_mail_stats = request.registry.get('mail.mail.statistics')
-        mail_mail_stats.set_opened(request.cr, request.uid, mail_ids=[mail_id])
-        return False
+        mail_mail_stats.set_opened(request.cr, request.uid, mail_mail_ids=[mail_id])
+        return "data:image/gif;base64,R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="

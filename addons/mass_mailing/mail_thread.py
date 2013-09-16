@@ -22,6 +22,7 @@
 import logging
 
 from openerp import tools
+from openerp.addons.mail.mail_message import decode
 from openerp.addons.mail.mail_thread import decode_header
 from openerp.osv import osv
 
@@ -76,7 +77,8 @@ class MailThread(osv.Model):
             for obj in self.browse(cr, uid, ids, context=context):
                 self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 
-    def message_route_process(self, cr, uid, msg, routes, context=None):
-        if msg.get('message_id'):
-            self.pool['mail.mail.statistics'].set_replied(cr, uid, mail_message_ids=[msg.get('message_id')], context=context)
-        return super(MailThread, self).message_route_process(cr, uid, msg, routes, context=context)
+    def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
+        if message.get('References'):
+            message_ids = [x.strip() for x in decode(message['References']).split()]
+            self.pool['mail.mail.statistics'].set_replied(cr, uid, mail_message_ids=message_ids, context=context)
+        return super(MailThread, self).message_route_process(cr, uid, message, message_dict, routes, context=context)

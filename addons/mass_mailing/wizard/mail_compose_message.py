@@ -37,10 +37,10 @@ class MailComposeMessage(osv.TransientModel):
         ),
     }
 
-    def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
+    def get_mail_values(self, cr, uid, wizard, res_ids, context=None):
         """ Override method that generated the mail content by adding the mass
         mailing campaign, when doing pure email mass mailing. """
-        res = super(MailComposeMessage, self).render_message_batch(cr, uid, wizard, res_ids, context=context)
+        res = super(MailComposeMessage, self).get_mail_values(cr, uid, wizard, res_ids, context=context)
         if wizard.composition_mode == 'mass_mail' and wizard.mass_mailing_campaign_id:  # TODO: which kind of mass mailing ?
             current_date = fields.datetime.now()
             mass_mailing_id = self.pool['mail.mass_mailing'].create(
@@ -52,4 +52,6 @@ class MailComposeMessage(osv.TransientModel):
                     'template_id': wizard.template_id and wizard.template_id.id or False,
                 }, context=context)
             context['default_mass_mailing_id'] = mass_mailing_id
+            for res_id in res_ids:
+                res[res_id]['track'] = True
         return res
