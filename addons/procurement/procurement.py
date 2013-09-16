@@ -194,10 +194,11 @@ class procurement_order(osv.osv):
             :param procurement: browse record
             :rtype: boolean
         '''
-        rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
-        if rule_id:
-            self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
-            return True
+        if procurement.product_id.type != 'service':
+            rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
+            if rule_id:
+                self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
+                return True
         return False
 
     def _run(self, cr, uid, procurement, context=None):

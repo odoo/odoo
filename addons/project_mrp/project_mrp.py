@@ -165,7 +165,7 @@ class sale_order(osv.osv):
     def _check_create_procurement(self, cr, uid, order, line, context=None):
         create = super(sale_order, self)._check_create_procurement(cr, uid, order, line, context=context)
         if (line.product_id.type== "service" and not line.product_id.auto_create_task):
-            create = True
+            create = False
         return create
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
