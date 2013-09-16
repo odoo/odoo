@@ -734,7 +734,8 @@ class mrp_production(osv.osv):
         production = self.browse(cr, uid, production_id, context=context)
 
         wf_service = netsvc.LocalService("workflow")
-        if not production.move_lines:
+        if not production.move_lines and production.state == 'ready':
+            # trigger workflow if not products to consume (eg: services)
             wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce', cr)
 
         produced_qty = 0

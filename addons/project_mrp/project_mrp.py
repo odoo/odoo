@@ -120,11 +120,10 @@ class mrp_production(osv.osv):
             return move
         
         res =  super(mrp_production, self)._hook_create_post_procurement(cr, uid, production, procurement_id, context)
-        procurement_order = self.pool.get('procurement.order')
         if production.move_prod_id:
             parent_move_line = get_parent_move(production.move_prod_id)
             if parent_move_line and parent_move_line.sale_line_id:
-                procurement_order.write(cr, uid, procurement_id, {'sale_line_id': parent_move_line.sale_line_id.id})
+                self.pool.get('procurement.order').write(cr, uid, procurement_id, {'sale_line_id': parent_move_line.sale_line_id.id})
         return res
 
 mrp_production()
