@@ -219,15 +219,15 @@
 
                     var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
                     if( action === 'insert'){
-                        if (!$snippet.data('selector-siblings') && !$snippet.data('selector-childs') && !$snippet.data('selector-vertical-childs')) {
+                        if (!$snippet.data('selector-siblings') && !$snippet.data('selector-children') && !$snippet.data('selector-vertical-children')) {
                             console.debug($snippet.data("snippet-id") + " have oe_snippet_body class and have not for insert action"+
-                                "data-selector-siblings, data-selector-childs or data-selector-vertical-childs tag for mutate action");
+                                "data-selector-siblings, data-selector-children or data-selector-vertical-children tag for mutate action");
                             return;
                         }
                         self.activate_insertion_zones({
                             siblings: $snippet.data('selector-siblings'),
-                            childs:   $snippet.data('selector-childs'),
-                            vertical_childs:   $snippet.data('selector-vertical-childs')
+                            children:   $snippet.data('selector-children'),
+                            vertical_children:   $snippet.data('selector-vertical-children')
                         });
 
                     } else if( action === 'mutate' ){
@@ -308,15 +308,15 @@
         },
 
         // Create element insertion drop zones. two css selectors can be provided
-        // selector.childs -> will insert drop zones as direct child of the selected elements
+        // selector.children -> will insert drop zones as direct child of the selected elements
         //   in case the selected elements have children themselves, dropzones will be interleaved
         //   with them.
         // selector.siblings -> will insert drop zones after and before selected elements
         activate_insertion_zones: function(selector){
             var self = this;
-            var child_selector = selector.childs;
+            var child_selector = selector.children;
             var sibling_selector = selector.siblings;
-            var vertical_child_selector   =  selector.vertical_childs;
+            var vertical_child_selector   =  selector.vertical_children;
 
             var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
@@ -523,8 +523,8 @@
                     self.$target.css("display", "none");
                     self.parent.activate_insertion_zones({
                         siblings: self.$el ? self.$el.data('selector-siblings') : false,
-                        childs:   self.$el ? self.$el.data('selector-childs') : false,
-                        vertical_childs: self.$el ? self.$el.data('selector-vertical-childs') : false,
+                        children:   self.$el ? self.$el.data('selector-children') : false,
+                        vertical_children: self.$el ? self.$el.data('selector-vertical-children') : false,
                     });
                     $("body").addClass('move-important');
                     $('.oe_drop_zone').droppable({
