@@ -120,6 +120,14 @@ class crm_meeting(osv.Model):
     _defaults = {
         'state': 'open',
     }
+    
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+        if context is None:
+            context={}
+        if context.get('mymeetings',False):
+            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_id.id
+            args += ['|', ('partner_ids', 'in', [partner_id]), ('user_id', '=', uid)]
+        return super(crm_meeting, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
         res = {}

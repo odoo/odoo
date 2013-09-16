@@ -76,7 +76,11 @@
                                     on_change="onchange_dates(date,False,date_deadline)"/>
                             </group>
                             <group>
+<<<<<<< TREE
                                 <field name="user_id"/>
+=======
+                                <field name="user_id" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+>>>>>>> MERGE-SOURCE
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
                                 <field name="organizer" groups="base.group_no_one"/>
@@ -141,7 +145,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Invitations" attrs="{'invisible':[('is_attendee','=',True)]}">
+                    <page string="Invitations" attrs="{'invisible':[('is_attendee','=',True)]}" groups="base.group_no_one">
                         <field name="attendee_ids" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top" >
                                 <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -250,7 +254,7 @@
                 <field name="categ_ids"/>
                 <field name="user_id"/>
                 <separator/>
-                <filter string="My Meetings" help="My Meetings" domain="[('user_id','=',uid)]"/>
+                <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
             </search>
         </field>
@@ -264,7 +268,7 @@
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="view_crm_meeting_calendar"/>
         <field name="search_view_id" ref="view_crm_meeting_search"/>
-        <field name="context">{"calendar_default_user_id": uid}</field>
+        <field name="context">{"search_default_mymeetings": 1}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to schedule a new meeting.

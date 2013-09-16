@@ -476,8 +476,7 @@ property or property parameter."),
 
     def do_accept(self, cr, uid, ids, context=None, *args):
         """
-        Update state of invitation as Accepted and if the invited user is other
-        then event user it will make a copy of this event for invited user.
+        Marks event invitation as Accepted.
         @param cr: the current row, from the database cursor
         @param uid: the current user's ID for security checks
         @param ids: list of calendar attendee's IDs
@@ -1027,12 +1026,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
+                local_context = context.copy()
+                local_context.pop('default_state', None)
                 att_id = self.pool.get('calendar.attendee').create(cr, uid, {
                     'partner_id': partner.id,
                     'user_id': partner.user_ids and partner.user_ids[0].id or False,
                     'ref': self._name+','+str(event.id),
                     'email': partner.email
-                }, context=context)
+                }, context=local_context)
                 if partner.email:
                     mail_to = mail_to + " " + partner.email
                 self.write(cr, uid, [event.id], {

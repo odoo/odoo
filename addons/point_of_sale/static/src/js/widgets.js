@@ -990,7 +990,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label: _t('Close'),
-                action: function(){ self.try_close(); },
+                action: function(){ self.close(); },
             });
             this.close_button.appendTo(this.$('#rightheader'));
 
@@ -1100,15 +1100,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
         },
-        try_close: function() {
-            var self = this;
-            //TODO : do the close after the flush...
-            self.pos.flush()
-            self.close();
-        },
         close: function() {
             var self = this;
-            this.pos.barcode_reader.disconnect();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
@@ -1120,8 +1113,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }, this));
         },
         destroy: function() {
+            this.pos.destroy();
             instance.webclient.set_content_full_screen(false);
-            self.pos = undefined;
             this._super();
         }
     });
