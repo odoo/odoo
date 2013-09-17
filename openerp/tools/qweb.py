@@ -314,6 +314,9 @@ class QWebXml(object):
 
     def render_tag_field(self, e, t_att, g_att, v):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
+        node_name = e.nodeName
+        assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td"),\
+            "RTE widgets do not work correctly on %r elements" % node_name
 
         record, field = t_att["field"].rsplit('.', 1)
         record = self.eval_object(record, v)
@@ -330,7 +333,7 @@ class QWebXml(object):
             if isinstance(inner, unicode):
                 inner = inner.encode("utf8")
 
-            if e.nodeName == 't':
+            if node_name == 't':
                 e.nodeName = DEFAULT_TAG_BY_TYPE[field_type]
 
             g_att += ''.join(
