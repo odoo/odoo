@@ -28,9 +28,7 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
     
     def _get_font(self, cr, uid, context=None):
-        if not customfonts.supported_fonts:
-            customfonts.RegisterCustomFonts()
-        return sorted(customfonts.supported_fonts)
+        return sorted(customfonts.RegisterCustomFonts())
         
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
