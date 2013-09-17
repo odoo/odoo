@@ -76,11 +76,7 @@
                                     on_change="onchange_dates(date,False,date_deadline)"/>
                             </group>
                             <group>
-<<<<<<< TREE
-                                <field name="user_id"/>
-=======
                                 <field name="user_id" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
->>>>>>> MERGE-SOURCE
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
                                 <field name="organizer" groups="base.group_no_one"/>
