@@ -242,14 +242,7 @@
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            var $editables = $('[data-oe-model][data-oe-xpath]')
-                    // FIXME: propagation should make "meta" blocks non-editable in the first place...
-                    .not('link, script')
-                    .not('[data-oe-type]')
-                    .not('.oe_snippet_editor')
-                    .prop('contentEditable', true)
-                    .addClass('oe_editable');
-            this.rte.start_edition($editables);
+            this.rte.start_edition();
         },
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);
@@ -258,20 +251,26 @@
             var self = this;
 
             observer.disconnect();
-            var defs = _(CKEDITOR.instances).chain()
-                .filter(function (editor) { return editor.element.hasClass('oe_dirty'); })
-                .map(function (editor) {
-                    var $el = $(editor.element.$);
+            var editor = this.rte.editor;
+            var root = editor.element.$;
+            editor.destroy();
+            // FIXME: select editables then filter by dirty?
+            var defs = this.rte.fetch_editables(root)
+                .removeClass('oe_editable cke_focus')
+                .removeAttr('contentEditable')
+                .filter('.oe_dirty')
+                .map(function () {
+                    var $el = $(this);
                     // TODO: Add a queue with concurrency limit in webclient
                     // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
                     return self.saving_mutex.exec(function () {
-                        return self.saveEditor(editor)
+                        return self.saveElement($el)
                             .fail(function () {
                                 var data = $el.data();
                                 console.error(_.str.sprintf('Could not save %s(%d).%s', data.oeModel, data.oeId, data.oeField));
                             });
                     });
-                }).value();
+                }).get();
             return $.when.apply(null, defs).then(function () {
                 window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
             });
@@ -279,18 +278,15 @@
         /**
          * Saves an RTE content, which always corresponds to a view section (?).
          */
-        saveEditor: function (editor) {
-            var element = editor.element;
-            editor.destroy();
-            element.removeClass('cke_focus')
-                   .removeClass('oe_dirty')
-                   .removeClass('oe_editable')
-                   .removeAttribute('contentEditable');
-            var data = element.getOuterHtml();
+        saveElement: function ($el) {
+            $el.removeClass('oe_dirty');
+            var markup = $el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
-                args: [element.data('oe-id'), data, element.data('oe-xpath'), website.get_context()],
+                args: [$el.data('oe-id'), markup,
+                       $el.data('oe-xpath') || null,
+                       website.get_context()],
             });
         },
         cancel: function () {
@@ -313,19 +309,54 @@
 
         start_edition: function ($elements) {
             var self = this;
-            $elements
+            // create a single editor for the whole page
+            // FIXME: is not the whole page, ckeditor can't handle body
+            var root = document.getElementById('wrap');
+            root.setAttribute('data-cke-editable', 'true');
+            this.editor = CKEDITOR.inline(root, self._config());
+            this.editor.on('instanceReady', function () {
+                // ckeditor set root to editable, disable it (only inner
+                // sections are editable)
+                // FIXME: are there cases where the whole editor is editable?
+                root.contentEditable = false;
+
+                self.setup_editables(root);
+            });
+        },
+
+        setup_editables: function (root) {
+            // selection of editable sub-items was previously in
+            // EditorBar#edit, but for some unknown reason the elements were
+            // apparently removed and recreated (?) at editor initalization,
+            // and observer setup was lost.
+            var self = this;
+            // setup dirty-marking for each editable element
+            this.fetch_editables(root)
+                .prop('contentEditable', true)
+                .addClass('oe_editable')
                 .each(function () {
                     var node = this;
+                    observer.observe(node, OBSERVER_CONFIG);
                     var $node = $(node);
-                    var editor = CKEDITOR.inline(this, self._config());
-                    editor.on('instanceReady', function () {
-                        self.trigger('instanceReady');
-                        observer.observe(node, OBSERVER_CONFIG);
-                    });
                     $node.one('content_changed', function () {
+                        console.log("!", $node)
                         $node.addClass('oe_dirty');
                         self.trigger('change');
                     });
+                });
+        },
+
+        fetch_editables: function (root) {
+            return $(root).find('[data-oe-model]')
+                // FIXME: propagation should make "meta" blocks non-editable in the first place...
+                .not('link, script')
+                .not('.oe_snippet_editor')
+                .filter(function () {
+                    var $this = $(this);
+                    // keep view sections and fields which are *not* in
+                    // view sections for toplevel editables
+                    return $this.data('oe-model') === 'ir.ui.view'
+                       || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
                 });
         },
 

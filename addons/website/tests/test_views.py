@@ -154,6 +154,21 @@ class TestViewSaving(common.TransactionCase):
             )
         )
 
+    def test_save_only_embedded(self):
+        Company = self.registry('res.company')
+        company_id = 1
+        Company.write(self.cr, self.uid, company_id, {'name': "Foo Corporation"})
+
+        node = html.tostring(h.SPAN(
+            "Acme Corporation",
+            attrs(model='res.company', id=company_id, field="name", expression='bob')))
+
+        self.registry('ir.ui.view').save(self.cr, self.uid, res_id=company_id,value=node)
+
+        company = Company.browse(self.cr, self.uid, company_id)
+        self.assertEqual(company.name, "Acme Corporation")
+
+
     def test_field_tail(self):
         View = self.registry('ir.ui.view')
         replacement = ET.tostring(

@@ -91,6 +91,11 @@ class view(osv.osv):
 
         arch_section = html.fromstring(value)
 
+        if xpath is None:
+            # value is an embedded field on its own, not a view section
+            self.save_embedded_field(cr, uid, arch_section, context=context)
+            return
+
         for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
             self.save_embedded_field(cr, uid, el, context=context)
 
