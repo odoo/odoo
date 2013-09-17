@@ -330,8 +330,8 @@ class QWebXml(object):
             if isinstance(inner, unicode):
                 inner = inner.encode("utf8")
 
-            if e.tagName == 't':
-                e.tagName = DEFAULT_TAG_BY_TYPE[field_type]
+            if e.nodeName == 't':
+                e.nodeName = DEFAULT_TAG_BY_TYPE[field_type]
 
             g_att += ''.join(
                 ' %s="%s"' % (name, cgi.escape(str(value), True))
