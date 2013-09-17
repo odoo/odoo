@@ -379,8 +379,8 @@ class stock_quant(osv.osv):
         domain += [('product_id','=',product.id)] + domain
         res = []
         offset = 0
-        #id is added at the end of the order to make sure the order is always the same for quants created at the same second
-        orderby += ', id asc'
+        #'propagated_from_id' and 'id' are added at the end of the order to make sure the order is always the same for quants created at the same second
+        orderby += ', propagated_from_id, id'
         while quantity > 0:
             quants = self.search(cr, uid, domain, order=orderby, limit=10, offset=offset, context=context)
             if not quants:
