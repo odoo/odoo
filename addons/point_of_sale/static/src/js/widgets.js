@@ -283,27 +283,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ProductWidget = module.PosBaseWidget.extend({
-        template: 'ProductWidget',
-        init: function(parent, options) {
-            this._super(parent,options);
-            this.model = options.model;
-            this.model.attributes.weight = options.weight;
-            this.next_screen = options.next_screen; //when a product is clicked, this screen is set
-            this.click_product_action = options.click_product_action; 
-        },
-        // returns the url of the product thumbnail
-        renderElement: function() {
-            this._super();
-            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.model.get_image_url()));
-            var self = this;
-            $("a", this.$el).click(function(e){
-                if(self.click_product_action){
-                    self.click_product_action(self.model);
-                }
-            });
-        },
-    });
 
     module.PaymentlineWidget = module.PosBaseWidget.extend({
         template: 'PaymentlineWidget',
@@ -619,25 +598,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-
-            // free subwidgets  memory from previous renders
             
-            for(var i = 0, len = this.productwidgets.length; i < len; i++){
-                this.productwidgets[i].destroy();
-            }
-            this.productwidgets = []; 
             if(this.scrollbar){
                 this.scrollbar.destroy();
             }
             var products = this.pos.get('products').models || [];
-            for(var i = 0, len = products.length; i < len; i++){
-                var product = new module.ProductWidget(self, {
-                    model: products[i],
-                    click_product_action: this.click_product_action,
-                });
-                this.productwidgets.push(product);
-                product.appendTo(this.$('.product-list'));
-            }
+            
+            _.each(products,function(product,i){
+                var $product = $(QWeb.render('Product',{ widget:self, product: products[i] }));
+                $product.find('img').replaceWith(self.pos_widget.image_cache.get_image(products[i].get_image_url()));
+                $product.find('a').click(function(){ self.click_product_action(product); });
+                $product.appendTo(self.$('.product-list'));
+            });
+
             this.scrollbar = new module.ScrollbarWidget(this,{
                 target_widget:   this,
                 target_selector: '.product-list-scroller',
