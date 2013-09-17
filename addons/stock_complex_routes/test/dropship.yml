@@ -45,16 +45,11 @@
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
         purchase_id = procurement_order.purchase_line_id.order_id.id
+        
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
-- 
-    Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces
--
-    !python {model: purchase.order}: |
-         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
-         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
-         purchase_id = procurement_order.purchase_line_id.order_id.id
-         self.view_picking(cr, uid, [purchase_id])
+        print self.browse(cr, uid, purchase_id).state
+        assert self.browse(cr, uid, purchase_id).state == 'approved', 'Purchase order should be in the approved state'
 -
     Send the 200 pieces.
 - 

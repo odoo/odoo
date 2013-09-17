@@ -70,7 +70,6 @@ class sale_order(osv.osv):
                 'product_id': grid.carrier_id.product_id.id,
                 'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
                 'tax_id': [(6,0,taxes_ids)],
-                'type': 'make_to_stock'
             })
         #remove the value of the carrier_id field on the sale order
         return self.write(cr, uid, ids, {'carrier_id': False}, context=context)
