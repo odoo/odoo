@@ -259,7 +259,24 @@
     assert round(product.standard_price) == round(150.0 / 1.2834), "Product price not updated accordingly. %s found instead of %s" %(product.standard_price, round(150.0/1.2834))
     assert product.qty_available == 0.0, 'Wrong quantity in stock after first reception'
 - 
-  Let us create some outs to get negative stock. Create outpicking.  We create delivery order of 100 kg.
+  Let us create some outs to get negative stock for a new product using the same config
+-
+  !record {model: product.product, id: product_fifo_negative}:
+    default_code: NEG
+    name: FIFO Negative
+    type: product
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    cost_method: real
+    valuation: real_time
+    property_stock_account_input: account.o_expense
+    property_stock_account_output: account.o_income
+    description: 
+- 
+  Create outpicking.  We create delivery order of 100 kg.
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_neg}:
     picking_type_id: stock.picking_type_out
@@ -268,7 +285,7 @@
 -
   !record {model: stock.move, id: outgoing_shipment_fifo_icecream_neg}:
     picking_id: outgoing_fifo_shipment_neg
-    product_id: product_fifo_icecream
+    product_id: product_fifo_negative
     product_uom: product.product_uom_kgm
     product_uom_qty: 100.0
     location_id: stock.stock_location_stock
@@ -290,7 +307,7 @@
 -
   !record {model: stock.move, id: outgoing_shipment_fifo_icecream_neg2}:
     picking_id: outgoing_fifo_shipment_neg2
-    product_id: product_fifo_icecream
+    product_id: product_fifo_negative
     product_uom: product.product_uom_kgm
     product_uom_qty: 400.0
     location_id: stock.stock_location_stock
@@ -310,7 +327,7 @@
     location_id: stock.stock_location_stock
     pricelist_id: 1
     order_line:
-      - product_id: product_fifo_icecream
+      - product_id: product_fifo_negative
         product_qty: 50.0
         product_uom: product.product_uom_categ_kgm
         price_unit: 50.0
@@ -329,7 +346,7 @@
   Assert price on product is still the old price as the out move has not been received fully yet
 - 
   !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834), 'The product price should not have been updated'
+    assert round(self.browse(cr, uid, ref("product_fifo_negative")).standard_price) == 70), 'The product price should not have been updated'
 - 
   Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
 - 
@@ -338,7 +355,7 @@
     location_id: stock.stock_location_stock
     pricelist_id: 1
     order_line:
-      - product_id: product_fifo_icecream
+      - product_id: product_fifo_negative
         product_qty: 60.0
         product_uom: product.product_uom_categ_kgm
         price_unit: 80
@@ -358,6 +375,6 @@
 - 
   !python {model: product.product}: |
     quant_obj = self.pool.get("stock.quant")
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_icecream"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.in_date) for x in quant_obj.browse(cr, uid, quants)]
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)
+    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
+    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost) for x in quant_obj.browse(cr, uid, quants)]
+    assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_negative")).standard_price,)
