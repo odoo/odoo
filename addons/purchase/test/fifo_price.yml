@@ -346,7 +346,7 @@
   Assert price on product is still the old price as the out move has not been received fully yet
 - 
   !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_negative")).standard_price) == 70), 'The product price should not have been updated'
+    assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 70, 'The product price should not have been updated'
 - 
   Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
 - 
