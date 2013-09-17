@@ -1,3 +1,8 @@
+-
+    Create a supplier
+-
+  !record {model: res.partner, id: supplier_dropship}:
+    name: Supplier of Dropshipping test
 - 
     Create new product without any routes
 - 
@@ -10,7 +15,7 @@
         type: product
         seller_ids:
           - delay: 1
-            name: base.res_partner_2
+            name: supplier_dropship
             min_qty: 2.0
             qty: 5.0
         uom_id: product.product_uom_unit
@@ -48,24 +53,28 @@
         
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
-        print self.browse(cr, uid, purchase_id).state
         assert self.browse(cr, uid, purchase_id).state == 'approved', 'Purchase order should be in the approved state'
+- 
+    Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces
+-
+    !python {model: purchase.order}: |
+         po_id = self.search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
+         self.view_picking(cr, uid, po_id)
 -
     Send the 200 pieces.
 - 
     !python {model: stock.picking}: |
-        sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
-        procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
-        purchase_id = procurement_order.purchase_line_id.order_id.id
-        picking_id = self.search(cr, uid, [('purchase_id', '=', purchase_id)])
+        po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
+        picking_id = self.search(cr, uid, [('purchase_id', '=', po_id[0])])
         print [(x.move_lines[0].product_id.name, x.move_lines[0].product_uom_qty) for x in self.browse(cr, uid, picking_id)]
         self.do_partial(cr, uid, picking_id)
 - 
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 
     !python {model: stock.quant}: |
-        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('product_id', '=', ref("drop_shop_product"))])
-        print "Quants", quant_ids
+        quant_obj = self.pool.get("stock.quant")
+        quant_ids = self.search(cr, uid, [('product_id', '=', ref("drop_shop_product"))])
+        print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost) for x in quant_obj.browse(cr, uid, quant_ids)]
         quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
         print "Quants", quant_ids
         assert quant_ids, 'No Quant found'
