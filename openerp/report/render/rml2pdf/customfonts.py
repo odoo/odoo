@@ -23,7 +23,6 @@
 from reportlab import rl_config
 from reportlab.pdfbase import pdfmetrics, ttfonts
 import logging
-import matplotlib.font_manager
 import os,platform
 
 # .apidoc title: TTF Font Table
