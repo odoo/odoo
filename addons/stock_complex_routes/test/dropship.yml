@@ -65,7 +65,9 @@
 - 
     !python {model: stock.picking}: |
         po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
+        print "Picking_ids", self.pool.get("purchase.order").browse(cr, uid, po_id[0]).picking_ids
         picking_id = self.search(cr, uid, [('purchase_id', '=', po_id[0])])
+        print "Pick_id", picking_id
         print [(x.move_lines[0].product_id.name, x.move_lines[0].product_uom_qty) for x in self.browse(cr, uid, picking_id)]
         self.do_partial(cr, uid, picking_id)
 - 
