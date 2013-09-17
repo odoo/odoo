@@ -74,7 +74,7 @@
         },
         dom_filter: function (dom) {
             if (typeof dom === "string") {
-                var exclude = ":not(#oe_manipulators):not(#website-top-navbar)";
+                var exclude = ":not(#oe_manipulators):not(#website-top-navbar):not(.oe_snippet)";
                 var sdom = dom.split(',');
                 dom = "";
                 _.each(sdom, function (val) {
@@ -86,7 +86,7 @@
                 dom = dom.replace(/,\s*$/g, '');
                 return $(dom);
             } else {
-                return $(dom).parents("#oe_manipulators, #website-top-navbar").length ? $() : $(dom);
+                return $(dom).parents("#oe_manipulators, #website-top-navbar").length || $(dom).hasClass("oe_snippet") ? $("") : $(dom);
             }
         },
         start: function() {
@@ -111,14 +111,12 @@
             var pos = $target.offset();
             var mt = parseInt($target.css("margin-top") || 0);
             var mb = parseInt($target.css("margin-bottom") || 0);
-            var ml = parseInt($target.css("margin-left") || 0);
-            var mr = parseInt($target.css("margin-right") || 0);
             $el.css({
                 'position': 'absolute',
-                'width': $target.outerWidth() + ml + mr,
+                'width': $target.outerWidth(),
                 'height': $target.outerHeight() + mt + mb,
                 'top': pos.top - mt,
-                'left': pos.left - ml
+                'left': pos.left
             });
         },
         show: function () {
@@ -212,6 +210,7 @@
             var $selected_target = null;
             $("body").mouseover(function (event){
                 var $target = $(event.srcElement).parents("[data-snippet-id]:first");
+                $target = self.dom_filter($target);
                 if($target.length && !self.editor_busy) {
                     if($selected_target != $target){
                         if($selected_target && $selected_target.data('overlay')){
@@ -544,7 +543,6 @@
                 greedy: true,
                 appendTo: 'body',
                 cursor: "move",
-                distance: 20,
                 handle: ".js_box_move",
                 cursorAt: {left: $move.outerWidth()/2, top: $move.find(".oe_move").outerHeight()/2},
                 helper: function() {
@@ -783,7 +781,7 @@
             this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
 
             var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
-            this.grid.w = [_.map(grid, function (v) {return 'col-lg-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
+            this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
 
             return this.grid;
         },
@@ -793,15 +791,15 @@
 
             // don't change the rigth border position when we change the offset (replace col size)
             var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
+            var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
+            var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
 
-            this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-)([0-9-]+)/g, ''));
+            this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
 
             var colSize = beginCol - (offset - beginOffset);
             this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
             if (offset > 0) {
-                this.$target.addClass('col-lg-offset-' + offset);
+                this.$target.addClass('col-md-offset-' + offset);
             }
         },
     });

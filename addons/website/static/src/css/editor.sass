@@ -140,41 +140,36 @@ table.editorbar-panel
 .oe_snippet
     display: inline-block
     vertical-align: top
-    background: white
     width: 120px
     height: 120px
     border-radius: 3px
     margin: 10px
     margin-right: 0px
     position: relative
-    box-shadow: 0px 3px 10px rgba(0,0,0,0.2)
     overflow: hidden
     -webkit-user-select: none
     user-select: none
     cursor: move
+    pointer-events: none
 
     .oe_snippet_thumbnail.oe_label
+        pointer-events: auto
         text-align: center
-        background: rgb(116, 116, 116)
-        background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
         height: 100%
         line-height: 120px
+        background: transparent
         color: white
         text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95)
-        box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
-
-    .oe_snippet_body
-        display: none
-    & > *
-        pointer-events: none
-    & > :not(.oe_snippet_body):not(.oe_snippet_thumbnail)
+        position: relative
+        span, div
+            line-height: 18px
+    & > :not(.oe_snippet_thumbnail)
         display: none !important
 
-    & > *:first-child:not(.oe_snippet_thumbnail)
-        display: block
-        -webkit-transform-origin-x: 5px
-        -webkit-transform-origin-y: 10px
-        -webkit-transform: scale(0.095)
+#oe_snippets .oe_snippet_thumbnail.oe_label
+    background: rgb(116, 116, 116)
+    background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
+    box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
 
 
 /* ---- SNIPPETS DROP ZONES ---- */
