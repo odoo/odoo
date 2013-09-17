@@ -2749,7 +2749,7 @@ class BaseModel(object):
                     else:
                         domain_dt_begin = groupby_datetime.replace(month=1, day=1)
                         domain_dt_end = groupby_datetime.replace(month=12, day=31)
-                    d['__domain'] = [(group_by, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (group_by, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
+                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
