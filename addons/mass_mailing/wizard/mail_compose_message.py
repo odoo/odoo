@@ -53,5 +53,5 @@ class MailComposeMessage(osv.TransientModel):
                 }, context=context)
             context['default_mass_mailing_id'] = mass_mailing_id
             for res_id in res_ids:
-                res[res_id]['track'] = True
+                res[res_id]['statistics_ids'] = [(0, 0, {'model': wizard.model, 'res_id': res_id})]
         return res

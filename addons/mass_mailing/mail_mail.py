@@ -32,24 +32,20 @@ class MailMail(osv.Model):
     _inherit = ['mail.mail']
 
     _columns = {
-        'track': fields.boolean('Use tracking'),
-    }
-
-    _defaults = {
-        'track': False,
+        'statistics_ids': fields.one2many(
+            'mail.mail.statistics', 'mail_mail_id',
+            string='Statistics',
+        ),
     }
 
     def create(self, cr, uid, values, context=None):
         """ Override mail_mail creation to create an entry in mail.mail.statistics """
         # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
         mail_id = super(MailMail, self).create(cr, uid, values, context=context)
-        mail = self.browse(cr, SUPERUSER_ID, mail_id)
-        if mail.track:
-            self.pool['mail.mail.statistics'].create(
-                cr, uid, {
-                    'mail_mail_id': mail_id,
-                    'message_id': mail.message_id,
-                }, context=context)
+        if values.get('statistics_ids'):
+            mail = self.browse(cr, SUPERUSER_ID, mail_id)
+            for stat in mail.statistics_ids:
+                self.pool['mail.mail.statistics'].write(cr, uid, [stat.id], {'message_id': mail.message_id}, context=context)
         return mail_id
 
     def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
@@ -62,7 +58,7 @@ class MailMail(osv.Model):
         body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
 
         # generate tracking URL
-        if mail.track:
+        if mail.statistics_ids:
             tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')

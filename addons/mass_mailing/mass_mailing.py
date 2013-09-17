@@ -288,7 +288,13 @@ class MailMailStats(osv.Model):
                  'the related mail_mail can be deleted separately from its statistics.'
         ),
         'message_id': fields.char(
-            'Message-ID', required=True,
+            'Message-ID',
+        ),
+        'model': fields.char(
+            'Document model',
+        ),
+        'res_id': fields.integer(
+            'Document ID',
         ),
         # campaign / wave data
         'mass_mailing_id': fields.many2one(
@@ -333,7 +339,7 @@ class MailMailStats(osv.Model):
         for stat in self.browse(cr, uid, ids, context=context):
             if not stat.opened:
                 self.write(cr, uid, [stat.id], {'opened': fields.datetime.now()}, context=context)
-        return True
+        return ids
 
     def set_replied(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
         """ Set as replied """
@@ -346,7 +352,7 @@ class MailMailStats(osv.Model):
         for stat in self.browse(cr, uid, ids, context=context):
             if not stat.replied:
                 self.write(cr, uid, [stat.id], {'replied': fields.datetime.now()}, context=context)
-        return True
+        return ids
 
     def set_bounced(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, context=None):
         """ Set as bounced """
@@ -359,4 +365,4 @@ class MailMailStats(osv.Model):
         for stat in self.browse(cr, uid, ids, context=context):
             if not stat.bounced:
                 self.write(cr, uid, [stat.id], {'bounced': fields.datetime.now()}, context=context)
-        return True
+        return ids
