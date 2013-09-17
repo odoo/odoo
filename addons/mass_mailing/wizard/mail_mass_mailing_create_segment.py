@@ -36,8 +36,10 @@ class MailMassMailingCreate(osv.TransientModel):
             required=True,
         ),
         'model_id': fields.many2one(
-            'ir.model', 'Model',
+            'ir.model', 'Document',
             required=True,
+            help='Document on which the mass mailing will run. This must be a '
+                 'valid OpenERP model.',
         ),
         'model_model': fields.related(
             'model_id', 'name',
@@ -45,7 +47,10 @@ class MailMassMailingCreate(osv.TransientModel):
         ),
         'filter_id': fields.many2one(
             'ir.filters', 'Filter',
+            required=True,
             domain="[('model_id', '=', model_model)]",
+            help='Filter to be applied on the document to find the records to be '
+                 'mailed.',
         ),
         'domain': fields.related(
             'filter_id', 'domain',
@@ -56,14 +61,20 @@ class MailMassMailingCreate(osv.TransientModel):
             domain="[('model_id', '=', model_id)]",
         ),
         'name': fields.char(
-            'Name', required=True,
+            'Mailing Name', required=True,
+            help='Name of the mass mailing.',
         ),
         'mass_mailing_id': fields.many2one(
             'mail.mass_mailing', 'Mass Mailing',
         ),
     }
 
+    def _get_default_model_id(self, cr, uid, context=None):
+        model_ids = self.pool['ir.model'].search(cr, uid, [('model', '=', 'res.partner')], context=context)
+        return model_ids and model_ids[0] or False
+
     _defaults = {
+        'model_id': lambda self, cr, uid, ctx=None: self._get_default_model_id(cr, uid, context=ctx),
     }
 
     def on_change_model_id(self, cr, uid, ids, model_id, context=None):

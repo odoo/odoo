@@ -47,7 +47,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="mass_mailing_campaign_id"/>
+                                <field name="mass_mailing_campaign_id" readonly="True"/>
                             </group>
                             <group>
                                 <field name="template_id"/>
@@ -55,10 +55,8 @@
                                 <field name="date"/>
                             </group>
                         </group>
-                        <group>
-                            <field name="statistics_ids"/>
-                        </group>
-                        <group>
+                        <group string="Email Statistics">
+                            <field name="statistics_ids" nolabel="1" colspan="2"/>
                             <group>
                                 <field name="sent"/>
                                 <field name="opened"/>
@@ -203,7 +201,7 @@
                             </group>
                         </group>
                         <group>
-                            <field name="mass_mailing_ids"/>
+                            <field name="mass_mailing_ids" readonly="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -289,6 +287,13 @@
             <field name="res_model">mail.mass_mailing.campaign</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new mass mailing campaign.
+              </p><p>
+                Create a campaign to structure mass mailing and get analysis from email status.
+              </p>
+            </field>
         </record>
 
         <!--  MAIL MAIL STATISTICS !-->
