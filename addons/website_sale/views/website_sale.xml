@@ -136,10 +136,13 @@
                     <div class="css_product col-md-2 mb16 thumbnail text-center" data-publish="">
                         <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
                         <div class="ellipsis css_content">
-                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}" style="text-decoration: none; display: block;">
-                                <h5 t-field="product.name"/>
-                                <img class="img-rounded" t-att-src="product.img('image_small')"/>
-                            </a>
+                            <h5>
+                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}"
+                                   style="text-decoration: none; display: block">
+                                    <span t-field="product.name" style="display: block;"/>
+                                </a>
+                            </h5>
+                            <img class="img-rounded" t-att-src="product.img('image_small')"/>
                             <p t-field="product.description_sale"/>
                             <span class="end">&amp;#133;</span><span class="fill" contenteditable="false"></span>
                         </div>
