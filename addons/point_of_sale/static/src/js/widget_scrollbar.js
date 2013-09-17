@@ -81,7 +81,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             $(window).unbind('resize',this.resize_handler);
             $(window).bind('resize',this.resize_handler);
 
-            this.target().unbind('mousewheel',this.target_mousweheel_handler);
+            this.target().unbind('mousewheel',this.target_mousewheel_handler);
             this.target().bind('mousewheel',this.target_mousewheel_handler);
             
             // because the rendering is asynchronous we must wait for the next javascript update
@@ -93,22 +93,18 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             },0);
         },
 
-        // binds the window resize and the target scrolling events.
-        // it is good advice not to bind these multiple_times
-        bind_events:function(){
-            $(window).resize(function(){     
-            });
-            this.target().bind('mousewheel',function(event,delta){
-                self.scroll(delta*self.wheel_step);
-            });
+        destroy: function(){
+            $(window).unbind('resize',this.resize_handler);
+            this.target().unbind('mousewheel',this.target_mousewheel_handler);
+            this._super();
         },
 
         // shows the scrollbar. if animated is true, it will do it in an animated fashion
         show: function(animated){   //FIXME: animated show and hide don't work ... ? 
             if(animated){
-                this.$el.show().animate({'width':'48px'}, 500, 'swing');
+                this.$el.removeClass('oe_hidden').animate({'width':'48px'}, 500, 'swing');
             }else{
-                this.$el.show().css('width','48px');
+                this.$el.removeClass('oe_hidden').css('width','48px');
             }
             this.on_show(this);
         },
@@ -117,9 +113,9 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
         hide: function(animated){
             var self = this;
             if(animated){
-                this.$el.animate({'width':'0px'}, 500, 'swing', function(){ self.$el.hide();});
+                this.$el.animate({'width':'0px'}, 500, 'swing', function(){ self.$el.addClass('oe_hidden');});
             }else{
-                this.$el.hide().css('width','0px');
+                this.$el.addClass('oe_hidden').css('width','0px');
             }
             this.on_hide(this);
         },

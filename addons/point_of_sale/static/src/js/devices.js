@@ -40,6 +40,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 });
             }else{
                 running = false;
+                scheduled_end_time = 0;
                 end_of_queue.resolve();
             }
         };
@@ -100,15 +101,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };    
             this.custom_payment_status = this.default_payment_status;
 
+            this.notifications = {};
+            this.bypass_proxy = false;
+
             this.connection = new instance.web.Session(undefined,url);
             this.connection.session_id = _.uniqueId('posproxy');
-            this.connected = true;
-            this.bypass_proxy = false;
-            this.notifications = {};
-            this.message('test_connection').fail(function(){
-                self.connected = false;
-                console.error('Could not connect to the OpenERP Device Proxy Server');
-            });
+            this.test_connection();
+            window.proxy = this;
             
         },
         close: function(){
@@ -124,6 +123,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }else{
                 return (new $.Deferred()).reject();
             }
+        },
+        test_connection: function(){
+            var self = this;
+            this.connected = true;
+            return this.message('test_connection').fail(function(){
+                    self.connected = false;
+                    console.error('Could not connect to the Proxy');
+                });
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 

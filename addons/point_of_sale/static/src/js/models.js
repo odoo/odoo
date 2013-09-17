@@ -263,7 +263,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         //removes the current order
         delete_current_order: function(){
             this.get('selectedOrder').destroy({'reason':'abandon'});
-            console.log('coucou!');
         },
 
         // saves the order locally and try to send it to the backend. 
