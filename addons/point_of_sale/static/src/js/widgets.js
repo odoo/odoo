@@ -137,17 +137,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.model = options.model;
             this.order = options.order;
 
-            this.model.bind('change', _.bind( function() {
-                this.refresh();
-            }, this));
-        },
-        click_handler: function() {
-            this.order.selectLine(this.model);
-            this.trigger('order_line_selected');
+            this.model.bind('change', this.refresh, this);
         },
         renderElement: function() {
+            var self = this;
             this._super();
-            this.$el.click(_.bind(this.click_handler, this));
+            this.$el.click(function(){
+                self.order.selectLine(this.model);
+                self.trigger('order_line_selected');
+            });
             if(this.model.is_selected()){
                 this.$el.addClass('selected');
             }
@@ -155,6 +153,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         refresh: function(){
             this.renderElement();
             this.trigger('order_line_refreshed');
+        },
+        destroy: function(){
+            this.model.unbind('change',this.refresh,this);
+            this._super();
         },
     });
     
@@ -281,27 +283,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ProductWidget = module.PosBaseWidget.extend({
-        template: 'ProductWidget',
-        init: function(parent, options) {
-            this._super(parent,options);
-            this.model = options.model;
-            this.model.attributes.weight = options.weight;
-            this.next_screen = options.next_screen; //when a product is clicked, this screen is set
-            this.click_product_action = options.click_product_action; 
-        },
-        // returns the url of the product thumbnail
-        renderElement: function() {
-            this._super();
-            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.model.get_image_url()));
-            var self = this;
-            $("a", this.$el).click(function(e){
-                if(self.click_product_action){
-                    self.click_product_action(self.model);
-                }
-            });
-        },
-    });
 
     module.PaymentlineWidget = module.PosBaseWidget.extend({
         template: 'PaymentlineWidget',
@@ -358,16 +339,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             this.order = options.order;
-            this.order.bind('destroy',function(){ self.destroy(); });
-            this.order.bind('change', function(){ self.renderElement(); });
-            this.pos.bind('change:selectedOrder', function() {
-                self.renderElement();
-            }, this);
+            this.order.bind('destroy',this.destroy, this );
+            this.order.bind('change', this.renderElement, this );
+            this.pos.bind('change:selectedOrder', this.renderElement,this );
         },
         renderElement:function(){
             this._super();
-            this.$('button.select-order').off('click').click(_.bind(this.selectOrder, this));
-            this.$('button.close-order').off('click').click(_.bind(this.closeOrder, this));
+            var self = this;
+            this.$el.click(function(){ 
+                self.selectOrder();
+            });
             if( this.order === this.pos.get('selectedOrder') ){
                 this.$el.addClass('selected-order');
             }
@@ -377,8 +358,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 selectedOrder: this.order
             });
         },
-        closeOrder: function(event) {
-            this.order.destroy();
+        destroy: function(){
+            this.order.unbind('destroy', this.destroy, this);
+            this.order.unbind('change',  this.renderElement, this);
+            this.pos.unbind('change:selectedOrder', this.renderElement, this);
+            this._super();
         },
     });
 
@@ -422,9 +406,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible != this.visibility[element]){
                 this.visibility[element] = !!visible;
                 if(visible){
-                    this.$('.'+element).show();
+                    this.$('.'+element).removeClass('oe_hidden');
                 }else{
-                    this.$('.'+element).hide();
+                    this.$('.'+element).addClass('oe_hidden');
                 }
             }
             if(visible && action){
@@ -459,10 +443,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return button;
         },
         show:function(){
-            this.$el.show();
+            this.$el.removeClass('oe_hidden');
         },
         hide:function(){
-            this.$el.hide();
+            this.$el.addClass('oe_hidden');
         },
     });
 
@@ -614,25 +598,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-
-            // free subwidgets  memory from previous renders
             
-            for(var i = 0, len = this.productwidgets.length; i < len; i++){
-                this.productwidgets[i].destroy();
-            }
-            this.productwidgets = []; 
             if(this.scrollbar){
                 this.scrollbar.destroy();
             }
             var products = this.pos.get('products').models || [];
-            for(var i = 0, len = products.length; i < len; i++){
-                var product = new module.ProductWidget(self, {
-                    model: products[i],
-                    click_product_action: this.click_product_action,
-                });
-                this.productwidgets.push(product);
-                product.appendTo(this.$('.product-list'));
-            }
+            
+            _.each(products,function(product,i){
+                var $product = $(QWeb.render('Product',{ widget:self, product: products[i] }));
+                $product.find('img').replaceWith(self.pos_widget.image_cache.get_image(products[i].get_image_url()));
+                $product.find('a').click(function(){ self.click_product_action(product); });
+                $product.appendTo(self.$('.product-list'));
+            });
+
             this.scrollbar = new module.ScrollbarWidget(this,{
                 target_widget:   this,
                 target_selector: '.product-list-scroller',
@@ -693,8 +671,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.$el.click(function(){ self.action(); });
             }
         },
-        show: function(){ this.$el.show(); },
-        hide: function(){ this.$el.hide(); },
+        show: function(){ this.$el.removeClass('oe_hidden'); },
+        hide: function(){ this.$el.addClass('oe_hidden'); },
     });
 
     // The debug widget lets the user control and monitor the hardware and software status
@@ -873,13 +851,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     new_order_button.selectOrder();
                 }, self);
 
-                self.pos.get('orders').add(new module.Order({ pos: self.pos }));
+                self.pos.add_new_order();
 
                 self.build_widgets();
 
                 self.screen_selector.set_default_screen();
 
-                window.screen_selector = self.screen_selector;
 
                 self.pos.barcode_reader.connect();
 
@@ -892,7 +869,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             
                 instance.web.unblockUI();
-                self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
+                self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
 
                 self.pos.flush();
 
@@ -1081,11 +1058,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible !== this.leftpane_visible){
                 this.leftpane_visible = visible;
                 if(visible){
-                    $('#leftpane').show().animate({'width':this.leftpane_width},500,'swing');
+                    $('#leftpane').removeClass('oe_hidden').animate({'width':this.leftpane_width},500,'swing');
                     $('#rightpane').animate({'left':this.leftpane_width},500,'swing');
                 }else{
                     var leftpane = $('#leftpane');
-                    $('#leftpane').animate({'width':'0px'},500,'swing', function(){ leftpane.hide(); });
+                    $('#leftpane').animate({'width':'0px'},500,'swing', function(){ leftpane.addClass('oe_hidden'); });
                     $('#rightpane').animate({'left':'0px'},500,'swing');
                 }
             }
@@ -1095,11 +1072,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible !== this.cashier_controls_visible){
                 this.cashier_controls_visible = visible;
                 if(visible){
-                    $('#loggedas').show();
-                    $('#rightheader').show();
+                    $('#loggedas').removeClass('oe_hidden');
+                    $('#rightheader').removeClass('oe_hidden');
                 }else{
-                    $('#loggedas').hide();
-                    $('#rightheader').hide();
+                    $('#loggedas').addClass('oe_hidden');
+                    $('#rightheader').addClass('oe_hidden');
                 }
             }
         },
