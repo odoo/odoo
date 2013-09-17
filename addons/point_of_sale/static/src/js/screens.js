@@ -455,7 +455,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             queue.schedule(function(){
                 return self.pos.proxy.weighting_start();
-            },{ unclearable: true });
+            },{ important: true });
             
             queue.schedule(function(){
                 return self.pos.proxy.weighting_read_kg().then(function(weight){
@@ -479,7 +479,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.proxy_queue.clear();
             this.pos.proxy_queue.schedule(function(){
                 return self.pos.proxy.weighting_end();
-            },{ unclearable: true });
+            },{ important: true });
         },
     });
 
@@ -516,7 +516,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             queue.schedule(function(){
                 return self.pos.proxy.weighting_start()
-            },{ unclearable: true });
+            },{ important: true });
             
             queue.schedule(function(){
                 return self.pos.proxy.weighting_read_kg().then(function(weight){
@@ -566,7 +566,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.proxy_queue.clear();
             this.pos.proxy_queue.schedule(function(){
                 self.pos.proxy.weighting_end();
-            },{ unclearable: true });
+            },{ important: true });
         },
     });
 
