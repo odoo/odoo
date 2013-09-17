@@ -359,5 +359,5 @@
   !python {model: product.product}: |
     quant_obj = self.pool.get("stock.quant")
     quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_icecream"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost) for x in quant_obj.browse(cr, uid, quants)]
+    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.in_date) for x in quant_obj.browse(cr, uid, quants)]
     assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price,)
