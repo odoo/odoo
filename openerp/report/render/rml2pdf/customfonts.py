@@ -24,7 +24,7 @@ from reportlab import rl_config
 from reportlab.pdfbase import pdfmetrics, ttfonts
 import logging
 import matplotlib.font_manager
-import os
+import os,platform
 
 # .apidoc title: TTF Font Table
 
@@ -60,10 +60,64 @@ CustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         # Sun-ExtA can be downloaded from http://okuc.net/SunWb/
         ('Sun-ExtA', "Sun-ExtA", "Sun-ExtA.ttf", 'normal'),
 ]
+
+TTFSearchPath_Linux = [
+            '/usr/share/fonts/truetype', # SuSE
+            '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
+            '/usr/share/fonts/truetype/*','/usr/local/share/fonts' # Ubuntu,
+            '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
+            '/usr/share/fonts/TTF', # Arch Linux
+            '/usr/lib/openoffice/share/fonts/truetype/',
+            ]
+
+TTFSearchPath_Windows = [
+            'c:/winnt/fonts',
+            'c:/windows/fonts'
+            ]
+
+TTFSearchPath_Darwin = [
+            #mac os X - from
+            #http://developer.apple.com/technotes/tn/tn2024.html
+            '~/Library/Fonts',
+            '/Library/Fonts',
+            '/Network/Library/Fonts',
+            '/System/Library/Fonts',
+            ]
+
+TTFSearchPathMap = {
+    'Darwin': TTFSearchPath_Darwin,
+    'Windows': TTFSearchPath_Windows,
+    'Linux': TTFSearchPath_Linux,
+}
+
+def linux_home_fonts():
+    home = os.environ.get('HOME')
+    if home is not None:
+        # user fonts on OSX
+        path = os.path.join(home, 'Library', 'Fonts')
+        path = os.path.join(home, '.fonts')
+        TTFSearchPath_Linux.append(path)
+
+def all_sysfonts_list():
+    searchpath = []
+    filepath = []
+    local_platform = platform.system()
+    if local_platform in TTFSearchPathMap:
+        if local_platform == 'Linux':
+            linux_home_fonts()
+        searchpath += TTFSearchPathMap[local_platform]
+    # Append the original search path of reportlab (at the end)
+    searchpath += rl_config.TTFSearchPath 
+    searchpath = list(set(searchpath))
+    for dirname in searchpath:
+        if os.path.exists(dirname):
+            for filename in [x for x in os.listdir(dirname) if x.lower().endswith('.ttf')]:
+                filepath.append(os.path.join(dirname, filename))
+    return filepath
     
 def RegisterCustomFonts():
     global _fonts_info
-    all_system_fonts = matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+    all_system_fonts = all_sysfonts_list()
     if len(all_system_fonts) > _fonts_info['font_len']:
         for dirname in all_system_fonts:
             try:
