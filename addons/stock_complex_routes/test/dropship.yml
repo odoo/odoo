@@ -48,17 +48,21 @@
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
 - 
-    Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces..
+    Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces
 -
     !python {model: purchase.order}: |
-         po_id = self.search(cr, uid, [('partner_id', '=', ref('base.res_partner_2'))])
-         self.view_picking(cr, uid, po_id)
+         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
+         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
+         purchase_id = procurement_order.purchase_line_id.order_id.id
+         self.view_picking(cr, uid, [purchase_id])
 -
     Send the 200 pieces.
 - 
     !python {model: stock.picking}: |
-        po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('base.res_partner_2'))])
-        picking_id = self.search(cr, uid, [('purchase_id', '=', po_id[0])])
+        sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
+        procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
+        purchase_id = procurement_order.purchase_line_id.order_id.id
+        picking_id = self.search(cr, uid, [('purchase_id', '=', purchase_id)])
         self.do_partial(cr, uid, picking_id)
 - 
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
