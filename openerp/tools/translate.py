@@ -874,7 +874,7 @@ def trans_generate(lang, modules, cr):
         if module:
             src_file = open(fabsolutepath, 'r')
             try:
-                for lineno, message, comments in extract.extract(extract_method, src_file,
+                for lineno, message, comments, _context in extract.extract(extract_method, src_file,
                                                                  keywords=extract_keywords):
                     push_translation(module, trans_type, display_path, lineno,
                                      encode(message), comments + extra_comments)
