@@ -49,10 +49,13 @@
         from openerp import netsvc
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
+        print 'procurement_order', procurement_order.state
         purchase_id = procurement_order.purchase_line_id.order_id.id
         
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
+        po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
+        print 'PO_id', po_id, 'purchase_id', purchase_id, self.browse(cr, uid, purchase_id).state
         assert self.browse(cr, uid, purchase_id).state == 'approved', 'Purchase order should be in the approved state'
 - 
     Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces
