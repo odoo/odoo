@@ -9,7 +9,9 @@
                             class="btn">Cancel</button>
                 </form>
                 <ul class="nav navbar-nav pull-right">
-                    <li class="navbar-form"><button type="button" data-action="snippet" class="btn btn-primary">Insert Blocks</button></li>
+                    <li class="navbar-form">
+                      <button type="button" data-action="snippet" class="btn btn-primary">Building Blocks <span class="caret" style="border-top-color: white"/></button>
+                    </li>
                 </ul>
             </div>
         </t>
@@ -167,7 +169,7 @@
 
     <t t-name="website.snippets">
         <div id='oe_snippets'>
-            <ul class="nav nav-pills">
+            <ul class="nav nav-pills nav-stacked col-sm-1">
               <li class="active"><a data-toggle="pill" href="#snippet_structure">Structure</a></li>
               <li class=""><a data-toggle="pill" href="#snippet_content">Content</a></li>
               <li class=""><a data-toggle="pill" href="#snippet_business">Business</a></li>
