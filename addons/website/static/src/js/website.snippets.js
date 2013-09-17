@@ -73,10 +73,17 @@
             $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
         },
         dom_filter: function (dom) {
-            var $errordom = $("#oe_manipulators, #website-top-navbar");
-            return $(dom).filter(function () {
-                return $.contains($errordom, this) || $.inArray(this, $errordom);
+            var sdom = dom.split(',');
+            var exclude = ":not(#oe_manipulators):not(#website-top-navbar)";
+            dom = "";
+            _.each(sdom, function (val) {
+                val = val.replace(/^\s+|\s+$/g, '');
+                dom += "body > " + exclude + " " + val + ", ";
+                val = val.split(" ");
+                dom += "body > "+ val.shift() + exclude + val.join(" ") + ", ";
             });
+            dom = dom.replace(/,\s*$/g, '');
+            return $(dom);
         },
         start: function() {
             var self = this;
