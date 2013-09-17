@@ -73,17 +73,21 @@
             $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
         },
         dom_filter: function (dom) {
-            var sdom = dom.split(',');
-            var exclude = ":not(#oe_manipulators):not(#website-top-navbar)";
-            dom = "";
-            _.each(sdom, function (val) {
-                val = val.replace(/^\s+|\s+$/g, '');
-                dom += "body > " + exclude + " " + val + ", ";
-                val = val.split(" ");
-                dom += "body > "+ val.shift() + exclude + val.join(" ") + ", ";
-            });
-            dom = dom.replace(/,\s*$/g, '');
-            return $(dom);
+            if (typeof dom === "string") {
+                var exclude = ":not(#oe_manipulators):not(#website-top-navbar)";
+                var sdom = dom.split(',');
+                dom = "";
+                _.each(sdom, function (val) {
+                    val = val.replace(/^\s+|\s+$/g, '');
+                    dom += "body > " + exclude + " " + val + ", ";
+                    val = val.split(" ");
+                    dom += "body > "+ val.shift() + exclude + val.join(" ") + ", ";
+                });
+                dom = dom.replace(/,\s*$/g, '');
+                return $(dom);
+            } else {
+                return $(dom).parents("#oe_manipulators, #website-top-navbar").length ? $() : $(dom);
+            }
         },
         start: function() {
             var self = this;
