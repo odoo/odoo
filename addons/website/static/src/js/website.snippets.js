@@ -50,7 +50,7 @@
     function remove_added_snippet_id () {
         _.each(website.snippet.selector, function (val) {
             $(val[0]).each(function() {
-                if ($(this).is("[data-snippet-id='"+ val[1]+"']")) {
+                if ($(this).data("snippet-id") === val[1]) {
                     $(this).removeAttr("data-snippet-id");
                 }
             });
@@ -108,12 +108,18 @@
             this.activate_overlay_zones();
         },
         cover_target: function ($el, $target){
+            var pos = $target.offset();
+            var mt = parseInt($target.css("margin-top") || 0);
+            var mb = parseInt($target.css("margin-bottom") || 0);
+            var ml = parseInt($target.css("margin-left") || 0);
+            var mr = parseInt($target.css("margin-right") || 0);
             $el.css({
                 'position': 'absolute',
-                'width': $target.outerWidth(),
-                'height': $target.outerHeight(),
+                'width': $target.outerWidth() + ml + mr,
+                'height': $target.outerHeight() + mt + mb,
+                'top': pos.top - mt,
+                'left': pos.left - ml
             });
-            $el.css($target.offset());
         },
         show: function () {
             this.$el.show();
@@ -736,8 +742,8 @@
         getSize: function () {
             var grid = [0,4,8,16,32,48,64,92,128];
             this.grid = {
-                n: [_.map(grid, function (v) {return 'pt'+v;}), grid],
-                s: [_.map(grid, function (v) {return 'pb'+v;}), grid]
+                n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
+                s: [_.map(grid, function (v) {return 'mb'+v;}), grid]
             };
             return this.grid;
         },
@@ -785,8 +791,6 @@
             }
         },
     });
-    website.snippet.selector.push([ _.map([1,2,3,4,5,6,7,8,9,10,11,12], function (v) {return '.row > .col-md-'+v;}).join(","), 'colmd']);
-
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         template : "website.snippets.carousel",
@@ -797,45 +801,13 @@
         },
         start : function () {
             this._super();
-            var self = this;
 
-            this.$editor.find(".js_add").on('click', self, this.on_add);
-            this.$editor.find(".js_remove").on('click', self, this.on_remove);
+            this.$editor.find(".js_add").on('click', this, this.on_add);
+            this.$editor.find(".js_remove").on('click', this, this.on_remove);
 
-
-            //background
-            var bg = this.$target.find('.carousel-inner .item.active').css('background-image').replace(/url\((.*)\)/g, '\$1');
-            var selected = this.$editor.find('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
-                .prop('selected', true).length;
-            if (!selected) {
-                this.$editor.find('.carousel-background input').val(bg);
-            }
-
-            this.$editor.find('select[name="carousel-background"], input')
-                .on('click', function (event) {event.preventDefault(); return false;})
-                .on('change', function () {
-                    self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
-                    $(this).next().val("");
-                });
-
-
-            //style
-            var style = false;
-            var el = this.$target.find('.carousel-inner .item.active');
-            if (el.hasClass('text_only'))
-                style = 'text_only';
-            if (el.hasClass('image_text'))
-                style = 'image_text';
-            if (el.hasClass('text_image'))
-                style = 'text_image';
-
-            this.$editor.find('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
-
-            this.$editor.find('select[name="carousel-style"]').on('change', function(e) {
-                var $container = self.$target.find('.carousel-inner .item.active');
-                $container.removeClass('image_text text_image text_only');
-                $container.addClass($(e.currentTarget).val());
-            });
+            this.change_background();
+            this.change_style();
+            this.change_size();
         },
         on_add: function (e) {
             e.preventDefault();
@@ -854,6 +826,56 @@
                 e.data.$target.carousel(0);
             }
         },
+        change_background: function () {
+            var self = this;
+            var bg = this.$target.find('.carousel-inner .item.active').css('background-image').replace(/url\((.*)\)/g, '$1');
+            var selected = this.$editor.find('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
+                .prop('selected', true).length;
+            if (!selected) {
+                this.$editor.find('.carousel-background input').val(bg);
+            }
+
+            this.$editor.find('select[name="carousel-background"], input')
+                .on('click', function (event) {event.preventDefault(); return false;})
+                .on('change', function () {
+                    self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
+                    $(this).next().val("");
+                });
+        },
+        change_style: function () {
+            var self = this;
+            var style = false;
+            var el = this.$target.find('.carousel-inner .item.active');
+            if (el.hasClass('text_only'))
+                style = 'text_only';
+            if (el.hasClass('image_text'))
+                style = 'image_text';
+            if (el.hasClass('text_image'))
+                style = 'text_image';
+
+            this.$editor.find('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
+
+            this.$editor.find('select[name="carousel-style"]').on('change', function(e) {
+                var $container = self.$target.find('.carousel-inner .item.active');
+                $container.removeClass('image_text text_image text_only');
+                $container.addClass($(e.currentTarget).val());
+            });
+        },
+        change_size: function () {
+            var self = this;
+
+            var size = 'big';
+            if (this.$target.hasClass('oe_small'))
+                size = 'small';
+
+            this.$editor.find('select[name="carousel-size"] option[value="'+size+'"]').prop('selected', true);
+
+            this.$editor.find('select[name="carousel-size"]').on('change', function(e) {
+                self.$target
+                    .removeClass('oe_big oe_small')
+                    .addClass("oe_" + $(e.currentTarget).val());
+            });
+        }
     });
 
     website.snippet.editorRegistry.darken = website.snippet.Editor.extend({
@@ -889,5 +911,8 @@
             },5000);
         }
     });
+
+    website.snippet.selector.push([ _.map([1,2,3,4,5,6,7,8,9,10,11,12], function (v) {return '.row > .col-md-'+v;}).join(","), 'colmd']);
+    website.snippet.selector.push(['hr', 'hr']);
 
 })();

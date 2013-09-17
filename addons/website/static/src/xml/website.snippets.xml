@@ -28,6 +28,15 @@
         
         <!-- editor bar to display inside the top edit bar -->
         <li class='oe_snippet_options'>
+            <a class="carousel-style">
+                <select class="form-control" name="carousel-size">
+                    <option value="big">Big</option>
+                    <option value="small">Small</option>
+                </select>
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li class='oe_snippet_options'>
             <a href="#" class="button js_add">Add Slide</a>
         </li>
         <li class='oe_snippet_options'>
@@ -71,9 +80,9 @@
         <div class='oe_snippet_thumbnail oe_label'>Banner</div>
 
         <!-- body to insert after drag and drop thumbnail -->
-        <div id="myCarousel" class="oe_snippet_body carousel slide" data-interval="10000">
+        <div id="myCarousel" class="oe_snippet_body carousel slide oe_big" data-interval="10000">
             <!-- Carousel items -->
-            <div class="carousel-inner" style="height: 280px">
+            <div class="carousel-inner">
                 <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
                     <div class="container">
                         <div class="carousel-caption content">
@@ -242,7 +251,7 @@
 
     <div t-name="website.snippets.hr" data-snippet-id='hr' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail oe_label'>Separator</div>
-        <div class="oe_snippet_body"><hr/></div>
+        <hr class="oe_snippet_body"/>
     </div>
 
 
