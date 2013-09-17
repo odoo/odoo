@@ -530,7 +530,7 @@
 
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
-            $options.find(".oe_label").text(this.$el.find('.oe_snippet_thumbnail.oe_label, .oe_snippet_thumbnail .oe_label').text());
+            $options.find(".oe_label").text(this.$el.find('.oe_snippet_label').text());
         },
 
 
