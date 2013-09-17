@@ -1919,7 +1919,8 @@ class stock_move(osv.osv):
         """
         if not prod_id:
             return {}
-        lang = False
+        user = self.pool.get('res.users').browse(cr, uid, uid)
+        lang = user and user.lang or False
         if partner_id:
             addr_rec = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if addr_rec:
