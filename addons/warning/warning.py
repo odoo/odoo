@@ -252,7 +252,7 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     def onchange_product_id(self,cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, states='draft', notes=False, context=None):
+            name=False, price_unit=False, state='draft', notes=False, context=None):
         warning = {}
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
@@ -270,7 +270,7 @@ class purchase_order_line(osv.osv):
             warning['message'] = message
 
         result =  super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order, fiscal_position_id)
+            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned, name=name, price_unit=price_unit, state=state, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
