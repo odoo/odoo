@@ -736,8 +736,8 @@
         getSize: function () {
             var grid = [0,4,8,16,32,48,64,92,128];
             this.grid = {
-                n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
-                s: [_.map(grid, function (v) {return 'mb'+v;}), grid]
+                n: [_.map(grid, function (v) {return 'pt'+v;}), grid],
+                s: [_.map(grid, function (v) {return 'pb'+v;}), grid]
             };
             return this.grid;
         },
