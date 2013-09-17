@@ -328,13 +328,20 @@
             <field name="arch" type="xml">
                 <form string="Mail Statistics" version="7.0">
                     <group>
-                        <field name="mail_mail_id"/>
-                        <field name="message_id"/>
-                        <field name="opened"/>
-                        <field name="replied"/>
-                        <field name="bounced"/>
-                        <field name="model"/>
-                        <field name="res_id"/>
+                        <group>
+                            <field name="mail_mail_id"/>
+                            <field name="message_id"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
+                        </group>
+                        <group>
+                            <field name="mass_mailing_id"/>
+                            <field name="mass_mailing_campaign_id"/>
+                            <field name="template_id"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                        </group>
                     </group>
                 </form>
             </field>

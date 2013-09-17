@@ -32,6 +32,8 @@ class MassMailingCampaign(osv.Model):
     """
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
+    # number of embedded mailings in kanban view
+    _kanban_mailing_nbr = 4
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
@@ -48,10 +50,12 @@ class MassMailingCampaign(osv.Model):
         return results
 
     def _get_mass_mailing_kanban_ids(self, cr, uid, ids, name, arg, context=None):
+        """ Gather data about mass mailings to display them in kanban view as
+        nested kanban views is not possible currently. """
         results = dict.fromkeys(ids, '')
         for campaign in self.browse(cr, uid, ids, context=context):
             mass_mailing_results = []
-            for mass_mailing in campaign.mass_mailing_ids:
+            for mass_mailing in campaign.mass_mailing_ids[:self._kanban_mailing_nbr]:
                 mass_mailing_object = {}
                 for attr in ['name', 'sent', 'delivered', 'opened', 'replied', 'bounced']:
                     mass_mailing_object[attr] = getattr(mass_mailing, attr)
@@ -74,7 +78,9 @@ class MassMailingCampaign(osv.Model):
         'mass_mailing_kanban_ids': fields.function(
             _get_mass_mailing_kanban_ids,
             type='text', string='Mass Mailings (kanban data)',
-            help='This field has for purpose to gather data about mass mailings to display them in kanban view as nested kanban views is not possible currently',
+            help='This field has for purpose to gather data about mass mailings '
+                 'to display them in kanban view as nested kanban views is not '
+                 'possible currently',
         ),
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mass_mailing_campaign_id',
@@ -139,6 +145,7 @@ class MassMailing(osv.Model):
     _description = 'Wave of sending emails'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
+    _order = 'date DESC'
 
     def __get_bar_values(self, cr, uid, id, obj, domain, read_fields, value_field, groupby_field, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
@@ -167,9 +174,10 @@ class MassMailing(osv.Model):
             section_result[timedelta.days] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
         return section_result
 
-    def _get_monthly_statistics(self, cr, uid, ids, field_name, arg, context=None):
-        """ TODO
-        """
+    def _get_daily_statistics(self, cr, uid, ids, field_name, arg, context=None):
+        """ Get the daily statistics of the mass mailing. This is done by a grouping
+        on opened and replied fields. Using custom format in context, we obtain
+        results for the next 6 days following the mass mailing date. """
         obj = self.pool['mail.mail.statistics']
         res = {}
         context['datetime_format'] = {
@@ -254,14 +262,14 @@ class MassMailing(osv.Model):
         ),
         # monthly ratio
         'opened_monthly': fields.function(
-            _get_monthly_statistics,
+            _get_daily_statistics,
             string='Opened',
-            type='char', multi='_get_monthly_statistics',
+            type='char', multi='_get_daily_statistics',
         ),
         'replied_monthly': fields.function(
-            _get_monthly_statistics,
+            _get_daily_statistics,
             string='Replied',
-            type='char', multi='_get_monthly_statistics',
+            type='char', multi='_get_daily_statistics',
         ),
     }
 

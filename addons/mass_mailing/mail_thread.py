@@ -36,6 +36,9 @@ class MailThread(osv.Model):
     _inherit = ['mail.thread']
 
     def message_route_check_bounce(self, cr, uid, message, context=None):
+        """ Override to verify that the email_to is the bounce alias. If it is the
+        case, log the bounce, set the parent and related document as bounced and
+        return False to end the routing process. """
         bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
         message_id = message.get('Message-Id')
         email_from = decode_header(message, 'From')
@@ -74,6 +77,9 @@ class MailThread(osv.Model):
                 self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 
     def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
+        """ Override to update the parent mail statistics. The parent is found
+        by using the References header of the incoming message and looking for
+        matching message_id in mail.mail.statistics. """
         if message.get('References'):
             message_ids = [x.strip() for x in decode(message['References']).split()]
             self.pool['mail.mail.statistics'].set_replied(cr, uid, mail_message_ids=message_ids, context=context)
