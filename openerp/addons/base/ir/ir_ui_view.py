@@ -683,13 +683,13 @@ class view(osv.osv):
         return r['arch']
 
     def distribute_branding(self, e, branding=None):
-        if e.attrib.get('t-ignore') or e.tag == 'head':
+        if e.get('t-ignore') or e.tag == 'head':
             # TODO: find a better name and check if we have a string to boolean helper
             return
-        if branding and not (e.attrib.get('data-oe-model') or e.attrib.get('t-field')):
+        if branding and not (e.get('data-oe-model') or e.get('t-field')):
             e.attrib.update(branding)
-            e.attrib['data-oe-xpath'] = e.getroottree().getpath(e)
-        if not e.attrib.get('data-oe-model'): return
+            e.set('data-oe-xpath', e.getroottree().getpath(e))
+        if not e.get('data-oe-model'): return
 
         # if a branded element contains branded elements distribute own
         # branding to children unless it's t-raw, then just remove branding
@@ -700,7 +700,7 @@ class view(osv.osv):
             distributed_branding = dict(
                 (attribute, e.attrib.pop(attribute))
                 for attribute in MOVABLE_BRANDING
-                if e.attrib.get(attribute))
+                if e.get(attribute))
 
             if 't-raw' not in e.attrib:
                 for child in e.iterchildren(tag=etree.Element):
