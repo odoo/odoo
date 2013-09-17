@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 
 
-class TestProjectBase(TestMailBase):
+class TestProjectBase(TestMail):
 
     def setUp(self):
         super(TestProjectBase, self).setUp()

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,11 @@
 #
 ##############################################################################
 
-from . import test_mail_group, test_mail_message, test_mail_features, test_mail_gateway, test_message_read, test_invite
+from openerp.addons.mail.tests.common import TestMail
 
-checks = [
-    test_mail_group,
-    test_mail_message,
-    test_mail_features,
-    test_mail_gateway,
-    test_message_read,
-    test_invite,
-]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class test_message_compose(TestMail):
+
+    def test_OO_mail_mail_tracking(self):
+        """ Tests designed for mail_mail tracking (opened, replied, bounced) """
+        pass

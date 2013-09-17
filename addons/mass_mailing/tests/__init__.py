@@ -2,32 +2,25 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    License, or (at your option) any later version
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU Affero General Public License for more details
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
-from . import test_mail_group, test_mail_message, test_mail_features, test_mail_gateway, test_message_read, test_invite
+from openerp.addons.mass_mailing.tests import test_mail
 
 checks = [
-    test_mail_group,
-    test_mail_message,
-    test_mail_features,
-    test_mail_gateway,
-    test_message_read,
-    test_invite,
+    test_mail,
 ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
