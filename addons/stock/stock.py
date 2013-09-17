@@ -380,7 +380,7 @@ class stock_quant(osv.osv):
         res = []
         offset = 0
         #id is added at the end of the order to make sure the order is always the same for quants created at the same second
-        orderby += ', id'
+        orderby += ', id asc'
         while quantity > 0:
             quants = self.search(cr, uid, domain, order=orderby, limit=10, offset=offset, context=context)
             if not quants:
