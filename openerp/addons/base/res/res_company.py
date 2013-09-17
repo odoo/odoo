@@ -114,9 +114,7 @@ class res_company(osv.osv):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
     
     def _get_font(self, cr, uid, context=None):
-        if not customfonts.supported_fonts:
-            customfonts.RegisterCustomFonts()
-        return sorted(customfonts.supported_fonts)
+        return sorted(customfonts.RegisterCustomFonts())
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
