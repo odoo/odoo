@@ -586,6 +586,7 @@
     background:#fff;
     border: 1px solid #fff;
     border-radius: 3px;
+    overflow: hidden;
     -webkit-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
        -moz-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
             box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
@@ -627,6 +628,8 @@
     top:auto;
     line-height: 14px;
     width:100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
@@ -804,9 +807,11 @@
 .point-of-sale .pos-sale-ticket table {
     width: 100%;
     border: 0;
+    table-layout: fixed;
 }
 .point-of-sale .pos-sale-ticket table td {
     border: 0;
+    word-wrap: break-word;
 }
 
 @media print {
@@ -905,14 +910,16 @@
 
 .point-of-sale .scale-screen .product-name {
     position: absolute;
-    left:0;
+    left:40px;
     top:50px;
     height:50px;
-    font-size:40px;
+    font-size:36px;
     line-height:50px;
     text-align:right;
     right:275px;
     color: #8d8d8d;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .point-of-sale .scale-screen .weight{
     position: absolute;
@@ -1076,6 +1083,7 @@
     font-weight: bold;
     width:80%;
     overflow:hidden;
+    text-overflow: ellipsis;
 }
 .point-of-sale .order .orderline .price{
     padding:0;
