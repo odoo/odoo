@@ -8,7 +8,8 @@
 
     <template id="website.themes" name="Themes">
         <t t-call="website.layout">
-          <div class="container" id="wrap" t-if="editable">
+          <div id="wrap" t-if="editable">
+            <div class="container">
     
             <div class="alert alert-success mt32" t-if="theme_changed">
                 <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
@@ -176,6 +177,7 @@
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </t>
