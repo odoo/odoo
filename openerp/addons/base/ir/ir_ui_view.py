@@ -694,9 +694,8 @@ class view(osv.osv):
         # if a branded element contains branded elements distribute own
         # branding to children unless it's t-raw, then just remove branding
         # on current element
-        if e.tag == 't' or 't-raw' in e.attrib or\
-                any(BRANDING_TRIGGERS.intersection(child.attrib)
-                    for child in e.iterdescendants()):
+        if e.tag == 't' or 't-raw' in e.attrib or \
+                any(self.is_node_branded(child) for child in e.iterdescendants()):
             distributed_branding = dict(
                 (attribute, e.attrib.pop(attribute))
                 for attribute in MOVABLE_BRANDING
@@ -705,6 +704,20 @@ class view(osv.osv):
             if 't-raw' not in e.attrib:
                 for child in e.iterchildren(tag=etree.Element):
                     self.distribute_branding(child, distributed_branding)
+
+    def is_node_branded(self, node):
+        """ Finds out whether a node is branded or qweb-active (bears a
+        @data-oe-model or a @t-* *which is not t-field* as t-field does not
+        section out views)
+
+        :param node: an etree-compatible element to test
+        :type node: etree._Element
+        :rtype: boolean
+        """
+        return any(
+            (attr == 'data-oe-model' or (attr != 't-field' and attr.startswith('t-')))
+            for attr in node.attrib
+        )
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
@@ -797,7 +810,6 @@ class view(osv.osv):
         return super(view, self).copy(cr, uid, id, default, context=context)
 
 MOVABLE_BRANDING = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
-BRANDING_TRIGGERS = frozenset(('data-oe-model', 't-esc', 't-raw', 't-call', 't-ignore'))
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
