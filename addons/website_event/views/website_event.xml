@@ -176,9 +176,9 @@
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
-                                        <td t-field="ticket.name"/>
-                                        <td t-field="ticket.deadline"/>
-                                        <td t-field="ticket.price"/>
+                                        <td><span t-field="ticket.name"/></td>
+                                        <td><span t-field="ticket.deadline"/></td>
+                                        <td><span t-field="ticket.price"/></td>
                                         <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>
                                         <td>
                                             <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">
