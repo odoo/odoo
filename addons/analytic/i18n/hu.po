@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-26 04:44+0000\n"
-"X-Generator: Launchpad (build 16540)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:14+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -39,6 +39,7 @@ msgstr "Sablon"
 
 #. module: analytic
 #: view:account.analytic.account:0
+#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr "Befejezés dátuma"
 
@@ -86,6 +87,14 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
+"Ha egyszer a szerződés határideje át lett\n"
+"                                        lépve vagy a maximum szolgáltatási "
+"egységek száma\n"
+"                                        (pl. támogatási szerződés) el lett\n"
+"                                        érve, a számlázási ügyintéző e-"
+"mailben\n"
+"                                        értesítve lesz a szerződés "
+"megújításáról."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -186,6 +195,8 @@ msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
 msgstr ""
+"Beállítja az időbeosztás szerinti a szerződésre ráfordítható hosszabb időt. "
+"(például, órák száma egy korlátozottan támogatott szerződéshez.)"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
@@ -198,6 +209,12 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Ha beállított egy vállalatot, a kiválasztott pénznemnek azonosnak kell "
+"lennie a pénznemével. \n"
+"A vállalathoz tartozókat leválaszthatja, ezzel megváltoztatható a pénznem, "
+"de csak az elemző számlák 'nézet' típusán. Ez nagyon hasznos lehet  "
+"különböző vállalatok különböző pénznemében értékel grafikonjainak "
+"megerősítéshez, például."
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
@@ -312,12 +329,12 @@ msgstr "Egyenleg"
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "To Renew"
-msgstr ""
+msgstr "Megújításhoz"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -333,18 +350,18 @@ msgstr "Záró dátum"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
-msgstr ""
+msgstr "Hivatkozás"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analitikus/elemző könyvvitel"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
@@ -367,7 +384,7 @@ msgstr "Gyűjtőkód"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Pénznem"
 
 #. module: analytic
 #: help:account.analytic.account,message_summary:0
@@ -375,21 +392,23 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
-msgstr ""
+msgstr "Bankszámla típusa"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Kezdő dátum"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr ""
+msgstr "Nem hozhat létre elemző sort a számla nézeten."
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0

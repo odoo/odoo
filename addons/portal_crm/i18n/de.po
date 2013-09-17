@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:53+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:39+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Lead"
-msgstr "Lead"
+msgstr "Interessent"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,title:0
@@ -30,17 +30,17 @@ msgstr "Anrede"
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,probability:0
 msgid "Success Rate (%)"
-msgstr "Erfolgsquote (%)"
+msgstr "Erfolgsrate (%)"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Contact us"
-msgstr "Kontaktieren Sie uns!"
+msgstr "Kontakt"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,date_action:0
 msgid "Next Action Date"
-msgstr "Datum der nächsten Aktion"
+msgstr "Nächste Zahlungserinnerung"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,fax:0
@@ -50,7 +50,7 @@ msgstr "Fax"
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,zip:0
 msgid "Zip"
-msgstr "Plz"
+msgstr "PLZ"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,message_unread:0
@@ -70,9 +70,7 @@ msgstr "Tage bis Eröffnung"
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Thank you for your interest, we'll respond to your request shortly."
-msgstr ""
-"Danke für Ihre Anfrage, wir werden uns schnellstmöglich um Ihre Anfrage "
-"kümmern."
+msgstr "Danke für Ihre Anfrage, wir werden uns baldmöglichst darum kümmern."
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
@@ -117,7 +115,7 @@ msgstr "Abgebrochen"
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Wenn aktiviert, erfordern neue Nachrichten Ihr Handeln."
+msgstr "Falls aktiviert, sind neue Nachrichten abzuarbeiten."
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,channel_id:0
@@ -157,7 +155,7 @@ msgstr "Partner"
 #. module: portal_crm
 #: model:ir.actions.act_window,name:portal_crm.action_contact_us
 msgid "Contact Us"
-msgstr "Kontaktieren Sie uns"
+msgstr "Kontakt"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,name:0
@@ -167,7 +165,7 @@ msgstr "Betreff"
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,opt_out:0
 msgid "Opt-Out"
-msgstr "Opt-Out"
+msgstr "Keine Werbe-E-Mails"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,priority:0
@@ -239,12 +237,12 @@ msgstr "Schließen"
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,state:0
 msgid "Pending"
-msgstr "Schwebend"
+msgstr "Ausstehend"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type:0
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Typ wird zur Unterscheidung von Leads und Opportunities verwendet."
+msgstr "Typ wird zur Unterscheidung von Interessenten und Chancen verwendet."
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,categ_ids:0
@@ -273,7 +271,7 @@ msgstr ""
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,contact_name:0
 msgid "Contact Name"
-msgstr "Kontakt Name"
+msgstr "Ansprechpartner"
 
 #. module: portal_crm
 #: model:ir.ui.menu,name:portal_crm.portal_company_contact
@@ -341,8 +339,8 @@ msgid ""
 "The name of the future partner company that will be created while converting "
 "the lead into opportunity"
 msgstr ""
-"Der Unternehmensname des zukünftigen Kunden, der bei der Umwandlung des "
-"Leads zur Opportunity übernommen wird."
+"Der Unternehmensname des Interessenten, der bei der Umwandlung des "
+"Interessenten zur Chance verwendet wird."
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,planned_cost:0
@@ -352,7 +350,7 @@ msgstr "Geschätzte Kosten"
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,date_deadline:0
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr "Vorraussichtliches Abschlussdatum dieses Leads"
+msgstr "Voraussichtliches Abschlussdatum dieser Chance"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_cc:0
@@ -362,8 +360,8 @@ msgid ""
 "addresses with a comma"
 msgstr ""
 "Diese E-Mail Adressen werden automatisch dem CC-Feld aller ein- und "
-"ausgehenden Mails hinzugefügt. Trennen Sie mehrere E-Mail Adressen mit "
-"Kommas."
+"ausgehenden E-Mails hinzugefügt. Trennen Sie mehrere E-Mail-Adressen mit "
+"Kommata."
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
@@ -394,7 +392,7 @@ msgstr "Normal"
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,email_cc:0
 msgid "Global CC"
-msgstr "Allgemeine CC"
+msgstr "Globale CC"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,street2:0
@@ -446,12 +444,12 @@ msgstr "Zusammenfassung"
 msgid ""
 "When sending mails, the default email address is taken from the sales team."
 msgstr ""
-"Für den Mailversand wird die Standardadresse des  Verkaufsteams verwendet"
+"Für den E-Mail-Versand wird die Standardadresse des Verkaufsteams verwendet."
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_address_name:0
 msgid "Partner Contact Name"
-msgstr "Partner Kontakt Name"
+msgstr "Partner Kontakt"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_longitude:0
@@ -466,7 +464,7 @@ msgstr "Letztes Datum wenn dieser Fall einem Partner zugewiesen wurde"
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_from:0
 msgid "Email address of the contact"
-msgstr "E-Mail Adresse des Kontakts"
+msgstr "E-Mail-Adresse des Kontakts"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,city:0
@@ -496,7 +494,7 @@ msgstr "Zugewiesener Partner"
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
-msgstr "Opportunity"
+msgstr "Chance"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,partner_assigned_id:0
@@ -506,7 +504,7 @@ msgstr "Partner, dem der Fall zugewiesen wurde."
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,country_id:0
 msgid "Country"
-msgstr "Land"
+msgstr "Staat"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
@@ -529,7 +527,7 @@ msgstr ""
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,message_ids:0
 msgid "Messages and communication history"
-msgstr "Nachrichten- und Kommunikations-Historie"
+msgstr "Nachrichten- und Kommunikationsverlauf"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type_id:0
@@ -548,7 +546,7 @@ msgstr "Hoch"
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,section_id:0
 msgid "Sales Team"
-msgstr "Verkaufsteam"
+msgstr "Vertriebsteam"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,street:0
@@ -563,4 +561,4 @@ msgstr "Letzte Aktion"
 #. module: portal_crm
 #: model:ir.model,name:portal_crm.model_portal_crm_crm_contact_us
 msgid "Contact form for the portal"
-msgstr "Kontakt Formular für das Portal"
+msgstr "Kontaktformular für das Portal"

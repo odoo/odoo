@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2012-12-17 14:43+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:51+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:36+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -38,7 +38,7 @@ msgid "Deliveries to Invoice"
 msgstr "Te factureren uitgaande leveringen"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:544
+#: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
 msgstr "Orderverzamel informatie!: "
@@ -49,7 +49,7 @@ msgid "Pick List"
 msgstr "Verzamellijst"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:539
+#: code:addons/sale_stock/sale_stock.py:565
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -78,7 +78,7 @@ msgid "Validate"
 msgstr "Bevestig"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:207
+#: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
@@ -142,7 +142,7 @@ msgid "Stock Move"
 msgstr "Voorraadmutatie"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -158,8 +158,8 @@ msgid "Allow a different address for delivery and invoicing "
 msgstr "Invoer van een afwijkend afleveradres en factuuradres toestaan "
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:546
-#: code:addons/sale_stock/sale_stock.py:597
+#: code:addons/sale_stock/sale_stock.py:572
+#: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
 msgstr "Configuratiefout!"
@@ -284,7 +284,7 @@ msgid "Shipped"
 msgstr "Verzonden"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:240
+#: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "invalid mode for test_state"
@@ -359,7 +359,7 @@ msgstr "Lever alle producten tegelijk als deze beschikbaar zijn"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "Activeren van het factureren van uitgaande orders"
+msgstr "Activeren van het factureren van uitgaande leveringen"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -380,7 +380,7 @@ msgstr ""
 "deelleveringen toestaat."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:206
+#: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
 msgstr "Het is niet mogelijk de verkooporder te annuleren!"
@@ -470,7 +470,7 @@ msgid "Assign"
 msgstr "Toekennen"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:592
+#: code:addons/sale_stock/sale_stock.py:618
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Niet genoeg voorraad! "
@@ -512,7 +512,7 @@ msgid "Cancel"
 msgstr "Annuleer"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
@@ -548,7 +548,7 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Verkoop vooruibetaling factuur"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:497
+#: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
@@ -556,7 +556,7 @@ msgstr ""
 "verkooporderregel."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:535
+#: code:addons/sale_stock/sale_stock.py:561
 #, python-format
 msgid "(n/a)"
 msgstr "(n.b.)"
@@ -567,7 +567,7 @@ msgid "Incoterm"
 msgstr "Leveringsvoorwaarden"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
 msgstr "Het is niet mogelijk de verkooporder regel te annuleren!"
@@ -603,8 +603,8 @@ msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
 msgstr ""
-"Dit is een lijst van alle uitgaande orders welke zijn aangemaakt voor deze "
-"verkooporder."
+"Dit is een lijst van alle uitgaande leveringen welke zijn aangemaakt voor "
+"deze verkooporder."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
@@ -622,7 +622,7 @@ msgid "Ignore Exception"
 msgstr "Fouten negeren"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:588
+#: code:addons/sale_stock/sale_stock.py:614
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"

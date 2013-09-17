@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:33+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:59+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -28,10 +28,10 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:369
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
-msgstr "Зөрүү"
+msgstr "Хасалт"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -103,7 +103,7 @@ msgstr "Тооцоо хийх"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
-msgstr "Та энэ талоныг хэрэгсэхгүй болгохдоо итгэлтэй байна уу?"
+msgstr "Та энэ баримтыг цуцлахдаа итгэлтэй байна уу?"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -124,7 +124,7 @@ msgstr "Нэхэмжилсэн Огнооны Жилээр нь Бүлэглэх
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr "Худалдагч"
+msgstr "Борлуулалтын ажилтан"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -132,7 +132,7 @@ msgid "Voucher Statistics"
 msgstr "Ваучерийн статистик"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -163,10 +163,9 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Худалдан авалтын талон үүсгэхээр бол дарна уу. \n"
+"                Худалдан авалтын баримт үүсгэхээр бол дарна уу. \n"
 "              </p><p>\n"
-"                Худалдан авалтын талон батласан дараа холбогдох "
-"нийлүүлэгчийн\n"
+"                Худалдан авалтын баримтыг батласан дараа  нийлүүлэгчийн\n"
 "                төлбөрийг хөтлөх боломжтой.\n"
 "              </p>\n"
 "            "
@@ -179,7 +178,7 @@ msgstr "Ваучераар хайх"
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Counterpart Account"
-msgstr "Гүйцээлтийн данс"
+msgstr "Харьцах Данс"
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -201,7 +200,7 @@ msgstr "Тийм"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr "Бүтэн гүйцээлт"
+msgstr "Бүтэн тулгалт"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -225,7 +224,7 @@ msgstr "Зурвасууд"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr "Худалдан авалтын талон"
+msgstr "Худалдан авалтын баримт"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -233,8 +232,8 @@ msgid "Journal Item"
 msgstr "Журналын бичилт"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
-#: code:addons/account_voucher/account_voucher.py:981
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "Error!"
 msgstr "Алдаа!"
@@ -261,7 +260,7 @@ msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -281,9 +280,9 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Борлуулалтын талон үүсгэхээр бол дарна уу.\n"
+"                Борлуулалтын баримт үүсгэхээр бол дарна уу.\n"
 "              </p><p>\n"
-"                Борлуулалтын талон батлагдсан дараа холбогдох\n"
+"                Борлуулалтын баримт батлагдсан дараа холбогдох\n"
 "                захиалагчийн төлбөрийг хөтлөх боломжтой.\n"
 "              </p>\n"
 "            "
@@ -312,7 +311,7 @@ msgid "Tax"
 msgstr "Татвар"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Invalid Action!"
 msgstr "Буруу Үйлдэл!"
@@ -320,7 +319,7 @@ msgstr "Буруу Үйлдэл!"
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr "Гүйцээлтийн тайлбар"
+msgstr "Харьцах дансны тайлбар"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -365,7 +364,7 @@ msgid "Import Invoices"
 msgstr "Нэхэмжлэх Импортлох"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Буруу ваучерийн мөр"
@@ -384,7 +383,7 @@ msgid "Receipt"
 msgstr "Талон"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -407,7 +406,7 @@ msgstr "Мөчлөг"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:211
+#: code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Нийлүүлэгч"
@@ -428,7 +427,7 @@ msgid "Debit"
 msgstr "Дебит"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid "Unable to change journal !"
 msgstr "Журнал өөрчлөх боломжгүй!"
@@ -550,7 +549,7 @@ msgid "Pay Invoice"
 msgstr "Төлбөрийн нэхэмжлэл"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Дансны Суурь код болон Дансны Татварын Код алга байна!"
@@ -585,7 +584,7 @@ msgstr ""
 "              </p><p>\n"
 "                Захиалагч болон төлбөрийг сонгоод дараа нь\n"
 "                гараараа төлбөрийг оруулна эсвэл OpenERP\n"
-"                автоматаар нээлттэй нэхэмжлэл юмуу борлуулалтын талонтай\n"
+"                автоматаар нээлттэй нэхэмжлэх эсвэл борлуулалтын баримттай\n"
 "                тулгалт хийхийг санал болгоно.\n"
 "              </p>\n"
 "            "
@@ -613,15 +612,15 @@ msgid "To Review"
 msgstr "Үзлэг хийх"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1039
-#: code:addons/account_voucher/account_voucher.py:1194
+#: code:addons/account_voucher/account_voucher.py:1120
+#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1286
 #, python-format
 msgid "change"
 msgstr "зөрүү"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1106
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -679,6 +678,7 @@ msgstr "Сар"
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Валют"
@@ -722,7 +722,7 @@ msgid "Reconcile Payment Balance"
 msgstr "Төлбөрийн үлдэгдлийг гүйцээх"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:975
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "Configuration Error !"
 msgstr "Тохиргооны алдаа !"
@@ -787,7 +787,7 @@ msgid "October"
 msgstr "10-р сар"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:976
+#: code:addons/account_voucher/account_voucher.py:1068
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Сонгосон журналын дарааллыг идэвхжүүлнэ үү!"
@@ -811,7 +811,7 @@ msgstr "Төлөгдсөн"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr "Борлуулалтын талон"
+msgstr "Борлуулалтын баримт"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -821,7 +821,7 @@ msgstr "Дагагч эсэх"
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr "Хасагдуулгын Шинжилгээний Данс"
+msgstr "Хасалтын Шинжилгээний Данс"
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -867,7 +867,7 @@ msgid "Previous Payments ?"
 msgstr "Өмнөх төлбөрүүд ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "Таны төлөх гэж буй нэхэмжлэл нь хүчингүй болсон байна"
@@ -899,7 +899,7 @@ msgid "Active"
 msgstr "Идэвхтэй"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:982
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Энэ журналд дараалaл тодорхойлон уу."
@@ -916,7 +916,7 @@ msgstr "Захиалагчийн төлбөр"
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr "Борлуулалтын талоны шинжилгээ"
+msgstr "Борлуулалтын баримтын шинжилгээ"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -947,7 +947,7 @@ msgstr "Тооцоо бодсон огноо"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Unreconcile"
-msgstr "Гүйцээлтийг цуцлах"
+msgstr "Тулгалтыг арилгах"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1018,7 +1018,7 @@ msgstr "Нэхэмжлэлийн Цэсийг Нээх"
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
-msgstr "Урьтал"
+msgstr "Урьдчилсан"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1027,7 +1027,7 @@ msgid "Journal Items"
 msgstr "Журналын бичилтүүд"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr "Журналд үндсэн кредит/дебит дансаа тодорхойлно уу \"%s\"."
@@ -1138,7 +1138,7 @@ msgstr "Жинхэнэ дүн"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Receipt"
-msgstr "Худалдан авалтын талон"
+msgstr "Худалдан авалтын баримт"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1248,7 +1248,7 @@ msgid ""
 msgstr "Ваучерийн үнийн дүн нь хуулгын мөр дээрх дүнтэй адил байх ёстой."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Нэгэнт нээчихсэн эсвэл төлөгдчихсөн ваучер устгагдах боломжгүй."
@@ -1289,7 +1289,7 @@ msgstr "Татвар татахгүй дүн"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr "Борлуулалтын талоны статистик"
+msgstr "Борлуулалтын баримтын статистик"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1311,8 +1311,8 @@ msgid "Status <b>changed</b>"
 msgstr "Төлөв  <b>өөрчлөгдлөө</b>"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Тохиргоо Дутуу байна!"

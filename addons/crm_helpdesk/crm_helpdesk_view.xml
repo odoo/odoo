@@ -38,7 +38,7 @@
                     <group col="4" class="oe_header">
                         <field name="name" string="Query"/>
                         <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
-                        <field name="user_id"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                         <field name="date"/>
                         <field name="date_deadline"/>
                     </group>
@@ -149,7 +149,7 @@
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
-                        <filter string="Date" icon="terp-go-month" domain="[]" help="Request Date" context="{'group_by':'date'}" />
+                        <filter string="Request Month" icon="terp-go-month" domain="[]" help="Request Date by Month" context="{'group_by':'date'}" />
                         <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}" />
                     </group>
                 </search>

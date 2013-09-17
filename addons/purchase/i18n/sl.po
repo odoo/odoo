@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:03+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:07+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -101,13 +101,13 @@ msgid ""
 msgstr "Povzetek (število sporočil,..)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1024
+#: code:addons/purchase/purchase.py:1050
 #, python-format
 msgid "Configuration Error!"
 msgstr "Napaka v nastavitvah"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:587
+#: code:addons/purchase/purchase.py:589
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr "Najprej morate preklicati vse prevzeme, vezane na ta nabavni nalog."
@@ -124,7 +124,7 @@ msgid "Purchase-Standard Price"
 msgstr "Standardna cena nabave"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1011
+#: code:addons/purchase/purchase.py:1037
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Dobavitelj ni določen!"
@@ -224,7 +224,7 @@ msgstr ""
 "To se izračuna kot minimalni pričakovani datum vseh naročil artiklov."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:260
+#: code:addons/purchase/purchase.py:262
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Če želite izbrisati nabavni nalog, ga morate najprej preklicati."
@@ -326,7 +326,7 @@ msgid "October"
 msgstr "Oktober"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1024
+#: code:addons/purchase/purchase.py:1050
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
@@ -576,7 +576,7 @@ msgid "Supplier"
 msgstr "Dobavitelj"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:525
+#: code:addons/purchase/purchase.py:527
 #, python-format
 msgid "Define expense account for this company: \"%s\" (id:%d)."
 msgstr "Določite konto odhodkov za to podjetje: \"%s\" (id:%d)."
@@ -679,8 +679,8 @@ msgid "It indicates that a picking has been done"
 msgstr "Pokaže da je bilo izbiranje končano"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:579
-#: code:addons/purchase/purchase.py:586
+#: code:addons/purchase/purchase.py:581
+#: code:addons/purchase/purchase.py:588
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Tega nabavnega naloga ni mogoče preklicati."
@@ -747,9 +747,9 @@ msgid "Draft PO"
 msgstr "Osnutek"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:941
-#: code:addons/purchase/purchase.py:956
-#: code:addons/purchase/purchase.py:960
+#: code:addons/purchase/purchase.py:967
+#: code:addons/purchase/purchase.py:982
+#: code:addons/purchase/purchase.py:986
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning!"
@@ -823,7 +823,7 @@ msgid "Stock Moves"
 msgstr "Premiki zaloge"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1156
+#: code:addons/purchase/purchase.py:1182
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "Osnutek nabavnega naloga je kreiran"
@@ -1168,7 +1168,7 @@ msgid "Outgoing Mails"
 msgstr "Odhajajoča sporočila"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:456
+#: code:addons/purchase/purchase.py:458
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr "Ne morete potrditi nabavnega naloga brez postavk."
@@ -1185,7 +1185,7 @@ msgid "Destination Warehouse"
 msgstr "Ciljno skladišče"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:941
+#: code:addons/purchase/purchase.py:967
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -1214,7 +1214,7 @@ msgid "Purchase Dashboard"
 msgstr "Nadzorna plošča za nakup"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:580
+#: code:addons/purchase/purchase.py:582
 #, python-format
 msgid "First cancel all receptions related to this purchase order."
 msgstr "Najprej prekličite vse prevzeme, vezane na ta nabavni nalog."
@@ -1299,7 +1299,7 @@ msgid "Stock Move"
 msgstr "Prenos zaloge"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:260
+#: code:addons/purchase/purchase.py:262
 #, python-format
 msgid "Invalid Action!"
 msgstr "Napačno dejanje!"
@@ -1403,7 +1403,7 @@ msgstr ""
 "                        nabavnega naloga"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:320
+#: code:addons/purchase/purchase.py:322
 #, python-format
 msgid "Please create Invoices."
 msgstr "Kreirajte  račune"
@@ -1497,7 +1497,7 @@ msgid "Purchase Order Line Make Invoice"
 msgstr "Naročilo naj naredi račun"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1141
+#: code:addons/purchase/purchase.py:1167
 #, python-format
 msgid "PO: %s"
 msgstr "Nabavni nalog: %s"
@@ -1508,7 +1508,7 @@ msgid "Send by EMail"
 msgstr "Pošlji po e-pošti"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:515
+#: code:addons/purchase/purchase.py:517
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr "Določite dnevnik nabave za to podjetje: \"%s\" (id:%d)."
@@ -1679,7 +1679,7 @@ msgid "Compute product cost price based on average cost"
 msgstr "Izračun cene izdelka na osnovi povprečne cene"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:350
+#: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/wizard/purchase_line_invoice.py:137
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:0
@@ -1793,7 +1793,7 @@ msgid "Open Purchase Menu"
 msgstr "Odpri meni nabave"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1028
+#: code:addons/purchase/purchase.py:1054
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Ni naslova dobavitelja"
@@ -1868,10 +1868,10 @@ msgid "Purchase Order"
 msgstr "Nabavni nalog"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:320
-#: code:addons/purchase/purchase.py:456
-#: code:addons/purchase/purchase.py:514
-#: code:addons/purchase/purchase.py:525
+#: code:addons/purchase/purchase.py:322
+#: code:addons/purchase/purchase.py:458
+#: code:addons/purchase/purchase.py:516
+#: code:addons/purchase/purchase.py:527
 #: code:addons/purchase/wizard/purchase_line_invoice.py:105
 #, python-format
 msgid "Error!"
@@ -1997,7 +1997,7 @@ msgid "RFQ_${(object.name or '').replace('/','_')}"
 msgstr "Zahtevo za ponudbo_${(object.name or '').zamenja('/','_')}"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:956
+#: code:addons/purchase/purchase.py:982
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Izbrani dobavitelj prodaja le ta artikel z %s"
@@ -2197,7 +2197,7 @@ msgid "Based on incoming shipments"
 msgstr "Na osnovi prihajajočih pošiljk"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1018
+#: code:addons/purchase/purchase.py:1044
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Ni privzetega dobavitelja"
@@ -2209,7 +2209,7 @@ msgid "Warehouse"
 msgstr "Skladišče"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:960
+#: code:addons/purchase/purchase.py:986
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "

@@ -106,7 +106,7 @@
                         <field name="date"/>
                     </group>
                     <group colspan="4" col="4"  groups="base.group_user">
-                        <field name="user_id"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                         <field name="priority"/>
                         <field name="section_id" groups="base.group_multi_salesteams"/>
                         <field name="date_deadline"/>
@@ -196,7 +196,7 @@
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}"/>
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
-                        <filter string="Claim Date" icon="terp-go-month" domain="[]" help="Claim Date" context="{'group_by':'date'}"/>
+                        <filter string="Claim Month" icon="terp-go-month" domain="[]" help="Claim Date by Month" context="{'group_by':'date'}"/>
                         <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}"/>
                         <filter string="Closure" icon="terp-go-month" domain="[]" help="Date Closed" context="{'group_by':'date_closed'}"  groups="base.group_no_one"/>
                     </group>

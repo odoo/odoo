@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:43+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:18+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -23,12 +23,14 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
+"Etkin alanda yanlış olarak ayarlanırsa, bu durumda gizleme sağlayacak "
+"kaldırmadan."
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
 #: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
-msgstr "İşe alım"
+msgstr "İşe Alım"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -51,11 +53,13 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Bu aşama sırasında, durum çubuğu veya kanban görünümünde, örneğin "
+"görünmezgörüntülemek için bu aşamada herhangi bir kayıt yoktur."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
 msgid "Graduate"
-msgstr "lisansüstü"
+msgstr "Lisansüstü"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -174,7 +178,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
-msgstr "Uygulamalar"
+msgstr "Başvurular"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_open:0
@@ -201,12 +205,12 @@ msgstr "Gün"
 #: view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Contact"
-msgstr "Sözleşme Oluştur"
+msgstr "Kontak Oluştur"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Refuse"
-msgstr "reddetme"
+msgstr "Reddet"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -244,7 +248,7 @@ msgstr "Doktora Derecesi"
 #: field:hr.applicant,job_id:0
 #: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
-msgstr "Uygulanan İş"
+msgstr "Başvurulan İş"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,department_id:0
@@ -318,12 +322,12 @@ msgstr "Önerilen Maaş"
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr "İş Ortağı"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Proposed Salary"
-msgstr "Ort Maaş Önerilen"
+msgstr "Ort Önerilen Maaş"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -351,7 +355,7 @@ msgstr "Partnere Dönüştür"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
 msgid "Recruitments Statistics"
-msgstr "İşe alımlarda İstatistikleri"
+msgstr "İşe Alım İstatistikleri"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -377,7 +381,7 @@ msgstr "Kaynak"
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
 msgid "Followers"
-msgstr "Takipçiler"
+msgstr "İzleyiciler"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
@@ -392,7 +396,7 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -407,6 +411,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Işe alım sürecinde yeni bir aşamaya eklemek için tıklayın.\n"
+"          </p><p>\n"
+"            burada işe alım sürecinin sizin aşamalarında tanımlayın örnek:\n"
+"            qualification call, first interview, second interview, refused,\n"
+"            hired.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -424,6 +436,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Bu iş pozisyonu için e-posta takma adı. Bu iş pozisyonu için başvuruda yeni "
+"e-posta otomatik olarak oluşturur."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -499,7 +513,7 @@ msgstr "Temmuz"
 #. module: hr_recruitment
 #: field:hr.applicant,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "İzleyici E-postalar"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -537,7 +551,7 @@ msgstr "Kontak"
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected_extra:0
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr "Başvuru, ekstra avantajlar Beklenen Maaş"
+msgstr "Başvuru, ekstra avantajları Beklenen Maaş"
 
 #. module: hr_recruitment
 #: help:hr.applicant,state:0
@@ -589,7 +603,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
-msgstr ""
+msgstr "İşler - İşe Alım Formu"
 
 #. module: hr_recruitment
 #: field:hr.applicant,probability:0
@@ -625,7 +639,7 @@ msgstr "Etiketler"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr "Başvuru Kategori"
+msgstr "Başvuru Kategorisi"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -678,7 +692,7 @@ msgstr "Toplantı Takvimi"
 #. module: hr_recruitment
 #: field:hr.applicant,partner_name:0
 msgid "Applicant's Name"
-msgstr "Başvuru Adı"
+msgstr "Başvuranın Adı"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -775,7 +789,7 @@ msgstr "Bu başvuru görüşmesi için planlayın"
 #: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
-msgstr "Başvuru <b>oluşturuldu </ b>"
+msgstr "Başvuru <b>oluşturuldu</b>"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -800,12 +814,12 @@ msgstr "Haziran"
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Kapanış Günü"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir Takipçisi mi"
+msgstr "Bir İzleyicidir"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,user_id:0
@@ -841,6 +855,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Işe alım sürecinde yeni bir aşamaya eklemek için tıklayın.\n"
+"          </p><p>\n"
+"            Don't forget to specify the department if your recruitment "
+"process\n"
+"            is different according to the job position.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -855,7 +877,7 @@ msgstr "Ekim"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Özgeçmişi otomatik endekslemeye izin ver"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -871,7 +893,7 @@ msgstr "Ocak"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "A contact is already existing with the same name."
-msgstr ""
+msgstr "Bu kişi zaten aynı ad ile mevcut."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
@@ -958,6 +980,7 @@ msgstr "İptal"
 #: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
+"Bu iş talebi üzerine bir kişi oluşturmak için istediğinizden emin misiniz?"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
@@ -966,6 +989,9 @@ msgid ""
 "(jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
+"Başvuru e-posta adresine onların iş başvurusu göndermesine izin ver "
+"(jobs@mycompany.com),\n"
+"                ve sistemde başvuru belgelerini otomatik olarak oluşturma."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1061,7 +1087,7 @@ msgstr "Açıklama"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr "Durmu Değişti"
+msgstr "Durumu Değişti"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1071,7 +1097,7 @@ msgstr "Mayıs"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
 msgid "Contract Signed"
-msgstr "Sözleşmeyi İmzaladı"
+msgstr "Sözleşme İmzaladı"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_word
@@ -1081,7 +1107,7 @@ msgstr "Ağızdan Duyma"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,fold:0
 msgid "Hide in views if empty"
-msgstr ""
+msgstr "Boş ise görünümlerinide gizle"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,module_document_ftp:0
@@ -1098,7 +1124,7 @@ msgstr ""
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 #: selection:hr.recruitment.stage,state:0
 msgid "Refused"
-msgstr "RedEdilen"
+msgstr "RedEdildi"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,state:0
@@ -1111,7 +1137,7 @@ msgstr "Gizlenen"
 #. module: hr_recruitment
 #: field:hr.applicant,reference:0
 msgid "Referred By"
-msgstr "Refransıyla"
+msgstr "Referansı"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1122,22 +1148,22 @@ msgstr "Departemen:"
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "On Average"
-msgstr ""
+msgstr "Orta"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr ""
+msgstr "İşe Alım Derecesi"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "Ort. Önerilen Maaş"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Open Jobs"
-msgstr ""
+msgstr "Açık İşler"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1165,12 +1191,12 @@ msgstr "Kasım"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
 msgid "Avg. Expected Salary"
-msgstr ""
+msgstr "Ort. Beklenen Maaş"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Expected Salary"
-msgstr ""
+msgstr "Ort. Beklenen Maaş"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
@@ -1180,17 +1206,17 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.applicant,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Bu insanlardan e-posta alacaksınız."
 
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Takma adı"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Pending recruitment"
-msgstr "Beklemeyen iş-alım"
+msgstr "Bekleyen iş-alım"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1241,7 +1267,7 @@ msgstr "Atanmamış İşe-Alımlar"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,state:0
@@ -1255,7 +1281,7 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "Organizasyon tarafından önerilen maaş, ekstra avantajları"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
@@ -1270,12 +1296,12 @@ msgstr "Açık"
 #. module: hr_recruitment
 #: view:board.board:0
 msgid "Applications to be Processed"
-msgstr ""
+msgstr "İşlenmiş Başvurular"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Interview"
-msgstr ""
+msgstr "Görüşme Programı"
 
 #~ msgid "# of Cases"
 #~ msgstr "Vak'aların sayısı"

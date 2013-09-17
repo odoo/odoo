@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:11+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:21+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -81,7 +81,7 @@ msgstr "公司"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:259
+#: code:addons/account_followup/account_followup.py:258
 #, python-format
 msgid "Invoice Date"
 msgstr "发票日期"
@@ -94,7 +94,7 @@ msgstr "电子邮件主题"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s"
-msgstr ""
+msgstr "%(user_signature)s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -118,7 +118,7 @@ msgstr "发送催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:263
+#: code:addons/account_followup/account_followup.py:262
 #, python-format
 msgid "Amount"
 msgstr "金额"
@@ -133,7 +133,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "没有负责任的"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -219,7 +219,7 @@ msgstr "：伙伴名称"
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "指定负责人员"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -269,7 +269,7 @@ msgstr "业务伙伴列表"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "每个公司只允许一个催款单"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -398,7 +398,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "截止天数"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -414,12 +414,12 @@ msgstr "最近的催款"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "核销发票和付款单"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr ""
+msgstr "手工催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -450,7 +450,7 @@ msgstr "用业务伙伴的语言发电子邮件"
 #: code:addons/account_followup/wizard/account_followup_print.py:169
 #, python-format
 msgid " email(s) sent"
-msgstr ""
+msgstr " 发出邮件"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
@@ -466,12 +466,12 @@ msgstr "已打印消息"
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "任何人"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "处理时，将发出一个email"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -481,7 +481,7 @@ msgstr "提醒合作伙伴"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "打印逾期支付"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -490,10 +490,10 @@ msgid "Follow Ups"
 msgstr "催款"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:219
+#: code:addons/account_followup/account_followup.py:218
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
-msgstr ""
+msgstr "邮件未发出，因为合作伙伴的Email地址没填写"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -505,7 +505,7 @@ msgstr "催款"
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr ""
+msgstr "你可以随意指定一个用户到这个字段，将使他负责这个动作"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
@@ -699,7 +699,7 @@ msgid "unknown"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:314
+#: code:addons/account_followup/account_followup.py:313
 #, python-format
 msgid "Printed overdue payments report"
 msgstr ""
@@ -945,7 +945,7 @@ msgstr "包含有争议的凭证行"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
-#: code:addons/account_followup/account_followup.py:260
+#: code:addons/account_followup/account_followup.py:259
 #, python-format
 msgid "Description"
 msgstr "说明"

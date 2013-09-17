@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:27+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:49+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 #: view:report_timesheet.user:0
 msgid "Timesheet by user"
-msgstr "ZamanÇizegesi kullanıcıya göre"
+msgstr "Kullanıcıya göre ZamanÇizegesi"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
@@ -76,7 +76,7 @@ msgstr "Oturum Açma Faaliyeti"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Re-open project"
-msgstr "Projeyi YenidenAç"
+msgstr "Projeyi Yeniden Aç"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,product_uom_id:0
@@ -103,7 +103,7 @@ msgid "Profit"
 msgstr "Kar"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr "Bir fatura analitik satırı değiştiremezsiniz!"
@@ -178,7 +178,7 @@ msgid "Invoiced Amount"
 msgstr "Fatura Tutarı"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:185
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr "Analitik Hesap eksik!"
@@ -231,6 +231,11 @@ msgid ""
 "20% advance invoice (fixed price, based on a sales order), you should "
 "invoice the rest on timesheet with a 80% ratio."
 msgstr ""
+"Genelde zaman çizelgelerinin %100 ünü fatura edersiniz. Ama, sabit fiyat ve "
+"zaman çizelgesi faturalamasını karma yapıyorsanız, başka bir oran "
+"kullanmalısınız. Örnek olarak, eğer %20 oranında bir ön fatura yapıyorsanız "
+"(sabit fiyat, satış siparişlerine göre), geri kalanını zaman çizelgesine "
+"göre %80 oranında faturalamalısınız."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -257,7 +262,7 @@ msgid "Deadline"
 msgstr "ZamanSınırı"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
 #, python-format
 msgid "Configuration Error!"
 msgstr "Yapılandırma Hatası"
@@ -265,7 +270,7 @@ msgstr "Yapılandırma Hatası"
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr "İş Ortağı"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,time:0
@@ -294,7 +299,7 @@ msgid "Costs to invoice"
 msgstr "Maliyetleri Faturala"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr "Ürün için gelir hesabı belirtiniz '%s'."
@@ -352,7 +357,7 @@ msgstr "ZamanÇizelge Karı"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
 msgid "Force Product"
-msgstr "Zorla Ürün"
+msgstr "Ürüne Zorla"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -465,7 +470,7 @@ msgstr "ParaBirimi"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Non Assigned timesheets to users"
-msgstr "ZamanÇizelgelerini Kullanıcı atanmamış"
+msgstr "ZamanÇizelgelerine Kullanıcı atanmamış"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.line:0
@@ -552,7 +557,7 @@ msgstr "Hesabı tarafından ZamanÇizelgesi"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr "Yevmiye Öğeleri"
+msgstr "Yevmiye Kalemleri"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -759,7 +764,7 @@ msgid "Timesheets to invoice"
 msgstr "ZamanÇizelgeleri faturala"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:186
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -854,7 +859,7 @@ msgstr "Analitik Satırları"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
 msgid "Daily timesheet by account"
-msgstr "Hesabın Günlük zamançizelgesi"
+msgstr "Hesap günlük zamançizelgesi"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,sale_price:0
@@ -876,7 +881,7 @@ msgid "April"
 msgstr "Nisan"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -908,8 +913,8 @@ msgid "Units"
 msgstr "Birimler"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
 #, python-format
 msgid "Error!"
 msgstr "Hata!"

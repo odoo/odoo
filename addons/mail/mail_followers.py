@@ -77,7 +77,7 @@ class mail_notification(osv.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, read, starred, message_id)')
 
-    def get_partners_to_notify(self, cr, uid, message, partners_to_notify=None, context=None):
+    def get_partners_to_email(self, cr, uid, ids, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
 
             :param browse_record message: mail.message to notify
@@ -85,13 +85,10 @@ class mail_notification(osv.Model):
                 the notifications to process
         """
         notify_pids = []
-        for notification in message.notification_ids:
+        for notification in self.browse(cr, uid, ids, context=context):
             if notification.read:
                 continue
             partner = notification.partner_id
-            # If partners_to_notify specified: restrict to them
-            if partners_to_notify is not None and partner.id not in partners_to_notify:
-                continue
             # Do not send to partners without email address defined
             if not partner.email:
                 continue
@@ -143,14 +140,62 @@ class mail_notification(osv.Model):
             company = user.company_id.name
         sent_by = _('Sent by %(company)s using %(openerp)s.')
         signature_company = '<small>%s</small>' % (sent_by % {
-                'company': company,
-                'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"
-            })
+            'company': company,
+            'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"
+        })
         footer = tools.append_content_to_html(footer, signature_company, plaintext=False, container_tag='div')
 
         return footer
 
-    def _notify(self, cr, uid, msg_id, partners_to_notify=None, context=None,
+    def update_message_notification(self, cr, uid, ids, message_id, partner_ids, context=None):
+        existing_pids = set()
+        new_pids = set()
+        new_notif_ids = []
+
+        for notification in self.browse(cr, uid, ids, context=context):
+            existing_pids.add(notification.partner_id.id)
+
+        # update existing notifications
+        self.write(cr, uid, ids, {'read': False}, context=context)
+
+        # create new notifications
+        new_pids = set(partner_ids) - existing_pids
+        for new_pid in new_pids:
+            new_notif_ids.append(self.create(cr, uid, {'message_id': message_id, 'partner_id': new_pid, 'read': False}, context=context))
+        return new_notif_ids
+
+    def _notify_email(self, cr, uid, ids, message_id, force_send=False, user_signature=True, context=None):
+        message = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
+
+        # compute partners
+        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=None)
+        if not email_pids:
+            return True
+
+        # compute email body (signature, company data)
+        body_html = message.body
+        user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
+        if user_signature:
+            signature_company = self.get_signature_footer(cr, uid, user_id, res_model=message.model, res_id=message.res_id, context=context)
+            body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
+
+        # compute email references
+        references = message.parent_id.message_id if message.parent_id else False
+
+        # create email values
+        mail_values = {
+            'mail_message_id': message.id,
+            'auto_delete': True,
+            'body_html': body_html,
+            'recipient_ids': [(4, id) for id in email_pids],
+            'references': references,
+        }
+        email_notif_id = self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
+        if force_send:
+            self.pool.get('mail.mail').send(cr, uid, [email_notif_id], context=context)
+        return True
+
+    def _notify(self, cr, uid, message_id, partners_to_notify=None, context=None,
                 force_send=False, user_signature=True):
         """ Send by email the notification depending on the user preferences
 
@@ -162,57 +207,14 @@ class mail_notification(osv.Model):
             :param bool user_signature: if True, the generated mail.mail body is
                 the body of the related mail.message with the author's signature
         """
-        if context is None:
-            context = {}
-        mail_message_obj = self.pool.get('mail.message')
+        notif_ids = self.search(cr, SUPERUSER_ID, [('message_id', '=', message_id), ('partner_id', 'in', partners_to_notify)], context=context)
 
-        # optional list of partners to notify: subscribe them if not already done or update the notification
-        if partners_to_notify:
-            notifications_to_update = []
-            notified_partners = []
-            notif_ids = self.search(cr, SUPERUSER_ID, [('message_id', '=', msg_id), ('partner_id', 'in', partners_to_notify)], context=context)
-            for notification in self.browse(cr, SUPERUSER_ID, notif_ids, context=context):
-                notified_partners.append(notification.partner_id.id)
-                notifications_to_update.append(notification.id)
-            partners_to_notify = filter(lambda item: item not in notified_partners, partners_to_notify)
-            if notifications_to_update:
-                self.write(cr, SUPERUSER_ID, notifications_to_update, {'read': False}, context=context)
-            mail_message_obj.write(cr, uid, msg_id, {'notified_partner_ids': [(4, id) for id in partners_to_notify]}, context=context)
+        # update or create notifications
+        new_notif_ids = self.update_message_notification(cr, SUPERUSER_ID, notif_ids, message_id, partners_to_notify, context=context)
 
         # mail_notify_noemail (do not send email) or no partner_ids: do not send, return
-        if context.get('mail_notify_noemail'):
+        if context and context.get('mail_notify_noemail'):
             return True
+
         # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
-        msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)
-        notify_partner_ids = self.get_partners_to_notify(cr, uid, msg, partners_to_notify=partners_to_notify, context=context)
-        if not notify_partner_ids:
-            return True
-
-        # add the context in the email
-        # TDE FIXME: commented, to be improved in a future branch
-        # quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
-
-        # add signature
-        body_html = msg.body
-        user_id = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0] and msg.author_id.user_ids[0].id or None
-        if user_signature:
-            signature_company = self.get_signature_footer(cr, uid, user_id, res_model=msg.model, res_id=msg.res_id, context=context)
-            body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
-
-        references = False
-        if msg.parent_id:
-            references = msg.parent_id.message_id
-
-        mail_values = {
-            'mail_message_id': msg.id,
-            'auto_delete': True,
-            'body_html': body_html,
-            'recipient_ids': [(4, id) for id in notify_partner_ids],
-            'references': references,
-        }
-        mail_mail = self.pool.get('mail.mail')
-        email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
-
-        if force_send:
-            mail_mail.send(cr, uid, [email_notif_id], context=context)
-        return True
+        self._notify_email(cr, SUPERUSER_ID, new_notif_ids, message_id, force_send, user_signature, context=context)

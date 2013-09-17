@@ -14,14 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:45+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:24+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event starts"
-msgstr "Etkinlik Başlar"
+msgstr "Etkinlik başlar"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -250,7 +250,7 @@ msgid "To"
 msgstr "Kime"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1260
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -365,9 +365,9 @@ msgstr ""
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
 #: code:addons/base_calendar/base_calendar.py:441
-#: code:addons/base_calendar/base_calendar.py:1013
 #: code:addons/base_calendar/base_calendar.py:1015
-#: code:addons/base_calendar/base_calendar.py:1460
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -484,7 +484,7 @@ msgstr "Ayın günü"
 #. module: base_calendar
 #: field:crm.meeting,message_follower_ids:0
 msgid "Followers"
-msgstr "Takipçiler"
+msgstr "İzleyiciler"
 
 #. module: base_calendar
 #: field:calendar.event,location:0
@@ -528,10 +528,10 @@ msgid "Event alarm information"
 msgstr "Etkinlik alarm bilgisi"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
 #, python-format
 msgid "Count cannot be negative or 0."
-msgstr "Sayım negatif ya da 0 olamaz."
+msgstr "Sayım negatif veya 0 olamaz."
 
 #. module: base_calendar
 #: field:crm.meeting,create_date:0
@@ -607,7 +607,7 @@ msgstr "Yetkilendirilen"
 #: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr "Aşağıdaki kişilerin eposta adresini Yok :"
+msgstr "Aşağıdaki kişilerin eposta adresi yok :"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -747,7 +747,7 @@ msgid "Declined"
 msgstr "Reddedildi"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1460
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -951,7 +951,7 @@ msgstr "Yetkilendiren"
 #. module: base_calendar
 #: field:crm.meeting,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Takipçi"
+msgstr "Bir İzleyicidir"
 
 #. module: base_calendar
 #: field:calendar.attendee,user_id:0
@@ -980,7 +980,7 @@ msgstr "Kasım"
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr "Katılanın bağlı olduğu grubu belirt"
+msgstr "Katılımcının bağlı olduğu grubu belirtir"
 
 #. module: base_calendar
 #: field:calendar.event,mo:0
@@ -1010,7 +1010,7 @@ msgstr "Belirsiz"
 #: constraint:calendar.todo:0
 #: constraint:crm.meeting:0
 msgid "Error ! End date cannot be set before start date."
-msgstr "Hata! Bitiş tarihi başlangıç ​​tarihinden önce ayarlanamaz."
+msgstr "Hata! Bitiş tarihi başlangıç ​​tarihinden önceye ayarlanamaz."
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_occurs:0
@@ -1165,7 +1165,7 @@ msgstr "Yapıldı"
 #: help:calendar.todo,interval:0
 #: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Her (Gün/Hafta/Ay/Yıl) Tekrarla"
+msgstr "Her (Gün/Hafta/Ay/Yıl) yinele"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1195,7 +1195,7 @@ msgstr ""
 "            Yeni bir toplantı planlamak için tıklayın.\n"
 "          </p><p>\n"
 "            Takvim çalışanlar arasında paylaşılır ve çalışan tatilleri \n"
-"            ya da iş fırsatları gibi diğer uygulamalarla \n"
+"            veya iş fırsatları gibi diğer uygulamalarla \n"
 "            tam entegredir.\n"
 "          </p>\n"
 "        "
@@ -1207,8 +1207,9 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
-"Takvim bileşeninin tanımını \"ÖZET\" özelliğinden eldeedilenden daha tam "
-"olarak belirtir."
+"Takvim bileşeninin tanımını                             \"ÖZET\" "
+"özelliğinden elde edilenden                             daha eksiksiz "
+"belirtir."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1221,7 +1222,7 @@ msgid "Select Weekdays"
 msgstr "Hafta Günlerini Seçin"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1519
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1268,7 +1269,7 @@ msgstr "İstisnai Kural"
 msgid ""
 "To specify the language for text values in aproperty or property parameter."
 msgstr ""
-"Bir özellikteki ya da özellik parametresine ait metin değerlerinin dilini "
+"Bir özellikteki veya özellik değiştirgelerine ait metin değerlerinin dilini "
 "belirler."
 
 #. module: base_calendar
@@ -1284,7 +1285,7 @@ msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
 msgstr ""
-"Yineleme kuralı dışında tutulan bir zaman tekrarlama modelini tanımlar."
+"Yineleme kuralı dışında tutulacak bir kural ya da yineleme modeli tanımlar."
 
 #. module: base_calendar
 #: field:calendar.event,month_list:0
@@ -1303,7 +1304,7 @@ msgstr "Gün(ler)"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirmed Events"
-msgstr "Onaylanmış Etkinlikler"
+msgstr "Onaylı Etkinlikler"
 
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
@@ -1441,8 +1442,8 @@ msgid ""
 "Contains the text to be                      used as the message subject for "
 "email                      or contains the text to be used for display"
 msgstr ""
-"Eposta konusu olarak kullanılacak ya da görüntülenecek metin olarak "
-"kullanılacak metni içerir."
+"Eposta konusu olarak                      kullanılacak metni içerir ya da    "
+"                  görüntülenecek metni içerir."
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_mail_message
@@ -1487,7 +1488,7 @@ msgid "Weekday"
 msgstr "Hafta Günü"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1013
+#: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Interval cannot be negative."
 msgstr "Aralık negatif olamaz"
@@ -1566,7 +1567,7 @@ msgstr "Sıra"
 #: help:calendar.todo,alarm_id:0
 #: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr "Bu sefer etkinlik başlamadan önce alarm ayarla"
+msgstr "Bu sefer etkinlik başlamadan önce alarmı ayarla"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1627,12 +1628,12 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
-"* Alarmın ses çalması için tetiklendiği durumuna benzeterek, Bir ses "
-"kaynağını işaret eder.\n"
-"                    * Bir epostaya mesal eki olarak gönderilmek istenen "
+"* Alarmın ses çalması için,                     tetiklendiği durumuna "
+"benzeterek, bir ses kaynağını işaret eder.\n"
+"                    * Bir epostaya mesaj eki olarak gönderilmek istenen "
 "dosya,\n"
-"                    * Alarm işlem için tetiklendiğinde işlem kaynağını "
-"işaret eder."
+"                    * Alarm işlem için tetiklendiğinde işlem kaynağını       "
+"               işaret eder."
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
