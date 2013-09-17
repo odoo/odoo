@@ -339,7 +339,6 @@
                     observer.observe(node, OBSERVER_CONFIG);
                     var $node = $(node);
                     $node.one('content_changed', function () {
-                        console.log("!", $node)
                         $node.addClass('oe_dirty');
                         self.trigger('change');
                     });
