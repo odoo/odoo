@@ -31,9 +31,6 @@ from openerp import SUPERUSER_ID
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
-    def _can_create_procurement(self, cr, uid, ids, context=None):
-        return True
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -203,8 +200,6 @@ class sale_order(osv.osv):
                 self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
         return res
 
-
-        
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         date_planned = super(sale_order, self)._get_date_planned(cr, uid, order, line, start_date, context=context)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -240,10 +235,17 @@ class sale_order(osv.osv):
         return False
 
 
-
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
-    
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale is installed alone, there is no need to create procurements, but with sale_stock
+        #we must create a procurement for each product that is not a service.
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.product_id and line.product_id.type != 'service':
+                return True
+        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
+
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -261,7 +263,6 @@ class sale_order_line(osv.osv):
     _defaults = {
         'product_packaging': False,
     }
-
 
     def button_cancel(self, cr, uid, ids, context=None):
         res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)

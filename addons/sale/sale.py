@@ -622,6 +622,8 @@ class sale_order(osv.osv):
         }
 
     def action_done(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            self.pool.get('sale.order.line').write(cr, uid, [line.id for line in order.order_line], {'state': 'done'}, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
@@ -646,15 +648,16 @@ class sale_order(osv.osv):
         return date_planned
 
     def _prepare_procurement_group(self, cr, uid, order, context=None):
-        return {
-                'name': order.name, 'partner_id': order.partner_shipping_id.id, 
-            }
+        return {'name': order.name, 'partner_id': order.partner_shipping_id.id}
 
-    def _check_create_procurement(self, cr, uid, order, line, context=None):
-        return True
-
-    def _can_create_procurement(self, cr, uid, ids, context=None):
-        return False
+    def procurement_needed(self, cr, uid, ids, context=None):
+        #when sale is installed only, there is no need to create procurements, that's only
+        #further installed modules (project_mrp, sale_stock) that will change this.
+        sale_line_obj = self.pool.get('sale.order.line')
+        res = []
+        for order in self.browse(cr, uid, ids, context=context):
+            res.append(sale_line_obj.need_procurement(cr, uid, [line.id for line in order.order_line], context=context))
+        return any(res)
 
     def action_ship_create(self, cr, uid, ids, context=None):
         """Create the required procurements to supply sales order lines, also connecting
@@ -668,21 +671,23 @@ class sale_order(osv.osv):
         :return: True
         """
         procurement_obj = self.pool.get('procurement.order')
+        sale_line_obj = self.pool.get('sale.order.line')
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
-            group_id =  self.pool.get("procurement.group").create(cr, uid, vals, context=context)
+            group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
             
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
-                if (line.state == 'done') or not line.product_id:
-                    continue
-                if self._can_create_procurement(cr, uid, ids, context=context) and self._check_create_procurement(cr, uid, order, line, context=context):
+                if sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
+                    if (line.state == 'done') or not line.product_id:
+                        continue
                     vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
-                    #Confirm procurement order such that rules will be applied on it
-                    procurement_obj.run(cr, uid, proc_ids, context=context)
+            #Confirm procurement order such that rules will be applied on it
+            #note that the workflow ensure proc_ids isn't an empty list
+            procurement_obj.run(cr, uid, proc_ids, context=context)
             # FP NOTE: do we need this? isn't it the workflow that should set this
             val = {}
             if order.state == 'shipping_except':
@@ -697,14 +702,6 @@ class sale_order(osv.osv):
             order.write(val)
         return True
 
-    def action_ship_end(self, cr, uid, ids, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            for line in order.order_line:
-                if line.state == 'exception':
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'done'}, context=context)
-
-
-
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
     # if mode == 'canceled':
@@ -715,18 +712,12 @@ class sale_order(osv.osv):
         canceled = False
         write_done_ids = []
         write_cancel_ids = []
-        if not self._can_create_procurement(cr, uid, ids, context={}):
-            for order in self.browse(cr, uid, ids, context={}):
-                for line in order.order_line:
-                    write_done_ids.append(line.id)
-            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
-            return True
         for order in self.browse(cr, uid, ids, context={}):
 
             #TODO: Need to rethink what happens when cancelling
             for line in order.order_line:
                 states =  [x.state for x in line.procurement_ids]
-                cancel = all([x == 'cancel' for x in states])
+                cancel = states and all([x == 'cancel' for x in states])
                 doneorcancel = all([x in ('done', 'cancel') for x in states])
                 if cancel:
                     canceled = True
@@ -763,6 +754,11 @@ class sale_order(osv.osv):
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale is installed only, there is no need to create procurements, that's only
+        #further installed modules (project_mrp, sale_stock) that will change this.
+        return False
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')

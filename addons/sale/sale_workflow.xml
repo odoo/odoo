@@ -191,8 +191,7 @@
         <record id="act_ship_end" model="workflow.activity">
             <field name="wkf_id" ref="sale.wkf_sale"/>
             <field name="name">ship_end</field>
-            <field name="kind">function</field>
-            <field name="action">action_ship_end()</field>
+            <field name="kind">dummy</field>
         </record>
         
         <record id="act_ship_cancel" model="workflow.activity">
@@ -240,7 +239,12 @@
         <record id="trans_wait_ship_ship" model="workflow.transition">
             <field name="act_from" ref="act_wait_ship"/>
             <field name="act_to" ref="act_ship"/>
-            <field name="condition">(order_policy!='prepaid') or invoiced</field>
+            <field name="condition">procurement_needed() and ((order_policy!='prepaid') or invoiced)</field>
+        </record>
+        <record id="trans_wait_ship_done" model="workflow.transition">
+            <field name="act_from" ref="act_wait_ship"/>
+            <field name="act_to" ref="act_ship_end"/>
+            <field name="condition">not procurement_needed()</field>
         </record>
         
         <record id="trans_ship_end_done" model="workflow.transition">

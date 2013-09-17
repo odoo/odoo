@@ -64,9 +64,7 @@
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 
     !python {model: stock.quant}: |
-        quant_id = self.search(cr, uid, [('product_id', '=', ref("drop_shop_product"))])
-        print quant_id, [(x.qty, x.product_id.name) for x in self.browse(cr, uid, quant_id)]
-        quant_id = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
-        print quant_id, [(x.qty, x.product_id.name) for x in self.browse(cr, uid, quant_id)]
-        assert len(self.browse(cr, uid, quant_id)[0].history_ids) == 1
-        assert len(quant_id) == 1
+        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
+        assert quant_ids, 'No Quant found'
+        assert len(quant_ids) == 1
+        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1

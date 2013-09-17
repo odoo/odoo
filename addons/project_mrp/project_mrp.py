@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 class procurement_order(osv.osv):
@@ -49,8 +48,8 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context) and procurement.task_id and procurement.task_id.stage_id.closed:
-            return True
+        if self._is_procurement_task(cr, uid, procurement, context=context):
+            return procurement.task_id and procurement.task_id.stage_id.closed or False
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
@@ -149,24 +148,19 @@ class product_product(osv.osv):
     }
 
 
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale is installed alone, there is no need to create procurements, but with project_mrp
+        #we must create a procurement for each service that has the auto_create_task boolean set to True.
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.product_id and line.product_id.type == 'service' and line.product_id.auto_create_task:
+                return True
+        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
+
 class sale_order(osv.osv):
     _inherit = 'sale.order'
-
-    def _can_create_procurement(self, cr, uid, ids, context=None):
-        return True
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
-                uid, order, line, group_id = group_id, context=context)
-        if not(line.product_id.type== "service" and not line.product_id.auto_create_task):
-            proc_data['sale_line_id'] = line.id
-        return proc_data
-
-    def _check_create_procurement(self, cr, uid, order, line, context=None):
-        create = super(sale_order, self)._check_create_procurement(cr, uid, order, line, context=context)
-        if (line.product_id.type== "service" and not line.product_id.auto_create_task):
-            create = False
-        return create
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids:
