@@ -703,7 +703,7 @@ class view(osv.osv):
                 if e.attrib.get(attribute))
 
             if 't-raw' not in e.attrib:
-                for child in e:
+                for child in e.iterchildren(tag=etree.Element):
                     self.distribute_branding(child, distributed_branding)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
