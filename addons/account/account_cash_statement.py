@@ -171,7 +171,35 @@ class account_cash_statement(osv.osv):
 
         return result
 
+    def _compute_cash_all(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict()
+
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = {
+                'cash_journal_id' : False,
+                'cash_register_id' : False,
+                'cash_control' : False,
+            }
+            for st in self.browse(cr, uid, ids, context=context):
+                if st.journal_id.cash_control == True:
+                    result[record.id]['cash_control'] = True
+                    result[record.id]['cash_journal_id'] = st.journal_id.id
+                    result[record.id]['cash_register_id'] = st.id
+        return result
+
+
     _columns = {
+        'cash_control' : fields.function(_compute_cash_all,
+                                         multi='cash',
+                                         type='boolean', string='Has Cash Control'),
+        'cash_journal_id' : fields.function(_compute_cash_all,
+                                            multi='cash',
+                                            type='many2one', relation='account.journal',
+                                            string='Cash Journal', store=True),
+        'cash_register_id' : fields.function(_compute_cash_all,
+                                             multi='cash',
+                                             type='many2one', relation='account.bank.statement',
+                                             string='Cash Register', store=True),
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Transactions",
             store = {
                 'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
@@ -185,6 +213,28 @@ class account_cash_statement(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
         'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float", help="Difference between the theoretical closing balance and the real closing balance."),
         'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float'),
+        'cash_register_balance_end_real' : fields.related('cash_register_id', 'balance_end_real',
+                type='float',
+                digits_compute=dp.get_precision('Account'),
+                string="Ending Balance",
+                help="Total of closing cash control lines.",
+                readonly=True),
+        'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start',
+                type='float',
+                digits_compute=dp.get_precision('Account'),
+                string="Starting Balance",
+                help="Total of opening cash control lines.",
+                readonly=True),
+        'cash_register_total_entry_encoding' : fields.related('cash_register_id', 'total_entry_encoding',
+                string='Total Cash Transaction',
+                readonly=True,
+                help="Total of all paid sale orders"),
+        'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end',
+                type='float',
+                digits_compute=dp.get_precision('Account'),
+                string="Theoretical Closing Balance",
+                help="Sum of opening balance and transactions.",
+                readonly=True),
     }
     _defaults = {
         'state': 'draft',

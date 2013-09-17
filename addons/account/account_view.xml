@@ -2264,7 +2264,6 @@
                         <group>
                             <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />
                             <field name="user_id" readonly="1" string="Responsible"/>
-                            <field name="total_entry_encoding"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
                         <group>
@@ -2281,7 +2280,7 @@
                                     <field name="opening_details_ids" colspan="2" nolabel="1">
                                         <tree string="Opening Cashbox Lines" editable="bottom">
                                             <field name="pieces"/>
-                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
                                             <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                         </tree>
                                     </field>
@@ -2291,7 +2290,7 @@
                                         <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
                                             <tree string="Opening Cashbox Lines" editable="bottom">
                                                 <field name="pieces"/>
-                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)"/>
                                                 <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                             </tree>
                                         </field>
@@ -2300,7 +2299,7 @@
                                         <field name="closing_details_ids" colspan="2" nolabel="1">
                                             <tree string="Closing Cashbox Lines" editable="bottom">
                                                 <field name="pieces" readonly="1" />
-                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
+                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
                                                 <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
                                             </tree>
                                         </field>
