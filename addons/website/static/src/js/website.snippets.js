@@ -70,6 +70,7 @@
             }
             this.$active_snipped_id = false;
             hack_to_add_snippet_id();
+            $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
         },
         dom_filter: function (dom) {
             var $errordom = $("#oe_manipulators, #website-top-navbar");
@@ -212,6 +213,7 @@
         // activate drag and drop for the snippets in the snippet toolbar
         make_snippet_draggable: function($snippet){
             var self = this;
+            var $toInsert = false;
 
             $snippet.draggable({
                 helper: 'clone',
@@ -221,6 +223,7 @@
                 start: function(){
                     self.hide();
 
+                    var snipped_id = $snippet.data('snippet-id');
                     var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
                     if( action === 'insert'){
                         if (!$snippet.data('selector-siblings') && !$snippet.data('selector-children') && !$snippet.data('selector-vertical-children')) {
@@ -233,6 +236,10 @@
                             children:   $snippet.data('selector-children'),
                             vertical_children:   $snippet.data('selector-vertical-children')
                         });
+
+                        $toInsert = $snippet.find('.oe_snippet_body').clone();
+                        $toInsert.removeClass('oe_snippet_body');
+                        $toInsert.attr('data-snippet-id', snipped_id);
 
                     } else if( action === 'mutate' ){
                         if (!$snippet.data('selector')) {
@@ -250,16 +257,25 @@
 
                     $('.oe_drop_zone').droppable({
                         over:   function(){
-                            // FIXME: stupid hack to prevent multiple droppable to activate at once ...
-                            // it's not even working properly but it's better than nothing.
-                            $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
-                            $(this).addClass("oe_hover");
+                            if( action === 'insert'){
+                                $(".oe_drop_zone.hide").removeClass("hide");
+                                $(this).addClass("hide").first().after($toInsert);
+                            } else {
+                                // FIXME: stupid hack to prevent multiple droppable to activate at once ...
+                                // it's not even working properly but it's better than nothing.
+                                $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
+                                $(this).addClass("oe_hover");
+                            }
                         },
                         out:    function(){
-                            $(this).removeClass("oe_hover");
+                            if( action === 'insert'){
+                                $(this).removeClass("hide");
+                                $toInsert.detach();
+                            } else {
+                                $(this).removeClass("oe_hover");
+                            }
                         },
                         drop:   function(){
-                            var snipped_id = $snippet.data('snippet-id');
 
                             if (!$(".oe_drop_zone.oe_hover").length) {
                                 return false;
@@ -267,12 +283,7 @@
 
                             var $target = false;
                             if(action === 'insert'){
-                                var $toInsert = $snippet.find('.oe_snippet_body').clone();
-                                $toInsert.removeClass('oe_snippet_body');
-                                $toInsert.attr('data-snippet-id', snipped_id);
-                                $(".oe_drop_zone.oe_hover").first().after($toInsert);
                                 $target = $toInsert;
-                                hack_to_add_snippet_id();
 
                                 if (website.snippet.animationRegistry[snipped_id]) {
                                     new website.snippet.animationRegistry[snipped_id]($target);
@@ -299,7 +310,6 @@
                 },
                 stop: function(){
                     $('.oe_drop_zone').droppable('destroy').remove();
-                    self.show();
                 },
             });
         },
@@ -544,7 +554,6 @@
                     self.$target.css("display", "");
                     self.parent.editor_busy = false;
                     setTimeout(function () {self.parent.create_overlay(self.$target);},0);
-                    self.parent.show();
                 },
             });
         },
