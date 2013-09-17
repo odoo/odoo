@@ -28,11 +28,11 @@ class stock_config_settings(osv.osv_memory):
     _columns = {
         'module_claim_from_delivery': fields.boolean("Allow claim on deliveries",
             help='Adds a Claim link to the delivery order.\n'
-                '-This installs the module claim_from_delivery.'),
+                 '-This installs the module claim_from_delivery.'),
         'module_stock_invoice_directly': fields.boolean("Create and open the invoice when the user finish a delivery order",
             help='This allows to automatically launch the invoicing wizard if the delivery is '
-                'to be invoiced when you send or deliver goods.\n'
-                '-This installs the module stock_invoice_directly.'),
+                 'to be invoiced when you send or deliver goods.\n'
+                 '-This installs the module stock_invoice_directly.'),
         'module_product_expiry': fields.boolean("Expiry date on serial numbers",
             help="""Track different dates on products and serial numbers.
 The following dates can be tracked:
@@ -43,16 +43,16 @@ The following dates can be tracked:
 This installs the module product_expiry."""),
         'module_stock_location': fields.boolean("Create push/pull logistic rules",
             help='Provide push and pull inventory flows. Typical uses of this feature are: '
-                'manage product manufacturing chains, manage default locations per product, '
-                'define routes within your warehouse according to business needs, etc.\n'
-                '-This installs the module stock_location.'),
+                 'manage product manufacturing chains, manage default locations per product, '
+                 'define routes within your warehouse according to business needs, etc.\n'
+                 '-This installs the module stock_location.'),
         'group_uom': fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_uos': fields.boolean("Invoice products in a different unit of measure than the sales order",
             implied_group='product.group_uos',
             help='Allows you to sell units of a product, but invoice based on a different unit of measure.\n'
-                'For instance, you can sell pieces of meat that you invoice based on their weight.'),
+                 'For instance, you can sell pieces of meat that you invoice based on their weight.'),
         'group_stock_packaging': fields.boolean("Allow to define several packaging methods on products",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
@@ -68,7 +68,7 @@ This installs the module product_expiry."""),
         'group_stock_multiple_locations': fields.boolean("Manage multiple locations and warehouses",
             implied_group='stock.group_locations',
             help='This allows to configure and use multiple stock locations and warehouses, '
-                'instead of having a single default one.'),
+                 'instead of having a single default one.'),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
 
