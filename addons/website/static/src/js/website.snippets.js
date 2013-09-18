@@ -878,12 +878,14 @@
             var size = 'big';
             if (this.$target.hasClass('oe_small'))
                 size = 'small';
+            else if (this.$target.hasClass('oe_medium'))
+                size = 'medium';
 
             this.$editor.find('select[name="carousel-size"] option[value="'+size+'"]').prop('selected', true);
 
             this.$editor.find('select[name="carousel-size"]').on('change', function(e) {
                 self.$target
-                    .removeClass('oe_big oe_small')
+                    .removeClass('oe_big oe_small oe_medium')
                     .addClass("oe_" + $(e.currentTarget).val());
             });
         }

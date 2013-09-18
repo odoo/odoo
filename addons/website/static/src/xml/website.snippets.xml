@@ -30,8 +30,9 @@
         <li class='oe_snippet_options'>
             <a class="carousel-style">
                 <select class="form-control" name="carousel-size">
-                    <option value="big">Big</option>
                     <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="big">Big</option>
                 </select>
             </a>
         </li>
@@ -85,7 +86,7 @@
         </div>
 
         <!-- body to insert after drag and drop thumbnail -->
-        <div id="myCarousel" class="oe_snippet_body carousel slide oe_big mb32" data-interval="10000">
+        <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000">
             <!-- Carousel items -->
             <div class="carousel-inner">
                 <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
@@ -300,7 +301,7 @@
     <div t-name="website.snippets.big-picture" data-snippet-id='big-picture' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_label'>Big Picture</div>
         <div class='oe_snippet_thumbnail'>
-            <div style="position: absolute; top: 14px; left: 5px;  width: 94%;">
+            <div style="position: absolute; top: 8px; left: 5px;  width: 94%;">
                 <div style="display: block;">
                     Big Picture
                     <img src="/website/static/src/img/big_picture.png" style="max-width: 100%"/>
@@ -447,16 +448,16 @@
             <div style="padding-top: 22px;">
                 Image Gallery
                 <div class="clearfix">
-                    <div style="float: right; width: 58px;height: 32px;">
-                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 27px;"/>
-                        <img src="/website/static/src/img/deers_thumb.jpg" style="max-width: 27px;"/>
-                        <img src="/website/static/src/img/desert_thumb.jpg" style="max-width: 27px;"/>
-                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 27px;"/>
+                    <div style="float: right; width: 56px;height: 30px;">
+                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
+                        <img src="/website/static/src/img/deers_thumb.jpg" style="max-width: 24px;"/>
+                        <img src="/website/static/src/img/desert_thumb.jpg" style="max-width: 24px;"/>
+                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
                     </div>
-                    <img src="/website/static/src/img/desert.jpg" style="float-left; width: 56px;height: 34px;margin-top: 2px;"/>
-                    <img src="/website/static/src/img/deers_thumb.jpg" style="float-left; max-width: 27px;"/>
-                    <img src="/website/static/src/img/landscape.jpg" style="float-left; max-width: 54px;"/>
-                    <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 27px;"/>
+                    <img src="/website/static/src/img/desert.jpg" style="float-left; width: 50px;height: 31px;margin-top: 4px;"/>
+                    <img src="/website/static/src/img/deers_thumb.jpg" style="float-left; max-width: 24px;"/>
+                    <img src="/website/static/src/img/landscape.jpg" style="float-left; max-width: 50px;"/>
+                    <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
                 </div>
             </div>
         </div>
