@@ -831,7 +831,7 @@ class stock_picking(osv.osv):
                 #Find moves that correspond
                 if ops.product_id:
                     #TODO: Should have order such that things with lots and packings are searched first
-                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops.product_id.id), ('remaining_qty', '>', 0.0)], context=context)
+                    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id), ('product_id', '=', ops.product_id.id), ('remaining_qty', '>', 0.0), ('state', '=', ['assigned'])], context=context)
                     qty_to_do = ops.product_qty
                     while qty_to_do > 0 and move_ids:
                         move = move_obj.browse(cr, uid, move_ids.pop(), context=context)

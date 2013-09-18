@@ -739,7 +739,7 @@ class purchase_order(osv.osv):
         stock_move = self.pool.get('stock.move')
         
         new_group = False
-        if any([(x.group_id == False) for x in order_lines]):
+        if any([(not x.group_id) for x in order_lines]):
             new_group = self.pool.get("procurement.group").create(cr, uid, {'name':order.name, 'partner_id': order.partner_id.id}, context=context)
         
         

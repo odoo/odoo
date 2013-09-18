@@ -597,7 +597,7 @@
                                 <tree editable="top">
                                     <field name="product_id"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
-                                    <field name="lot_id" groups="stock.group_production_lot"/>
+                                    <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
