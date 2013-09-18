@@ -2191,7 +2191,7 @@ class BaseModel(object):
                 are applied
 
             """
-            sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, user, inherit_id, self._name)
+            sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, user, inherit_id, self._name, context=context)
             for (view_arch, view_id) in sql_inherit:
                 source = apply_inheritance_specs(source, view_arch, view_id)
                 source = apply_view_inheritance(cr, user, source, view_id)
