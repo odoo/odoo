@@ -5,7 +5,19 @@
     website.templates.push('/website/static/src/xml/website.snippets.xml');
 
     website.EditorBar.include({
+        start: function () {
+            var self = this;
+            $("body").on('click', function (event) {
+                var tag = event.srcElement.tagName.toLowerCase();
+                var $this = $(event.srcElement);
+                if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
+                    self.$('[data-action="edit"]').parent().effect('bounce', {distance: 18, times: 5}, 250);
+                }
+            });
+            return this._super();
+        },
         edit: function () {
+            $("body").off('click');
             var self = this;
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
