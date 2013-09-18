@@ -9,9 +9,6 @@
                             class="btn">Cancel</button>
                 </form>
                 <ul class="nav navbar-nav pull-right">
-                    <li class="navbar-form">
-                      <button type="button" data-action="snippet" class="btn btn-primary">Building Blocks <span class="caret" style="border-top-color: white"/></button>
-                    </li>
                 </ul>
             </div>
         </t>
@@ -163,47 +160,6 @@
                 <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
             </tbody>
         </table>
-    </t>
-
-    <!-- Snippets -->
-
-    <t t-name="website.snippets">
-        <div id='oe_snippets'>
-            <ul class="nav nav-pills nav-stacked col-sm-1">
-              <li class="active"><a data-toggle="pill" href="#snippet_structure">Structure</a></li>
-              <li class=""><a data-toggle="pill" href="#snippet_content">Content</a></li>
-              <li class=""><a data-toggle="pill" href="#snippet_business">Business</a></li>
-              <li class=""><a data-toggle="pill" href="#snippet_style">Style</a></li>
-            </ul>
-            <div class="pill-content">
-                <div class="pill-pane active" id="snippet_structure"></div>
-                <div class="pill-pane" id="snippet_content"></div>
-                <div class="pill-pane" id="snippet_business"></div>
-                <div class="pill-pane" id="snippet_style"></div>
-                <div class="pill-pane" id="snippet_unsorted"></div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="website.snippet_overlay">
-        <div class="oe_overlay">
-            <div class="oe_overlay_options">
-                <div class="dropdown oe_options">
-                    <i data-toggle="dropdown" class="btn btn-primary btn-sm icon icon-cog"></i>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li class="divider"></li>
-                        <li><a href="#" class="button js_box_clone">Duplicate this snippet</a></li>
-                        <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
-                    </ul>
-                </div>
-                <div class="oe_label"></div>
-                <div class="oe_move"><i class="js_box_move icon btn btn-primary btn-sm icon-move"></i></div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="website.snippet_manipulator">
-        <div class='oe_snippet_manipulator'></div>
     </t>
 
 </templates>

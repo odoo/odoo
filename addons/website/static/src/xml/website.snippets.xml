@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <!--
-        Snippets to remove:
-          - top-bottom handlers must be on all snippets
-          - left-right handlers must be on all children of row
-    -->
+    <!-- Snippet loader -->
+    <t t-name="website.snippets_button">
+        <li class="navbar-form"><button type="button" data-action="snippet" class="btn btn-primary">Insert Blocks</button></li>
+    </t>
+
+    <t t-name="website.snippets">
+        <div id='oe_snippets'>
+            <div class="scroll">
+                <ul class="nav navbar-nav">
+                  <li><a href="#snippet_structure">Structure</a></li>
+                  <li><a href="#snippet_content">Content</a></li>
+                  <li><a href="#snippet_business">Business</a></li>
+                  <li><a href="#snippet_style">Style</a></li>
+                </ul>
+                <div class="pill-content">
+                    <div id="snippet_structure"><label><div>Structure</div></label></div>
+                    <div id="snippet_content"><label><div>Content</div></label></div>
+                    <div id="snippet_business"><label><div>Business</div></label></div>
+                    <div id="snippet_style"><label><div>Style</div></label></div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_overlay">
+        <div class="oe_overlay">
+            <div class="oe_overlay_options">
+                <div class="dropdown oe_options">
+                    <i data-toggle="dropdown" class="btn btn-primary btn-sm icon icon-cog"></i>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li class="divider"></li>
+                        <li><a href="#" class="button js_box_clone">Duplicate this snippet</a></li>
+                        <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
+                    </ul>
+                </div>
+                <div class="oe_label"></div>
+                <div class="oe_move"><i class="js_box_move icon btn btn-primary btn-sm icon-move"></i></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.snippet_manipulator">
+        <div class='oe_snippet_manipulator'></div>
+    </t>
+
+    <!-- snippet objects -->
 
     <div t-name="website.snippets.resize" data-snippet-id='resize'>
         <!-- custom data for the widget -->

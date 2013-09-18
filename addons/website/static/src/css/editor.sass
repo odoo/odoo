@@ -131,22 +131,55 @@ table.editorbar-panel
 
 
 #oe_snippets
-    display: none
     position: fixed
     left: 0px
     right: 0px
     top: 50px
-    max-height: 280px
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
-    overflow-y: auto
     z-index: 1010
-    .nav-pills
+    overflow: hidden
+    .scroll
+        white-space: nowrap
+        overflow-y: auto
+    .nav
         padding: 3px 15px
         width: 162px
         background: #444444
-        > li > a
-            padding: 2px 10px !important
+        > li
+            display: block
+            float: none
+            > a
+                padding: 2px 10px !important
+                width: 100%
+                display: block
+        position: fixed
+        z-index: 1
+        height: 108px
+    .pill-content
+        display: inline-block
+        height: 110px
+        white-space: nowrap
+        padding-left: 166px
+        > div
+            display: inline-block
+            label
+                width: 44px
+                height: 100%
+                color: #fff
+                padding-left: 10px
+                div
+                    width: 100px
+                    text-align: center
+                    -webkit-transform: translate(-39px, 44px) rotate(-90deg)
+                    -moz-transform: translate(-39px, 44px) rotate(-90deg)
+                    -o-transform: translate(-39px, 44px) rotate(-90deg)
+                    transform: translate(-39px, 44px) rotate(-90deg)
+                    -webkit-transform-origin: 50% 50%
+                    -moz-transform-origin: 50% 50%
+                    -ms-transform-origin: 50% 50%
+                    -o-transform-origin: 50% 50%
+                    transform-origin: 50% 50%
 
 .oe_snippet
     display: inline-block
@@ -181,34 +214,24 @@ table.editorbar-panel
     background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
     box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
 
-
 /* ---- SNIPPETS DROP ZONES ---- */
 
 
 .oe_drop_zone.oe_insert
     display: block
-    height: 32px
-    margin: -16px 0px
+    height: 48px
+    margin: 0px
+    margin-bottom: -48px
     -webkit-transition: margin 250ms linear
     width: 100%
     position: absolute
     z-index: 1000
-    &:first-child:not(:last-child)
-        margin-top: -8px
-        margin-bottom: -24px
-    &:last-child:not(:first-child)
-        margin-top: -24px
-        margin-bottom: -8px
     &:before
         content: ""
         display: block
         border-top: dashed 2px rgba(209, 178, 255, 0.72)
         position: relative
-        top: 16px
-    &:first-child:not(:last-child):before
-        top: 8px
-    &:last-child:not(:first-child):before
-        top: 24px
+        top: 0px
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
     &.oe_vertical

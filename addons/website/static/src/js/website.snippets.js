@@ -19,10 +19,14 @@
         edit: function () {
             $("body").off('click');
             var self = this;
-            window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
-            this.snippets.appendTo(this.$el);
-            this.$el.find('[data-action="snippet"]').click(function () {
-                self.snippets.$el.toggle();
+            self.on('rte:ready', this, function () {
+
+                var $button = $(openerp.qweb.render('website.snippets_button'))
+                    .click(function () {self.snippets.$el.toggleClass("hidden");})
+                    .prependTo(self.$("ul"));
+                window.snippets = self.snippets = new website.snippet.BuildingBlock(this);
+                self.snippets.appendTo(self.$el);
+
             });
             return this._super.apply(this, arguments);
         },
@@ -68,7 +72,6 @@
             });
         });
     }
-
 
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
@@ -118,6 +121,42 @@
             this.bind_selected_manipulator();
             this.bind_snippet_click_editor();
             this.activate_overlay_zones();
+
+            this.scrollspy();
+            this.$el.addClass("hidden");
+        },
+        scrollspy: function (){
+            var self = this;
+            var $ul = this.$("ul");
+            var $pill = self.$(".pill-content");
+            var padding = parseInt($pill.css("padding-left"));
+            var $scroll = this.$(".scroll");
+
+            $scroll.scroll(function () {
+                $pill.find("> div").each(function () {
+                    if ($(this).position().left <= padding) {
+                        $ul.find("> li").removeClass('active');
+                        $ul.find("a[href='#" + $(this).attr("id") + "']").parent("li").addClass('active');
+                    }
+                });
+            });
+
+            $ul.find("a").click(function (event) {
+                event.preventDefault();
+                $scroll.scrollLeft( $scroll.scrollLeft() + $($(event.currentTarget).attr("href")).position().left - padding );
+                return false;
+            });
+
+            $pill.css("padding-right", self.$el.outerWidth() - padding + 10 - $pill.find("> div:last").outerWidth());
+            $ul.find("> li:first").addClass('active');
+
+            this.$el.mouseenter(function () {
+                self.$el.css("height", "");
+            });
+            this.$el.mouseleave(function () {
+                self.$el.css("height", "110px");
+            });
+            this.$el.mouseleave();
         },
         cover_target: function ($el, $target){
             var pos = $target.offset();
@@ -132,10 +171,10 @@
             });
         },
         show: function () {
-            this.$el.show();
+            this.$el.removeClass("hidden");
         },
         hide: function () {
-            this.$el.hide();
+            this.$el.addClass("hidden");
         },
 
         bind_snippet_click_editor: function () {

@@ -184,6 +184,13 @@
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
+            var instanceReady = false;
+            this.rte.on('instanceReady', this, function () {
+                clearTimeout(instanceReady);
+                instanceReady = setTimeout(function () {
+                    self.trigger('rte:ready');
+                }, 0);
+            });
 
             return $.when(
                 this._super.apply(this, arguments),
