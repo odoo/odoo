@@ -932,7 +932,9 @@ class stock_picking(osv.osv):
                 for move in res2.keys():
                     if res2[move] > 0:
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
-                        stock_move_obj.split(cr, uid, mov, res2[move], context=context)
+                        new_move = stock_move_obj.split(cr, uid, mov, res2[move], context=context)
+                        #Assign move as it was assigned before
+                        stock_move_obj.action_assign(cr, uid, [new_move])
                 todo = []
                 orig_moves = [x for x in orig_moves if x.reserved_quant_ids]
                 for move in orig_moves + stock_move_obj.browse(cr, uid, extra_moves, context=context):
