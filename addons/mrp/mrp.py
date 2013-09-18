@@ -824,14 +824,14 @@ class mrp_production(osv.osv):
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
-        for raw_product in production.move_lines2:
-            new_parent_ids = []
-            parent_move_ids = [x.id for x in raw_product.move_history_ids]
-            for final_product in production.move_created_ids2:
-                if final_product.id not in parent_move_ids:
-                    new_parent_ids.append(final_product.id)
-            for new_parent_id in new_parent_ids:
-                stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
+#         for raw_product in production.move_lines2:
+#             new_parent_ids = []
+#             parent_move_ids = [x.id for x in raw_product.move_history_ids]
+#             for final_product in production.move_created_ids2:
+#                 if final_product.id not in parent_move_ids:
+#                     new_parent_ids.append(final_product.id)
+#             for new_parent_id in new_parent_ids:
+#                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
         return True
@@ -896,6 +896,28 @@ class mrp_production(osv.osv):
                 if not self.action_compute(cr, uid, [production.id]):
                     res = False
         return res
+    
+    def consume_lines_get(self, cr, uid, ids, *args):
+        res = []
+        for order in self.browse(cr, uid, ids, context={}):
+            res += [x.id for x in order.move_lines]
+        return res
+    
+    
+    def test_ready2(self, cr, uid, ids):
+        res = True
+        assign = self._moves_assigned(cr, uid, ids, False, False)
+        for production in ids:
+            if not assign[production]:
+                res = False
+        return res
+    
+    def test_ready(self, cr, uid, ids):
+        res = True
+        for production in self.browse(cr, uid, ids):
+            if not production.ready_production:
+                res = False
+        return res
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
@@ -933,9 +955,8 @@ class mrp_production(osv.osv):
             'name': production.name,
             'date': production.date_planned,
             'product_id': production_line.product_id.id,
-            'product_qty': production_line.product_qty,
-            'product_uom_qty': production.product_qty, 
-            'product_uom': production_line.product_uom.id,
+            'product_uom_qty': production_line.product_qty,
+            'product_uom': production_line.product_uom.id, 
             'product_uos_qty': production_line.product_uos and production_line.product_uos_qty or False,
             'product_uos': production_line.product_uos and production_line.product_uos.id or False,
             'location_id': source_location_id,
@@ -972,8 +993,10 @@ class mrp_production(osv.osv):
         @param *args: Arguments
         @return: True
         """
-        pick_obj = self.pool.get('stock.picking')
-        pick_obj.force_assign(cr, uid, [prod.picking_id.id for prod in self.browse(cr, uid, ids)])
+        
+        move_obj = self.pool.get('stock.move')
+        for order in self.browse(cr, uid, ids):
+            move_obj.force_assign(cr, uid, [x.id for x in order.move_lines])
         return True
 
 

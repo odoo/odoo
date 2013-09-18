@@ -17,8 +17,6 @@
         <record id="prod_act_picking" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="name">picking</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','stock.picking')]"/>
             <field name="action">action_confirm()</field>
         </record>
         <record id="prod_act_ready" model="workflow.activity">
@@ -69,8 +67,9 @@
         <record id="prod_trans_picking_ready" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking"/>
             <field name="act_to" ref="prod_act_ready"/>
-            <field name="signal"></field>
-            <field name="condition">ready_production</field>
+            <field name="trigger_model">stock.move</field>
+            <field name="trigger_expr_id">consume_lines_get()</field>
+            <field name="condition">test_ready2()</field>
         </record>
         <record id="prod_trans_ready_in_production" model="workflow.transition">
             <field name="act_from" ref="prod_act_ready"/>
@@ -83,11 +82,11 @@
             <field name="signal">button_produce_done</field>
             <field name="condition">test_production_done()</field>
         </record>
-        <record id="prod_trans_picking_picking_exception" model="workflow.transition">
+        <!--<record id="prod_trans_picking_picking_exception" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking"/>
             <field name="act_to" ref="prod_act_picking_exception"/>
-            <field name="signal">subflow.cancel</field>
-        </record>
+            <field name="condition">False</field>
+        </record>-->
         <record id="prod_trans_picking_exception_cancel" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking_exception"/>
             <field name="act_to" ref="prod_act_cancel"/>

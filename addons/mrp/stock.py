@@ -109,7 +109,7 @@ class StockMove(osv.osv):
             for prod in production_obj.browse(cr, uid, production_ids, context=context):
                 if prod.state == 'confirmed':
                     production_obj.force_production(cr, uid, [prod.id])
-            production_obj.signal_button_produce(cr, uid, production_ids)                
+            production_obj.signal_button_produce(cr, uid, production_ids)
             for new_move in new_moves:
                 if new_move == move.id:
                     #This move is already there in move lines of production order
@@ -138,6 +138,15 @@ class StockMove(osv.osv):
         return res
 
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
+        from openerp import workflow
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.production_id and move.production_id.state == 'confirmed':
+                workflow.trg_trigger(uid, 'stock.move', move.production_id.id, cr)
+        return res
 
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
