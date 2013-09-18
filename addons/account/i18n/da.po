@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-09-16 20:11+0000\n"
+"PO-Revision-Date: 2013-09-17 19:33+0000\n"
 "Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-17 05:18+0000\n"
+"X-Launchpad-Export-Date: 2013-09-18 05:11+0000\n"
 "X-Generator: Launchpad (build 16765)\n"
 
 #. module: account
@@ -27,6 +27,8 @@ msgstr "Systembetaling"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
+"En konto's finansielle/skattemæssige position kan kan angives én gang på "
+"samme konto."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -220,6 +222,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
+"Angiver typen på den analytiske journal. Når det er påkrævet for at danne "
+"analytiske posteringer, søger OpenERP efter en matchende journal af samme "
+"type."
 
 #. module: account
 #: help:account.tax,account_analytic_collected_id:0
@@ -228,6 +233,8 @@ msgid ""
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Angiver den analyse konto som bruges standard på fakturaens momslinier. "
+"Efterlad tom hvis du ikke ønsker et standard forslag på analyse konto."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -243,7 +250,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr ""
+msgstr "Konto posteringer danner grundlag for afstemningen"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -368,12 +375,12 @@ msgstr "Juni"
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "Du skal vælge konti til afstemning"
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr ""
+msgstr "Giver dig mulighed for at bruge analytisk bogføring"
 
 #. module: account
 #: view:account.invoice:0
@@ -624,7 +631,7 @@ msgstr "Alle"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Decimal nøjagtighed på posteringer"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -903,7 +910,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:0
 msgid "Supplier Invoices And Refunds"
-msgstr ""
+msgstr "Leverandør fakturaer og -kreditnotaer"
 
 #. module: account
 #: code:addons/account/account_move_line.py:851
@@ -1672,7 +1679,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr ""
+msgstr "Leverandør kreditnotaer"
 
 #. module: account
 #: report:account.invoice:0
@@ -2430,7 +2437,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_supplier_inv_check_total
 msgid "Check Total on supplier invoices"
-msgstr ""
+msgstr "Tjek total på leverandør fakturaer"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -3127,7 +3134,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_customer
 #: model:ir.ui.menu,name:account.menu_finance_receivables
 msgid "Customers"
-msgstr ""
+msgstr "Kunder"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -4108,7 +4115,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr ""
+msgstr "Tjek totalen på leverandør fakturaer"
 
 #. module: account
 #: view:account.tax:0
@@ -4307,7 +4314,7 @@ msgstr "Regnskab"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current year"
-msgstr ""
+msgstr "Posteringer med datoer i indeværende år."
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -4441,6 +4448,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Denne betalingsbetingelse vil blive anvendt i stedet for den der er standard "
+"på salgsordrer og fakturaer"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4539,6 +4548,8 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
+"Analytiske omkostninger (tidsskemaer, nogle købte varer..) stammer fra "
+"analytiske konti. Disse danner kladde leverandør fakturaer."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5119,7 +5130,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "Bogførte posteringer"
 
 #. module: account
 #: view:account.use.model:0
@@ -5180,7 +5191,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Journal Entries to Review"
-msgstr ""
+msgstr "Posteringer til gennemsyn"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -5847,7 +5858,7 @@ msgstr "Analyse konto"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer Invoices And Refunds"
-msgstr ""
+msgstr "Kunde fakturaer og kreditnotaer"
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -5913,6 +5924,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Betalingsbetingelsen vil blive brugt i stedet for standardbetingelen på "
+"indkøbsordrer og leverandørfakturaer."
 
 #. module: account
 #: code:addons/account/account_invoice.py:474
@@ -6304,7 +6317,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr ""
+msgstr "Kunde kreditnotaer"
 
 #. module: account
 #: field:account.account,foreign_balance:0
@@ -7307,7 +7320,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
 msgid "Manage customer payments"
-msgstr ""
+msgstr "Håndtér kunde betalinger"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -7341,7 +7354,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Kunde fakturaer"
 
 #. module: account
 #: view:account.tax:0
@@ -7722,7 +7735,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer And Supplier Refunds"
-msgstr ""
+msgstr "Kunde og leverandør kreditnotaer"
 
 #. module: account
 #: field:account.financial.report,sign:0
@@ -8716,6 +8729,7 @@ msgstr ""
 msgid ""
 "In order to close a period, you must first post related journal entries."
 msgstr ""
+"For at lukke en periode, skal du ført postere relaterede bogføringskladder."
 
 #. module: account
 #: view:account.entries.report:0
@@ -9641,7 +9655,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer And Supplier Invoices"
-msgstr ""
+msgstr "Kunde og leverandør fakturaer"
 
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
@@ -10101,7 +10115,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Leverandør fakturaer"
 
 #. module: account
 #: view:account.analytic.line:0
