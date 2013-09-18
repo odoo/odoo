@@ -51,6 +51,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'pos_config':       null,
                 'units':            null,
                 'units_by_id':      null,
+                'pricelist':        null,
 
                 'selectedOrder':    null,
             });
@@ -101,10 +102,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
                 }).then(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
-
-                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('company').currency_id[0]]]);
-                }).then(function(currencies){
-                    self.set('currency',currencies[0]);
 
                     return self.fetch('product.uom', null, null);
                 }).then(function(units){
@@ -159,6 +156,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
                 }).then(function(shops){
                     self.set('shop',shops[0]);
+
+                    return self.fetch('product.pricelist',['currency_id'],[['id','=',self.get('shop').pricelist_id[0]]]);
+                }).then(function(pricelists){
+                    self.set('pricelist',pricelists[0]);
+
+                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('pricelist').currency_id[0]]]);
+                }).then(function(currencies){
+                    self.set('currency',currencies[0]);
 
                     return self.fetch('product.packaging',['ean','product_id']);
                 }).then(function(packagings){
