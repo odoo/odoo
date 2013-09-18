@@ -874,8 +874,11 @@ def trans_generate(lang, modules, cr):
         if module:
             src_file = open(fabsolutepath, 'r')
             try:
-                for lineno, message, comments in extract.extract(extract_method, src_file,
-                                                                 keywords=extract_keywords):
+                for extracted in extract.extract(extract_method, src_file,
+                                                 keywords=extract_keywords):
+                    # Babel 0.9.6 yields lineno, message, comments
+                    # Babel 1.3 yields lineno, message, comments, context
+                    lineno, message, comments = extracted[:3] 
                     push_translation(module, trans_type, display_path, lineno,
                                      encode(message), comments + extra_comments)
             except Exception:
