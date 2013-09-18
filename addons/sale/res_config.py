@@ -34,15 +34,15 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sales order lines using the menu 'Lines to Invoice'."),
         'timesheet': fields.boolean('Prepare invoices based on timesheets',
-            help = """For modifying account analytic view to show important data to project manager of services companies.
-                You can also view the report of account analytic summary user-wise as well as month wise.
-                This installs the module account_analytic_analysis."""),
+            help='For modifying account analytic view to show important data to project manager of services companies.'
+                 'You can also view the report of account analytic summary user-wise as well as month wise.\n'
+                 '-This installs the module account_analytic_analysis.'),
         'module_account_analytic_analysis': fields.boolean('Use contracts management',
-            help = """Allows to define your customer contracts conditions: invoicing
-            method (fixed price, on timesheet, advance invoice), the exact pricing
-            (650€/day for a developer), the duration (one year support contract).
-            You will be able to follow the progress of the contract and invoice automatically.
-            It installs the account_analytic_analysis module."""),
+            help='Allows to define your customer contracts conditions: invoicing '
+                 'method (fixed price, on timesheet, advance invoice), the exact pricing '
+                 '(650€/day for a developer), the duration (one year support contract).\n'
+                 'You will be able to follow the progress of the contract and invoice automatically.\n'
+                 '-It installs the account_analytic_analysis module.'),
         'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
         'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
@@ -58,26 +58,26 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             implied_group='product.group_product_variant',
             help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
-            help="""Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.
-Example: Product: this product is deprecated, do not purchase more than 5.
-                Supplier: don't forget to ask for an express delivery."""),
+            help='Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n'
+                 'Example: Product: this product is deprecated, do not purchase more than 5.\n'
+                 'Supplier: don\'t forget to ask for an express delivery.'),
         'module_sale_margin': fields.boolean("Display margins on sales orders",
-            help="""This adds the 'Margin' on sales order.
-                This gives the profitability by calculating the difference between the Unit Price and Cost Price.
-                This installs the module sale_margin."""),
+            help='This adds the \'Margin\' on sales order.\n'
+                 'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
+                 '-This installs the module sale_margin.'),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
-            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
-                and perform batch operations on journals.
-                This installs the module sale_journal."""),
+            help='Allows you to categorize your sales and deliveries (picking lists) between different journals, '
+                 'and perform batch operations on journals.\n'
+                 '-This installs the module sale_journal.'),
         'module_analytic_user_function': fields.boolean("One employee can have different roles per contract",
-            help="""Allows you to define what is the default function of a specific user on a given account.
-                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
-                But the possibility to change these values is still available.
-                This installs the module analytic_user_function."""),
+            help='Allows you to define what is the default function of a specific user on a given account.\n'
+                 'This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. '
+                 'But the possibility to change these values is still available.\n'
+                 '-This installs the module analytic_user_function.'),
         'module_project': fields.boolean("Project"),
         'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
-            help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
-                    This installs the module sale_stock."""),
+            help='Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n'
+                 '-This installs the module sale_stock.'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
