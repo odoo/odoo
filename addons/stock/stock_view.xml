@@ -99,7 +99,7 @@
             <field name="name">stock.inventory.form</field>
             <field name="model">stock.inventory</field>
             <field name="arch" type="xml">
-                <form string="Physical Inventory" version="7.0">
+                <form string="Inventory Adjustment" version="7.0">
                 <header>
                     <button name="prepare_inventory" states="draft" string="Start Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                     <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
@@ -157,7 +157,7 @@
         </record>
 
         <record id="action_inventory_form" model="ir.actions.act_window">
-            <field name="name">Physical Inventories</field>
+            <field name="name">Inventories Adjustment</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.inventory</field>
             <field name="view_type">form</field>
@@ -176,14 +176,6 @@
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
-        <record id="action_inventory_form_draft" model="ir.actions.act_window">
-            <field name="name">Draft Physical Inventories</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.inventory</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
-        </record>
 
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
             sequence="3"/>
@@ -459,7 +451,7 @@
             <field name="res_model">stock.move</field>
         </record>
         <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Location Structure</field>
+            <field name="name">Inventory by Location</field>
             <field name="res_model">stock.location</field>
             <field name="type">ir.actions.act_window</field>
             <field name="domain">[('location_id','=',False)]</field>
@@ -1242,16 +1234,6 @@
                                     </div>
                                     <div class="oe_items_list oe_kanban_ellipsis">
                                         <div>
-                                            <a name="%(action_picking_tree_draft)d" type="action">
-                                                <field name="count_picking_draft"/> Draft
-                                            </a>
-                                            <t t-if="record.count_picking_draft.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_draft)d" type="action">
-                                                <field name="weekly_picking" widget="stock_sparkline">Weekly Moves</field>
-                                            </a>
-                                            </t>
-                                        </div>
-                                        <div>
                                             <a name="%(action_picking_tree_ready)d" type="action">
                                                 <field name="count_picking_ready"/> Ready
                                             </a>
@@ -1260,14 +1242,6 @@
                                                 <field name="weekly_picking" widget="stock_sparkline">Weekly Moves</field>
                                             </a>
                                             </t>
-                                        </div>
-                                        <div t-if="record.count_picking_waiting.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_waiting)d" type="action">
-                                                <field name="count_picking_waiting"/> Waiting
-                                            </a>
-                                            <a name="%(action_picking_tree_waiting)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="latest_picking_waiting" widget="stock_sparkline" options="{'type': 'tristate'}"/>
-                                            </a>
                                         </div>
                                         <div t-if="record.count_picking_late.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_late)d" type="action">
@@ -1284,6 +1258,21 @@
                                             <a name="%(action_picking_tree_backorder)d" type="action" class="oe_sparkline_bar_link">
                                                 <field name="latest_picking_backorders" widget="stock_sparkline" options="{'type': 'tristate'}"/>
                                             </a>
+                                        </div>
+                                        <div t-if="record.count_picking_waiting.raw_value &gt; 0">
+                                            <a name="%(action_picking_tree_waiting)d" type="action">
+                                                <field name="count_picking_waiting"/> Waiting
+                                            </a>
+                                            <a name="%(action_picking_tree_waiting)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="latest_picking_waiting" widget="stock_sparkline" options="{'type': 'tristate'}"/>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <t t-if="record.count_picking_draft.raw_value &gt; 0">
+                                            <a name="%(action_picking_tree_draft)d" type="action">
+                                                <field name="count_picking_draft"/> Draft
+                                            </a>
+                                            </t>
                                         </div>
                                     </div>
                                     <div class="oe_center oe_stock_justgage">
@@ -1316,6 +1305,7 @@
               </p>
             </field>
         </record>
+
         <menuitem
             action="action_picking_type_form"
             id="menu_action_picking_type_form"
@@ -1590,7 +1580,7 @@
             <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
-        <menuitem id="menu_quants" name="Current Inventory Situation" parent="stock.menu_stock_inventory_control" sequence="20" action="quantsact"/>
+        <menuitem id="menu_quants" name="Current Inventory" parent="stock.menu_stock_inventory_control" sequence="20" action="quantsact"/>
     <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
 
 
