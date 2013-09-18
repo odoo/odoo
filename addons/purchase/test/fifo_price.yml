@@ -298,6 +298,11 @@
     picking_obj = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg"))
     picking_obj.do_partial(context=context)
 -
+  The behavior of fifo/lifo is not garantee if the quants are created at the same second, so i just wait one second
+-
+    import time
+    time.sleep(1)
+-
   Let us create another out of 400 kg
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_neg2}:
