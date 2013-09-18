@@ -19,66 +19,147 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
-class test_mail_access_rights(TestMailBase):
+class TestMailMail(TestMail):
 
-    def setUp(self):
-        super(test_mail_access_rights, self).setUp()
-        cr, uid = self.cr, self.uid
+    def test_00_partner_find_from_email(self):
+        """ Tests designed for partner fetch based on emails. """
+        cr, uid, user_raoul, group_pigs = self.cr, self.uid, self.user_raoul, self.group_pigs
 
-        # Test mail.group: public to provide access to everyone
-        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
-        # Test mail.group: private to restrict access
-        self.group_priv_id = self.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
+        # --------------------------------------------------
+        # Data creation
+        # --------------------------------------------------
+        # 1 - Partner ARaoul
+        p_a_id = self.res_partner.create(cr, uid, {'name': 'ARaoul', 'email': 'test@test.fr'})
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
-    def test_00_mail_group_access_rights(self):
-        """ Testing mail_group access rights and basic mail_thread features """
-        cr, uid, user_bert_id, user_raoul_id = self.cr, self.uid, self.user_bert_id, self.user_raoul_id
+        # --------------------------------------------------
+        # CASE1: without object
+        # --------------------------------------------------
 
-        # Do: Bert reads Jobs -> ok, public
-        self.mail_group.read(cr, user_bert_id, [self.group_jobs_id])
-        # Do: Bert read Pigs -> ko, restricted to employees
-        self.assertRaises(except_orm, self.mail_group.read,
-            cr, user_bert_id, [self.group_pigs_id])
-        # Do: Raoul read Pigs -> ok, belong to employees
-        self.mail_group.read(cr, user_raoul_id, [self.group_pigs_id])
+        # Do: find partner with email -> first partner should be found
+        partner_info = self.mail_thread.message_partner_info_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
+        self.assertEqual(partner_info['full_name'], 'Maybe Raoul <test@test.fr>',
+                         'mail_thread: message_partner_info_from_emails did not handle email')
+        self.assertEqual(partner_info['partner_id'], p_a_id,
+                         'mail_thread: message_partner_info_from_emails wrong partner found')
 
-        # Do: Bert creates a group -> ko, no access rights
-        self.assertRaises(except_orm, self.mail_group.create,
-            cr, user_bert_id, {'name': 'Test'})
-        # Do: Raoul creates a restricted group -> ok
-        new_group_id = self.mail_group.create(cr, user_raoul_id, {'name': 'Test'})
-        # Do: Bert added in followers, read -> ok, in followers
-        self.mail_group.message_subscribe_users(cr, uid, [new_group_id], [user_bert_id])
-        self.mail_group.read(cr, user_bert_id, [new_group_id])
+        # Data: add some data about partners
+        # 2 - User BRaoul
+        p_b_id = self.res_partner.create(cr, uid, {'name': 'BRaoul', 'email': 'test@test.fr', 'user_ids': [(4, user_raoul.id)]})
 
-        # Do: Raoul reads Priv -> ko, private
-        self.assertRaises(except_orm, self.mail_group.read,
-            cr, user_raoul_id, [self.group_priv_id])
-        # Do: Raoul added in follower, read -> ok, in followers
-        self.mail_group.message_subscribe_users(cr, uid, [self.group_priv_id], [user_raoul_id])
-        self.mail_group.read(cr, user_raoul_id, [self.group_priv_id])
+        # Do: find partner with email -> first user should be found
+        partner_info = self.mail_thread.message_partner_info_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
+        self.assertEqual(partner_info['partner_id'], p_b_id,
+                         'mail_thread: message_partner_info_from_emails wrong partner found')
 
-        # Do: Raoul write on Jobs -> ok
-        self.mail_group.write(cr, user_raoul_id, [self.group_priv_id], {'name': 'modified'})
-        # Do: Bert cannot write on Private -> ko (read but no write)
-        self.assertRaises(except_orm, self.mail_group.write,
-            cr, user_bert_id, [self.group_priv_id], {'name': 're-modified'})
-        # Test: Bert cannot unlink the group
-        self.assertRaises(except_orm,
-            self.mail_group.unlink,
-            cr, user_bert_id, [self.group_priv_id])
-        # Do: Raoul unlinks the group, there are no followers and messages left
-        self.mail_group.unlink(cr, user_raoul_id, [self.group_priv_id])
-        fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_priv_id)])
-        self.assertFalse(fol_ids, 'unlinked document should not have any followers left')
-        msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_priv_id)])
-        self.assertFalse(msg_ids, 'unlinked document should not have any followers left')
+        # --------------------------------------------------
+        # CASE1: with object
+        # --------------------------------------------------
+
+        # Do: find partner in group where there is a follower with the email -> should be taken
+        self.mail_group.message_subscribe(cr, uid, [group_pigs.id], [p_b_id])
+        partner_info = self.mail_group.message_partner_info_from_emails(cr, uid, group_pigs.id, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
+        self.assertEqual(partner_info['partner_id'], p_b_id,
+                         'mail_thread: message_partner_info_from_emails wrong partner found')
+
+
+class TestMailMessage(TestMail):
+
+    def test_00_mail_message_values(self):
+        """ Tests designed for testing email values based on mail.message, aliases, ... """
+        cr, uid, user_raoul_id = self.cr, self.uid, self.user_raoul_id
+
+        # Data: update + generic variables
+        reply_to1 = '_reply_to1@example.com'
+        reply_to2 = '_reply_to2@example.com'
+        email_from1 = 'from@example.com'
+        alias_domain = 'schlouby.fr'
+        raoul_from = 'Raoul Grosbedon <raoul@raoul.fr>'
+        raoul_from_alias = 'Raoul Grosbedon <raoul@schlouby.fr>'
+        raoul_reply = '"Followers of Pigs" <raoul@raoul.fr>'
+        raoul_reply_alias = '"Followers of Pigs" <group+pigs@schlouby.fr>'
+
+        # --------------------------------------------------
+        # Case1: without alias_domain
+        # --------------------------------------------------
+        param_ids = self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.domain')])
+        self.registry('ir.config_parameter').unlink(cr, uid, param_ids)
+
+        # Do: free message; specified values > default values
+        msg_id = self.mail_message.create(cr, user_raoul_id, {'reply_to': reply_to1, 'email_from': email_from1})
+        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
+        # Test: message content
+        self.assertIn('reply_to', msg.message_id,
+                      'mail_message: message_id should be specific to a mail_message with a given reply_to')
+        self.assertEqual(msg.reply_to, reply_to1,
+                         'mail_message: incorrect reply_to: should come from values')
+        self.assertEqual(msg.email_from, email_from1,
+                         'mail_message: incorrect email_from: should come from values')
+
+        # Do: create a mail_mail with the previous mail_message + specified reply_to
+        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel', 'reply_to': reply_to2})
+        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, reply_to2,
+                         'mail_mail: incorrect reply_to: should come from values')
+        self.assertEqual(mail.email_from, email_from1,
+                         'mail_mail: incorrect email_from: should come from mail.message')
+
+        # Do: mail_message attached to a document
+        msg_id = self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_pigs_id})
+        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
+        # Test: message content
+        self.assertIn('mail.group', msg.message_id,
+                      'mail_message: message_id should contain model')
+        self.assertIn('%s' % self.group_pigs_id, msg.message_id,
+                      'mail_message: message_id should contain res_id')
+        self.assertEqual(msg.reply_to, raoul_reply,
+                         'mail_message: incorrect reply_to: should be Raoul')
+        self.assertEqual(msg.email_from, raoul_from,
+                         'mail_message: incorrect email_from: should be Raoul')
+
+        # --------------------------------------------------
+        # Case2: with alias_domain, without catchall alias
+        # --------------------------------------------------
+        self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', alias_domain)
+        self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
+
+        # Update message
+        msg_id = self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_pigs_id})
+        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
+        # Test: generated reply_to
+        self.assertEqual(msg.reply_to, raoul_reply_alias,
+                         'mail_mail: incorrect reply_to: should be Pigs alias')
+
+        # Update message: test alias on email_from
+        msg_id = self.mail_message.create(cr, user_raoul_id, {})
+        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
+        # Test: generated reply_to
+        self.assertEqual(msg.reply_to, raoul_from_alias,
+                         'mail_mail: incorrect reply_to: should be message email_from using Raoul alias')
+
+        # --------------------------------------------------
+        # Case2: with alias_domain and  catchall alias
+        # --------------------------------------------------
+        self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.alias', 'gateway')
+
+        # Update message
+        msg_id = self.mail_message.create(cr, user_raoul_id, {})
+        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
+        # Test: generated reply_to
+        self.assertEqual(msg.reply_to, 'gateway@schlouby.fr',
+                         'mail_mail: reply_to should equal the catchall email alias')
+
+        # Do: create a mail_mail
+        mail_id = self.mail_mail.create(cr, uid, {'state': 'cancel', 'reply_to': 'someone@example.com'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, 'someone@example.com',
+                         'mail_mail: reply_to should equal the rpely_to given to create')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
     def test_10_mail_message_search_access_rights(self):

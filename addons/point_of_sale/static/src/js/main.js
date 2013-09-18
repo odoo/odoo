@@ -16,10 +16,12 @@ openerp.point_of_sale = function(instance) {
     openerp_pos_scrollbar(instance,module);  // import pos_scrollbar_widget.js
 
     openerp_pos_screens(instance,module);    // import pos_screens.js
+
+    openerp_pos_devices(instance,module);    // import pos_devices.js
     
     openerp_pos_widgets(instance,module);    // import pos_widgets.js
 
-    openerp_pos_devices(instance,module);    // import pos_devices.js
+    openerp_pos_tests(instance,module);      // import pos_tests.js
 
     instance.web.client_actions.add('pos.ui', 'instance.point_of_sale.PosWidget');
 };
