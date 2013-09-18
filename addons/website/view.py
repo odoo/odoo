@@ -55,12 +55,42 @@ class view(osv.osv):
     def extract_embedded_fields(self, cr, uid, arch, context=None):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
+    def convert_embedded_field(self, cr, uid, el, column, context=None):
+        """ Converts the content of an embedded field to a value acceptable
+        for writing in the column
+
+        :param etree._Element el: embedded field being saved
+        :param fields._column column: column object corresponding to the field
+        :return: converted value
+        """
+        if isinstance(column, fields.html):
+            # FIXME: multiple children?
+            return html.tostring(el[0])
+        elif isinstance(column, fields.integer):
+            return int(el.text_content())
+        elif isinstance(column, fields.float):
+            return float(el.text_content())
+        elif isinstance(column, (fields.char, fields.text,
+                                 fields.date, fields.datetime)):
+            return el.text_content()
+        # TODO: fields.selection
+        # TODO: fields.many2one
+        elif isinstance(column, fields.function):
+            # FIXME: special-case selection as in get_pg_type?
+            return self.convert_embedded_field(
+                cr, uid, el, getattr(fields, column._type), context=context)
+        # TODO?: fields.many2many, fields.one2many
+        # TODO?: fields.reference
+        else:
+            raise TypeError("Un-convertable column type %s" % column)
+
     def save_embedded_field(self, cr, uid, el, context=None):
-        embedded_id = int(el.get('data-oe-id'))
-        # FIXME: type conversions
-        self.pool[el.get('data-oe-model')].write(cr, uid, embedded_id, {
-            # FIXME: ckeditor parser does not follow HTML5 parsing, breaks block-level links
-            el.get('data-oe-field'): el.text_content()
+        Model = self.pool[el.get('data-oe-model')]
+        field = el.get('data-oe-field')
+
+        column = Model._all_columns[field].column
+        Model.write(cr, uid, int(el.get('data-oe-id')), {
+            field: self.convert_embedded_field(cr, uid, el, column, context=context)
         }, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
