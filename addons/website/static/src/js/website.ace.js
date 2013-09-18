@@ -27,7 +27,10 @@
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action=ace]': 'launch',
         }),
-        launch: launch,
+        launch: function (e) {
+            e.preventDefault();
+            launch();
+        },
     });
 
     website.ace = {};
