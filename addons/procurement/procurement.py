@@ -547,14 +547,14 @@ class stock_warehouse_orderpoint(osv.osv):
     ]
 
     def default_get(self, cr, uid, fields, context=None):
+        warehouse_obj = self.pool.get('stock.warehouse')
         res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
         # default 'warehouse_id' and 'location_id'
         if 'warehouse_id' not in res:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0', context)
-            res['warehouse_id'] = warehouse.id
+            warehouse_ids = warehouse_obj.search(cr, uid, [('company_id', '=', res.get('company_id'))], context=context)
+            res['warehouse_id'] = warehouse_ids and warehouse_ids[0] or False
         if 'location_id' not in res:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context)
-            res['location_id'] = warehouse.lot_stock_id.id
+            res['location_id'] = False if not res.get('warehouse_id') else self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context).lot_stock_id.id
         return res
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
