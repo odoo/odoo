@@ -227,6 +227,7 @@ class account_cash_statement(osv.osv):
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
         if journal and (journal.type == 'cash'):
             last_pieces = None
+
             if journal.with_last_closing_balance == True:
                 domain = [('journal_id', '=', journal.id),
                           ('state', '=', 'confirm')]
@@ -244,7 +245,6 @@ class account_cash_statement(osv.osv):
                     'pieces' : value.pieces
                 }
                 details_ids.append([0, False, nested_values])
-                
         return details_ids
 
     def create(self, cr, uid, vals, context=None):
@@ -268,6 +268,7 @@ class account_cash_statement(osv.osv):
 
         @return: True on success, False otherwise
         """
+
         cashbox_pool = self.pool.get('account.cashbox.line')
         if vals.get('journal_id', False):
             cashbox_ids = cashbox_pool.search(cr, uid, [('bank_statement_id', 'in', ids)], context=context)

@@ -222,7 +222,7 @@ class pos_session(osv.osv):
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
-        
+
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
                                          type='boolean', string='Has Cash Control'),

@@ -463,11 +463,9 @@ class account_bank_statement(osv.osv):
             return {}
         res = {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
-        res['balance_start'] = balance_start 
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
-        res['company_id'] =  journal.company_id.id
         currency = journal.currency or journal.company_id.currency_id
-        res['currency']  = currency.id
+        res = {'balance_start' : balance_start, 'company_id' : journal.company_id.id, 'currency' : currency.id}
         if journal.type == 'cash':
             res['cash_control'] = journal.cash_control
         return {'value': res}
