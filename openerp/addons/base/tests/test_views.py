@@ -13,7 +13,7 @@ class test_views(common.TransactionCase):
 
         self.assertTrue(Views.pool._init)
 
-        error_msg = "Invalid XML for View Architecture"
+        error_msg = "The model name does not exist or the view architecture cannot be rendered"
         # test arch check is call for views without xmlid during registry initialization
         with self.assertRaisesRegexp(except_orm, error_msg):
             Views.create(self.cr, self.uid, {
