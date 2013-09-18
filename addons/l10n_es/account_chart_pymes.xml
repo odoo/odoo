@@ -11465,5 +11465,12 @@
             <field name="property_account_expense_categ" ref="pgc_pymes_600_child"/>
             <field name="property_account_income_categ" ref="pgc_pymes_7000_child"/>
         </record>
+        <record id="l10nES_chart_template_pymes_value" model="ir.values">
+            <field name="name">Plantilla PGCE PYMES 2008</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10nES_chart_template_pymes"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
     </data>
 </openerp>

@@ -46,6 +46,23 @@
         Process Transition
     -->
 
+        <!-- This "foreign" process node is duplicated here from the corresponding sale_stock node because
+             `project_mrp` implements a basic procurement system for services without actually using the
+             full-fledged procurement process from sale_stock, and without the dependency. So it stil
+             represents a "procurement system".
+             TODO: To cleanup this invalid foreign external ID, the node should probably be moved to the
+             `sale` module directly, and removed from both `sale_stock` and `project_mrp`.
+        --> 
+        <record id="sale_stock.process_node_saleprocurement0" model="process.node">
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
+            <field name="model_id" ref="procurement.model_procurement_order"/>
+            <field name="kind">subflow</field>
+            <field name="name">Procurement</field>
+            <field name="subflow_id" ref="procurement.process_process_procurementprocess0"/>
+            <field name="process_id" ref="sale.process_process_salesprocess0"/>
+            <field name="model_states">object.state=='confirmed'</field>
+            <field name="flow_start" eval="1"/>
+        </record>
         <record id="process_transition_procuretask0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement Task&quot;&quot;&quot;" name="name"/>

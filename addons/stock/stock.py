@@ -1910,7 +1910,8 @@ class stock_move(osv.osv):
         """
         if not prod_id:
             return {}
-        lang = False
+        user = self.pool.get('res.users').browse(cr, uid, uid)
+        lang = user and user.lang or False
         if partner_id:
             addr_rec = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if addr_rec:
@@ -2053,7 +2054,10 @@ class stock_move(osv.osv):
             ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
             if picking:
                 # name of new picking according to its type
-                new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
+                if ptype == 'internal':
+                    new_pick_name = seq_obj.get(cr, uid,'stock.picking')
+                else :
+                    new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
                 pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
                 # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
@@ -2940,8 +2944,8 @@ class stock_warehouse(osv.osv):
 
     def _default_lot_output_id(self, cr, uid, context=None):
         try:
-            lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+            lot_output_model, lot_output_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
+            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
         except (ValueError, orm.except_orm):
             # the user does not have read access on the location or it does not exists
             lot_output_id = False
@@ -2998,6 +3002,18 @@ class stock_picking_in(osv.osv):
         # overridden in order to fire the workflow signal on given stock.picking workflow instance
         # instead of its own workflow (which is not existing)
         return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
+
+    def message_post(self, *args, **kwargs):
+        """Post the message on stock.picking to be able to see it in the form view when using the chatter"""
+        return self.pool.get('stock.picking').message_post(*args, **kwargs)
+
+    def message_subscribe(self, *args, **kwargs):
+        """Send the subscribe action on stock.picking model as it uses _name in request"""
+        return self.pool.get('stock.picking').message_subscribe(*args, **kwargs)
+
+    def message_unsubscribe(self, *args, **kwargs):
+        """Send the unsubscribe action on stock.picking model to match with subscribe"""
+        return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -3059,6 +3075,18 @@ class stock_picking_out(osv.osv):
         # overridden in order to fire the workflow signal on given stock.picking workflow instance
         # instead of its own workflow (which is not existing)
         return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
+
+    def message_post(self, *args, **kwargs):
+        """Post the message on stock.picking to be able to see it in the form view when using the chatter"""
+        return self.pool.get('stock.picking').message_post(*args, **kwargs)
+
+    def message_subscribe(self, *args, **kwargs):
+        """Send the subscribe action on stock.picking model as it uses _name in request"""
+        return self.pool.get('stock.picking').message_subscribe(*args, **kwargs)
+
+    def message_unsubscribe(self, *args, **kwargs):
+        """Send the unsubscribe action on stock.picking model to match with subscribe"""
+        return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),

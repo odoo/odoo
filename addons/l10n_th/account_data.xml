@@ -478,6 +478,13 @@
     <field name="property_account_expense" ref="a_exp_office"/>
     <field name="property_account_income" ref="a_sales"/>
 </record>
+<record id="chart_value" model="ir.values">
+    <field name="name">Thailand - Chart of Accounts</field>
+    <field name="model">account.chart.template</field>
+    <field name="key">default</field>
+    <field name="res_id" ref="chart"/>
+    <field name="value" ref="base.THB"/>
+</record>
 
 
 <!-- TAXES -->
