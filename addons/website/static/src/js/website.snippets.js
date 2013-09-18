@@ -281,12 +281,18 @@
         make_snippet_draggable: function($snippet){
             var self = this;
             var $toInsert = false;
+            var $tumb = $snippet.find(".oe_snippet_thumbnail");
 
             $snippet.draggable({
                 helper: 'clone',
                 zIndex: '1000',
                 appendTo: 'body',
                 cursor: "move",
+                handle: ".oe_snippet_thumbnail",
+                cursorAt: {
+                    'left': $tumb.outerWidth()/2,
+                    'top': $tumb.outerHeight()/2
+                },
                 start: function(){
                     self.hide();
 
@@ -325,8 +331,7 @@
                     $('.oe_drop_zone').droppable({
                         over:   function(){
                             if( action === 'insert'){
-                                $(".oe_drop_zone.hide").removeClass("hide");
-                                $(this).addClass("hide").first().after($toInsert);
+                                $(this).first().after($toInsert);
                             } else {
                                 // FIXME: stupid hack to prevent multiple droppable to activate at once ...
                                 // it's not even working properly but it's better than nothing.
@@ -336,7 +341,6 @@
                         },
                         out:    function(){
                             if( action === 'insert'){
-                                $(this).removeClass("hide");
                                 $toInsert.detach();
                             } else {
                                 $(this).removeClass("oe_hover");
