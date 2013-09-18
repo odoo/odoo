@@ -128,6 +128,7 @@ class account_bank_statement(osv.osv):
         'currency': fields.function(_currency, string='Currency',
             type='many2one', relation='res.currency'),
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
+        'cash_control': fields.related('journal_id', 'cash_control' , type='boolean', relation='account.journal',string='Cash control'),
     }
 
     _defaults = {
@@ -460,12 +461,12 @@ class account_bank_statement(osv.osv):
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
         if not journal_id:
             return {}
+        if context is None:
+           context = {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
-
-        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['company_id', 'currency'], context=context)
-        company_id = journal_data['company_id']
-        currency_id = journal_data['currency'] or self.pool.get('res.company').browse(cr, uid, company_id[0], context=context).currency_id.id
-        return {'value': {'balance_start': balance_start, 'company_id': company_id, 'currency': currency_id}}
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+        currency = journal.currency or journal.company_id.currency_id
+        return {'value': {'balance_start': balance_start, 'company_id': journal.company_id.id, 'currency': currency.id, 'cash_control': journal.cash_control}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'], context=context)

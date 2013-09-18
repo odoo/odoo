@@ -2271,10 +2271,11 @@
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
                             <field name="currency" invisible="1"/>
+                            <field name="cash_control" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Cash Control">
+                        <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                             <group col="2" expand="1">
                                 <group string="Opening Cash Control" attrs="{'invisible' : [('state', '!=', 'draft')]}">
                                     <field name="opening_details_ids" colspan="2" nolabel="1">
@@ -2342,7 +2343,7 @@
                         </page>
                     </notebook>
                     <group>
-                        <group class="oe_subtotal_footer oe_right">
+                        <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('cash_control', '=', False)]}">
                             <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator oe_open_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of opening cash control lines"/>
                             <label for="total_entry_encoding" string="+ Transactions" class="oe_force_bold oe_mini_subtotal_footer_separator"/>
                             <field name="total_entry_encoding" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
@@ -2350,12 +2351,12 @@
                             <field name="balance_end" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
                         </group>
                         <div>
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'draft')]}">
                                 <field name="balance_end_real" readonly="1" string="Real Closing Balance" class="oe_subtotal_footer_separator oe_real_closing_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of closing cash control lines."/>
                             </group>
                             <group/>
                             <group/>
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'draft')]}">
                                 <field name="difference" class="oe_subtotal_footer_separator oe_difference" widget="monetary" options="{'currency_field': 'currency'}"/>
                             </group>
                         </div>
