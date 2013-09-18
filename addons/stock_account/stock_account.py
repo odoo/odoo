@@ -190,13 +190,14 @@ class stock_quant(osv.osv):
     def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
         move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
         quant_neg_position = quant_neg.negative_dest_location_id.usage
-        remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
+        remaining_solving_quant, remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
         #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
         #1) there isn't any negative quant anymore
         #2) the product cost's method is 'real'
         #3) we just fixed a negative quant caused by an outgoing shipment
         if not remaining_to_solve_quant and move.product_id.cost_method == 'real' and quant_neg_position != 'internal':
             self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
+        return remaining_solving_quant, remaining_to_solve_quant
 
 class stock_move(osv.osv):
     _inherit = "stock.move"

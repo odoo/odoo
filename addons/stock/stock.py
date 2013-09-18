@@ -319,7 +319,7 @@ class stock_quant(osv.osv):
 
     def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
         move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
-        self._quant_split(cr, uid, quant, qty, context=context)
+        remaining_solving_quant = self._quant_split(cr, uid, quant, qty, context=context)
         remaining_to_solve_quant = self._quant_split(cr, uid, to_solve_quant, qty, context=context)
         remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
         #if the reconciliation was not complete, we need to link together the remaining parts
@@ -329,7 +329,7 @@ class stock_quant(osv.osv):
         self.unlink(cr, SUPERUSER_ID, [quant_neg.id, to_solve_quant.id], context=context)
         #call move_single_quant to ensure recursivity if necessary and do the stock valuation
         self.move_single_quant(cr, uid, quant, qty, move, context=context)
-        return remaining_to_solve_quant
+        return remaining_solving_quant, remaining_to_solve_quant
 
     def _quant_reconcile_negative(self, cr, uid, quant, context=None):
         """
@@ -339,15 +339,16 @@ class stock_quant(osv.osv):
         """
         if quant.location_id.usage != 'internal':
             return False
+        solving_quant = quant
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty', '<', '0')], context=context)
         for quant_neg, qty in quants:
             if not quant_neg:
                 continue
-            to_solve_quant = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', '!=', quant.id)], context=context)
+            to_solve_quant = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', '!=', solving_quant.id)], context=context)
             if not to_solve_quant:
                 continue
             to_solve_quant = self.browse(cr, uid, to_solve_quant[0], context=context)
-            self._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
+            solving_quant, dummy = self._reconcile_single_negative_quant(cr, uid, to_solve_quant, solving_quant, quant_neg, qty, context=context)
 
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
@@ -379,8 +380,6 @@ class stock_quant(osv.osv):
         domain += [('product_id','=',product.id)] + domain
         res = []
         offset = 0
-        #'propagated_from_id' and 'id' are added at the end of the order to make sure the order is always the same for quants created at the same second
-        orderby += ', propagated_from_id, id'
         while quantity > 0:
             quants = self.search(cr, uid, domain, order=orderby, limit=10, offset=offset, context=context)
             if not quants:
@@ -1533,7 +1532,6 @@ class stock_move(osv.osv):
         """
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
-        uom_obj = self.pool.get("product.uom")
         done = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting'):
@@ -1548,7 +1546,7 @@ class stock_move(osv.osv):
                     for q in m2.quant_ids:
                         dp.append(str(q.id))
                         qty -= q.qty
-                domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
+                domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id), ('qty', '>', 0)]
                 quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = dp and ('id not in ('+','.join(dp)+')') or False, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 #Will only reserve physical quants, no negative
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
