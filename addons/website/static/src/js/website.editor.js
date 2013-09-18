@@ -310,8 +310,7 @@
         start_edition: function ($elements) {
             var self = this;
             // create a single editor for the whole page
-            // FIXME: is not the whole page, ckeditor can't handle body
-            var root = document.getElementById('wrap');
+            var root = document.getElementById('wrapwrap');
             root.setAttribute('data-cke-editable', 'true');
             this.editor = CKEDITOR.inline(root, self._config());
             this.editor.on('instanceReady', function () {

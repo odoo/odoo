@@ -55,34 +55,42 @@ class view(osv.osv):
     def extract_embedded_fields(self, cr, uid, arch, context=None):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
-    def convert_embedded_field(self, cr, uid, el, column, context=None):
+    def convert_embedded_field(self, cr, uid, el, column,
+                               type_override=None, context=None):
         """ Converts the content of an embedded field to a value acceptable
         for writing in the column
 
         :param etree._Element el: embedded field being saved
         :param fields._column column: column object corresponding to the field
+        :param type type_override: column type to dispatch on instead of the
+                                   column's actual type (for proxy column types
+                                   e.g. relateds)
         :return: converted value
         """
-        if isinstance(column, fields.html):
+        column_type = type_override or type(column)
+
+        if issubclass(column_type, fields.html):
             # FIXME: multiple children?
             return html.tostring(el[0])
-        elif isinstance(column, fields.integer):
+        elif issubclass(column_type, fields.integer):
             return int(el.text_content())
-        elif isinstance(column, fields.float):
+        elif issubclass(column_type, fields.float):
             return float(el.text_content())
-        elif isinstance(column, (fields.char, fields.text,
-                                 fields.date, fields.datetime)):
+        elif issubclass(column_type, (fields.char, fields.text,
+                                      fields.date, fields.datetime)):
             return el.text_content()
         # TODO: fields.selection
         # TODO: fields.many2one
-        elif isinstance(column, fields.function):
+        elif issubclass(column_type, fields.function):
             # FIXME: special-case selection as in get_pg_type?
             return self.convert_embedded_field(
-                cr, uid, el, getattr(fields, column._type), context=context)
+                cr, uid, el, column,
+                type_override=getattr(fields, column._type),
+                context=context)
         # TODO?: fields.many2many, fields.one2many
         # TODO?: fields.reference
         else:
-            raise TypeError("Un-convertable column type %s" % column)
+            raise TypeError("Un-convertable column type %s" % column_type)
 
     def save_embedded_field(self, cr, uid, el, context=None):
         Model = self.pool[el.get('data-oe-model')]

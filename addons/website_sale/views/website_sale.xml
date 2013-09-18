@@ -43,7 +43,7 @@
     <!-- Layout add nav and footer -->
 
     <template id="header_footer" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">
@@ -53,7 +53,7 @@
                 </a>
             </li>
         </xpath>
-        <xpath expr="//body/footer//ul[@name='products']" position="inside">
+        <xpath expr="//footer//ul[@name='products']" position="inside">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">

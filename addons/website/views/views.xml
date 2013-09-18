@@ -57,99 +57,101 @@
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                     </head>
                     <body>
-                        <header>
-                            <div class="navbar navbar-default navbar-static-top">
+                        <div id="wrapwrap">
+                            <header>
+                                <div class="navbar navbar-default navbar-static-top">
+                                    <div class="container">
+                                        <div class="navbar-header">
+                                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                                                <span class="sr-only">Toggle navigation</span>
+                                                <span class="icon-bar"></span>
+                                                <span class="icon-bar"></span>
+                                                <span class="icon-bar"></span>
+                                            </button>
+                                            <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
+                                        </div>
+                                        <div class="collapse navbar-collapse navbar-top-collapse">
+                                            <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                                <li><a href="/page/website.contactus">Contact us</a></li>
+                                                <li><a href="/admin">Sign in</a></li>
+                                                <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                    <!-- TODO: use flags for language selection -->
+                                                    <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                        <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li t-foreach="website.language_ids" t-as="lg">
+                                                            <a href="#" role="menuitem">
+                                                                <strong t-att-class="'icon-check' if lg.code == lang
+                                                                    else 'icon-check-empty'"></strong>
+                                                                <t t-esc="lg.name"/>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                            <div t-raw="0" id="wrap">
                                 <div class="container">
-                                    <div class="navbar-header">
-                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                            <span class="sr-only">Toggle navigation</span>
-                                            <span class="icon-bar"></span>
-                                            <span class="icon-bar"></span>
-                                            <span class="icon-bar"></span>
-                                        </button>
-                                        <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
-                                    </div>
-                                    <div class="collapse navbar-collapse navbar-top-collapse">
-                                        <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                            <li><a href="/page/website.contactus">Contact us</a></li>
-                                            <li><a href="/admin">Sign in</a></li>
-                                            <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
-                                                <!-- TODO: use flags for language selection -->
-                                                <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
-                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                                    <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
-                                                </a>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li t-foreach="website.language_ids" t-as="lg">
-                                                        <a href="#" role="menuitem">
-                                                            <strong t-att-class="'icon-check' if lg.code == lang
-                                                                else 'icon-check-empty'"></strong>
-                                                            <t t-esc="lg.name"/>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <h1>Main Layout</h1>
                                 </div>
                             </div>
-                        </header>
-                        <div t-raw="0" id="wrap">
-                            <div class="container">
-                                <h1>Main Layout</h1>
-                            </div>
+                            <footer>
+                                <div class="container" id="footer_container">
+                                    <div class="row">
+                                        <div class="col-md-3" name="product">
+                                            <h4>Our products &amp; Services</h4>
+                                            <ul class="list-unstyled" name="products">
+                                                <li><a href="/">Home</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-3" name="info">
+                                            <h4 name="info_title">Connect with us</h4>
+                                            <ul class="list-unstyled">
+                                                <li><a href="/page/website.contactus">Contact us</a></li>
+                                            </ul>
+                                            <ul class="list-unstyled">
+                                                <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
+                                                <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                            </ul>
+                                            <h1>
+                                                <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
+                                                <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
+                                                <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-5 col-lg-offset-1" name="about_us">
+                                            <h4 t-field="res_company.name">About us</h4>
+                                            <ul class="list-unstyled">
+                                                <li><a href="/page/website.aboutus">About us</a></li>
+                                            </ul>
+                                            <p>
+                                                We are a team of passionated people whose goal is to improve everyone's
+                                                life through disruptive products. We build great products to solve your
+                                                business problems.
+                                            </p>
+                                            <p>
+                                                Our products are designed for small to medium companies willing to optimize
+                                                their performance.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container mt16">
+                                    <div class="pull-right" t-ignore="1">
+                                        Create a <a href="http://openerp.com/apps/website">free website</a> with
+                                        <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
+                                    </div>
+                                    <div class="pull-left text-muted">
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
+                                    </div>
+                                </div>
+                            </footer>
                         </div>
-                        <footer>
-                            <div class="container" id="footer_container">
-                                <div class="row">
-                                    <div class="col-md-3" name="product">
-                                        <h4>Our products &amp; Services</h4>
-                                        <ul class="list-unstyled" name="products">
-                                            <li><a href="/">Home</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-3" name="info">
-                                        <h4 name="info_title">Connect with us</h4>
-                                        <ul class="list-unstyled">
-                                            <li><a href="/page/website.contactus">Contact us</a></li>
-                                        </ul>
-                                        <ul class="list-unstyled">
-                                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
-                                            <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
-                                        </ul>
-                                        <h1>
-                                            <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
-                                            <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
-                                            <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
-                                        </h1>
-                                    </div>
-                                    <div class="col-md-5 col-lg-offset-1" name="about_us">
-                                        <h4 t-field="res_company.name">About us</h4>
-                                        <ul class="list-unstyled">
-                                            <li><a href="/page/website.aboutus">About us</a></li>
-                                        </ul>
-                                        <p>
-                                            We are a team of passionated people whose goal is to improve everyone's
-                                            life through disruptive products. We build great products to solve your
-                                            business problems.
-                                        </p>
-                                        <p>
-                                            Our products are designed for small to medium companies willing to optimize
-                                            their performance.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="container mt16">
-                                <div class="pull-right" t-ignore="1">
-                                    Create a <a href="http://openerp.com/apps/website">free website</a> with
-                                    <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
-                                </div>
-                                <div class="pull-left text-muted">
-                                    Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
-                                </div>
-                            </div>
-                        </footer>
                     </body>
                 </html>
         </template>
