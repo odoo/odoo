@@ -1425,14 +1425,17 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        if 'line_id' in vals:
+        if vals.get('line_id', False):
             c = context.copy()
             c['novalidate'] = True
             c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
-            self.validate(cr, uid, [result], context)
+            tmp = self.validate(cr, uid, [result], context)
+            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
+            if journal.entry_posted and tmp:
+                self.button_validate(cr,uid, [result], context)
         else:
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
