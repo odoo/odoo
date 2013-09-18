@@ -14,7 +14,7 @@
                     <sheet>
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
-                        <div>
+                        <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                 context="{'default_composition_mode':'reply', 'default_parent_id': active_id}" states='received,sent,exception,cancel'/>
@@ -32,20 +32,26 @@
                             </page>
                             <page string="Advanced" groups="base.group_no_one">
                                 <group>
-                                    <group>
-                                        <field name="auto_delete"/>
-                                        <field name="type"/>
-                                        <field name="state"/>
-                                        <field name="mail_server_id"/>
-                                        <field name="model"/>
-                                        <field name="res_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="message_id"/>
-                                        <field name="references"/>
-                                        <field name="partner_ids" widget="many2many_tags"/>
-                                        <field name="notified_partner_ids" widget="many2many_tags"/>
-                                    </group>
+                                    <div>
+                                        <group string="Status">
+                                            <field name="auto_delete"/>
+                                            <field name="type"/>
+                                            <field name="state"/>
+                                            <field name="mail_server_id"/>
+                                            <field name="model"/>
+                                            <field name="res_id"/>
+                                        </group>
+                                    </div>
+                                    <div>
+                                        <group string="Headers">
+                                            <field name="message_id"/>
+                                            <field name="references"/>
+                                        </group>
+                                        <group string="Recipients">
+                                            <field name="partner_ids" widget="many2many_tags"/>
+                                            <field name="notified_partner_ids" widget="many2many_tags"/>
+                                        </group>
+                                    </div>
                                 </group>
                             </page>
                             <page string="Attachments">

@@ -75,7 +75,7 @@ class mail_compose_message(osv.TransientModel):
         if 'active_domain' in context:  # not context.get() because we want to keep global [] domains
             result['use_active_domain'] = True
             result['active_domain'] = '%s' % context.get('active_domain')
-        else:
+        elif not result.get('active_domain'):
             result['active_domain'] = ''
         # get default values according to the composition mode
         if composition_mode == 'reply':
@@ -134,8 +134,9 @@ class mail_compose_message(osv.TransientModel):
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
-        'post': lambda self, cr, uid, ctx={}: True,
-        'same_thread': lambda self, cr, uid, ctx={}: True,
+        'post': False,
+        'notify': False,
+        'same_thread': True,
     }
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
@@ -232,7 +233,11 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
-        ir_attachment_obj = self.pool.get('ir.attachment')
+        # clean the context (hint: mass mailing sets some default values that
+        # could be wrongly interpreted by mail_mail)
+        context.pop('default_email_to', None)
+        context.pop('default_partner_ids', None)
+
         active_ids = context.get('active_ids')
         is_log = context.get('mail_compose_log', False)
 
@@ -251,43 +256,11 @@ class mail_compose_message(osv.TransientModel):
             else:
                 res_ids = [wizard.res_id]
 
-            for res_id in res_ids:
-                # mail.message values, according to the wizard options
-                post_values = {
-                    'subject': wizard.subject,
-                    'body': wizard.body,
-                    'parent_id': wizard.parent_id and wizard.parent_id.id,
-                    'partner_ids': [partner.id for partner in wizard.partner_ids],
-                    'attachment_ids': [attach.id for attach in wizard.attachment_ids],
-                }
-                # mass mailing: render and override default values
-                if mass_mail_mode and wizard.model:
-                    email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
-                    post_values['partner_ids'] += email_dict.pop('partner_ids', [])
-                    post_values['attachments'] = email_dict.pop('attachments', [])
-                    attachment_ids = []
-                    for attach_id in post_values.pop('attachment_ids'):
-                        new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
-                        attachment_ids.append(new_attach_id)
-                    post_values['attachment_ids'] = attachment_ids
-                    # email_from: mass mailing only can specify another email_from
-                    if email_dict.get('email_from'):
-                        post_values['email_from'] = email_dict.pop('email_from')
-                    # replies redirection: mass mailing only
-                    if not wizard.same_thread:
-                        post_values['reply_to'] = email_dict.pop('reply_to')
-                    else:
-                        email_dict.pop('reply_to')
-                    post_values.update(email_dict)
-                # clean the context (hint: mass mailing sets some default values that
-                # could be wrongly interpreted by mail_mail)
-                context.pop('default_email_to', None)
-                context.pop('default_partner_ids', None)
-                # post the message
+            all_mail_values = self.get_mail_values(cr, uid, wizard, res_ids, context=context)
+
+            for res_id, mail_values in all_mail_values.iteritems():
                 if mass_mail_mode and not wizard.post:
-                    post_values['body_html'] = post_values.get('body', '')
-                    post_values['recipient_ids'] = [(4, id) for id in post_values.pop('partner_ids', [])]
-                    self.pool.get('mail.mail').create(cr, uid, post_values, context=context)
+                    self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
                     if is_log:  # log a note: subtype is False
@@ -296,46 +269,122 @@ class mail_compose_message(osv.TransientModel):
                         if not wizard.notify:
                             subtype = False
                         context = dict(context,
-                                    mail_notify_force_send=False,  # do not send emails directly but use the queue instead
-                                    mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
-                    active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
+                                       mail_notify_force_send=False,  # do not send emails directly but use the queue instead
+                                       mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
+                    active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **mail_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
-    def render_message(self, cr, uid, wizard, res_id, context=None):
-        """ Generate an email from the template for given (wizard.model, res_id)
-            pair. This method is meant to be inherited by email_template that
-            will produce a more complete dictionary. """
-        return {
-            'subject': self.render_template(cr, uid, wizard.subject, wizard.model, res_id, context),
-            'body': self.render_template(cr, uid, wizard.body, wizard.model, res_id, context),
-            'email_from': self.render_template(cr, uid, wizard.email_from, wizard.model, res_id, context),
-            'reply_to': self.render_template(cr, uid, wizard.reply_to, wizard.model, res_id, context),
-        }
+    def get_mail_values(self, cr, uid, wizard, res_ids, context=None):
+        """Generate the values that will be used by send_mail to create mail_messages
+        or mail_mails. """
+        results = dict.fromkeys(res_ids, False)
+        mass_mail_mode = wizard.composition_mode == 'mass_mail'
 
-    def render_template(self, cr, uid, template, model, res_id, context=None):
+        # render all template-based value at once
+        if mass_mail_mode and wizard.model:
+            rendered_values = self.render_message_batch(cr, uid, wizard, res_ids, context=context)
+
+        for res_id in res_ids:
+            # static wizard (mail.message) values
+            mail_values = {
+                'subject': wizard.subject,
+                'body': wizard.body,
+                'parent_id': wizard.parent_id and wizard.parent_id.id,
+                'partner_ids': [partner.id for partner in wizard.partner_ids],
+                'attachment_ids': [attach.id for attach in wizard.attachment_ids],
+            }
+            # mass mailing: rendering override wizard static values
+            if mass_mail_mode and wizard.model:
+                email_dict = rendered_values[res_id]
+                mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
+                mail_values['attachments'] = email_dict.pop('attachments', [])
+                attachment_ids = []
+                for attach_id in mail_values.pop('attachment_ids'):
+                    new_attach_id = self.pool.get('ir.attachment').copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
+                    attachment_ids.append(new_attach_id)
+                mail_values['attachment_ids'] = attachment_ids
+                # email_from: mass mailing only can specify another email_from
+                if email_dict.get('email_from'):
+                    mail_values['email_from'] = email_dict.pop('email_from')
+                # replies redirection: mass mailing only
+                if not wizard.same_thread:
+                    mail_values['reply_to'] = email_dict.pop('reply_to')
+                else:
+                    email_dict.pop('reply_to')
+                mail_values.update(email_dict)
+            # mass mailing without post: mail_mail values
+            if mass_mail_mode and not wizard.post:
+                if 'mail_auto_delete' in context:
+                    mail_values['auto_delete'] = context.get('mail_auto_delete')
+                mail_values['body_html'] = mail_values.get('body', '')
+                mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
+            results[res_id] = mail_values
+        return results
+
+    def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
+        """Generate template-based values of wizard, for the document records given
+        by res_ids. This method is meant to be inherited by email_template that
+        will produce a more complete dictionary, using Jinja2 templates.
+
+        Each template is generated for all res_ids, allowing to parse the template
+        once, and render it multiple times. This is useful for mass mailing where
+        template rendering represent a significant part of the process.
+
+        :param browse wizard: current mail.compose.message browse record
+        :param list res_ids: list of record ids
+
+        :return dict results: for each res_id, the generated template values for
+                              subject, body, email_from and reply_to
+        """
+        subjects = self.render_template_batch(cr, uid, wizard.subject, wizard.model, res_ids, context)
+        bodies = self.render_template_batch(cr, uid, wizard.body, wizard.model, res_ids, context)
+        emails_from = self.render_template_batch(cr, uid, wizard.email_from, wizard.model, res_ids, context)
+        replies_to = self.render_template_batch(cr, uid, wizard.reply_to, wizard.model, res_ids, context)
+
+        results = dict.fromkeys(res_ids, False)
+        for res_id in res_ids:
+            results[res_id] = {
+                'subject': subjects[res_id],
+                'body': bodies[res_id],
+                'email_from': emails_from[res_id],
+                'reply_to': replies_to[res_id],
+            }
+        return results
+
+    def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
         """ Render the given template text, replace mako-like expressions ``${expr}``
-            with the result of evaluating these expressions with an evaluation context
-            containing:
+        with the result of evaluating these expressions with an evaluation context
+        containing:
 
-                * ``user``: browse_record of the current user
-                * ``object``: browse_record of the document record this mail is
-                              related to
-                * ``context``: the context passed to the mail composition wizard
+            * ``user``: browse_record of the current user
+            * ``object``: browse_record of the document record this mail is
+                          related to
+            * ``context``: the context passed to the mail composition wizard
 
-            :param str template: the template text to render
-            :param str model: model name of the document record this mail is related to.
-            :param int res_id: id of the document record this mail is related to.
+        :param str template: the template text to render
+        :param str model: model name of the document record this mail is related to
+        :param list res_ids: list of record ids
         """
         if context is None:
             context = {}
+        results = dict.fromkeys(res_ids, False)
 
-        def merge(match):
-            exp = str(match.group()[2:-1]).strip()
-            result = eval(exp, {
-                'user': self.pool.get('res.users').browse(cr, uid, uid, context=context),
-                'object': self.pool[model].browse(cr, uid, res_id, context=context),
-                'context': dict(context),  # copy context to prevent side-effects of eval
+        for res_id in res_ids:
+            def merge(match):
+                exp = str(match.group()[2:-1]).strip()
+                result = eval(exp, {
+                    'user': self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                    'object': self.pool[model].browse(cr, uid, res_id, context=context),
+                    'context': dict(context),  # copy context to prevent side-effects of eval
                 })
-            return result and tools.ustr(result) or ''
-        return template and EXPRESSION_PATTERN.sub(merge, template)
+                return result and tools.ustr(result) or ''
+            results[res_id] = template and EXPRESSION_PATTERN.sub(merge, template)
+        return results
+
+    # Compatibility methods
+    def render_template(self, cr, uid, template, model, res_id, context=None):
+        return self.render_template_batch(cr, uid, template, model, [res_id], context)[res_id]
+
+    def render_message(self, cr, uid, wizard, res_id, context=None):
+        return self.render_message_batch(cr, uid, wizard, [res_id], context)[res_id]

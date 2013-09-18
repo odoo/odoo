@@ -1,5 +1,8 @@
 -
-  In order to test process of the Sale Order,
+  In order to test process of the Sale Order with access rights of saleman,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   First I check the total amount of the Quotation before Approved.
 -
@@ -41,10 +44,20 @@
         assert procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
         assert procurement.procure_method == order_line.type, "Procurement method is not correspond."
 -
+  Only stock user can change data related warehouse therefore test with that user which have stock user rights,
+-
+  !context
+    uid: 'res_stock_user'
+-
   I run the scheduler.
 -
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
+-
+  Salesman can also check order therefore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   I check the details of delivery order after confirmed quotation.
 -
@@ -137,6 +150,11 @@
         assert inv_line.quantity == (so_line.product_uos and so_line.product_uos_qty) or so_line.product_uom_qty , "Product qty is not correspond."
         assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
 -
+  Only Stock manager can open the Invoice therefore test with that user which have stock manager rights,
+-
+  !context
+    uid: 'res_stock_manager'
+-
   I open the Invoice.
 -
   !python {model: sale.order}: |
@@ -157,6 +175,11 @@
             journal_ids[0], ref('account.cash'),
             ref('account.period_8'), journal_ids[0],
             name='test')
+-
+  To test process of the Sale Order with access rights of saleman,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   I check the order after paid invoice.
 -

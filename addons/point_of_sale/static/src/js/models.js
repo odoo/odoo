@@ -182,7 +182,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.get('pos_config').pricelist_id[0]} // context for price
@@ -263,13 +263,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         //removes the current order
         delete_current_order: function(){
             this.get('selectedOrder').destroy({'reason':'abandon'});
-            console.log('coucou!');
         },
 
         // saves the order locally and try to send it to the backend. 
         // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
         push_order: function(order) {
             var self = this;
+            this.proxy.log('push_order',order.export_as_JSON());
             var order_id = this.db.add_order(order.export_as_JSON());
             var pushed = new $.Deferred();
 
