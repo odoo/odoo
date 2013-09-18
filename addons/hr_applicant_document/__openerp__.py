@@ -35,7 +35,7 @@
     'images': [],
     'depends': ['hr_recruitment','document'],
     'data': ['hr_applicant_document_view.xml'],
-    'demo': [],
+    'demo': ['hr_applicant_document_demo.xml'],
     'test': [],
     'installable': True,
     'auto_install': True,

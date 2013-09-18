@@ -3,9 +3,10 @@
   <data noupdate="1">
     <record id="hr_case_salesman0" model="hr.applicant">
         <field name="name">Salesperson</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_marketing"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field eval= "time.strftime('%Y-%m-01 10:35:50')" name="date"/>
         <field name="priority">2</field>
         <field name="partner_name">Enrique Jones</field>
@@ -35,7 +36,7 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="priority">1</field>
         <field name="partner_name">Jose</field>
         <field name="stage_id" ref="stage_job3"/>
@@ -45,7 +46,7 @@
     </record>
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
         <field name="name">Marketing Job</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_marketing"/>
         <field name="type_id" ref="degree_bac5"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
@@ -69,7 +70,7 @@
     </record>
     <record id="hr_case_financejob0" model="hr.applicant">
         <field name="name">Finance Job</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_hrm"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
@@ -110,7 +111,7 @@
     </record>
     <record id="hr_case_advertisement" model="hr.applicant">
         <field name="name">Advertisement</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_consultant"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
@@ -125,28 +126,68 @@
     <record id="hr.job_developer" model="hr.job">
         <field name="survey_id" ref="survey_job_0"/>
     </record>
+    <record id="hr.job_ceo" model="hr.job">
+        <field name="survey_id" ref="survey_job_0"/>
+    </record>
+    <record id="hr.job_cto" model="hr.job">
+        <field name="survey_id" ref="survey_job_0"/>
+    </record>
+    <record id="hr.job_consultant" model="hr.job">
+        <field name="survey_id" ref="survey_job_0"/>
+    </record>
+    <record id="hr.job_hrm" model="hr.job">
+        <field name="survey_id" ref="survey_job_0"/>
+    </record>
+    <record id="hr.job_marketing" model="hr.job">
+        <field name="survey_id" ref="survey_job_0"/>
+    </record>
+    <record id="hr.job_trainee" model="hr.job">
+        <field name="survey_id" ref="survey_job_0"/>
+    </record>
 
-     <record id="message_application_demo" model="mail.message">
-            <field name="model">hr.applicant</field>
-            <field name="res_id" ref="hr_case_advertisement"/>
-            <field name="body">Please do refer to this application for sure.</field>
-            <field name="type">comment</field>
-            <field name="author_id" ref="base.res_partner_2"/>
-        </record>
-         <record id="msg_case18_aplicant" model="mail.message">
-            <field name="subject">Regarding reference</field>
-            <field name="model">hr.applicant</field>
-            <field name="res_id" ref="hr_case_advertisement"/>
-            <field name="body"><![CDATA[<p>Hello!<br />
+    <record id="message_application_demo" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_advertisement"/>
+        <field name="body">Please do refer to this application for sure.</field>
+        <field name="type">comment</field>
+        <field name="author_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="msg_case18_aplicant" model="mail.message">
+        <field name="subject">Regarding reference</field>
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_advertisement"/>
+        <field name="body"><![CDATA[<p>Hello!<br />
             I will surely refer to this application as it is by your reference and <br />
             will try to conduct an interview within a very short time<br />
             Thanks,</p>]]></field>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-        </record>
-       <function model="mail.message" name="set_message_starred"
+        <field name="type">comment</field>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+    <function model="mail.message" name="set_message_starred"
             eval="[ ref('msg_case18_aplicant')], True, {}"
-        />
+    />
+    <record id="msg_case_salesman0_aplicant" model="mail.message">
+        <field name="subject">Refuse Application</field>
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_salesman0"/>
+        <field name="body"><![CDATA[<p>Hello,</p>
+        <p>I have checked this application but It's not match with our requirement. so no need to process further and we should refuse this application.</p>
+        <p>Kind regards,</p>]]></field>
+        <field name="type">comment</field>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+    <record id="msg_case_fresher0_aplicant" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_fresher0"/>
+        <field name="body"><![CDATA[<p>Hello,</p>
+        <p>We should move further for this application as early as possible..</p>
+        <p>Kind regards,</p>]]></field>
+        <field name="type">comment</field>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+
   </data>
 </openerp>
