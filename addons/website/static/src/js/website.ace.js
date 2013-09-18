@@ -141,6 +141,7 @@
         },
         displaySelectedView: function () {
             this.displayView(this.selectedViewId());
+            this.updateHash();
         },
         formatXml: function () {
             var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
@@ -176,8 +177,11 @@
                 return $.Deferred().fail("Malformed XML document");
             }
         },
-        reloadPage: function () {
+        updateHash: function () {
             window.location.hash = hash + "?view=" + this.selectedViewId();
+        },
+        reloadPage: function () {
+            this.updateHash();
             window.location.reload();
         },
         displayError: function (error) {
@@ -186,12 +190,13 @@
         },
         open: function () {
             this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
-            var hash = window.location.hash;
-            var indexOfView = hash.indexOf("?view=");
+            var curentHash = window.location.hash;
+            var indexOfView = curentHash.indexOf("?view=");
             if (indexOfView >= 0) {
-                var viewId = parseInt(hash.substring(indexOfView + 6, hash.length), 10);
+                var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
                 this.$('#ace-view-list').val(viewId).change();
-                window.location.hash = hash.substring(0, indexOfView);
+            } else {
+                window.location.hash = hash;
             }
         },
         close: function () {
