@@ -3,21 +3,31 @@
 
     var globalEditor;
 
+    var hash = "#advanced-view-editor";
+
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.ace.xml');
 
+    website.ready().then(function () {
+        if (window.location.hash == hash) {
+            launch();
+        }
+    });
+
+    function launch () {
+        if (globalEditor) {
+            globalEditor.open();
+        } else {
+            globalEditor = new website.ace.ViewEditor(this);
+            globalEditor.appendTo($(document.body));
+        }
+    }
+
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=ace]': 'launchAce',
+            'click a[data-action=ace]': 'launch',
         }),
-        launchAce: function () {
-            if (globalEditor) {
-                globalEditor.open();
-            } else {
-                globalEditor = new website.ace.ViewEditor(this);
-                globalEditor.appendTo($(document.body));
-            }
-        },
+        launch: launch,
     });
 
     website.ace = {};
@@ -163,6 +173,7 @@
             }
         },
         reloadPage: function () {
+            window.location.hash = hash;
             window.location.reload();
         },
         displayError: function (error) {
@@ -174,6 +185,7 @@
             this.displayView();
         },
         close: function () {
+            window.location.hash = "";
             var self = this;
             this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
                 globalEditor = null;
