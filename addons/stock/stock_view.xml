@@ -8,15 +8,14 @@
             groups="group_stock_manager,group_stock_user"
             sequence="70"/>
 
-        <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
             parent="stock.menu_stock_product" sequence="0"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
         <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="40" groups="base.group_no_one"/>
-        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
+        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
             parent="stock.menu_stock_configuration" sequence="45" groups="base.group_no_one"/>
@@ -1095,19 +1094,6 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_move_reception_picking_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="act_window_id" ref="action_reception_picking_move"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_move_reception_picking_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_move_form"/>
-            <field name="act_window_id" ref="action_reception_picking_move"/>
-        </record>
-
         <!-- Stock incoterms -->
         <record id="view_incoterms_tree" model="ir.ui.view">
             <field name="name">stock.incoterms.tree</field>
@@ -1164,47 +1150,6 @@
             <field name="name">Open Products</field>
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
         </record>
-
-
-
-        <record id="action_out_picking_move" model="ir.actions.act_window">
-            <field name="name">Deliver Products</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain" eval="['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_type_id','=',ref('picking_type_out'))]"/>
-            <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context">{'search_default_future': True}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a product delivery.
-              </p>
-              <p>
-                You will find in this list all products you have to deliver to
-                your customers. You can process the deliveries directly from
-                this list using the buttons on the right of each line. You can
-                filter the products to deliver by customer, products or sale
-                order (using the Origin field).
-              </p>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_move_out_picking_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="act_window_id" ref="action_out_picking_move"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_move_out_picking_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_move_form"/>
-            <field name="act_window_id" ref="action_out_picking_move"/>
-        </record>
-
-      <menuitem action="action_reception_picking_move" id="menu_action_pdct_in" parent="menu_stock_products_moves" sequence="1"/>
-      <menuitem action="action_out_picking_move" id="menu_action_pdct_out" parent="menu_stock_products_moves" sequence="2"/>
 
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
@@ -1355,7 +1300,7 @@
         </record>
 
         <record id="action_picking_type_form" model="ir.actions.act_window">
-            <field name="name">Inventory Moves</field>
+            <field name="name">All Operations</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
