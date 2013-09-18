@@ -9,7 +9,7 @@
     website.templates.push('/website/static/src/xml/website.ace.xml');
 
     website.ready().then(function () {
-        if (window.location.hash == hash) {
+        if (window.location.hash.indexOf(hash) >= 0) {
             launch();
         }
     });
@@ -158,7 +158,11 @@
                 return session.isDirty;
             });
             var requests = _.map(toSave, self.saveView);
-            $.when.apply($, requests).then(self.reloadPage).fail(self.displayError);
+            $.when.apply($, requests).then(function () {
+                self.reloadPage.call(self);
+            }).fail(function () {
+                self.displayError.call(self);
+            });
         },
         saveView: function (session) {
             var xml = new website.ace.XmlDocument(session.text);
@@ -173,7 +177,7 @@
             }
         },
         reloadPage: function () {
-            window.location.hash = hash;
+            window.location.hash = hash + "?view=" + this.selectedViewId();
             window.location.reload();
         },
         displayError: function (error) {
@@ -182,7 +186,13 @@
         },
         open: function () {
             this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
-            this.displayView();
+            var hash = window.location.hash;
+            var indexOfView = hash.indexOf("?view=");
+            if (indexOfView >= 0) {
+                var viewId = parseInt(hash.substring(indexOfView + 6, hash.length), 10);
+                this.$('#ace-view-list').val(viewId).change();
+                window.location.hash = hash.substring(0, indexOfView);
+            }
         },
         close: function () {
             window.location.hash = "";
