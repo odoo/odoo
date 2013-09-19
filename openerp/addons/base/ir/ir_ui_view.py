@@ -129,6 +129,7 @@ class view(osv.osv):
             fvg = self.pool[view.model].fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
             return fvg['arch']
         except Exception:
+            _logger.exception('cannot render view %s', view.xml_id)
             return False
 
     def _check_xml(self, cr, uid, ids, context=None):
