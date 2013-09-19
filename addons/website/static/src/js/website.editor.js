@@ -37,7 +37,10 @@
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
                     var element = evt.data.element;
-                    if (element.is('img') && !element.data( 'cke-realelement' ) && !element.isReadOnly()) {
+                    if (element.is('img')
+                            && !element.data('cke-realelement')
+                            && !element.isReadOnly()
+                            && (element.data('oe-model') !== 'ir.ui.view')) {
                         image_dialog(editor);
                         return;
                     }
