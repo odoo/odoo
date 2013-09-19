@@ -35,14 +35,8 @@
                                     <t t-foreach="res_job" t-as="job">
                                         <tr t-if="job.company_id.id==company.id" t-att-id="job.id">
                                             <td>
-                                                <span id="job_post" t-att-class="job.no_of_recruitment &gt; 0 and 'show' or 'hidden'">
-                                                    <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></a><br/>
-                                                </span>
-                                                <span id="no_job_post" t-att-class="job.no_of_recruitment &lt; 1 and 'show' or 'hidden'">
-                                                    <div t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"/></div>
-                                                </span>
                                                 <t t-if="job.department_id">
-                                                    <span t-field="job.department_id.name"></span>
+                                                    <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.department_id.name"></span></a>
                                                 </t><br/>
                                                 <i class="icon-time"></i> <t t-esc="vals[job.id]['date_recruitment']"/><br/>
                                                 <span id='counting' t-att-class="job.no_of_recruitment &gt; 0 and 'show' or 'hidden'" style="position:absolute;">

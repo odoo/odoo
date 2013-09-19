@@ -42,16 +42,12 @@ $(function () {
             return openerp.jsonRpc('/recruitment/published', 'call', {'id': id}).then(function (result) {
                 if (result['published']) {
                     msg.addClass('hidden');
-                    no_job_post.addClass('hidden');
                     counting.removeClass('hidden');
-                    job_post.removeClass('hidden');
                     counting.find('span#counting_num').html(result['count']);
                     div.addClass('hidden');
                 } else {
                     msg.removeClass('hidden');
-                    no_job_post.removeClass('hidden');
                     counting.addClass('hidden');
-                    job_post.addClass('hidden');
                     div.removeClass('hidden');
                 }
             });
