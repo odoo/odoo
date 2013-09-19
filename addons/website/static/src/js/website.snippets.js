@@ -118,6 +118,9 @@
 
             this.scrollspy();
             this.$el.addClass("hidden");
+
+            this.$modal = $(openerp.qweb.render('website.snippets_modal'));
+            this.$modal.appendTo("body");
         },
         fetch_snippet_templates: function () {
             var self = this;
@@ -291,6 +294,7 @@
             var self = this;
             var $toInsert = false;
             var $tumb = $snippet.find(".oe_snippet_thumbnail");
+            var dropped = false;
 
             $snippet.draggable({
                 helper: 'clone',
@@ -304,7 +308,7 @@
                 },
                 start: function(){
                     self.hide();
-
+                    dropped = false;
                     var snipped_id = $snippet.data('snippet-id');
                     var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
                     if( action === 'insert'){
@@ -361,6 +365,8 @@
                                 return false;
                             }
 
+                            dropped = true;
+
                             var $target = false;
                             if(action === 'insert'){
                                 $target = $toInsert;
@@ -390,6 +396,10 @@
                 },
                 stop: function(){
                     $('.oe_drop_zone').droppable('destroy').remove();
+                    if (!dropped) {
+                        self.$modal.modal('toggle');
+                        setTimeout(function () {self.$modal.fadeOut();}, 3000);
+                    }
                 },
             });
         },
