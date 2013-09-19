@@ -5117,6 +5117,8 @@ class BaseModel(object):
         """
         if type(ids) in (int, long):
             ids = [ids]
+        if not ids:
+            return []
         query = 'SELECT id FROM "%s"' % self._table
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
         return [x[0] for x in cr.fetchall()]
