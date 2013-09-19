@@ -86,7 +86,7 @@ class website_mail(http.Controller):
     @website.route(['/blog/<int:mail_group_id>/new'], type='http', auth="public")
     def new_blog_post(self, mail_group_id=None, **post):
         blog_id = request.registry['mail.group'].message_post(request.cr, request.uid, mail_group_id,
-                body=_("Blog content.<br/>Please edit this content then you can publish this blog."),
+                body="",
                 subject=_("Blog title"),
                 website_published=False,
                 type='comment',

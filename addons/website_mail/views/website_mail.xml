@@ -44,7 +44,7 @@
                                 <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
                             </form>
                             <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
-                                <input type="hidden" name="email" t-att-value="subscribe"/>
+                                <input type="hidden" name="email" t-att-value="subscribe" style="display: none"/>
                                 <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
                             </form>
                         </div>
