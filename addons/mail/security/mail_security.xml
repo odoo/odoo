@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
         <!-- RULES -->
         <record id="mail_group_public_and_joined" model="ir.rule">
@@ -34,6 +34,15 @@
             <field name="name">mail.notification: read and write its own entries</field>
             <field name="model_id" ref="model_mail_notification"/>
             <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="mail_message_internal_note_employee" model="ir.rule">
+            <field name="name">mail.message</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('type', '=', 'comment')]</field>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
