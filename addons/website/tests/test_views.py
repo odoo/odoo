@@ -80,6 +80,18 @@ class TestViewSaving(common.TransactionCase):
             h.SPAN({'t-field': 'bob'})
         )
 
+    def test_to_field_ref_keep_attributes(self):
+        View = self.registry('ir.ui.view')
+
+        att = attrs(expression="bob", model="res.company", id=1, field="name")
+        att['id'] = "whop"
+        att['class'] = "foo bar"
+        embedded = h.SPAN("My Company", att)
+
+        self.eq(View.to_field_ref(self.cr, self.uid, embedded, context=None),
+                h.SPAN({'t-field': 'bob', 'class': 'foo bar', 'id': 'whop'}))
+
+
     def test_replace_arch(self):
         replacement = h.P("Wheee")
 
