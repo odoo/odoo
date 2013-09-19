@@ -198,17 +198,12 @@
                     if (snipped_event_flag) {
                         return;
                     }
-                    var $target = $(event.currentTarget);
-                    if (self.$active_snipped_id) {
-                        if (self.$active_snipped_id[0] === $target[0] || $.contains(self.$active_snipped_id, $target[0])) {
-                            var $parent = self.$active_snipped_id.parents("[data-snippet-id]:first");
-                            if ($parent.length) {
-                                $target = $parent;
-                            }
-                        }
-                    }
                     snipped_event_flag = true;
                     setTimeout(function () {snipped_event_flag = false;}, 0);
+                    var $target = $(event.currentTarget);
+                    if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
+                        return;
+                    }
                     self.make_active($target);
                 });
             $("body > :not(:has(#website-top-view)):not(#oe_manipulators)").on('click', function (ev) {
@@ -572,6 +567,7 @@
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
+            this.get_parent_block();
             this.start();
         },
 
@@ -662,6 +658,7 @@
                     $('.oe_drop_zone').droppable('destroy').remove();
                     $(".oe_drop_clone").remove();
                     self.parent.editor_busy = false;
+                    self.get_parent_block();
                     setTimeout(function () {self.parent.create_overlay(self.$target);},0);
                 },
             });
@@ -714,6 +711,23 @@
                 this.$target.addClass(_class);
             }
             $li.toggleClass("active");
+        },
+
+        get_parent_block: function () {
+            var self = this;
+            var $button = this.$overlay.find('.oe_snippet_parent');
+            var $parent = this.$target.parents("[data-snippet-id]:first");
+            if ($parent.length) {
+                $button.show();
+                $button.off("click").on('click', function (event) {
+                    event.preventDefault();
+                    setTimeout(function () {
+                        self.parent.make_active($parent);
+                    }, 0);
+                });
+            } else {
+                $button.hide();
+            }
         },
 
         /*
