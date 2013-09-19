@@ -149,6 +149,10 @@ table.editorbar-panel td.selected {
   box-shadow: 0px 10px 10px -10px black inset;
   z-index: 1010;
   overflow: hidden;
+  height: 110px;
+}
+#oe_snippets:hover {
+  height: auto;
 }
 #oe_snippets .scroll {
   white-space: nowrap;
@@ -349,33 +353,28 @@ table.editorbar-panel td.selected {
   display: inline-block;
 }
 .oe_overlay .oe_overlay_options {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: -11px;
   display: none;
   z-index: 1002;
 }
-.oe_overlay .oe_overlay_options .oe_options, .oe_overlay .oe_overlay_options .oe_label, .oe_overlay .oe_overlay_options .oe_move {
-  position: absolute;
-  display: block;
-  z-index: 1002;
-  top: -11px;
+.oe_overlay .oe_overlay_options > div {
+  display: inline-block;
 }
-.oe_overlay .oe_overlay_options .oe_options {
+.oe_overlay .oe_overlay_options .btn {
   pointer-events: auto;
-  left: -14px;
+  display: inline-block;
 }
 .oe_overlay .oe_overlay_options .oe_label {
-  top: -8px;
+  position: absolute;
+  top: 3px;
   right: 6px;
   background: white;
   font-size: 75%;
   color: rgba(153, 0, 255, 0.5);
   padding: 0 5px;
-}
-.oe_overlay .oe_overlay_options .oe_move {
-  pointer-events: auto;
-  left: 50%;
-}
-.oe_overlay .oe_overlay_options .oe_move .js_box_move {
-  margin-left: -50%;
 }
 .oe_overlay .oe_overlay_options .dropdown-menu select, .oe_overlay .oe_overlay_options .dropdown-menu input {
   display: block;

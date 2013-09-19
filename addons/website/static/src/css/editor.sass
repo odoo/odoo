@@ -139,6 +139,9 @@ table.editorbar-panel
     box-shadow: 0px 10px 10px -10px black inset
     z-index: 1010
     overflow: hidden
+    height: 110px
+    &:hover
+        height: auto
     .scroll
         white-space: nowrap
         overflow-y: auto
@@ -310,28 +313,25 @@ table.editorbar-panel
         display: inline-block
 
     .oe_overlay_options
+        position: absolute
+        width: 100%
+        text-align: center
+        top: -11px
         display: none
         z-index: 1002
-        .oe_options,.oe_label,.oe_move
-            position: absolute
-            display: block
-            z-index: 1002
-            top: -11px
-        .oe_options
+        > div
+            display: inline-block
+        .btn
             pointer-events: auto
-            left: -14px
+            display: inline-block
         .oe_label
-            top: -8px
+            position: absolute
+            top: 3px
             right: 6px
             background: #fff
             font-size: 75%
             color: rgba(153, 0, 255, 0.5)
             padding: 0 5px
-        .oe_move
-            pointer-events: auto
-            left: 50%
-            .js_box_move
-                margin-left: -50%
         .dropdown-menu select,.dropdown-menu input
             display: block
     &.oe_active .oe_overlay_options
