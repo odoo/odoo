@@ -6,6 +6,8 @@ Changelog
 `trunk`
 -------
 
+- Added support of custom group_by format and display format when using group_by
+  on a datetime field, using datetime_format context key
 - Improved ``html_email_clean`` in tools: better quote and signature finding,
   added shortening.
 - Cleaned and slightly refactored ``ir.actions.server``. The ``loop``, ``sms``
