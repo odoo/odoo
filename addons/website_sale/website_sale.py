@@ -36,6 +36,12 @@ class product_template(osv.osv):
         'website_description': fields.html('Description for the website'),
         'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
+        'website_sizex': fields.selection([map(lambda x: (str(x),str(x)), range(12))], 'Size X'),
+        'website_sizey': fields.selection([map(lambda x: (str(x),str(x)), range(12))], 'Size Y'),
+    }
+    _defaults = {
+        'website_sizex': 3,
+        'website_sizey': 3,
     }
 
     def recommended_products(self, cr, uid, ids, context=None):
