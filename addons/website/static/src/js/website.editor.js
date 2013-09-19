@@ -184,10 +184,17 @@
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
+            var instanceReady = false;
+            this.rte.on('instanceReady', this, function () {
+                clearTimeout(instanceReady);
+                instanceReady = setTimeout(function () {
+                    self.trigger('rte:ready');
+                }, 0);
+            });
 
             return $.when(
                 this._super.apply(this, arguments),
-                this.rte.prependTo(this.$('#website-top-edit .nav.pull-right'))
+                this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
             );
         },
         edit: function () {
@@ -315,6 +322,8 @@
                     'magicline'
             ];
             return {
+                // FIXME
+                language: 'en',
                 // Disable auto-generated titles
                 // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
                 title: false,
@@ -589,23 +598,34 @@
             },
             'change input[type=file]': 'file_selection',
             'change input.url': 'preview_image',
-            'click .existing-attachments a': 'select_existing',
+            'click a[href=#existing]': 'browse_existing',
+            'change select.image-style': 'preview_image',
         }),
         start: function () {
             var selection = this.editor.getSelection();
             var el = selection && selection.getSelectedElement();
             this.element = null;
+
+            var $select = this.$('.image-style');
+            var $options = $select.children();
+            this.image_styles = $options.map(function () { return this.value; }).get();
+
             if (el && el.is('img')) {
                 this.element = el;
+                _(this.image_styles).each(function (style) {
+                    if (el.hasClass(style)) {
+                        $select.val(style);
+                    }
+                });
+                // set_image must follow setup of image style
                 this.set_image(el.getAttribute('src'));
             }
 
-            return $.when(
-                this._super(),
-                this.fetch_existing().then(this.proxy('fetched_existing')));
+            return this._super();
         },
         save: function () {
             var url = this.$('input.url').val();
+            var style = this.$('.image-style').val();
             var element, editor = this.editor;
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
@@ -619,7 +639,10 @@
                 }, 0);
             }
             element.setAttribute('src', url);
-            this._super();
+            $(element.$).removeClass(this.image_styles.join(' '));
+            if (style) { element.addClass(style); }
+
+            return this._super();
         },
 
         /**
@@ -657,11 +680,48 @@
             var image = this.$('input.url').val();
             if (!image) { return; }
 
-            this.$('img.image-preview').attr('src', image);
+            this.$('img.image-preview')
+                .attr('src', image)
+                .removeClass(this.image_styles.join(' '))
+                .addClass(this.$('select.image-style').val());
+        },
+
+        browse_existing: function (e) {
+            e.preventDefault();
+            new website.editor.ExistingImageDialog(this).appendTo(document.body);
+        },
+    });
+
+    var IMAGES_PER_ROW = 3;
+    var IMAGES_ROWS = 3;
+    website.editor.ExistingImageDialog = website.editor.Dialog.extend({
+        template: 'website.editor.dialog.image.existing',
+        events: _.extend({}, website.editor.Dialog.prototype.events, {
+            'click .existing-attachments a': 'select_existing',
+            'click .pager > li': function (e) {
+                e.preventDefault();
+                var $target = $(e.currentTarget);
+                if ($target.hasClass('disabled')) {
+                    return;
+                }
+                this.page += $target.hasClass('previous') ? -1 : 1;
+                this.display_attachments();
+            },
+        }),
+        init: function (parent) {
+            this.image = null;
+            this.page = 0;
+            this.parent = parent;
+            this._super(parent.editor);
+        },
+
+        start: function () {
+            return $.when(
+                this._super(),
+                this.fetch_existing().then(this.proxy('fetched_existing')));
         },
 
         fetch_existing: function () {
-            // FIXME: lazy load attachments?
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'ir.attachment',
                 method: 'search_read',
@@ -675,17 +735,42 @@
             });
         },
         fetched_existing: function (records) {
+            this.records = records;
+            this.display_attachments();
+        },
+        display_attachments: function () {
+            var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
+
+            var from = this.page * per_screen;
+            var records = this.records;
+
             // Create rows of 3 records
             var rows = _(records).chain()
-                .groupBy(function (_, index) { return Math.floor(index / 3); })
+                .slice(from, from + per_screen)
+                .groupBy(function (_, index) { return Math.floor(index / IMAGES_PER_ROW); })
                 .values()
                 .value();
+
             this.$('.existing-attachments').replaceWith(
-                openerp.qweb.render('website.editor.dialog.image.existing', {rows: rows}));
+                openerp.qweb.render(
+                    'website.editor.dialog.image.existing.content', {rows: rows}));
+            this.$('.pager')
+                .find('li.previous').toggleClass('disabled', (from === 0)).end()
+                .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
+
         },
         select_existing: function (e) {
             e.preventDefault();
-            this.set_image(e.currentTarget.getAttribute('href'));
+            this.$('a.thumbnail.selected').removeClass('selected');
+
+            $(e.currentTarget).addClass('selected');
+        },
+        save: function () {
+            var link = this.$('a.thumbnail.selected').attr('href');
+            if (link) {
+                this.parent.set_image(link);
+            }
+            this._super();
         },
     });
 

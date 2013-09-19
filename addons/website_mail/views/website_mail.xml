@@ -25,15 +25,16 @@
 
     <template id="index" name="Blogs" page="True">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
-                <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Blog</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
+              <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Blog</t>
+          <div id="wrap">
             <div class="container mt48 js_website_mail">
                 <div class="row">
-                   <div class="col-md-4" id="left_column">
+                   <div class="col-md-3" id="left_column">
                         <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">Add a new Blog</a>
                         <div>
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
@@ -48,9 +49,9 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-md-8" t-if="blog_id">
+                    <div class="col-md-9" t-if="blog_id">
                         <div class="media">
-                            <div class="media-body well">
+                            <div class="media-body">
                                 <t t-call="website.publish"><t t-set="object" t-value="blog_id"/></t>
                                 <h3 t-field="blog_id.subject"/>
                                 <div t-field="blog_id.body"/>
@@ -104,6 +105,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </t>
     </template>
 

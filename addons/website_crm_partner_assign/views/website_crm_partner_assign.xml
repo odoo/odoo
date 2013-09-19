@@ -15,12 +15,15 @@
 
     <template id="layout" name="Partners Layout">
         <t t-call="website.layout">
-            <t t-set="title">Partners</t>
+          <t t-set="title">Partners</t>
+          <div id="wrap">
+            <div class="oe_structure"> </div>
             <div class="container">
                 <div class="row">
                     <t t-raw="ref_content" />
                 </div>
             </div>
+          </div>
         </t>
     </template>
 

@@ -11,7 +11,7 @@
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="layout">
+        <template id="layout" name="Main layout">
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
                       t-att-data-editable="'1' if editable else '0'"
@@ -19,6 +19,8 @@
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />
+                        <meta name="description" value="" />
+                        <meta name="keywords" value="" />
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
@@ -95,11 +97,7 @@
                                 </div>
                             </div>
                         </header>
-                        <div t-raw="0" id="wrap">
-                            <div class="container">
-                                <h1>Main Layout</h1>
-                            </div>
-                        </div>
+                        <t t-raw="0"/>
                         <footer>
                             <div class="container" id="footer_container">
                                 <div class="row">
@@ -125,10 +123,10 @@
                                         </h1>
                                     </div>
                                     <div class="col-md-5 col-lg-offset-1" name="about_us">
-                                        <h4 t-field="res_company.name">About us</h4>
-                                        <ul class="list-unstyled">
-                                            <li><a href="/page/website.aboutus">About us</a></li>
-                                        </ul>
+                                        <h4>
+                                            <span t-field="res_company.name">Your Company</span>
+                                            <small> - <a href="/page/website.aboutus">About us</a></small>
+                                        </h4>
                                         <p>
                                             We are a team of passionated people whose goal is to improve everyone's
                                             life through disruptive products. We build great products to solve your
@@ -156,121 +154,53 @@
         </template>
 
         <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
+            <xpath expr="//div[@id='footer_container']" position="before">
+                <section data-snippet-id='three-columns' class="mt16 mb16">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="mt16">Subtitle</h4>
+                                <p>
+                                    <a href="/">Homepage</a>
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <h4 class="mt16">Subtitle 2</h4>
+                                <p>
+                                    ...
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <h4 class="mt16">Subtitle 3</h4>
+                                <p>
+                                    ...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </xpath>
             <xpath expr="//div[@id='footer_container']" position="attributes">
                 <attribute name="style">display: none</attribute>
             </xpath>
         </template>
 
-        <template id="homepage" page="True">
+        <template id="homepage" name="Homepage" page="True">
             <t t-call="website.layout">
-                <div id="myCarousel" data-snippet-id="carousel" class="carousel slide" data-interval="1000000">
-                    <!-- Carousel items -->
-                    <div class="carousel-inner">
-                        <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
-                            <div class="container">
-                                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
-                                    <h1>Create Awesome Websites</h1>
-                                    <h3>Super easy, fully flexible</h3>
-                                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Carousel nav -->
-                    <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
-                    <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
-                </div>
-
-                <section class="container" data-snippet-id="resize">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                             <h1>Welcome To Your New Homepage,</h1>
-                             <h2>where <b>everything</b> can be <em>customized</em></h2>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="dark mt64">
-                    <section class="dark container" data-snippet-id="resize">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg" />
-                            </div>
-                            <div class="col-md-6 col-lg-offset-1">
-                                <p class="mt16">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                    consequat.
-                                </p>
-                                <p>
-                                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                    dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                                </p>
-                                <div class="text-center"> <a href="http://www.openerp.com/start" class="btn mt16 btn-lg btn-primary">Call To <em>Action</em></a></div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <section class="container" data-snippet-id="resize">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                             <h2 class="mt48">Ut enim ad minim veniam</h2>
-                        </div>
-                    </div>
-                    <div class="row mt32">
-                        <div class="col-md-4">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg" />
-                            <h4 class="mt16">Cillum Dolore</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat.
-                            </p>
-                        </div>
-                        <div class="col-md-4">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
-                            <h4 class="mt16">Mollit Anim</h4>
-                            <p>
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </p>
-                        </div>
-                        <div class="col-md-4">
-                            <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
-                            <h4 class="mt16">Nemo Enim Ipsam</h4>
-                            <p>
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                                doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
-                                veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                                ipsam voluptatem quia voluptas
-                            </p>
-                        </div>
-                    </div>
-                </section>
+              <div id="wrap" class="oe_structure"></div>
             </t>
         </template>
 
         <template id="default_page">
             <t t-call="website.layout">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1>New Page</h1>
-                            <p>Write your text here...</p>
-                        </div>
-                    </div>
-                </div>
+              <div id="wrap" class="oe_structure"></div>
             </t>
         </template>
 
 
         <template id="404">
             <t t-call="website.layout">
+              <div id="wrap">
                 <div class="container" t-if="editable and path">
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
@@ -280,26 +210,31 @@
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
                 <hr />
-                <div class="container">
-                    <h1 class="mt32">404: Page not found!</h1>
-                    <p>
-                        The page you were looking for could not be found; it is possible you have
-                        typed the address incorrectly, but it has most probably been removed due
-                        to the recent website reorganisation.
-                    </p>
-                    <p>Maybe you were looking for one of these popular pages ?</p>
-                    <ul>
-                        <li><a href="/">Homepage</a></li>
-                        <li><a href="/">Contact Us</a></li>
-                    </ul>
+                <div class="oe_structure">
+                    <div class="container">
+                        <h1 class="mt32">404: Page not found!</h1>
+                        <p>
+                            The page you were looking for could not be found; it is possible you have
+                            typed the address incorrectly, but it has most probably been removed due
+                            to the recent website reorganisation.
+                        </p>
+                        <p>Maybe you were looking for one of these popular pages ?</p>
+                        <ul>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/">Contact Us</a></li>
+                        </ul>
+                    </div>
                 </div>
+              </div>
             </t>
         </template>
 
         <template id="500">
             <t t-call="website.layout">
-                <div class="container">
-                    <h1 class="mt32">500: Internal Server Error!</h1>
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <h1 class="container mt32">500: Internal Server Error!</h1>
+                    </div>
                     <pre t-if="editable" t-esc="traceback"/>
                 </div>
             </t>
@@ -307,9 +242,9 @@
 
         <template id="401">
             <t t-call="website.layout">
+              <div id="wrap">
                 <div class="container">
                     <h1 class="mt32">401: Unauthorized Access!</h1>
-
                     <p>
                         The page you were looking for could not be
                         authorized.
@@ -323,20 +258,22 @@
                         <li><a href="/">Contact Us</a></li>
                     </ul>
                 </div>
+              </div>
             </t>
         </template>
 
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
-                <t t-set="title">Contact us -
-                    <t t-raw="res_company.name"></t>
-                </t>
+              <t t-set="title">Contact us -
+                  <t t-raw="res_company.name"></t>
+              </t>
+              <div id="wrap">
                 <div class="container">
                     <h1>Contact us</h1>
                     <div class="row">
                         <div class="col-md-8">
-                            <div>
+                            <div class="oe_structure">
                                 <p>Contact us about anything related to our company or services.</p>
                                 <p>We'll do our best to get back to you as soon as possible.</p>
                             </div>
@@ -360,14 +297,15 @@
                         </div>
                     </div>
                 </div>
+              </div>
             </t>
         </template>
 
         <template id="aboutus" page="True">
             <t t-call="website.layout">
-                <t t-set="title">About us -
-                    <t t-raw="res_company.name"></t>
-                </t>
+              <t t-set="title">About <t t-raw="res_company.name"></t>
+              </t>
+              <div id="wrap" class="oe_structure">
                 <div class="container">
                     <h2>About us</h2>
                     <div class="row">
@@ -379,6 +317,7 @@
                         <div class="col-md-8"></div>
                     </div>
                 </div>
+              </div>
             </t>
         </template>
 

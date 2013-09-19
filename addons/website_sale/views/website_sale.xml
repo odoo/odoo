@@ -74,18 +74,21 @@
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
-            <div class="container oe_website_sale">
-                <div class="row">
-                    <div class="col-md-12" id="shop_content">
-                        <t t-raw="shop_content" />
-                    </div>
-                </div>
+            <div id="wrap">
+              <div class="oe_structure"> </div>
+              <div class="container oe_website_sale">
+                  <div class="row">
+                      <div class="col-md-12" id="shop_content">
+                          <t t-raw="shop_content" />
+                      </div>
+                  </div>
+              </div>
             </div>
         </t>
     </template>
     <template id="products_categories" inherit_id="website_sale.layout" inherit_option_id="website_sale.layout" name="Left Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
                     <t t-foreach="categories" t-as="category">
@@ -95,7 +98,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='shop_content']" position="attributes">
-            <attribute name="class">col-md-8</attribute>
+            <attribute name="class">col-md-9</attribute>
         </xpath>
     </template>
 
@@ -192,21 +195,15 @@
                         <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price"><t t-field="product.product_variant_ids[0].lst_price" /> €</h4>
                     </div>
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <div t-field="product.website_description">
-                        <div class="container mt32"></div>
-                        <div class="container" data-snippet-id="container">
-                            Replace this text with your Website product description
-                        </div>
-                        <div class="container mt32"></div>
-                    </div>
+                    <div t-field="product.website_description"></div>
                 </div>
             </t>
         </t>
     </template>
     <template id="recommended_products" inherit_id="website_sale.product" inherit_option_id="website_sale.product" name="Recommended Products">
         <xpath expr="//div[@id='product_detail']" position="inside">
-            <div class="well mt32" t-if="product.recommended_products()">
-                <h4>Customers who have bought this item also bought</h4>
+            <div class="mt32" t-if="product.recommended_products()">
+                <h3>Customers who have bought this product also bought:</h3>
                 <div class='row mt16' style="margin-left: 15px !important;">
                 <t t-foreach="product.recommended_products()" t-as="product">
                     <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
@@ -361,11 +358,12 @@
 
     <template id="checkout">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Shop - Checkout</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Shop - Checkout</t>
+          <div id="wrap">
             <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-md-4">
@@ -542,16 +540,18 @@
                     </form>
                 </div>
             </div>
+          </div>
         </t>
     </template>
 
     <template id="payment">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Shop - Payment</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Shop - Payment</t>
+          <div id="wrap">
             <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-md-4">
@@ -597,6 +597,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </t>
     </template>
  </data>

@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <!-- Editor -->
+    <!-- Snippet loader -->
+    <t t-name="website.snippets_button">
+        <li class="navbar-form"><button type="button" data-action="snippet" class="btn btn-primary">Insert Blocks</button></li>
+    </t>
 
     <t t-name="website.snippets">
-        <div id='oe_snippets' class='hide'>
-            <ul class="nav nav-pills">
-              <li class="active"><a data-toggle="pill" href="#snippet_structure">Structure</a></li>
-              <li class=""><a data-toggle="pill" href="#snippet_content">Content</a></li>
-              <li class=""><a data-toggle="pill" href="#snippet_emphasize">Emphasize</a></li>
-              <li class=""><a data-toggle="pill" href="#snippet_style">Style</a></li>
-            </ul>
-            <div class="pill-content">
-                <div class="pill-pane active" id="snippet_structure"></div>
-                <div class="pill-pane" id="snippet_content"></div>
-                <div class="pill-pane" id="snippet_emphasize"></div>
-                <div class="pill-pane" id="snippet_style"></div>
-                <div class="pill-pane" id="snippet_unsorted"></div>
+        <div id='oe_snippets'>
+            <div class="scroll">
+                <ul class="nav navbar-nav">
+                  <li><a href="#snippet_structure">Structure</a></li>
+                  <li><a href="#snippet_content">Content</a></li>
+                  <li><a href="#snippet_business">Business</a></li>
+                  <li><a href="#snippet_style">Style</a></li>
+                </ul>
+                <div class="pill-content">
+                    <div id="snippet_structure"><label><div>Structure</div></label></div>
+                    <div id="snippet_content"><label><div>Content</div></label></div>
+                    <div id="snippet_business"><label><div>Business</div></label></div>
+                    <div id="snippet_style"><label><div>Style</div></label></div>
+                </div>
             </div>
         </div>
     </t>
@@ -25,13 +29,15 @@
         <div class="oe_overlay">
             <div class="oe_overlay_options">
                 <div class="dropdown oe_options">
-                    <i data-toggle="dropdown" class="btn btn-primary icon icon-cog"></i>
+                    <i data-toggle="dropdown" class="btn btn-primary btn-sm icon icon-cog"></i>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li class="divider"></li>
+                        <li><a href="#" class="button js_box_clone">Duplicate this snippet</a></li>
                         <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
                     </ul>
                 </div>
                 <div class="oe_label"></div>
-                <div class="oe_move"><i class="js_box_move icon btn btn-primary icon-move"></i></div>
+                <div class="oe_move"><i class="js_box_move icon btn btn-primary btn-sm icon-move"></i></div>
             </div>
         </div>
     </t>
@@ -40,7 +46,7 @@
         <div class='oe_snippet_manipulator'></div>
     </t>
 
-    <!-- Snippets -->
+    <!-- snippet objects -->
 
     <div t-name="website.snippets.resize" data-snippet-id='resize'>
         <!-- custom data for the widget -->
@@ -50,162 +56,703 @@
             <div class='oe_handle w'></div>
             <div class='oe_handle s'></div>
         </div>
-        <div class='oe_snippet_thumbnail oe_label'>Margin resize</div>
+        <div class='oe_snippet_thumbnail oe_snippet_label'>Margin resize</div>
     </div>
 
-    <div t-name="website.snippets.colmd" data-snippet-id='colmd' data-action='insert' data-selector-vertical-childs='.row'>
-        <div class='oe_snippet_thumbnail oe_label'>Column</div>
+    <div t-name="website.snippets.colmd" data-snippet-id='colmd' data-selector-vertical-children='.row'>
+        <div class='oe_snippet_label'>Column</div>
     </div>
 
-    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='emphasize' data-action='insert' data-selector-siblings='.container'>
+    <!-- Structure Snippets -->
+
+    <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         
         <!-- editor bar to display inside the top edit bar -->
         <li class='oe_snippet_options'>
-            <a href="#" class="button js_add">Add layer</a>
+            <a class="carousel-style">
+                <select class="form-control" name="carousel-size">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="big">Big</option>
+                </select>
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li class='oe_snippet_options'>
+            <a href="#" class="button js_add">Add Slide</a>
         </li>
         <li class='oe_snippet_options'>
-            <a href="#" class="button js_remove">Remove current layer</a>
-        </li>
-        <li>
-            <div class="dropdown">
-                <a data-toggle="dropdown" href="#">test</a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li>inside</li>
-                </ul>
-            </div>
+            <a href="#" class="button js_remove">Remove Slide</a>
         </li>
         <li class='oe_snippet_options'>
-            <select name="carousel-background">
-                <option value="/website/static/src/img/greenfields.jpg">greenfields</option>
-                <option value="/website/static/src/img/landscape.png">landscape</option>
-                <option value="/website/static/src/img/aqua.jpg">aqua</option>
-            </select>
+            <a class="carousel-background">
+                Background
+                <select class="form-control" name="carousel-background">
+                    <option value="/website/static/src/img/banner/aqua.jpg">Aqua</option>
+                    <option value="/website/static/src/img/banner/baby_blue.jpg">Baby Blue</option>
+                    <option value="/website/static/src/img/banner/black.jpg">Black</option>
+                    <option value="/website/static/src/img/banner/business_guy.jpg">Business Guy</option>
+                    <option value="/website/static/src/img/banner/color_splash.jpg">Color Splash</option>
+                    <option value="/website/static/src/img/banner/flower_field.jpg">Flowers Field</option>
+                    <option value="/website/static/src/img/banner/greenfields.jpg">Greenfields</option>
+                    <option value="/website/static/src/img/banner/landscape.jpg">Landscape</option>
+                    <option value="/website/static/src/img/banner/mango.jpg">Mango</option>
+                    <option value="/website/static/src/img/banner/mountains.jpg">Mountains</option>
+                    <option value="/website/static/src/img/banner/orange_red.jpg">Orange Red</option>
+                    <option value="/website/static/src/img/banner/flower.jpg">Purple</option>
+                    <option value="/website/static/src/img/banner/velour.jpg">Velour</option>
+                    <option value="/website/static/src/img/banner/wood.jpg">Wood</option>
+                    <option value="/website/static/src/img/banner/yellow_green.jpg">Yellow Green</option>
+                </select>
+                <input class="form-control input-sm" type="text" placeholder="http://...."/>
+            </a>
         </li>
         <li class='oe_snippet_options'>
-            <select name="carousel-style">
-                <option value="no_image">No image</option>
-                <option value="image_left">Image left</option>
-                <option value="image_right">Image right</option>
-            </select>
+            <a class="carousel-style">
+                Style
+                <select class="form-control" name="carousel-style">
+                    <option value="text_only">Text Only</option>
+                    <option value="image_text">Image - Text</option>
+                    <option value="text_image">Text - Image</option>
+                </select>
+            </a>
         </li>
 
         <!-- thumbnail to display inside the bottom widget list editor -->
-        <div class='oe_snippet_thumbnail oe_label'>carousel</div>
+        <div class='oe_snippet_label'>Banner</div>
+        <div class='oe_snippet_thumbnail'>
+            <img src="/website/static/src/img/banner/color_splash.jpg" style="position: absolute; left: 0; top: 40px; max-width: 100%"/>
+            <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; left: 10px; top: 52px; max-width: 25%"/>
+            <span style="position: absolute; top: 50px; right: 10px;">Banner</span>
+        </div>
 
         <!-- body to insert after drag and drop thumbnail -->
-        <div id="myCarousel" class="oe_snippet_body carousel slide" data-interval="10000">
+        <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000">
             <!-- Carousel items -->
             <div class="carousel-inner">
-                <div class="item active" style="background-image: url(/website/static/src/img/greenfields.jpg); background-size: cover;">
+                <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
                     <div class="container">
-                        <div class="content" style="padding-top: 90px; padding-bottom:45px;">
-                            <h1>Create Awesome Websites</h1>
-                            <h3>Super easy, fully flexible</h3>
-                            <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
+                        <div class="carousel-caption content">
+                            <h1>Set Your Banner Title</h1>
+                            <h3>Customize with the top-left menu</h3>
+                            <p>
+                                <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
+                            </p>
+                        </div>
+                        <div class="carousel-image">
+                            <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Carousel nav -->
-            <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
-            <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
-        </div>
-
-        <!-- custom data for the widget -->
-        <div class="item" style="background-image: url(/website/static/src/img/china.jpg); background-size: cover; background-position: bottom;" >
-            <div class='container'>
-                <div class="content" style="padding-top: 90px; padding-bottom:45px;">
-                    <h1>Your New Banner Slide</h1>
-                    <h3>With another convincing subtitle</h3>
-                    <a href="/page/website.contactus" class="btn btn-success btn-large mt16">Contact us</a>
-                </div>
-            </div>
+            <a class="carousel-control left" href="#myCarousel" data-slide="prev" style="width: 10%"></a>
+            <a class="carousel-control right" href="#myCarousel" data-slide="next" style="width: 10%"></a>
         </div>
     </div>
 
-    <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-action='mutate' data-selector='.container'>
-        <div class='oe_snippet_thumbnail oe_label'>Darken</div>
+    <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-selector='section'>
+        <div class='oe_snippet_thumbnail oe_snippet_label'>Darken</div>
     </div>
 
-    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='content' data-action='mutate' data-selector='.container'>
-        <div class="oe_snippet_body" style="display: none;"></div>
-        <div class='oe_snippet_thumbnail oe_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
+    <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
+        <div class='oe_snippet_thumbnail'>Well</div>
+        <div class="oe_snippet_body well">
+            Manage your sales funnel with no effort with OpenERP CRM. Attract
+            leads, follow-up on phone calls and meetings. Analyse the quality
+            of your leads to make informed decisions.
+        </div>
     </div>
 
-    <div t-name="website.snippets.spacer" data-snippet-id='resize' data-category='structure' data-action='insert' data-selector-siblings='.container'>
-        <div class='oe_snippet_thumbnail oe_label'>Spacer</div>
-        <div class="oe_snippet_body container mt32"></div>
+    <div t-name="website.snippets.quote" data-snippet-id='quote' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
+        <div class='oe_snippet_thumbnail oe_snippet_label'>Quote</div>
+        <blockquote class="oe_snippet_body">
+            <p>
+                OpenERP provides essential platform for our project management.
+                Things are better organized and more visible with it.
+            </p>
+            <small>John Doe, CEO</small>
+        </blockquote>
     </div>
 
-    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-action='insert' data-selector-siblings='.container'>
-        <div class='oe_snippet_thumbnail oe_label'>Main Title</div>
-        <section class="oe_snippet_body container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h1 class="mt64">Welcome To Your New Homepage,</h1>
-                    <h2 class="mt32 subheader">where <b><em>everything</em></b> can be customized </h2>
-                </div>
+    <div t-name="website.snippets.panel" data-snippet-id='panel' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
+        <div class='oe_snippet_thumbnail oe_snippet_label'>Panel</div>
+        <div class="oe_snippet_body panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">OpenERP Features</h3>
             </div>
-        </section>
+            <div class="panel-body">
+                OpenERP's collaborative and realtime project management helps
+                your team get work done. Keep track of everything, from the big
+                picture to the minute details, from the customer contract to
+                the billing.
+            </div>
+        </div>
     </div>
 
-    <div t-name="website.snippets.three-collumns" data-snippet-id='three-collumns' data-category='structure' data-action='insert' data-selector-siblings='.container'>
-        <div class='oe_snippet_thumbnail oe_label'>three-collumns</div>
-        <section class="oe_snippet_body container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h2 class="mt48">Ut enim ad minim veniam</h2>
-                </div>
-            </div>
-            <div class="row mt32">
-                <div class="col-md-4">
-                    <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
-                    <h4 class="mt16">Cillum Dolore</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat.</p>
-                </div>
-                <div class="col-md-4">
-                    <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
-                    <h4 class="mt16">Mollit Anim</h4>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                </div>
-                <div class="col-md-4">
-                    <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
-                    <h4 class="mt16">Nemo Enim Ipsam</h4>
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                        doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
-                        veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                        ipsam voluptatem quia voluptas</p>
-                </div>
-            </div>
-        </section>
+    <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='content' data-selector-children='.oe_structure'>
+        <div class="oe_snippet_body" style="height: 0; position: absolute;"></div>
+        <div class='oe_snippet_thumbnail oe_snippet_label' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
     </div>
 
-    <div t-name="website.snippets.header-block" data-snippet-id='header-block' data-category='structure' data-action='insert' data-selector-siblings='.container'>
-        <div class='oe_snippet_thumbnail oe_label'>header-block</div>
-        <section class="container oe_snippet_body">
-            <div class="row">
-                <div class="col-md-5">
-                    <img class="img-rounded img-responsive" src="/website/static/src/img/island.jpg"/>
-                </div>
-                <div class="col-md-6 col-lg-offset-1">
-                    <p class="mt16">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat.</p>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                    <div class="text-center">
-                        <a href="http://www.openerp.com/start" class="btn btn-default mt16 btn-lg btn-primary">Call To  <em>Action</em></a>
+    <div t-name="website.snippets.text-image" data-snippet-id='text-image' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_thumbnail oe_snippet_label'>
+            <span style="position: absolute; top: 50px; left: 5px;">Text-Image</span>
+            <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; right: 5px; top: 50px; max-width: 28%"/>
+        </div>
+        <section class="oe_snippet_body dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="mt48">Enterprise Social Network</h3>
+                        <p>
+                            Make every employee feel more connected and engaged
+                            with twitter-like features for your own company. Follow
+                            people, share best practices, 'like' top ideas, etc.
+                        </p><p>
+                            Connect with experts, follow what interests you, share
+                            documents and promote best practices with OpenERP
+                            Social application. Get work done with effective
+                            collaboration across departments, geographies
+                            and business applications.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <img class="img-responsive shadow mt32 mb32" src="/website/static/src/img/text_image.png"/>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+
+    <div t-name="website.snippets.image-text" data-snippet-id='image-text' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_thumbnail oe_snippet_label'>
+            <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; left: 5px; top: 50px; max-width: 28%"/>
+            <span style="position: absolute; top: 50px; right: 5px;">Image-Text</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img class="img-responsive shadow mt32 mb32" src="/website/static/src/img/image_text.jpg"/>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="mt48">Manage Your Shops</h3>
+                        <p>
+                            OpenERP's Point of Sale introduces a super clean
+                            interface with no installation required that runs
+                            online and offline on modern hardwares.
+                        </p><p>
+                            It's full integration with the company inventory
+                            and accounting, gives you real time statistics and
+                            consolidations amongst all shops without the hassle
+                            of integrating several applications.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.jumbotron" data-snippet-id='jumbotron' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Jumbotron</div>
+        <div class='oe_snippet_thumbnail'>
+            <div style="position: absolute; top: 30px; background-color: #eee; width: 100%; padding: 8px 0 6px 4px;">
+                <div style="color: #000; display: block; text-align: left;">
+                    Jumbotron
+                    <div style="font-size: 9px; line-height: 9px; text-shadow: none;">
+                        Jumbotron Sub-title
+                        <br/><span class="label label-primary">Contact us</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="oe_snippet_body jumbotron mt16 mb16">
+            <div class="container">
+                <h1>Sell Online. Easily.</h1>
+                <p>
+                    Get your online shop ready in a few clicks with OpenERP Commerce.
+                </p>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="/website.contactus">
+                        Contact us
+                    </a>
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.text-block" data-snippet-id='text-block' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Text Block</div>
+        <div class='oe_snippet_thumbnail'>
+            <div style="position: absolute; top: 26px; left: 5px;  width: 94%;">
+                <div style="display: block;">
+                    Text Block
+                    <div style="text-shadow: none;font-size: 9px; line-height: 9px; color: #bbb;margin-bottom: 5px;">
+                        Jumbotron Sub-title
+                    </div>
+                    <div style="text-shadow: none;font-size: 6px; line-height: 6px; text-align: left;">
+                        Organize projects around your own processes. Work
+                        on tasks and issues using the kanban view, schedule
+                        tasks using the gantt chart and control deadlines
+                        in the calendar view. Every project may have it's
+                        own stages allowing teams to optimize their job.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="oe_snippet_body mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h1>
+                            OpenERP Project Management<br/>
+                            <small>Infinitely flexible. Incredibly easy to use.</small>
+                        </h1>
+                    </div>
+                    <div class="col-md-12 mb16 mt16">
+                        <p>
+                            OpenERP's <b>collaborative and realtime</b> project
+                            management helps your team get work done. Keep
+                            track of everything, from the big picture to the
+                            minute details, from the customer contract to the
+                            billing.
+                        </p><p>
+                            Organize projects around your own processes. Work
+                            on tasks and issues using the kanban view, schedule
+                            tasks using the gantt chart and control deadlines
+                            in the calendar view. Every project may have it's
+                            own stages allowing teams to optimize their job.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.hr" data-snippet-id='hr' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class="oe_snippet_thumbnail oe_snippet_label">
+            <hr style="position: absolute;top: 61px;margin: 0;width: 100%;border-color: #888;"/>
+            <div style="position: absolute;width: 100%;top: 51px;">Separator</div>
+        </div>
+        <hr class="oe_snippet_body"/>
+    </div>
+
+
+    <div t-name="website.snippets.big-picture" data-snippet-id='big-picture' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Big Picture</div>
+        <div class='oe_snippet_thumbnail'>
+            <div style="position: absolute; top: 8px; left: 5px;  width: 94%;">
+                <div style="display: block;">
+                    Big Picture
+                    <img src="/website/static/src/img/big_picture.png" style="max-width: 100%"/>
+                    <div style="text-shadow: none;font-size: 6px; line-height: 6px; margin: 5px 10px">
+                        OpenERP's Point of Sale introduces a super clean
+                        interface with no installation required.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <section class="oe_snippet_body dark mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt32 mb16">
+                        <h2>Work with the hardware you already have...</h2>
+                    </div>
+                    <div class="col-md-12">
+                        <img class="img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                        <p class="text-center">
+                            <b>No installation required</b>
+                        </p>
+                        <p class="text-center">
+                            OpenERP's Point of Sale introduces a super clean
+                            interface with no installation required that runs
+                            online and offline on modern hardware. Laptops,
+                            tablets, industrial POS, it runs on everything.
+                        </p>
+                        <p class="text-center">
+                            <a href="/page/website.contactus">Get more information »</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.three-columns" data-snippet-id='three-columns' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Three Columns</div>
+        <div class="oe_snippet_thumbnail">
+            <div style="padding-top: 22px;">
+                Three Columns
+                <div class="clearfix" style="font-size: 6px;text-shadow: none;">
+                    <div class="pull-left" style="width: 33%;line-height: 6px;">
+                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 90%;"/>
+                        Post job offers and keep track of each application received.
+                    </div>
+                    <div class="pull-left" style="width: 33%;line-height: 6px;">
+                        <img src="/website/static/src/img/desert_thumb.jpg" style="max-width: 90%;"/>
+                        Break down information silos. Share knowledge and best practices amongst all employees.
+                    </div>
+                    <div class="pull-left" style="width: 33%; line-height: 6px;">
+                        <img src="/website/static/src/img/deers_thumb.jpg" style="max-width: 90%;"/>
+                        The agenda of each employee is updated accordingly.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="oe_snippet_body mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb16">
+                        <h2>OpenERP HR Features</h2>
+                        <h3 class="text-muted">Manage your company most important asset: People</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg"/>
+                        <h4 class="mt16">Streamline Recruitments</h4>
+                        <p>
+                            Post job offers and keep track of each application
+                            received. Follow applicants in your recruitment process
+                            with the smart kanban view.
+                        </p><p>
+                            Save time by automating some communications with email
+                            templates. Resumes are indexed automatically, allowing
+                            you to easily find for specific profiles.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg"/>
+                        <h4 class="mt16">Enterprise Social Network</h4>
+                        <p>
+                            Break down information silos. Share knowledge and best
+                            practices amongst all employees. Follow specific people
+                            or documents and join groups of interests to share
+                            expertise and documents.
+                        </p><p>
+                            Interact with your collegues in real time with live chat.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg"/>
+                        <h4 class="mt16">Leaves Management</h4>
+                        <p>
+                            Keep track of the vacation days accrued by each
+                            employee. Employees enter their requests (paid
+                            holidays, sick leave, etc), for managers to approve and
+                            validate. It's all done in just a few clicks. The
+                            agenda of each employee is updated accordingly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.portfolio" data-snippet-id='portfolio' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Portfolio</div>
+        <div class='oe_snippet_thumbnail'>Portfolio</div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>Our Porfolio</h2>
+                        <h4 class="text-muted">More than 500 successful projects</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg"/>
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg"/>
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg"/>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg"/>
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg"/>
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg"/>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/landscape.jpg"/>
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg"/>
+                        <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.image-gallery" data-snippet-id='image-gallery' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Image Gallery</div>
+        <div class='oe_snippet_thumbnail'>
+            <div style="padding-top: 22px;">
+                Image Gallery
+                <div class="clearfix">
+                    <div style="float: right; width: 56px;height: 30px;">
+                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
+                        <img src="/website/static/src/img/deers_thumb.jpg" style="max-width: 24px;"/>
+                        <img src="/website/static/src/img/desert_thumb.jpg" style="max-width: 24px;"/>
+                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
+                    </div>
+                    <img src="/website/static/src/img/desert.jpg" style="float-left; width: 50px;height: 31px;margin-top: 4px;"/>
+                    <img src="/website/static/src/img/deers_thumb.jpg" style="float-left; max-width: 24px;"/>
+                    <img src="/website/static/src/img/landscape.jpg" style="float-left; max-width: 50px;"/>
+                    <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
+                </div>
+            </div>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center mt16 mb32">
+                        <h2>Our Customer References</h2>
+                        <h4 class="text-muted">More than 500 successful projects</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/desert.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/desert_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-6">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/landscape.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.pricing" data-snippet-id='pricing' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Comparisons</div>
+        <div class='oe_snippet_thumbnail'>Comparisons</div>
+        <section class="oe_snippet_body">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center mt16 mb32">
+                    <h2>Our Offers</h2>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Beginner</h2>
+                          <p style="margin: 0" class="text-muted">
+                              Starter package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">450</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 8 hours</li>
+                        <li class="list-group-item">Screen: 2.5 inch</li>
+                        <li class="list-group-item">Weight: 1.1 ounces</li>
+                        <li class="list-group-item">No support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Professional</h2>
+                          <p style="margin: 0">
+                              Enterprise package
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">590</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 12 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Limited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-info">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading text-center">
+                          <h2 style="margin: 0">Expert</h2>
+                          <p style="margin: 0" class="text-muted">
+                              The top of the top
+                          </p>
+                      </div>
+                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">890</b><small>.00</small></h2>
+                        <div>per month</div>
+                      </div>
+
+                      <!-- List group -->
+                      <ul class="list-group">
+                        <li class="list-group-item">Battery: 20 hours</li>
+                        <li class="list-group-item">Screen: 2.8 inch</li>
+                        <li class="list-group-item">Weight: 1.2 ounces</li>
+                        <li class="list-group-item">Unlimited support</li>
+                      </ul>
+                      <div class="panel-footer text-center">
+                          <p class="text-muted">
+                              <i>Free shipping, satisfied or reimbursed.</i>
+                          </p>
+                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.cta" data-snippet-id='cta' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>Buttons</div>
+        <div class='oe_snippet_thumbnail'>Buttons</div>
+        <section class="oe_snippet_body dark">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center mt16 mb16">
+                    <a href="/shop" class="btn btn-info btn-lg">View Products</a>
+                    <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                </div>
+              </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.faq" data-snippet-id='faq' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>FAQ</div>
+        <div class='oe_snippet_thumbnail'>FAQ</div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <h2 class="page-header">
+                    Point of Sale Questions <small>v7</small>
+                </h2>
+                <h3>
+                    Which hardware does OpenERP POS support?
+                </h3>
+                <p>
+                    OpenERP's POS is a web application that can run on any device that
+                    can display websites with little to no setup required.
+                </p><p>
+                    The Point of Sale works perfectly on any kind of touch enabled
+                    device, whether it's multi-touch tablets like an iPad or
+                    keyboardless resistive touchscreen terminals.
+                </p>
+                <h3>
+                    Does it works offline?
+                </h3>
+                <p>
+                    Deploy new stores with just an internet connection: no
+                    installation, no specific hardware required. It works with any
+                    iPad, Tablet PC, laptop or industrial POS machine.
+                </p><p>
+                    While an internet connection is required to start the Point of
+                    Sale, it will stay operational even after a complete disconnection.
+                </p>
+
+                <h2 class="page-header">
+                    Project Management Questions <small>v7</small>
+                </h2>
+                <h3>
+                    Can I use it to manage projects based on agile methodologies?
+                </h3>
+                <p>
+                    Yes.
+                </p>
+            </div>
+        </section>
+    </div>
+
+
+    <div t-name="website.snippets.references" data-snippet-id='references' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_label'>References</div>
+        <div class='oe_snippet_thumbnail'>References</div>
+        <section class="oe_snippet_body mb32 mt16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center">
+                            Our References
+                        </h1>
+                        <h3 class="text-muted text-center">
+                            More than 500 happy customers.
+                        </h3>
+                    </div>
+                    <div class="col-md-4 col-md-offset-1">
+                        <blockquote class="mt16 mb32" data-snippet-id="quote">
+                            <p>
+                                OpenERP provides essential platform for our project management.
+                                Things are better organized and more visible with it.
+                            </p>
+                            <small>John Doe, CEO</small>
+                        </blockquote>
+                    </div>
+                    <div class="col-md-4 col-md-offset-2">
+                        <blockquote class="mt16 mb32" data-snippet-id="quote">
+                            <p>
+                                OpenERP provides essential platform for our project management.
+                                Things are better organized and more visible with it.
+                            </p>
+                            <small>John Doe, CEO</small>
+                        </blockquote>
+                    </div>
+                    <div class="clearfix"/>
+                    <div class="col-md-2 col-md-offset-1">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
 
 </templates>

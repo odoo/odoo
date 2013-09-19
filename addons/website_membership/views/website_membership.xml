@@ -16,10 +16,14 @@
     <template id="layout" name="Members Layout">
         <t t-call="website.layout">
             <t t-set="title">Partners</t>
-            <div class="container">
-                <div class="row">
-                    <t t-raw="ref_content" />
+            <div id="wrap">
+                <div class="oe_structure"> </div>
+                <div class="container">
+                    <div class="row">
+                        <t t-raw="ref_content" />
+                    </div>
                 </div>
+                <div class="oe_structure"> </div>
             </div>
         </t>
     </template>
