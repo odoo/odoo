@@ -28,48 +28,48 @@ class mrp_config_settings(osv.osv_memory):
 
     _columns = {
         'module_mrp_repair': fields.boolean("Manage repairs of products ",
-            help="""Allows to manage all product repairs.
-                    * Add/remove products in the reparation
-                    * Impact for stocks
-                    * Invoicing (products and/or services)
-                    * Warranty concept
-                    * Repair quotation report
-                    * Notes for the technician and for the final customer.
-                This installs the module mrp_repair."""),
-        'module_mrp_operations': fields.boolean("Allow detailed planning of work orders",
-            help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
-                This installs the module mrp_operations."""),
+            help='Allows to manage all product repairs.\n'
+                 '* Add/remove products in the reparation\n'
+                 '* Impact for stocks\n'
+                 '* Invoicing (products and/or services)\n'
+                 '* Warranty concept\n'
+                 '* Repair quotation report\n'
+                 '* Notes for the technician and for the final customer.\n'
+                 '-This installs the module mrp_repair.'),
+        'module_mrp_operations': fields.boolean("Allow detailed planning of work order",
+            help='This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).\n'
+                 '-This installs the module mrp_operations.'),
         'module_mrp_byproduct': fields.boolean("Produce several products from one manufacturing order",
-            help="""You can configure by-products in the bill of material.
-                Without this module: A + B + C -> D.
-                With this module: A + B + C -> D + E.
-                This installs the module mrp_byproduct."""),
+            help='You can configure by-products in the bill of material.\n'
+                 'Without this module: A + B + C -> D.\n'
+                 'With this module: A + B + C -> D + E.\n'
+                 '-This installs the module mrp_byproduct.'),
         'module_mrp_jit': fields.boolean("Generate procurement in real time",
-            help="""This allows Just In Time computation of procurement orders.
-                All procurement orders will be processed immediately, which could in some
-                cases entail a small performance impact.
-                This installs the module mrp_jit."""),
+            help='This allows Just In Time computation of procurement orders.\n'
+                 'All procurement orders will be processed immediately, which could in some '
+                 'cases entail a small performance impact.\n'
+                 '-This installs the module mrp_jit.'),
         'module_stock_no_autopicking': fields.boolean("Manage manual picking to fulfill manufacturing orders ",
-            help="""This module allows an intermediate picking process to provide raw materials to production orders.
-                For example to manage production made by your suppliers (sub-contracting).
-                To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking"
-                and put the location of the supplier in the routing of the assembly operation.
-                This installs the module stock_no_autopicking."""),
+            help='This module allows an intermediate picking process to provide raw materials to production orders.\n'
+                 'For example to manage production made by your suppliers (sub-contracting).\n'
+                 'To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking" '
+                 'and put the location of the supplier in the routing of the assembly operation.\n'
+                 '-This installs the module stock_no_autopicking.'),
         'group_mrp_routings': fields.boolean("Manage routings and work orders ",
             implied_group='mrp.group_mrp_routings',
-            help="""Routings allow you to create and manage the manufacturing operations that should be followed
-                within your work centers in order to produce a product. They are attached to bills of materials
-                that will define the required raw materials."""),
-        'group_mrp_properties': fields.boolean("Allow several bill of materials per product using properties",
+            help='Routings allow you to create and manage the manufacturing operations that should be followed '
+                 'within your work centers in order to produce a product. They are attached to bills of materials '
+                 'that will define the required raw materials.'),
+        'group_mrp_properties': fields.boolean("Allow several bill of materials per products using properties",
             implied_group='product.group_mrp_properties',
             help="""The selection of the right Bill of Material to use will depend on the properties specified on the sales order and the Bill of Material."""),
         'module_product_manufacturer': fields.boolean("Define manufacturers on products ",
-            help="""This allows you to define the following for a product:
-                    * Manufacturer
-                    * Manufacturer Product Name
-                    * Manufacturer Product Code
-                    * Product Attributes.
-                This installs the module product_manufacturer."""),
+            help='This allows you to define the following for a product:\n'
+                 '* Manufacturer\n'
+                 '* Manufacturer Product Name\n'
+                 '* Manufacturer Product Code\n'
+                 '* Product Attributes.\n'
+                 '-This installs the module product_manufacturer.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
