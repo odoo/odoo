@@ -692,8 +692,8 @@
         },
     });
 
-    var IMAGES_PER_ROW = 4;
-    var IMAGES_ROWS = 3;
+    var IMAGES_PER_ROW = 6;
+    var IMAGES_ROWS = 4;
     website.editor.ExistingImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image.existing',
         events: _.extend({}, website.editor.Dialog.prototype.events, {

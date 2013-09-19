@@ -150,9 +150,9 @@
                 <li class="next disabled"><a href="#">Next →</a></li>
             </ul>
             <div class="row mt16" t-foreach="rows" t-as="row">
-                <div class="col-sm-3" t-foreach="row" t-as="attachment">
+                <div class="col-sm-2" t-foreach="row" t-as="attachment">
                     <t t-set="url">/website/attachment/<t t-esc="attachment.id"/></t>
-                    <img t-att-src="url" t-att-alt="attachment.name" class="img thumbnail"/>
+                    <img t-att-src="url" t-att-alt="attachment.name" class="img img-responsive"/>
                 </div>
             </div>
         </div>
