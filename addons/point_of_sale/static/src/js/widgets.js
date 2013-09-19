@@ -668,7 +668,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
             if(this.action){
-                this.$el.click(function(){ self.action(); });
+                this.$el.click(function(){
+                    var draft_order = _.find( self.pos.get('orders').models, function(order){
+                        return order.get('orderLines').length !== 0 && order.get('paymentLines').length === 0;
+                    });
+                    if(draft_order){
+                    	if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
+                            self.action();
+                        }
+                    }else{
+                        self.action();
+                    }
+                });
             }
         },
         show: function(){ this.$el.removeClass('oe_hidden'); },
