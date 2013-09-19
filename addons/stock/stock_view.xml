@@ -1201,7 +1201,7 @@
             <field name="name">stock.picking.type.kanban</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban version="7.0" class="oe_background_grey" create="0">
                     <field name="complete_name"/>
                     <field name="color"/>
                     <field name="count_picking_ready"/>
@@ -1310,6 +1310,8 @@
             action="action_picking_type_form"
             id="menu_action_picking_type_form"
             parent="menu_stock_warehouse_mgmt" sequence="1"/>
+
+        
 
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">

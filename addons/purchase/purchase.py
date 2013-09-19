@@ -1376,4 +1376,15 @@ class account_invoice_line(osv.Model):
             readonly=True),
     }
 
+class product_product(osv.osv):
+    _inherit = "product.product"
+
+    def _get_buy_route(self, cr, uid, context=None):
+        buy_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
+        return [buy_route]
+
+    _defaults = {
+        'route_ids': _get_buy_route,
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
