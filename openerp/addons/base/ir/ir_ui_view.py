@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import collections
 import copy
 import logging
 import os
@@ -260,6 +261,8 @@ class view(osv.osv):
             else:
                 node.set('data-oe-id', str(view_id))
                 node.set('data-oe-xpath', xpath)
+                node.set('data-oe-model', 'ir.ui.view')
+                node.set('data-oe-field', 'arch')
 
         return specs_tree
 
@@ -682,13 +685,18 @@ class view(osv.osv):
         r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
         return r['arch']
 
-    def distribute_branding(self, e, branding=None):
+    def distribute_branding(self, e, branding=None, parent_xpath='',
+                            index_map=misc.ConstantMapping(1)):
         if e.get('t-ignore') or e.tag == 'head':
             # TODO: find a better name and check if we have a string to boolean helper
             return
+
+        node_path = e.get('data-oe-xpath')
+        if node_path is None:
+            node_path = "%s/%s[%d]" % (parent_xpath, e.tag, index_map[e.tag])
         if branding and not (e.get('data-oe-model') or e.get('t-field')):
             e.attrib.update(branding)
-            e.set('data-oe-xpath', e.getroottree().getpath(e))
+            e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
         # if a branded element contains branded elements distribute own
@@ -702,8 +710,14 @@ class view(osv.osv):
                 if e.get(attribute))
 
             if 't-raw' not in e.attrib:
+                # TODO: collections.Counter if remove p2.6 compat
+                # running index by tag type, for XPath query generation
+                indexes = collections.defaultdict(lambda: 0)
                 for child in e.iterchildren(tag=etree.Element):
-                    self.distribute_branding(child, distributed_branding)
+                    indexes[child.tag] += 1
+                    self.distribute_branding(child, distributed_branding,
+                                             parent_xpath=node_path,
+                                             index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a
