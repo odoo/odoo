@@ -140,15 +140,6 @@ table.editorbar-panel td.selected {
 }
 
 /* ---- SNIPPET EDITOR ---- */
-#oe_droperror .modal-header {
-  border-bottom: 0;
-}
-#oe_droperror .modal-footer {
-  border-top: 0;
-  margin: 0;
-  padding: 0;
-}
-
 #oe_snippets {
   position: fixed;
   left: 0px;
@@ -282,13 +273,19 @@ table.editorbar-panel td.selected {
   border-radius: 3px;
 }
 
-.oe_drop_zone {
+.oe_drop_zone, .oe_drop_zone_style {
   background: rgba(153, 0, 255, 0.17);
   border-radius: 3px;
 }
-.oe_drop_zone.oe_hover {
+.oe_drop_zone.oe_hover, .oe_drop_zone_style.oe_hover {
   background: rgba(0, 255, 133, 0.22);
   z-index: 1001;
+}
+
+.oe_drop_zone_style {
+  color: white;
+  height: 48px;
+  margin-bottom: 32px;
 }
 
 /* ---- SNIPPET MANIPULATOR ---- */

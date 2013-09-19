@@ -387,11 +387,6 @@
                     $('.oe_drop_zone').droppable('destroy').remove();
                     if (!dropped) {
                         self.$modal.modal('toggle');
-                        setTimeout(function () {
-                            self.$modal.fadeOut(function () {
-                                self.$modal.modal('hide');
-                            });
-                        }, 3000);
                     }
                 },
             });

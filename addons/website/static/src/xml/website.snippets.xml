@@ -16,17 +16,38 @@
         </li>
     </t>
     <t t-name="website.snippets_modal">
-        <div class="modal" id="oe_droperror" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal" id="oe_droperror" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
                         <h4 class="modal-title">
-                            Nothing Added<br/>
-                            <small>Please drop in a valid zone</small>
+                            Building Block Not Inserted
                         </h4>
                     </div>
-                    <div class="modal-footer"></div>
+                    <div class="modal-body">
+                        <p>
+                            The building block has not been inserted in your
+                            page because you did not drop it in a valid zone.
+                            Valid zone are represented by rectangle like this:
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-4 oe_drop_zone_style text-center">
+                                drop in this zone
+                            </div>
+                        </div>
+                        <p class="text-muted">
+                            When your cursor is in a valid zone, OpenERP shows
+                            you a preview of the building block in your page.
+                            You must release the block when the preview is visible.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <div class="pull-left">
+                            <input type="checkbox" value="1"/> Never show this tip again
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
