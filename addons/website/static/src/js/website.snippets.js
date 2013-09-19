@@ -689,7 +689,7 @@
                     return;
                 }
                 var $li = $("<li/>").data(val);
-                $li.append($('<a href="#"/>').text(val.label));
+                $li.append($('<a/>').text(val.label));
                 $ul.append($li);
                 if (self.$target.hasClass( "oe_snippet_" + $li.data("snipped-id") )) {
                     $li.addClass("active");
