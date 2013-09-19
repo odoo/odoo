@@ -2,7 +2,7 @@
 <openerp>
     <data>
     <record id="event_technical_training" model="event.event">
-        <field name="name">Technical training in Grand-Rosiere</field>
+        <field name="name">Technical Training</field>
         <field eval="(DateTime.now() + timedelta(15)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(20)).strftime('%Y-%m-%d 16:00:00')" name="date_end"/>
         <field name="type" ref="event.event_type_4"/>

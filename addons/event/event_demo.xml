@@ -29,23 +29,25 @@
 
 <!-- Demo data for Event -->
     <record id="event_0" model="event.event">
-        <field name="name">Concert of Bon Jovi</field>
+        <field name="name">Open Days in Los Angeles</field>
         <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
         <field name="register_max">500</field>
+        <field name="address_id" ref="base.res_partner_24"/>
         <field name="type" ref="event_type_1"/>
     </record>
 
     <record id="event_1" model="event.event">
-        <field name="name">Opera of Verdi</field>
+        <field name="name">Functional Webinar</field>
         <field eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 18:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 21:00:00')" name="date_end"/>
-        <field name="type" ref="event_type_1"/>
-        <field name="register_min">50</field>
+        <field name="type" ref="event_type_0"/>
+        <field name="address_id" ref="base.res_partner_5"/>
         <field name="register_max">350</field>
     </record>
+    
     <record id="event_2" model="event.event">
-        <field name="name">Conference on ERP Business</field>
+        <field name="name">Conference on ERP Business Applications</field>
         <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 14:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
