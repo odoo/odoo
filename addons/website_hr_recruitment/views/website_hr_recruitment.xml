@@ -11,7 +11,7 @@
                 <li><a href="/jobs">Jobs</a></li>
             </xpath>
         </template>
-        
+
         <template id="index" name="Jobs">
             <t t-call="website.layout">
                 <t t-set="head">
@@ -22,6 +22,9 @@
                 <div class="container">
                     <h1>Job Position</h1>
                     <t t-if="no_of_jobs &gt; 0">
+                        <t t-call="website.pager">
+                           <t t-set="classname">pull-left</t>
+                        </t>
                         <t t-foreach="companies" t-as="company">
                             <h2 class="text-center"><t t-field="company.name"/></h2>
                             <table class="table">
@@ -101,12 +104,15 @@
                     </ul>
                 </div>
                 <div class="container">
-                    <h1><t t-field="job.name"/></h1>
+                    <h1 t-field="job.name"></h1>
                     <div class="row">
-                        <div class="span12">
+                        <div class="col-md-12">
                             <t t-if="job.description">
-                                <h3>Description</h3>
-                                <p t-if="job.description"><t t-field="job.description"/></p>
+                                <p t-field="job.description"></p>
+                            </t>
+                            <t t-if="job.requirements">
+                                <h1>Requirements</h1>
+                                <p t-field="job.requirements"></p>
                             </t>
                         </div>
                     </div>
