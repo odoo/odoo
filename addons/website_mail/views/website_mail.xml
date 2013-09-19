@@ -35,7 +35,7 @@
             <div class="container mt48 js_website_mail">
                 <div class="row">
                    <div class="col-md-3" id="left_column">
-                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">Add a new Blog</a>
+                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">New Blog Post</a>
                         <div>
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
                                 <div class="col-lg-7">
