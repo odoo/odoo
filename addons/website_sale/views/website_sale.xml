@@ -215,12 +215,16 @@
                 <div class='row mt16' style="margin-left: 15px !important;">
                 <t t-foreach="product.recommended_products()" t-as="product">
                     <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
-                        <a t-attf-href="/shop/product/#{ product.id }/">
-                            <div class='mt16 text-center'>
-                                <img t-att-src="product.img('image_small')"/>
-                                <h5 t-field='product.name'></h5>
-                            </div>
-                        </a>
+                        <div class='mt16 text-center'>
+                            <img t-att-src="product.img('image_small')"/>
+                            <h5>
+                                <a t-attf-href="/shop/product/#{ product.id }/"
+                                   style="display: block">
+                                    <span t-field='product.name'
+                                          style="display: block"/>
+                                </a>
+                            </h5>
+                        </div>
                     </div>
                 </t>
                 </div>
