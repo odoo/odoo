@@ -110,12 +110,7 @@
                 .click(function () {self.$el.toggleClass("hidden");})
                 .prependTo($ul);
 
-            var $stylesblock = $(openerp.qweb.render('website.snippets_style')).insertAfter($button);
-            $stylesblock.find('#oe_snippets_style').on('click', 'li a', _.bind(this.change_style, this));
-
             this.fetch_snippet_templates();
-
-            this.change_style_options();
 
             this.bind_selected_manipulator();
             this.bind_snippet_click_editor();
@@ -127,6 +122,7 @@
         fetch_snippet_templates: function () {
             var self = this;
             var $styles = self.parent.$('#oe_snippets_style');
+            this.style_templates = {};
 
             _.each(openerp.qweb.compiled_templates, function (val, key) {
                 if (key.indexOf('website.snippets.') === 0) {
@@ -135,62 +131,21 @@
                     if (snipped_id) {
 
                         if ($snippet.data('category') === 'style') {
-                            var $li = $("<li/>")
-                                .data("selector", $snippet.data('selector'))
-                                .data("class", $snippet.find(".oe_snippet_class").text())
-                                .data("snipped-id", snipped_id);
-                            var $a = $('<a href="#"/>').text($snippet.find(".oe_snippet_label").text());
-                            $li.append($a);
-                            $styles.append($li);
-
-                        } else if ($snippet.find(".oe_snippet_thumbnail").length) {
+                            self.style_templates[snipped_id] = {
+                                'snipped-id' : snipped_id,
+                                'selector': $snippet.data('selector'),
+                                'class': $snippet.find(".oe_snippet_class").text(),
+                                'label': $snippet.find(".oe_snippet_label").text(),
+                                '$el': $snippet
+                            };
+                        }
+                        if ($snippet.find(".oe_snippet_thumbnail").length) {
                             self.$el.find('#snippet_' + $snippet.data('category')).append($snippet);
                             self.make_snippet_draggable($snippet);
                         }
                     }
                 }
             });
-        },
-        change_style_options: function () {
-            var self = this;
-            var $styles = self.parent.$('#oe_snippets_style');
-            var visible = false;
-            $styles.find("li").each(function () {
-                var $li = $(this);
-                if (!$li.data("snipped-id"))
-                    return;
-
-                if (self.$active_snipped_id && (!$li.data("selector") || self.dom_filter($li.data("selector")).is(self.$active_snipped_id))) {
-                    $li.show();
-                    if (self.$active_snipped_id.hasClass( "oe_snippet_" + $li.data("snipped-id") )) {
-                        $li.addClass("active");
-                    } else {
-                        $li.removeClass("active");
-                    }
-                    visible = true;
-                }
-                else {
-                    $li.hide();
-                }
-            });
-            $styles.parents("li:first").toggle(visible);
-        },
-        change_style: function (event) {
-            var $li = $(event.currentTarget).parent();
-            var snipped_id = $li.data("snipped-id");
-            var active = $li.hasClass("active");
-
-            if (website.snippet.editorRegistry[snipped_id]) {
-                var snippet = new website.snippet.editorRegistry[snipped_id](this, this.$active_snipped_id);
-                snippet.build_snippet(this.$active_snipped_id);
-            }
-            var _class = "oe_snippet_" + snipped_id + " " + ($opt.data("class") || "");
-            if (active) {
-                this.$active_snipped_id.addClass(_class);
-            } else {
-                this.$active_snipped_id.removeClass(_class);
-            }
-            $li.toggleClass("active");
         },
         scrollspy: function (){
             var self = this;
@@ -296,7 +251,6 @@
             } else {
                 self.$active_snipped_id = false;
             }
-            this.change_style_options();
         },
         create_overlay: function ($snipped_id) {
             if (typeof $snipped_id.data("snippet-editor") === 'undefined') {
@@ -617,6 +571,7 @@
             this.$overlay = this.$target.data('overlay');
             this.snippet_id = this.$target.data("snippet-id");
             this._readXMLData();
+            this.load_style_options();
             this.start();
         },
 
@@ -645,6 +600,10 @@
 
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
+            if (!$options.find(".oe_options ul li").length) {
+                $options.find(".oe_options").hide();
+            }
+
             $options.find(".oe_label").text(this.$el.find('.oe_snippet_label').text());
         },
 
@@ -718,6 +677,43 @@
                     self.parent.make_active($clone);
                 },0);
             });
+        },
+
+        load_style_options: function () {
+            var self = this;
+            var $styles = this.$overlay.find('.oe_styles');
+            var $ul = $styles.find('ul');
+            $styles.hide();
+            _.each(this.parent.style_templates, function (val, key) {
+                if (!self.parent.dom_filter(val.selector).is(self.$target)) {
+                    return;
+                }
+                var $li = $("<li/>").data(val);
+                $li.append($('<a href="#"/>').text(val.label));
+                $ul.append($li);
+                if (self.$target.hasClass( "oe_snippet_" + $li.data("snipped-id") )) {
+                    $li.addClass("active");
+                }
+                $styles.show();
+            });
+            $styles.on('click', 'li a', _.bind(this.change_style, this));
+        },
+        change_style: function (event) {
+            var $li = $(event.currentTarget).parent();
+            var snipped_id = $li.data("snipped-id");
+            var active = $li.hasClass("active");
+
+            if (website.snippet.editorRegistry[snipped_id]) {
+                var snippet = new website.snippet.editorRegistry[snipped_id](this, this.$target);
+                snippet.build_snippet(this.$target);
+            }
+            var _class = "oe_snippet_" + snipped_id + " " + ($li.data("class") || "");
+            if (active) {
+                this.$target.removeClass(_class);
+            } else {
+                this.$target.addClass(_class);
+            }
+            $li.toggleClass("active");
         },
 
         /*
