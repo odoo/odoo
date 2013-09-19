@@ -36,7 +36,7 @@ should have the same filenames, only need the code below).
 Due to an awful configuration that ships with reportlab at many Linux
 and Ubuntu distros, we have to override the search path, too.
 """
-_fonts_cache = {'regestered_fonts':[], 'total_system_fonts': 0}
+_fonts_cache = {'registered_fonts':[], 'total_system_fonts': 0}
 _logger = logging.getLogger(__name__)
 
 CustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
@@ -127,54 +127,54 @@ def all_sysfonts_list():
     
 def RegisterCustomFonts():
     """
-    This function registers all fonts in reportlab if font is not regestered
-    and returns the updated list of registered fonts.
+    This function prepares a list for all system fonts to be registered
+    in reportlab and returns the updated list with new fonts.
     """
-    global _fonts_cache
     all_system_fonts = sorted(all_sysfonts_list())
     if len(all_system_fonts) > _fonts_cache['total_system_fonts']:
         all_mode = {}
         last_family = ""
-        for dirname in all_system_fonts:
+        for i,dirname in enumerate(all_system_fonts):
             try:
                 font_info = ttfonts.TTFontFile(dirname)
-                if (font_info.name, font_info.name) not in _fonts_cache['regestered_fonts']:
-                    if font_info.name not in pdfmetrics._fonts:
-                        pdfmetrics.registerFont(ttfonts.TTFont(font_info.name, dirname, asciiReadable=0))
-                    if not last_family:
-                        last_family = font_info.familyName
-                    if not all_mode:
-                        all_mode = {
-                            'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
-                            'italic':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'italic'),
-                            'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
-                            'bolditalic':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bolditalic'),
-                        }
-                    if last_family != font_info.familyName:
-                        CustomTTFonts.extend(all_mode.values())
-                        all_mode = {
-                            'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
-                            'italic':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'italic'),
-                            'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
-                            'bolditalic':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bolditalic'),
-                            }
-                    mode = font_info.styleName.lower().replace(" ", "") 
-                    if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
-                        all_mode['regular'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular')
-                    elif (mode == 'italic') or (mode == 'oblique'):
-                        all_mode['italic'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'italic')
-                    elif mode == 'bold':
-                        all_mode['bold'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold')
-                    elif (mode == 'bolditalic') or (mode == 'boldoblique'):
-                        all_mode['bolditalic'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'bolditalic')
+                if not last_family:
                     last_family = font_info.familyName
-                    _fonts_cache['regestered_fonts'].append((font_info.name, font_info.name))
+                if not all_mode:
+                    all_mode = {
+                        'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
+                        'italic':(),
+                        'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
+                        'bolditalic':(),
+                    }
+                if (last_family != font_info.familyName) or ((i+1) == len(all_system_fonts)):
+                    if not all_mode['italic']:
+                        all_mode['italic'] = (all_mode['regular'][0],all_mode['regular'][1],all_mode['regular'][2],'italic')
+                    if not all_mode['bolditalic']:
+                        all_mode['bolditalic'] = (all_mode['bold'][0],all_mode['bold'][1],all_mode['bold'][2],'bolditalic')
+                    CustomTTFonts.extend(all_mode.values())
+                    all_mode = {
+                        'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
+                        'italic':(),
+                        'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
+                        'bolditalic':(),
+                        }
+                mode = font_info.styleName.lower().replace(" ", "") 
+                if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
+                    all_mode['regular'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular')
+                elif (mode == 'italic') or (mode == 'oblique'):
+                    all_mode['italic'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'italic')
+                elif mode == 'bold':
+                    all_mode['bold'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold')
+                elif (mode == 'bolditalic') or (mode == 'boldoblique'):
+                    all_mode['bolditalic'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'bolditalic')
+                last_family = font_info.familyName
+                _fonts_cache['registered_fonts'].append((font_info.name, font_info.name))
                 _logger.debug("Found font %s at %s", font_info.name, dirname)
             except:
-                remain_mode = ['regular','italic','bold','bolditalic']
                 _logger.warning("Could not register Font %s", dirname)
         _fonts_cache['total_system_fonts'] = len(all_system_fonts)
-    return _fonts_cache['regestered_fonts']
+        _fonts_cache['registered_fonts'] = list(set(_fonts_cache['registered_fonts']))
+    return _fonts_cache['registered_fonts']
     
 def SetCustomFonts(rmldoc):
     """ Map some font names to the corresponding TTF fonts
@@ -184,8 +184,7 @@ def SetCustomFonts(rmldoc):
         This function is called once per report, so it should
         avoid system-wide processing (cache it, instead).
     """
-    global _fonts_cache
-    if not _fonts_cache['regestered_fonts']:
+    if not _fonts_cache['registered_fonts']:
         RegisterCustomFonts()
     for name, font, filename, mode in CustomTTFonts:
         if os.path.isabs(filename) and os.path.exists(filename):
