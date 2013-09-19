@@ -907,6 +907,9 @@ class stock_picking(osv.osv):
                 #First thing that needs to happen is rereserving the quants
                 res = self.rereserve(cr, uid, [picking.id], create = True, context = context) #This time, quants need to be created
                 orig_moves = picking.move_lines
+                orig_qtys = {}
+                for orig in orig_moves:
+                    orig_qtys[orig.id] = orig.product_qty
                 #Add moves that operations need extra
                 extra_moves = []
                 for ops in res[0].keys():
@@ -936,7 +939,7 @@ class stock_picking(osv.osv):
                         #Assign move as it was assigned before
                         stock_move_obj.action_assign(cr, uid, [new_move])
                 todo = []
-                orig_moves = [x for x in orig_moves if x.reserved_quant_ids]
+                orig_moves = [x for x in orig_moves if res[1][x.id] < orig_qtys[x.id]]
                 for move in orig_moves + stock_move_obj.browse(cr, uid, extra_moves, context=context):
                     if move.state == 'draft':
                         self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
