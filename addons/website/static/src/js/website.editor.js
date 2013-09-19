@@ -759,8 +759,14 @@
         if (!range) { return null; }
 
         range.shrink(CKEDITOR.SHRINK_TEXT);
-        return editor.elementPath(range.getCommonAncestor())
-                          .contains('a');
+        var commonAncestor = range.getCommonAncestor();
+        var viewRoot = editor.elementPath(commonAncestor).contains(function (element) {
+            return element.data('oe-model') === 'ir.ui.view'
+        });
+        if (!viewRoot) { return null; }
+        // if viewRoot is the first link, don't edit it.
+        return new CKEDITOR.dom.elementPath(commonAncestor, viewRoot)
+                .contains('a', true);
     }
 
 
