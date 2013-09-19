@@ -5,7 +5,7 @@ $(function () {
         var groupid = $(this).siblings('input[name=group_id]').val();
         var id = $(this).parent().parent().attr('id');
         var email = $(this).siblings('div').find('input[name=email]').val();
-
+        if (!email) return;
         openerp.jsonRpc('/recruitment/message_get_subscribed', 'call', {'email': email, 'id': id, 'mail_group_id': groupid}).then(function (result) {
             if (result == 1) {
                 div.removeClass('show').addClass('hidden');
