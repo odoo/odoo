@@ -297,6 +297,7 @@
             var dropped = false;
 
             $snippet.draggable({
+                greedy: true,
                 helper: 'clone',
                 zIndex: '1000',
                 appendTo: 'body',
@@ -345,26 +346,14 @@
                         over:   function(){
                             if( action === 'insert'){
                                 $(this).first().after($toInsert);
-                            } else {
-                                // FIXME: stupid hack to prevent multiple droppable to activate at once ...
-                                // it's not even working properly but it's better than nothing.
-                                $(".oe_drop_zone.oe_hover").removeClass("oe_hover");
-                                $(this).addClass("oe_hover");
                             }
                         },
                         out:    function(){
                             if( action === 'insert'){
                                 $toInsert.detach();
-                            } else {
-                                $(this).removeClass("oe_hover");
                             }
                         },
                         drop:   function(){
-
-                            if (!$(".oe_drop_zone.oe_hover").length) {
-                                return false;
-                            }
-
                             dropped = true;
 
                             var $target = false;
@@ -379,7 +368,7 @@
                                 $target.data("snippet-editor").build_snippet($target);
 
                             } else {
-                                $target = $(".oe_drop_zone.oe_hover").first().data('target');
+                                $target = $(this).data('target');
 
                                 self.create_overlay($target);
                                 if (website.snippet.editorRegistry[snipped_id]) {
