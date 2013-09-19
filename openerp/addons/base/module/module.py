@@ -24,6 +24,7 @@ from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
 import imp
 import logging
+from operator import attrgetter
 import os
 import re
 import shutil
@@ -178,9 +179,6 @@ class module(osv.osv):
     def _get_views(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
-        view_obj = self.pool.get('ir.ui.view')
-        report_obj = self.pool.get('ir.actions.report.xml')
-        menu_obj = self.pool.get('ir.ui.menu')
 
         dmodels = []
         if field_name is None or 'views_by_module' in field_name:
@@ -192,7 +190,7 @@ class module(osv.osv):
         assert dmodels, "no models for %s" % field_name
 
         for module_rec in self.browse(cr, uid, ids, context=context):
-            res[module_rec.id] = {
+            res_mod_dic = res[module_rec.id] = {
                 'menus_by_module': [],
                 'reports_by_module': [],
                 'views_by_module': []
@@ -212,28 +210,20 @@ class module(osv.osv):
             for imd_res in model_data_obj.read(cr, uid, imd_ids, ['model', 'res_id'], context=context):
                 imd_models[imd_res['model']].append(imd_res['res_id'])
 
-            # For each one of the models, get the names of these ids.
-            # We use try except, because views or menus may not exist.
-            try:
-                res_mod_dic = res[module_rec.id]
-                view_ids = imd_models.get('ir.ui.view', [])
-                for v in view_obj.browse(cr, uid, view_ids, context=context):
-                    aa = v.inherit_id and '* INHERIT ' or ''
-                    res_mod_dic['views_by_module'].append('%s%s (%s)' % (aa, v.name, v.type))
+            def browse(model):
+                M = self.pool[model]
+                # as this method is called before the module update, some xmlid may be invalid at this stage
+                # explictly filter records before reading them
+                ids = M.exists(cr, uid, imd_models.get(model, []), context)
+                return M.browse(cr, uid, ids, context)
 
-                report_ids = imd_models.get('ir.actions.report.xml', [])
-                for rx in report_obj.browse(cr, uid, report_ids, context=context):
-                    res_mod_dic['reports_by_module'].append(rx.name)
+            def format_view(v):
+                aa = v.inherit_id and '* INHERIT ' or ''
+                return '%s%s (%s)' % (aa, v.name, v.type)
 
-                menu_ids = imd_models.get('ir.ui.menu', [])
-                for um in menu_obj.browse(cr, uid, menu_ids, context=context):
-                    res_mod_dic['menus_by_module'].append(um.complete_name)
-            except KeyError, e:
-                _logger.warning('Data not found for items of %s', module_rec.name)
-            except AttributeError, e:
-                _logger.warning('Data not found for items of %s %s', module_rec.name, str(e))
-            except Exception, e:
-                _logger.warning('Unknown error while fetching data of %s', module_rec.name, exc_info=True)
+            res_mod_dic['views_by_module'] = map(format_view, browse('ir.ui.view'))
+            res_mod_dic['reports_by_module'] = map(attrgetter('name'), browse('ir.actions.report.xml'))
+            res_mod_dic['menus_by_module'] = map(attrgetter('complete_name'), browse('ir.ui.menu'))
 
         for key in res.iterkeys():
             for k, v in res[key].iteritems():
@@ -624,7 +614,7 @@ class module(osv.osv):
         # wsgi handlers, so they can react accordingly
         if tuple(res) != (0, 0):
             for handler in openerp.service.wsgi_server.module_handlers:
-                if hasattr(handler,'load_addons'):
+                if hasattr(handler, 'load_addons'):
                     handler.load_addons()
 
         return res
