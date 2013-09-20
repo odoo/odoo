@@ -307,7 +307,7 @@
                     'top': $tumb.outerHeight()/2
                 },
                 start: function(){
-                    self.addClass("hidden");
+                    self.hide();
                     dropped = false;
                     var snipped_id = $snippet.data('snippet-id');
                     var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
@@ -344,11 +344,13 @@
                     $('.oe_drop_zone').droppable({
                         over:   function(){
                             if( action === 'insert'){
+                                dropped = true;
                                 $(this).first().after($toInsert);
                             }
                         },
                         out:    function(){
                             if( action === 'insert'){
+                                dropped = false;
                                 $toInsert.detach();
                             }
                         },
