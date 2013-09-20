@@ -141,8 +141,8 @@
                             <input type="hidden" name="email" t-att-value="subscribe"/>
                             <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
                         </form>
-                    </div>
-                        <div class="col-md-8">
+                    </div><br/><br/>
+                    <div class="col-md-8">
                         <h1 class="text-center" t-field="event_id.name"></h1>
                         <h4 class="text-center">
                             <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
@@ -151,20 +151,19 @@
                         <h5 class="text-center" t-field="event_id.address_id"/>
                     </div>
 
-                    <div class="col-md-4 css_noprint">
+                    <div class="col-md-4 css_noprint pull-right">
                         <h4>When &amp; Where</h4>
                         <a t-att-href="event_id.google_map_link()" target="_BLANK">
                             <img class="thumbnail" t-att-src="event_id.google_map_img()"/>
                         </a>
-                        <address>
-                            <pre t-field="event_id.address_id"/>
-                            <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span><br/>
-                            <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
-                            <t t-if="event_id.organizer_id">
-                                <h6>Organized by:</h6>
-                                <pre><t t-field="event_id.organizer_id"/><t t-if="event_id.phone"><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span></t><t t-if="event_id.email"><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></t></pre>
-                            </t>
-                        </address>
+                        
+                        <address><pre t-field="event_id.address_id"/></address>
+                        <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span><br/>
+                        <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
+                        <t t-if="event_id.organizer_id">
+                            <h6>Organized by:</h6>
+                            <address><strong t-field="event_id.organizer_id.name"/><t t-if="event_id.phone"><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span></t><t t-if="event_id.email"><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></t></address>
+                        </t>
                     </div>
                     <div class="col-md-8">
                         <t t-if="event_id.event_ticket_ids">
@@ -195,7 +194,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="submit" class="btn btn-primary" t-if="event_id.register_avail">Order Now</button>
+                            <button type="submit" class="btn btn-primary pull-right" t-if="event_id.register_avail">Order Now</button><br/>
                         </form>
                         </t>
                         <hr/>
@@ -204,7 +203,7 @@
                         <ul class="media-list" id="comment">
                             <li t-foreach="message_ids" t-as="comment" class="media">
                                 <div class="media-body">
-                                    <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
+                                    <!--t t-call="website.publish"><t t-set="object" t-value="comment"/></t-->
                                     <t t-raw="comment.body"/>
                                     <small class="pull-right muted text-right">
                                         <div t-field="comment.author_id"/>
