@@ -125,11 +125,11 @@ def all_sysfonts_list():
                 __foundFonts[filename]=os.path.join(dirname, filename)
     return filepath
 
-def set_mode(font_info, dirname):
+def init_new_font(familyName, name, font_dir):
     return {
-        'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
+        'regular':(familyName, name, font_dir, 'regular'),
         'italic':(),
-        'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
+        'bold':(familyName, name, font_dir, 'bold'),
         'bolditalic':(),
     }
     
@@ -140,38 +140,40 @@ def RegisterCustomFonts():
     """
     all_system_fonts = sorted(all_sysfonts_list())
     if len(all_system_fonts) > _fonts_cache['total_system_fonts']:
-        all_mode = {}
-        last_family = ""
-        for i,dirname in enumerate(all_system_fonts):
+        font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'] = {}, "", [], []
+        #Prepares a list of registered fonts. Remove such fonts those don't have cmap for Unicode.
+        for dirname in all_system_fonts:
             try:
                 font_info = ttfonts.TTFontFile(dirname)
-                if not last_family:
-                    last_family = font_info.familyName
-                if not all_mode:
-                    all_mode = set_mode(font_info, dirname)
-                if (last_family != font_info.familyName) or ((i+1) == len(all_system_fonts)):
-                    if not all_mode['italic']:
-                        all_mode['italic'] = all_mode['regular'][:3]+('italic',)
-                    if not all_mode['bolditalic']:
-                        all_mode['bolditalic'] = all_mode['bold'][:3]+('bolditalic',)
-                    CustomTTFonts.extend(all_mode.values())
-                    all_mode = set_mode(font_info, dirname)
-                mode = font_info.styleName.lower().replace(" ", "") 
-                if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
-                    all_mode['regular'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular')
-                elif (mode == 'italic') or (mode == 'oblique'):
-                    all_mode['italic'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'italic')
-                elif mode == 'bold':
-                    all_mode['bold'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold')
-                elif (mode == 'bolditalic') or (mode == 'boldoblique'):
-                    all_mode['bolditalic'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'bolditalic')
-                last_family = font_info.familyName
                 _fonts_cache['registered_fonts'].append((font_info.name, font_info.name))
+                registered_font_list.append((font_info.familyName, font_info.name, dirname.split('/')[-1], font_info.styleName.lower().replace(" ", "")))
                 _logger.debug("Found font %s at %s", font_info.name, dirname)
             except:
                 _logger.warning("Could not register Font %s", dirname)
+       
+        #Prepare font list for mapping.Each font family requires four type of modes(regular,bold,italic,bolditalic).
+        #If all modes are not found, dummy entries are made for remaining modes.
+        for i,(familyName, name, font_dir, mode) in enumerate(sorted(registered_font_list)):
+            if not last_family or not font_modes:
+                last_family = familyName
+                font_modes = init_new_font(familyName, name, font_dir)
+            if (last_family != familyName) or ((i+1) == len(registered_font_list)):
+                if not font_modes['italic']:
+                    font_modes['italic'] = font_modes['regular'][:3]+('italic',)
+                if not font_modes['bolditalic']:
+                    font_modes['bolditalic'] = font_modes['bold'][:3]+('bolditalic',)
+                CustomTTFonts.extend(font_modes.values())
+                font_modes = init_new_font(familyName, name, font_dir)
+            if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
+                font_modes['regular'] = (familyName, name, font_dir, 'regular')
+            elif (mode == 'italic') or (mode == 'oblique'):
+                font_modes['italic'] = (familyName, name, font_dir, 'italic')
+            elif mode == 'bold':
+                font_modes['bold'] = (familyName, name, font_dir, 'bold')
+            elif (mode == 'bolditalic') or (mode == 'boldoblique'):
+                font_modes['bolditalic'] = (familyName, name, font_dir, 'bolditalic')
+            last_family = familyName
         _fonts_cache['total_system_fonts'] = len(all_system_fonts)
-        _fonts_cache['registered_fonts'] = list(set(_fonts_cache['registered_fonts']))
     return _fonts_cache['registered_fonts']
     
 def SetCustomFonts(rmldoc):
