@@ -883,6 +883,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
+                        _.each(self.paymentlinewidgets, function(widget){
+                            if( widget.payment_line.get_amount() === 0 ){
+                                widget.payment_line.destroy();
+                            }
+                        });
                         self.pos_widget.screen_selector.set_current_screen(self.back_screen);
                     },
                 });
