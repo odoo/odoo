@@ -21,17 +21,17 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-import base64
+
 
 class showdiff(osv.osv_memory):
     """ Disp[ay Difference for History """
 
-    _name = 'wizard.document.page.history.show_diff'
+    _name = 'blog.post.history.show_diff'
 
     def get_diff(self, cr, uid, context=None):
         if context is None:
             context = {}
-        history = self.pool.get('document.page.history')
+        history = self.pool.get('blog.post.history')
         ids = context.get('active_ids', [])
 
         diff = ""
@@ -43,7 +43,7 @@ class showdiff(osv.osv_memory):
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
-            nids = history.search(cr, uid, [('page_id', '=', old.page_id.id)])
+            nids = history.search(cr, uid, [('post_id', '=', old.post_id.id)])
             nids.sort()
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data noupdate="1">
-        <record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('base.group_sale_salesman')),(4, ref('base.group_document_user'))]" name="groups_id"/>
-        </record>
-        <record id="demo_category1" model="document.page">
-            <field name="name">OpenERP Features</field>
-            <field name="type">category</field>
-            <field  name="content">
+    <!-- <data noupdate="1"> -->
+    <data>
+
+        <!-- CATEGORIES -->
+        <record id="blog_category_1" model="blog.category">
+            <field name="name">News</field>
+            <field name="description">Presentation of new OpenERP features</field>
+            <field name="template">
 Summary of the feature
 
 Long explanation
@@ -15,13 +15,22 @@ Long explanation
 Conclusion
 
 Additional ressources
-
-</field>
+            </field>
         </record>
 
-        <record id="demo_page1" model="document.page">
-            <field name="name">OpenERP 6.1. Functional Demo</field>
-            <field name="parent_id" ref="demo_category1"/>
+        <!-- TAGS -->
+        <record id="blog_tag_1" model="blog.tag">
+            <field name="name">functional</field>
+        </record>
+        <record id="blog_tag_2" model="blog.tag">
+            <field name="name">pos</field>
+        </record>
+
+        <!-- POSTS -->
+        <record id="blog_post_1" model="blog.post">
+            <field name="name">OpenERP 7.0 Functional Demo</field>
+            <field name="category_id" ref="blog_category_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="content">
 <![CDATA[
 <br>
@@ -48,9 +57,9 @@ company, with your clients and implement it now for your business.<br>
 </field>
         </record>
 
-        <record id="demo_page2" model="document.page">
+        <record id="blog_post_2" model="blog.post">
             <field name="name">Personalise Dashboards</field>
-            <field name="parent_id" ref="demo_category1"/>
+            <field name="category_id" ref="blog_category_1"/>
             <field name="content">
 <![CDATA[
 <br>
@@ -89,9 +98,10 @@ you change your mind there is a reset button to return to the default view.<br>
 </field>
         </record>
 
-        <record id="demo_page3" model="document.page">
+        <record id="blog_post_3" model="blog.post">
             <field name="name">Touchscreen Point of Sale</field>
-            <field name="parent_id" ref="demo_category1"/>
+            <field name="category_id" ref="blog_category_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
             <field name="content">
 <![CDATA[
 <br>

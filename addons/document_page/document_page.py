@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,45 +22,56 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import difflib
-from openerp import tools
 
-class document_page(osv.osv):
-    _name = "document.page"
-    _description = "Document Page"
+
+class BlogCategory(osv.Model):
+    _name = 'blog.category'
+    _description = 'Blog Category'
+    _inherit = ['mail.thread']
     _order = 'name'
 
-    def _get_page_index(self, cr, uid, page, link=True):
-        index = []
-        for subpage in page.child_ids:
-            index += ["<li>"+ self._get_page_index(cr, uid, subpage) +"</li>"]
-        r = ''
-        if link:
-            r = '<a href="#id=%s">%s</a>'%(page.id,page.name)
-        if index:
-            r += "<ul>" + "".join(index) + "</ul>"
-        return r
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'description': fields.text('Description'),
+        'template': fields.text('Template'),
+        'blog_ids': fields.one2many(
+            'blog.post', 'category_id',
+            'Blogs',
+        ),
+    }
 
-    def _get_display_content(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for page in self.browse(cr, uid, ids, context=context):
-            if page.type == "category":
-               content = self._get_page_index(cr, uid, page, link=False)
-            else:
-               content = page.content
-            res[page.id] =  content
-        return res
+
+class BlogTag(osv.Model):
+    _name = 'blog.tag'
+    _description = 'Blog Tag'
+    _order = 'name'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+    }
+
+
+class BlogPost(osv.Model):
+    _name = "blog.post"
+    _description = "Blog Post"
+    _inherit = ['mail.thread']
+    _order = 'name'
 
     _columns = {
         'name': fields.char('Title', required=True),
-        'type':fields.selection([('content','Content'), ('category','Category')], 'Type', help="Page type"), 
-
-        'parent_id': fields.many2one('document.page', 'Category', domain=[('type','=','category')]),
-        'child_ids': fields.one2many('document.page', 'parent_id', 'Children'),
+        'category_id': fields.many2one(
+            'blog.category', 'Category',
+            ondelete='set null',
+        ),
+        'tag_ids': fields.many2many(
+            'blog.tag', 'blog_tag_rel',
+            'blog_id', 'tag_id',
+            'Tags',
+        ),
 
         'content': fields.text("Content"),
-        'display_content': fields.function(_get_display_content, string='Displayed Content', type='text'),
 
-        'history_ids': fields.one2many('document.page.history', 'page_id', 'History'),
+        'history_ids': fields.one2many('blog.post.history', 'post_id', 'History'),
         'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
 
         'create_date': fields.datetime("Created on", select=True, readonly=True),
@@ -68,52 +79,43 @@ class document_page(osv.osv):
         'write_date': fields.datetime("Modification Date", select=True, readonly=True),
         'write_uid': fields.many2one('res.users', "Last Contributor", select=True, readonly=True),
     }
-    _defaults = {
-        'type':'content',
-    }
-
-    def onchange_parent_id(self, cr, uid, ids, parent_id, content, context=None):
-        res = {}
-        if parent_id and not content:
-            parent = self.browse(cr, uid, parent_id, context=context)
-            if parent.type == "category":
-                res['value'] = {
-                    'content': parent.content,
-                }
-        return res
 
     def create_history(self, cr, uid, ids, vals, context=None):
         for i in ids:
-            history = self.pool.get('document.page.history')
+            history = self.pool.get('blog.post.history')
             if vals.get('content'):
                 res = {
                     'content': vals.get('content', ''),
-                    'page_id': i,
+                    'post_id': i,
                 }
                 history.create(cr, uid, res)
 
     def create(self, cr, uid, vals, context=None):
-        page_id = super(document_page, self).create(cr, uid, vals, context)
-        self.create_history(cr, uid, [page_id], vals, context)
-        return page_id
+        if context is None:
+            context = {}
+        create_context = dict(context, mail_create_nolog=True)
+        post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
+        self.create_history(cr, uid, [post_id], vals, context)
+        return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        result = super(document_page, self).write(cr, uid, ids, vals, context)
+        result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
 
-class document_page_history(osv.osv):
-    _name = "document.page.history"
+
+class BlogPostHistory(osv.Model):
+    _name = "blog.post.history"
     _description = "Document Page History"
     _order = 'id DESC'
     _rec_name = "create_date"
 
     _columns = {
-          'page_id': fields.many2one('document.page', 'Page'),
-          'summary': fields.char('Summary', size=256, select=True),
-          'content': fields.text("Content"),
-          'create_date': fields.datetime("Date"),
-          'create_uid': fields.many2one('res.users', "Modified By"),
+        'post_id': fields.many2one('blog.post', 'Blog Post'),
+        'summary': fields.char('Summary', size=256, select=True),
+        'content': fields.text("Content"),
+        'create_date': fields.datetime("Date"),
+        'create_uid': fields.many2one('res.users', "Modified By"),
     }
 
     def getDiff(self, cr, uid, v1, v2, context=None):
