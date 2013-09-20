@@ -620,7 +620,7 @@
                     return $clone.appendTo("body").removeClass("hidden");
                 },
                 start: function(){
-                    self.parent.addClass("hidden");
+                    self.parent.hide();
                     self.parent.editor_busy = true;
                     self.$target.after("<div class='oe_drop_clone' style='display: none;'/>");
                     self.$target.detach();
