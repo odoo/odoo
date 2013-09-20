@@ -97,42 +97,46 @@ class website(osv.osv):
         if values is None:
             values = {}
 
-        values.update({
-            'request': request,
-            'registry': request.registry,
-            'json': simplejson,
-            'website': request.website,
-            'res_company': request.website.company_id,
-        })
+        values.update(
+            request=request,
+            registry=request.registry,
+            json=simplejson,
+            website=request.website,
+            res_company=request.website.company_id,
+        )
 
         qweb_context.update(values)
         context = {
-            'inherit_branding': qweb_context.get('editable', False),
+            'inherit_branding': qweb_context.setdefault('editable', False),
         }
 
         # check if xmlid of the template exists
         try:
-            model, xmlid = template.split('.', 1)
-            model, id = IMD.get_object_reference(cr, uid, model, xmlid)
-        except ValueError:
-            logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render('website.404', qweb_context)
+            module, xmlid = template.split('.', 1)
+            IMD.get_object_reference(cr, uid, module, xmlid)
+        except ValueError: # catches both unpack errors and gor errors
+            module, xmlid = 'website', template
+            try:
+                IMD.get_object_reference(cr, uid, module, xmlid)
+            except ValueError:
+                logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
+                return self.render('website.404', qweb_context)
 
-        # render template and catch error
         try:
-            return view.render(cr, uid, template, qweb_context, context=context)
+            return view.render(cr, uid, "%s.%s" % (module, xmlid),
+                               qweb_context, context=context)
         except (AccessError, AccessDenied), err:
             logger.error(err)
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
             return self.render('website.401', qweb_context)
         except Exception:
+            logger.exception("Website Rendering Error.")
             qweb_context['traceback'] = traceback.format_exc()
-            logger.error("Website Rendering Error.\n\n%s" % qweb_context['traceback'])
-            if qweb_context['editable']:
-                return view.render(cr, uid, 'website.500', qweb_context, context=context)
-            else:
-                return view.render(cr, uid, 'website.404', qweb_context, context=context)
+            return view.render(
+                cr, uid,
+                'website.500' if qweb_context['editable'] else 'website.404',
+                qweb_context, context=context)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager

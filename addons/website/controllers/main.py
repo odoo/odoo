@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             module = 'website'
             idname = path
-        path = "%s.%s" % (module, idname)
+        xid = "%s.%s" % (module, idname)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -63,8 +63,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         newview = view.browse(
             request.cr, request.uid, newview_id, context=request.context)
         newview.write({
-            'arch': newview.arch.replace("website.default_page", path),
-            'name': "page/%s" % path,
+            'arch': newview.arch.replace("website.default_page", xid),
+            'name': "page/%s" % xid,
             'page': True,
         })
         # Fuck it, we're doing it live
