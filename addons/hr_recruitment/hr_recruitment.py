@@ -54,6 +54,7 @@ class hr_recruitment_stage(osv.osv):
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
+        'template_id': fields.many2one('email.template', 'Use template', help="Use this email template, so that an email will be sent to applicant if application stage is changed to this stage.")
     }
     _defaults = {
         'sequence': 1,
@@ -255,6 +256,16 @@ class hr_applicant(osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
+    
+    def _get_mail_template(self, cr, uid, ids, template, context):
+        mail_obj = self.pool.get('mail.mail')
+        assert template._name == 'email.template'
+        for applications in self.browse(cr, uid, ids, context):
+            if applications.email_from:
+                mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, applications.id, True, context=context)
+                mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
+                if mail_state and mail_state['state'] == 'exception':
+                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         if job_id:
@@ -429,6 +440,9 @@ class hr_applicant(osv.Model):
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            stage_obj = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals.get('stage_id'), context=context)
+            if stage_obj and stage_obj.template_id:
+                self._get_mail_template(cr, uid, ids, stage_obj.template_id, context)
             for applicant in self.browse(cr, uid, ids, context=None):
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
