@@ -104,31 +104,17 @@ table.editorbar-panel
     -o-user-select: auto
     user-select: auto
 
-.modal .existing-attachments a.thumbnail
-    position: relative
+.modal-dialog.select-image
+    width: 80%
 
-    &.selected:before
-        text-decoration: none
-        font-size: 150%
-        background-color: rgba(0, 0, 0, 0.3)
-        color: #21dc0f
-        content: "✔"
-
-        height: 2em
-        width: 2em
-        text-align: center
-        padding: 5px
-        border-radius: 4px 0
-
-        position: absolute
-        top: 0
-        left: 0
+.modal .existing-attachments
+    .pager
+        margin: 0
 
 .modal .image-preview
     margin-bottom: 0.5em
 
 /* ---- SNIPPET EDITOR ---- */
-
 
 #oe_snippets
     position: fixed
@@ -220,6 +206,8 @@ table.editorbar-panel
 /* ---- SNIPPETS DROP ZONES ---- */
 
 
+.col-md-12
+    float: left
 .oe_drop_zone.oe_insert
     display: block
     height: 48px
@@ -229,7 +217,7 @@ table.editorbar-panel
     width: 100%
     position: absolute
     z-index: 1000
-    &:before
+    &:not(.oe_vertical):before
         content: ""
         display: block
         border-top: dashed 2px rgba(209, 178, 255, 0.72)
@@ -238,20 +226,25 @@ table.editorbar-panel
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
     &.oe_vertical
-        width: 16px
-        display: inline-block
-        position: absolute
-        margin: 0px !important
+        width: 48px
+        float: left
+        position: relative
+        margin: 0px -24px !important
     &.oe_overlay
         background: rgba(153, 0, 255, 0.17)
         border-radius: 3px
 
-.oe_drop_zone
+.oe_drop_zone, .oe_drop_zone_style
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
         z-index: 1001
+
+.oe_drop_zone_style
+    color: white
+    height: 48px
+    margin-bottom: 32px
 
 /* ---- SNIPPET MANIPULATOR ---- */
 
@@ -319,11 +312,17 @@ table.editorbar-panel
         top: -11px
         display: none
         z-index: 1002
-        > div
+        > *
+            margin: 0 -2px 0 -3px
             display: inline-block
-        .btn
+        *
+            border-radius: 0
+        .btn, a
             pointer-events: auto
-            display: inline-block
+            cursor: pointer
+        .dropdown-menu
+            text-align: left
+            min-width: 180px
         .oe_label
             position: absolute
             top: 3px
@@ -430,13 +429,24 @@ $icon_close: #E00101
 /* ---- SEO TOOLS ---- */
 
 $remove_color: $icon_close
+$in_title_color: #5cb85c
+$in_description_color: #428bca
+$in_body_color: #5bc0de
 .oe_seo_configuration
     .modal-dialog
         width: 80%
     .oe_remove
         color: $remove_color
-    .oe_seo_suggestion
+    .oe_seo_keyword
         cursor: pointer
+        padding: .2em .4em .2em .5em
+        border-radius: .4em
+    .keyword-in-title
+        background-color: $in_title_color
+    .keyword-in-description
+        background-color: $in_description_color
+    .keyword-in-body
+        background-color: $in_body_color
 
 /* ---- ACE EDITOR ---- */
 

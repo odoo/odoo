@@ -26,14 +26,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <dl class="dl-horizontal">
-                                <dt><span class="label label-warning">Keywords</span></dt>
-                                <dd>
-                                    <ul class="list-inline">
-                                        <li><span class="label label-default">Most searched topics related to these keywords</span></li>
-                                    </ul>
-                                </dd>
-                            </dl>
+                            <span class="text-muted">Here are the most searched topics related to these keywords, ordered by importance:</span>
                             <!-- filled in JS -->
                         </section>
                         <section>
@@ -83,12 +76,10 @@
     </t>
 
     <t t-name="website.seo_keyword">
-        <dl class="dl-horizontal js_seo_keyword">
+        <dl class="dl-horizontal">
             <dt>
-                <span t-attf-class="label label-#{ widget.type } js_seo_keyword" t-att-data-keyword="widget.keyword">
-                    <a href="#" class="oe_remove" data-action="remove-keyword">x</a>
-                    &amp;nbsp;
-                    <t t-raw="widget.keyword"/>
+                <span t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_keyword" t-att-data-keyword="widget.keyword">
+                    <a href="#" class="oe_remove" data-action="remove-keyword">x</a> <t t-raw="widget.keyword"/>
                 </span>
             </dt>
             <dd class="js_seo_keyword_suggestion">
@@ -99,7 +90,7 @@
 
     <t t-name="website.seo_suggestion">
         <li class="oe_seo_suggestion">
-            <span t-attf-class="label label-#{ widget.type } js_seo_suggestion" t-att-data-keyword="widget.keyword">
+            <span t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_suggestion" t-att-data-keyword="widget.keyword">
                 <t t-raw="widget.keyword"/>
             </span>
         </li>

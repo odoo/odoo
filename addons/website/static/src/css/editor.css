@@ -116,23 +116,12 @@ table.editorbar-panel td.selected {
   user-select: auto;
 }
 
-.modal .existing-attachments a.thumbnail {
-  position: relative;
+.modal-dialog.select-image {
+  width: 80%;
 }
-.modal .existing-attachments a.thumbnail.selected:before {
-  text-decoration: none;
-  font-size: 150%;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: #21dc0f;
-  content: "✔";
-  height: 2em;
-  width: 2em;
-  text-align: center;
-  padding: 5px;
-  border-radius: 4px 0;
-  position: absolute;
-  top: 0;
-  left: 0;
+
+.modal .existing-attachments .pager {
+  margin: 0;
 }
 
 .modal .image-preview {
@@ -242,6 +231,10 @@ table.editorbar-panel td.selected {
 }
 
 /* ---- SNIPPETS DROP ZONES ---- */
+.col-md-12 {
+  float: left;
+}
+
 .oe_drop_zone.oe_insert {
   display: block;
   height: 48px;
@@ -252,7 +245,7 @@ table.editorbar-panel td.selected {
   position: absolute;
   z-index: 1000;
 }
-.oe_drop_zone.oe_insert:before {
+.oe_drop_zone.oe_insert:not(.oe_vertical):before {
   content: "";
   display: block;
   border-top: dashed 2px rgba(209, 178, 255, 0.72);
@@ -263,23 +256,29 @@ table.editorbar-panel td.selected {
   border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }
 .oe_drop_zone.oe_insert.oe_vertical {
-  width: 16px;
-  display: inline-block;
-  position: absolute;
-  margin: 0px !important;
+  width: 48px;
+  float: left;
+  position: relative;
+  margin: 0px -24px !important;
 }
 .oe_drop_zone.oe_insert.oe_overlay {
   background: rgba(153, 0, 255, 0.17);
   border-radius: 3px;
 }
 
-.oe_drop_zone {
+.oe_drop_zone, .oe_drop_zone_style {
   background: rgba(153, 0, 255, 0.17);
   border-radius: 3px;
 }
-.oe_drop_zone.oe_hover {
+.oe_drop_zone.oe_hover, .oe_drop_zone_style.oe_hover {
   background: rgba(0, 255, 133, 0.22);
   z-index: 1001;
+}
+
+.oe_drop_zone_style {
+  color: white;
+  height: 48px;
+  margin-bottom: 32px;
 }
 
 /* ---- SNIPPET MANIPULATOR ---- */
@@ -360,12 +359,20 @@ table.editorbar-panel td.selected {
   display: none;
   z-index: 1002;
 }
-.oe_overlay .oe_overlay_options > div {
+.oe_overlay .oe_overlay_options > * {
+  margin: 0 -2px 0 -3px;
   display: inline-block;
 }
-.oe_overlay .oe_overlay_options .btn {
+.oe_overlay .oe_overlay_options * {
+  border-radius: 0;
+}
+.oe_overlay .oe_overlay_options .btn, .oe_overlay .oe_overlay_options a {
   pointer-events: auto;
-  display: inline-block;
+  cursor: pointer;
+}
+.oe_overlay .oe_overlay_options .dropdown-menu {
+  text-align: left;
+  min-width: 180px;
 }
 .oe_overlay .oe_overlay_options .oe_label {
   position: absolute;
@@ -499,8 +506,19 @@ table.editorbar-panel td.selected {
 .oe_seo_configuration .oe_remove {
   color: #e00101;
 }
-.oe_seo_configuration .oe_seo_suggestion {
+.oe_seo_configuration .oe_seo_keyword {
   cursor: pointer;
+  padding: 0.2em 0.4em 0.2em 0.5em;
+  border-radius: 0.4em;
+}
+.oe_seo_configuration .keyword-in-title {
+  background-color: #5cb85c;
+}
+.oe_seo_configuration .keyword-in-description {
+  background-color: #428bca;
+}
+.oe_seo_configuration .keyword-in-body {
+  background-color: #5bc0de;
 }
 
 /* ---- ACE EDITOR ---- */
