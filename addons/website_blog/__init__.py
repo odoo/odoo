@@ -19,14 +19,6 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
-
-
-class MailMessage(osv.Model):
-    _inherit = 'mail.message'
-
-    _columns = {
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website as a blog"
-        ),
-    }
+import controllers
+import document_page
+import res_config

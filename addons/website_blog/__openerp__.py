@@ -19,14 +19,26 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+{
+    'name': 'Blogs',
+    'category': 'Website',
+    'summary': 'News, Blogs, Announces, Discussions',
+    'version': '1.0',
+    'description': """
+OpenERP Blog
+============
 
-
-class MailMessage(osv.Model):
-    _inherit = 'mail.message'
-
-    _columns = {
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website as a blog"
-        ),
-    }
+        """,
+    'author': 'OpenERP SA',
+    'depends': ['website_mail', 'document_page'],
+    'data': [
+        'website_mail_data.xml',
+        'views/website_mail.xml',
+        'views/res_config.xml',
+        'security/website_mail.xml',
+    ],
+    'qweb': [
+        'static/src/xml/*.xml'
+    ],
+    'installable': True,
+}
