@@ -426,13 +426,24 @@
                     var $zone = $(this);
                     var $template = $(zone_template).addClass("oe_vertical");
                     var nb = 0;
+                    var $lastinsert = false;
+                    var left = 0;
+                    var temp_left = 0;
                     $zone.find('> *:not(.oe_drop_zone):visible').each(function () {
                         var $col = $(this);
                         $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")))+'px');
-                        $col.after($template.clone());
-                        if (!nb) {
-                            $(this).before($template.clone());
+                        $lastinsert = $template.clone();
+                        $(this).after($lastinsert);
+
+                        temp_left = $col.position().left;
+                        if (left === temp_left) {
+                            $col.prev(".oe_drop_zone.oe_vertical").remove();
+                            $col.before($template.clone().css("clear", "left"));
                         }
+                        else if (!nb) {
+                            $col.before($template.clone());
+                        }
+                        left = temp_left;
                         nb ++;
                     });
                     if (!nb) {
@@ -456,11 +467,11 @@
             var count;
             do {
                 count = 0;
-                var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
-                count += $zones.length;
-                $zones.remove();
+                // var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
+                // count += $zones.length;
+                // $zones.remove();
 
-                $zones = $('.oe_drop_zone > .oe_drop_zone').remove();   // no recusrive zones
+                $zones = $('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recusrive zones
                 count += $zones.length;
                 $zones.remove();
             } while (count > 0);
@@ -846,7 +857,7 @@
                     var xy = event['page'+XY];
                     var begin = current;
                     var beginClass = self.$target.attr("class");
-                    var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[0-9-]+'), 'g');
+                    var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
 
                     var cursor = $handle.css("cursor")+'-important';
                     $("body").addClass(cursor);
