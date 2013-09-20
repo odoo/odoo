@@ -112,7 +112,7 @@
                     <notebook>
                         <page string="Team" name="team">
                             <field colspan="4" name="members" widget="many2many_kanban">
-                                <kanban quick_create="false" create="true">
+                                <kanban quick_create="false" create="true" delete="true">
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">
