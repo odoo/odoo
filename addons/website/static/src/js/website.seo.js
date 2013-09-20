@@ -350,8 +350,6 @@
             });
             self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
             $modal.modal();
-            // Avoid the 'Edit' button in the background boucing needlessly
-            $modal.on('click', function (e) { e.stopPropagation(); });
         },
         suggestImprovements: function () {
             var tips = [];
