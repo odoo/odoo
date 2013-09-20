@@ -318,7 +318,10 @@
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
-            root.setAttribute('data-cke-editable', 'true');
+            $(root).attr('data-cke-editable', 'true')
+                    .on('dragstart', 'img', function (e) {
+                        e.preventDefault();
+                    });
             this.editor = CKEDITOR.inline(root, self._config());
             this.editor.on('instanceReady', function () {
                 // ckeditor set root to editable, disable it (only inner
