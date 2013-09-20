@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='workcenter_lines']/form//field[@name='name']" position="before">
                 <header colspan="8">
-                    <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
+                    <button name="button_start_working" string="Start" states="draft" icon="gtk-media-play" help="Start Working"/>
                     <button name="button_cancel" string="Cancel Order" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
                     <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
                     <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
@@ -29,7 +29,7 @@
            <xpath expr="//field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
                 <field name="state"/>
                 <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
-                <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
+                <button name="button_start_working" string="Start" states="draft" icon="gtk-media-play"/>
                 <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
                 <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
                 <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
