@@ -17,7 +17,7 @@
             'hidden.bs.modal': 'destroy'
         },
         start: function () {
-            document.getElementById("mobile-viewport").src = window.location.origin + window.location.pathname + "?mobile-preview=true";
+            document.getElementById("mobile-viewport").src = window.location.origin + window.location.pathname + "#mobile-preview";
             this.$el.modal();
         },
     });
