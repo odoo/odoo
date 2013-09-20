@@ -1235,8 +1235,8 @@ class account_invoice(osv.Model):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
         po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        if po_ids:
-            purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, uid, po_id, body=_("Invoice received"), context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):
