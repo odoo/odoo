@@ -424,18 +424,19 @@
             if(vertical_child_selector){
                 self.dom_filter(vertical_child_selector).each(function (){
                     var $zone = $(this);
-                    var $template = $(zone_template).addClass("oe_vertical").css('height', $zone.outerHeight()+'px');
+                    var $template = $(zone_template).addClass("oe_vertical");
                     var nb = 0;
                     $zone.find('> *:not(.oe_drop_zone):visible').each(function () {
-                        $template.css('height', $(this).outerHeight()+'px');
-                        $(this).after($template.clone());
+                        var $col = $(this);
+                        $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")))+'px');
+                        $col.after($template.clone());
                         if (!nb) {
                             $(this).before($template.clone());
                         }
                         nb ++;
                     });
                     if (!nb) {
-                        $zone.prepend($template.clone());
+                        $zone.prepend($template.css('height', $zone.outerHeight()+'px'));
                     }
                 });
             }
