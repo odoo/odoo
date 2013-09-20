@@ -72,11 +72,6 @@
                     <t t-raw="head or ''"/>
 		</t>
                 <t t-set="title">Job Detail</t>
-<div class="col-md-4 pull-right">
-		            <ul class="pager">
-		                <li><a t-att-href="'/jobs'">All Jobs</a></li>
-		            </ul>
-                	</div>
 		<div id="wrap">
 		    <div class="oe_structure">
 	                <h1 class="text-center" t-field="job.name"></h1>
@@ -107,7 +102,6 @@
             <t t-set="title">Apply Job</t>
             <section id="forms">
                 <h1>Apply</h1>
-                <div class="row">
                     <form class="form-horizontal mt32" action="/job/success" method="post" enctype="multipart/form-data">
                         <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
                         <input type="hidden" t-att-value="job.id" name="job_id"/>
@@ -142,7 +136,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
             </section>
         </template>
         <template id="thankyou">
