@@ -7,100 +7,100 @@
             <field name="description">Job Posts on your website</field>
         </record>
         <template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
-            <xpath expr="//body/footer//a[@href='/page/website.aboutus']" position="after">
+            <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
                 <li><a href="/jobs">Jobs</a></li>
             </xpath>
         </template>
 
-        <template id="index" name="Jobs">
+        <template id="index" name="Jobs" page="True">
             <t t-call="website.layout">
                 <t t-set="head">
-                    <script type="text/javascript" src="/website_hr_recruitment/static/src/js/recruitment.js"></script>
                     <t t-raw="head or ''"/>
                 </t>
                 <t t-set="title">Jobs</t>
-                <div class="container">
-                    <h1>Job Position</h1>
-                    <t t-if="no_of_jobs &gt; 0">
-                        <t t-call="website.pager">
-                           <t t-set="classname">pull-left</t>
-                        </t>
-                        <t t-foreach="companies" t-as="company">
-                            <h2 class="text-center"><t t-field="company.name"/></h2>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th><h4>Post Name</h4></th>
-                                        <th/>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="res_job" t-as="job">
-                                        <tr t-if="job.company_id.id==company.id" t-att-id="job.id">
-                                            <td>
-                                                <t t-if="job.department_id">
-                                                    <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.department_id.name"></span></a>
-                                                </t>
-                                                <t t-if="not job.department_id">
-                                                    <a t-att-href="'/job/detail/%%s' %% job.id"><span class="lead" t-field="job.name"></span></a>
-                                                </t>
-                                                <br/>
-                                                <i class="icon-time"></i> <t t-esc="vals[job.id]['date_recruitment']"/><br/>
-                                                <span id='counting' t-att-class="job.no_of_recruitment &gt; 0 and 'show' or 'hidden'" style="position:absolute;">
-                                                    <i class="icon-group"></i> No.of Post:
-                                                    <span id='counting_num'>
-                                                        <t t-esc="vals[job.id]['count']"></t>
-                                                    </span>
-                                                </span>
-                                                <span id="norecruit" t-att-class="job.no_of_recruitment &lt; 1 and 'show' or 'hidden'" style="position:absolute;">
-                                                    Right now no recruitment is going on.
-                                                </span>
-                                                <br/>
-                                                <span><i class="icon-map-marker"></i> <t t-field="res_company.city"/> 
-                                                <t t-if="res_company.state_id">
-                                                    <span t-field="res_company.state_id.name"></span>
-                                                </t>
-                                                <t t-if="res_company.country_id">
-                                                    <span t-field="res_company.country_id.name"></span>
-                                                </t><br/>
-                                                <t t-if="res_company.phone">&amp;#x2706; <t t-field="res_company.phone"/></t></span>
-                                            </td>
-                                            <td><t t-call="website.publish"><t t-set="object" t-value="job"/></t></td>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                            </table>
-                        </t>
-                    </t>
-                    <t t-if="no_of_jobs &lt; 1">
-                        <h3>"Thank you for your interest, but right now there is no job openings available in our company."</h3>
-                    </t>
-                </div>
+		<div id="wrap">
+            	    <div class="oe_structure">
+	                <h1 class="text-center">Job Position</h1>
+                    </div>
+                    <div class="container">
+			<div class="row">
+			    <div class="col-md-4 css_noprint" id="left_column">
+		                <ul class="nav nav-pills nav-stacked">
+		                    <li class="nav-header">Departments</li>
+				    <t t-foreach="departments" t-as="department">
+					<li t-att-class="department.id == active and 'active' or ''">
+				    	    <a t-attf-href="/department/#{ department.id }/" ><t t-field="department.name"/></a>
+			            	</li>
+				    </t>
+			        </ul>
+		            </div>
+			    <div class="col-md-8">
+		                <t t-call="website.pager" >
+		                    <t t-set="classname">pull-left</t>
+		                </t>
+		            </div>
+			    <div class="col-md-8">
+	                        <ul class="media-list">
+        	                    <li t-foreach="res_job" t-as="job" class="media" data-publish="">
+					<t t-call="website.publish"><t t-set="object" t-value="job"/></t>
+					<div class="media-body">
+					    <span t-if="not job.no_of_recruitment" class="label label-default pull-right">No recruitment needed.</span>
+					    <t t-if="job.no_of_recruitment">
+						<span class="label label-default pull-right label-info"><t t-esc="vals[job.id]['count']"/> Recruitment availables.</span>
+					    </t>
+                                    	    <h4 class="media-heading"><a t-attf-href="/job/detail/#{ job.id }/"><span t-field="job.name"> </span></a></h4>
+					    <div>
+						<i class="icon-time"></i> <span t-esc="vals[job.id]['date_recruitment']"> </span>
+                                    	    </div>
+					    <div t-if="companies[0].country_id">
+                                        	<i class="icon-map-marker"></i> <span t-field="companies[0].city"> </span>  <span t-if="companies[0].state_id" t-field="companies[0].state_id.name"> </span>, <span t-field="companies[0].country_id.name"> </span>
+                                    	    </div>
+					</div>
+				    </li>
+				</ul>
+			    </div>
+                        </div>
+                    </div>
+		    <div class="oe_structure"/>
+		</div>
             </t>
         </template>
         <template id="detail">
             <t t-call="website.layout">
+		<t t-set="head">
+		    <script type="text/javascript" src="/website_hr_recruitment/static/src/js/recruitment.js"></script>
+                    <t t-raw="head or ''"/>
+		</t>
                 <t t-set="title">Job Detail</t>
-                <div class="col-md-4 pull-right">
-                    <ul class="pager">
-                        <li><a t-att-href="'/jobs'">All Jobs</a></li>
-                    </ul>
-                </div>
-                <div class="container">
-                    <h1 t-field="job.name"></h1>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <t t-if="job.description">
-                                <p t-field="job.description"></p>
-                            </t>
-                            <t t-if="job.requirements">
-                                <h4>Requirements</h4>
-                                <p t-field="job.requirements"></p>
-                            </t>
-                        </div>
-                    </div>
-                    <t t-call="website_hr_recruitment.applyjobpost"/>
-                </div>
+<div class="col-md-4 pull-right">
+		            <ul class="pager">
+		                <li><a t-att-href="'/jobs'">All Jobs</a></li>
+		            </ul>
+                	</div>
+		<div id="wrap">
+		    <div class="oe_structure">
+	                <h1 class="text-center" t-field="job.name"></h1>
+			<h4 class="text-center">
+                            <i class="icon-time"></i> <span><t t-esc="vals_date"/></span>
+			</h4>
+			<h5 class="text-center">
+				<i class="icon-map-marker"></i> <span t-field="job.company_id.city"> </span>  <span t-if="job.company_id.state_id" t-field="job.company_id.state_id.name"> </span>, <span t-field="job.company_id.country_id.name"> </span></h5>
+
+                    </div>			
+  		    <div class="container">
+		        <t t-call="website.publish"><t t-set="object" t-value="job"/></t>
+			<hr/>
+		        <div class="row">
+			<div class="pull-left">
+            	    </div>
+			<h4>Description</h4>
+			<p t-field="job.description"></p>
+			<h4>Requirements</h4>
+			<p t-field="job.requirements"></p>
+			<t t-call="website_hr_recruitment.applyjobpost"/>				
+		    </div>
+		</div>
+		</div>
             </t>
         </template>
         <template id="applyjobpost">
