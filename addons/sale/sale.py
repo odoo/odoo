@@ -70,6 +70,7 @@ class sale_order(osv.osv):
         if not default:
             default = {}
         default.update({
+            'date_order': fields.date.context_today(self, cr, uid, context=context),
             'state': 'draft',
             'invoice_ids': [],
             'date_confirm': False,
