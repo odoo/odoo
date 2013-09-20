@@ -326,7 +326,11 @@
             $modal.find('textarea[name=seo_page_description]').val(htmlPage.description());
             self.suggestImprovements();
             self.imageList = new website.seo.ImageList(self, { page: htmlPage });
-            self.imageList.appendTo($modal.find('.js_seo_image_list'));
+            if (htmlPage.images().length === 0) {
+                $modal.find('.js_image_section').remove()
+            } else {
+                self.imageList.appendTo($modal.find('.js_seo_image_list'));
+            }
             self.keywordList = new website.seo.KeywordList(self, { page: htmlPage });
             self.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
