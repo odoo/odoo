@@ -727,7 +727,7 @@
                 method: 'search_read',
                 args: [],
                 kwargs: {
-                    fields: ['name'],
+                    fields: ['name', 'website_url'],
                     domain: [['res_model', '=', 'ir.ui.view']],
                     order: 'name',
                     context: website.get_context(),
