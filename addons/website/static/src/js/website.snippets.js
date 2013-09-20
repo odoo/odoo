@@ -425,8 +425,18 @@
                 self.dom_filter(vertical_child_selector).each(function (){
                     var $zone = $(this);
                     var $template = $(zone_template).addClass("oe_vertical").css('height', $zone.outerHeight()+'px');
-                    $zone.find('> *:not(.oe_drop_zone):visible').after($template);
-                    $zone.prepend($template.clone());
+                    var nb = 0;
+                    $zone.find('> *:not(.oe_drop_zone):visible').each(function () {
+                        $template.css('height', $(this).outerHeight()+'px');
+                        $(this).after($template.clone());
+                        if (!nb) {
+                            $(this).before($template.clone());
+                        }
+                        nb ++;
+                    });
+                    if (!nb) {
+                        $zone.prepend($template.clone());
+                    }
                 });
             }
 
