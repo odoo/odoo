@@ -16,7 +16,7 @@
     website.seo = {};
 
     function analyzeKeyword(htmlPage, keyword) {
-        return htmlPage.isInTitle(keyword) ? {
+        return  htmlPage.isInTitle(keyword) ? {
                     title: 'keyword-in-title',
                     description: "This keyword is used in the page title",
                 } : htmlPage.isInDescription(keyword) ? {
@@ -410,7 +410,7 @@
             setTimeout(function () {
                 var title = self.$('input[name=seo_page_title]').val();
                 self.htmlPage.changeTitle(title);
-            }, 1);
+            }, 0);
         },
         descriptionChanged: function () {
             var self = this;
