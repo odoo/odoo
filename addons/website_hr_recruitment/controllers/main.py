@@ -86,7 +86,7 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.thankyou", values)
 
     @website.route(['/job/detail/<int:job_id>/subscribe'], type='http', auth="public")
-    def subscribe(self, event_id=None, **post):
+    def subscribe(self, job_id=None, **post):
         partner_obj = request.registry['res.partner']
         job_obj = request.registry['hr.job']
         user_obj = request.registry['res.users']
@@ -107,12 +107,12 @@ class website_hr_recruitment(http.Controller):
                 partner_ids = [user_obj.browse(
                     request.cr, request.uid, request.uid,
                     context=request.context).partner_id.id]
-            job_obj.check_access_rule(request.cr, request.uid, [event_id],
+            job_obj.check_access_rule(request.cr, request.uid, [job_id],
                                         'read', request.context)
-            job_obj.message_subscribe(request.cr, SUPERUSER_ID, [event_id],
+            job_obj.message_subscribe(request.cr, SUPERUSER_ID, [job_id],
                                         partner_ids, request.context)
 
-        return self.detail(job_id=job_id)
+        return self.detail(id=job_id)
 
     @website.route(['/job/detail/<int:job_id>/unsubscribe'], type='http', auth="public")
     def unsubscribe(self, job_id=None, **post):
@@ -127,10 +127,10 @@ class website_hr_recruitment(http.Controller):
                     context=request.context)
             else:
                 partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
-            job_obj.check_access_rule(request.cr, request.uid, [event_id], 'read', request.context)
+            job_obj.check_access_rule(request.cr, request.uid, [job_id], 'read', request.context)
             job_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [job_id], partner_ids, request.context)
 
-        return self.detail(job_id=job_id)
+        return self.detail(id=job_id)
 
     @website.route('/recruitment/published', type='json', auth="admin")
     def published (self, **post):

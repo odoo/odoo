@@ -73,7 +73,19 @@
 		</t>
                 <t t-set="title">Job Detail</t>
 		<div id="wrap">
-		    <div class="oe_structure">
+			<div class="col-md-4">
+                        <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
+                            <div class="col-lg-7">
+                                <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
+                        </form>
+                        <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
+                            <input type="hidden" name="email" t-att-value="subscribe"/>
+                            <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
+                        </form>
+                    </div>
+		    <div class="oe_structure" style="clear:both;">
 	                <h1 class="text-center" t-field="job.name"></h1>
 			<h4 class="text-center">
                             <i class="icon-time"></i> <span><t t-esc="vals_date"/></span>
