@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-muted">Here are the most searched topics related to these keywords, ordered by importance:</span>
+                            <span class="text-muted">Most searched topics related your keywords, ordered by importance:</span>
                             <!-- filled in JS -->
                         </section>
                         <section>
@@ -69,16 +69,15 @@
     </t>
 
     <t t-name="website.seo_tip">
-        <div t-attf-class="alert alert-#{widget.type}">
-              <button title="Dismiss" type="button" class="close" data-action="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <t t-raw="widget.message"/>
+        <div t-attf-class="alert alert-#{ widget.type }">
+            <t t-raw="widget.message"/>
         </div>
     </t>
 
     <t t-name="website.seo_keyword">
         <dl class="dl-horizontal">
             <dt>
-                <span t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_keyword" t-att-data-keyword="widget.keyword">
+                <span t-attf-title="#{ widget.tooltip() }" t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_keyword" t-att-data-keyword="widget.keyword">
                     <a href="#" class="oe_remove" data-action="remove-keyword">x</a> <t t-raw="widget.keyword"/>
                 </span>
             </dt>
@@ -90,7 +89,7 @@
 
     <t t-name="website.seo_suggestion">
         <li class="oe_seo_suggestion">
-            <span t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_suggestion" t-att-data-keyword="widget.keyword">
+            <span t-attf-title="#{ widget.tooltip() }" t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_suggestion" t-att-data-keyword="widget.keyword">
                 <t t-raw="widget.keyword"/>
             </span>
         </li>

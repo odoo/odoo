@@ -15,6 +15,19 @@
 
     website.seo = {};
 
+    function analyzeKeyword(htmlPage, keyword) {
+        return htmlPage.isInTitle(keyword) ? {
+                    title: 'keyword-in-title',
+                    description: "This keyword is used in the page title",
+                } : htmlPage.isInDescription(keyword) ? {
+                    title: 'keyword-in-description',
+                    description: "This keyword is used in the page description",
+                } : htmlPage.isInBody(keyword) ? {
+                    title: 'keyword-in-body',
+                    description: "This keyword is used in the page content."
+                } : { title: "", description: "" };
+    }
+
     website.seo.Suggestion = openerp.Widget.extend({
         template: 'website.seo_suggestion',
         events: {
@@ -30,11 +43,14 @@
             this.htmlPage.on('title-changed', this, this.renderElement);
             this.htmlPage.on('description-changed', this, this.renderElement);
         },
+        analyze: function () {
+            return analyzeKeyword(this.htmlPage, this.keyword);
+        },
         highlight: function () {
-            return this.htmlPage.isInTitle(this.keyword) ? 'keyword-in-title'
-                    : this.htmlPage.isInDescription(this.keyword) ? 'keyword-in-description'
-                    : this.htmlPage.isInBody(this.keyword) ? 'keyword-in-body'
-                    : "";
+            return this.analyze().title;
+        },
+        tooltip: function () {
+            return this.analyze().description;
         },
         select: function () {
             this.trigger('selected', this.keyword);
@@ -103,15 +119,19 @@
             });
             this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
         },
+        analyze: function () {
+            return analyzeKeyword(this.htmlPage, this.keyword);
+        },
         highlight: function () {
-            return this.htmlPage.isInTitle(this.keyword) ? 'keyword-in-title'
-                    : this.htmlPage.isInDescription(this.keyword) ? 'keyword-in-description'
-                    : this.htmlPage.isInBody(this.keyword) ? 'keyword-in-body'
-                    : "";
+            return this.analyze().title;
+        },
+        tooltip: function () {
+            return this.analyze().description;
         },
         updateLabel: function () {
             var cssClass = "oe_seo_keyword js_seo_keyword " + this.highlight();
             this.$(".js_seo_keyword").attr('class', cssClass);
+            this.$(".js_seo_keyword").attr('title', this.tooltip());
         },
         destroy: function () {
             this.trigger('removed');
@@ -326,6 +346,8 @@
             });
             self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
             $modal.modal();
+            // Avoid the 'Edit' button in the background boucing needlessly
+            $modal.on('click', function (e) { e.stopPropagation(); });
         },
         suggestImprovements: function () {
             var tips = [];
@@ -340,13 +362,13 @@
             if (htmlPage.headers('h1').length === 0) {
                 tips.push({
                     type: 'warning',
-                    message: "You don't have an &lt;h1&gt; tag on your page.",
+                    message: "This page seems to be missing an &lt;h1&gt; tag.",
                 });
             }
             if (htmlPage.headers('h1').length > 1) {
                 tips.push({
                     type: 'warning',
-                    message: "You have more than one &lt;h1&gt; tag on your page.",
+                    message: "The page contains more than one &lt;h1&gt; tag.",
                 });
             }
             if (tips.length > 0) {
@@ -354,7 +376,7 @@
                     displayTip(tip.message, tip.type);
                 });
             } else {
-                displayTip("Your page makup is appropriate for search engines.", 'success');
+                displayTip("The markup on this page is appropriate for search engines.", 'success');
             }
         },
         confirmKeyword: function (e) {
