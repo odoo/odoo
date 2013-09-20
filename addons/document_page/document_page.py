@@ -68,15 +68,17 @@ class BlogPost(osv.Model):
             'blog_id', 'tag_id',
             'Tags',
         ),
-
-        'content': fields.text("Content"),
-
-        'history_ids': fields.one2many('blog.post.history', 'post_id', 'History'),
+        'content': fields.text('Content'),
+        # technical stuff: history, menu (to keep ?)
+        'history_ids': fields.one2many(
+            'blog.post.history', 'post_id',
+            'History', help='Last post modifications'
+        ),
         'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
-
+        # creation / update stuff
         'create_date': fields.datetime("Created on", select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
-        'write_date': fields.datetime("Modification Date", select=True, readonly=True),
+        'write_date': fields.datetime("last Modified on", select=True, readonly=True),
         'write_uid': fields.many2one('res.users', "Last Contributor", select=True, readonly=True),
     }
 

@@ -57,15 +57,13 @@
                     <sheet>
                         <h1><field name="name" placeholder="Name"/></h1>
                         <field name="tag_ids" widget="many2many_tags"/>
-                        <group class="oe_edit_only">
-                            <group>
-                                <field name="category_id" string="Category"/>
-                            </group>
-                            <group>
-                                <field name="write_uid" groups="base.group_no_one"/>
-                                <field name="write_date" groups="base.group_no_one"/>
-                                <field name="menu_id" groups="base.group_no_one"/>
-                            </group>
+                        <group>
+                            <field name="category_id" string="Category"/>
+                        </group>
+                        <group>
+                            <field name="write_uid" groups="base.group_no_one"/>
+                            <field name="write_date" groups="base.group_no_one"/>
+                            <field name="menu_id" groups="base.group_no_one"/>
                         </group>
                         <div class="oe_document_page">
                             <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
