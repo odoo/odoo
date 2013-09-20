@@ -124,6 +124,14 @@ def all_sysfonts_list():
                 filepath.append(os.path.join(dirname, filename))
                 __foundFonts[filename]=os.path.join(dirname, filename)
     return filepath
+
+def set_mode(font_info, dirname):
+    return {
+        'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
+        'italic':(),
+        'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
+        'bolditalic':(),
+    }
     
 def RegisterCustomFonts():
     """
@@ -140,24 +148,14 @@ def RegisterCustomFonts():
                 if not last_family:
                     last_family = font_info.familyName
                 if not all_mode:
-                    all_mode = {
-                        'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
-                        'italic':(),
-                        'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
-                        'bolditalic':(),
-                    }
+                    all_mode = set_mode(font_info, dirname)
                 if (last_family != font_info.familyName) or ((i+1) == len(all_system_fonts)):
                     if not all_mode['italic']:
-                        all_mode['italic'] = (all_mode['regular'][0],all_mode['regular'][1],all_mode['regular'][2],'italic')
+                        all_mode['italic'] = all_mode['regular'][:3]+('italic',)
                     if not all_mode['bolditalic']:
-                        all_mode['bolditalic'] = (all_mode['bold'][0],all_mode['bold'][1],all_mode['bold'][2],'bolditalic')
+                        all_mode['bolditalic'] = all_mode['bold'][:3]+('bolditalic',)
                     CustomTTFonts.extend(all_mode.values())
-                    all_mode = {
-                        'regular':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular'),
-                        'italic':(),
-                        'bold':(font_info.familyName, font_info.name, dirname.split('/')[-1], 'bold'),
-                        'bolditalic':(),
-                        }
+                    all_mode = set_mode(font_info, dirname)
                 mode = font_info.styleName.lower().replace(" ", "") 
                 if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
                     all_mode['regular'] = (font_info.familyName, font_info.name, dirname.split('/')[-1], 'regular')
