@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-02-16 10:49+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-09-18 11:50+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:22+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-09-19 04:56+0000\n"
+"X-Generator: Launchpad (build 16765)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -23,6 +23,8 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Dovolite prodajnikom da pripravijo fakture za odpremnice z uporabo metode "
+"\"Odpremnice za fakuriranje\""
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -39,7 +41,7 @@ msgstr "Dostave za fakturiranje."
 #: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "Informacija o odpremi/prevzemu!: "
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_packinglist0
@@ -55,6 +57,10 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Izbrali ste količino %d enot.\n"
+"Vendar ni usklajena z izbranim pakiranjem.\n"
+"Tu je predlog za količine v skladu s pakiranjem:\n"
+"EAN: %s Količina: %s Tip: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -81,7 +87,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "Najprej prekličite vse odpremnice, pripete k temu prodajnemu nalogu."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -183,6 +189,10 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
+"Obrazec za odpremo je kreiran takoj, ko je potrjen prodajni nalog, v istem "
+"trenutku kot nabavni nalog. Predstavlja prireditev artiklov prodajnemu "
+"nalogu. Nastane 1 odpremni nalog za vrstico prodajnega naloga, ki upošteva "
+"razpoložljivost artikla."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -202,7 +212,7 @@ msgstr "Sila dodelitev"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Privzeta metoda fakturiranja je"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
@@ -217,7 +227,7 @@ msgstr "Dokument premika straniki"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Pregled odpremnega naloga"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -232,7 +242,7 @@ msgstr "Privzete možnosti"
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
-msgstr ""
+msgstr "Projekt MRP"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
@@ -243,6 +253,12 @@ msgid ""
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
+"Če je na prodajnem nalogu določeno, da se kreira faktura \"po odpremnem "
+"nalogu\", se faktura kreira avtomatično glede na odpremljene količine. Če "
+"želimo kreirati fakturo na osnovi prodajnega naloga, lahko določimo "
+"nastavitev kreiraj fakturo \"Na zahtevo\"; v tem primeru sledimo prodajne "
+"naloge, ki so bili v celoti odpremljeni in pripravimo fakture na osnovi "
+"prodajnih nalogov."
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -277,17 +293,17 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Omogoči opremiti vrstice prodajnega naloga z ključnimi besedami"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Generiranje faktur po in na osnovi odpremnih nalogov."
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Dovoli dodajanje stroškov dostave"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -305,6 +321,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Mednarodni pogoji (INCOTERMS) so v naprej določeni komercialni pogoji, ki se "
+"uporabljajo pri mednarodnih prevozih."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -314,16 +332,20 @@ msgid ""
 "prices.\n"
 "                This installs the module delivery."
 msgstr ""
+"Dovoljenje, da dodate metode dobave na prodajne naloge in dostavne naloge.\n"
+"                Določite lahko lastnega prevoznika in dostavne poti za "
+"cene.\n"
+"                Instalirati modul delivery."
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Dobavi vse naenkrat, ko so vsi artikli na voljo."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Omogoči fakturanje dostavnih nalogov."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -340,12 +362,13 @@ msgstr "Nabava prodanega materiala"
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
+"Izberite 'Dostavi vsak artikel, ko je na voljo' če dovolite delne dobave."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Ne morem preklicati prodajnega naloga!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -358,6 +381,8 @@ msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
 msgstr ""
+"Označuje, da je bil prodajni nalog odpremljen. To polje je posodobljeno samo "
+"če je bil izveden preračun."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -375,7 +400,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Lastnosti artikla na vrsticah naloga"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
@@ -411,6 +436,7 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Dovoli opredeliti različne naslove dostave in računa na prodajnem nalogu."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -435,7 +461,7 @@ msgstr "Ni dovolj zaloge !: "
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Število dni med potrditvijo naloga in odpremo artiklov kupcu."
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -444,11 +470,14 @@ msgid ""
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
 msgstr ""
+"Prodajni nalog bo v osnovi nastavljen tako, da se vsi artikli dostavijo "
+"naenkrat, za razliko od dostave vsakega artikla, ko je ta na voljo. To lahko "
+"vpliva na ceno dobave."
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Fkatura temeljji na prodajnem nalogu"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -468,6 +497,9 @@ msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
+"Če želite brisati prodajni nalog, ga morate preklicati.\n"
+"Da lahko to naredite, morate najprej preklicati povezane odpremnice za "
+"dostavni nalog."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -487,7 +519,7 @@ msgstr "Ustvari račun"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Pripravite račun na osnovi aktivnosti nalog."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
@@ -606,6 +638,8 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr ""
+"Odvisno od nastavitev izhodne lokacije, je transakcija med izhodno lokacijo "
+"in kupcem izvedena na osnovi dostavnega naloga ročno ali avtomatično."
 
 #~ msgid ""
 #~ "This is the days added to what you promise to customers for security purpose"
