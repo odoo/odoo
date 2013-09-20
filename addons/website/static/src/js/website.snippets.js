@@ -7,7 +7,7 @@
     website.EditorBar.include({
         start: function () {
             var self = this;
-            $("body").on('click', function (event) {
+            $("[data-oe-model]").on('click', function (event) {
                 var tag = event.srcElement.tagName.toLowerCase();
                 var $this = $(event.srcElement);
                 if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
@@ -86,19 +86,19 @@
         },
         dom_filter: function (dom) {
             if (typeof dom === "string") {
-                var exclude = ":not(#oe_manipulators):not(#website-top-navbar):not(.oe_snippet)";
+                var include = "[data-oe-model]";
                 var sdom = dom.split(',');
                 dom = "";
                 _.each(sdom, function (val) {
                     val = val.replace(/^\s+|\s+$/g, '');
-                    dom += "body > " + exclude + " " + val + ", ";
+                    dom += "body " + include + " " + val + ", ";
                     val = val.split(" ");
-                    dom += "body > "+ val.shift() + exclude + val.join(" ") + ", ";
+                    dom += "body "+ val.shift() + include + val.join(" ") + ", ";
                 });
                 dom = dom.replace(/,\s*$/g, '');
                 return $(dom);
             } else {
-                return $(dom).parents("#oe_manipulators, #website-top-navbar").length || $(dom).hasClass("oe_snippet") ? $("") : $(dom);
+                return $(dom).is("[data-oe-model]") || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
             }
         },
         start: function() {
@@ -208,7 +208,7 @@
                     }
                     self.make_active($target);
                 });
-            $("body > :not(:has(#website-top-view)):not(#oe_manipulators)").on('click', function (ev) {
+            $("[data-oe-model]").on('click', function (ev) {
                     if (!snipped_event_flag && self.$active_snipped_id && !self.$active_snipped_id.parents("[data-snippet-id]:first")) {
                         self.make_active(false);
                     }
