@@ -46,7 +46,11 @@
                     }
 
                     element = get_selected_link(editor) || evt.data.element;
-                    if (element.isReadOnly() || !element.is('a')) { return; }
+                    if (element.isReadOnly()
+                        || !element.is('a')
+                        || element.data('oe-model')) {
+                        return;
+                    }
 
                     editor.getSelection().selectElement(element);
                     link_dialog(editor);
