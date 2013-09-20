@@ -116,6 +116,17 @@ table.editorbar-panel
 
 /* ---- SNIPPET EDITOR ---- */
 
+#oe_snippet_cache
+    background: rgba(0,0,0,.4)
+    position: fixed
+    top: 0
+    left: 0
+    z-index: 1001
+    width: 100%
+    height: 100%
+    display: none
+    pointer-events: none
+
 #oe_snippets
     position: fixed
     left: 0px
@@ -239,7 +250,7 @@ table.editorbar-panel
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
-        z-index: 1001
+        z-index: 1002
 
 .oe_drop_zone_style
     color: white
@@ -247,6 +258,11 @@ table.editorbar-panel
     margin-bottom: 32px
 
 /* ---- SNIPPET MANIPULATOR ---- */
+
+.oe_snippet_overlay_activate
+    position: relative
+    z-index: 1003
+    background: rgba(255,255,255,1)
 
 .oe_overlay
     display: none
@@ -256,6 +272,7 @@ table.editorbar-panel
     transition: opacity 100ms linear
     box-sizing: border-box
     pointer-events: none
+    z-index: 1003
     &.oe_active
         display: block
         border-style: dashed
@@ -301,7 +318,7 @@ table.editorbar-panel
         width: 100%
         text-align: center
         top: -11px
-        z-index: 1002
+        z-index: 1003
         .btn, a
             pointer-events: auto
             cursor: pointer
