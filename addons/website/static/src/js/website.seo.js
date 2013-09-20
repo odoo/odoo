@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-
+    
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.seo.xml');
 
