@@ -437,6 +437,10 @@ $editorbar_height: 40px
 // TODO Fix => might break with themes
 $navbar_height: 51px
 
+@mixin editor-font
+    font-size: 14px
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
+    line-height: normal
 .oe_ace_view_editor
     transition: all 0.2s ease-in
     -webkit-transition: all 0.2s ease-in
@@ -458,9 +462,11 @@ $navbar_height: 51px
         .oe_view_list
             width: 50%
             height: $editorbar_height - 8px
+            @include editor-font
         .btn
             height: $editorbar_height - 8px
             padding: 0 4px 0 4px
+            @include editor-font
     .ace_editor
         position: absolute
         top: $editorbar_height
