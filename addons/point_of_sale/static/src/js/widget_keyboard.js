@@ -43,10 +43,15 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
 
         // Write a character to the input zone
         writeCharacter: function(character){
-            var $input = this.$target
-            $input[0].value += character;
-            $input.keydown();
-            $input.keyup();
+            var $input = this.$target;
+            if(character === '\n'){
+                $input.trigger($.Event('keydown',{which:13}));
+                $input.trigger($.Event('keyup',{which:13}));
+            }else{
+                $input[0].value += character;
+                $input.keydown();
+                $input.keyup();
+            }
         },
         
         // Sends a 'return' character to the input zone. TODO
