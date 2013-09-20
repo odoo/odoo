@@ -31,8 +31,7 @@ class website_hr_recruitment(http.Controller):
         for rec in hr_job_obj.browse(request.cr, request.uid, jobpost_ids):
             vals[rec.id] = {'count': int(rec.no_of_recruitment), 'date_recruitment': rec.write_date.split(' ')[0]}
         step = 5
-        pager = request.website.pager(url="/jobs/", total=len(jobpost_ids), page=page, step=step, scope=5)
-        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
+
         department_ids = []
         request.cr.execute("select * from hr_department")
         for i in request.cr.fetchall():
@@ -43,11 +42,12 @@ class website_hr_recruitment(http.Controller):
         jobids = hr_job_obj.search(request.cr, request.uid, [('department_id','=',id)])
         step = 5
         pager = request.website.pager(url="/jobs/", total=len(jobids), page=page, step=step, scope=5)
+        jobids = hr_job_obj.search(request.cr, request.uid, [('department_id','=',id)], limit=step, offset=pager['offset'])
+        
         values = {
             'active': active,
             'companies': companies,
             'res_job': hr_job_obj.browse(request.cr, request.uid, jobids),
-#            'res_job': hr_job_obj.browse(request.cr, request.uid, jobpost_ids),
             'departments': hr_department_obj.browse(request.cr, request.uid, department_ids),
             'vals': vals,
             'no_of_jobs': len(hr_job_obj.browse(request.cr, request.uid, jobpost_ids)),
