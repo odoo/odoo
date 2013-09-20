@@ -162,7 +162,7 @@
                         <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
                         <t t-if="event_id.organizer_id">
                             <h6>Organized by:</h6>
-                            <address><strong t-field="event_id.organizer_id.name"/><t t-if="event_id.phone"><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span></t><t t-if="event_id.email"><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></t></address>
+                            <address><strong t-field="event_id.organizer_id.display_name"/><t t-if="event_id.phone"><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span></t><t t-if="event_id.email"><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></t></address>
                         </t>
                     </div>
                     <div class="col-md-8">
@@ -203,7 +203,7 @@
                         <ul class="media-list" id="comment">
                             <li t-foreach="message_ids" t-as="comment" class="media">
                                 <div class="media-body">
-                                    <!--t t-call="website.publish"><t t-set="object" t-value="comment"/></t-->
+                                    <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
                                     <t t-raw="comment.body"/>
                                     <small class="pull-right muted text-right">
                                         <div t-field="comment.author_id"/>

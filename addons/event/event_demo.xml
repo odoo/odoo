@@ -26,6 +26,21 @@
     <record id="event_type_4" model="event.type">
         <field name="name">Training</field>
     </record>
+    
+<!-- Demo data for Address -->
+    <record id="res_partner_24" model="res.partner">
+            <field name="name">Epix Technosoft</field>
+            <field eval="[(6, 0, [ref('base.res_partner_category_2')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field eval="0" name="customer"/>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
+            <field name="zip">90001</field>
+            <field name="city">Los Angeles</field>
+            <field name="email">epix@technosoft.info</field>
+            <field name="phone">+1 312 349 2121</field>
+            <field name="website">www.epixtechnosoft.info//</field>
+    </record>
 
 <!-- Demo data for Event -->
     <record id="event_0" model="event.event">
@@ -33,7 +48,7 @@
         <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
         <field name="register_max">500</field>
-        <field name="address_id" ref="base.res_partner_24"/>
+        <field name="address_id" ref="res_partner_24"/>
         <field name="type" ref="event_type_1"/>
     </record>
 
