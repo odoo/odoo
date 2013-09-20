@@ -1790,6 +1790,7 @@ openerp.mail = function (session) {
         template: 'mail.record_thread',
 
         init: function (parent, node) {
+            var self = this;
             this._super.apply(this, arguments);
             this.ParentViewManager = parent;
             this.node = _.clone(node);
@@ -1800,8 +1801,8 @@ openerp.mail = function (session) {
                 'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
+                'display_log_button' : false,
             }, this.node.params);
-
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
             }
@@ -1814,6 +1815,10 @@ openerp.mail = function (session) {
             if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
             }
+            this.dataset = new session.web.DataSet(this,"ir.actions.client");
+            this.dataset.call('check_message_security', [this.session.uid]).then(function(result){
+                self.node.params.display_log_button = result;
+            });
         },
 
         start: function () {

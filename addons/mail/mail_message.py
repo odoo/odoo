@@ -1023,3 +1023,15 @@ class mail_message(osv.Model):
                     'message': warning_msg,
                     }
                 }
+
+class ir_actions_client(osv.Model):
+
+    _inherit = 'ir.actions.client'
+
+    def check_message_security(self, cr, uid, context=None):
+        flag = False
+        group =  self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        if group:
+            users = self.pool.get('res.groups').read(cr, uid, group[1], ['users'])['users']
+            flag = uid in users and True or False
+        return flag
