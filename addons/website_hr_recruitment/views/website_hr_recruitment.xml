@@ -42,7 +42,6 @@
 			    <div class="col-md-8">
 	                        <ul class="media-list">
         	                    <li t-foreach="res_job" t-as="job" class="media" data-publish="">
-					<t t-call="website.publish"><t t-set="object" t-value="job"/></t>
 					<div class="media-body">
 					    <span t-if="not job.no_of_recruitment" class="label label-default pull-right">No recruitment needed.</span>
 					    <t t-if="job.no_of_recruitment">
@@ -73,17 +72,22 @@
 		</t>
                 <t t-set="title">Job Detail</t>
 		<div id="wrap">
-			<div class="col-md-4">
-                        <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
-                            <div class="col-lg-7">
-                                <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
-                            </div>
-                            <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
-                        </form>
-                        <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
-                            <input type="hidden" name="email" t-att-value="subscribe"/>
-                            <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
-                        </form>
+		    <div class="container">
+		        <div class="row">
+			    <div class="col-md-4">
+		                <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
+		                    <div class="col-lg-7">
+		                        <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
+		                    </div>
+		                    <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
+		                </form>
+		                <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
+		                    <input type="hidden" name="email" t-att-value="subscribe"/>
+		                    <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
+		                </form>
+		            </div>
+		        <t t-call="website.publish"><t t-set="object" t-value="job"/></t>
+                    </div>
                     </div>
 		    <div class="oe_structure" style="clear:both;">
 	                <h1 class="text-center" t-field="job.name"></h1>
@@ -95,7 +99,6 @@
 
                     </div>			
   		    <div class="container">
-		        <t t-call="website.publish"><t t-set="object" t-value="job"/></t>
 			<hr/>
 		        <div class="row">
 			<div class="pull-left">
