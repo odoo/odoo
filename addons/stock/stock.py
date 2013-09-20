@@ -807,14 +807,18 @@ class stock_picking(osv.osv):
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
             This will unreserve all products and reserve the quants from the operations
-            :return: tuple of dictionary with quantities of quant operation and product that can not be matched between ops and moves
+            :return: Tuple (res, res2)
+                res: dictionary of ops with quantity that could not be processed matching ops and moves
+                res2: dictionary of moves with quantity that could not be processed
+                resneg: the negative quants that should be created with ops and move (TODO)
+            tuple of dictionary with quantities of quant operation and product that can not be matched between ops and moves
             and dictionary with remaining values on moves
             
         """
         quant_obj = self.pool.get("stock.quant")
         move_obj = self.pool.get("stock.move")
         op_obj = self.pool.get("stock.pack.operation")
-        res = {}
+        res = {} # Qty still to do from ops
         res2 = {} #what is left from moves
         for picking in self.browse(cr, uid, picking_ids, context=context):
             # unreserve everything and initialize res2
@@ -824,8 +828,8 @@ class stock_picking(osv.osv):
             # Resort pack_operation_ids
             
             orderedpackops = picking.pack_operation_ids
-            #Sort packing operations such that packing operations with most specific information 
-            orderedpackops.sort(key = lambda x: (x.package_id and -1 or 0) + (x.lot_id and -1 or 0))
+            #Sort packing operations such that only transferring packages happens first and then packing operations with most specific information 
+            orderedpackops.sort(key = lambda x: ((x.package_id and not x.product_id) and -3 or 0) + (x.package_id and -1 or 0) + (x.lot_id and -1 or 0))
 
             for ops in orderedpackops:
                 #Find moves that correspond
@@ -861,8 +865,9 @@ class stock_picking(osv.osv):
                         else:
                             #Quants get
                             prefered_order = "reservation_id IS NOT NULL"
-                            domain = op_obj._get_domain(cr, uid, ops, context=context)
-                            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order=prefered_order, context=context)
+                            dom = op_obj._get_domain(cr, uid, ops, context=context)
+                            dom = dom + [('reservation_id', 'not in', [x.id for x in picking.move_lines])]
+                            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_order=prefered_order, context=context)
                             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                             #In the end, move quants in correct package
                             if create:
@@ -872,6 +877,7 @@ class stock_picking(osv.osv):
                     res[ops.id][ops.product_id.id] = qty_to_do
                 elif ops.package_id:
                     quants = ops.package_id.quant_ids #_get_package_lines
+                    
                     for quant in quants:
                         move_ids = move_obj.search(cr, uid, [('picking_id', '=', picking.id), ('product_id', '=', quant.product_id.id), ('remaining_qty', '>', 0.0)])
                         qty_to_do = quant.qty
@@ -928,7 +934,8 @@ class stock_picking(osv.osv):
                                             'location_dest_id': picking.location_dest_id.id,
                                             'picking_id': picking.id,
                                             'reserved_quant_ids': quant and [(4, quant.id)] or [],
-                                            'picking_type_id': picking.picking_type_id.id
+                                            'picking_type_id': picking.picking_type_id.id,
+                                            'group_id': picking.group_id.id,
                                         }, context=context)
                             extra_moves.append(move_id)
                 res2 = res[1]
