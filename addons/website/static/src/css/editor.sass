@@ -429,13 +429,24 @@ $icon_close: #E00101
 /* ---- SEO TOOLS ---- */
 
 $remove_color: $icon_close
+$in_title_color: #5cb85c
+$in_description_color: #428bca
+$in_body_color: #5bc0de
 .oe_seo_configuration
     .modal-dialog
         width: 80%
     .oe_remove
         color: $remove_color
-    .oe_seo_suggestion
+    .oe_seo_keyword
         cursor: pointer
+        padding: .2em .4em .2em .5em
+        border-radius: .4em
+    .keyword-in-title
+        background-color: $in_title_color
+    .keyword-in-description
+        background-color: $in_description_color
+    .keyword-in-body
+        background-color: $in_body_color
 
 /* ---- ACE EDITOR ---- */
 

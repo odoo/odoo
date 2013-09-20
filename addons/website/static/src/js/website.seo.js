@@ -6,9 +6,9 @@
 
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=promote-current-page]': 'promotePage',
+            'click a[data-action=promote-current-page]': 'launchSeo',
         }),
-        promotePage: function () {
+        launchSeo: function () {
             (new website.seo.Configurator()).appendTo($(document.body));
         },
     });
@@ -20,31 +20,21 @@
         events: {
             'click .js_seo_suggestion': 'select',
         },
-        init: function (parent, keyword, htmlPage) {
-            this.keyword = keyword;
-            this.htmlPage = htmlPage;
-            this.type = this.computeType();
+        init: function (parent, options) {
+            this.root = options.root;
+            this.keyword = options.keyword;
+            this.htmlPage = options.page;
             this._super(parent);
         },
         start: function () {
-            var self = this;
-            function update () {
-                self.updateType();
-            }
-            self.htmlPage.on('title-changed', self, update);
-            self.htmlPage.on('description-changed', self, update);
+            this.htmlPage.on('title-changed', this, this.renderElement);
+            this.htmlPage.on('description-changed', this, this.renderElement);
         },
-        computeType: function () {
-            // cf. http://getbootstrap.com/components/#labels
-            // default, primary, success, info, warning, danger
-            return this.htmlPage.isInTitle(this.keyword) ? 'success'
-                    : this.htmlPage.isInDescription(this.keyword) ? 'primary'
-                    : this.htmlPage.isInBody(this.keyword) ? 'info'
-                    : 'default';
-        },
-        updateType: function () {
-            this.type = this.computeType();
-            this.renderElement();
+        highlight: function () {
+            return this.htmlPage.isInTitle(this.keyword) ? 'keyword-in-title'
+                    : this.htmlPage.isInDescription(this.keyword) ? 'keyword-in-description'
+                    : this.htmlPage.isInBody(this.keyword) ? 'keyword-in-body'
+                    : "";
         },
         select: function () {
             this.trigger('selected', this.keyword);
@@ -53,9 +43,9 @@
 
     website.seo.SuggestionList = openerp.Widget.extend({
         template: 'website.seo_list',
-        init: function (parent, word, htmlPage) {
-            this.word = word;
-            this.htmlPage = htmlPage;
+        init: function (parent, options) {
+            this.root = options.root;
+            this.htmlPage = options.page;
             this._super(parent);
         },
         start: function () {
@@ -67,14 +57,18 @@
             function addSuggestions (list) {
                 self.$el.empty();
                 // TODO Improve algorithm + Ajust based on custom user keywords
-                var nameRegex = new RegExp(self.companyName, "gi");
-                var cleanList = _.map(list, function removeCompanyName (word) {
-                    return word.replace(nameRegex, "").trim();
+                var regex = new RegExp(self.root, "gi");
+                var cleanList = _.map(list, function (word) {
+                    return word.replace(regex, "").trim();
                 });
                 // TODO Order properly ?
                 _.each(_.uniq(cleanList), function (keyword) {
                     if (keyword) {
-                        var suggestion = new website.seo.Suggestion(self, keyword, self.htmlPage);
+                        var suggestion = new website.seo.Suggestion(self, {
+                            root: self.root,
+                            keyword: keyword,
+                            page: self.htmlPage,
+                        });
                         suggestion.on('selected', self, function (word) {
                             self.trigger('selected', word);
                         });
@@ -82,7 +76,7 @@
                     }
                 });
             }
-            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.word + " "), addSuggestions);
+            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.root + " "), addSuggestions);
         },
     });
 
@@ -92,36 +86,32 @@
             'click a[data-action=remove-keyword]': 'destroy',
         },
         maxWordsPerKeyword: 4, // TODO Check
-        init: function (parent, keyword, htmlPage) {
-            this.keyword = keyword;
-            this.htmlPage = htmlPage;
-            this.type = this.computeType();
+        init: function (parent, options) {
+            this.keyword = options.word;
+            this.htmlPage = options.page;
             this._super(parent);
         },
         start: function () {
-            var self = this;
-            function update () {
-                self.updateType();
-            }
-            self.htmlPage.on('title-changed', self, update);
-            self.htmlPage.on('description-changed', self, update);
-            self.suggestionList = new website.seo.SuggestionList(self, this.keyword, this.htmlPage);
-            self.suggestionList.on('selected', self, function (word) {
-                self.trigger('selected', word);
+            this.htmlPage.on('title-changed', this, this.updateLabel);
+            this.htmlPage.on('description-changed', this, this.updateLabel);
+            this.suggestionList = new website.seo.SuggestionList(this, {
+                root: this.keyword,
+                page: this.htmlPage,
+            });
+            this.suggestionList.on('selected', this, function (word) {
+                this.trigger('selected', word);
             });
             this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
         },
-        computeType: function () {
-            // cf. http://getbootstrap.com/components/#labels
-            // default, primary, success, info, warning, danger
-            return this.htmlPage.isInTitle(this.keyword) ? 'success'
-                    : this.htmlPage.isInDescription(this.keyword) ? 'primary'
-                    : this.htmlPage.isInBody(this.keyword) ? 'warning'
-                    : 'default';
+        highlight: function () {
+            return this.htmlPage.isInTitle(this.keyword) ? 'keyword-in-title'
+                    : this.htmlPage.isInDescription(this.keyword) ? 'keyword-in-description'
+                    : this.htmlPage.isInBody(this.keyword) ? 'keyword-in-body'
+                    : "";
         },
-        updateType: function () {
-            this.type = this.computeType();
-            this.$('span.js_seo_keyword').attr('class', "label label-"+this.type+" js_seo_keyword");
+        updateLabel: function () {
+            var cssClass = "oe_seo_keyword js_seo_keyword " + this.highlight();
+            this.$(".js_seo_keyword").attr('class', cssClass);
         },
         destroy: function () {
             this.trigger('removed');
@@ -132,29 +122,44 @@
     website.seo.KeywordList = openerp.Widget.extend({
         template: 'website.seo_list',
         maxKeywords: 10,
-        init: function (parent, htmlPage) {
-            this.htmlPage = htmlPage;
+        init: function (parent, options) {
+            this.htmlPage = options.page;
             this._super(parent);
+        },
+        start: function () {
+            var self = this;
+            var existingKeywords = self.htmlPage.keywords();
+            if (existingKeywords.length > 0) {
+                _.each(existingKeywords, function (word) {
+                    self.add.call(self, word);
+                });
+            } else {
+                var companyName = self.htmlPage.company().toLowerCase();
+                self.add(companyName);
+            }
         },
         keywords: function () {
             var result = [];
-            this.$('span.js_seo_keyword').each(function () {
+            this.$('.js_seo_keyword').each(function () {
                 result.push($(this).data('keyword'));
             });
             return result;
         },
-        isKeywordListFull: function () {
+        isFull: function () {
             return this.keywords().length >= this.maxKeywords;
         },
-        isExistingKeyword: function (word) {
+        exists: function (word) {
             return _.contains(this.keywords(), word);
         },
         add: function (candidate) {
             var self = this;
             // TODO Refine
-            var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim() : "";
-            if (word && !self.isKeywordListFull() && !self.isExistingKeyword(word)) {
-                var keyword = new website.seo.Keyword(self, word, this.htmlPage);
+            var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim().toLowerCase() : "";
+            if (word && !self.isFull() && !self.exists(word)) {
+                var keyword = new website.seo.Keyword(self, {
+                    word: word,
+                    page: this.htmlPage,
+                });
                 keyword.on('removed', self, function () {
                    self.trigger('list-not-full');
                    self.trigger('removed', word);
@@ -164,7 +169,7 @@
                 });
                 keyword.appendTo(self.$el);
             }
-            if (self.isKeywordListFull()) {
+            if (self.isFull()) {
                 self.trigger('list-full');
             }
         },
@@ -181,8 +186,8 @@
 
 
     website.seo.ImageList = openerp.Widget.extend({
-        init: function (parent, htmlPage) {
-            this.htmlPage = htmlPage;
+        init: function (parent, options) {
+            this.htmlPage = options.page;
             this._super(parent);
         },
         start: function () {
@@ -228,10 +233,11 @@
             this.trigger('description-changed', description);
         },
         keywords: function () {
-            return $('meta[name=keywords]').attr('value').split(",");
+            var parsed = $('meta[name=keywords]').attr('value').split(",");
+            return parsed[0] ? parsed: [];
         },
         changeKeywords: function (keywords) {
-            $('meta[name=keywords]').attr('value', keyword.join(","));
+            $('meta[name=keywords]').attr('value', keywords.join(","));
             this.trigger('keywords-changed', keywords);
         },
         headers: function (tag) {
@@ -299,9 +305,9 @@
             $modal.find('input[name=seo_page_title]').val(htmlPage.title());
             $modal.find('textarea[name=seo_page_description]').val(htmlPage.description());
             self.suggestImprovements();
-            self.imageList = new website.seo.ImageList(self, htmlPage);
+            self.imageList = new website.seo.ImageList(self, { page: htmlPage });
             self.imageList.appendTo($modal.find('.js_seo_image_list'));
-            self.keywordList = new website.seo.KeywordList(self, htmlPage);
+            self.keywordList = new website.seo.KeywordList(self, { page: htmlPage });
             self.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
                     .attr('readonly', "readonly")
@@ -319,8 +325,6 @@
                 self.keywordList.add(word);
             });
             self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
-            var companyName = htmlPage.company().toLowerCase();
-            self.addKeyword(companyName);
             $modal.modal();
         },
         suggestImprovements: function () {
@@ -388,6 +392,10 @@
                 var description = self.$('textarea[name=seo_page_description]').attr('value');
                 self.htmlPage.changeDescription(description);
             }, 1);
+        },
+        destroy: function () {
+            this.htmlPage.changeKeywords(this.keywordList.keywords());
+            this._super();
         },
     });
 })();

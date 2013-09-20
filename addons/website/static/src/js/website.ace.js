@@ -25,9 +25,9 @@
 
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=ace]': 'launch',
+            'click a[data-action=ace]': 'launchAce',
         }),
-        launch: function (e) {
+        launchAce: function (e) {
             e.preventDefault();
             launch();
         },
