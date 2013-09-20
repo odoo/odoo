@@ -616,7 +616,7 @@
                     top: 14
                 },
                 helper: function() {
-                    var $clone = $(this).clone().css({width: "24px", height: "50px", border: 0});
+                    var $clone = $(this).clone().css({width: "24px", height: "24px", border: 0});
                     $clone.find(".oe_overlay_options >:not(.oe_snippet_move), .oe_handle").remove();
                     $clone.find(":not(.glyphicon)").css({position: 'absolute', top: 0, left: 0});
                     return $clone.appendTo("body").removeClass("hidden");

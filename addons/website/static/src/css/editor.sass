@@ -206,7 +206,8 @@ table.editorbar-panel
 /* ---- SNIPPETS DROP ZONES ---- */
 
 
-
+.col-md-12[data-snippet-id="colmd"]
+    float: left
 .oe_drop_zone.oe_insert
     display: block
     height: 48px
@@ -216,7 +217,7 @@ table.editorbar-panel
     width: 100%
     position: absolute
     z-index: 1000
-    &:before
+    &:not(.oe_vertical):before
         content: ""
         display: block
         border-top: dashed 2px rgba(209, 178, 255, 0.72)
@@ -225,10 +226,10 @@ table.editorbar-panel
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
     &.oe_vertical
-        width: 16px
-        display: inline-block
-        position: absolute
-        margin: 0px !important
+        width: 24px
+        float: left
+        position: relative
+        margin: 0px -12px !important
     &.oe_overlay
         background: rgba(153, 0, 255, 0.17)
         border-radius: 3px
