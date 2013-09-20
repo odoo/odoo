@@ -156,7 +156,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'name': v.name,
                     'id': v.id,
                     'header': False,
-                    'active': v.inherit_id.id == v.inherit_option_id.id
+                    'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
                 })
         return result
 

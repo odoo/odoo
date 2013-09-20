@@ -104,31 +104,17 @@ table.editorbar-panel
     -o-user-select: auto
     user-select: auto
 
-.modal .existing-attachments a.thumbnail
-    position: relative
+.modal-dialog.select-image
+    width: 80%
 
-    &.selected:before
-        text-decoration: none
-        font-size: 150%
-        background-color: rgba(0, 0, 0, 0.3)
-        color: #21dc0f
-        content: "✔"
-
-        height: 2em
-        width: 2em
-        text-align: center
-        padding: 5px
-        border-radius: 4px 0
-
-        position: absolute
-        top: 0
-        left: 0
+.modal .existing-attachments
+    .pager
+        margin: 0
 
 .modal .image-preview
     margin-bottom: 0.5em
 
 /* ---- SNIPPET EDITOR ---- */
-
 
 #oe_snippets
     position: fixed
@@ -139,6 +125,9 @@ table.editorbar-panel
     box-shadow: 0px 10px 10px -10px black inset
     z-index: 1010
     overflow: hidden
+    height: 110px
+    &:hover
+        height: auto
     .scroll
         white-space: nowrap
         overflow-y: auto
@@ -217,6 +206,7 @@ table.editorbar-panel
 /* ---- SNIPPETS DROP ZONES ---- */
 
 
+
 .oe_drop_zone.oe_insert
     display: block
     height: 48px
@@ -243,12 +233,17 @@ table.editorbar-panel
         background: rgba(153, 0, 255, 0.17)
         border-radius: 3px
 
-.oe_drop_zone
+.oe_drop_zone, .oe_drop_zone_style
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
         z-index: 1001
+
+.oe_drop_zone_style
+    color: white
+    height: 48px
+    margin-bottom: 32px
 
 /* ---- SNIPPET MANIPULATOR ---- */
 
@@ -310,28 +305,31 @@ table.editorbar-panel
         display: inline-block
 
     .oe_overlay_options
+        position: absolute
+        width: 100%
+        text-align: center
+        top: -11px
         display: none
         z-index: 1002
-        .oe_options,.oe_label,.oe_move
-            position: absolute
-            display: block
-            z-index: 1002
-            top: -11px
-        .oe_options
+        > div
+            display: inline-block
+        .btn
+            display: inline-block
             pointer-events: auto
-            left: -14px
+        a
+            pointer-events: auto
+            cursor: pointer
+        .dropdown-menu
+            text-align: left
+            min-width: 180px
         .oe_label
-            top: -8px
+            position: absolute
+            top: 3px
             right: 6px
             background: #fff
             font-size: 75%
             color: rgba(153, 0, 255, 0.5)
             padding: 0 5px
-        .oe_move
-            pointer-events: auto
-            left: 50%
-            .js_box_move
-                margin-left: -50%
         .dropdown-menu select,.dropdown-menu input
             display: block
     &.oe_active .oe_overlay_options

@@ -27,6 +27,7 @@ class website_mail(http.Controller):
             'nav_list': dict(),
             'mail_group_id': mail_group_id,
             'subscribe': post.get('subscribe'),
+            'unable_editor': post.get('unable_editor')
         }
 
         if not request.context['is_public_user'] and mail_group_id:
@@ -86,13 +87,13 @@ class website_mail(http.Controller):
     @website.route(['/blog/<int:mail_group_id>/new'], type='http', auth="public")
     def new_blog_post(self, mail_group_id=None, **post):
         blog_id = request.registry['mail.group'].message_post(request.cr, request.uid, mail_group_id,
-                body=_("Blog content.<br/>Please edit this content then you can publish this blog."),
+                body="",
                 subject=_("Blog title"),
                 website_published=False,
                 type='comment',
                 subtype='mt_comment',
                 context=dict(request.context, mail_create_nosubscribe=True))
-        return werkzeug.utils.redirect("/blog/%s/%s/" % (mail_group_id, blog_id))
+        return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (mail_group_id, blog_id))
 
     @website.route(['/blog/<int:mail_group_id>/subscribe', '/blog/<int:mail_group_id>/<int:blog_id>/subscribe'], type='http', auth="public")
     def subscribe(self, mail_group_id=None, blog_id=None, **post):

@@ -5,6 +5,53 @@
     <t t-name="website.snippets_button">
         <li class="navbar-form"><button type="button" data-action="snippet" class="btn btn-primary">Insert Blocks</button></li>
     </t>
+    <t t-name="website.snippets_style">
+        <li class="navbar-form">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Block style <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="oe_snippets_style" role="menu"></ul>
+            </div>
+        </li>
+    </t>
+    <t t-name="website.snippets_modal">
+        <div class="modal" id="oe_droperror" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
+                        <h4 class="modal-title">
+                            Building Block Not Inserted
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            The building block has not been inserted in your
+                            page because you did not drop it in a valid zone.
+                            Valid zone are represented by rectangle like this:
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-4 oe_drop_zone_style text-center">
+                                drop in this zone
+                            </div>
+                        </div>
+                        <p class="text-muted">
+                            When your cursor is in a valid zone, OpenERP shows
+                            you a preview of the building block in your page.
+                            You must release the block when the preview is visible.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <div class="pull-left">
+                            <input type="checkbox" value="1"/> Never show this tip again
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 
     <t t-name="website.snippets">
         <div id='oe_snippets'>
@@ -13,13 +60,11 @@
                   <li><a href="#snippet_structure">Structure</a></li>
                   <li><a href="#snippet_content">Content</a></li>
                   <li><a href="#snippet_business">Business</a></li>
-                  <li><a href="#snippet_style">Style</a></li>
                 </ul>
                 <div class="pill-content">
                     <div id="snippet_structure"><label><div>Structure</div></label></div>
                     <div id="snippet_content"><label><div>Content</div></label></div>
                     <div id="snippet_business"><label><div>Business</div></label></div>
-                    <div id="snippet_style"><label><div>Style</div></label></div>
                 </div>
             </div>
         </div>
@@ -28,16 +73,19 @@
     <t t-name="website.snippet_overlay">
         <div class="oe_overlay">
             <div class="oe_overlay_options">
+                <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Get Container Block"><span class="glyphicon glyphicon-open"/></a>
                 <div class="dropdown oe_options">
-                    <i data-toggle="dropdown" class="btn btn-primary btn-sm icon icon-cog"></i>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li class="divider"></li>
-                        <li><a href="#" class="button js_box_clone">Duplicate this snippet</a></li>
-                        <li><a href="#" class="button js_box_remove">Remove this snippet</a></li>
-                    </ul>
+                    <a href="#" data-toggle="dropdown" class="btn btn-default btn-sm" title="Customize">Customize <span class="glyphicon glyphicon-cog"/></a>
+                    <ul class="dropdown-menu" role="menu"></ul>
+                </div>
+                <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate"><span class="glyphicon glyphicon-tags"/></a>
+                <a href="#" class="btn btn-default btn-sm oe_snippet_move" title="move"><span class="glyphicon glyphicon-move"/></a>
+                <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove"><span class="glyphicon glyphicon-remove"/></a>
+                <div class="dropdown oe_styles">
+                    <a href="#" data-toggle="dropdown" class="btn btn-default btn-sm" title="Styles"><span class="glyphicon glyphicon-cog"/> Styles</a>
+                    <ul class="dropdown-menu" role="menu"></ul>
                 </div>
                 <div class="oe_label"></div>
-                <div class="oe_move"><i class="js_box_move icon btn btn-primary btn-sm icon-move"></i></div>
             </div>
         </div>
     </t>
@@ -152,7 +200,8 @@
     </div>
 
     <div t-name="website.snippets.darken" data-snippet-id='darken' data-category='style' data-selector='section'>
-        <div class='oe_snippet_thumbnail oe_snippet_label'>Darken</div>
+        <div class='oe_snippet_label'>Darken</div>
+        <div class='oe_snippet_class'>dark</div>
     </div>
 
     <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
@@ -200,7 +249,7 @@
             <span style="position: absolute; top: 50px; left: 5px;">Text-Image</span>
             <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; right: 5px; top: 50px; max-width: 28%"/>
         </div>
-        <section class="oe_snippet_body dark">
+        <section class="oe_snippet_body">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">

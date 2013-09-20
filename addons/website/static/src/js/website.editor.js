@@ -692,12 +692,12 @@
         },
     });
 
-    var IMAGES_PER_ROW = 3;
-    var IMAGES_ROWS = 3;
+    var IMAGES_PER_ROW = 6;
+    var IMAGES_ROWS = 4;
     website.editor.ExistingImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image.existing',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'click .existing-attachments a': 'select_existing',
+            'click .existing-attachments img': 'select_existing',
             'click .pager > li': function (e) {
                 e.preventDefault();
                 var $target = $(e.currentTarget);
@@ -760,17 +760,11 @@
 
         },
         select_existing: function (e) {
-            e.preventDefault();
-            this.$('a.thumbnail.selected').removeClass('selected');
-
-            $(e.currentTarget).addClass('selected');
-        },
-        save: function () {
-            var link = this.$('a.thumbnail.selected').attr('href');
+            var link = $(e.currentTarget).attr('src');
             if (link) {
                 this.parent.set_image(link);
             }
-            this._super();
+            this.close()
         },
     });
 
