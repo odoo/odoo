@@ -19,5 +19,4 @@ OpenERP Contact Form
        'static/src/css/*.css'
       ],
     'installable': True,
-    'auto_install': False,
 }
