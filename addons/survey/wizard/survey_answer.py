@@ -171,8 +171,8 @@ class survey_question_wiz(osv.osv_memory):
                         # TODO: l10n, cleanup this code to make it readable. Or template?
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.user_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Answer :- " + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
+                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_('Answer Of :- ') + record.user_id.name + _(',  Date :- ') + record.date_create.split('.')[0]  )), 'align':"0.0"})
+                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_(" Answer :- ") + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
                         if context.get('response_no',0) > 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})
                         if context.get('response_no',0) + 1 < len(context.get('response_id',0)):
@@ -219,7 +219,7 @@ class survey_question_wiz(osv.osv_memory):
                                 selection.append((tools.ustr(ans.id), ans.answer))
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '2', 'colspan': '2'})
                             etree.SubElement(xml_group, 'field', {'readonly':str(readonly), 'name': tools.ustr(que.id) + "_selection"})
-                            fields[tools.ustr(que.id) + "_selection"] = {'type':'selection', 'selection' :selection, 'string':"Answer"}
+                            fields[tools.ustr(que.id) + "_selection"] = {'type':'selection', 'selection' :selection, 'string':_('Answer')}
 
                         elif que_rec.type == 'multiple_choice_multiple_ans':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
@@ -372,10 +372,10 @@ class survey_question_wiz(osv.osv_memory):
 
                     if pre_button:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'name':"action_previous",'string':"Previous",'type':"object"})
-                    but_string = "Next"
+                        etree.SubElement(xml_footer, 'button', {'name':"action_previous",'string':_('Previous'),'type':"object"})
+                    but_string = _('Next')
                     if int(page_number) + 1 == total_pages:
-                        but_string = "Done"
+                        but_string = _('Done')
                     if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
                         etree.SubElement(xml_footer, 'label', {'string': ""})
                         etree.SubElement(xml_footer, 'button', {'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_highlight"})
@@ -388,8 +388,8 @@ class survey_question_wiz(osv.osv_memory):
                     else:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
                         etree.SubElement(xml_footer, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_highlight"})
-                    etree.SubElement(xml_footer, 'label', {'string': "or"})
-                    etree.SubElement(xml_footer, 'button', {'special': "cancel",'string':"Exit",'class':"oe_link"})
+                    etree.SubElement(xml_footer, 'label', {'string': _('or')})
+                    etree.SubElement(xml_footer, 'button', {'special': "cancel",'string':_('Exit'),'class':"oe_link"})
                     etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_survey_title_page oe_right"})
 
                     root = xml_form.getroottree()
