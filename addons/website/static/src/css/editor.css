@@ -355,14 +355,14 @@ table.editorbar-panel td.selected {
   display: none;
   z-index: 1002;
 }
-.oe_overlay .oe_overlay_options > div {
+.oe_overlay .oe_overlay_options > * {
+  margin: 0 -2px 0 -3px;
   display: inline-block;
 }
-.oe_overlay .oe_overlay_options .btn {
-  display: inline-block;
-  pointer-events: auto;
+.oe_overlay .oe_overlay_options * {
+  border-radius: 0;
 }
-.oe_overlay .oe_overlay_options a {
+.oe_overlay .oe_overlay_options .btn, .oe_overlay .oe_overlay_options a {
   pointer-events: auto;
   cursor: pointer;
 }

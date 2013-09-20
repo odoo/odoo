@@ -124,7 +124,6 @@
         },
         fetch_snippet_templates: function () {
             var self = this;
-            var $styles = self.parent.$('#oe_snippets_style');
             this.style_templates = {};
 
             _.each(openerp.qweb.compiled_templates, function (val, key) {
@@ -308,7 +307,7 @@
                     'top': $tumb.outerHeight()/2
                 },
                 start: function(){
-                    self.hide();
+                    self.addClass("hidden");
                     dropped = false;
                     var snipped_id = $snippet.data('snippet-id');
                     var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
@@ -594,11 +593,9 @@
 
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
-            if (!$options.find(".oe_options ul li").length) {
-                $options.find(".oe_options").hide();
+            if ($options.find(".oe_options ul li").length) {
+                $options.find(".oe_options").removeClass("hidden");
             }
-
-            $options.find(".oe_label").text(this.$el.find('.oe_snippet_label').text());
         },
 
 
@@ -620,14 +617,14 @@
                     var $clone = $(this).clone().css({width: "24px", height: "50px", border: 0});
                     $clone.find(".oe_overlay_options >:not(.oe_snippet_move), .oe_handle").remove();
                     $clone.find(":not(.glyphicon)").css({position: 'absolute', top: 0, left: 0});
-                    return $clone.appendTo("body").show();
+                    return $clone.appendTo("body").removeClass("hidden");
                 },
                 start: function(){
-                    self.parent.hide();
+                    self.parent.addClass("hidden");
                     self.parent.editor_busy = true;
                     self.$target.after("<div class='oe_drop_clone' style='display: none;'/>");
                     self.$target.detach();
-                    self.$overlay.hide();
+                    self.$overlay.addClass("hidden");
                     self.parent.activate_insertion_zones({
                         siblings: self.$el ? self.$el.data('selector-siblings') : false,
                         children:   self.$el ? self.$el.data('selector-children') : false,
@@ -651,7 +648,7 @@
                     if (!dropped) {
                         $(".oe_drop_clone").after(self.$target);
                     }
-                    self.$overlay.show();
+                    self.$overlay.removeClass("hidden");
                     $("body").removeClass('move-important');
                     $('.oe_drop_zone').droppable('destroy').remove();
                     $(".oe_drop_clone").remove();
@@ -676,22 +673,21 @@
 
         load_style_options: function () {
             var self = this;
-            var $styles = this.$overlay.find('.oe_styles');
+            var $styles = this.$overlay.find('.oe_options');
             var $ul = $styles.find('ul');
-            $styles.hide();
             _.each(this.parent.style_templates, function (val, key) {
                 if (!self.parent.dom_filter(val.selector).is(self.$target)) {
                     return;
                 }
-                var $li = $("<li/>").data(val);
+                var $li = $("<li class='oe_style'/>").data(val);
                 $li.append($('<a/>').text(val.label));
                 $ul.append($li);
                 if (self.$target.hasClass( "oe_snippet_" + $li.data("snipped-id") )) {
                     $li.addClass("active");
                 }
-                $styles.show();
+                $styles.removeClass("hidden");
             });
-            $styles.on('click', 'li a', _.bind(this.change_style, this));
+            $styles.on('click', 'li.oe_style a', _.bind(this.change_style, this));
         },
         change_style: function (event) {
             var $li = $(event.currentTarget).parent();
@@ -716,7 +712,7 @@
             var $button = this.$overlay.find('.oe_snippet_parent');
             var $parent = this.$target.parents("[data-snippet-id]:first");
             if ($parent.length) {
-                $button.show();
+                $button.removeClass("hidden");
                 $button.off("click").on('click', function (event) {
                     event.preventDefault();
                     setTimeout(function () {
@@ -724,7 +720,7 @@
                     }, 0);
                 });
             } else {
-                $button.hide();
+                $button.addClass("hidden");
             }
         },
 
