@@ -19,8 +19,12 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+
+from openerp import tools
+from openerp import SUPERUSER_ID
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
+
 import difflib
 
 
@@ -56,6 +60,18 @@ class BlogPost(osv.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread']
     _order = 'name'
+    # maximum number of characters to display in summary
+    _shorten_max_char = 10
+
+    def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for page in self.browse(cr, uid, ids, context=context):
+            try:
+                body_short = tools.html_email_clean(page.content, remove=True, shorten=True, max_length=self._shorten_max_char)
+            except Exception:
+                body_short = False
+            res[page.id] = body_short
+        return res
 
     _columns = {
         'name': fields.char('Title', required=True),
@@ -69,6 +85,28 @@ class BlogPost(osv.Model):
             'Tags',
         ),
         'content': fields.text('Content'),
+        'shortened_content': fields.function(
+            get_shortened_content,
+            type='text',
+            string='Shortened Content',
+            help="Shortened content of the page that serves as a summary"
+        ),
+        # website control
+        'website_published': fields.boolean(
+            'Publish', help="Publish on the website"
+        ),
+        'website_published_datetime': fields.datetime(
+            'Publish Date'
+        ),
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', ('model', '=', self._name), ('type', '=', 'comment')
+            ],
+            auto_join=True,
+            string='Website Messages',
+            help="Website communication history",
+        ),
         # technical stuff: history, menu (to keep ?)
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
@@ -105,6 +143,10 @@ class BlogPost(osv.Model):
         self.create_history(cr, uid, ids, vals, context)
         return result
 
+    def img(self, cr, uid, ids, field='image_small', context=None):
+        post = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
+        return "/website/image?model=%s&field=%s&id=%s" % ('res.users', field, post.create_uid.id)
+
 
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"
@@ -121,7 +163,7 @@ class BlogPostHistory(osv.Model):
     }
 
     def getDiff(self, cr, uid, v1, v2, context=None):
-        history_pool = self.pool.get('document.page.history')
+        history_pool = self.pool.get('blog.post.history')
         text1 = history_pool.read(cr, uid, [v1], ['content'])[0]['content']
         text2 = history_pool.read(cr, uid, [v2], ['content'])[0]['content']
         line1 = line2 = ''

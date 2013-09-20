@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 20123TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,36 +19,10 @@
 #
 ##############################################################################
 
-{
-    'name': 'Document Page',
-    'version': '1.0.1',
-    'category': 'Knowledge Management',
-    'description': """
-Pages
-=====
-Web pages
-    """,
-    'author': ['OpenERP SA'],
-    'website': 'http://www.openerp.com/',
-    'depends': ['mail', 'knowledge'],
-    'data': [
-        # 'wizard/document_page_create_menu_view.xml',
-        'wizard/document_page_show_diff_view.xml',
-        'document_page_view.xml',
-        'document_page_data.xml',
-        # 'security/document_page_security.xml',
-        'security/ir.model.access.csv',
-    ],
-    'demo': [
-        'document_page_demo.xml'
-    ],
-    'test': [
-        # 'test/document_page_test00.yml'
-    ],
-    'installable': True,
-    'auto_install': False,
-    'css': [
-        'static/src/css/document_page.css'
-    ],
-}
+from openerp.addons.website_blog.tests import test_controllers
+
+checks = [
+    test_controllers,
+]
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

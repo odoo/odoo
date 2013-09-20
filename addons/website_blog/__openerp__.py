@@ -30,12 +30,22 @@ OpenERP Blog
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website_mail', 'document_page'],
+    'depends': ['knowledge', 'website_mail'],
     'data': [
-        'website_mail_data.xml',
-        'views/website_mail.xml',
+        'website_blog_data.xml',
+        'views/website_blog_views.xml',
+        'views/website_templates.xml',
         'views/res_config.xml',
+        # 'wizard/document_page_create_menu_view.xml',
+        'wizard/document_page_show_diff_view.xml',
+        'security/ir.model.access.csv',
         'security/website_mail.xml',
+    ],
+    'demo': [
+        'website_blog_demo.xml'
+    ],
+    'test': [
+        'test/document_page_test00.yml'
     ],
     'qweb': [
         'static/src/xml/*.xml'

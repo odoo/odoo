@@ -5,10 +5,10 @@
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
-            <li><a href="/blog/%(document_page.blog_category_1)d/">News</a></li>
+            <li><a href="/blog/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
         <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
-            <li><a href="/blog/%(document_page.blog_category_1)d/">News</a></li>
+            <li><a href="/blog/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
     </template>
 
