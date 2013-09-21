@@ -89,7 +89,7 @@
     <template id="products_categories" inherit_option_id="website_sale.layout" name="Product Categories">
         <xpath expr="//div[@id='shop_content']" position="before">
             <div class="col-md-3">
-                <ul class="nav nav-pills nav-stacked">
+                <ul class="nav nav-pills nav-stacked mt16">
                     <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
                     <t t-foreach="categories" t-as="category">
                         <t t-call="website_sale.categories_recursive"/>
