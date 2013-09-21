@@ -28,7 +28,6 @@
             return this._super.apply(this, arguments);
         },
         save: function () {
-            this.snippets.make_active(false);
             remove_added_snippet_id();
             this._super();
         },
@@ -78,6 +77,9 @@
         init: function (parent) {
             this.parent = parent;
             this._super.apply(this, arguments);
+            if(!$('#oe_manipulators').length){
+                $("<div id='oe_manipulators'></div>").appendTo('body');
+            }
             this.$active_snipped_id = false;
             hack_to_add_snippet_id();
             $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
@@ -101,10 +103,6 @@
         },
         start: function() {
             var self = this;
-
-            if(!$('#oe_manipulators').length){
-                $("<div id='oe_snippet_cache'></div><div id='oe_manipulators'></div>").appendTo('body');
-            }
 
             var $ul = this.parent.$("#website-top-edit ul");
 
@@ -198,20 +196,23 @@
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag = false;
-            $("body").on('click', "[data-oe-model], > header, > footer", function (event) {
-                if (snipped_event_flag) {
-                    return;
-                }
-                var $target = $(event.srcElement).parents("[data-snippet-id]:first");
-                snipped_event_flag = true;
-                setTimeout(function () {snipped_event_flag = false;}, 0);
-
-                if (!$target.length) {
-                    self.make_active(false);
-                } else if (!self.$active_snipped_id || !self.$active_snipped_id.is($target)) {
+            $("body").on('click', "[data-snippet-id]", function (event) {
+                    if (snipped_event_flag) {
+                        return;
+                    }
+                    snipped_event_flag = true;
+                    setTimeout(function () {snipped_event_flag = false;}, 0);
+                    var $target = $(event.currentTarget);
+                    if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
+                        return;
+                    }
                     self.make_active($target);
-                }
-            });
+                });
+            $("[data-oe-model]").on('click', function (ev) {
+                    if (!snipped_event_flag && self.$active_snipped_id && !self.$active_snipped_id.parents("[data-snippet-id]:first")) {
+                        self.make_active(false);
+                    }
+                });
         },
         snippet_blur: function ($snipped_id) {
             if ($snipped_id) {
@@ -244,9 +245,7 @@
                 this.$active_snipped_id = $snipped_id;
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snipped_id);
-                $("#oe_snippet_cache").show();
             } else {
-                $("#oe_snippet_cache").hide();
                 self.$active_snipped_id = false;
             }
         },
@@ -778,7 +777,6 @@
         */
         onFocus : function () {
             this.$overlay.addClass('oe_active');
-            this.$target.addClass('oe_snippet_overlay_activate');
         },
 
         /* onFocus
@@ -786,7 +784,6 @@
         */
         onBlur : function () {
             this.$overlay.removeClass('oe_active');
-            this.$target.removeClass('oe_snippet_overlay_activate');
         },
 
         /* setOptions
