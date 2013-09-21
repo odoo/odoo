@@ -1,0 +1,91 @@
+@charset "utf-8"
+
+/* ---- Default Styles Description ---- */
+
+.oe_product_image
+    position: absolute
+    left: 15px
+    right: 15px
+    top: 5px
+
+.oe_product_description
+    bottom: 0
+    position: absolute
+    left: 15px
+    right: 15px
+    border-top: 1px solid #dddddd
+
+
+.oe_shop_top /* Option 1 */
+    .oe_product_description
+        top: 0
+        bottom: auto
+        border-top-style: none
+    .oe_product_image
+        top: auto
+        bottom: 5px
+
+.oe_shop_center /* Option 2 */
+    .oe_product_description
+        text-align: center
+        border-top-style: none
+
+.oe_product.oe_image_full /* Option 3 */
+    .oe_product_image
+        top: 0
+        bottom: 0
+        img
+            max-height: 100%
+
+/* ---- Default Styles ---- */
+
+.oe_product
+    border: 1px solid rgba(100,100,100,0.2)
+    margin-left: -1px
+    margin-top: -1px
+    
+.oe_product .oe_product_image img
+    max-width: 100%
+    max-height: 65%
+    z-index: 4
+
+.oe_product_description
+    background: rgba(255,255, 255, 0.7)
+    padding: 5px 0 5px 0
+    z-index: 5
+
+.oe_subdescription
+    line-height: 1.2
+    margin-bottom: 4px
+
+
+/* ---- Grid Style ---- */
+
+.style1
+    .oe_product .oe_product_image
+        position: absolute
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+
+/* ---- Product Sizes ---- */
+
+.oe-height-1
+    height: 60px
+
+.oe-height-2
+    height: 180px
+
+.oe-height-3
+    height: 210px
+
+.oe-height-4
+    height: 420px
+
+.oe-height-5
+    height: 540px
+
+.oe-height-6
+    height: 620px
+
