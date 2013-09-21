@@ -125,39 +125,60 @@
             </t>
             <t t-set="title">Product</t>
             <t t-set="shop_content">
-                <a t-if="editable" t-attf-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-default pull-right">Create New Product</a>
-                <div t-if="editable" class="clearfix"/>
-                <t t-call="website.pager">
-                    <t t-set="classname">pull-left</t>
-                </t>
-                <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
-                    <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search" t-att-value="search or '' or ''"/>
-                </form>
-                <div class="clearfix"/>
-                <div class='row grid grid-align-top'>
-                    <t t-foreach="products" t-as="product">
-                    <div class="css_product col-md-2 mb16 thumbnail text-center" data-publish="">
-                        <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
-                        <div class="ellipsis css_content">
-                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}" style="text-decoration: none; display: block;">
-                                <h5 t-field="product.name"> </h5>
-                                <img class="img-rounded" t-att-src="product.img('image_small')"/>
-                            </a>
-                            <small t-field="product.description_sale"></small>
-                            <span class="end">&amp;#133;</span><span class="fill"></span>
-                        </div>
-                        <div>
-                            <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                            <small class="text-error" style="text-decoration: line-through;"><t t-esc="product.product_variant_ids[0].lst_price" /> €</small>
-                            </t>
-                            <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
-                        </div>
-                        <div class="mb8 mt8">
-                            <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success">Add to basket</a>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <t t-call="website.pager">
+                            <t t-set="classname">pull-left</t>
+                        </t>
+                    </div><div class="col-sm-4 pagination text-center">
+                        <a t-if="editable" t-attf-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-default">New Product</a>
+                    </div><div class="col-sm-3 col-sm-offset-1">
+                        <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
+                                <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="search or '' or ''"/>
+                            </div>
+
+                        </form>
                     </div>
+                </div>
+
+                <div class='style_default'>
+                    <t t-foreach="products" t-as="product">
+                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey }" t-att-data-publish="product.website_published" data-snippet-id="colmd">
+
+                            <div class="oe_product_description">
+                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+                                    <b t-field="product.name"/>
+                                </a>
+                                <!-- This should be an option -->
+                                <div t-if="product.description_sale" class="text-muted oe_subdescription">
+                                    <small t-field="product.description_sale"/>
+                                </div>
+                                <div>
+                                    <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                                        <small class="text-error" style="text-decoration: line-through;">
+                                          <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                                        </small>
+                                    </t>
+                                    <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
+                                    <a t-attf-href="./add_cart/?product_id=#{ product.id }">
+                                        <span class="icon-shopping-cart"/>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="oe_product_image text-center">
+                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+                                    <img class="img" t-att-src="product.img('image')"/>
+                                </a>
+                            </div>
+
+                        </div>
                     </t>
                 </div>
+
+
                 <div class="text-center">
                     <t t-call="website.pager" />
                 </div>
