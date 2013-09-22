@@ -175,6 +175,13 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         if t == 'html':
             return _process("".join([etree.tostring(n, encoding='utf-8')
                                    for n in node]), idref)
+        if node.get('file'):
+            import openerp.tools
+            import base64
+            fp = openerp.tools.file_open(node.get('file'))
+            result = base64.b64encode(fp.read())
+            return result
+
         if t == 'file':
             from ..modules import module
             path = node.text.strip()
@@ -241,7 +248,9 @@ class xml_import(object):
         return val.lower() not in ('0', 'false', 'off')
 
     def isnoupdate(self, data_node=None):
-        return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
+        if data_node and data_node.get('noupdate'):
+            return len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False)
+        return self.noupdate
 
     def get_context(self, data_node, node, eval_dict):
         data_node_context = (len(data_node) and data_node.get('context','').encode('utf8'))
