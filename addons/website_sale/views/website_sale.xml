@@ -64,44 +64,6 @@
             </li>
         </xpath>
     </template>
-
-    <!-- Page Shop --> 
-
-    <template id="layout" name="Products Layout">
-        <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
-            <div id="wrap">
-              <div class="oe_structure"/>
-              <div class="container oe_website_sale">
-                  <div class="row">
-                      <div class="col-md-12" id="shop_content">
-                          <t t-raw="shop_content" />
-                      </div>
-                  </div>
-              </div>
-            </div>
-        </t>
-    </template>
-    <template id="products_categories" inherit_option_id="website_sale.layout" name="Product Categories">
-        <xpath expr="//div[@id='shop_content']" position="before">
-            <div class="col-md-3">
-                <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if category_id else 'active' " class='active'><a href="/shop/">All Products</a></li>
-                    <t t-foreach="categories" t-as="category">
-                        <t t-call="website_sale.categories_recursive"/>
-                    </t>
-                </ul>
-            </div>
-        </xpath>
-        <xpath expr="//div[@id='shop_content']" position="attributes">
-            <attribute name="class">col-md-9</attribute>
-        </xpath>
-    </template>
-
     <!-- List of categories -->
 
     <template id="categories_recursive">
@@ -118,13 +80,16 @@
     <!-- Product list --> 
 
     <template id="products" page="True">
-        <t t-call="website_sale.layout">
+        <t t-call="website.layout">
             <t t-set="head">
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="title">Product</t>
-            <t t-set="shop_content">
+            <t t-set="title">Our Products</t>
+            <div id="wrap">
+              <div class="oe_structure"/>
+              <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-sm-4">
                         <t t-call="website.pager">
@@ -136,16 +101,17 @@
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
-                                <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="search or '' or ''"/>
+                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or '' or ''"/>
                             </div>
 
                         </form>
                     </div>
                 </div>
 
-                <div class='style_default'>
+                <div class='row style_default'>
+                  <div class="col-md-12" id="products_grid">
                     <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey }" t-att-data-publish="product.website_published" data-snippet-id="colmd">
+                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published" data-snippet-id="colmd">
 
                             <div class="oe_product_description">
                                 <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
@@ -153,15 +119,19 @@
                                 </a>
                                 <!-- This should be an option -->
                                 <div t-if="product.description_sale" class="text-muted oe_subdescription">
-                                    <small t-field="product.description_sale"/>
+
+                                    <!-- TODO: replace by a smart t-field on field.text: description_sale -->
+                                    <small t-raw="product.description_sale.replace('\n','&lt;br/&gt;') "/>
                                 </div>
                                 <div>
-                                    <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                        <small class="text-error" style="text-decoration: line-through;">
-                                          <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                                        </small>
-                                    </t>
-                                    <b><t t-esc="product.product_variant_ids[0].price" /> €</b>
+                                    <b>
+                                        <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                                          <span class="text-danger" style="text-decoration: line-through;">
+                                              <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                                          </span>&amp;nbsp;
+                                        </t>
+                                        <t t-esc="product.product_variant_ids[0].price" /> €
+                                    </b>
                                     <a t-attf-href="./add_cart/?product_id=#{ product.id }">
                                         <span class="icon-shopping-cart"/>
                                     </a>
@@ -176,22 +146,28 @@
 
                         </div>
                     </t>
+                  </div>
                 </div>
-
-
                 <div class="text-center">
                     <t t-call="website.pager" />
                 </div>
-            </t>
+              </div>
+              <div class="oe_structure mb32"/>
+            </div>
         </t>
     </template>
 
     <!-- product --> 
 
     <template id="product" name="Product">
-        <t t-call="website_sale.layout">
-            <t t-set="title">Product</t>
-            <t t-set="shop_content">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                <t t-raw="head or ''"/>
+            </t>
+            <t t-set="title" t-raw="product.name"/>
+            <div id="wrap">
+              <div class="container oe_website_sale">
                 <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
                     <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search..." t-att-value="search or '' or ''"/>
                 </form>
@@ -218,7 +194,9 @@
                     <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
                     <div t-field="product.website_description"></div>
                 </div>
-            </t>
+              </div>
+              <div class="oe_structure"/>
+            </div>
         </t>
     </template>
     <template id="recommended_products" inherit_id="website_sale.product" inherit_option_id="website_sale.product" name="Recommended Products">
@@ -244,9 +222,14 @@
     <!-- Page Shop my cart --> 
 
     <template id="mycart" name="My cart" page="True">
-        <t t-call="website_sale.layout">
-            <t t-set="title">My cart</t>
-            <t t-set="shop_content">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                <t t-raw="head or ''"/>
+            </t>
+            <t t-set="title">Your Cart</t>
+            <div id="wrap">
+              <div class="container oe_website_sale">
                 <div class="col-md-12 oe_mycart">
                     <h1>My Shopping Cart</h1>
                     <table class='table' id="mycart_products">
@@ -309,9 +292,31 @@
                     </table>
                     <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
                 </div>
-            </t>
+              </div>
+              <div class="oe_structure"/>
+            </div>
         </t>
     </template>
+
+    <!-- Page Shop --> 
+
+    <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
+        <xpath expr="//div[@id='products_grid']" position="before">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked mt16">
+                    <li t-att-class=" '' if category_id else 'active' "><a href="/shop/">All Products</a></li>
+                    <t t-foreach="categories" t-as="category">
+                        <t t-call="website_sale.categories_recursive"/>
+                    </t>
+                </ul>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='products_grid']" position="attributes">
+            <attribute name="class">col-md-9</attribute>
+        </xpath>
+    </template>
+
+
     <template id="suggested_products_list" inherit_id="website_sale.mycart" inherit_option_id="website_sale.mycart" name="Suggested Products in list view">
         <xpath expr="//table[@id='mycart_products']" position="after">
             <table t-if="suggested_products" class='table table-hover table-condensed'>

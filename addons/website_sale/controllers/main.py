@@ -63,8 +63,7 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.template')
 
         domain = [("sale_ok", "=", True)]
-        if SUPERUSER_ID != request.uid:
-            domain += [('website_published', '=', True)]
+        domain += [('website_published', '=', True)]
 
         if post.get("search"):
             domain += ['|', '|', '|',
