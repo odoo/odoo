@@ -248,9 +248,7 @@ class xml_import(object):
         return val.lower() not in ('0', 'false', 'off')
 
     def isnoupdate(self, data_node=None):
-        if data_node and data_node.get('noupdate'):
-            return len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False)
-        return self.noupdate
+        return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
 
     def get_context(self, data_node, node, eval_dict):
         data_node_context = (len(data_node) and data_node.get('context','').encode('utf8'))
