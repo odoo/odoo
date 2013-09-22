@@ -101,7 +101,7 @@
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
-                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or '' or ''"/>
+                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
                             </div>
 
                         </form>
@@ -163,45 +163,80 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-                <t t-raw="head or ''"/>
             </t>
             <t t-set="title" t-raw="product.name"/>
             <div id="wrap">
-              <div class="container oe_website_sale">
-                <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
-                    <input type="text" name="search" class="search-query col-md-2 form-control" placeholder="Search..." t-att-value="search or '' or ''"/>
-                </form>
-                <div class="clearfix"/>
-                <div id="product_detail">
-                    <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
-                    <h1 t-field="product.name">Product Name</h1>
-                    <a t-if="len(product.product_variant_ids) &lt;= 1" t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-default btn-sm btn-success pull-right">Add to basket</a>
-                    <form t-if="len(product.product_variant_ids) > 1" action="./add_cart/" class="pull-right">
-                        <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
-                            <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
-                            <t t-esc="product.variants or ''">Standard</t>
-                            <span class="badge" t-if="product.price_extra"><t t-esc="product.price_extra > 0 and '+' or ''"/><t t-esc="product.price_extra"/> €</span>
-                        </label><br/>
-                        <button class="btn btn-sm btn-success">Add to basket</button>
-                    </form>
-                    <div class="pull-right">
-                        <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                        <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><t t-field="product.product_variant_ids[0].lst_price" /> €</h5>
-                        <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
-                        </t>
-                        <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price"><t t-field="product.product_variant_ids[0].lst_price" /> €</h4>
-                    </div>
-                    <img class="media-object img-responsive" t-att-src="product.img('image_medium')"/>
-                    <div t-field="product.website_description"></div>
+
+              <section class="container mt8">
+                <div class="row">
+                  <div class="col-sm-5">
+                      <ol class="breadcrumb">
+                          <li><a href="/shop">Products</a></li>
+                          <li t-if="category"><a t-att-href="'/shop/category/%s' % (category_id,)"><t t-field="category.name"/></a></li>
+                          <li class="active" t-field="product.name">Product Name</li>
+                      </ol>
+                  </div><div class="col-sm-3">
+                      <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
+                  </div><div class="col-sm-3 col-sm-offset-1">
+                      <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
+                          <div class="input-group">
+                              <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
+                              <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
+                          </div>
+                      </form>
+                  </div>
                 </div>
-              </div>
-              <div class="oe_structure"/>
+              </section>
+
+              <section class="container oe_website_sale mb16" id="product_detail">
+                <div class="row">
+                  <div class="col-sm-7 col-md-7 col-lg-7">
+                      <img class="img" t-att-src="product.img('image')" style="max-height: 500px"/>
+                  </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
+                      <h1 t-field="product.name">Product Name</h1>
+
+                      <form action="./add_cart/">
+                          <input type="hidden" t-if="len(product.product_variant_ids) &lt;= 1" name="product_id" t-att-value="product.id"/>
+                          <t t-if="len(product.product_variant_ids) &gt; 1">
+                              <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
+                                  <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
+                                  <t t-esc="product.variants or ''">Standard</t>
+                                  <span class="badge" t-if="product.price_extra">
+                                      <t t-esc="product.price_extra > 0 and '+' or ''"/><t t-esc="product.price_extra"/> €
+                                  </span>
+                              </label>
+                              <br/>
+                          </t>
+                          <div>
+                              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                              <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><t t-field="product.product_variant_ids[0].lst_price" /> €</h5>
+                              <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
+                              </t>
+                              <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price">
+                                  <b><t t-field="product.product_variant_ids[0].lst_price" /> €</b>
+                              </h4>
+                          </div>
+                          <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
+                          <hr t-if="product.description_sale"/>
+                          <p t-field="product.description_sale" class="text-muted"/>
+                          <hr/>
+                          <p class="text-muted">
+                              30-day money-back guarantee<br/>
+                              Free Shipping in U.S.<br/>
+                              Buy now, get in 2 days
+                          </p>
+                      </form>
+                  </div>
+                </div>
+              </section>
+              <div t-field="product.website_description" class="oe_structure" id="product_full_description"/>
             </div>
         </t>
     </template>
+
     <template id="recommended_products" inherit_id="website_sale.product" inherit_option_id="website_sale.product" name="Recommended Products">
-        <xpath expr="//div[@id='product_detail']" position="inside">
-            <div class="mt32" t-if="product.recommended_products()">
+        <xpath expr="//div[@id='product_full_description']" position="after">
+            <div class="container mt32" t-if="product.recommended_products()">
                 <h3>Customers who have bought this product also bought:</h3>
                 <div class='row mt16' style="margin-left: 15px !important;">
                 <t t-foreach="product.recommended_products()" t-as="product">
