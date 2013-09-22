@@ -92,19 +92,19 @@
               <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-sm-4">
-                        <t t-call="website.pager">
-                            <t t-set="classname">pull-left</t>
-                        </t>
+                        <h1>Our Products</h1>
                     </div><div class="col-sm-4 pagination text-center">
                         <a t-if="editable" t-attf-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-default">New Product</a>
-                    </div><div class="col-sm-3 col-sm-offset-1">
+                    </div><div class="col-sm-4">
                         <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
                                 <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
                             </div>
-
                         </form>
+                        <t t-call="website.pager">
+                            <t t-set="classname">pull-left</t>
+                        </t>
                     </div>
                 </div>
 
