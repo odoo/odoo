@@ -358,7 +358,14 @@ DEFAULT_TAG_BY_TYPE = {
     'integer': 'span',
     'float': 'span',
     'char': 'span',
+    'date': 'span',
+    'datetime': 'span',
+    'time': 'span',
     'many2one': 'span',
+
+    'text': 'p',
+
+    'html': 'div',
 }
 
 # leave this, al.
