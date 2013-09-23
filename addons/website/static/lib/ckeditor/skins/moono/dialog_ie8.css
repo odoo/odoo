@@ -1,0 +1,24 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+/*
+dialog_ie8.css
+===============
+
+This file contains styles to used by Internet Explorer 8 only.
+*/
+
+/* Base it on dialog_ie.css, overriding it with styles defined in this file. */
+@import url("dialog_ie.css");
+
+/* 	Without the following, IE8 cannot compensate footer button thick borders
+	on :focus/:active. */
+a.cke_dialog_ui_button_ok:focus span,
+a.cke_dialog_ui_button_ok:active span,
+a.cke_dialog_ui_button_cancel:focus span,
+a.cke_dialog_ui_button_cancel:active span
+{
+	display: block;
+}

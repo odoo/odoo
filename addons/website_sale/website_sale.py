@@ -41,8 +41,8 @@ class product_template(osv.osv):
         'website_product_class': fields.selection([('','Default'), ('oe_image_full','Image Full')], 'Size Y'),
     }
     _defaults = {
-        'website_sizex': 3,
-        'website_sizey': 2,
+        'website_sizex': '3',
+        'website_sizey': '2',
         'website_product_class': '',
     }
 

@@ -13,10 +13,10 @@
     <!-- Layout add nav and footer -->
 
     <template id="header_footer_custom" inherit_id="website.layout">
-        <xpath expr="//body/header//ul[@id='top_menu']/li[last()]" position="before">
+        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
             <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
         </xpath>
-        <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a href="/blog/%(website_mail.website_mail_blog)d/">News</a></li>
         </xpath>
     </template>

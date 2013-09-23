@@ -43,7 +43,7 @@
     <!-- Layout add nav and footer -->
 
     <template id="header_footer" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">
@@ -53,7 +53,7 @@
                 </a>
             </li>
         </xpath>
-        <xpath expr="//body/footer//ul[@name='products']" position="inside">
+        <xpath expr="//footer//ul[@name='products']" position="inside">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">
@@ -297,12 +297,16 @@
                 <div class='row mt16' style="margin-left: 15px !important;">
                 <t t-foreach="product.recommended_products()" t-as="product">
                     <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
-                        <a t-attf-href="/shop/product/#{ product.id }/">
-                            <div class='mt16 text-center'>
-                                <img t-att-src="product.img('image_small')"/>
-                                <h5 t-field='product.name'></h5>
-                            </div>
-                        </a>
+                        <div class='mt16 text-center'>
+                            <img t-att-src="product.img('image_small')"/>
+                            <h5>
+                                <a t-attf-href="/shop/product/#{ product.id }/"
+                                   style="display: block">
+                                    <span t-field='product.name'
+                                          style="display: block"/>
+                                </a>
+                            </h5>
+                        </div>
                     </div>
                 </t>
                 </div>

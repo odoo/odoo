@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>BBCode plugin playground &ndash; CKEditor Sample</title>
+	<script src="../../../ckeditor.js"></script>
+	<link href="../../../samples/sample.css" rel="stylesheet">
+	<style>
+body {
+	margin: 0;
+}
+
+#editables
+{
+	float:left;
+	width: 49%
+}
+
+#preview
+{
+	width: 50%;
+	float:right;
+}
+
+#console
+{
+	height: 300px;
+	padding: 5px 10px;
+	border: solid 3px #555;
+	overflow: auto;
+	color: #000;
+	-webkit-transition: border-color 0.5s;
+	-moz-transition: border-color 0.5s;
+	-o-transition: border-color 0.5s;
+	-ms-transition: border-color 0.5s;
+	transition: border-color 0.5s;
+	font-family: Monaco, monospace;
+	font-size: 13px;
+	white-space: normal;
+}
+
+#console.updated {
+	border-color: #0B0;
+}
+	</style>
+</head>
+<body>
+	<h1 class="samples">
+		CKEditor Sample &mdash; BBCode plugin playground
+	</h1>
+	<div id="main">
+	<div class="description">
+		<p>
+			This sample shows how to configure CKEditor to output <a href="http://en.wikipedia.org/wiki/BBCode">BBCode</a> format instead of HTML.
+			Please note that the editor configuration was modified to reflect what is needed in a BBCode editing environment.
+			Smiley images, for example, were stripped to the emoticons that are commonly used in some BBCode dialects.
+		</p>
+		<p>
+			Please note that currently there is no standard for the BBCode markup language, so its implementation
+			for different platforms (message boards, blogs etc.) can vary. This means that before using CKEditor to
+			output BBCode you may need to adjust the implementation to your own environment.
+		</p>
+		<p>
+			A snippet of the configuration code can be seen below; check the source of this page for
+			a full definition:
+		</p>
+		<pre class="samples">
+CKEDITOR.inline( 'editor1', {
+	<strong>extraPlugins : 'bbcode',</strong>
+	<i>(below configurations details omitted:)</i>
+	toolbar : ...,
+	fontSize_sizes : ...,
+	smiley_images : ...,
+	smiley_descriptions : ...
+});</pre>
+	</div>
+
+	<div id="editables">
+		<textarea id="editor1">
+[img]http://a.cksource.com/f/1/img/logo-ckeditor.gif[/img]
+"[b]Little Red Riding Hood[/b]" is a famous [url=http://en.wikipedia.org/wiki/Fairy_tale]fairy tale[/url] about a young girl's encounter with a wolf. The story has been changed considerably in its history and subject to numerous modern adaptations and readings.
+[list]
+[*]Chinese: [i]小紅帽[/i]
+[*]Italian: [i]Cappuccetto Rosso[/i]
+[*]Spanish: [i]Caperucita Roja[/i]
+[/list]
+[quote]It is about a girl called [color=#FF0000]Little Red Riding Hood :)[/color], after the red [url=http://en.wikipedia.org/wiki/Hood_%28headgear%29]hooded[/url] [url=http://en.wikipedia.org/wiki/Cape]cape[/url] or [url=http://en.wikipedia.org/wiki/Cloak]cloak[/url] she wears.
+The girl walks through the woods to deliver food to her sick grandmother. A wolf wants to eat the girl but is afraid to do so in public. He approaches the girl, and she naïvely tells him where she is going.
+He suggests the girl pick some flowers, which she does. In the meantime, he goes to the grandmother's house and gains entry by pretending to be the girl. He swallows the grandmother whole, and waits for the girl, disguised as the grandmother. When the girl arrives, she notices he looks very strange to be her grandma. In most retellings, this eventually culminates with Little Red Riding Hood saying, "My, what big teeth you have!"
+To which the wolf replies, "The better to eat you with," and swallows her whole, too.[/quote]
+The above version most widely known today is based on the [url=http://en.wikipedia.org/wiki/Brothers_Grimm]Brothers Grimm[/url] variant.
+		</textarea>
+	</div>
+	<div id="preview">
+		<h3 for="console">BBCode Output: </h3>
+		<pre id="console">
+		</pre>
+	</div>
+	</div>
+	<div id="footer">
+		<hr>
+		<p>
+			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+		</p>
+		<p id="copy">
+			Copyright &copy; 2003-2013, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
+			Knabben. All rights reserved.
+		</p>
+	</div>
+	<script>
+(function() {
+	'use strict';
+
+	var editor = CKEDITOR.replace( 'editor1', {
+		extraPlugins: 'bbcode',
+		// Remove unused plugins.
+		removePlugins: 'bidi,dialogadvtab,div,filebrowser,flash,format,forms,horizontalrule,iframe,justify,liststyle,pagebreak,showborders,stylescombo,table,tabletools,templates',
+		// Width and height are not supported in the BBCode format, so object resizing is disabled.
+		disableObjectResizing: true,
+		height: 250,
+		toolbar: [
+			['Source', '-', 'Save', 'NewPage', '-', 'Undo', 'Redo'],
+			['Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+			['Link', 'Unlink', 'Image'],
+			'/',
+			['FontSize', 'Bold', 'Italic', 'Underline'],
+			['NumberedList', 'BulletedList', '-', 'Blockquote'],
+			['TextColor', '-', 'Smiley', 'SpecialChar', '-', 'Maximize']
+		],
+		// Define font sizes in percent values.
+		fontSize_sizes: '30/30%;50/50%;100/100%;120/120%;150/150%;200/200%;300/300%',
+		// Strip CKEditor smileys to those commonly used in BBCode.
+		smiley_images: [
+			'regular_smile.gif', 'sad_smile.gif', 'wink_smile.gif', 'teeth_smile.gif', 'tounge_smile.gif',
+			'embarrassed_smile.gif', 'omg_smile.gif', 'whatchutalkingabout_smile.gif', 'angel_smile.gif', 'shades_smile.gif',
+			'cry_smile.gif', 'kiss.gif'
+		],
+		smiley_descriptions: [
+			'smiley', 'sad', 'wink', 'laugh', 'cheeky', 'blush', 'surprise',
+			'indecision', 'angel', 'cool', 'crying', 'kiss'
+		]
+	} );
+
+	function updatePreview() {
+		var consoleEl = CKEDITOR.document.getById( 'console' );
+		consoleEl.addClass( 'updated' );
+		setTimeout( function() { consoleEl.removeClass( 'updated' ); }, 500 );
+		// IE needs <br>, it doesn't even understand new lines.
+		consoleEl.setHtml( editor.getData().replace( /\n\r?/g, '<br>' ) );
+	}
+
+	function checkUpdatePreview() {
+		setTimeout( function() {
+			if ( editor.checkDirty() ) {
+				updatePreview();
+				editor.resetDirty();
+			}
+		}, 0 );
+	}
+
+	editor.on( 'instanceReady', updatePreview );
+	editor.on( 'key', checkUpdatePreview );
+	editor.on( 'selectionChange', checkUpdatePreview );
+
+})();
+	</script>
+</body>
+</html>
