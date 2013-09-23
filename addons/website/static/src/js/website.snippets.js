@@ -1041,55 +1041,100 @@
         },
         change_background: function () {
             var self = this;
-            var bg = this.$target.find('.carousel-inner .item.active').css('background-image').replace(/url\((.*)\)/g, '$1');
-            var selected = this.$editor.find('select[name="carousel-background"] option[value="'+bg+'"], select[name="carousel-background"] option[value="'+bg.replace(window.location.protocol+'//'+window.location.host, '')+'"]')
-                .prop('selected', true).length;
+            var $item = this.$target.find('.carousel-inner .item.active');
+            var bg = $item.css('background-image')
+                .replace(/url\((.*)\)/g, '$1');
+
+            var $input = this.$editor.find('input');
+            var $ul = this.$editor.find('ul[name="carousel-background"]');
+            var $li = $ul.find("li");
+
+            var selected = $ul.find('[data-value="' + bg + '"], [data-value="' + bg.replace(/.*:\/\/[^\/]+/, '') + '"]')
+                .addClass('active').length;
+
             if (!selected) {
                 this.$editor.find('.carousel-background input').val(bg);
             }
 
-            this.$editor.find('select[name="carousel-background"], input')
-                .on('click', function (event) {event.preventDefault(); return false;})
-                .on('change', function () {
-                    self.$target.find('.carousel-inner .item.active').css('background-image', 'url(' + $(this).val() + ')');
-                    $(this).next().val("");
+            $input.on('change', function () {
+                $item.css('background-image', 'url(' + $(this).val() + ')');
+                $li.removeClass("active");
+            });
+
+            $li.on('click', function (event) {
+                    event.preventDefault();
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                    $input.val("");
+                    return false;
+                })
+                .on('mouseover', function (event) {
+                    $item.css('background-image', 'url(' + $(this).data("value") + ')');
+                })
+                .on('mouseout', function (event) {
+                    $item.css('background-image', 'url(' + $ul.find('li.active').data("value") + ')');
                 });
         },
         change_style: function () {
             var self = this;
             var style = false;
-            var el = this.$target.find('.carousel-inner .item.active');
-            if (el.hasClass('text_only'))
+            var $el = this.$target.find('.carousel-inner .item.active');
+            if ($el.hasClass('text_only'))
                 style = 'text_only';
-            if (el.hasClass('image_text'))
+            if ($el.hasClass('image_text'))
                 style = 'image_text';
-            if (el.hasClass('text_image'))
+            if ($el.hasClass('text_image'))
                 style = 'text_image';
 
-            this.$editor.find('select[name="carousel-style"] option[value="'+style+'"]').prop('selected', true);
+            var $ul = this.$editor.find('ul[name="carousel-style"]');
+            var $li = $ul.find("li");
 
-            this.$editor.find('select[name="carousel-style"]').on('change', function(e) {
-                var $container = self.$target.find('.carousel-inner .item.active');
-                $container.removeClass('image_text text_image text_only');
-                $container.addClass($(e.currentTarget).val());
-            });
+            $ul.find('[data-value="' + style + '"]').addClass('active');
+
+            $li.on('click', function (event) {
+                    event.preventDefault();
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                    return false;
+                })
+                .on('mouseover', function (event) {
+                    $el.removeClass('image_text text_image text_only');
+                    $el.addClass($(event.currentTarget).data("value"));
+                })
+                .on('mouseout', function (event) {
+                    $el.removeClass('image_text text_image text_only');
+                    $el.addClass($ul.find('li.active').data("value"));
+                });
         },
         change_size: function () {
             var self = this;
+            var $el = this.$target;
 
-            var size = 'big';
+            var size = 'oe_big';
             if (this.$target.hasClass('oe_small'))
-                size = 'small';
+                size = 'oe_small';
             else if (this.$target.hasClass('oe_medium'))
-                size = 'medium';
+                size = 'oe_medium';
 
-            this.$editor.find('select[name="carousel-size"] option[value="'+size+'"]').prop('selected', true);
+            var $ul = this.$editor.find('ul[name="carousel-size"]');
+            var $li = $ul.find("li");
 
-            this.$editor.find('select[name="carousel-size"]').on('change', function(e) {
-                self.$target
-                    .removeClass('oe_big oe_small oe_medium')
-                    .addClass("oe_" + $(e.currentTarget).val());
-            });
+            $ul.find('[data-value="' + size + '"]').addClass('active');
+
+            $li.on('click', function (event) {
+                    event.preventDefault();
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                    return false;
+                })
+                .on('mouseover', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($(event.currentTarget).data("value"));
+                })
+                .on('mouseout', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($ul.find('li.active').data("value"));
+                });
         }
     });
 
