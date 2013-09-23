@@ -406,6 +406,9 @@
                 allowedContent: true,
                 // Don't insert paragraphs around content in e.g. <li>
                 autoParagraph: false,
+                // Don't automatically add &nbsp; or <br> in empty block-level
+                // elements when edition starts
+                fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
                 extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
