@@ -2,9 +2,16 @@
 <openerp>
     <data>
 
-        <record id="group_website_mail_reply" model="res.groups">
+        <record model="res.groups" id="group_website_mail_reply">
             <field name="name">Visitors can reply on blogs</field>
             <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record model="ir.rule" id="website_blog_post_public">
+            <field name="name">Blog Post: public: published only</field>
+            <field name="model_id" ref="model_blog_post"/>
+            <field name="domain_force">[('website_published', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         </record>
 
     </data>
