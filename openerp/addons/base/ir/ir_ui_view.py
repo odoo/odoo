@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import collections
 import copy
 import logging
 import os
@@ -25,7 +26,8 @@ import sys
 import re
 import time
 
-from lxml import etree
+from lxml import etree, html
+from functools import partial
 
 from openerp import tools
 from openerp.osv import fields, osv, orm
@@ -251,24 +253,16 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id, base_xpath=None, count=None):
-        if not count:
-            count = {}
+    def inherit_branding(self, specs_tree, view_id):
         for node in specs_tree:
-            try:
-                count[node.tag] = count.get(node.tag, 0) + 1
-                xpath = "%s/%s[%s]" % (base_xpath or '', node.tag, count.get(node.tag))
-                if node.tag == 'data' or node.tag == 'xpath':
-                    node = self.inherit_branding(node, view_id, xpath, count)
-                else:
-                    node.attrib.update({
-                        'data-oe-model': 'ir.ui.view',
-                        'data-oe-id': str(view_id),
-                        'data-oe-field': 'arch',
-                        'data-oe-xpath': xpath
-                    })
-            except Exception,e:
-                print "inherit branding error",e,xpath,node.tag
+            xpath = node.getroottree().getpath(node)
+            if node.tag == 'data' or node.tag == 'xpath':
+                self.inherit_branding(node, view_id)
+            else:
+                node.set('data-oe-id', str(view_id))
+                node.set('data-oe-xpath', xpath)
+                node.set('data-oe-model', 'ir.ui.view')
+                node.set('data-oe-field', 'arch')
 
         return specs_tree
 
@@ -691,37 +685,62 @@ class view(osv.osv):
         r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
         return r['arch']
 
-    def distribute_branding(self, e, branding=None, xpath=None, count=None):
-        if e.attrib.get('t-ignore') or e.tag in ('head',):
+    def distribute_branding(self, e, branding=None, parent_xpath='',
+                            index_map=misc.ConstantMapping(1)):
+        if e.get('t-ignore') or e.tag == 'head':
             # TODO: find a better name and check if we have a string to boolean helper
             return
-        branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
-        branding_dist = {}
-        xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 1)
-        if branding and not (e.attrib.get('data-oe-model') or e.attrib.get('t-field')):
+
+        node_path = e.get('data-oe-xpath')
+        if node_path is None:
+            node_path = "%s/%s[%d]" % (parent_xpath, e.tag, index_map[e.tag])
+        if branding and not (e.get('data-oe-model') or e.get('t-field')):
             e.attrib.update(branding)
-            e.attrib['data-oe-xpath'] = xpath
-        if e.attrib.get('data-oe-model'):
-            # if a branded tag containg branded tag distribute to the childs
-            child_text = "".join([etree.tostring(x, encoding='utf-8') for x in e])
-            if re.search('( data-oe-model=| t-esc=| t-raw=| t-field=| t-call=| t-ignore=)',child_text) or e.tag == "t" or 't-raw' in e.attrib:
-                for i in branding_copy:
-                    if e.attrib.get(i):
-                        branding_dist[i] = e.attrib.get(i)
-                        e.attrib.pop(i)
-                if 't-raw' not in e.attrib:
-                    count = {}
-                    for child in e:
-                        count[child.tag] = count.get(child.tag, 0) + 1
-                        self.distribute_branding(child, branding_dist, xpath, count)
+            e.set('data-oe-xpath', node_path)
+        if not e.get('data-oe-model'): return
+
+        # if a branded element contains branded elements distribute own
+        # branding to children unless it's t-raw, then just remove branding
+        # on current element
+        if e.tag == 't' or 't-raw' in e.attrib or \
+                any(self.is_node_branded(child) for child in e.iterdescendants()):
+            distributed_branding = dict(
+                (attribute, e.attrib.pop(attribute))
+                for attribute in MOVABLE_BRANDING
+                if e.get(attribute))
+
+            if 't-raw' not in e.attrib:
+                # TODO: collections.Counter if remove p2.6 compat
+                # running index by tag type, for XPath query generation
+                indexes = collections.defaultdict(lambda: 0)
+                for child in e.iterchildren(tag=etree.Element):
+                    indexes[child.tag] += 1
+                    self.distribute_branding(child, distributed_branding,
+                                             parent_xpath=node_path,
+                                             index_map=indexes)
+
+    def is_node_branded(self, node):
+        """ Finds out whether a node is branded or qweb-active (bears a
+        @data-oe-model or a @t-* *which is not t-field* as t-field does not
+        section out views)
+
+        :param node: an etree-compatible element to test
+        :type node: etree._Element
+        :rtype: boolean
+        """
+        return any(
+            (attr == 'data-oe-model' or (attr != 't-field' and attr.startswith('t-')))
+            for attr in node.attrib
+        )
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
             arch = self.read_template(cr, uid, name, context=context)
             arch_tree = etree.fromstring(arch)
             self.distribute_branding(arch_tree)
-            arch = etree.tostring(arch_tree, encoding='utf-8')
-            arch = '<?xml version="1.0" encoding="utf-8"?><tpl>%s</tpl>' % (arch)
+            root = etree.Element('tpl')
+            root.append(arch_tree)
+            arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
             return arch
 
         engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
@@ -804,6 +823,7 @@ class view(osv.osv):
         })
         return super(view, self).copy(cr, uid, id, default, context=context)
 
+MOVABLE_BRANDING = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'

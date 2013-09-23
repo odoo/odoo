@@ -3,7 +3,6 @@ from lxml import etree as ET
 from lxml.builder import E
 
 from openerp.tests import common
-import unittest2
 
 Field = E.field
 
