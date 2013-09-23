@@ -578,7 +578,8 @@
             var self = this, _super = this._super.bind(this);
             var $e = this.$('.list-group-item.active .url-source');
             var val = $e.val();
-            if (!val) {
+            if (!val || !$e[0].checkValidity()) {
+                // FIXME: error message
                 $e.closest('.form-group').addClass('has-error');
                 return;
             }
