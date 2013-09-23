@@ -424,6 +424,8 @@ class Field(object):
         if name == '*':
             # special case: add triggers on all fields of model
             fields = model._fields.values()
+            if not path0:
+                fields.remove(self)     # self cannot depend directly on itself
         else:
             fields = (model._fields[name],)
 
