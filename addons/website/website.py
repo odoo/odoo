@@ -120,7 +120,7 @@ class website(osv.osv):
                 IMD.get_object_reference(cr, uid, module, xmlid)
             except ValueError:
                 logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-                return self.render('website.404', qweb_context)
+                return self.render(cr, uid, ids, 'website.404', qweb_context)
 
         try:
             return view.render(cr, uid, "%s.%s" % (module, xmlid),
@@ -129,7 +129,7 @@ class website(osv.osv):
             logger.error(err)
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render('website.401', qweb_context)
+            return self.render(cr, uid, ids, 'website.401', qweb_context)
         except Exception:
             logger.exception("Website Rendering Error.")
             qweb_context['traceback'] = traceback.format_exc()
@@ -266,6 +266,21 @@ class website(osv.osv):
         for object_id in object_ids:
             html += request.website.render(template, {'object_id': object_id})
         return html
+
+class ir_attachment(osv.osv):
+    _inherit = "ir.attachment"
+    def _website_url_get(self, cr, uid, ids, name, arg, context=None):
+        context = context or {}
+        result = {}
+        for attach in self.browse(cr, uid, ids, context=context):
+            if attach.type=='url':
+                result[attach.id] = attach.url
+            else:
+                result[attach.id] = "/website/attachment/"+str(attach.id)
+        return result
+    _columns = {
+        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
+    }
 
 class res_partner(osv.osv):
     _inherit = "res.partner"

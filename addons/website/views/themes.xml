@@ -8,16 +8,18 @@
 
     <template id="website.themes" name="Themes">
         <t t-call="website.layout">
-          <div class="container" t-if="editable">
+          <div id="wrap" t-if="editable">
+            <div class="container">
     
-            <div class="alert alert-success mt32" t-if="theme_changed">
+            <div class="alert alert-info mt32" t-if="theme_changed">
                 <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                 <p>
                     <h4>Theme Changed!</h4>
                     Have a look at <a href="/">your homepage</a> or try another theme bellow.
                 </p>
             </div>
-            <h1 class="text-center mt32">Change Your Theme</h1>
+            <h1 class="text-center">Try a New Theme</h1>
+            <h3 class="text-center text-muted">You'll be able to change the theme at anytime</h3>
     
             <div class="row mt32" id="themes-list">
     
@@ -176,6 +178,7 @@
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </t>

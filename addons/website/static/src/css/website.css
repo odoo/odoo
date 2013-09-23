@@ -78,6 +78,78 @@
   margin-bottom: 0px !important;
 }
 
+.pt128 {
+  padding-top: 128px !important;
+}
+
+.pt92 {
+  padding-top: 92px !important;
+}
+
+.pt64 {
+  padding-top: 64px !important;
+}
+
+.pt48 {
+  padding-top: 48px !important;
+}
+
+.pt32 {
+  padding-top: 32px !important;
+}
+
+.pt16 {
+  padding-top: 16px !important;
+}
+
+.pt8 {
+  padding-top: 8px !important;
+}
+
+.pt4 {
+  padding-top: 4px !important;
+}
+
+.pt0 {
+  padding-top: 0px !important;
+}
+
+.pb128 {
+  padding-bottom: 128px !important;
+}
+
+.pb92 {
+  padding-bottom: 92px !important;
+}
+
+.pb64 {
+  padding-bottom: 64px !important;
+}
+
+.pb48 {
+  padding-bottom: 48px !important;
+}
+
+.pb32 {
+  padding-bottom: 32px !important;
+}
+
+.pb16 {
+  padding-bottom: 16px !important;
+}
+
+.pb8 {
+  padding-bottom: 8px !important;
+}
+
+.pb4 {
+  padding-bottom: 4px !important;
+}
+
+.pb0 {
+  padding-bottom: 0px !important;
+}
+
 /* Grid of unequally tall elements */
 .grid > [class*="col-md"] {
   display: inline-block;
@@ -93,6 +165,28 @@
 }
 .grid > [class*="col-md"].grid-align-bottom > [class*="col-md"] {
   vertical-align: bottom;
+}
+
+/* Extra Styles */
+img.shadow {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+}
+
+h1.text-muted, h2.text-muted, h3.text-muted {
+  margin-top: 10px;
+}
+
+/* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
+.navbar.navbar-default.navbar-static-top {
+  margin-bottom: 0;
 }
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
@@ -122,18 +216,86 @@ footer {
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: url("/website/static/src/img/drag_here.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  height: 200px !important;
+}
+
+.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  position: static;
+}
+
+.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here";
+  text-align: center;
+  display: block;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  color: grey;
+  font-size: 24px;
+}
+
+/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .navbar .nav > li > p {
   margin-bottom: 0px;
 }
 
-.carousel .item {
-  color: white;
+.carousel-inner .item {
+  height: 100%;
+}
+
+.carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.carousel .carousel-image {
+  right: 10%;
+  left: 50%;
+  top: 5%;
+  bottom: 5%;
+  position: absolute;
+  text-align: center;
+}
+.carousel .carousel-image img {
+  height: 100%;
+  margin: 0 auto;
+}
+.carousel .item.text_image .carousel-caption {
+  left: auto;
+  right: auto;
+  bottom: 10%;
+  text-align: left;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+}
+.carousel .item.text_only .carousel-image {
+  display: none;
+}
+.carousel .item.text_only .carousel-caption {
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  text-align: center;
+}
+.carousel .item.image_text .carousel-caption {
+  left: auto;
+  text-align: left;
+  right: 10%;
+  bottom: 10%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+}
+.carousel .item.image_text .carousel-image {
+  right: 50%;
+  left: 10%;
 }
 
 /* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
 .dark {
   background: #eff8f8;
-  background: rgba(100, 200, 200, 0.1);
+  background: rgba(100, 200, 200, 0.14);
   -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
   -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
   box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
@@ -143,8 +305,8 @@ footer {
   padding-left: 16px;
 }
 
-div#wrap .carousel {
-  top: -20px;
+#themes-list .well {
+  padding: 0 0 20px 0;
 }
 
 /* -- Hack for removing double scrollbar from mobile preview -- */

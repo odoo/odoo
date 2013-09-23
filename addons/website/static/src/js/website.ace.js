@@ -3,20 +3,33 @@
 
     var globalEditor;
 
+    var hash = "#advanced-view-editor";
+
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.ace.xml');
+
+    website.ready().then(function () {
+        if (window.location.hash.indexOf(hash) >= 0) {
+            launch();
+        }
+    });
+
+    function launch () {
+        if (globalEditor) {
+            globalEditor.open();
+        } else {
+            globalEditor = new website.ace.ViewEditor(this);
+            globalEditor.appendTo($(document.body));
+        }
+    }
 
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action=ace]': 'launchAce',
         }),
-        launchAce: function () {
-            if (globalEditor) {
-                globalEditor.open();
-            } else {
-                globalEditor = new website.ace.ViewEditor(this);
-                globalEditor.appendTo($(document.body));
-            }
+        launchAce: function (e) {
+            e.preventDefault();
+            launch();
         },
     });
 
@@ -55,88 +68,143 @@
     website.ace.ViewEditor = openerp.Widget.extend({
         template: 'website.ace_view_editor',
         events: {
-            'change #ace-view-list': 'displayView',
-            'click button[data-action=save]': 'saveView',
+            'change #ace-view-list': 'displaySelectedView',
+            'click button[data-action=save]': 'saveViews',
             'click button[data-action=format]': 'formatXml',
             'click button[data-action=close]': 'close',
         },
+        init: function (parent) {
+            this.buffers = {};
+            this._super(parent);
+        },
         start: function () {
             var self = this;
+            self.aceEditor = ace.edit(self.$('#ace-view-editor')[0]);
+            self.aceEditor.setTheme("ace/theme/monokai");
             var viewId = $(document.documentElement).data('view-xmlid');
             openerp.jsonRpc('/website/customize_template_get', 'call', {
                 'xml_id': viewId,
                 'optional': false,
             }).then(function (views) {
-                self.loadViewList.call(self, views);
+                self.loadViews.call(self, views);
+                self.open.call(self);
             });
-            this.$el.hover();
+        },
+        loadViews: function (views) {
+            var self = this;
+            var activeViews = _.filter(views, function (view) {
+               return view.active;
+            });
+            var $viewList = self.$('#ace-view-list');
+            _.each(activeViews, function (view) {
+                if (view.id) {
+                    new website.ace.ViewOption(self, view).appendTo($viewList);
+                    self.loadView(view.id);
+                }
+            });
+        },
+        loadView: function (id) {
+            var viewId = parseInt(id, 10);
+            var self = this;
+            openerp.jsonRpc('/web/dataset/call', 'call', {
+                model: 'ir.ui.view',
+                method: 'read',
+                args: [[viewId], ['arch'], website.get_context()],
+            }).then(function(result) {
+                var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);;
+                editingSession.setMode("ace/mode/xml");
+                editingSession.setUndoManager(new ace.UndoManager());
+                editingSession.on("change", function () {
+                    setTimeout(function () {
+                        var $option = self.$('#ace-view-list').find('[value='+viewId+']');
+                        var bufferName = $option.text();
+                        var dirtyMarker = " (unsaved changes)";
+                        var isDirty = editingSession.getUndoManager().hasUndo();
+                        if (isDirty && bufferName.indexOf(dirtyMarker) < 0) {
+                            $option.text(bufferName + dirtyMarker);
+                        } else if (!isDirty && bufferName.indexOf(dirtyMarker) > 0) {
+                            $option.text(bufferName.substring(0, bufferName.indexOf(dirtyMarker)));
+                        }
+                    }, 1);
+                });
+                if (viewId === self.selectedViewId()) {
+                    self.displayView.call(self, viewId);
+                }
+            });
         },
         selectedViewId: function () {
             return parseInt(this.$('#ace-view-list').val(), 10);
         },
-        loadViewList: function (views) {
-            var activeViews = _.filter(views, function (view) {
-               return view.active;
-            });
-            var $viewList = this.$('#ace-view-list');
-            _.each(activeViews, function (view) {
-                if (view.id) {
-                    new website.ace.ViewOption(this, view).appendTo($viewList);
-                }
-            });
-            var editor = ace.edit(this.$('#ace-view-editor')[0]);
-            editor.setTheme("ace/theme/monokai");
-            this.aceEditor = editor;
-            this.open();
+        displayView: function (id) {
+            var viewId = parseInt(id, 10);
+            var editingSession = this.buffers[viewId];
+            if (editingSession) {
+                this.aceEditor.setSession(editingSession);
+            }
         },
-        displayView: function () {
-            var editor = this.aceEditor;
-            openerp.jsonRpc('/web/dataset/call', 'call', {
-                model: 'ir.ui.view',
-                method: 'read',
-                args: [[this.selectedViewId()], ['arch'], website.get_context()],
-            }).then(function(result) {
-                var xml = new website.ace.XmlDocument(result[0].arch);
-                var editingSession = new ace.EditSession(xml.xml);
-                editingSession.setMode("ace/mode/xml");
-                editingSession.setUndoManager(new ace.UndoManager());
-                editor.setSession(editingSession);
-            });
+        displaySelectedView: function () {
+            this.displayView(this.selectedViewId());
+            this.updateHash();
         },
         formatXml: function () {
             var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
             this.aceEditor.setValue(xml.format());
         },
-        saveView: function () {
+        saveViews: function () {
             var self = this;
-            var xml = new website.ace.XmlDocument(this.aceEditor.getValue());
+            var toSave = _.filter(_.map(self.buffers, function (editingSession, viewId) {
+                return {
+                    id: parseInt(viewId, 10),
+                    isDirty: editingSession.getUndoManager().hasUndo(),
+                    text: editingSession.getValue(),
+                };
+            }), function (session) {
+                return session.isDirty;
+            });
+            var requests = _.map(toSave, self.saveView);
+            $.when.apply($, requests).then(function () {
+                self.reloadPage.call(self);
+            }).fail(function (source, error) {
+                var message = (error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in" : error.message;
+                self.displayError.call(self, message);
+            });
+        },
+        saveView: function (session) {
+            var xml = new website.ace.XmlDocument(session.text);
             if (xml.isWellFormed()) {
-                openerp.jsonRpc('/web/dataset/call', 'call', {
+                return openerp.jsonRpc('/web/dataset/call', 'call', {
                     model: 'ir.ui.view',
                     method: 'write',
-                    args: [[this.selectedViewId()], { 'arch':  xml.xml }, website.get_context()],
-                }).then(function(result) {
-                    self.reloadPage();
-                }).fail(function (error) {
-                    self.displayError(error);
+                    args: [[session.id], { 'arch':  xml.xml }, website.get_context()],
                 });
             } else {
-                self.displayError();
+                return $.Deferred().fail("Malformed XML document");
             }
         },
+        updateHash: function () {
+            window.location.hash = hash + "?view=" + this.selectedViewId();
+        },
         reloadPage: function () {
-            // TODO Reload { header + div#wrap + footer } only
+            this.updateHash();
             window.location.reload();
         },
         displayError: function (error) {
             // TODO Improve feedback (e.g. update 'Save' button + tooltip)
-            alert("Malformed XML document");
+            alert(error);
         },
         open: function () {
             this.$el.removeClass('oe_ace_closed').addClass('oe_ace_open');
-            this.displayView();
+            var curentHash = window.location.hash;
+            var indexOfView = curentHash.indexOf("?view=");
+            if (indexOfView >= 0) {
+                var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
+                this.$('#ace-view-list').val(viewId).change();
+            } else {
+                window.location.hash = hash;
+            }
         },
         close: function () {
+            window.location.hash = "";
             var self = this;
             this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
                 globalEditor = null;

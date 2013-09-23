@@ -8,6 +8,17 @@
 .navbar.navbar-inverse .cke_inner
     background: transparent
 
+.navbar.navbar-inverse
+    .cke_toolbar
+        position: relative
+        top: 1px
+    .cke_combo_button
+        padding-top: 3px
+        padding-bottom: 3px
+    .cke_button
+        padding-top: 7px
+        padding-bottom: 7px
+
 .navbar.navbar-inverse .cke_top
     background: transparent
     border: none
@@ -77,6 +88,8 @@
 table.editorbar-panel
     cursor: pointer
     width: 100%
+    td
+        border: 1px solid #aaa
     td.selected
         background-color: #b1c9d9
 
@@ -91,6 +104,16 @@ table.editorbar-panel
     -o-user-select: auto
     user-select: auto
 
+.modal-dialog.select-image
+    width: 80%
+
+.modal .existing-attachments
+    .pager
+        margin: 0
+
+.modal .image-preview
+    margin-bottom: 0.5em
+
 // "remove" drag & drop of CKE widgets
 .cke_widget_drag_handler_container
     display: none !important
@@ -101,165 +124,198 @@ table.editorbar-panel
     position: fixed
     left: 0px
     right: 0px
-    bottom: 0px
-    max-height: 280px
-    min-height: 140px
+    top: 50px
     background: rgb(40,40,40)
     box-shadow: 0px 10px 10px -10px black inset
-    overflow-y: auto
-    z-index: 20000
-    .nav-pills
-        padding: 3px 8px
+    z-index: 1010
+    overflow: hidden
+    height: 110px
+    &:hover
+        height: auto
+    .scroll
+        white-space: nowrap
+        overflow-y: auto
+    .nav
+        padding: 3px 15px
+        width: 162px
         background: #444444
-        > li > a
-            padding: 2px 10px !important
+        > li
+            display: block
+            float: none
+            > a
+                padding: 2px 10px !important
+                width: 100%
+                display: block
+        position: fixed
+        z-index: 1
+        height: 108px
     .pill-content
-        height: 140px
+        display: inline-block
+        height: 110px
+        white-space: nowrap
+        padding-left: 166px
+        > div
+            display: inline-block
+            label
+                width: 44px
+                height: 100%
+                color: #fff
+                padding-left: 10px
+                div
+                    width: 100px
+                    text-align: center
+                    -webkit-transform: translate(-39px, 44px) rotate(-90deg)
+                    -moz-transform: translate(-39px, 44px) rotate(-90deg)
+                    -o-transform: translate(-39px, 44px) rotate(-90deg)
+                    transform: translate(-39px, 44px) rotate(-90deg)
+                    -webkit-transform-origin: 50% 50%
+                    -moz-transform-origin: 50% 50%
+                    -ms-transform-origin: 50% 50%
+                    -o-transform-origin: 50% 50%
+                    transform-origin: 50% 50%
 
 .oe_snippet
     display: inline-block
     vertical-align: top
-    background: white
-    width: 120px
-    height: 120px
+    width: 108px
+    height: 108px
     border-radius: 3px
-    margin: 10px
-    margin-right: 0px
+    margin: 1px
+    margin-top: 0px
     position: relative
-    box-shadow: 0px 3px 10px rgba(0,0,0,0.2)
     overflow: hidden
     -webkit-user-select: none
     user-select: none
     cursor: move
+    pointer-events: none
 
-    .oe_snippet_thumbnail.oe_label
+    .oe_snippet_thumbnail
+        pointer-events: auto
         text-align: center
-        background: rgb(116, 116, 116)
-        background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
         height: 100%
-        line-height: 120px
+        background: transparent
         color: white
         text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95)
-        box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
-
-    .oe_snippet_body
-        display: none
-    & > *
-        pointer-events: none
-    & > :not(.oe_snippet_body):not(.oe_snippet_thumbnail)
+        position: relative
+        span, div
+            line-height: 18px
+    & > :not(.oe_snippet_thumbnail)
         display: none !important
 
-    & > *:first-child:not(.oe_snippet_thumbnail)
-        display: block
-        -webkit-transform-origin-x: 5px
-        -webkit-transform-origin-y: 10px
-        -webkit-transform: scale(0.095)
-
+#oe_snippets .oe_snippet_thumbnail
+    background: rgb(116, 116, 116)
+    background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
+    box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset
 
 /* ---- SNIPPETS DROP ZONES ---- */
 
 
+.col-md-12
+    float: left
 .oe_drop_zone.oe_insert
     display: block
-    height: 32px
-    margin: -16px 0px
+    height: 48px
+    margin: 0px
+    margin-bottom: -48px
     -webkit-transition: margin 250ms linear
     width: 100%
+    position: absolute
     z-index: 1000
-    &:first-child:not(:last-child)
-        margin-top: -8px
-        margin-bottom: -24px
-    &:last-child:not(:first-child)
-        margin-top: -24px
-        margin-bottom: -8px
-    &:before
+    &:not(.oe_vertical):before
         content: ""
         display: block
         border-top: dashed 2px rgba(209, 178, 255, 0.72)
         position: relative
-        top: 16px
-    &:first-child:not(:last-child):before
-        top: 8px
-    &:last-child:not(:first-child):before
-        top: 24px
+        top: 0px
     &.oe_hover:before
         border-top: dashed 2px rgba(116, 255, 161, 0.72)
     &.oe_vertical
-        width: 16px
-        display: inline-block
-        position: absolute
-        margin: 0px !important
+        width: 48px
+        float: left
+        position: relative
+        margin: 0px -24px !important
     &.oe_overlay
-    position: absolute
-    background: rgba(153, 0, 255, 0.17)
-    border-radius: 3px
+        background: rgba(153, 0, 255, 0.17)
+        border-radius: 3px
 
-.oe_drop_zone
+.oe_drop_zone, .oe_drop_zone_style
     background: rgba(153, 0, 255, 0.17)
     border-radius: 3px
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
         z-index: 1001
 
+.oe_drop_zone_style
+    color: white
+    height: 48px
+    margin-bottom: 32px
+
 /* ---- SNIPPET MANIPULATOR ---- */
 
 .oe_overlay
-    display: block
+    display: none
     position: absolute
-    background: transparent //rgba(153, 0, 255, 0.05)
+    background: transparent
     border-radius: 3px
-    opacity: 0
     transition: opacity 100ms linear
     box-sizing: border-box
     pointer-events: none
-    &.oe_hover
-        opacity: 1
-        cursor: pointer
-    &.oe_selected, &.oe_active
-        opacity: 1
-        background: transparent
+    &.oe_active
+        display: block
         border-style: dashed
         border-width: 1px
         box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
-    &.oe_selected
-        border-color: rgba(0, 153, 255, 0.5)
-    .oe_handle
-        display: none !important
-    &.oe_active
         border-color: rgba(153, 0, 255, 0.5)
         .oe_handle
             display: block !important
             pointer-events: auto
+            &:before
+                position: relative
+                top: 50%
+                left: 50%
+                display: block
+                background: rgba(255, 255, 255, 1)
+                border: solid 1px rgba(153, 0, 255, 1)
+                border-radius: 8px
+                width: 16px
+                height: 16px
+                margin: -8px
+                padding-left: 1px
+                font-size: 14px
+                line-height: 14px
+                color: rgba(153, 0, 255, 1)
+                -webkit-transition: background 100ms linear
+            &:hover:before
+                background: rgba(153, 0, 255, 1)
+                color: #fff
+        .oe_handle.e:before
+            content: "⇨"
+        .oe_handle.s:before
+            content: "⇩"
+        .oe_handle.w:before
+            content: "⇦"
+        .oe_handle.n:before
+            content: "⇧"
+
     .icon.btn
         display: inline-block
 
     .oe_overlay_options
-        display: none
+        position: absolute
+        width: 100%
+        text-align: center
+        top: -11px
         z-index: 1002
-        .oe_options,.oe_label,.oe_move
-            position: absolute
-            display: block
-            z-index: 1002
-            top: -11px
-        .oe_options
+        .btn, a
             pointer-events: auto
-            left: -14px
-        .oe_label
-            top: -8px
-            right: 6px
-            background: #fff
-            font-size: 75%
-            color: rgba(153, 0, 255, 0.5)
-            padding: 0 5px
-        .oe_move
-            pointer-events: auto
-            left: 50%
-            .js_box_move
-                margin-left: -50%
+            cursor: pointer
+        .dropdown
+            display: inline-block
+        .dropdown-menu
+            text-align: left
+            min-width: 180px
         .dropdown-menu select,.dropdown-menu input
             display: block
-    &.oe_active .oe_overlay_options
-        display: block
 
 .oe_handle
     pointer-events: auto
@@ -354,6 +410,10 @@ $icon_close: #E00101
 /* ---- SEO TOOLS ---- */
 
 $remove_color: $icon_close
+$in_title_color: #5cb85c
+$in_description_color: #428bca
+$in_body_color: #5bc0de
+$highlighted_text_color: #ffffff
 .oe_seo_configuration
     .modal-dialog
         width: 80%
@@ -361,6 +421,18 @@ $remove_color: $icon_close
         color: $remove_color
     .oe_seo_suggestion
         cursor: pointer
+    .oe_seo_keyword
+        padding: .2em .4em .2em .5em
+        border-radius: .4em
+    .keyword-in-title
+        background-color: $in_title_color
+        color: $highlighted_text_color
+    .keyword-in-description
+        background-color: $in_description_color
+        color: $highlighted_text_color
+    .keyword-in-body
+        background-color: $in_body_color
+        color: $highlighted_text_color
 
 /* ---- ACE EDITOR ---- */
 
@@ -369,8 +441,16 @@ $editorbar_height: 40px
 // TODO Fix => might break with themes
 $navbar_height: 51px
 
+@mixin editor-font
+    font-size: 14px
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
+    line-height: normal
 .oe_ace_view_editor
     transition: all 0.2s ease-in
+    -webkit-transition: all 0.2s ease-in
+    -ms-transition: all 0.2s ease-in
+    -o-transition: all 0.2s ease-in
+    -moz-transition: all 0.2s ease-in
     opacity: 0.3
     position: fixed
     top: $navbar_height
@@ -386,9 +466,11 @@ $navbar_height: 51px
         .oe_view_list
             width: 50%
             height: $editorbar_height - 8px
+            @include editor-font
         .btn
             height: $editorbar_height - 8px
             padding: 0 4px 0 4px
+            @include editor-font
     .ace_editor
         position: absolute
         top: $editorbar_height

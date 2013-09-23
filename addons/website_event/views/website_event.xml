@@ -25,11 +25,14 @@
  
     <template id="index" name="Events" page="True">
         <t t-call="website.layout">
-            <t t-set="head">
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Events</t>
-            <h1 class="text-center">Our Events</h1>
+          <t t-set="head">
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Events</t>
+          <div id="wrap">
+            <div class="oe_structure">
+                <h1 class="text-center">Our Events</h1>
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 css_noprint" id="left_column">
@@ -86,6 +89,8 @@
                     </div>
                 </div>
             </div>
+            <div class="oe_structure"/>
+          </div>
         </t>
     </template>
 
@@ -116,11 +121,12 @@
 
     <template id="detail">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
-            <t t-set="title">Events</t>
+          <t t-set="head">
+              <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
+              <t t-raw="head or ''"/>
+          </t>
+          <t t-set="title">Events</t>
+          <div id="wrap">
             <div class="container">
                 <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
                 <div class="row">
@@ -210,6 +216,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </t>
     </template>
  </data>
