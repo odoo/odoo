@@ -541,7 +541,7 @@ class stock_picking(osv.osv):
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'min_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the first part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed"),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
                  store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
