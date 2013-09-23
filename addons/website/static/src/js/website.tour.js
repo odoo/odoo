@@ -62,11 +62,10 @@
                 onPrev: function(tour) {}
             });
         }
-        
     });
     $(document).ready(function () {
         if (window.location.href.indexOf("?tutorial=true") != -1) {
-            var Tour = new website.Tour().start()
+            var Tour = new website.Tour().start();
         }
     });
 }).call(this);
