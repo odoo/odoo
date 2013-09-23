@@ -37,7 +37,7 @@ class BlogCategory(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
         'description': fields.text('Description'),
-        'template': fields.text('Template'),
+        'template': fields.html('Template'),
         'blog_ids': fields.one2many(
             'blog.post', 'category_id',
             'Blogs',
@@ -61,18 +61,24 @@ class BlogPost(osv.Model):
     _inherit = ['mail.thread']
     _order = 'name'
     # maximum number of characters to display in summary
-    _shorten_max_char = 100
+    _shorten_max_char = 150
 
     def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for page in self.browse(cr, uid, ids, context=context):
             try:
-                body_short = tools.html_email_clean(page.content, remove=True, shorten=True, max_length=self._shorten_max_char)
+                body_short = tools.html_email_clean(
+                    page.content,
+                    remove=True,
+                    shorten=True,
+                    max_length=self._shorten_max_char,
+                    expand_options={
+                        'oe_expand_href': '/blog/%d/%d' % (page.category_id.id, page.id),
+                    }
+                )
             except Exception:
                 body_short = False
             res[page.id] = body_short
-            print body_short
-            print '-----------------\n\n'
         return res
 
     _columns = {
@@ -86,10 +92,10 @@ class BlogPost(osv.Model):
             'blog_id', 'tag_id',
             'Tags',
         ),
-        'content': fields.text('Content'),
+        'content': fields.html('Content'),
         'shortened_content': fields.function(
             get_shortened_content,
-            type='text',
+            type='html',
             string='Shortened Content',
             help="Shortened content of the page that serves as a summary"
         ),
