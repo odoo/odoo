@@ -83,7 +83,11 @@ class view(osv.osv):
                                       fields.date, fields.datetime)):
             return el.text_content()
         # TODO: fields.selection
-        # TODO: fields.many2one
+        elif issubclass(column_type, fields.many2one):
+            matches = self.pool[column._obj].name_search(
+                cr, uid, name=el.text_content().strip(), context=context)
+            # FIXME: more than one match, error reporting
+            return matches[0][0]
         elif issubclass(column_type, fields.function):
             # FIXME: special-case selection as in get_pg_type?
             return self.convert_embedded_field(
