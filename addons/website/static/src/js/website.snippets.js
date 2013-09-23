@@ -7,7 +7,7 @@
     website.EditorBar.include({
         start: function () {
             var self = this;
-            $("body").on('click', function (event) {
+            $("[data-oe-model]").on('click', function (event) {
                 var tag = event.srcElement.tagName.toLowerCase();
                 var $this = $(event.srcElement);
                 if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
@@ -86,19 +86,19 @@
         },
         dom_filter: function (dom) {
             if (typeof dom === "string") {
-                var exclude = ":not(#oe_manipulators):not(#website-top-navbar):not(.oe_snippet)";
+                var include = "[data-oe-model]";
                 var sdom = dom.split(',');
                 dom = "";
                 _.each(sdom, function (val) {
                     val = val.replace(/^\s+|\s+$/g, '');
-                    dom += "body > " + exclude + " " + val + ", ";
+                    dom += "body " + include + " " + val + ", ";
                     val = val.split(" ");
-                    dom += "body > "+ val.shift() + exclude + val.join(" ") + ", ";
+                    dom += "body "+ val.shift() + include + val.join(" ") + ", ";
                 });
                 dom = dom.replace(/,\s*$/g, '');
                 return $(dom);
             } else {
-                return $(dom).parents("#oe_manipulators, #website-top-navbar").length || $(dom).hasClass("oe_snippet") ? $("") : $(dom);
+                return $(dom).is("[data-oe-model]") || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
             }
         },
         start: function() {
@@ -208,7 +208,7 @@
                     }
                     self.make_active($target);
                 });
-            $("body > :not(:has(#website-top-view)):not(#oe_manipulators)").on('click', function (ev) {
+            $("[data-oe-model]").on('click', function (ev) {
                     if (!snipped_event_flag && self.$active_snipped_id && !self.$active_snipped_id.parents("[data-snippet-id]:first")) {
                         self.make_active(false);
                     }
@@ -276,14 +276,14 @@
                 if($target.length && !self.editor_busy) {
                     if($selected_target != $target){
                         if($selected_target && $selected_target.data('overlay')){
-                            $selected_target.data('overlay').removeClass('oe_selected');
+                            $selected_target.data('overlay').removeClass('oe_hover');
                         }
                         $selected_target = $target;
                         self.create_overlay($target);
-                        $target.data('overlay').addClass('oe_selected');
+                        $target.data('overlay').addClass('oe_hover');
                     }
                 } else if($selected_target && $selected_target.data('overlay')) {
-                    $selected_target.data('overlay').removeClass('oe_selected');
+                    $selected_target.data('overlay').removeClass('oe_hover');
                 }
             });
         },
@@ -861,7 +861,6 @@
 
                     var cursor = $handle.css("cursor")+'-important';
                     $("body").addClass(cursor);
-                    self.$overlay.addClass('oe_hover');
 
                     var body_mousemove = function (event){
                         event.preventDefault();
@@ -940,10 +939,16 @@
             var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
             var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
             var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
-
+            if (offset < 0) {
+                offset = 0;
+            }
+            var colSize = beginCol - (offset - beginOffset);
+            if (colSize <= 0) {
+                colSize = 1;
+                offset = beginOffset + beginCol - 1;
+            }
             this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
 
-            var colSize = beginCol - (offset - beginOffset);
             this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
             if (offset > 0) {
                 this.$target.addClass('col-md-offset-' + offset);

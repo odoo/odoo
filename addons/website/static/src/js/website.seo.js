@@ -16,7 +16,7 @@
     website.seo = {};
 
     function analyzeKeyword(htmlPage, keyword) {
-        return htmlPage.isInTitle(keyword) ? {
+        return  htmlPage.isInTitle(keyword) ? {
                     title: 'keyword-in-title',
                     description: "This keyword is used in the page title",
                 } : htmlPage.isInDescription(keyword) ? {
@@ -350,8 +350,6 @@
             });
             self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
             $modal.modal();
-            // Avoid the 'Edit' button in the background boucing needlessly
-            $modal.on('click', function (e) { e.stopPropagation(); });
         },
         suggestImprovements: function () {
             var tips = [];
@@ -410,7 +408,7 @@
             setTimeout(function () {
                 var title = self.$('input[name=seo_page_title]').val();
                 self.htmlPage.changeTitle(title);
-            }, 1);
+            }, 0);
         },
         descriptionChanged: function () {
             var self = this;
