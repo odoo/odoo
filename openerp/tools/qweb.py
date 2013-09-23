@@ -1,12 +1,10 @@
 import cgi
 import logging
 import re
-import types
 
 #from openerp.tools.safe_eval import safe_eval as eval
 
 import xml   # FIXME use lxml
-import xml.dom.minidom
 import traceback
 from openerp.osv import osv, orm
 
@@ -170,7 +168,7 @@ class QWebXml(object):
             t_att = {}
             for (an, av) in e.attributes.items():
                 an = str(an)
-                if isinstance(av, types.UnicodeType):
+                if isinstance(av, unicode):
                     av = av.encode("utf8")
                 else:
                     av = av.nodeValue.encode("utf8")
@@ -262,7 +260,7 @@ class QWebXml(object):
             var = t_att.get('as', expr).replace('.', '_')
             d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
-            if isinstance(enum, (types.ListType, types.TupleType)):
+            if isinstance(enum, (list, tuple)):
                 size = len(enum)
             elif hasattr(enum, 'count'):
                 size = enum.count()
@@ -283,7 +281,7 @@ class QWebXml(object):
                     d["%s_parity" % var] = 'even'
                 if 'as' in t_att:
                     d[var] = i
-                elif isinstance(i, types.DictType):
+                elif isinstance(i, dict):
                     d.update(i)
                 ru.append(self.render_element(e, t_att, g_att, d))
                 index += 1
@@ -316,35 +314,51 @@ class QWebXml(object):
 
     def render_tag_field(self, e, t_att, g_att, v):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
+        node_name = e.nodeName
+        assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td"),\
+            "RTE widgets do not work correctly on %r elements" % node_name
 
         record, field = t_att["field"].rsplit('.', 1)
         record = self.eval_object(record, v)
 
-        inner = ""
-        field_type = record._model._all_columns.get(field).column._type
+        inner = None
+        field_type = record._model._all_columns[field].column._type
         try:
             if field_type == 'many2one':
                 field_data = record.read([field])[0].get(field)
-                inner = field_data and field_data[1] or ""
+                inner = field_data and field_data[1]
             else:
-                inner = getattr(record, field) or ""
-            if isinstance(inner, types.UnicodeType):
+                inner = getattr(record, field)
+
+            if isinstance(inner, unicode):
                 inner = inner.encode("utf8")
-            if field_type != 'html':
-                cgi.escape(str(inner))
-            if e.tagName != 't':
-                g_att += ''.join(
-                    ' %s="%s"' % (name, cgi.escape(str(value), True))
-                    for name, value in [
-                        ('data-oe-model', record._model._name),
-                        ('data-oe-id', str(record.id)),
-                        ('data-oe-field', field),
-                        ('data-oe-type', field_type),
-                    ]
-                )
+
+            if node_name == 't':
+                e.nodeName = DEFAULT_TAG_BY_TYPE[field_type]
+
+            g_att += ''.join(
+                ' %s="%s"' % (name, cgi.escape(str(value), True))
+                for name, value in [
+                    ('data-oe-model', record._model._name),
+                    ('data-oe-id', str(record.id)),
+                    ('data-oe-field', field),
+                    ('data-oe-type', field_type),
+                    ('data-oe-expression', t_att['field']),
+                ]
+            )
         except AttributeError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att, g_att, v, str(inner))
+        return self.render_element(e, t_att, g_att, v, str(inner or ""))
+
+# If a t-field is set on a <t> element, by default only its text will be
+# rendered losing the information that it's a tag and completely breaking
+# edition => replace <t> by some default tag depending on field type
+DEFAULT_TAG_BY_TYPE = {
+    'integer': 'span',
+    'float': 'span',
+    'char': 'span',
+    'many2one': 'span',
+}
 
 # leave this, al.

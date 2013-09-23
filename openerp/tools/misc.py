@@ -35,7 +35,7 @@ import sys
 import threading
 import time
 import zipfile
-from collections import defaultdict
+from collections import defaultdict, Mapping
 from datetime import datetime
 from itertools import islice, izip, groupby
 from lxml import etree
@@ -1065,5 +1065,33 @@ def stripped_sys_argv(*strip_args):
             or (i >= 1 and (args[i - 1] in strip_args) and takes_value[args[i - 1]])
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
+
+class ConstantMapping(Mapping):
+    """
+    An immutable mapping returning the provided value for every single key.
+
+    Useful for default value to methods
+    """
+    __slots__ = ['_value']
+    def __init__(self, val):
+        self._value = val
+
+    def __len__(self):
+        """
+        defaultdict updates its length for each individually requested key, is
+        that really useful?
+        """
+        return 0
+
+    def __iter__(self):
+        """
+        same as len, defaultdict udpates its iterable keyset with each key
+        requested, is there a point for this?
+        """
+        return iter([])
+
+    def __getitem__(self, item):
+        return self._value
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

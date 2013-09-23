@@ -49,7 +49,7 @@ except:
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from lxml import etree
+from lxml import etree, builder
 import misc
 from config import config
 from translate import _
@@ -854,33 +854,33 @@ form: module.record_id""" % (xml_id,)
             module, tpl_id = tpl_id.split('.', 1)
         # set the full template name for qweb <module>.<id>
         if not (el.get('inherit_id') or el.get('inherit_option_id')):
-            el.attrib['t-name'] = '%s.%s' % (module, tpl_id)
+            el.set('t-name', '%s.%s' % (module, tpl_id))
             el.tag = 't'
         else:
             el.tag = 'data'
         el.attrib.pop('id', None)
 
-        record = etree.Element('record')
         record_attrs = {
             'id': tpl_id,
             'model': 'ir.ui.view',
         }
         for att in ['forcecreate', 'context']:
-            if att in el.attrib:
+            if att in el.keys():
                 record_attrs[att] = el.attrib.pop(att)
 
-        record.attrib.update(record_attrs)
+        Field = builder.E.field
         name = el.get('name', tpl_id)
-        record.append(etree.fromstring('<field name="name">%s</field>' % name))
-        record.append(etree.fromstring('<field name="type">qweb</field>'))
-        record.append(etree.fromstring('<field name="arch" type="xml"/>'))
-        record[-1].append(el)
-        for key in ('inherit_id','inherit_option_id'):
-            if el.get(key):
-                record.append(etree.fromstring('<field name="%s" ref="%s"/>' % (key, el.get(key))))
-                el.attrib.pop(key, None)
-        if el.get('page'):
-            record.append(etree.Element('field', name="page", eval="True"))
+
+        record = etree.Element('record', attrib=record_attrs)
+        record.append(Field(name, name='name'))
+        record.append(Field("qweb", name='type'))
+        record.append(Field(el, name="arch", type="xml"))
+        for field_name in ('inherit_id','inherit_option_id'):
+            value = el.attrib.pop(field_name, None)
+            if value: record.append(Field(name=field_name, ref=value))
+        if el.attrib.pop('page', None) == 'True':
+            record.append(Field(name="page", eval="True"))
+
         return self._tag_record(cr, record, data_node)
 
     def id_get(self, cr, id_str):
