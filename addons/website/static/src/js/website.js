@@ -37,7 +37,9 @@
         });
         return $.when.apply(null, dones);
     };
-
+    website.reload = function () {
+        window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
+    };
 
     var all_ready = null;
     var dom_ready = website.dom_ready = $.Deferred();
