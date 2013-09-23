@@ -165,13 +165,53 @@
 
     <!-- Add to cart button-->
 
-    <template id="add_basket" inherit_option_id="website_sale.products" name="Add to Cart">
+    <template id="add_to_basket" inherit_option_id="website_sale.products" name="Add to Cart">
         <xpath expr="//span[@id='add_to_cart']" position="replace">
             <a t-attf-href="./add_cart/?product_id=#{ product.id }">
                 <span class="icon-shopping-cart"/>
             </a>
         </xpath>
     </template>
+
+    <!-- List view of products -->
+
+    <template id="add_basket" inherit_option_id="website_sale.products" name="List View">
+        <xpath expr="//div[@id='products_grid']" position="replace">
+            <div class="col-md-12">
+                <t t-foreach="products" t-as="product">
+                    <div class="col-md-12 oe_products oe-height-1}" t-att-data-publish="product.website_published" data-snippet-id="colmd">
+                        <div class="oe_product_list_image .col-md-3">
+                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+                                <img class="img" t-att-src="product.img('image')"/>
+                            </a>
+                        </div>
+                        <div class="oe_product_list_description .col-md-offset-3">
+                            <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+                                <b t-field="product.name"/>
+                            </a>
+                            <!-- This should be an option -->
+                            <div t-if="product.description_sale" class="text-muted oe_subdescription">
+                                <div id="product_description" t-att-data-name="product.id"/>
+                            </div>
+                            <div>
+                                <b>
+                                    <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                                      <span class="text-danger" style="text-decoration: line-through;">
+                                          <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                                      </span>&amp;nbsp;
+                                    </t>
+                                    <t t-esc="product.product_variant_ids[0].price" /> €
+                                </b>
+                                <span id="add_to_cart" t-att-data-name="product.id"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
 
     <!-- product --> 
 
