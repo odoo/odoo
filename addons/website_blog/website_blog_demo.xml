@@ -41,6 +41,7 @@ company, with your clients and implement it now for your business.</p>
         <record id="blog_post_2" model="blog.post">
             <field name="name">Personalise Dashboards</field>
             <field name="category_id" ref="blog_category_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="content">
 <![CDATA[
 <p>You like OpenERP, but feel like you want to personalise it more? Now, OpenERP

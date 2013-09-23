@@ -38,7 +38,7 @@ class BlogCategory(osv.Model):
         'name': fields.char('Name', required=True),
         'description': fields.text('Description'),
         'template': fields.html('Template'),
-        'blog_ids': fields.one2many(
+        'blog_post_ids': fields.one2many(
             'blog.post', 'category_id',
             'Blogs',
         ),
@@ -52,6 +52,11 @@ class BlogTag(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'blog_post_ids': fields.many2many(
+            'blog.tag', 'blog_tag_rel',
+            'tag_id', 'blog_post_id',
+            'Posts',
+        ),
     }
 
 
@@ -85,7 +90,7 @@ class BlogPost(osv.Model):
         'name': fields.char('Title', required=True),
         'category_id': fields.many2one(
             'blog.category', 'Category',
-            ondelete='set null',
+            required=True, ondelete='cascade',
         ),
         'tag_ids': fields.many2many(
             'blog.tag', 'blog_tag_rel',
@@ -121,10 +126,22 @@ class BlogPost(osv.Model):
         ),
         'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
         # creation / update stuff
-        'create_date': fields.datetime("Created on", select=True, readonly=True),
-        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
-        'write_date': fields.datetime("last Modified on", select=True, readonly=True),
-        'write_uid': fields.many2one('res.users', "Last Contributor", select=True, readonly=True),
+        'create_date': fields.datetime(
+            'Created on',
+            select=True, readonly=True,
+        ),
+        'create_uid': fields.many2one(
+            'res.users', 'Author',
+            select=True, readonly=True,
+        ),
+        'write_date': fields.datetime(
+            'Last Modified on',
+            select=True, readonly=True,
+        ),
+        'write_uid': fields.many2one(
+            'res.users', 'Last Contributor',
+            select=True, readonly=True,
+        ),
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):

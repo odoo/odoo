@@ -38,12 +38,16 @@ class website_mail(http.Controller):
         '/blog/<int:category_id>/',
         '/blog/<int:category_id>/<int:blog_post_id>/',
         '/blog/<int:category_id>/page/<int:page>/',
-        '/blog/<int:category_id>/<int:blog_post_id>/page/<int:page>/'
+        '/blog/<int:category_id>/<int:blog_post_id>/page/<int:page>/',
+        '/blog/tag/',
+        '/blog/tag/<int:tag_id>/',
     ], type='http', auth="public")
-    def blog(self, category_id=None, blog_post_id=None, page=1, **post):
+    def blog(self, category_id=None, blog_post_id=None, tag_id=None, page=1, **post):
         """ Prepare all values to display the blog.
 
         :param integer category_id: id of the category currently browsed.
+        :param integer tag_id: id of the tag that is currently used to filter
+                               blog posts
         :param integer blog_post_id: ID of the blog post currently browsed. If not
                                      set, the user is browsing the category and
                                      a post pager is calculated. If set the user
@@ -64,12 +68,15 @@ class website_mail(http.Controller):
          - 'categories': list of browse records of categories
          - 'pager': the pager to display, posts pager in a category or comments
                     pager in a blog post
+         - 'tag': current tag, if tag_id
          - 'nav_list': a dict [year][month] for archives navigation
         """
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
+        tag_obj = request.registry['blog.tag']
         category_obj = request.registry['blog.category']
 
+        tag = None
         category = None
         blog_post = None
         blog_posts = None
@@ -78,24 +85,40 @@ class website_mail(http.Controller):
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
+
+        if tag_id:
+            tag = tag_obj.browse(cr, uid, tag_id, context=context)
         if category_id:
             category = category_obj.browse(cr, uid, category_id, context=context)
-            if not blog_post_id:
-                pager = request.website.pager(
-                    url="/blog/%s/" % category_id,
-                    total=len(category.blog_ids),
-                    page=page,
-                    step=self._category_post_per_page,
-                    scope=7
-                )
-                pager_begin = (page - 1) * self._category_post_per_page
-                pager_end = page * self._category_post_per_page
-                blog_posts = category.blog_ids[pager_begin:pager_end]
-        if category_id and blog_post_id:
+
+        if category and blog_post_id:
             blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
+            blog_message_ids = blog_post.website_message_ids
+        else:
+            if category and tag:
+                blog_posts = [cat_post for cat_post in category.blog_post_ids
+                              if tag_id in [post_tag.id for post_tag in cat_post.tag_ids]]
+            elif category:
+                blog_posts = category.blog_post_ids
+            elif tag:
+                blog_posts = tag.blog_post_ids
+
+        if blog_posts:
+            pager = request.website.pager(
+                url="/blog/%s/" % category_id,
+                total=len(blog_posts),
+                page=page,
+                step=self._category_post_per_page,
+                scope=7
+            )
+            pager_begin = (page - 1) * self._category_post_per_page
+            pager_end = page * self._category_post_per_page
+            blog_posts = blog_posts[pager_begin:pager_end]
+
+        if blog_post:
             pager = request.website.pager(
                 url="/blog/%s/%s/" % (category_id, blog_post_id),
-                total=len(blog_post.website_message_ids),
+                total=len(blog_message_ids),
                 page=page,
                 step=self._post_comment_per_page,
                 scope=7
@@ -112,10 +135,11 @@ class website_mail(http.Controller):
             nav[year]['months'].append(group)
 
         values = {
-            'blog_post': blog_post,
-            'blog_posts': blog_posts,
             'categories': categories,
             'category': category,
+            'tag': tag,
+            'blog_post': blog_post,
+            'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
             'unable_editor': post.get('unable_editor')
@@ -160,17 +184,17 @@ class website_mail(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
             request.session.body = False
 
-        return self.blog(category_id=category_id, blog_post_id=blog_post_id)
+        return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (category_id, blog_post_id))
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public")
     def create_blog_post(self, category_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
-        blog_id = request.registry['blog.post'].create(
+        blog_post_id = request.registry['blog.post'].create(
             request.cr, request.uid, {
                 'category_id': category_id,
                 'name': _("Blog title"),
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (category_id, blog_id))
+        return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (category_id, blog_post_id))

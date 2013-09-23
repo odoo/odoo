@@ -41,6 +41,9 @@
                     <t t-field="blog_post.create_uid"/> on <t t-field="blog_post.create_date"/>
                 </small>
                 <h3 t-field="blog_post.name"/>
+                <t t-foreach="blog_post.tag_ids" t-as="tag">
+                    <a class="btn btn-sm btn-info" href="/blog/tag/#{tag.id}"><t t-esc="tag.name"/></a>
+                </t>
                 <div t-field="blog_post.content"/>
             </div>
             <hr />
