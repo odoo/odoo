@@ -985,7 +985,7 @@
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         build_snippet: function($target) {
-            var id = "myCarousel" + $("body .carousel").size();
+            var id = "myCarousel" + $("body .carousel").length;
             $target.attr("id", id);
             $target.find(".carousel-control").attr("href", "#"+id);
         },
@@ -1007,8 +1007,9 @@
         },
         on_add: function (e) {
             e.preventDefault();
+            this.$target.find('.carousel-control').removeClass("hidden");
             var $inner = this.$target.find('.carousel-inner');
-            var cycle = $inner.find('.item').size();
+            var cycle = $inner.find('.item').length;
             $inner.find('.item.active').clone().removeClass('active').appendTo($inner);
             this.$target.carousel(cycle);
             this.set_options_background();
@@ -1017,13 +1018,18 @@
         on_remove: function (e) {
             e.preventDefault();
             var $inner = this.$target.find('.carousel-inner');
-            if ($inner.find('.item').size() > 1) {
+            var nb = $inner.find('.item').length;
+            if (nb > 1) {
                 $inner
                     .find('.item.active').remove().end()
                     .find('.item:first').addClass('active');
                 this.$target.carousel(0);
                 this.set_options_background();
                 this.set_options_style();
+            }
+            console.log(nb);
+            if (nb <= 1) {
+                this.$target.find('.carousel-control').addClass("hidden");
             }
         },
         onFocus: function () {
