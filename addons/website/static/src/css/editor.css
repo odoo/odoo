@@ -116,23 +116,12 @@ table.editorbar-panel td.selected {
   user-select: auto;
 }
 
-.modal .existing-attachments a.thumbnail {
-  position: relative;
+.modal-dialog.select-image {
+  width: 80%;
 }
-.modal .existing-attachments a.thumbnail.selected:before {
-  text-decoration: none;
-  font-size: 150%;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: #21dc0f;
-  content: "✔";
-  height: 2em;
-  width: 2em;
-  text-align: center;
-  padding: 5px;
-  border-radius: 4px 0;
-  position: absolute;
-  top: 0;
-  left: 0;
+
+.modal .existing-attachments .pager {
+  margin: 0;
 }
 
 .modal .image-preview {
@@ -149,6 +138,10 @@ table.editorbar-panel td.selected {
   box-shadow: 0px 10px 10px -10px black inset;
   z-index: 1010;
   overflow: hidden;
+  height: 110px;
+}
+#oe_snippets:hover {
+  height: auto;
 }
 #oe_snippets .scroll {
   white-space: nowrap;
@@ -238,6 +231,10 @@ table.editorbar-panel td.selected {
 }
 
 /* ---- SNIPPETS DROP ZONES ---- */
+.col-md-12 {
+  float: left;
+}
+
 .oe_drop_zone.oe_insert {
   display: block;
   height: 48px;
@@ -248,7 +245,7 @@ table.editorbar-panel td.selected {
   position: absolute;
   z-index: 1000;
 }
-.oe_drop_zone.oe_insert:before {
+.oe_drop_zone.oe_insert:not(.oe_vertical):before {
   content: "";
   display: block;
   border-top: dashed 2px rgba(209, 178, 255, 0.72);
@@ -259,53 +256,46 @@ table.editorbar-panel td.selected {
   border-top: dashed 2px rgba(116, 255, 161, 0.72);
 }
 .oe_drop_zone.oe_insert.oe_vertical {
-  width: 16px;
-  display: inline-block;
-  position: absolute;
-  margin: 0px !important;
+  width: 48px;
+  float: left;
+  position: relative;
+  margin: 0px -24px !important;
 }
 .oe_drop_zone.oe_insert.oe_overlay {
   background: rgba(153, 0, 255, 0.17);
   border-radius: 3px;
 }
 
-.oe_drop_zone {
+.oe_drop_zone, .oe_drop_zone_style {
   background: rgba(153, 0, 255, 0.17);
   border-radius: 3px;
 }
-.oe_drop_zone.oe_hover {
+.oe_drop_zone.oe_hover, .oe_drop_zone_style.oe_hover {
   background: rgba(0, 255, 133, 0.22);
   z-index: 1001;
 }
 
+.oe_drop_zone_style {
+  color: white;
+  height: 48px;
+  margin-bottom: 32px;
+}
+
 /* ---- SNIPPET MANIPULATOR ---- */
 .oe_overlay {
-  display: block;
+  display: none;
   position: absolute;
   background: transparent;
   border-radius: 3px;
-  opacity: 0;
   transition: opacity 100ms linear;
   box-sizing: border-box;
   pointer-events: none;
 }
-.oe_overlay.oe_hover {
-  opacity: 1;
-  cursor: pointer;
-}
-.oe_overlay.oe_selected, .oe_overlay.oe_active {
-  opacity: 1;
+.oe_overlay.oe_active {
+  display: block;
   border-style: dashed;
   border-width: 1px;
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
-}
-.oe_overlay.oe_selected {
-  border-color: rgba(0, 153, 255, 0.5);
-}
-.oe_overlay .oe_handle {
-  display: none !important;
-}
-.oe_overlay.oe_active {
   border-color: rgba(153, 0, 255, 0.5);
 }
 .oe_overlay.oe_active .oe_handle {
@@ -349,38 +339,24 @@ table.editorbar-panel td.selected {
   display: inline-block;
 }
 .oe_overlay .oe_overlay_options {
-  display: none;
-  z-index: 1002;
-}
-.oe_overlay .oe_overlay_options .oe_options, .oe_overlay .oe_overlay_options .oe_label, .oe_overlay .oe_overlay_options .oe_move {
   position: absolute;
-  display: block;
-  z-index: 1002;
+  width: 100%;
+  text-align: center;
   top: -11px;
+  z-index: 1002;
 }
-.oe_overlay .oe_overlay_options .oe_options {
+.oe_overlay .oe_overlay_options .btn, .oe_overlay .oe_overlay_options a {
   pointer-events: auto;
-  left: -14px;
+  cursor: pointer;
 }
-.oe_overlay .oe_overlay_options .oe_label {
-  top: -8px;
-  right: 6px;
-  background: white;
-  font-size: 75%;
-  color: rgba(153, 0, 255, 0.5);
-  padding: 0 5px;
+.oe_overlay .oe_overlay_options .dropdown {
+  display: inline-block;
 }
-.oe_overlay .oe_overlay_options .oe_move {
-  pointer-events: auto;
-  left: 50%;
-}
-.oe_overlay .oe_overlay_options .oe_move .js_box_move {
-  margin-left: -50%;
+.oe_overlay .oe_overlay_options .dropdown-menu {
+  text-align: left;
+  min-width: 180px;
 }
 .oe_overlay .oe_overlay_options .dropdown-menu select, .oe_overlay .oe_overlay_options .dropdown-menu input {
-  display: block;
-}
-.oe_overlay.oe_active .oe_overlay_options {
   display: block;
 }
 
@@ -503,6 +479,22 @@ table.editorbar-panel td.selected {
 .oe_seo_configuration .oe_seo_suggestion {
   cursor: pointer;
 }
+.oe_seo_configuration .oe_seo_keyword {
+  padding: 0.2em 0.4em 0.2em 0.5em;
+  border-radius: 0.4em;
+}
+.oe_seo_configuration .keyword-in-title {
+  background-color: #5cb85c;
+  color: white;
+}
+.oe_seo_configuration .keyword-in-description {
+  background-color: #428bca;
+  color: white;
+}
+.oe_seo_configuration .keyword-in-body {
+  background-color: #5bc0de;
+  color: white;
+}
 
 /* ---- ACE EDITOR ---- */
 .oe_ace_view_editor {
@@ -528,10 +520,16 @@ table.editorbar-panel td.selected {
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
   height: 32px;
+  font-size: 14px;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
+  line-height: normal;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .btn {
   height: 32px;
   padding: 0 4px 0 4px;
+  font-size: 14px;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
+  line-height: normal;
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;

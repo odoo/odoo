@@ -263,6 +263,21 @@ class website(osv.osv):
             html += request.website.render(template, {'object_id': object_id})
         return html
 
+class ir_attachment(osv.osv):
+    _inherit = "ir.attachment"
+    def _website_url_get(self, cr, uid, ids, name, arg, context=None):
+        context = context or {}
+        result = {}
+        for attach in self.browse(cr, uid, ids, context=context):
+            if attach.type=='url':
+                result[attach.id] = attach.url
+            else:
+                result[attach.id] = "/website/attachment/"+str(attach.id)
+        return result
+    _columns = {
+        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
+    }
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
 

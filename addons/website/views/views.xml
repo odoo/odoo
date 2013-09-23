@@ -70,7 +70,7 @@
                                             <span class="icon-bar"></span>
                                             <span class="icon-bar"></span>
                                         </button>
-                                        <a class="navbar-brand" href="/page/website.homepage"><em>Open</em><b>ERP</b></a>
+                                        <a class="navbar-brand" href="/page/website.homepage"><em>Your</em><b>Company</b></a>
                                     </div>
                                     <div class="collapse navbar-collapse navbar-top-collapse">
                                         <ul class="nav navbar-nav navbar-right" id="top_menu">
@@ -187,13 +187,13 @@
 
         <template id="homepage" name="Homepage" page="True">
             <t t-call="website.layout">
-              <div id="wrap" class="oe_structure"></div>
+              <div id="wrap" class="oe_structure oe_empty"></div>
             </t>
         </template>
 
         <template id="default_page">
             <t t-call="website.layout">
-              <div id="wrap" class="oe_structure"></div>
+              <div id="wrap" class="oe_structure oe_empty"></div>
             </t>
         </template>
 
@@ -210,7 +210,7 @@
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
                 <hr />
-                <div class="oe_structure">
+                <div class="oe_structure oe_empty">
                     <div class="container">
                         <h1 class="mt32">404: Page not found!</h1>
                         <p>

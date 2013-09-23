@@ -1,24 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="0">
 
-        <record id="product.product_product_consultant" model="product.product">
-            <field name="website_published" eval="True"/>
-        </record>
-        <record id="product.product_product_1" model="product.product">
-            <field name="website_published" eval="True"/>
-        </record>
-        <record id="product.product_product_2" model="product.product">
-            <field name="website_published" eval="True"/>
-        </record>
         <record id="product.product_product_4" model="product.product">
             <field name="website_published" eval="True"/>
+            <field name="website_product_class">oe_image_full</field>
+            <field name="website_sizex">6</field>
+            <field name="website_sizey">4</field>
+            <field name="website_description" type="html">
+                <section snippet-id="text-image" class="mt16 mb16 dark">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-5 col-md-offset-1 mt64">
+                                <h3>Why you'll love an iPad.</h3>
+                                <p>
+                                    Right from the start, there’s a lot to love about
+                                    iPad. It’s simple yet powerful. Thin and light yet
+                                    full-featured. It can do just about everything and
+                                    be just about anything.
+                                </p><p>
+                                    And because it’s so easy to use, it’s easy to love.
+                                </p>
+                            </div>
+                            <div class="col-md-5 mt16 mb16">
+                                <img class="img img-responsive" src="/website_sale/static/src/img/ipad_why.png"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section snippet-id="image-text" class="mt16 mb16">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-5 col-md-offset-1">
+                                <img class="img img-responsive" src="/website_sale/static/src/img/ipad_experience.png"/>
+                            </div>
+                            <div class="col-md-6 mt64">
+                                <h3>The full iPad experience.</h3>
+                                <h4 class="small">There is less of it, but no less to it.</h4>
+                                <p>
+                                    Everything you love about iPad — the beautiful
+                                    screen, fast and fluid performance, FaceTime and
+                                    iSight cameras, thousands of amazing apps, 10-hour
+                                    battery life* — is everything you’ll love about
+                                    iPad mini, too. And you can hold it in one hand.
+                                </p>
+                                <p>
+                                    <a href="http://openerp.com">Learn more »</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
         </record>
         <record id="product.product_product_5" model="product.product">
             <field name="website_published" eval="True"/>
+            <field name="website_sizex">6</field>
         </record>
         <record id="product.product_product_6" model="product.product">
             <field name="website_published" eval="True"/>
+            <field name="website_product_class">oe_image_full</field>
         </record>
         <record id="product.product_product_7" model="product.product">
             <field name="website_published" eval="True"/>

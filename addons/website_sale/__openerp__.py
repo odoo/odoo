@@ -15,6 +15,8 @@ OpenERP E-Commerce
         'views/website_sale.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
+    ],
+    'demo': [
         'website_sale_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],

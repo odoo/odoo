@@ -35,7 +35,7 @@
             <div class="container mt48 js_website_mail">
                 <div class="row">
                    <div class="col-md-3" id="left_column">
-                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">Add a new Blog</a>
+                        <a t-if="mail_group_id and editable" t-attf-href="/blog/#{ mail_group_id }/new" class="btn btn-default">New Blog Post</a>
                         <div>
                             <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
                                 <div class="col-lg-7">
@@ -44,7 +44,7 @@
                                 <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
                             </form>
                             <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
-                                <input type="hidden" name="email" t-att-value="subscribe"/>
+                                <input type="hidden" name="email" t-att-value="subscribe" style="display: none"/>
                                 <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
                             </form>
                         </div>
@@ -56,11 +56,10 @@
                                 <h3 t-field="blog_id.subject"/>
                                 <div t-field="blog_id.body"/>
                                 <small class="pull-right muted text-right">
-                                    <div t-field="blog_id.author_id"/>
                                     <div t-field="blog_id.date"/>
                                 </small>
                             </div>
-                            <ul class="media-list" id="comment">
+                            <ul class="media-list" id="comment" t-if="not unable_editor">
                                 <li t-foreach="blog_id.child_ids" t-as="comment" class="media">
                                     <div class="media-body">
                                         <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
@@ -72,7 +71,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <form id="post" t-attf-action="/blog/#{ blog_id.res_id }/#{ blog_id.id }/post#post" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
+                            <form id="post" t-if="not unable_editor" t-attf-action="/blog/#{ blog_id.res_id }/#{ blog_id.id }/post#post" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
                                 <textarea rows="4" placeholder="Your comment" class="col-md-7 form-control"></textarea>
                                 <button type="submit" class="btn btn-default">Post your comment</button>
                             </form>
@@ -92,7 +91,6 @@
                                             <a t-if="len(blog.child_ids) > 1" t-attf-href="/blog/#{ blog.res_id }/#{ blog.id }#comment"><t t-esc="len(blog.child_ids)"/> Comments</a>
                                         </small>
                                         <small class="pull-right muted text-right">
-                                            <div t-field="blog.author_id"/>
                                             <div t-field="blog.date"/>
                                         </small>
                                     </div>
@@ -107,6 +105,15 @@
             </div>
           </div>
         </t>
+    </template>
+
+    <template id="blog_author" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="Author">
+        <xpath expr="//div[@t-field='blog_id.date']" position="before">
+            <div t-field="blog_id.author_id"/>
+        </xpath>
+        <xpath expr="//div[@t-field='blog.date']" position="before">
+            <div t-field="blog.author_id"/>
+        </xpath>
     </template>
 
     <template id="blog_history" inherit_id="website_mail.index" inherit_option_id="website_mail.index" name="History">

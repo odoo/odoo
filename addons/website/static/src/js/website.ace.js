@@ -25,9 +25,9 @@
 
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=ace]': 'launch',
+            'click a[data-action=ace]': 'launchAce',
         }),
-        launch: function (e) {
+        launchAce: function (e) {
             e.preventDefault();
             launch();
         },
@@ -164,8 +164,9 @@
             var requests = _.map(toSave, self.saveView);
             $.when.apply($, requests).then(function () {
                 self.reloadPage.call(self);
-            }).fail(function () {
-                self.displayError.call(self);
+            }).fail(function (source, error) {
+                var message = (error.data.arguments[0] === "Access Denied") ? "Access denied: please sign in" : error.message;
+                self.displayError.call(self, message);
             });
         },
         saveView: function (session) {
