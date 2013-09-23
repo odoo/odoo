@@ -175,6 +175,13 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         if t == 'html':
             return _process("".join([etree.tostring(n, encoding='utf-8')
                                    for n in node]), idref)
+        if node.get('file'):
+            import openerp.tools
+            import base64
+            fp = openerp.tools.file_open(node.get('file'))
+            result = base64.b64encode(fp.read())
+            return result
+
         if t == 'file':
             from ..modules import module
             path = node.text.strip()

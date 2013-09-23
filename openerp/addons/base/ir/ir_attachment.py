@@ -44,6 +44,7 @@ class ir_attachment(osv.osv):
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
     """
+    _order = 'id desc'
     def _name_get_resname(self, cr, uid, ids, object, method, context):
         data = {}
         for attachment in self.browse(cr, uid, ids, context=context):
