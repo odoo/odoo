@@ -33,7 +33,6 @@ OpenERP Blog
     'depends': ['knowledge', 'website_mail'],
     'data': [
         'website_blog_data.xml',
-        'website_blog_demo.xml',
         'views/website_blog_classic.xml',
         'views/website_blog_templates.xml',
         'views/res_config.xml',
@@ -43,7 +42,7 @@ OpenERP Blog
         'security/website_mail.xml',
     ],
     'demo': [
-        # 'website_blog_demo.xml'
+        'website_blog_demo.xml'
     ],
     'test': [
         'test/document_page_test00.yml'

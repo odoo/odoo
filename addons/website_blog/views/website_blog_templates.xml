@@ -12,7 +12,7 @@
         </xpath>
     </template>
 
-    <!-- Blog Post -->
+    <!-- Blog Post Summary -->
     <template id="view_blog_post_short" name="Blog Post Short">
         <div class="media-body">
             <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
@@ -31,6 +31,7 @@
         </div>
     </template>
 
+    <!-- Blog Post Complete -->
     <template id="view_blog_post" name="Blog Post">
         <div class="media">
             <div class="media-body">
@@ -124,17 +125,8 @@
         </t>
     </template>
 
-    <template id="blog_author" inherit_id="website_blog.index" inherit_option_id="website_blog.index" name="Author">
-<!--         <xpath expr="//div[@t-field='document_page.create_date']" position="before">
-            <div t-field="document_page.author_id"/>
-        </xpath>
-        <xpath expr="//div[@t-field='blog.create_date']" position="before">
-            <div t-field="blog.author_id"/>
-        </xpath> -->
-    </template>
-
     <!-- Option: archives -->
-    <template id="blog_history" inherit_id="website_blog.index" inherit_option_id="website_blog.index" name="History">
+    <template id="blog_history" inherit_id="website_blog.index" inherit_option_id="website_blog.index" name="Archives">
         <xpath expr="//div[@id='left_column']" position="inside">
             <h4>Archives</h4>
             <ul class="nav nav-pills nav-stacked">
