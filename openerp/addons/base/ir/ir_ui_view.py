@@ -25,6 +25,7 @@ import sys
 import re
 import time
 
+import HTMLParser
 from lxml import etree
 
 from openerp import tools
@@ -667,29 +668,20 @@ class view(osv.osv):
         try:
             id_ = int(id_)
         except ValueError:
-            if '/' not in id_ and '.' not in id_:
+            if '.' not in id_:
                 raise ValueError('Invalid id: %r' % (id_,))
-            s = id_.find('/')
-            s = s if s >= 0 else sys.maxint
-            d = id_.find('.')
-            d = d if d >= 0 else sys.maxint
+            IMD = self.pool['ir.model.data']
+            m, _, n = id_.partition('.')
+            _, id_ = IMD.get_object_reference(cr, uid, m, n)
 
-            if d < s:
-                # xml id
-                IMD = self.pool['ir.model.data']
-                m, _, n = id_.partition('.')
-                _, id_ = IMD.get_object_reference(cr, uid, m, n)
-            else:
-                # path id => read directly on disk
-                # TODO apply inheritence
-                try:
-                    with misc.file_open(id_) as f:
-                        return f.read().decode('utf-8')
-                except Exception:
-                    raise ValueError('Invalid id: %r' % (id_,))
-
-        r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
-        return r['arch']
+        arch = self.read_combined(cr, uid, id_, fields=['arch'], context=context)['arch']
+        arch_tree = etree.fromstring(arch)
+        if 'lang' in context:
+            arch_tree = self.translate_qweb(cr, uid, id_, arch_tree, context['lang'], context)
+        self.distribute_branding(arch_tree)
+        arch = etree.tostring(arch_tree, encoding='utf-8')
+        arch = '<?xml version="1.0" encoding="utf-8"?><tpl>%s</tpl>' % (arch)
+        return arch
 
     def distribute_branding(self, e, branding=None, xpath=None, count=None):
         if e.attrib.get('t-ignore') or e.tag in ('head',):
@@ -715,14 +707,42 @@ class view(osv.osv):
                         count[child.tag] = count.get(child.tag, 0) + 1
                         self.distribute_branding(child, branding_dist, xpath, count)
 
+    def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
+        # TODO: this should be moved in a place before inheritance is applied
+        #       but process() is only called on fields_view_get()
+        Translations = self.pool['ir.translation']
+        h = HTMLParser.HTMLParser()
+        def get_trans(text):
+            if not text or not text.strip():
+                return None
+            text = h.unescape(text.strip())
+            if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
+                return None
+            # if text == 'Our Events':
+            #     from pudb import set_trace;set_trace() ############################## Breakpoint ##############################
+            return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
+
+        if arch.tag not in ['script']:
+            text = get_trans(arch.text)
+            if text:
+                arch.text = arch.text.replace(arch.text.strip(), text)
+            tail = get_trans(arch.tail)
+            if tail:
+                arch.tail = arch.tail.replace(arch.tail.strip(), tail)
+
+            for attr_name in ('title', 'alt', 'placeholder'):
+                attr = get_trans(arch.get(attr_name))
+                if attr:
+                    arch.set(attr_name, attr)
+            for node in arch.iterchildren("*"):
+                self.translate_qweb(cr, uid, id_, node, lang, context)
+        return arch
+
     def render(self, cr, uid, id_or_xml_id, values, context=None):
+        if not context:
+            context = {}
         def loader(name):
-            arch = self.read_template(cr, uid, name, context=context)
-            arch_tree = etree.fromstring(arch)
-            self.distribute_branding(arch_tree)
-            arch = etree.tostring(arch_tree, encoding='utf-8')
-            arch = '<?xml version="1.0" encoding="utf-8"?><tpl>%s</tpl>' % (arch)
-            return arch
+            return self.read_template(cr, uid, name, context=context)
 
         engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
         return engine.render(id_or_xml_id, values)
