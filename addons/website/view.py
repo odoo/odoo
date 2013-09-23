@@ -50,19 +50,100 @@ class view(osv.osv):
                 result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
         return result
 
-    def save(self, cr, uid, model, res_id, field, value, xpath=None, context=None):
-        """ Update the content of a field
+
+
+    def extract_embedded_fields(self, cr, uid, arch, context=None):
+        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
+
+    def convert_embedded_field(self, cr, uid, el, column,
+                               type_override=None, context=None):
+        """ Converts the content of an embedded field to a value acceptable
+        for writing in the column
+
+        :param etree._Element el: embedded field being saved
+        :param fields._column column: column object corresponding to the field
+        :param type type_override: column type to dispatch on instead of the
+                                   column's actual type (for proxy column types
+                                   e.g. relateds)
+        :return: converted value
+        """
+        column_type = type_override or type(column)
+
+        if issubclass(column_type, fields.html):
+            # FIXME: multiple children?
+            return html.tostring(el[0])
+        elif issubclass(column_type, fields.integer):
+            return int(el.text_content())
+        elif issubclass(column_type, fields.float):
+            return float(el.text_content())
+        elif issubclass(column_type, (fields.char, fields.text,
+                                      fields.date, fields.datetime)):
+            return el.text_content()
+        # TODO: fields.selection
+        # TODO: fields.many2one
+        elif issubclass(column_type, fields.function):
+            # FIXME: special-case selection as in get_pg_type?
+            return self.convert_embedded_field(
+                cr, uid, el, column,
+                type_override=getattr(fields, column._type),
+                context=context)
+        # TODO?: fields.many2many, fields.one2many
+        # TODO?: fields.reference
+        else:
+            raise TypeError("Un-convertable column type %s" % column_type)
+
+    def save_embedded_field(self, cr, uid, el, context=None):
+        Model = self.pool[el.get('data-oe-model')]
+        field = el.get('data-oe-field')
+
+        column = Model._all_columns[field].column
+        Model.write(cr, uid, int(el.get('data-oe-id')), {
+            field: self.convert_embedded_field(cr, uid, el, column, context=context)
+        }, context=context)
+
+    def to_field_ref(self, cr, uid, el, context=None):
+        # filter out meta-information inserted in the document
+        attributes = dict((k, v) for k, v in el.items()
+                          if not k.startswith('data-oe-'))
+        attributes['t-field'] = el.get('data-oe-expression')
+
+        out = html.html_parser.makeelement(el.tag, attrib=attributes)
+        out.tail = el.tail
+        return out
+
+    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
+        arch = replacement
+        if section_xpath:
+            previous_arch = etree.fromstring(self.browse(cr, uid, view_id, context=context).arch.encode('utf-8'))
+            # ensure there's only one match
+            [previous_section] = previous_arch.xpath(section_xpath)
+            previous_section.getparent().replace(previous_section, replacement)
+            arch = previous_arch
+        return arch
+
+    def save(self, cr, uid, res_id, value, xpath=None, context=None):
+        """ Update a view section. The view section may embed fields to write
 
         :param str model:
         :param int res_id:
         :param str xpath: valid xpath to the tag to replace
         """
-        model_obj = self.pool.get(model)
-        if xpath:
-            origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
-            origin_tree = etree.fromstring(origin.encode('utf-8'))
-            zone = origin_tree.xpath(xpath)[0]
-            zone.getparent().replace(zone, html.fromstring(value))
-            value = etree.tostring(origin_tree, encoding='utf-8')
+        res_id = int(res_id)
 
-        model_obj.write(cr, uid, res_id, {field: value}, context=context)
+        arch_section = html.fromstring(value)
+
+        if xpath is None:
+            # value is an embedded field on its own, not a view section
+            self.save_embedded_field(cr, uid, arch_section, context=context)
+            return
+
+        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
+            self.save_embedded_field(cr, uid, el, context=context)
+
+            # transform embedded field back to t-field
+            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
+
+        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
+        self.write(cr, uid, res_id, {
+            'arch': etree.tostring(arch, encoding='utf-8').decode('utf-8')
+        }, context=context)

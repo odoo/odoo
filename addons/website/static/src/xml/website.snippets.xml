@@ -111,54 +111,49 @@
     <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         
         <!-- editor bar to display inside the top edit bar -->
-        <li class='oe_snippet_options'>
-            <a class="carousel-style">
-                <select class="form-control" name="carousel-size">
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="big">Big</option>
-                </select>
-            </a>
+        <li class='oe_snippet_options dropdown-submenu'>
+            <a tabindex="-1" href="#">Size</a>
+            <ul class="dropdown-menu" name="carousel-size">
+                <li data-value="oe_small"><a>Small</a></li>
+                <li data-value="oe_medium"><a>Medium</a></li>
+                <li data-value="oe_big"><a>Big</a></li>
+            </ul>
         </li>
         <li class="divider"></li>
         <li class='oe_snippet_options'>
             <a href="#" class="button js_add">Add Slide</a>
         </li>
+        <li class="oe_snippet_options dropdown-submenu">
+            <a tabindex="-1" href="#">Background</a>
+            <ul class="dropdown-menu" name="carousel-background">
+                <li data-value="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                <li data-value="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                <li data-value="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                <li data-value="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+                <li data-value="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                <li data-value="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+                <li data-value="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                <li data-value="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                <li data-value="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                <li data-value="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+                <li data-value="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+                <li data-value="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                <li data-value="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+                <li data-value="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+                <li data-value="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                <li class="oe_custom_bg"><b></b></li>
+            </ul>
+        </li>
+        <li class='oe_snippet_options dropdown-submenu'>
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu" name="carousel-style">
+                <li data-value="text_only"><a>Text Only</a></li>
+                <li data-value="image_text"><a>Image - Text</a></li>
+                <li data-value="text_image"><a>Text - Image</a></li>
+            </ul>
+        </li>
         <li class='oe_snippet_options'>
             <a href="#" class="button js_remove">Remove Slide</a>
-        </li>
-        <li class='oe_snippet_options'>
-            <a class="carousel-background">
-                Background
-                <select class="form-control" name="carousel-background">
-                    <option value="/website/static/src/img/banner/aqua.jpg">Aqua</option>
-                    <option value="/website/static/src/img/banner/baby_blue.jpg">Baby Blue</option>
-                    <option value="/website/static/src/img/banner/black.jpg">Black</option>
-                    <option value="/website/static/src/img/banner/business_guy.jpg">Business Guy</option>
-                    <option value="/website/static/src/img/banner/color_splash.jpg">Color Splash</option>
-                    <option value="/website/static/src/img/banner/flower_field.jpg">Flowers Field</option>
-                    <option value="/website/static/src/img/banner/greenfields.jpg">Greenfields</option>
-                    <option value="/website/static/src/img/banner/landscape.jpg">Landscape</option>
-                    <option value="/website/static/src/img/banner/mango.jpg">Mango</option>
-                    <option value="/website/static/src/img/banner/mountains.jpg">Mountains</option>
-                    <option value="/website/static/src/img/banner/orange_red.jpg">Orange Red</option>
-                    <option value="/website/static/src/img/banner/flower.jpg">Purple</option>
-                    <option value="/website/static/src/img/banner/velour.jpg">Velour</option>
-                    <option value="/website/static/src/img/banner/wood.jpg">Wood</option>
-                    <option value="/website/static/src/img/banner/yellow_green.jpg">Yellow Green</option>
-                </select>
-                <input class="form-control input-sm" type="text" placeholder="http://...."/>
-            </a>
-        </li>
-        <li class='oe_snippet_options'>
-            <a class="carousel-style">
-                Style
-                <select class="form-control" name="carousel-style">
-                    <option value="text_only">Text Only</option>
-                    <option value="image_text">Image - Text</option>
-                    <option value="text_image">Text - Image</option>
-                </select>
-            </a>
         </li>
 
         <!-- thumbnail to display inside the bottom widget list editor -->
@@ -172,7 +167,8 @@
         <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000">
             <!-- Carousel items -->
             <div class="carousel-inner">
-                <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
+                <div class="item image_text active">
+                    <img src="/website/static/src/img/banner/color_splash.jpg" width="100%" height="100%"/>
                     <div class="container">
                         <div class="carousel-caption content">
                             <h1>Set Your Banner Title</h1>
@@ -188,8 +184,8 @@
                 </div>
             </div>
             <!-- Carousel nav -->
-            <a class="carousel-control left" href="#myCarousel" data-slide="prev" style="width: 10%"></a>
-            <a class="carousel-control right" href="#myCarousel" data-slide="next" style="width: 10%"></a>
+            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-circle-arrow-left"><span class="hidden">.</span></span></a>
+            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-circle-arrow-right"><span class="hidden">.</span></span></a>
         </div>
     </div>
 
@@ -779,7 +775,6 @@
                             <small>John Doe, CEO</small>
                         </blockquote>
                     </div>
-                    <div class="clearfix"/>
                     <div class="col-md-2 col-md-offset-1">
                         <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
                     </div>

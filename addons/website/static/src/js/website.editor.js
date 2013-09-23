@@ -2,11 +2,11 @@
     'use strict';
 
     var website = openerp.website;
+    // $.fn.data automatically parses value, '0'|'1' -> 0|1
+    website.is_editable = $(document.documentElement).data('editable');
 
     website.templates.push('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
-        // $.fn.data automatically parses value, '0'|'1' -> 0|1
-        website.is_editable = $(document.documentElement).data('editable');
         var is_smartphone = $(document.body)[0].clientWidth < 767;
 
         if (website.is_editable && !is_smartphone) {
@@ -21,22 +21,42 @@
         return new website.editor.ImageDialog(editor).appendTo(document.body);
     }
 
+    if (website.is_editable) {
+        // only enable editors manually
+        CKEDITOR.disableAutoInline = true;
+        // EDIT ALL THE THINGS
+        CKEDITOR.dtd.$editable = $.extend(
+            {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+        // Disable removal of empty elements on CKEDITOR activation. Empty
+        // elements are used for e.g. support of FontAwesome icons
+        CKEDITOR.dtd.$removeEmpty = {};
+    }
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
-            requires: 'link,image',
+//            requires: 'link,image',
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
-                    if (evt.data.dialog === 'link') {
-                        delete evt.data.dialog;
-                        link_dialog(editor);
-                    } else if(evt.data.dialog === 'image') {
-                        delete evt.data.dialog;
+                    var element = evt.data.element;
+                    if (element.is('img')
+                            && !element.data('cke-realelement')
+                            && !element.isReadOnly()
+                            && (element.data('oe-model') !== 'ir.ui.view')) {
                         image_dialog(editor);
+                        return;
                     }
-                    // priority should be smaller than dialog (999) but bigger
-                    // than link or image (default=10)
+
+                    element = get_selected_link(editor) || evt.data.element;
+                    if (element.isReadOnly()
+                        || !element.is('a')
+                        || element.data('oe-model')) {
+                        return;
+                    }
+
+                    editor.getSelection().selectElement(element);
+                    link_dialog(editor);
                 }, null, null, 500);
 
+                //noinspection JSValidateTypes
                 editor.addCommand('link', {
                     exec: function (editor, data) {
                         link_dialog(editor);
@@ -45,6 +65,7 @@
                     canUndo: false,
                     editorFocus: true,
                 });
+                //noinspection JSValidateTypes
                 editor.addCommand('image', {
                     exec: function (editor, data) {
                         image_dialog(editor);
@@ -53,6 +74,21 @@
                     canUndo: false,
                     editorFocus: true,
                 });
+
+                editor.ui.addButton('Link', {
+                    label: 'Link',
+                    command: 'link',
+                    toolbar: 'links,10',
+                    icon: '/website/static/lib/ckeditor/plugins/link/icons/link.png',
+                });
+                editor.ui.addButton('Image', {
+                    label: 'Image',
+                    command: 'image',
+                    toolbar: 'insert,10',
+                    icon: '/website/static/lib/ckeditor/plugins/image/icons/image.png',
+                });
+
+                editor.setKeystroke(CKEDITOR.CTRL + 76 /*L*/, 'link');
             }
         });
         CKEDITOR.plugins.add( 'tablebutton', {
@@ -94,6 +130,7 @@
                         }).on('click', 'td', function (e) {
                             var $e = $(e.target);
 
+                            //noinspection JSPotentiallyInvalidConstructorUsage
                             var table = new CKEDITOR.dom.element(
                                 $(openerp.qweb.render('website.editor.table', {
                                     rows: $e.closest('tr').index() + 1,
@@ -102,6 +139,7 @@
 
                             editor.insertElement(table);
                             setTimeout(function () {
+                                //noinspection JSPotentiallyInvalidConstructorUsage
                                 var firstCell = new CKEDITOR.dom.element(table.$.rows[0].cells[0]);
                                 var range = editor.createRange();
                                 range.moveToPosition(firstCell, CKEDITOR.POSITION_AFTER_START);
@@ -111,6 +149,20 @@
 
                         block.element.getDocument().getBody().setStyle('overflow', 'hidden');
                         CKEDITOR.ui.fire('ready', this);
+                    },
+                });
+            }
+        });
+
+        CKEDITOR.plugins.add('oeref', {
+            requires: 'widget',
+
+            init: function (editor) {
+                editor.widgets.add('oeref', {
+                    editables: { text: '*' },
+
+                    upcast: function (el) {
+                        return el.attributes['data-oe-type'];
                     },
                 });
             }
@@ -204,74 +256,51 @@
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            var $editables = $('[data-oe-model]')
-                    .not('link, script')
-                    // FIXME: propagation should make "meta" blocks non-editable in the first place...
-                    .not('.oe_snippets,.oe_snippet, .oe_snippet *')
-                    .prop('contentEditable', true)
-                    .addClass('oe_editable');
-            var $rte_ables = $editables.not('[data-oe-type]');
-            var $raw_editables = $editables.not($rte_ables);
-
-            // temporary: on raw editables, links are still active so an
-            // editable link, containing a link or within a link becomes very
-            // hard to edit. Disable linking for these.
-            $raw_editables.parents('a')
-                .add($raw_editables.find('a'))
-                .on('click', function (e) {
-                    e.preventDefault();
-                });
-
-            this.rte.start_edition($rte_ables);
-            $raw_editables.each(function () {
-                observer.observe(this, OBSERVER_CONFIG);
-            }).one('content_changed', function () {
-                $(this).addClass('oe_dirty');
-                self.rte_changed();
-            });
+            this.rte.start_edition();
         },
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);
         },
         save: function () {
             var self = this;
-            var defs = [];
+
             observer.disconnect();
-            $('.oe_dirty').each(function (i, v) {
-                var $el = $(this);
-                // TODO: Add a queue with concurrency limit in webclient
-                // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
-                var def = self.saving_mutex.exec(function () {
-                    return self.saveElement($el).then(function () {
-                        $el.removeClass('oe_dirty');
-                    }).fail(function () {
-                        var data = $el.data();
-                        console.error(_.str.sprintf('Could not save %s#%d#%s', data.oeModel, data.oeId, data.oeField));
+            var editor = this.rte.editor;
+            var root = editor.element.$;
+            editor.destroy();
+            // FIXME: select editables then filter by dirty?
+            var defs = this.rte.fetch_editables(root)
+                .removeClass('oe_editable cke_focus')
+                .removeAttr('contentEditable')
+                .filter('.oe_dirty')
+                .map(function () {
+                    var $el = $(this);
+                    // TODO: Add a queue with concurrency limit in webclient
+                    // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
+                    return self.saving_mutex.exec(function () {
+                        return self.saveElement($el)
+                            .fail(function () {
+                                var data = $el.data();
+                                console.error(_.str.sprintf('Could not save %s(%d).%s', data.oeModel, data.oeId, data.oeField));
+                            });
                     });
-                });
-                defs.push(def);
-            });
+                }).get();
             return $.when.apply(null, defs).then(function () {
                 window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
             });
         },
+        /**
+         * Saves an RTE content, which always corresponds to a view section (?).
+         */
         saveElement: function ($el) {
-            var data = $el.data();
-            var html = $el.html();
-            var xpath = data.oeXpath;
-            if (xpath) {
-                var $w = $el.clone();
-                $w.removeClass('oe_dirty');
-                _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
-                $w
-                    .removeClass('oe_editable')
-                    .prop('contentEditable', false);
-                html = $w.wrap('<div>').parent().html();
-            }
+            $el.removeClass('oe_dirty');
+            var markup = $el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
-                args: [data.oeModel, data.oeId, data.oeField, html, xpath, website.get_context()]
+                args: [$el.data('oe-id'), markup,
+                       $el.data('oe-xpath') || null,
+                       website.get_context()],
             });
         },
         cancel: function () {
@@ -294,16 +323,37 @@
 
         start_edition: function ($elements) {
             var self = this;
-            $elements
-                .not('span, [data-oe-type]')
+            // create a single editor for the whole page
+            var root = document.getElementById('wrapwrap');
+            $(root).attr('data-cke-editable', 'true')
+                    .on('dragstart', 'img', function (e) {
+                        e.preventDefault();
+                    });
+            this.editor = CKEDITOR.inline(root, self._config());
+            this.editor.on('instanceReady', function () {
+                // ckeditor set root to editable, disable it (only inner
+                // sections are editable)
+                // FIXME: are there cases where the whole editor is editable?
+                root.contentEditable = false;
+
+                self.setup_editables(root);
+            });
+        },
+
+        setup_editables: function (root) {
+            // selection of editable sub-items was previously in
+            // EditorBar#edit, but for some unknown reason the elements were
+            // apparently removed and recreated (?) at editor initalization,
+            // and observer setup was lost.
+            var self = this;
+            // setup dirty-marking for each editable element
+            this.fetch_editables(root)
+                .prop('contentEditable', true)
+                .addClass('oe_editable')
                 .each(function () {
                     var node = this;
+                    observer.observe(node, OBSERVER_CONFIG);
                     var $node = $(node);
-                    var editor = CKEDITOR.inline(this, self._config());
-                    editor.on('instanceReady', function () {
-                        self.trigger('instanceReady');
-                        observer.observe(node, OBSERVER_CONFIG);
-                    });
                     $node.one('content_changed', function () {
                         $node.addClass('oe_dirty');
                         self.trigger('change');
@@ -311,15 +361,37 @@
                 });
         },
 
+        fetch_editables: function (root) {
+            return $(root).find('[data-oe-model]')
+                // FIXME: propagation should make "meta" blocks non-editable in the first place...
+                .not('link, script')
+                .not('.oe_snippet_editor')
+                .filter(function () {
+                    var $this = $(this);
+                    // keep view sections and fields which are *not* in
+                    // view sections for toplevel editables
+                    return $this.data('oe-model') === 'ir.ui.view'
+                       || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
+                });
+        },
+
         _current_editor: function () {
             return CKEDITOR.currentInstance;
         },
         _config: function () {
-            var removed_plugins = [
-                    // remove custom context menu
-                    'contextmenu,tabletools,liststyle',
-                    // magicline captures mousein/mouseout => draggable does not work
-                    'magicline'
+            // base plugins minus
+            // - magicline (captures mousein/mouseout -> breaks draggable)
+            // - contextmenu & tabletools (disable contextual menu)
+            // - bunch of unused plugins
+            var plugins = [
+                'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+                'clipboard', 'colorbutton', 'colordialog', 'dialogadvtab',
+                'elementspath', 'enterkey', 'entities', 'filebrowser',
+                'find', 'floatingspace','format', 'htmlwriter', 'iframe',
+                'indentblock', 'indentlist', 'justify',
+                'list', 'pastefromword', 'pastetext', 'preview',
+                'removeformat', 'resize', 'save', 'selectall', 'stylescombo',
+                'tab', 'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
             ];
             return {
                 // FIXME
@@ -327,8 +399,9 @@
                 // Disable auto-generated titles
                 // FIXME: accessibility, need to generate user-sensible title, used for @title and @aria-label
                 title: false,
-                removePlugins: removed_plugins.join(','),
+                plugins: plugins.join(','),
                 uiColor: '',
+                // FIXME: currently breaks RTE?
                 // Ensure no config file is loaded
                 customConfig: '',
                 // Disable ACF
@@ -337,7 +410,7 @@
                 autoParagraph: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -419,10 +492,7 @@
                     return;
                 }
 
-                $target
-                    .addClass('active')
-                    .siblings().removeClass('active')
-                    .addBack().removeClass('has-error');
+                this.changed($target.find('.url-source'));
             },
             'click button.remove': 'remove_link',
         }),
@@ -455,7 +525,11 @@
             var editor = this.editor;
             // same issue as in make_link
             setTimeout(function () {
-                editor.execCommand('unlink');
+                editor.removeStyle(new CKEDITOR.style({
+                    element: 'a',
+                    type: CKEDITOR.STYLE_INLINE,
+                    alwaysRemoveElement: true,
+                }));
             }, 0);
             this.close();
         },
@@ -484,11 +558,13 @@
                 var range = selection.getRanges(true)[0];
 
                 if (range.collapsed) {
+                    //noinspection JSPotentiallyInvalidConstructorUsage
                     var text = new CKEDITOR.dom.text(label || url);
                     range.insertNode(text);
                     range.selectNodeContents(text);
                 }
 
+                //noinspection JSPotentiallyInvalidConstructorUsage
                 new CKEDITOR.style({
                     type: CKEDITOR.STYLE_INLINE,
                     element: 'a',
@@ -506,7 +582,8 @@
             var self = this, _super = this._super.bind(this);
             var $e = this.$('.list-group-item.active .url-source');
             var val = $e.val();
-            if (!val) {
+            if (!val || !$e[0].checkValidity()) {
+                // FIXME: error message
                 $e.closest('.form-group').addClass('has-error');
                 return;
             }
@@ -534,10 +611,15 @@
             if (!href) { return; }
 
             var match, $control;
-            if (match = /(mailto):(.+)/.exec(href)) {
-                $control = this.$('input.email-address').val(match[2]);
-            } else if(href in this.pages) {
+            if (match = /mailto:(.+)/.exec(href)) {
+                $control = this.$('input.email-address').val(match[1]);
+            } else if (href in this.pages) {
                 $control = this.$('select.existing').val(href);
+            } else if (match = /\/page\/(.+)/.exec(href)) {
+                var actual_href = '/page/website.' + match[1];
+                if (actual_href in this.pages) {
+                    $control = this.$('select.existing').val(actual_href);
+                }
             }
             if (!$control) {
                 $control = this.$('input.url').val(href);
@@ -550,23 +632,17 @@
         },
         changed: function ($e) {
             this.$('.url-source').not($e).val('');
+            $e.closest('.list-group-item')
+                .addClass('active')
+                .siblings().removeClass('active')
+                .addBack().removeClass('has-error');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
          * if the editor is set directly on a link it will thus not work.
          */
         get_selected_link: function () {
-            var sel = this.editor.getSelection(),
-                el = sel.getSelectedElement();
-            if (el && el.is('a')) { return el; }
-
-            var range = sel.getRanges(true)[0];
-            if (!range) { return null; }
-
-            range.shrink(CKEDITOR.SHRINK_TEXT);
-            return this.editor.elementPath(range.getCommonAncestor())
-                              .contains('a');
-
+            return get_selected_link(this.editor);
         },
         fetch_pages: function () {
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -768,6 +844,25 @@
         },
     });
 
+    function get_selected_link(editor) {
+        var sel = editor.getSelection(),
+            el = sel.getSelectedElement();
+        if (el && el.is('a')) { return el; }
+
+        var range = sel.getRanges(true)[0];
+        if (!range) { return null; }
+
+        range.shrink(CKEDITOR.SHRINK_TEXT);
+        var commonAncestor = range.getCommonAncestor();
+        var viewRoot = editor.elementPath(commonAncestor).contains(function (element) {
+            return element.data('oe-model') === 'ir.ui.view'
+        });
+        if (!viewRoot) { return null; }
+        // if viewRoot is the first link, don't edit it.
+        return new CKEDITOR.dom.elementPath(commonAncestor, viewRoot)
+                .contains('a', true);
+    }
+
 
     var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var OBSERVER_CONFIG = {
@@ -783,7 +878,7 @@
         //       will not mark dirty on attribute changes (@class, img/@src,
         //       a/@href, ...)
         _(mutations).chain()
-                .filter(function (m) {
+            .filter(function (m) {
                 switch(m.type) {
                 case 'attributes': // ignore .cke_focus being added or removed
                     // if attribute is not a class, can't be .cke_focus change

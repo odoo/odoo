@@ -6,11 +6,12 @@
             <field name="public">public</field>
             <field name="description">Job Posts on your website</field>
         </record>
-        <template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
-            <xpath expr="//body/footer//div[@name='info']/ul" position="inside">
-                <li><a href="/jobs">Jobs</a></li>
-            </xpath>
-        </template>
+
+	<template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
+	    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+		<li><a href="/jobs">Jobs</a></li>
+	    </xpath>
+    	</template>
 
         <template id="index" name="Jobs" page="True">
             <t t-call="website.layout">

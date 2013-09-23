@@ -19,7 +19,4 @@ OpenERP Website CMS
         'website_view.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [
-        'website_demo.xml'
-    ],
 }
