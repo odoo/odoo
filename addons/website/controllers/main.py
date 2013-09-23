@@ -160,6 +160,44 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
+    @website.route('/website/get_view_translations', type='json', auth='admin')
+    def get_view_translations(self, xml_id, optional=False):
+        view = request.registry.get("ir.ui.view")
+        views = view._views_get(request.cr, request.uid, xml_id, request.context)
+        return []
+
+    @website.route('/website/set_translations', type='json', auth='admin')
+    def set_translations(self, data, lang):
+        irt = request.registry.get('ir.translation')
+        for view_id, trans in data.items():
+            view_id = int(view_id)
+            for t in trans:
+                initial_content = t['initial_content'].strip()
+                new_content = t['new_content'].strip()
+                old_trans = irt.search_read(
+                    request.cr, request.uid,
+                    [
+                        ('type', '=', 'view'),
+                        ('res_id', '=', view_id),
+                        ('lang', '=', lang),
+                        ('src', '=', initial_content),
+                    ])
+                if old_trans:
+                    vals = {'value': new_content}
+                    irt.write(request.cr, request.uid, [old_trans[0]['id']], vals)
+                else:
+                    new_trans = {
+                        'name': 'website',
+                        'res_id': view_id,
+                        'lang': lang,
+                        'type': 'view',
+                        'source': initial_content,
+                        'value': new_content,
+                    }
+                    irt.create(request.cr, request.uid, new_trans)
+        irt._get_source.clear_cache(irt) # FIXME: find why ir.translation does not invalidate
+        return True
+
     #  # FIXME: auth, anybody can upload an attachment if URL known/found
     @website.route('/website/attach', type='http', auth='admin')
     def attach(self, func, upload):
