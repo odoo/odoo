@@ -119,9 +119,7 @@
                                 </a>
                                 <!-- This should be an option -->
                                 <div t-if="product.description_sale" class="text-muted oe_subdescription">
-
-                                    <!-- TODO: replace by a smart t-field on field.text: description_sale -->
-                                    <small t-raw="product.description_sale.replace('\n','&lt;br/&gt;') "/>
+                                    <div id="product_description" t-att-data-name="product.id"/>
                                 </div>
                                 <div>
                                     <b>
@@ -132,9 +130,7 @@
                                         </t>
                                         <t t-esc="product.product_variant_ids[0].price" /> €
                                     </b>
-                                    <a t-attf-href="./add_cart/?product_id=#{ product.id }">
-                                        <span class="icon-shopping-cart"/>
-                                    </a>
+                                    <span id="add_to_cart" t-att-data-name="product.id"/>
                                 </div>
                             </div>
 
@@ -155,6 +151,26 @@
               <div class="oe_structure mb32"/>
             </div>
         </t>
+    </template>
+
+    <!-- Product Description-->
+
+    <template id="product_description" inherit_option_id="website_sale.products" name="Product Description">
+        <xpath expr="//div[@id='product_description']" position="replace">
+            <small>
+                <t t-field="product.description_sale"/>
+            </small>
+        </xpath>
+    </template>
+
+    <!-- Add to cart button-->
+
+    <template id="add_basket" inherit_option_id="website_sale.products" name="Add to Cart">
+        <xpath expr="//span[@id='add_to_cart']" position="replace">
+            <a t-attf-href="./add_cart/?product_id=#{ product.id }">
+                <span class="icon-shopping-cart"/>
+            </a>
+        </xpath>
     </template>
 
     <!-- product --> 
