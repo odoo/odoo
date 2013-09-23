@@ -35,7 +35,7 @@ PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif'
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
-    @website.route('/', type='http', auth="admin")
+    @website.route('/', type='http', auth="admin", multilang=True)
     def index(self, **kw):
         return self.page("website.homepage")
 

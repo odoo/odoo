@@ -15,6 +15,7 @@
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
                       t-att-data-editable="'1' if editable else '0'"
+                      t-att-data-translatable="'1' if translatable else '0'"
                       t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
@@ -49,11 +50,20 @@
                         </t>
 
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
-                        <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+
+                        <t t-if="editable">
+                            <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
+                            <t t-if="not translatable">
+                                <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
+                                <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+                            </t>
+                            <t t-if="translatable">
+                                <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+                            </t>
+                        </t>
+
                         <t t-raw="head or ''"/>
                         <t t-call="website.theme"/>
 

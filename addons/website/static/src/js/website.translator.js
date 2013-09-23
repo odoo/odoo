@@ -5,36 +5,36 @@
     website.templates.push('/website/static/src/xml/website.translator.xml');
 
     website.EditorBar.include({
-        events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=js_website_translator]': function (ev) {
-                var self = this;
-                ev.preventDefault();
-                if (!localStorage['website_translator_nodialog']) {
-                    var dialog = new website.TranslatorDialog();
-                    dialog.appendTo($(document.body));
-                    dialog.on('activate', this, function () {
-                        dialog.$el.modal('hide');
-                        this.translateMode();
-                    });
-                } else {
-                    this.translateMode();
-                }
-            },
-        }),
-        temporaryHack: function() {
-            // TODO: refactor once xmo's feature branch is merged
-            debugger
-            this.$buttons.edit.prop('disabled', true);
+        start: function () {
+            var self = this;
+            return this._super.apply(this, arguments).then(function () {
+                // TODO: refactor once xmo's feature branch is merged
+                //       and make t-field's work as well as text translation
+                self.$('button[data-action=edit]').text("Translate");
+                self.$('[data-action=snippet]').hide();
+                self.$('#customize-menu-button').hide();
+            });
+        },
+        edit: function () {
+            var self = this;
+            if (!localStorage['website_translator_nodialog']) {
+                var dialog = new website.TranslatorDialog();
+                dialog.appendTo($(document.body));
+                dialog.on('activate', this, function () {
+                    dialog.$el.modal('hide');
+                    this.translate();
+                });
+            } else {
+                this.translate();
+            }
+        },
+        translate: function () {
+            var self = this;
+            // this.edit();
             this.$('#website-top-view').hide();
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
-            this.$el.find('[data-action=snippet]').hide();
-            this.save = this.saveTranslations;
-        },
-        translateMode: function () {
-            var self = this;
-            this.temporaryHack();
-            // this.edit(); -- Will need a translation mode
+
             this.translations = null;
             openerp.jsonRpc('/website/get_view_translations', 'call', {
                 'xml_id': $(document.documentElement).data('view-xmlid'),
@@ -88,8 +88,9 @@
             node.contentEditable = true;
             $(node).data('initial_content', node.childNodes[0].data);
         },
-        saveTranslations: function () {
+        save: function () {
             var trans = {};
+            // this._super.apply(this, arguments);
             $('.oe_translatable_text.oe_dirty').each(function () {
                 var $node = $(this);
                 var text = $node.text();
