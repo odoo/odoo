@@ -1440,6 +1440,7 @@ class account_invoice_line(osv.osv):
 
     _name = "account.invoice.line"
     _description = "Invoice Line"
+    _order = "invoice_id,sequence,id"
     _columns = {
         'name': fields.text('Description', required=True),
         'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
@@ -1476,6 +1477,7 @@ class account_invoice_line(osv.osv):
         'discount': 0.0,
         'price_unit': _price_unit_default,
         'account_id': _default_account_id,
+        'sequence': 10,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

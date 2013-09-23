@@ -36,13 +36,13 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': ['gengo_sync_schedular_data.xml'],
-    'update_xml': [
+    'data': [
+        'gengo_sync_schedular_data.xml',
         'ir_translation.xml',
         'res_company_view.xml',
         'wizard/base_gengo_translations_view.xml',
-           ],
-    'demo_xml': [],
+    ],
+    'demo': [],
     'test': [],
     'installable': True,
     'auto_install': False,

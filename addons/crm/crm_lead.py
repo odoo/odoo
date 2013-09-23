@@ -253,6 +253,8 @@ class crm_lead(format_address, osv.osv):
                                 multi='day_close', type="float", store=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
+        # Messaging and marketing
+        'message_bounce': fields.integer('Bounce'),
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
@@ -296,7 +298,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
     }
 
     _sql_constraints = [
@@ -634,7 +636,7 @@ class crm_lead(format_address, osv.osv):
         # Merge notifications about loss of information
         opportunities = [highest]
         opportunities.extend(opportunities_rest)
-        self._merge_notify(cr, uid, highest, opportunities, context=context)
+        self._merge_notify(cr, uid, highest.id, opportunities, context=context)
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('section_id'):
             section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)

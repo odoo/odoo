@@ -38,6 +38,7 @@ associated to every resource. It also manages the leaves of every resource.
     'depends': ['process'],
     'data': [
         'security/ir.model.access.csv',
+        'security/resource_security.xml',
         'resource_view.xml',
     ],
     'demo': ['resource_demo.xml'],
