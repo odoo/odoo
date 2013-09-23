@@ -450,7 +450,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // it will check its validity then return an object containing various
         // information about the ean.
         // most importantly : 
-        // - ean    : the ean
+        // - code    : the ean
         // - type   : the type of the ean: 
         //      'price' |  'weight' | 'unit' | 'cashier' | 'client' | 'discount' | 'error'
         //
@@ -460,13 +460,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // - unit   : if the encoded value has a unit, it will be put there. 
         //            not to be confused with the 'unit' type, which represent an unit of a 
         //            unique product
+        // - base_code : the ean code with all the encoding parts set to zero; the one put on
+        //               the product in the backend
 
         parse_ean: function(ean){
             var parse_result = {
-                type:'unknown', // 
+                encoding: 'ean13',
+                type:'unknown',  
                 prefix:'',
-                ean:ean,
-                base_ean: ean,
+                code:ean,
+                base_code: ean,
                 id:'',
                 value: 0,
                 unit: 'none',
@@ -487,13 +490,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 parse_result.type = 'error';
             } else if( match_prefix(this.price_prefix_set,'price')){
                 parse_result.id = ean.substring(0,7);
-                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.base_code = this.sanitize_ean(ean.substring(0,7));
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = 'euro';
             } else if( match_prefix(this.weight_prefix_set,'weight')){
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/1000.0;
-                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.base_code = this.sanitize_ean(ean.substring(0,7));
                 parse_result.unit = 'Kg';
             } else if( match_prefix(this.client_prefix_set,'client')){
                 parse_result.id = ean.substring(0,7);
@@ -502,7 +505,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 parse_result.id = ean.substring(0,7);
             } else if( match_prefix(this.discount_prefix_set,'discount')){
                 parse_result.id    = ean.substring(0,7);
-                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.base_code = this.sanitize_ean(ean.substring(0,7));
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = '%';
             } else {
@@ -512,9 +515,19 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             return parse_result;
         },
-
-        on_ean: function(ean){
-            var parse_result = this.parse_ean(ean);
+        
+        scan: function(type,code){
+            console.log('scan',type,code);
+            if (type === 'ean13'){
+                var parse_result = this.parse_ean(code);
+            }else if(type === 'reference'){
+                var parse_result = {
+                    encoding: 'reference',
+                    type: 'unit',
+                    code: code,
+                    prefix: '',
+                };
+            }
 
             if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
                 console.warn('WARNING: barcode checksum error:',parse_result);
@@ -522,7 +535,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 if(this.action_callback['product']){
                     this.action_callback['product'](parse_result);
                 }
-                //this.trigger("codebar",parse_result );
             }else{
                 if(this.action_callback[parse_result.type]){
                     this.action_callback[parse_result.type](parse_result);
@@ -530,41 +542,43 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
+        on_reference: function(code){
+            if(this.action_callback['reference']){
+                this.action_callback['reference'](code);
+            }
+        },
+
         // starts catching keyboard events and tries to interpret codebar 
         // calling the callbacks when needed.
         connect: function(){
+
             var self = this;
-            var codeNumbers = [];
-            var timeStamp = 0;
-            var lastTimeStamp = 0;
+            var code = "";
+            var timeStamp  = 0;
+            var onlynumbers = true;
 
-            // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
-            // barcode sequence in the typed keys, then act accordingly.
             this.handler = function(e){
-                //We only care about numbers
-                if (e.which >= 48 && e.which < 58){
+                if(timeStamp + 50 < new Date().getTime()){
+                    code = "";
+                    onlynumbers = true;
+                }
 
-                    // The barcode reader sends keystrokes with a specific interval.
-                    // We look if the typed keys fit in the interval. 
-                    if (codeNumbers.length === 0) {
-                        timeStamp = new Date().getTime();
-                    } else {
-                        if (lastTimeStamp + 30 < new Date().getTime()) {
-                            // not a barcode reader
-                            codeNumbers = [];
-                            timeStamp = new Date().getTime();
-                        }
-                    }
-                    codeNumbers.push(e.which - 48);
-                    lastTimeStamp = new Date().getTime();
-                    if (codeNumbers.length === 13) {
-                        //We have found what seems to be a valid codebar
-                        self.on_ean(codeNumbers.join(''));
-                        codeNumbers = [];
-                    }
-                } else {
-                    // NaN
-                    codeNumbers = [];
+                timeStamp = new Date().getTime();
+
+                if( e.which < 48 || e.which >= 58 ){ // not a number
+                    onlynumbers = false;
+                }
+
+                code += String.fromCharCode(e.which);
+
+                if(code.length >= 2 && self.pos.db.get_product_by_reference(code)){
+                    self.scan('reference',code);
+                    code = "";
+                    onlynumbers = true;
+                }else if(code.length === 13 && onlynumbers){
+                    self.scan('ean13',code);
+                    code = "";
+                    onlynumbers = true;
                 }
             };
             $('body').on('keypress', this.handler);

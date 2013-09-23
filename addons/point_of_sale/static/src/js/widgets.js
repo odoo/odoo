@@ -753,12 +753,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.button.custom_ean').click(function(){
                 var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
                 self.$('input.ean').val(ean);
-                self.pos.barcode_reader.on_ean(ean);
+                self.pos.barcode_reader.scan('ean13',ean);
+            });
+            this.$('.button.reference').click(function(){
+                self.pos.barcode_reader.scan('reference',self.$('input.ean').val());
             });
             _.each(this.eans, function(ean, name){
                 self.$('.button.'+name).click(function(){
                     self.$('input.ean').val(ean);
-                    self.pos.barcode_reader.on_ean(ean);
+                    self.pos.barcode_reader.scan('ean13',ean);
                 });
             });
             _.each(this.events, function(name){
