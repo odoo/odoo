@@ -649,7 +649,7 @@
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
                 method: 'list_pages',
-                args: [],
+                args: [null],
                 kwargs: {
                     context: website.get_context()
                 },
