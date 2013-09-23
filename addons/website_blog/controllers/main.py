@@ -93,10 +93,25 @@ class website_mail(http.Controller):
         print values
         return request.website.render("website_blog.index", values)
 
-    # @website.route(['/blog/nav'], type='http', auth="public")
-    # def nav(self, **post):
-    #     comment_ids = request.registry['mail.group'].get_public_message_ids(request.cr, request.uid, domain=safe_eval(post.get('domain')), order="create_date asc", limit=None, context=request.context)
-    #     return simplejson.dumps(request.registry['mail.message'].read(request.cr, request.uid, comment_ids, ['website_published', 'subject', 'res_id'], request.context))
+    @website.route(['/blog/nav'], type='http', auth="public")
+    def nav(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        blog_post_ids = request.registry['blog.post'].search(
+            cr, uid, safe_eval(post.get('domain')),
+            order="create_date asc",
+            limit=None,
+            context=context
+        )
+        blog_post_data = [
+            {
+                'id': blog_post.id,
+                'name': blog_post.name,
+                'website_published': blog_post.website_published,
+                'category_id': blog_post.category_id and blog_post.category_id.id or False,
+            }
+            for blog_post in request.registry['blog.post'].browse(cr, uid, blog_post_ids, context=context)
+        ]
+        return simplejson.dumps(blog_post_data)
 
     @website.route(['/blog/<int:category_id>/<int:blog_post_id>/post'], type='http', auth="public")
     def blog_comment(self, category_id=None, blog_post_id=None, **post):

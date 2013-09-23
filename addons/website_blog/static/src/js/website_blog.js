@@ -12,7 +12,7 @@ $(document).ready(function () {
                 var result = JSON.parse(result);
                 var blog_id = +window.location.pathname.split("/").pop();
                 $(result).each(function () {
-                    var $a = $('<a href="/blog/'+this.res_id+'/'+this.id+'"/>').text(this.subject);
+                    var $a = $('<a href="/blog/' + this.category_id + '/' + this.id + '"/>').text(this.name);
                     var $li = $("<li/>").append($a);
                     if (blog_id == this.id)
                         $li.addClass("active");
@@ -30,7 +30,6 @@ $(document).ready(function () {
     $form = $('.js_website_blog form#comment');
     $form.submit(function (e) {
         e.preventDefault();
-        console.log(e)
         var error = $form.find("textarea").val().length < 3;
         $form.find("textarea").toggleClass("has-error", error);
         if (!error) {
