@@ -485,10 +485,7 @@
                     return;
                 }
 
-                $target
-                    .addClass('active')
-                    .siblings().removeClass('active')
-                    .addBack().removeClass('has-error');
+                this.changed($target.find('.url-source'));
             },
             'click button.remove': 'remove_link',
         }),
@@ -623,6 +620,10 @@
         },
         changed: function ($e) {
             this.$('.url-source').not($e).val('');
+            $e.closest('.list-group-item')
+                .addClass('active')
+                .siblings().removeClass('active')
+                .addBack().removeClass('has-error');
         },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
