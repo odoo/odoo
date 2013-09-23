@@ -24,12 +24,21 @@
     'category': 'Website',
     'summary': 'Glue Module',
     'version': '0.1',
-    'description': """Glue module holding mail improvements for website.
-        """,
+    'description': """Glue module holding mail improvements for website.""",
     'author': 'OpenERP SA',
     'depends': ['website', 'mail'],
-    'data': [],
-    'qweb': [],
+    'data': [
+        'views/website_mail.xml',
+    ],
+    'css': [
+        'static/src/css/website_mail.css',
+    ],
+    'js': [
+        'static/src/js/website_mail.js',
+    ],
+    'qweb': [
+        'static/src/xml/website_mail.xml'
+    ],
     'installable': True,
     'auto_install': True,
 }
