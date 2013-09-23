@@ -172,7 +172,7 @@ class website(osv.osv):
             ]
         }
 
-    def list_pages(self, cr, uid, context=None):
+    def list_pages(self, cr, uid, ids, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
         controllers for dynamic pages (e.g. blog).
