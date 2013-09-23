@@ -129,6 +129,10 @@ class Field(object):
         for attr, value in kwargs.iteritems():
             setattr(self, attr, value)
 
+    def reset(self):
+        """ Prepare `self` for a new setup. This resets all lazy properties. """
+        lazy_property.reset_all(self)
+
     def copy(self, **kwargs):
         """ make a copy of `self`, possibly modified with parameters `kwargs` """
         field = copy(self)
@@ -144,13 +148,13 @@ class Field(object):
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
 
-    def __str__(self):
-        return "%s.%s" % (self.model_name, self.name)
-
     @lazy_property
     def model(self):
         """ return the model instance of `self` """
         return scope.model(self.model_name)
+
+    def __str__(self):
+        return "%s.%s" % (self.model_name, self.name)
 
     def get_description(self):
         """ Return a dictionary that describes the field `self`. """
@@ -190,27 +194,9 @@ class Field(object):
         """ return a kwargs dictionary to pass to the column class """
         return dict((attr, getattr(self, attr)) for attr in self._attrs)
 
-    def __get__(self, instance, owner):
-        """ read the value of field `self` for the record `instance` """
-        if instance is None:
-            return self         # the field is accessed through the class owner
-        assert instance._name == self.model_name
-
-        with instance._scope:
-            if instance:
-                # non-null records: get value through their cache
-                return instance._record_cache[self.name]
-            else:
-                # null records: return null value
-                return self.null()
-
-    def __set__(self, instance, value):
-        """ set the value of field `self` for the record `instance` """
-        assert instance._name == self.model_name
-        with instance._scope:
-            # adapt value to the cache level, and set it through the cache
-            value = self.convert_to_cache(value)
-            instance._record_cache[self.name] = value
+    #
+    # Conversion of values
+    #
 
     def null(self):
         """ return the null value for this field """
@@ -238,6 +224,32 @@ class Field(object):
     def convert_to_export(self, value):
         """ convert `value` from the cache to a valid value for export. """
         return bool(value) and ustr(value)
+
+    #
+    # Getter/setter methods
+    #
+
+    def __get__(self, instance, owner):
+        """ read the value of field `self` for the record `instance` """
+        if instance is None:
+            return self         # the field is accessed through the class owner
+        assert instance._name == self.model_name
+
+        with instance._scope:
+            if instance:
+                # non-null records: get value through their cache
+                return instance._record_cache[self.name]
+            else:
+                # null records: return null value
+                return self.null()
+
+    def __set__(self, instance, value):
+        """ set the value of field `self` for the record `instance` """
+        assert instance._name == self.model_name
+        with instance._scope:
+            # adapt value to the cache level, and set it through the cache
+            value = self.convert_to_cache(value)
+            instance._record_cache[self.name] = value
 
     #
     # Management of the computation of field values.
@@ -386,34 +398,36 @@ class Field(object):
     #
 
     @lazy_property
-    def _ready(self):
-        return False
-
-    def reset(self):
-        """ Prepare `self` for a new setup. This resets all lazy properties. """
-        lazy_property.reset_all(self)
+    def _triggers(self):
+        """ List of pairs (`field`, `path`), where `field` is a field to
+            recompute, and `path` is the dependency between `field` and `self`
+            (dot-separated sequence of field names between `field.model` and
+            `self.model`).
+        """
+        return []
 
     def setup(self):
         """ Complete the setup of `self`: make it process its dependencies and
             store triggers on other fields to be recomputed.
         """
-        if not self._ready:
-            self._ready = True
+        return self._setup              # trigger _setup() if not done yet
 
-            if self.related:
-                # setup all attributes of related field
-                self.setup_related()
+    @lazy_property
+    def _setup(self):
+        if self.related:
+            # setup all attributes of related field
+            self.setup_related()
+        else:
+            # retrieve dependencies from compute method
+            if isinstance(self.compute, basestring):
+                method = getattr(type(self.model), self.compute)
             else:
-                # retrieve dependencies from compute method
-                if isinstance(self.compute, basestring):
-                    method = getattr(type(self.model), self.compute)
-                else:
-                    method = self.compute
-                self.depends = getattr(method, '_depends', ())
+                method = self.compute
+            self.depends = getattr(method, '_depends', ())
 
-            # put invalidation/recomputation triggers on dependencies
-            for path in self.depends:
-                self._depends_on_model(self.model, [], path.split('.'))
+        # put invalidation/recomputation triggers on dependencies
+        for path in self.depends:
+            self._depends_on_model(self.model, [], path.split('.'))
 
     def _depends_on_model(self, model, path0, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
@@ -432,15 +446,6 @@ class Field(object):
         for field in fields:
             field._add_trigger_for(self, path0, tail)
 
-    @lazy_property
-    def _triggers(self):
-        """ List of pairs (`field`, `path`), where `field` is a field to
-            recompute, and `path` is the dependency between `field` and `self`
-            (dot-separated sequence of field names between `field.model` and
-            `self.model`).
-        """
-        return []
-
     def _add_trigger_for(self, field, path0, path1):
         """ Add a trigger on `self` to recompute `field`; `path0` is the
             sequence of field names from `field.model` to `self.model`; ``path0
@@ -448,6 +453,10 @@ class Field(object):
         """
         self._triggers.append((field, '.'.join(path0) if path0 else 'id'))
         _logger.debug("Add trigger on field %s to recompute field %s", self, field)
+
+    #
+    # Notification when fields are modified
+    #
 
     def modified(self, records):
         """ Notify that field `self` has been modified on `records`: invalidate
