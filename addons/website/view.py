@@ -70,8 +70,11 @@ class view(osv.osv):
         column_type = type_override or type(column)
 
         if issubclass(column_type, fields.html):
-            # FIXME: multiple children?
-            return html.tostring(el[0])
+            content = []
+            if el.text: content.append(el.text)
+            content.extend(html.tostring(child)
+                           for child in el.iterchildren(tag=etree.Element))
+            return '\n'.join(content)
         elif issubclass(column_type, fields.integer):
             return int(el.text_content())
         elif issubclass(column_type, fields.float):
@@ -80,7 +83,11 @@ class view(osv.osv):
                                       fields.date, fields.datetime)):
             return el.text_content()
         # TODO: fields.selection
-        # TODO: fields.many2one
+        elif issubclass(column_type, fields.many2one):
+            matches = self.pool[column._obj].name_search(
+                cr, uid, name=el.text_content().strip(), context=context)
+            # FIXME: more than one match, error reporting
+            return matches[0][0]
         elif issubclass(column_type, fields.function):
             # FIXME: special-case selection as in get_pg_type?
             return self.convert_embedded_field(
