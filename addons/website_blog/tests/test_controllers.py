@@ -19,5 +19,11 @@
 #
 ##############################################################################
 
-import controllers
-import mail_message
+from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.tools import mute_logger, email_split
+
+
+class TestControllers(TestMailBase):
+
+    def test_00(self):
+        cr, uid = self.cr, self.uid
