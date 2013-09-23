@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<title>Indent DEV sample</title>
+	<meta charset="utf-8">
+	<script src="../../../ckeditor.js"></script>
+	<style>
+		body {
+			padding: 20px;
+			margin: 0;
+		}
+		.editors {
+			display: block;
+			overflow: hidden;
+			width: 100%;
+			margin: 0px auto;
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+
+			box-sizing: content-box;
+			-moz-box-sizing: content-box;
+			-webkit-box-sizing: content-box;
+
+			background: #eee;
+		}
+		.editors li {
+			width: 50%;
+			margin: 0;
+			padding: 10px;
+			float: left;
+
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+
+		}
+		.editors li:nth-child(2n) {
+			background: #D4E59A;
+		}
+		#menu {
+			position: fixed;
+			top: 0;
+			right: 20px;
+			padding: 5px;
+			border: 1px solid #aaa;
+			background: #eee;
+		}
+
+	</style>
+</head>
+<body>
+	<p id="menu">
+		<a href="#listnblock">List &amp; Block</a>,
+		<a href="#classes">Classes</a>,
+		<a href="#list">List</a>,
+		<a href="#block">Block</a>,
+		<a href="#br">ENTER_BR</a>
+	</p>
+
+	<h1 class="samples">Indent DEV sample</h1>
+	<h2 id="listnblock">List &amp; Block</h2>
+	<ul class="editors">
+		<li>
+			<textarea cols="80" id="editor1" rows="10">
+				<p>xx</p>
+				<ul>
+					<li>x</li>
+					<li>y</li>
+				</ul>
+				<p>xx</p>
+
+				<br>
+
+				<ul><li><ol><li>xx</li></ol></li><li>yy</li></ul>
+			</textarea>
+		</li>
+		<li>
+			<pre id="editor1_out"></pre>
+		</li>
+	</ul>
+
+	<h2 id="classes">Indent classes</h2>
+	<ul class="editors">
+		<li>
+			<textarea cols="80" id="editor2" rows="10">
+				<ul>
+					<li>a</li>
+					<li>
+						b
+						<ol>
+							<li>inner</li>
+						</ol>
+					</li>
+					<li>c</li>
+				</ul>
+				<p>moo</p>
+			</textarea>
+		</li>
+		<li>
+			<pre id="editor2_out"></pre>
+		</li>
+	</ul>
+
+	<h2 id="list">List only</h2>
+	<ul class="editors">
+		<li>
+			<textarea cols="80" id="editor3" rows="10">
+				<ul>
+					<li>a</li>
+					<li>
+						b
+						<ol>
+							<li>inner</li>
+						</ol>
+					</li>
+					<li>c</li>
+				</ul>
+				<p>moo</p>
+			</textarea>
+		</li>
+		<li>
+			<pre id="editor3_out"></pre>
+		</li>
+	</ul>
+
+	<h2 id="block">Block only</h2>
+	<ul class="editors">
+		<li>
+			<textarea cols="80" id="editor4" rows="10">
+				<ul>
+					<li>a</li>
+					<li>
+						b
+						<ol>
+							<li>inner</li>
+						</ol>
+					</li>
+					<li>c</li>
+				</ul>
+				<p>moo</p>
+			</textarea>
+		</li>
+		<li>
+			<pre id="editor4_out"></pre>
+		</li>
+	</ul>
+
+	<h2 id="br">CKEDITOR.ENTER_BR</h2>
+	<ul class="editors">
+		<li>
+			<textarea cols="80" id="editor5" rows="10">
+				Text
+				<br>
+				<ul>
+					<li>a</li>
+					<li>b</li>
+				</ul>
+			</textarea>
+		</li>
+		<li>
+			<pre id="editor5_out"></pre>
+		</li>
+	</ul>
+	<script>
+
+		var plugins = 'enterkey,toolbar,htmlwriter,wysiwygarea,undo,sourcearea,clipboard,list,justify,indent,indentlist,indentblock';
+
+		CKEDITOR.config.indentOffset = 10;
+		CKEDITOR.addCss( '\
+			.i1{ margin-left: 10px}\
+			.i2{ margin-left: 20px}\
+			.i3{ margin-left: 30px}' );
+
+		function showData( event ) {
+			CKEDITOR.document.getById( this.name + '_out' ).setText( getHtmlWithSelection( this ) );
+		}
+
+		function browserHtmlFix( html ) {
+			if ( CKEDITOR.env.ie && ( document.documentMode || CKEDITOR.env.version ) < 9 ) {
+				// Fix output base href on anchored link.
+				html = html.replace( /href="(.*?)#(.*?)"/gi,
+				   function( m, base, anchor ) {
+					   if ( base == window.location.href.replace( window.location.hash, '' ) )
+						   return 'href="#' + anchor + '"';
+
+					   return m;
+				   } );
+
+				// Fix output line break after HR.
+				html = html.replace( /(<HR>)\r\n/gi, function( m, hr ) { return hr; } );
+			}
+
+			return html;
+		}
+
+		function getHtmlWithSelection( editorOrElement, root ) {
+			var isEditor = editorOrElement instanceof CKEDITOR.editor,
+				element =  isEditor ? editorOrElement.editable() : editorOrElement;
+
+			root = isEditor ? element :
+				   root instanceof CKEDITOR.dom.document ?
+				   root.getBody() : root || CKEDITOR.document.getBody();
+
+			function replaceWithBookmark( match, startOrEnd ) {
+				var bookmark;
+				switch( startOrEnd ) {
+					case 'S' :
+						bookmark = '[';
+						break;
+					case 'E' :
+						bookmark = ']';
+						break;
+					case 'C' :
+						bookmark = '^';
+						break;
+				}
+				return bookmark;
+			}
+
+			// Hack: force remove the filling char hack in Webkit.
+			isEditor && CKEDITOR.env.webkit && editorOrElement.fire( 'beforeSetMode' );
+
+			var sel = isEditor ? editorOrElement.getSelection()
+					  : new CKEDITOR.dom.selection( root );
+
+			var doc = sel.document;
+			var ranges = sel.getRanges(),
+				range;
+
+			var bms = [];
+			var iter = ranges.createIterator();
+			while( range = iter.getNextRange() )
+				bms.push( range.createBookmark( 1 ) );
+
+			var html = browserHtmlFix( isEditor ? editorOrElement.getData() : element.getHtml() );
+			html = html.replace( /<span\b[^>]*?id="?cke_bm_\d+(\w)"?\b[^>]*?>.*?<\/span>/gi,
+								 replaceWithBookmark );
+
+			for ( var i = 0, bm; i < bms.length; i++ ) {
+				bm = bms[ i ];
+				var start = doc.getById( bm.startNode ),
+					end = doc.getById( bm.endNode );
+
+				start && start.remove();
+				end && end.remove();
+			}
+
+			return html;
+		}
+
+		CKEDITOR.on( 'instanceReady', function ( event ) {
+			var editor = event.editor;
+
+			showData.call( editor );
+
+			editor.on( 'afterCommandExec', showData, editor );
+		});
+
+		CKEDITOR.replace( 'editor1', {
+			plugins: plugins
+		} );
+
+		CKEDITOR.replace( 'editor2', {
+			plugins: plugins,
+			indentClasses: [ 'i1', 'i2', 'i3' ]
+		} );
+
+		CKEDITOR.replace( 'editor3', {
+			plugins: plugins,
+			removePlugins: 'indentblock'
+		} );
+
+		CKEDITOR.replace( 'editor4', {
+			plugins: plugins,
+			removePlugins: 'indentlist'
+		} );
+
+		CKEDITOR.replace( 'editor5', {
+			plugins: plugins,
+			enterMode: CKEDITOR.ENTER_BR
+		} );
+	</script>
+</body>
+</html>
+
