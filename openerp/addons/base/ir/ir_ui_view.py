@@ -254,7 +254,6 @@ class view(osv.osv):
         return None
 
     def inherit_branding(self, specs_tree, view_id):
-        print map(etree.tostring, specs_tree)
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath':
