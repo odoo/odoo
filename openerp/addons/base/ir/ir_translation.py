@@ -294,7 +294,7 @@ class ir_translation(osv.osv):
         return len(ids)
 
     @tools.ormcache(skiparg=3)
-    def _get_source(self, cr, uid, name, types, lang, source=None):
+    def _get_source(self, cr, uid, name, types, lang, source=None, res_id=None):
         """
         Returns the translation for the given combination of name, type, language
         and source. All values passed to this method should be unicode (not byte strings),
@@ -304,6 +304,7 @@ class ir_translation(osv.osv):
         :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
+        :param res_id: optional resource id to translate (if used, ``source`` should be set)
         :rtype: unicode
         :return: the request translation, or an empty unicode string if no translation was
                  found and `source` was not passed
@@ -321,6 +322,9 @@ class ir_translation(osv.osv):
                         AND type in %s
                         AND src=%s"""
             params = (lang or '', types, tools.ustr(source))
+            if res_id:
+                query += "AND res_id=%s"
+                params += (res_id,)
             if name:
                 query += " AND name=%s"
                 params += (tools.ustr(name),)
