@@ -59,11 +59,12 @@ class website_mail(http.Controller):
         blog_post = None
         blog_posts = None
         pager = None
-        if not category_id:
-            category_ids = category_obj.search(cr, uid, [], context=context)
-            categories = category_obj.browse(cr, uid, category_ids, context=context)
+
+        category_ids = category_obj.search(cr, uid, [], context=context)
+        categories = category_obj.browse(cr, uid, category_ids, context=context)
+
         # category but no post chosen: display the last ones, create pager
-        elif category_id and not blog_post_id:
+        if category_id and not blog_post_id:
             pager_begin = (page - 1) * self._category_post_per_page
             pager_end = page * self._category_post_per_page
             category = category_obj.browse(cr, uid, category_id, context=context)
@@ -129,55 +130,3 @@ class website_mail(http.Controller):
                 'website_published': False,
             }, context=create_context)
         return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (category_id, blog_id))
-
-    def _find_or_create_partner(self, email, context=None):
-        partner_obj = request.registry['res.partner']
-        user_obj = request.registry['res.users']
-        partner_ids = []
-        if request.context['is_public_user'] and email:
-            partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)], context=request.context)
-            if not partner_ids:
-                partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": email, "name": email}, request.context)]
-        else:
-            partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
-        return partner_ids
-
-    @website.route(['/blog/<int:category_id>/subscribe'], type='http', auth="public")
-    def category_subscribe(self, category_id=None, **post):
-        partner_ids = self._find_or_create_partner(post.get('email'), request.context)
-        category_obj = request.registry['blog.category']
-
-        category_obj.check_access_rule(request.cr, request.uid, [category_id], 'read', request.context)
-        category_obj.message_subscribe(request.cr, SUPERUSER_ID, [category_id], partner_ids, context=request.context)
-
-        return self.blog(category_id=category_id)
-
-    @website.route(['/blog/<int:category_id>/unsubscribe'], type='http', auth="public")
-    def category_unsubscribe(self, category_id=None, **post):
-        partner_ids = self._find_or_create_partner(post.get('email'), request.context)
-        category_obj = request.registry['blog.category']
-
-        category_obj.check_access_rule(request.cr, request.uid, [category_id], 'read', request.context)
-        category_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [category_id], partner_ids, context=request.context)
-
-        return self.blog(category_id=category_id)
-
-    @website.route(['/blog/<int:category_id>/<int:blog_post_id>/subscribe'], type='http', auth="public")
-    def blog_post_subscribe(self, category_id=None, blog_post_id=None, **post):
-        partner_ids = self._find_or_create_partner(post.get('email'), request.context)
-        blog_post_obj = request.registry['blog.post']
-
-        blog_post_obj.check_access_rule(request.cr, request.uid, [blog_post_id], 'read', request.context)
-        blog_post_obj.message_subscribe(request.cr, SUPERUSER_ID, [blog_post_id], partner_ids, context=request.context)
-
-        return self.blog(category_id=category_id, blog_post_id=blog_post_id)
-
-    @website.route(['/blog/<int:category_id>/<int:blog_post_id>/unsubscribe'], type='http', auth="public")
-    def blog_post_unsubscribe(self, category_id=None, blog_post_id=None, **post):
-        partner_ids = self._find_or_create_partner(post.get('email'), request.context)
-        blog_post_obj = request.registry['blog.post']
-
-        blog_post_obj.check_access_rule(request.cr, request.uid, [blog_post_id], 'read', request.context)
-        blog_post_obj.message_unsubscribe(request.cr, SUPERUSER_ID, [blog_post_id], partner_ids, context=request.context)
-
-        return self.blog(category_id=category_id, blog_post_id=blog_post_id)

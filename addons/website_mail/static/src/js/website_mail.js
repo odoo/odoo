@@ -10,7 +10,6 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.js_follow', function (ev) {
-        console.log(ev);
         ev.preventDefault();
         var $data = $(":first", this).parents("[data-follow]");
         var message_is_follower = $data.first().attr("data-follow");

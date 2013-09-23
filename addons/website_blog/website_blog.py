@@ -61,7 +61,7 @@ class BlogPost(osv.Model):
     _inherit = ['mail.thread']
     _order = 'name'
     # maximum number of characters to display in summary
-    _shorten_max_char = 10
+    _shorten_max_char = 100
 
     def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -71,6 +71,8 @@ class BlogPost(osv.Model):
             except Exception:
                 body_short = False
             res[page.id] = body_short
+            print body_short
+            print '-----------------\n\n'
         return res
 
     _columns = {

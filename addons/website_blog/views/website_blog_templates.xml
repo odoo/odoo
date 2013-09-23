@@ -12,47 +12,29 @@
         </xpath>
     </template>
 
-    <!-- Follow button -->
-    <template id="blog_post_unfollow" name="Follow">
-        <form t-attf-action="/blog/#{object.category_id.id}/#{object.id}/unsubscribe" method="POST" class="form-inline" t-if="object.message_is_follower">
-            <input type="hidden" name="email" t-att-value="subscribe" style="display: none"/>
-            <button type="submit" class="btn btn-sm btn-default pull-right" name="unsubscribe">Unfollow</button>
-        </form>
-    </template>
-    <template id="blog_post_follow" name="Follow">
-        <form t-attf-action="/blog/#{object.category_id.id}/#{object.id}/subscribe" method="POST" class="form-inline" t-if="not object.message_is_follower">
-            <div class="col-lg-7">
-                <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
-            </div>
-            <button type="submit" class="btn btn-sm btn-primary pull-right" name="subscribe">Follow</button>
-        </form>
-    </template>
-
-    <!-- Post -->
-    <template id="blog_post_short" name="Blog Post">
+    <!-- Blog Post -->
+    <template id="view_blog_post_short" name="Blog Post Short">
         <div class="media-body">
-            <t t-call="website_blog.blog_post_follow"><t t-set="object" t-value="blog_post"/></t>
-            <t t-call="website_blog.blog_post_unfollow"><t t-set="object" t-value="blog_post"/></t>
+            <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
             <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
             <small class="text-muted">
                 <t t-field="blog_post.create_uid"/> on <t t-field="blog_post.create_date"/>
             </small>
-            <h4 class="media-heading" ><a t-attf-href="/blog_post/#{blog_post.category_id.id}/#{blog_post.id}#comment" t-field="blog_post.name"></a></h4>
+            <h4 class="media-heading" ><a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment" t-field="blog_post.name"></a></h4>
             <div class="media">
                 <div t-field="blog_post.shortened_content"/>
                 <small class="pull-left muted text-right">
-                    <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment"><t t-esc="len(blog_post.message_ids)"/> Comment</a>
-                    <a t-if="len(blog_post.message_ids) > 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment"><t t-esc="len(blog_post.message_ids)"/> Comments</a>
+                    <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> Comment</a>
+                    <a t-if="len(blog_post.message_ids) > 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> Comments</a>
                 </small>
             </div>
         </div>
     </template>
 
-    <template id="blog_post" name="Blog Post">
+    <template id="view_blog_post" name="Blog Post">
         <div class="media">
             <div class="media-body">
-                <t t-call="website_blog.blog_post_follow"><t t-set="object" t-value="blog_post"/></t>
-                <t t-call="website_blog.blog_post_unfollow"><t t-set="object" t-value="blog_post"/></t>
+                <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
                 <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
                 <small class="text-muted">
                     <t t-field="blog_post.create_uid"/> on <t t-field="blog_post.create_date"/>
@@ -60,7 +42,7 @@
                 <h3 t-field="blog_post.name"/>
                 <div t-field="blog_post.content"/>
             </div>
-            <ul class="media-list" id="comment">
+            <ul class="media-list" id="comments">
                 <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                     <div class="media-body">
                         <t t-call="website.publish"><t t-set="object" t-value="message"/></t>
@@ -72,58 +54,51 @@
                     </div>
                 </li>
             </ul>
-            <form id="blog" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
+            <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
                     method="POST" class="form-horizontal text-center"
-                    groups="group_website_mail_reply">
+                    groups="group_website_blog_reply">
                 <textarea rows="4" placeholder="Your comment" class="col-md-7 form-control"></textarea>
                 <button type="submit" class="btn btn-default">Post your comment</button>
             </form>
         </div>
     </template>
 
-
     <!-- Page --> 
     <template id="index" name="Blogs" page="True">
         <t t-call="website.layout">
           <t t-set="head">
-              <script type="text/javascript" src="/website_blog/static/src/js/blog.js"></script>
-              <link rel='stylesheet' href='/website_blog/static/src/css/blog.css'/>
+              <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"></script>
+              <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
               <t t-raw="head or ''"/>
           </t>
           <t t-set="title">Blog</t>
           <div id="wrap">
-            <div class="container mt48 js_website_mail">
+            <div class="container mt48 js_website_blog">
                 <div class="row">
-                   <div class="col-md-3" id="left_column">
+                    <div class="col-md-3" id="left_column">
+                        <h4>Categories</h4>
+                        <ul class="nav nav-pills nav-stacked">
+                            <t t-foreach="categories" t-as="nav_category">
+                                <li t-att-class="'active' if category and category.id == nav_category.id else ''">
+                                    <a t-attf-href="/blog/#{nav_category.id}">
+                                        <t t-field="nav_category.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
                         <t t-if="category">
-                            Latests posts on <t t-field="category.name"/>
-                            <a t-if="editable" t-attf-href="/blog/new" class="btn btn-default">New Blog Post</a>
-                            <div>
-                                <form t-attf-action="/blog/#{category.id}/subscribe"
-                                        method="POST" class="form-inline"
-                                        t-if="not category.message_is_follower">
-                                    <div class="col-lg-7">
-                                        <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary" name="subscribe">Follow</button>
-                                </form>
-                                <form t-attf-action="/blog/#{category.id}/unsubscribe"
-                                        method="POST" class="form-inline"
-                                        t-if="category.message_is_follower">
-                                    <input type="hidden" name="email" t-att-value="subscribe" style="display: none"/>
-                                    <button type="submit" class="btn btn-default" name="unsubscribe">Unfollow</button>
-                                </form>
-                            </div>
+                            <a t-if="editable" t-attf-href="/blog/#{category.id}/new" class="btn btn-default">New Blog Post</a>
+                            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
                         </t>
                     </div>
                     <div class="col-md-9" t-if="blog_post">
-                        <t t-call="website_blog.blog_post"><t t-set="blog_post" t-value="blog_post"/></t>
+                        <t t-call="website_blog.view_blog_post"><t t-set="blog_post" t-value="blog_post"/></t>
                     </div>
 
-                    <div class="col-md-8" t-if="not blog_post and blog_posts">
+                    <div class="col-md-9" t-if="not blog_post and blog_posts">
                         <ul class="media-list">
                             <li t-foreach="blog_posts" t-as="blog_post" data-publish="">
-                                <t t-call="website_blog.blog_post_short"><t t-set="blog_post" t-value="blog_post"/></t>
+                                <t t-call="website_blog.view_blog_post_short"/>
                             </li>
                         </ul>
                         <div class="text-center">
@@ -145,12 +120,11 @@
         </xpath> -->
     </template>
 
-
+    <!-- Option: archives -->
     <template id="blog_history" inherit_id="website_blog.index" inherit_option_id="website_blog.index" name="History">
         <xpath expr="//div[@id='left_column']" position="inside">
+            <h4>Archives</h4>
             <ul class="nav nav-pills nav-stacked">
-                <li class="nav-header"><a t-attf-href="/blog/#{category_id}/">Archives</a></li>
-                <!-- TODO: check qweb iteration -->
                 <li t-foreach="nav_list" t-as="year" class="js_nav_year">
                     <t t-set="year" t-value="nav_list[year]"/>
                     <a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['create_date_count']"/>)</small></a>

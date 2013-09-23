@@ -27,9 +27,10 @@ $(document).ready(function () {
         }
     });
 
-    $form = $('.js_website_mail form#post');
+    $form = $('.js_website_blog form#comment');
     $form.submit(function (e) {
         e.preventDefault();
+        console.log(e)
         var error = $form.find("textarea").val().length < 3;
         $form.find("textarea").toggleClass("has-error", error);
         if (!error) {

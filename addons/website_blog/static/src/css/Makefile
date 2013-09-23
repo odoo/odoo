@@ -1,2 +1,2 @@
 sass:
-	sass --compass --trace -t expanded blog.sass blog.css
+	sass --compass --trace -t expanded website_blog.sass website_blog.css
