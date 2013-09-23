@@ -679,16 +679,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
             if(this.action){
                 this.$el.click(function(){
-                    var draft_order = _.find( self.pos.get('orders').models, function(order){
-                        return order.get('orderLines').length !== 0 && order.get('paymentLines').length === 0;
-                    });
-                    if(draft_order){
-                    	if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
-                            self.action();
-                        }
-                    }else{
-                        self.action();
-                    }
+                    self.action();
                 });
             }
         },
@@ -1103,15 +1094,29 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         close: function() {
             var self = this;
-            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
-                    _.bind(function(res) {
-                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
-                    var action = result;
-                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
-                    //self.destroy();
-                    this.do_action(action);
-                }, this));
-            }, this));
+
+            function close(){
+                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
+                        _.bind(function(res) {
+                    return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                        var action = result;
+                        action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
+                        //self.destroy();
+                        this.do_action(action);
+                    }, this));
+                }, self));
+            }
+
+            var draft_order = _.find( self.pos.get('orders').models, function(order){
+                return order.get('orderLines').length !== 0 && order.get('paymentLines').length === 0;
+            });
+            if(draft_order){
+                if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
+                    return close();
+                }
+            }else{
+                return close();
+            }
         },
         destroy: function() {
             this.pos.destroy();
