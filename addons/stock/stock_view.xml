@@ -1465,25 +1465,27 @@
             <field name="arch" type="xml">
                 <form string="Procurement Rules" version="7.0">
                     <sheet>
-                        <div class="oe_title">
-                        <h1>
-                            <label string="Name"/>
-                            <field name="name" class="oe_inline"/>
-                        </h1>
-                        </div>
+                        <separator string="Pull Rule"/>
                         <group>
                             <group>
-                                <field name="location_src_id" attrs="{'invisible': [('action', '!=', 'move')]}"/>
-                                <field name="location_id"/>
-                                <field name="route_id"/>
-                                <field name="route_sequence"/>
-                                <field name="sequence"/>
+                                <field name="name"/>
                             </group>
                             <group>
                                 <field name="action"/>
-                                <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                            </group>
+                        </group>
+                        <separator string="Informations"/>
+                        <group>
+                            <group>
                                 <field name="procure_method" attrs="{'invisible': [('action', '!=', 'move')]}"/>
-                                <field name="group_id"/>
+                                <field name="location_src_id" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                                <field name="location_id"/>
+                                
+                            </group>
+                            <group>
+                                <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                                <field name="route_id"/>
+                                <field name="group_id" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </sheet>

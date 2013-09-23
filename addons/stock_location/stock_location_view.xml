@@ -7,11 +7,14 @@
             <field name="model">procurement.rule</field>
             <field name="inherit_id" ref="stock.view_procurement_rule_form"/>
             <field name="arch" type="xml">
-                <field name="location_id" position="after">
-                	<field name="delay"/>
-                	<field name="propagate"/>
+                <field name="group_id" position="after">
+                    <field name="propagate"/>
+                    <label for="delay" string="Delay"/>
+                    <div>
+                	   <field name="delay" class="oe_inline"/>days
+                	</div>
                 </field>
-                <field name="group_id" position="before">
+                    <field name="location_id" position="after">
                 	<field name="partner_address_id"/>
                 </field>
             </field>
@@ -110,7 +113,10 @@
                             <field name="company_id" groups="base.group_multi_company" />
                             <field name="picking_type_id"/>
                             <field name="auto"/>
-                            <field name="delay"/>
+                            <label for="delay" string="Delay"/>
+                        <div>
+                            <field name="delay" class="oe_inline"/>days
+                        </div>
                         </group>
 					</group>
 				</form>
