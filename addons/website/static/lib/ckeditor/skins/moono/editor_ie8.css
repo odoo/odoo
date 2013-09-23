@@ -1,0 +1,27 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+/*
+editor_ie8.css
+===============
+
+This file contains styles to used by Internet Explorer 8 only.
+*/
+
+/* Base it on editor_ie.css, overriding it with styles defined in this file. */
+@import url("editor_ie.css");
+
+.cke_toolbox_collapser .cke_arrow
+{
+	border-width:4px;
+}
+.cke_toolbox_collapser.cke_toolbox_collapser_min .cke_arrow
+{
+	border-width:3px;
+}
+.cke_toolbox_collapser .cke_arrow
+{
+	margin-top: 0;
+}

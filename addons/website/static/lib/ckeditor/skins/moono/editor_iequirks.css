@@ -1,0 +1,79 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+/*
+editor_iequirks.css
+===============
+
+This file contains styles to used by all versions of Internet Explorer
+in Quirks mode only.
+*/
+
+/* Base it on editor_ie.css, overriding it with styles defined in this file. */
+@import url("editor_ie.css");
+
+.cke_top,
+.cke_contents,
+.cke_bottom
+{
+	width: 100%; /* hasLayout = true */
+}
+
+.cke_button_arrow
+{
+	font-size: 0; /* Set minimal font size, so arrow won't be streched by the text that doesn't exist. */
+}
+
+/* Bring back toolbar buttons in RTL. */
+
+.cke_rtl .cke_toolgroup,
+.cke_rtl .cke_toolbar_separator,
+.cke_rtl .cke_button,
+.cke_rtl .cke_button *,
+.cke_rtl .cke_combo,
+.cke_rtl .cke_combo *,
+.cke_rtl .cke_path_item,
+.cke_rtl .cke_path_item *,
+.cke_rtl .cke_path_empty
+{
+	float: none;
+}
+
+.cke_rtl .cke_toolgroup,
+.cke_rtl .cke_toolbar_separator,
+.cke_rtl .cke_combo_button,
+.cke_rtl .cke_combo_button *,
+.cke_rtl .cke_button,
+.cke_rtl .cke_button_icon,
+{
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* Otherwise formatting toolbar breaks when editing a mixed content (#9893). */
+.cke_rtl .cke_button_icon
+{
+	float: none;
+}
+
+.cke_resizer
+{
+	width: 10px;
+}
+
+.cke_source
+{
+	white-space: normal;
+}
+
+.cke_bottom
+{
+	position: static; /* Without this bottom space doesn't move when resizing editor. */
+}
+
+.cke_colorbox
+{
+	font-size: 0; /* Set minimal font size, so button won't be streched by the text that doesn't exist. */
+}

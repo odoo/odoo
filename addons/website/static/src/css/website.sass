@@ -123,11 +123,11 @@ h1.text-muted, h2.text-muted, h3.text-muted
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
-html,body
+html,body, #wrapwrap
     box-sizing: border-box
     height: 100%
 
-body
+#wrapwrap
     display: table
     width: 100%
 
@@ -232,9 +232,8 @@ footer
 .nav-hierarchy
     padding-left: 16px
 
-#themes-list
-    .well
-        padding: 0 0 20px 0
+#themes-list .well
+    padding: 0 0 20px 0
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
@@ -244,9 +243,8 @@ div#mobile-preview.modal
 ul.nav-stacked > li > a
     padding: 2px 15px
 
-#customize-menu
-    .dropdown-header
-        text-transform: uppercase
+#customize-menu .dropdown-header
+    text-transform: uppercase
 
 /* ---- PUBLISH ---- */
 a[data-publish]
