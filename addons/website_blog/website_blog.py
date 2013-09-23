@@ -53,9 +53,7 @@ class BlogTag(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
         'blog_post_ids': fields.many2many(
-            'blog.tag', 'blog_tag_rel',
-            'tag_id', 'blog_post_id',
-            'Posts',
+            'blog.post', string='Posts',
         ),
     }
 
@@ -93,9 +91,7 @@ class BlogPost(osv.Model):
             required=True, ondelete='cascade',
         ),
         'tag_ids': fields.many2many(
-            'blog.tag', 'blog_tag_rel',
-            'blog_id', 'tag_id',
-            'Tags',
+            'blog.tag', string='Tags',
         ),
         'content': fields.html('Content'),
         'shortened_content': fields.function(
