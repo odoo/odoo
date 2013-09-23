@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2013-06-09 09:30+0000\n"
+"PO-Revision-Date: 2013-09-21 10:34+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-11 06:31+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-09-22 05:34+0000\n"
+"X-Generator: Launchpad (build 16765)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -538,7 +538,7 @@ msgstr "Meja posojila"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project_long_term
 msgid "Portal Project Long Term"
-msgstr ""
+msgstr "Portal - dolgoročni projekti"
 
 #. module: base
 #: field:ir.model.constraint,date_update:0
@@ -1085,7 +1085,7 @@ msgstr "Prepiši obstoječe izraze"
 #: code:addons/base/res/res_currency.py:52
 #, python-format
 msgid "No currency rate associated for currency %d for the given period"
-msgstr ""
+msgstr "Menjalni tečaj za valuto %d ni določen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
@@ -2124,6 +2124,10 @@ msgid ""
 "              </p>  \n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nov bančni račun.\n"
+"              </p>  \n"
+"            "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report_xml
@@ -2161,7 +2165,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "Invalid Search Criteria"
-msgstr ""
+msgstr "Napačni iskalni kriterij"
 
 #. module: base
 #: field:res.users,login:0
@@ -3262,6 +3266,36 @@ msgid ""
 "and\n"
 "directly integrated in the core accounting. \n"
 msgstr ""
+"\n"
+"Add an extra Company dimension on Invoices for consolidated Invoice "
+"Analysis\n"
+"============================================================================"
+"\n"
+"\n"
+"By default Customer and Supplier invoices can be linked to a contact within\n"
+"a company, but the company is not a direct reference in the database "
+"structure for\n"
+"invoices. Journal Entries are however always linked to the company and not "
+"to\n"
+"contacts, so that Accounts Payable and Receivable are always correct and "
+"consolidated\n"
+"at company level.\n"
+"\n"
+"When many different contacts/departments need to be invoiced within the same "
+"parent company,\n"
+"this can make reporting by Company more difficult: reports are directly "
+"based on the\n"
+"database structure and would not provide an aggregated company dimension.\n"
+"\n"
+"This modules solves the problem by adding an explicit company reference on "
+"invoices,\n"
+"automatically computed from the invoice contact, and use this new dimension\n"
+"when grouping the list of Invoices or the Invoice Analysis report by "
+"Partner. \n"
+"\n"
+"Note: this module will likely be removed for the next major OpenERP version "
+"and\n"
+"directly integrated in the core accounting. \n"
 
 #. module: base
 #: model:res.country,name:base.ai
@@ -3977,7 +4011,7 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:222
 #, python-format
 msgid "Connection Test Succeeded!"
-msgstr ""
+msgstr "Povezava uspela !"
 
 #. module: base
 #: field:ir.actions.client,params_store:0
@@ -4380,7 +4414,7 @@ msgstr "Preslikava polj"
 #: code:addons/base/module/wizard/base_module_upgrade.py:84
 #, python-format
 msgid "Unmet Dependency!"
-msgstr ""
+msgstr "Nedoločena odvisnost !"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
@@ -4641,7 +4675,7 @@ msgstr "Filtri"
 #: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s!"
-msgstr ""
+msgstr "Ni možno kreirati modula : %s!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -5983,7 +6017,7 @@ msgstr ""
 msgid ""
 "Next number that will be used. This number can be incremented frequently so "
 "the displayed value might already be obsolete"
-msgstr ""
+msgstr "Naslednja številka."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing
@@ -6014,7 +6048,7 @@ msgstr "Smer"
 #: code:addons/orm.py:4815
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "Polja %s ni na modelu %s"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -8330,7 +8364,7 @@ msgstr "Vrsta valutne vrednosti"
 msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
-msgstr ""
+msgstr "Ni možno brisati aktivnega jezika!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -9325,7 +9359,7 @@ msgstr "Napaka"
 #: code:addons/base/res/res_partner.py:566
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr ""
+msgstr "Kontakt mora imeti elektronski naslov!"
 
 #. module: base
 #: help:res.partner,tz:0
@@ -9849,7 +9883,7 @@ msgstr "Rules can not be applied on Transient models."
 #: code:addons/base/ir/ir_mail_server.py:215
 #, python-format
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "Test povezave - neuspešen !"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10176,6 +10210,12 @@ msgid ""
 "================\n"
 "    "
 msgstr ""
+"\n"
+"This module adds necessary security rules and access rights for project long "
+"term and portal.\n"
+"============================================================================="
+"================\n"
+"    "
 
 #. module: base
 #: help:res.currency,position:0
@@ -12037,7 +12077,7 @@ msgstr "New Language (Empty translation template)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_report_company
 msgid "Invoice Analysis per Company"
-msgstr ""
+msgstr "Invoice Analysis per Company"
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -13941,6 +13981,11 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nova kategorija partnerja.\n"
+"            \n"
+"              </p>\n"
+"            "
 
 #. module: base
 #: field:ir.actions.act_window,filter:0
@@ -13961,6 +14006,8 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
+"Podjetje lahko s spremenite samo če je bilo narobe nastavljeno. Če je "
+"kontakt spremenil podjetje , ustvarite nov kontakt."
 
 #. module: base
 #: help:res.partner,customer:0
@@ -14665,7 +14712,7 @@ msgstr "Falklandski otoki"
 #: code:addons/base/ir/ir_actions.py:606
 #, python-format
 msgid "Please specify an action to launch!"
-msgstr ""
+msgstr "Določiti morate dejanje !"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -15100,7 +15147,7 @@ msgstr "Oblika naslova"
 #. module: base
 #: constraint:res.partner:0
 msgid "You cannot create recursive Partner hierarchies."
-msgstr ""
+msgstr "Hierarhija partnerjev ne sme biti rekursivna ."
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -15346,7 +15393,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:295
 #, python-format
 msgid "Size of the field can never be less than 0 !"
-msgstr ""
+msgstr "Velikost polja ne more biti manjša od 0!"
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -16491,7 +16538,7 @@ msgstr ""
 #: code:addons/base/res/res_lang.py:187
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
-msgstr ""
+msgstr "Ni možno izbrisati aktivnega jezika !"
 
 #. module: base
 #: view:ir.model.data:0
@@ -17046,7 +17093,7 @@ msgstr "Luksemburg"
 #. module: base
 #: view:res.partner:0
 msgid "(edit company address)"
-msgstr ""
+msgstr "(uredi naslov podjetja)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_calendar
@@ -18647,7 +18694,7 @@ msgstr "Bančni računi"
 #: code:addons/base/res/res_lang.py:185
 #, python-format
 msgid "Base Language 'en_US' can not be deleted!"
-msgstr ""
+msgstr "Osnovni jezik ni mogoče brisati!"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -18987,7 +19034,7 @@ msgstr "Ime izvoza"
 #: code:addons/base/ir/ir_sequence.py:259
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
-msgstr ""
+msgstr "Napačna predpona ali pripona za zaporedje  '%s'"
 
 #. module: base
 #: help:res.partner,type:0
