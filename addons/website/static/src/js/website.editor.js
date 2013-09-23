@@ -236,12 +236,8 @@
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
-            var instanceReady = false;
-            this.rte.on('instanceReady', this, function () {
-                clearTimeout(instanceReady);
-                instanceReady = setTimeout(function () {
-                    self.trigger('rte:ready');
-                }, 0);
+            this.rte.on('rte:ready', this, function () {
+                self.trigger('rte:ready');
             });
 
             return $.when(
@@ -337,6 +333,8 @@
                 root.contentEditable = false;
 
                 self.setup_editables(root);
+
+                self.trigger('rte:ready');
             });
         },
 
