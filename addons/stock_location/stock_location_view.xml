@@ -101,15 +101,17 @@
 			<field name="arch" type="xml">
 				<form string="Location Paths" version="7.0">
 					<group col="4">
-						<field name="name"/>
-						<newline />
-						<field name="company_id" groups="base.group_multi_company" />
-						<newline />
-						<field name="location_from_id"/>
-						<field name="location_dest_id"/>
-						<field name="picking_type_id"/>
-						<field name="auto"/>
-						<field name="delay"/>
+                        <group>
+    						<field name="name"/>
+                            <field name="location_from_id"/>
+                            <field name="location_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="picking_type_id"/>
+                            <field name="auto"/>
+                            <field name="delay"/>
+                        </group>
 					</group>
 				</form>
 			</field>
@@ -125,7 +127,6 @@
 					<group string="Routes" colspan="4">
 					    <div class="oe_inline">
 					        <p attrs="{'invisible':[('route_ids','=',False)]}">
-					        The routes on this category are: 
         					<field name="route_ids" nolabel="1" widget="many2many_tags" class="oe_inline"/>
         					</p>
         					<p attrs="{'invisible':[('parent_id','=',False)]}">
@@ -140,7 +141,7 @@
                             Removal strategies define the method used for suggesting the 
                             location to take the products from
                         </p>
-                        <field name="removal_strategy_ids" class ="oe_inline">
+                        <field name="removal_strategy_ids">
                             <tree editable="bottom" string="removal">
                                 <field name="location_id"/>
                                 <field name="method"/>
@@ -156,7 +157,7 @@
                             Putaway strategies define the method used for suggesting the 
                             location to put the products
                         </p>
-                        <field name="putaway_strategy_ids" class="oe_inline">
+                        <field name="putaway_strategy_ids">
                             <tree string="Put Away" editable="bottom">
                                 <field name="location_id"/>
                                 <field name="method"/>
@@ -199,14 +200,16 @@
 			<field name="model">stock.location.route</field>
 			<field name="inherit_id" ref="stock.stock_location_route_form_view"/>
 			<field name="arch" type="xml">
-			    <xpath expr="//field[@name='sequence']" position="after">
-			        <group>
+			    <xpath expr="//group[@string='Pull Rules']" position="before">
+			        <separator string="Applicable On"/>
+                    <p class="oe_grey">Check these box so that the user can select this route during the following operations</p>
+                    <group>
                         <group>
-                            <field name="product_categ_selectable"/>
-                            <field name="product_selectable"/>
+                            <field name="product_categ_selectable" string="Product Categories"/>
+                            <field name="product_selectable" string="Products"/>
                         </group>
                         <group>
-                            <field name="warehouse_selectable"/>
+                            <field name="warehouse_selectable" string="Warehouses"/>
                         </group>
                     </group>
                     <group string="Push Rules" colspan="4" >

@@ -1807,15 +1807,15 @@
             <field name="arch" type="xml">
                 <form string="Route" version="7.0">
                     <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <label string="Route name"/>
-                        </h1>
-                        <h2>
-                        <field name="name" class="oe_inline"/>
-                    </h2>
-                    </div>
-                    <field name="sequence" groups="base.group_no_one"/>
+                    <group string="Route">
+
+                        <group>
+                            <field name="name" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                        </group>
+                    </group>
                     <group string="Pull Rules" colspan="4" >
                         <field name="pull_ids" colspan="4" nolabel="1"/>
                     </group>

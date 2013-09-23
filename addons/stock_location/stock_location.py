@@ -41,15 +41,16 @@ class stock_location_route(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Default Route', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse'),
+        'route_id': fields.many2one('stock.location.route', 'Default Delivery Route', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse'),
     }
 
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
+    _order = "name"
     _columns = {
-        'name': fields.char('Operation', size=64, required=True),
+        'name': fields.char('Operation Name', size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'route_id': fields.many2one('stock.location.route', 'Route'),
         'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
@@ -60,7 +61,7 @@ class stock_location_path(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
             required=True,), 
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True, help="This is the picking type associated with the different pickings"), 
+        'picking_type_id': fields.many2one('stock.picking.type', 'Type of the new Operation', required=True, help="This is the picking type associated with the different pickings"), 
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
