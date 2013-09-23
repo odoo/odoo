@@ -182,7 +182,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="route_id" attrs="{'invisible': [('route_id', '=', False)]}"/>
-                    <button name="%(action_view_stock_configure_wh)d" string="Configure this warehouse" type="action" attrs="{'invisible': [('route_id', '!=', False)]}"/>
+                    
+                </xpath>
+                <xpath expr="//group[last()]" position="after">
+                <button name="%(action_view_stock_configure_wh)d" class="oe_right oe_highlight" string="Configure this warehouse" type="action" attrs="{'invisible': [('route_id', '!=', False)]}"/>
                 </xpath>
             </field>
         </record>
