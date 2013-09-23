@@ -28,6 +28,7 @@
             return this._super.apply(this, arguments);
         },
         save: function () {
+            this.snippets.make_active(false);
             remove_added_snippet_id();
             this._super();
         },
@@ -106,9 +107,11 @@
 
             var $ul = this.parent.$("#website-top-edit ul");
 
-            var $button = $(openerp.qweb.render('website.snippets_button'))
-                .click(function () {self.$el.toggleClass("hidden");})
-                .prependTo($ul);
+            var $button = $(openerp.qweb.render('website.snippets_button')).prependTo($ul);
+            $button.find('button').click(function () {
+                self.make_active(false);
+                self.$el.toggleClass("hidden");
+            });
 
             this.fetch_snippet_templates();
 
@@ -626,8 +629,7 @@
         // activate drag and drop for the snippets in the snippet toolbar
         _drag_and_drop: function(){
             var self = this;
-            var dropped = false;
-            var $move = this.$overlay.find(".oe_snippet_move");
+            this.dropped = false;
             this.$overlay.draggable({
                 greedy: true,
                 appendTo: 'body',
@@ -639,48 +641,66 @@
                 },
                 helper: function() {
                     var $clone = $(this).clone().css({width: "24px", height: "24px", border: 0});
-                    $clone.find(".oe_overlay_options >:not(.oe_snippet_move), .oe_handle").remove();
+                    $clone.find(".oe_overlay_options >:not(:contains(.oe_snippet_move)), .oe_handle").remove();
                     $clone.find(":not(.glyphicon)").css({position: 'absolute', top: 0, left: 0});
-                    return $clone.appendTo("body").removeClass("hidden");
+                    $clone.appendTo("body").removeClass("hidden");
+                    return $clone;
                 },
-                start: function(){
-                    self.parent.hide();
-                    self.parent.editor_busy = true;
-                    self.$target.after("<div class='oe_drop_clone' style='display: none;'/>");
+                start: _.bind(self._drag_and_drop_start, self),
+                stop: _.bind(self._drag_and_drop_stop, self)
+            });
+        },
+        _drag_and_drop_after_insert_dropzone: function (){},
+        _drag_and_drop_active_drop_zone: function ($zones){
+            var self = this;
+            $zones.droppable({
+                over:   function(){
+                    $(".oe_drop_zone.hide").removeClass("hide");
+                    $(this).addClass("hide").first().after(self.$target);
+                    self.dropped = true;
+                },
+                out:    function(){
+                    $(this).removeClass("hide");
                     self.$target.detach();
-                    self.$overlay.addClass("hidden");
-                    self.parent.activate_insertion_zones({
-                        siblings: self.$el ? self.$el.data('selector-siblings') : false,
-                        children:   self.$el ? self.$el.data('selector-children') : false,
-                        vertical_children: self.$el ? self.$el.data('selector-vertical-children') : false,
-                    });
-                    $("body").addClass('move-important');
-                    $('.oe_drop_zone').droppable({
-                        over:   function(){
-                            $(".oe_drop_zone.hide").removeClass("hide");
-                            $(this).addClass("hide").first().after(self.$target);
-                            dropped = true;
-                        },
-                        out:    function(){
-                            $(this).removeClass("hide");
-                            self.$target.detach();
-                            dropped = false;
-                        },
-                    });
-                },
-                stop: function(){
-                    if (!dropped) {
-                        $(".oe_drop_clone").after(self.$target);
-                    }
-                    self.$overlay.removeClass("hidden");
-                    $("body").removeClass('move-important');
-                    $('.oe_drop_zone').droppable('destroy').remove();
-                    $(".oe_drop_clone").remove();
-                    self.parent.editor_busy = false;
-                    self.get_parent_block();
-                    setTimeout(function () {self.parent.create_overlay(self.$target);},0);
+                    self.dropped = false;
                 },
             });
+        },
+        _drag_and_drop_start: function (){
+            var self = this;
+            self.parent.hide();
+            self.parent.editor_busy = true;
+            self.size = {
+                width: self.$target.width(),
+                height: self.$target.height()
+            };
+            self.$target.after("<div class='oe_drop_clone' style='display: none;'/>");
+            self.$target.detach();
+            self.$overlay.addClass("hidden");
+
+            self.parent.activate_insertion_zones({
+                siblings: self.$el ? self.$el.data('selector-siblings') : false,
+                children:   self.$el ? self.$el.data('selector-children') : false,
+                vertical_children: self.$el ? self.$el.data('selector-vertical-children') : false,
+            });
+
+            $("body").addClass('move-important');
+            
+            self._drag_and_drop_after_insert_dropzone();
+            self._drag_and_drop_active_drop_zone($('.oe_drop_zone'));
+        },
+        _drag_and_drop_stop: function (){
+            var self = this;
+            if (!self.dropped) {
+                $(".oe_drop_clone").after(self.$target);
+            }
+            self.$overlay.removeClass("hidden");
+            $("body").removeClass('move-important');
+            $('.oe_drop_zone').droppable('destroy').remove();
+            $(".oe_drop_clone, .oe_drop_to_remove").remove();
+            self.parent.editor_busy = false;
+            self.get_parent_block();
+            setTimeout(function () {self.parent.create_overlay(self.$target);},0);
         },
 
         _clone: function () {
@@ -931,6 +951,36 @@
 
             return this.grid;
         },
+
+        _drag_and_drop_after_insert_dropzone: function(){
+            var self = this;
+            var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
+                var $row = $(this);
+                var width = $row.innerWidth();
+                var pos = 0;
+                while (width > pos + self.size.width) {
+                    var $last = $row.find("> .oe_drop_zone:last");
+                    $last.each(function () {
+                        pos = $(this).position().left;
+                    });
+                    if (width > pos + self.size.width) {
+                        $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
+                        var $add_drop = $last.clone();
+                        $row.append($add_drop);
+                        self._drag_and_drop_active_drop_zone($add_drop);
+                    }
+                }
+            });
+        },
+        _drag_and_drop_start: function () {
+            this._super();
+            this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, ''));
+        },
+        _drag_and_drop_stop: function () {
+            this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
+            this._super();
+        },
+
         on_resize: function (compass, beginClass, current) {
             if (compass !== 'w')
                 return;
