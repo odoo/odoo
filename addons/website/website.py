@@ -91,6 +91,7 @@ class website(osv.osv):
     def render(self, cr, uid, ids, template, values=None):
         view = request.registry.get("ir.ui.view")
         IMD = request.registry.get("ir.model.data")
+        user = request.registry.get("res.users")
 
         qweb_context = request.context.copy()
 
@@ -103,6 +104,7 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             res_company=request.website.company_id,
+            user_id=user.browse(cr, openerp.SUPERUSER_ID, uid),
         )
 
         qweb_context.update(values)

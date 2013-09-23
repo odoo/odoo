@@ -177,7 +177,14 @@ footer
 .carousel-inner .item
     height: 100%
 
+
 .carousel
+    &.oe_small .carousel-inner
+        height: 200px
+    &.oe_medium .carousel-inner
+        height: 300px
+    &.oe_big .carousel-inner
+        height: 450px
     .carousel-caption
         h1, h2, h3
             margin-top: 10px
@@ -202,7 +209,7 @@ footer
             background: rgba(0, 0, 0, 0.4)
     .item.text_only
         .carousel-image
-            display: none
+            display: none !important
         .carousel-caption
             left: 10%
             right: 10%
@@ -219,6 +226,16 @@ footer
         .carousel-image
             right: 50%
             left: 10%
+    .carousel-control
+        cursor: pointer
+        span
+            top: 50%
+            position: absolute
+            margin-top: -8px
+        &.left span
+            left: 10px
+        &.right span
+            right: 10px
 
 /* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
 
