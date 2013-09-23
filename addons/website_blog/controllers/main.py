@@ -74,6 +74,17 @@ class website_mail(http.Controller):
             category = category_obj.browse(cr, uid, category_id, context=context)
             blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
 
+        if blog_post_id:
+            blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
+            pager = request.website.pager(
+                url="/blog/%s/%s/" % (category_id, blog_post_id),
+                total=len(blog_post.website_message_ids),
+                page=page,
+                step=self._post_comment_per_page,
+                scope=7
+            )
+            print pager
+
         values.update({
             'blog_post': blog_post,
             'blog_posts': blog_posts,
