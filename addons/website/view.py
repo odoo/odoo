@@ -70,8 +70,11 @@ class view(osv.osv):
         column_type = type_override or type(column)
 
         if issubclass(column_type, fields.html):
-            # FIXME: multiple children?
-            return html.tostring(el[0])
+            content = []
+            if el.text: content.append(el.text)
+            content.extend(html.tostring(child)
+                           for child in el.iterchildren(tag=etree.Element))
+            return '\n'.join(content)
         elif issubclass(column_type, fields.integer):
             return int(el.text_content())
         elif issubclass(column_type, fields.float):
