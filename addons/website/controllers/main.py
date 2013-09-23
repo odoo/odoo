@@ -64,7 +64,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.cr, request.uid, newview_id, context=request.context)
         newview.write({
             'arch': newview.arch.replace("website.default_page", xid),
-            'name': "page/%s" % xid,
+            'name': "page/%s" % path,
             'page': True,
         })
         # Fuck it, we're doing it live

@@ -604,10 +604,15 @@
             if (!href) { return; }
 
             var match, $control;
-            if (match = /(mailto):(.+)/.exec(href)) {
-                $control = this.$('input.email-address').val(match[2]);
-            } else if(href in this.pages) {
+            if (match = /mailto:(.+)/.exec(href)) {
+                $control = this.$('input.email-address').val(match[1]);
+            } else if (href in this.pages) {
                 $control = this.$('select.existing').val(href);
+            } else if (match = /\/page\/(.+)/.exec(href)) {
+                var actual_href = '/page/website.' + match[1];
+                if (actual_href in this.pages) {
+                    $control = this.$('select.existing').val(actual_href);
+                }
             }
             if (!$control) {
                 $control = this.$('input.url').val(href);
