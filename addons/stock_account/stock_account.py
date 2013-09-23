@@ -180,7 +180,8 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'debit': valuation_amount * quant.qty,
+                    'debit': valuation_amount > 0 and valuation_amount * quant.qty or 0,
+                    'credit': valuation_amount < 0 and -valuation_amount * quant.qty or 0,
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -191,7 +192,8 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'credit': valuation_amount * quant.qty,
+                    'credit': valuation_amount > 0 and valuation_amount * quant.qty or 0,
+                    'debit': valuation_amount < 0 and -valuation_amount * quant.qty or 0,
                     'account_id': credit_account_id,
         }
         res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
