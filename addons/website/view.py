@@ -97,7 +97,7 @@ class view(osv.osv):
         field = el.get('data-oe-field')
 
         column = Model._all_columns[field].column
-        Model.write(cr, uid, int(el.get('data-oe-id')), {
+        Model.write(cr, uid, [int(el.get('data-oe-id'))], {
             field: self.convert_embedded_field(cr, uid, el, column, context=context)
         }, context=context)
 
