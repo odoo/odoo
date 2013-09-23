@@ -175,7 +175,7 @@
 
     <!-- List view of products -->
 
-    <template id="add_basket" inherit_option_id="website_sale.products" name="List View">
+    <template id="list_view" inherit_option_id="website_sale.products" name="List View">
         <xpath expr="//div[@id='products_grid']" position="replace">
             <div class="col-md-12">
                 <t t-foreach="products" t-as="product">
