@@ -1794,14 +1794,15 @@ openerp.mail = function (session) {
             this._super.apply(this, arguments);
             this.ParentViewManager = parent;
             this.node = _.clone(node);
-            this.node.params = _.extend({
+            console.log(self.node);
+           this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
                 'show_read_unread_button': true,
                 'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
-                'display_log_button' : false,
+                'display_log_button' : 1,
             }, this.node.params);
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
@@ -1809,16 +1810,14 @@ openerp.mail = function (session) {
             if (this.node.attrs.readonly) {
                 this.node.params.readonly = this.node.attrs.readonly;
             }
-
+            if (this.node.attrs.display_log_button){
+                this.node.params.display_log_button = parseInt(this.node.attrs.display_log_button);
+            }
             this.domain = this.node.params && this.node.params.domain || [];
 
             if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
             }
-            this.dataset = new session.web.DataSet(this,"ir.actions.client");
-            this.dataset.call('check_message_security', [this.session.uid]).then(function(result){
-                self.node.params.display_log_button = result;
-            });
         },
 
         start: function () {

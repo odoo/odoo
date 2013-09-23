@@ -38,23 +38,6 @@
             <field name="perm_unlink" eval="False"/>
         </record>
 
-        <record id="mail_message_internal_note_employee" model="ir.rule">
-            <field name="name">mail.message</field>
-            <field name="model_id" ref="model_mail_message"/>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="domain_force">[('type', 'in', ['comment','email','notification'])]</field>
-        </record>
-
-        <record id="mail_message_internal_note_all_user" model="ir.rule">
-            <field name="name">mail.message</field>
-            <field name="model_id" ref="model_mail_message"/>
-            <field name="domain_force">[('type', 'in', ['email','notification'])]</field>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-
         <!--
         This rule can not be uncommented, because we have a more wide method in mail.message. When we implement a many2one_variable field, we will be able to uncomment this.
         <record id="mail_message_read_partner_or_author" model="ir.rule">

@@ -1660,3 +1660,19 @@ class mail_thread(osv.AbstractModel):
             }
             threads.append(data)
         return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None: context = {}
+        flag = 0
+        from lxml import etree
+        group =  self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        if group:
+            users = self.pool.get('res.groups').read(cr, uid, group[1], ['users'])['users']
+            flag = uid in users and 1 or 0
+        res = super(mail_thread, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        doc = etree.XML(res['arch'])
+        if view_type == 'form':
+            for node in doc.xpath("//field[@name='message_ids']"):
+                node.set('display_log_button',str(flag))
+        res['arch'] = etree.tostring(doc)
+        return res
