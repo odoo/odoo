@@ -123,9 +123,6 @@
         <li class='oe_snippet_options'>
             <a href="#" class="button js_add">Add Slide</a>
         </li>
-        <li class='oe_snippet_options'>
-            <a href="#" class="button js_remove">Remove Slide</a>
-        </li>
         <li class="oe_snippet_options dropdown-submenu">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu" name="carousel-background">
@@ -144,7 +141,7 @@
                 <li data-value="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
                 <li data-value="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
                 <li data-value="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
-                <li><input class="form-control input-sm" type="text" placeholder="http://...."/></li>
+                <li class="oe_custom_bg"><b></b></li>
             </ul>
         </li>
         <li class='oe_snippet_options dropdown-submenu'>
@@ -154,6 +151,9 @@
                 <li data-value="image_text"><a>Image - Text</a></li>
                 <li data-value="text_image"><a>Text - Image</a></li>
             </ul>
+        </li>
+        <li class='oe_snippet_options'>
+            <a href="#" class="button js_remove">Remove Slide</a>
         </li>
 
         <!-- thumbnail to display inside the bottom widget list editor -->
@@ -167,7 +167,8 @@
         <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000">
             <!-- Carousel items -->
             <div class="carousel-inner">
-                <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
+                <div class="item image_text active">
+                    <img src="/website/static/src/img/banner/color_splash.jpg" width="100%" height="100%"/>
                     <div class="container">
                         <div class="carousel-caption content">
                             <h1>Set Your Banner Title</h1>

@@ -571,14 +571,6 @@
         *  Called after onBlur of snippet editor
         */
         onBlurEdit : function () {},
-
-        /* getOptions
-        *  Read data saved for your snippet animation.
-        */
-        getOptions: function () {
-            var options = this.$el.data("snippet-options");
-            return options ? JSON.parse(options) : undefined;
-        },
     });
 
 
@@ -805,21 +797,6 @@
         onBlur : function () {
             this.$overlay.removeClass('oe_active');
         },
-
-        /* setOptions
-        *  Use this method when you want to save some data for your snippet animation.
-        */
-        setOptions: function (options) {
-            $target.attr("data-snippet-options", JSON.stringify(options));
-        },
-
-        /* getOptions
-        *  Read data saved for your snippet animation.
-        */
-        getOptions: function () {
-            var options = this.$target.data("snippet-options");
-            return options ? JSON.parse(options) : undefined;
-        },
     });
 
 
@@ -1015,70 +992,81 @@
         start : function () {
             this._super();
 
-            this.$editor.find(".js_add").on('click', this, this.on_add);
-            this.$editor.find(".js_remove").on('click', this, this.on_remove);
+            this.$editor.find(".js_add").on('click', _.bind(this.on_add, this));
+            this.$editor.find(".js_remove").on('click', _.bind(this.on_remove, this));
 
             this.change_background();
             this.change_style();
             this.change_size();
+
+            // remove cke image seletor
+            this.$target.on('mousedown mouseup', '.carousel-inner .item > img', function (event) {
+                event.preventDefault();
+                return false;
+            });
         },
         on_add: function (e) {
             e.preventDefault();
-            var $inner = e.data.$target.find('.carousel-inner');
+            var $inner = this.$target.find('.carousel-inner');
             var cycle = $inner.find('.item').size();
             $inner.find('.item.active').clone().removeClass('active').appendTo($inner);
-            e.data.$target.carousel(cycle);
+            this.$target.carousel(cycle);
+            this.set_options_background();
+            this.set_options_style();
         },
         on_remove: function (e) {
             e.preventDefault();
-            var $inner = e.data.$target.find('.carousel-inner');
+            var $inner = this.$target.find('.carousel-inner');
             if ($inner.find('.item').size() > 1) {
                 $inner
                     .find('.item.active').remove().end()
                     .find('.item:first').addClass('active');
-                e.data.$target.carousel(0);
+                this.$target.carousel(0);
+                this.set_options_background();
+                this.set_options_style();
             }
+        },
+        onFocus: function () {
+            this.set_options_background();
+            this.set_options_style();
+            this._super();
+        },
+        set_options_background: function () {
+            var $image = this.$target.find('.carousel-inner .item.active > img');
+            var bg = $image.attr('src');
+            var $ul = this.$editor.find('ul[name="carousel-background"]');
+            $ul.find("li").removeClass("active");
+            var selected = $ul.find('[data-value="' + bg + '"], [data-value="' + bg.replace(/.*:\/\/[^\/]+/, '') + '"]')
+                .addClass('active').length;
+            this.$editor.find('.oe_custom_bg b').val(selected ? "" : bg);
         },
         change_background: function () {
             var self = this;
-            var $item = this.$target.find('.carousel-inner .item.active');
-            var bg = $item.css('background-image')
-                .replace(/url\((.*)\)/g, '$1');
-
-            var $input = this.$editor.find('input');
             var $ul = this.$editor.find('ul[name="carousel-background"]');
             var $li = $ul.find("li");
 
-            var selected = $ul.find('[data-value="' + bg + '"], [data-value="' + bg.replace(/.*:\/\/[^\/]+/, '') + '"]')
-                .addClass('active').length;
-
-            if (!selected) {
-                this.$editor.find('.carousel-background input').val(bg);
-            }
-
-            $input.on('change', function () {
-                $item.css('background-image', 'url(' + $(this).val() + ')');
-                $li.removeClass("active");
-            });
-
             $li.on('click', function (event) {
-                    event.preventDefault();
                     $li.removeClass("active");
                     $(this).addClass("active");
-                    $input.val("");
-                    return false;
+                    self.$editor.find('input').val("");
                 })
                 .on('mouseover', function (event) {
-                    $item.css('background-image', 'url(' + $(this).data("value") + ')');
+                    if ($(this).data("value")) {
+                        self.$target.find('.carousel-inner .item.active > img')
+                            .attr('src', $(this).data("value"));
+                    }
                 })
                 .on('mouseout', function (event) {
-                    $item.css('background-image', 'url(' + $ul.find('li.active').data("value") + ')');
+                    self.$target.find('.carousel-inner .item.active > img')
+                        .attr('src', $ul.find('li.active').data("value"));
                 });
         },
-        change_style: function () {
-            var self = this;
+        set_options_style: function () {
             var style = false;
             var $el = this.$target.find('.carousel-inner .item.active');
+            var $ul = this.$editor.find('ul[name="carousel-style"]');
+            var $li = $ul.find("li");
+
             if ($el.hasClass('text_only'))
                 style = 'text_only';
             if ($el.hasClass('image_text'))
@@ -1086,22 +1074,24 @@
             if ($el.hasClass('text_image'))
                 style = 'text_image';
 
+            $ul.find('[data-value="' + style + '"]').addClass('active');
+        },
+        change_style: function () {
+            var self = this;
             var $ul = this.$editor.find('ul[name="carousel-style"]');
             var $li = $ul.find("li");
 
-            $ul.find('[data-value="' + style + '"]').addClass('active');
-
             $li.on('click', function (event) {
-                    event.preventDefault();
                     $li.removeClass("active");
                     $(this).addClass("active");
-                    return false;
                 })
                 .on('mouseover', function (event) {
+                    var $el = self.$target.find('.carousel-inner .item.active');
                     $el.removeClass('image_text text_image text_only');
                     $el.addClass($(event.currentTarget).data("value"));
                 })
                 .on('mouseout', function (event) {
+                    var $el = self.$target.find('.carousel-inner .item.active');
                     $el.removeClass('image_text text_image text_only');
                     $el.addClass($ul.find('li.active').data("value"));
                 });
@@ -1122,10 +1112,8 @@
             $ul.find('[data-value="' + size + '"]').addClass('active');
 
             $li.on('click', function (event) {
-                    event.preventDefault();
                     $li.removeClass("active");
                     $(this).addClass("active");
-                    return false;
                 })
                 .on('mouseover', function (event) {
                     $el.removeClass('oe_big oe_small oe_medium');
