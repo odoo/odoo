@@ -297,7 +297,7 @@ class project_issue(osv.Model):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'kanban_state': 'normal',
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,
     }
 

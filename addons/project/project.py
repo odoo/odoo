@@ -804,7 +804,7 @@ class task(osv.osv):
     _defaults = {
         'stage_id': _get_default_stage_id,
         'project_id': _get_default_project_id,
-        'date_last_stage_update': lambda *a: fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
