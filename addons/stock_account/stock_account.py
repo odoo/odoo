@@ -71,7 +71,7 @@ class stock_quant(osv.osv):
             #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
             #1) the product cost's method is 'real'
             #2) we just fixed a negative quant caused by an outgoing shipment
-            if not quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
+            if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
 
