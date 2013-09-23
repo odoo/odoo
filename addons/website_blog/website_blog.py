@@ -111,7 +111,6 @@ class BlogPost(osv.Model):
             domain=lambda self: [
                 '&', ('model', '=', self._name), ('type', '=', 'comment')
             ],
-            auto_join=True,
             string='Website Messages',
             help="Website communication history",
         ),

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website import website
@@ -42,39 +41,57 @@ class website_mail(http.Controller):
         '/blog/<int:category_id>/<int:blog_post_id>/page/<int:page>/'
     ], type='http', auth="public")
     def blog(self, category_id=None, blog_post_id=None, page=1, **post):
+        """ Prepare all values to display the blog.
+
+        :param integer category_id: id of the category currently browsed.
+        :param integer blog_post_id: ID of the blog post currently browsed. If not
+                                     set, the user is browsing the category and
+                                     a post pager is calculated. If set the user
+                                     is reading the blog post and a comments pager
+                                     is calculated.
+        :param integer page: current page of the pager. Can be the category or
+                            post pager.
+        :param dict post: kwargs, may contain
+
+         - 'unable_editor': editor control
+
+        :return dict values: values for the templates, containing
+
+         - 'blog_post': browse of the current post, if blog_post_id
+         - 'blog_posts': list of browse records that are the posts to display
+                         in a given category, if not blog_post_id
+         - 'category': browse of the current category, if category_id
+         - 'categories': list of browse records of categories
+         - 'pager': the pager to display, posts pager in a category or comments
+                    pager in a blog post
+         - 'nav_list': a dict [year][month] for archives navigation
+        """
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
         category_obj = request.registry['blog.category']
 
-        values = {
-            'blog_ids': None,
-            'blog_id': None,
-            'nav_list': dict(),
-            'unable_editor': post.get('unable_editor')
-        }
-
-        # no category chosen: display categories
-        categories = None
         category = None
         blog_post = None
         blog_posts = None
         pager = None
+        nav = {}
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
-
-        # category but no post chosen: display the last ones, create pager
-        if category_id and not blog_post_id:
-            pager_begin = (page - 1) * self._category_post_per_page
-            pager_end = page * self._category_post_per_page
+        if category_id:
             category = category_obj.browse(cr, uid, category_id, context=context)
-            blog_posts = category.blog_ids[pager_begin:pager_end]
-            pager = request.website.pager(url="/blog/%s/" % category_id, total=len(category.blog_ids), page=page, step=self._category_post_per_page, scope=7)
-        elif category_id and blog_post_id:
-            category = category_obj.browse(cr, uid, category_id, context=context)
-            blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
-
-        if blog_post_id:
+            if not blog_post_id:
+                pager = request.website.pager(
+                    url="/blog/%s/" % category_id,
+                    total=len(category.blog_ids),
+                    page=page,
+                    step=self._category_post_per_page,
+                    scope=7
+                )
+                pager_begin = (page - 1) * self._category_post_per_page
+                pager_end = page * self._category_post_per_page
+                blog_posts = category.blog_ids[pager_begin:pager_end]
+        if category_id and blog_post_id:
             blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
             pager = request.website.pager(
                 url="/blog/%s/%s/" % (category_id, blog_post_id),
@@ -83,25 +100,27 @@ class website_mail(http.Controller):
                 step=self._post_comment_per_page,
                 scope=7
             )
-            print pager
+            pager_begin = (page - 1) * self._post_comment_per_page
+            pager_end = page * self._post_comment_per_page
+            blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
 
-        values.update({
+        for group in blog_post_obj.read_group(cr, uid, [], ['name', 'create_date'], groupby="create_date", orderby="create_date asc", context=context):
+            year = group['create_date'].split(" ")[1]
+            if not year in nav:
+                nav[year] = {'name': year, 'create_date_count': 0, 'months': []}
+            nav[year]['create_date_count'] += group['create_date_count']
+            nav[year]['months'].append(group)
+
+        values = {
             'blog_post': blog_post,
             'blog_posts': blog_posts,
             'categories': categories,
             'category': category,
             'pager': pager,
-        })
+            'nav_list': nav,
+            'unable_editor': post.get('unable_editor')
+        }
 
-        for group in blog_post_obj.read_group(cr, uid, [], ['name', 'create_date'], groupby="create_date", orderby="create_date asc", context=context):
-            print 'group', group
-            year = group['create_date'].split(" ")[1]
-            if not values['nav_list'].get(year):
-                values['nav_list'][year] = {'name': year, 'create_date_count': 0, 'months': []}
-            values['nav_list'][year]['create_date_count'] += group['create_date_count']
-            values['nav_list'][year]['months'].append(group)
-
-        print values
         return request.website.render("website_blog.index", values)
 
     @website.route(['/blog/nav'], type='http', auth="public")
@@ -129,7 +148,6 @@ class website_mail(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         url = request.httprequest.host_url
         request.session.body = post.get('body')
-        print category_id, blog_post_id, post
         if request.context['is_public_user']:  # purpose of this ?
             return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, category_id, blog_post_id)
 
