@@ -133,15 +133,10 @@ class ir_model(osv.osv):
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
-    # overridden to allow searching both on model name (model field)
-    # and model description (name field)
-    def _name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        return self.name_get(cr, name_get_uid or uid,
-                             super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
-                             context=context)
+    def _search_display_name(self, operator, value):
+        # overridden to allow searching both on model name (model field) and
+        # model description (name field)
+        return ['|', ('model', operator, value), ('name', operator, value)]
 
     def _drop_table(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context):

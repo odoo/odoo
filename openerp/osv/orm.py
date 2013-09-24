@@ -602,7 +602,14 @@ class BaseModel(object):
               '2013-06-18 08:31:32.821177'
         """
         if 'id' not in cls._columns and not hasattr(cls, 'id'):
-            cls._set_field_descriptor('id', fields2.Id())
+            cls._set_field_descriptor('id', fields2.Id(string='ID'))
+
+        if 'display_name' not in cls._columns and not hasattr(cls, 'display_name'):
+            cls._set_field_descriptor('display_name',
+                fields2.Char(string='Name', store=False,
+                    compute='_compute_display_name',
+                    inverse='_inverse_display_name',
+                    search='_search_display_name'))
 
         log_access = getattr(cls, '_log_access', getattr(cls, '_auto', True))
         compute_concurrency_field = "compute_concurrency_field"
@@ -2104,77 +2111,89 @@ class BaseModel(object):
         """
         return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
-    def name_get(self, cr, user, ids, context=None):
-        """Returns the preferred display value (text representation) for the records with the
-           given ``ids``. By default this will be the value of the ``name`` column, unless
-           the model implements a custom behavior.
-           Can sometimes be seen as the inverse function of :meth:`~.name_search`, but it is not
-           guaranteed to be.
+    #
+    # display_name, name_get, name_create, name_search
+    #
 
-           :rtype: list(tuple)
-           :return: list of pairs ``(id,text_repr)`` for all records with the given ``ids``.
+    @api.depends('*')
+    def _compute_display_name(self):
+        name = self._rec_name
+        if name in self._fields:
+            convert = self._fields[name].convert_to_display_name
+            for record in self:
+                record.display_name = convert(record[name])
+        else:
+            for record in self:
+                record.display_name = "%s,%s" % (self._name, self.id)
+
+    def _inverse_display_name(self):
+        name = self._rec_name
+        for record in self:
+            record[name] = record.display_name
+
+    def _search_display_name(self, operator, value):
+        return [(self._rec_name, operator, value)]
+
+    @api.multi
+    def name_get(self):
+        """ Return a textual representation for the records in `self`.
+            By default this is the value of field ``display_name``.
+
+            :rtype: list(tuple)
+            :return: list of pairs ``(id, text_repr)`` for all records
         """
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
+        return [(record.id, record.display_name) for record in self.exists()]
 
-        if self._rec_name in self._all_columns:
-            rec_name_column = self._all_columns[self._rec_name].column
-            return [(r['id'], rec_name_column.as_display_name(cr, user, self, r[self._rec_name], context=context))
-                        for r in self.read(cr, user, ids, [self._rec_name],
-                                       load='_classic_write', context=context)]
-        return [(id, "%s,%s" % (self._name, id)) for id in ids]
+    @api.model
+    def name_create(self, name):
+        """ Create a new record by calling :meth:`~.create` with only one value
+            provided: the display name of the new record.
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        """Search for records that have a display name matching the given ``name`` pattern if compared
-           with the given ``operator``, while also matching the optional search domain (``args``).
-           This is used for example to provide suggestions based on a partial value for a relational
-           field.
-           Sometimes be seen as the inverse function of :meth:`~.name_get`, but it is not
-           guaranteed to be.
+            The new record will be initialized with any default values
+            applicable to this model, or provided through the context. The usual
+            behavior of :meth:`~.create` applies.
 
-           This method is equivalent to calling :meth:`~.search` with a search domain based on ``name``
-           and then :meth:`~.name_get` on the result of the search.
-
-           :param list args: optional search domain (see :meth:`~.search` for syntax),
-                             specifying further restrictions
-           :param str operator: domain operator for matching the ``name`` pattern, such as ``'like'``
-                                or ``'='``.
-           :param int limit: optional max number of records to return
-           :rtype: list
-           :return: list of pairs ``(id,text_repr)`` for all matching records.
+            :param name: display name of the record to create
+            :rtype: tuple
+            :return: the :meth:`~.name_get` pair value of the created record
         """
-        return self._name_search(cr, user, name, args, operator, context, limit)
+        record = self.create({'display_name': name})
+        return (record.id, record.display_name)
 
-    def name_create(self, cr, uid, name, context=None):
-        """Creates a new record by calling :meth:`~.create` with only one
-           value provided: the name of the new record (``_rec_name`` field).
-           The new record will also be initialized with any default values applicable
-           to this model, or provided through the context. The usual behavior of
-           :meth:`~.create` applies.
-           Similarly, this method may raise an exception if the model has multiple
-           required fields and some do not have default values.
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        """ Search for records that have a display name matching the given
+            `name` pattern when compared with the given `operator`, while also
+            matching the optional search domain (`args`).
 
-           :param name: name of the record to create
+            This is used for example to provide suggestions based on a partial
+            value for a relational field. Sometimes be seen as the inverse
+            function of :meth:`~.name_get`, but it is not guaranteed to be.
 
-           :rtype: tuple
-           :return: the :meth:`~.name_get` pair value for the newly-created record.
+            This method is equivalent to calling :meth:`~.search` with a search
+            domain based on `display_name` and then :meth:`~.name_get` on the
+            result of the search.
+
+            :param name: the name pattern to match
+            :param list args: optional search domain (see :meth:`~.search` for
+                syntax), specifying further restrictions
+            :param str operator: domain operator for matching `name`, such as
+                ``'like'`` or ``'='``.
+            :param int limit: optional max number of records to return
+            :rtype: list
+            :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
-        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
-        return self.name_get(cr, uid, [rec_id], context)[0]
+        if not (name == '' and operator == 'ilike'):
+            args += [('display_name', operator, name)]
+        return self.search(args, limit=limit).name_get()
 
-    # private implementation of name_search, allows passing a dedicated user for the name_get part to
-    # solve some access rights issues
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        if context is None:
-            context = {}
-        args = args[:]
+        # private implementation of name_search, allows passing a dedicated user
+        # for the name_get part to solve some access rights issues
+        args = list(args or [])
         # optimize out the default criterion of ``ilike ''`` that matches everything
         if not (name == '' and operator == 'ilike'):
-            args += [(self._rec_name, operator, name)]
+            args += [('display_name', operator, name)]
         access_rights_uid = name_get_uid or user
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
         res = self.name_get(cr, access_rights_uid, ids, context)

@@ -225,6 +225,10 @@ class Field(object):
         """ convert `value` from the cache to a valid value for export. """
         return bool(value) and ustr(value)
 
+    def convert_to_display_name(self, value):
+        """ convert `value` from the cache to a suitable display name. """
+        return ustr(value)
+
     #
     # Getter/setter methods
     #
@@ -702,6 +706,9 @@ class Reference(Selection):
     def convert_to_export(self, value):
         return bool(value) and value.name_get()[0][1]
 
+    def convert_to_display_name(self, value):
+        return ustr(value and value.display_name)
+
 
 class _Relational(Field):
     """ Abstract class for relational fields. """
@@ -802,6 +809,9 @@ class Many2one(_Relational):
     def convert_to_export(self, value):
         return bool(value) and value.name_get()[0][1]
 
+    def convert_to_display_name(self, value):
+        return ustr(value.display_name)
+
     def determine_default(self, record):
         super(Many2one, self).determine_default(record)
         if self.inherits:
@@ -866,6 +876,9 @@ class _RelationalMulti(_Relational):
 
     def convert_to_export(self, value):
         return bool(value) and ','.join(name for id, name in value.name_get())
+
+    def convert_to_display_name(self, value):
+        raise NotImplementedError()
 
 
 class One2many(_RelationalMulti):
