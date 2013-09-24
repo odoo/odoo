@@ -386,5 +386,17 @@
                 </tbody>
             </table>
         </template>
+        <template id="robots">
+# robotstxt.org/
+User-agent: *
+Sitemap: <t t-esc="url_root"/>sitemap.xml
+        </template>
+        <template id="sitemap">
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                <t t-foreach="pages" t-as="page">
+                    <url t-esc="page['url']"/>
+                </t>
+            </urlset>
+        </template>
      </data>
 </openerp>

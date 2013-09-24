@@ -271,4 +271,12 @@ class Website(openerp.addons.web.controllers.main.Home):
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
+    @website.route(['/robots.txt'], type='http', auth="public")
+    def robots(self):
+        return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+
+    @website.route(['/sitemap.xml'], type='http', auth="public")
+    def sitemap(self):
+        return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
+
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

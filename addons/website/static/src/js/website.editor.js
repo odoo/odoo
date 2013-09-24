@@ -236,12 +236,8 @@
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
-            var instanceReady = false;
-            this.rte.on('instanceReady', this, function () {
-                clearTimeout(instanceReady);
-                instanceReady = setTimeout(function () {
-                    self.trigger('rte:ready');
-                }, 0);
+            this.rte.on('rte:ready', this, function () {
+                self.trigger('rte:ready');
             });
 
             return $.when(
@@ -337,6 +333,8 @@
                 root.contentEditable = false;
 
                 self.setup_editables(root);
+
+                self.trigger('rte:ready');
             });
         },
 
@@ -408,6 +406,9 @@
                 allowedContent: true,
                 // Don't insert paragraphs around content in e.g. <li>
                 autoParagraph: false,
+                // Don't automatically add &nbsp; or <br> in empty block-level
+                // elements when edition starts
+                fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
                 extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
@@ -648,7 +649,7 @@
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
                 method: 'list_pages',
-                args: [],
+                args: [null],
                 kwargs: {
                     context: website.get_context()
                 },
