@@ -3285,6 +3285,16 @@ class BaseModel(object):
                 cls._columns[field_name].required = True
                 cls._columns[field_name].ondelete = "cascade"
 
+        # reflect fields with delegate=True in dictionary cls._inherits
+        for field in cls._fields.itervalues():
+            if field.type == 'many2one' and not field.related and field.delegate:
+                if not field.required:
+                    _logger.warning("Field %s with delegate=True must be required.", field)
+                    field.required = True
+                if field.ondelete.lower() not in ('cascade', 'restrict'):
+                    field.ondelete = 'cascade'
+                cls._inherits[field.comodel_name] = field.name
+
     def _before_registry_update(self):
         """ method called on all models before updating the registry """
         # reset setup of all fields

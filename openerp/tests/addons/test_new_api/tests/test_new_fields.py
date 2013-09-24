@@ -378,3 +378,22 @@ class TestMagicalFields(common.TransactionCase):
         self.assertEqual(
             record.write_uid,
             self.registry('res.users').browse(self.uid))
+
+class TestInherits(common.TransactionCase):
+    def setUp(self):
+        super(TestInherits, self).setUp()
+        self.Parent = self.registry('test_new_api.inherits_parent')
+        self.Child = self.registry('test_new_api.inherits_child')
+
+    def test_inherits(self):
+        """ Check that a many2one field with delegate=True adds an entry in _inherits """
+        self.assertEqual(self.Child._inherits, {'test_new_api.inherits_parent': 'parent'})
+        self.assertIn('name', self.Child._fields)
+        self.assertEqual(self.Child._fields['name'].related, ('parent', 'name'))
+
+        child = self.Child.create({'name': 'Foo'})
+        parent = child.parent
+        self.assertTrue(parent)
+        self.assertEqual(child._name, 'test_new_api.inherits_child')
+        self.assertEqual(parent._name, 'test_new_api.inherits_parent')
+        self.assertEqual(child.name, parent.name)

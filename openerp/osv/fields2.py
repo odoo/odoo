@@ -757,7 +757,8 @@ class _Relational(Field):
 class Many2one(_Relational):
     """ Many2one field. """
     type = 'many2one'
-    ondelete = None                     # defaults to 'set null' in ORM
+    ondelete = 'set null'               # what to do when value is deleted
+    delegate = False                    # whether self implements delegation
 
     _attrs = Field._attrs + ('ondelete',)
 

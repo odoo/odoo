@@ -182,3 +182,14 @@ class defaults(Model):
 
     name = fields.Char(required=True, compute=fields.default(u'Bob the Builder'))
     description = fields.Char()
+
+
+class InheritsParent(Model):
+    _name = 'test_new_api.inherits_parent'
+    name = fields.Char()
+
+
+class InheritsChild(Model):
+    _name = 'test_new_api.inherits_child'
+    parent = fields.Many2one('test_new_api.inherits_parent', delegate=True)
+
