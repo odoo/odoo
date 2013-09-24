@@ -229,19 +229,24 @@
                     <button name="%(report_shipping)d" string="Print Delivery Order" states="confirmed,assigned" type="action"/>
                     <button name="%(report_shipping)d" string="Print Delivery Order" states="done" type="action" class="oe_highlight"/>
                 </xpath>
-                <field name="min_date" position="after">
-                    <field name="carrier_id"/>
-                    <field name="carrier_tracking_ref"/>
-                    <field name="number_of_packages"/>
-                </field>
-                <field name="company_id" position="before">
-                    <label for="weight" string="Weight"/>
-                    <div>
-                        <field name="weight" class="oe_inline"/>
-                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                    </div>
-                    <field name="weight_net" groups="base.group_no_one"/>
-               </field>
+                <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
+                <separator string="Carrier Informations"/>
+                <group>
+                    <group>
+                        <field name="carrier_id"/>
+                        <field name="carrier_tracking_ref"/>
+                        <field name="number_of_packages"/>
+                    </group>
+                    <group>
+                        <label for="weight" string="Weight"/>
+                        <div>
+                            <field name="weight" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                    </group>
+                </group>
+                </xpath>
             </field>
         </record>
 

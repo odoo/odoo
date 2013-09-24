@@ -935,10 +935,10 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'move_dest_id': production.move_prod_id.id,
-            'state': 'waiting',
             'company_id': production.company_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
+        stock_move.action_confirm(cr, uid, [move_id], context=context)
         production.write({'move_created_ids': [(6, 0, [move_id])]}, context=context)
         return move_id
 
@@ -962,10 +962,10 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'move_dest_id': parent_move_id,
-            'state': 'waiting',
             'company_id': production.company_id.id,
             'procure_method': 'make_to_order',
         })
+        stock_move.action_confirm(cr, uid, [move_id], context=context)
         production.write({'move_lines': [(4, move_id)]}, context=context)
         return move_id
 

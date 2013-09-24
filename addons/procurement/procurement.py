@@ -74,6 +74,7 @@ class procurement_rule(osv.osv):
     '''
     _name = 'procurement.rule'
     _description = "Procurement Rule"
+    _order = "name"
 
     def _get_action(self, cr, uid, context=None):
         return []

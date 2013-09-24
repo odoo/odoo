@@ -85,17 +85,6 @@
 
 <!--  Inherit stock picking's tree view  -->
 
-        <record model="ir.ui.view" id="sale_journal_picking_order_tree">
-            <field name="name">stock.picking.journal.view.tree</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.vpicktree"/>
-            <field name="arch" type="xml">
-                <field name="state" position="before">
-                    <field name="invoice_type_id"/>
-                </field>
-            </field>
-        </record>
-
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.journal.property.form.inherit</field>
             <field name="model">res.partner</field>

@@ -52,9 +52,9 @@ openerp.stock = function(openerp) {
                 labelFontColor: '#000',
                 label: label,
                 levelColors: [
-                    "#ff0000",
+                    "#a9d70b",
                     "#f9c802",
-                    "#a9d70b"
+                    "#ff0000"
                 ],
             });
         },

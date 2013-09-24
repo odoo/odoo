@@ -667,10 +667,8 @@ class purchase_order(osv.osv):
         return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
-        type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
-        type = self.pool.get("stock.picking.type").browse(cr, uid, type_id, context=context)
         return {
-            'name': self.pool.get('ir.sequence').get_id(cr, uid, type.sequence_id.id, 'id'),
+            'name': self.pool.get('ir.sequence').get_id(cr, uid, order.picking_type_id.sequence_id.id, 'id'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
@@ -679,12 +677,11 @@ class purchase_order(osv.osv):
             'purchase_id': order.id,
             'company_id': order.company_id.id,
             'move_lines' : [],
-            'picking_type_id': type_id, 
+            'picking_type_id': order.picking_type_id.id, 
         }
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         ''' prepare the stock move data from the PO line '''
-        type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
         price_unit = order_line.price_unit
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
             price_unit *= order_line.product_uom.factor
@@ -709,7 +706,7 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': price_unit,
-            'picking_type_id': type_id, 
+            'picking_type_id': order.picking_type_id.id, 
             'group_id': group_id, 
         }
 
@@ -739,7 +736,7 @@ class purchase_order(osv.osv):
         stock_move = self.pool.get('stock.move')
         
         new_group = False
-        if any([(x.group_id == False) for x in order_lines]):
+        if any([(not x.group_id) for x in order_lines]):
             new_group = self.pool.get("procurement.group").create(cr, uid, {'name':order.name, 'partner_id': order.partner_id.id}, context=context)
         
         
@@ -1377,6 +1374,17 @@ class account_invoice_line(osv.Model):
         'purchase_line_id': fields.many2one('purchase.order.line',
             'Purchase Order Line', ondelete='set null', select=True,
             readonly=True),
+    }
+
+class product_product(osv.osv):
+    _inherit = "product.product"
+
+    def _get_buy_route(self, cr, uid, context=None):
+        buy_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
+        return [buy_route]
+
+    _defaults = {
+        'route_ids': _get_buy_route,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

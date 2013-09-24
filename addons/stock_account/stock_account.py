@@ -59,27 +59,41 @@ class stock_quant(osv.osv):
             return line.cost * line.qty
         return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
 
-    # FP Note: this is where we should post accounting entries for adjustment
-    def _price_update(self, cr, uid, quant, newprice, context=None):
-        super(stock_quant, self)._price_update(cr, uid, quant, newprice, context=context)
-        # TODO: generate accounting entries
+    def _price_update(self, cr, uid, quant_ids, newprice, context=None):
+        if context is None:
+            context = {}
+        super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
+        ctx = context.copy()
+        for quant in self.browse(cr, uid, quant_ids, context=context):
+            move = self._get_latest_move(cr, uid, quant, context=context)
+            ctx['force_valuation_amount'] = newprice - quant.cost
+            # this is where we post accounting entries for adjustment
+            self._account_entry_move(cr, uid, quant, move, context=ctx)
+            #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
+            #1) the product cost's method is 'real'
+            #2) we just fixed a negative quant caused by an outgoing shipment
+            if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
+                self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
 
     """
     Accounting Valuation Entries
 
     location_from: can be None if it's a new quant
     """
-    def _account_entry_move(self, cr, uid, quant, location_from, location_to, move, context=None):
+    def _account_entry_move(self, cr, uid, quant, move, context=None):
+        location_from = move.location_id
+        location_to = move.location_dest_id
         if context is None:
             context = {}
         if quant.product_id.valuation != 'real_time':
             return False
-        if quant.lot_id and quant.lot_id.partner_id:
+        if quant.owner_id:
             #if the quant isn't owned by the company, we don't make any valuation entry
             return False
-        if quant.qty <= 0 or quant.propagated_from_id:
-            #we don't make any stock valuation for negative quants because we may not know the real cost price.
-            #The valuation will be made at the time of the reconciliation of the negative quant.
+        if quant.qty <= 0:
+            #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
+            #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
+            #to make the adjustments when we know the real cost price.
             return False
         company_from = self._location_owner(cr, uid, quant, location_from, context=context)
         company_to = self._location_owner(cr, uid, quant, location_to, context=context)
@@ -109,11 +123,9 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
-        location_from = quant and quant.location_id or False
-        quant = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
-        quant.refresh()
-        self._account_entry_move(cr, uid, quant, location_from, quant.location_id, move, context=context)
-        return quant
+        quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
+        self._account_entry_move(cr, uid, quant_record, move, context=context)
+        return quant_record
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
@@ -153,7 +165,12 @@ class stock_quant(osv.osv):
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
         """
-        valuation_amount = quant.product_id.cost_method == 'real' and quant.cost or quant.product_id.standard_price
+        if context is None:
+            context = {}
+        if context.get('force_valuation_amount'):
+            valuation_amount = context.get('force_valuation_amount')
+        else:
+            valuation_amount = quant.product_id.cost_method == 'real' and quant.cost or quant.product_id.standard_price
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -163,7 +180,8 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'debit': valuation_amount * quant.qty,
+                    'debit': valuation_amount > 0 and valuation_amount * quant.qty or 0,
+                    'credit': valuation_amount < 0 and -valuation_amount * quant.qty or 0,
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -174,7 +192,8 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'credit': valuation_amount * quant.qty,
+                    'credit': valuation_amount > 0 and valuation_amount * quant.qty or 0,
+                    'debit': valuation_amount < 0 and -valuation_amount * quant.qty or 0,
                     'account_id': credit_account_id,
         }
         res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
@@ -187,16 +206,17 @@ class stock_quant(osv.osv):
                                   'line_id': move_lines,
                                   'ref': move.picking_id and move.picking_id.name}, context=context)
 
-    def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
-        move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
-        quant_neg_position = quant_neg.negative_dest_location_id.usage
-        remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
-        #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
-        #1) there isn't any negative quant anymore
-        #2) the product cost's method is 'real'
-        #3) we just fixed a negative quant caused by an outgoing shipment
-        if not remaining_to_solve_quant and move.product_id.cost_method == 'real' and quant_neg_position != 'internal':
-            self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
+    #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
+    #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
+    #    quant_neg_position = quant_neg.negative_dest_location_id.usage
+    #    remaining_solving_quant, remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
+    #    #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
+    #    #1) there isn't any negative quant anymore
+    #    #2) the product cost's method is 'real'
+    #    #3) we just fixed a negative quant caused by an outgoing shipment
+    #    if not remaining_to_solve_quant and move.product_id.cost_method == 'real' and quant_neg_position != 'internal':
+    #        self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
+    #    return remaining_solving_quant, remaining_to_solve_quant
 
 class stock_move(osv.osv):
     _inherit = "stock.move"

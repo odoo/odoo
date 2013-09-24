@@ -47,7 +47,7 @@ class procurement_rule(osv.osv):
         return res
 
     _columns = {
-        'location_id': fields.many2one('stock.location', 'Destination Location'),
+        'location_id': fields.many2one('stock.location', 'Procurement Location'),
         'location_src_id': fields.many2one('stock.location', 'Source Location',
             help="Source location is action=move"),
         'route_id': fields.many2one('stock.location.route', 'Route',
