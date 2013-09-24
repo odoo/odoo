@@ -708,6 +708,8 @@ class stock_picking(osv.osv):
         if not backorder_moves:
             backorder_moves = picking.move_lines
         backorder_move_ids = [x.id for x in backorder_moves if x.state not in ('done','cancel')]
+        if 'do_only_split' in context and context['do_only_split']:
+            backorder_move_ids = [x.id for x in backorder_moves if x.id not in context['split']]
 
         if backorder_move_ids:
             backorder_id = self.copy(cr, uid, picking.id, {
@@ -794,47 +796,12 @@ class stock_picking(osv.osv):
                         'cost': move.product_id.standard_price,
                     }, context=context)
 
-    def _do_partial_product_move(self, cr, uid, picking, product, qty, pack_id = False, lot_id = False,  quant=False, context=None):
-        moves = []
-        stock_move_obj = self.pool.get('stock.move')
-        for move in picking.move_lines:
-            if move.state in ('cancel','done'): continue
-            if move.product_id.id == product.id:
-                todo = min(move.product_qty, qty)
-                newmove_id = stock_move_obj.split(cr, uid, move, todo, context=context)
-                if not context.get('do_only_split'):
-                    stock_move_obj.action_done(cr, uid, [newmove_id], context=context)
-
-                # TODO: To be removed after new API implementation
-                move.refresh()
-                moves.append(move)
-
-                qty -= todo
-                if qty <= 0: break
-        if qty > 0:
-            move_id = stock_move_obj.create(cr, uid, {
-                'name': product.name,
-                'product_id': product.id,
-                'product_uom_qty': qty,
-                'product_uom': product.uom_id.id,
-                'location_id': picking.location_id.id,
-                'location_dest_id': picking.location_dest_id.id,
-                'picking_id': picking.id,
-                'reserved_quant_ids': quant and [(4, quant.id)] or [],
-                'picking_type_id': picking.picking_type_id.id
-            }, context=context)
-            if not context.get('do_only_split'):
-                stock_move_obj.action_done(cr, uid, [move_id], context=context)
-            move = stock_move_obj.browse(cr, uid, move_id, context=context)
-            moves.append(move)
-        return moves
 
     def do_rereserve(self, cr, uid, picking_ids, context=None):
         '''
             Needed for parameter create
         '''
         self.rereserve(cr, uid, picking_ids, context=context)
-
 
 
 
@@ -956,6 +923,8 @@ class stock_picking(osv.osv):
             If no pack operation, we close the whole move
             Otherwise, do the pack operations
         """
+        if not context:
+            context={}
         stock_move_obj = self.pool.get('stock.move')
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if not picking.pack_operation_ids:
@@ -1010,8 +979,10 @@ class stock_picking(osv.osv):
                         todo.append(move.id)
                     elif move.state in ('assigned','confirmed'):
                         todo.append(move.id)
-                if len(todo):
+                if len(todo) and not ('do_only_split' in context and context['do_only_split']):
                     self.pool.get('stock.move').action_done(cr, uid, todo, negatives = resneg, context=context)
+                elif 'do_only_split' in context and context['do_only_split']:
+                    context.update({'split': [x.id for x in orig_moves] + extra_moves})
             picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
         return True
@@ -1024,19 +995,7 @@ class stock_picking(osv.osv):
             context = {}
         ctx = context.copy()
         ctx['do_only_split'] = True
-        quant_package_obj = self.pool.get('stock.quant.package')
-        backorder_moves = []
-        for picking in self.browse(cr, uid, picking_ids, context=context):
-            if not picking.pack_operation_ids:
-                continue
-            for op in picking.pack_operation_ids:
-                if op.package_id:
-                    for quant in quant_package_obj.quants_get(cr, uid, op.package_id, context=context):
-                        backorder_moves += self._do_partial_product_move(cr, uid, picking, quant.product_id, quant.qty, quant, context=ctx)
-                elif op.product_id:
-                    backorder_moves += self._do_partial_product_move(cr, uid, picking, op.product_id, op.product_qty, op.quant_id, context=ctx)
-
-            self._create_backorder(cr, uid, picking, backorder_moves, context=context)
+        self.do_partial(cr, uid, picking_ids, context=ctx)
         return True
 
     # Methods for the barcode UI
