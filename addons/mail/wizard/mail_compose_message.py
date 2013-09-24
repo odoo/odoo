@@ -271,7 +271,7 @@ class mail_compose_message(osv.TransientModel):
                         context = dict(context,
                                        mail_notify_force_send=False,  # do not send emails directly but use the queue instead
                                        mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
-                    active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **mail_values)
+                    active_model_pool.message_post(cr, uid, [res_id], type='email', subtype=subtype, context=context, **mail_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
