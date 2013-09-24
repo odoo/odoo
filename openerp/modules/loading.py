@@ -56,19 +56,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
-    def process_sql_file(cr, fp):
-        queries = fp.read().split(';')
-        for query in queries:
-            new_query = ' '.join(query.split())
-            if new_query:
-                cr.execute(new_query)
-
-    load_init_xml = lambda *args: _load_data(cr, *args, kind='init_xml')
-    load_update_xml = lambda *args: _load_data(cr, *args, kind='update_xml')
-    load_demo_xml = lambda *args: _load_data(cr, *args, kind='demo_xml')
-    load_data = lambda *args: _load_data(cr, *args, kind='data')
-    load_demo = lambda *args: _load_data(cr, *args, kind='demo')
-
     def load_test(module_name, idref, mode):
         cr.commit()
         try:
@@ -86,6 +73,28 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             else:
                 cr.rollback()
 
+    def _get_files_of_kind(kind):
+        if kind == 'demo':
+            kind = ['demo_xml', 'demo']
+        elif kind == 'data':
+            kind = ['init_xml', 'update_xml', 'data']
+        if isinstance(kind, str):
+            kind = [kind]
+        files = []
+        for k in kind:
+            for f in package.data[k]:
+                files.append(f)
+                if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
+                    # init_xml, update_xml and demo_xml are deprecated except
+                    # for the case of init_xml with yaml, csv and sql files as
+                    # we can't specify noupdate for those file.
+                    correct_key = 'demo' if k.count('demo') else 'data'
+                    _logger.warning(
+                        "module %s: key '%s' is deprecated in favor of '%s' for file '%s'.",
+                        package.name, k, correct_key, f
+                    )
+        return files
+
     def _load_data(cr, module_name, idref, mode, kind):
         """
 
@@ -95,32 +104,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         init mode.
 
         """
-        for filename in package.data[kind]:
+        for filename in _get_files_of_kind(kind):
             _logger.info("module %s: loading %s", module_name, filename)
-            _, ext = os.path.splitext(filename)
-            pathname = os.path.join(module_name, filename)
-            fp = tools.file_open(pathname)
             noupdate = False
-            if kind in ('demo', 'demo_xml'):
+            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
                 noupdate = True
-            try:
-                ext = ext.lower()
-                if ext == '.csv':
-                    if kind in ('init', 'init_xml'):
-                        noupdate = True
-                    tools.convert_csv_import(cr, module_name, pathname, fp.read(), idref, mode, noupdate)
-                elif ext == '.sql':
-                    process_sql_file(cr, fp)
-                elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
-                elif ext == '.xml':
-                    tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
-                elif ext == '.js':
-                    pass # .js files are valid but ignored here.
-                else:
-                    _logger.warning("Can't load unknown file type %s.", filename)
-            finally:
-                fp.close()
+            tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
 
     if status is None:
         status = {}
@@ -176,13 +165,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if package.state=='to upgrade':
                 # upgrading the module information
                 modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
-            load_init_xml(module_name, idref, mode)
-            load_update_xml(module_name, idref, mode)
-            load_data(module_name, idref, mode)
+            _load_data(cr, module_name, idref, mode, kind='data')
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (index + 0.75) / len(graph)
-                load_demo_xml(module_name, idref, mode)
-                load_demo(module_name, idref, mode)
+                _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
                 # launch tests only in demo mode, as most tests will depend
@@ -329,13 +315,21 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #            they are part of the "currently installed" modules. They will
         #            be dropped in STEP 6 later, before restarting the loading
         #            process.
-        states_to_load = ['installed', 'to upgrade', 'to remove']
-        processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
-        processed_modules.extend(processed)
-        if update_module:
-            states_to_load = ['to install']
-            processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
-            processed_modules.extend(processed)
+        # IMPORTANT 2: We have to loop here until all relevant modules have been
+        #              processed, because in some rare cases the dependencies have
+        #              changed, and modules that depend on an uninstalled module
+        #              will not be processed on the first pass.
+        #              It's especially useful for migrations.
+        previously_processed = -1
+        while previously_processed < len(processed_modules):
+            previously_processed = len(processed_modules)
+            processed_modules += load_marked_modules(cr, graph,
+                ['installed', 'to upgrade', 'to remove'],
+                force, status, report, loaded_modules, update_module)
+            if update_module:
+                processed_modules += load_marked_modules(cr, graph,
+                    ['to install'], force, status, report,
+                    loaded_modules, update_module)
 
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
@@ -406,12 +400,22 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 _logger.info('Reloading registry once more after uninstalling modules')
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
+        # STEP 7: verify custom views on every model
+        if update_module:
+            Views = registry['ir.ui.view']
+            custom_view_test = True
+            for model in registry.models.keys():
+                if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
+                    custom_view_test = False
+                    _logger.error('invalid custom view(s) for model %s', model)
+            report.record_result(custom_view_test)
+
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
         else:
             _logger.info('Modules loaded.')
 
-        # STEP 7: call _register_hook on every model
+        # STEP 8: call _register_hook on every model
         for model in registry.models.values():
             model._register_hook(cr)
 

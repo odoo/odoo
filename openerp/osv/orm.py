@@ -2191,7 +2191,7 @@ class BaseModel(object):
                 are applied
 
             """
-            sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, user, inherit_id, self._name)
+            sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, user, inherit_id, self._name, context=context)
             for (view_arch, view_id) in sql_inherit:
                 source = apply_inheritance_specs(source, view_arch, view_id)
                 source = apply_view_inheritance(cr, user, source, view_id)
@@ -2601,7 +2601,18 @@ class BaseModel(object):
         :param list groupby: fields by which the records will be grouped
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
-        :param dict context: context arguments, like lang, time zone
+        :param dict context: context arguments, like lang, time zone. A special
+                             context key exist for datetime fields : ``datetime_format``.
+                             context[``datetime_format``] = {
+                                'field_name': {
+                                    groupby_format: format for to_char (default: yyyy-mm)
+                                    display_format: format for displaying the value
+                                                    in the result (default: MMM yyyy)
+                                    interval: day, month or year; used for begin
+                                              and end date of group_by intervals
+                                              computation (default: month)
+                                }
+                             }
         :param list orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
@@ -2641,11 +2652,26 @@ class BaseModel(object):
         fget = self.fields_get(cr, uid, fields)
         flist = ''
         group_count = group_by = groupby
+        group_by_params = {}
         if groupby:
             if fget.get(groupby):
                 groupby_type = fget[groupby]['type']
                 if groupby_type in ('date', 'datetime'):
-                    qualified_groupby_field = "to_char(%s,'yyyy-mm')" % qualified_groupby_field
+                    if context.get('datetime_format') and isinstance(context['datetime_format'], dict) \
+                            and context['datetime_format'].get(groupby) and isinstance(context['datetime_format'][groupby], dict):
+                        groupby_format = context['datetime_format'][groupby].get('groupby_format', 'yyyy-mm')
+                        display_format = context['datetime_format'][groupby].get('display_format', 'MMMM yyyy')
+                        interval = context['datetime_format'][groupby].get('interval', 'month')
+                    else:
+                        groupby_format = 'yyyy-mm'
+                        display_format = 'MMMM yyyy'
+                        interval = 'month'
+                    group_by_params = {
+                        'groupby_format': groupby_format,
+                        'display_format': display_format,
+                        'interval': interval,
+                    }
+                    qualified_groupby_field = "to_char(%s,%%s)" % qualified_groupby_field
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
@@ -2672,6 +2698,8 @@ class BaseModel(object):
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
+        if group_by_params and group_by_params.get('groupby_format'):
+            where_clause_params = [group_by_params['groupby_format']] + where_clause_params + [group_by_params['groupby_format']]
         where_clause = where_clause and ' WHERE ' + where_clause
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
@@ -2708,14 +2736,20 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7], '%Y-%m')
-                    days = calendar.monthrange(dt.year, dt.month)[1]
-
-                    date_value = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d')
+                    groupby_datetime = datetime.datetime.strptime(alldata[d['id']][groupby], '%Y-%m-%d')
                     d[groupby] = babel.dates.format_date(
-                        date_value, format='MMMM yyyy', locale=context.get('lang', 'en_US'))
-                    d['__domain'] = [(groupby, '>=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01', '%Y-%m-%d').strftime('%Y-%m-%d') or False),\
-                                     (groupby, '<=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days), '%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
+                        groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
+                    if group_by_params.get('interval') == 'month':
+                        days = calendar.monthrange(groupby_datetime.year, groupby_datetime.month)[1]
+                        domain_dt_begin = groupby_datetime.replace(day=1)
+                        domain_dt_end = groupby_datetime.replace(day=days)
+                    elif group_by_params.get('interval') == 'day':
+                        domain_dt_begin = groupby_datetime.replace(hour=0, minute=0)
+                        domain_dt_end = groupby_datetime.replace(hour=23, minute=59, second=59)
+                    else:
+                        domain_dt_begin = groupby_datetime.replace(month=1, day=1)
+                        domain_dt_end = groupby_datetime.replace(month=12, day=31)
+                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
@@ -5083,6 +5117,8 @@ class BaseModel(object):
         """
         if type(ids) in (int, long):
             ids = [ids]
+        if not ids:
+            return []
         query = 'SELECT id FROM "%s"' % self._table
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
         return [x[0] for x in cr.fetchall()]

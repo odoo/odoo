@@ -89,7 +89,7 @@ class MigrationManager(object):
             'post': '[%s>]',
         }
 
-        if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade'):
+        if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade') or pkg.installed_version is None:
             return
 
         def convert_version(version):

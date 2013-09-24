@@ -43,13 +43,16 @@ _logger = logging.getLogger(__name__)
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
 tags_to_remove = ['html', 'body', 'font']
 
+# allow new semantic HTML5 tags
+allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure'.split())
+safe_attrs = clean.defs.safe_attrs | frozenset(['style'])
 
 def html_sanitize(src, silent=True):
     if not src:
         return src
     src = ustr(src, errors='replace')
 
-    logger = _logger.getChild('html_sanitize')
+    logger = logging.getLogger(__name__ + '.html_sanitize')
 
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
@@ -59,6 +62,8 @@ def html_sanitize(src, silent=True):
         'page_structure': True,
         'style': False,             # do not remove style attributes
         'forms': True,              # remove form tags
+        'remove_unknown_tags': False,
+        'allow_tags': allowed_tags,
     }
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
@@ -72,7 +77,7 @@ def html_sanitize(src, silent=True):
     if etree.LXML_VERSION >= (3, 1, 0):
         kwargs.update({
             'safe_attrs_only': True,
-            'safe_attrs': clean.defs.safe_attrs | set(['style']),
+            'safe_attrs': safe_attrs,
         })
     else:
         # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
@@ -442,6 +447,11 @@ command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 # Typical form of references is <timestamp-openerp-record_id-model_name@domain>
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
 reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
+
+# Bounce regex
+# Typical form of bounce is bounce-128-crm.lead-34@domain
+# group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
+bounce_re = re.compile("[\w]+-(\d+)-?([\w.]+)?-?(\d+)?", re.UNICODE)
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
