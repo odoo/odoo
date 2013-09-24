@@ -71,7 +71,7 @@ class QWebXml(object):
         self.node = xml.dom.Node
         self._t = {}
         self._render_tag = {}
-        self._format_regex = re.compile('#\{(.*?)\}')
+        self._format_regex = re.compile('(#\{(.*?)\})|(\{\{(.*?)\}\})')
         self._void_elements = set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
                                   'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
         prefix = 'render_tag_'
@@ -132,7 +132,8 @@ class QWebXml(object):
         use_native = True
         for m in self._format_regex.finditer(expr):
             use_native = False
-            expr = expr.replace(m.group(), self.eval_str(m.groups()[0], v))
+            expr = expr.replace(m.group(), self.eval_str(m.groups()[1] or m.groups()[3], v))
+
         if not use_native:
             return expr
         else:
@@ -237,6 +238,16 @@ class QWebXml(object):
         else:
             att, val = self.eval_object(av, v)
         return val and ' %s="%s"' % (att, cgi.escape(str(val), 1)) or " "
+
+    def render_att_href(self, e, an, av, v):
+        return self.url_for(e, an, av, v)
+    def render_att_src(self, e, an, av, v):
+        return self.url_for(e, an, av, v)
+    def url_for(self, e, an, av, v):
+        if 'url_for' not in v:
+            raise KeyError("qweb: no 'url_for' found in context")
+        path = str(v['url_for'](self.eval_format(av, v)))
+        return ' %s="%s"' % (an[2:], cgi.escape(path, 1))
 
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
