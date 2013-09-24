@@ -84,6 +84,11 @@
             <field name="act_to" ref="prod_act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
+        <record id="prod_trans_confirmed_cancel" model="workflow.transition">
+            <field name="act_from" ref="prod_act_confirmed"/>
+            <field name="act_to" ref="prod_act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
 
     </data>
 </openerp>
