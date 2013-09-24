@@ -1027,7 +1027,6 @@
                 this.set_options_background();
                 this.set_options_style();
             }
-            console.log(nb);
             if (nb <= 1) {
                 this.$target.find('.carousel-control').addClass("hidden");
             }
@@ -1159,7 +1158,12 @@
         }
     });
 
-    website.snippet.selector.push([ _.map([1,2,3,4,5,6,7,8,9,10,11,12], function (v) {return '.row > .col-md-'+v;}).join(","), 'colmd']);
+    /*
+    * data-snippet-id automatically setted
+    * Don't need to add data-snippet-id="..." into the views
+    */
+
+    website.snippet.selector.push([".row > div[class*='col-md-']", 'colmd']);
     website.snippet.selector.push(['hr', 'hr']);
 
 })();

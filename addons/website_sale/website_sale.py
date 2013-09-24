@@ -31,6 +31,7 @@ class product_pricelist(osv.osv):
 
 class product_template(osv.osv):
     _inherit = "product.template"
+    _order = 'website_published,name'
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
