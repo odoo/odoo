@@ -311,7 +311,8 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
         </record>
-        <record id="product_product_11" model="product.product">
+
+        <record id="product_product_11_temp" model="product.template">
             <field name="name">iPod</field>
             <field name="default_code">M-Las</field>
             <field name="categ_id" ref="product_category_8"/>
@@ -322,6 +323,24 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
         </record>
+        <record id="product_product_11" model="product.product">
+            <field name="name">iPod</field>
+            <field name="default_code">M-Las</field>
+            <field name="categ_id" ref="product_category_8"/>
+            <field name="public_categ_id" ref="Keyboard_Mouse"/>
+            <field name="standard_price">14</field>
+            <field name="list_price">16.50</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="product_tmpl_id" ref="product_product_11_temp"/>
+        </record>
+        <record id="product_product_11_b" model="product.product">
+            <field name="variants">32 Gb</field>
+            <field name="price_extra">12</field>
+            <field name="product_tmpl_id" ref="product_product_11_temp"/>
+        </record>
+
         <record id="product_product_12" model="product.product">
             <field name="name">Mouse, Wireless</field>
             <field name="default_code">M-Wir</field>
@@ -1023,12 +1042,12 @@ QWERTY keyboard</field>
             <field name="min_qty">1</field>
         </record>
 
-        <record id="product_supplierinfo_38" model="product.supplierinfo">
+        <!--record id="product_supplierinfo_38" model="product.supplierinfo">
             <field name="product_id" ref="product_product_48"/>
             <field name="name" ref="base.res_partner_8"/>
             <field name="delay">7</field>
             <field name="min_qty">1</field>
-        </record>
+        </record-->
 
         <record id="product_supplierinfo_39" model="product.supplierinfo">
             <field name="product_id" ref="product_product_18"/>

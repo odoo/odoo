@@ -113,7 +113,7 @@
                 <div class='row style_default'>
                   <div class="col-md-12" id="products_grid">
                     <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ search and 3 or product.website_sizex } oe_product oe-height-#{ search and 2 or product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published and 'on' or 'off'" id="products_layout">
+                        <div t-attf-class="col-md-#{ search and 3 or product.website_sizex } oe_product oe-height-#{ search and 2 or product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published and 'on' or 'off'" data-name="products_layout">
 
                             <div class="oe_product_description">
                                 <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
@@ -178,10 +178,9 @@
     <!-- List view of products -->
 
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
-        <xpath  expr="//div[@id='products_layout']" position="attributes">
-            <attribute name="class">col-md-12 oe_products oe-height-1</attribute>
+        <xpath  expr="//div[@data-name='products_layout']" position="attributes">
+            <attribute name="class">col-md-12 oe_list_products oe-height-1</attribute>
         </xpath>
-
     </template>
 
 

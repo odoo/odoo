@@ -88,4 +88,5 @@ class product_product(osv.Model):
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):
-        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+        temp_id = self.browse(cr, uid, ids[0], context=context).product_tmpl_id.id
+        return "/website/image?model=product.template&field=%s&id=%s" % (field, temp_id)
