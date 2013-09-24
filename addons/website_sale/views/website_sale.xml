@@ -426,12 +426,16 @@
                 <div class='row mt16'>
                 <t t-foreach="suggested_products" t-as="product">
                     <div class='col-md-2 thumbnail'>
-                        <a t-attf-href="/shop/product/#{ product.id }/">
-                            <div class='mt16 text-center'>
+                        <div class='mt16 text-center'>
+                            <a t-attf-href="/shop/product/#{ product.id }/">
                                 <img t-att-src="product.img('image_small')"/>
-                                <h5 t-field='product.name'></h5>
-                            </div>
-                        </a>
+                            </a>
+                            <h5>
+                                <a t-attf-href="/shop/product/#{ product.id }/" style="display: block;">
+                                    <span t-field="product.name"/>
+                                </a>
+                            </h5>
+                        </div>
                     </div>
                 </t>
                 </div>
