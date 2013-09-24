@@ -85,38 +85,32 @@
           <t t-set="head">
               <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"></script>
               <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
-              <t t-raw="head or ''"/>
           </t>
           <t t-set="title">Blog</t>
           <div id="wrap">
-            <div class="container mt48 js_website_blog">
+            <div class="container mt16 js_website_blog">
                 <div class="row">
-                    <div class="col-md-3" id="left_column">
-                        <h4>Categories</h4>
-                        <ul class="nav nav-pills nav-stacked">
-                            <t t-foreach="categories" t-as="nav_category">
-                                <li t-att-class="'active' if category and category.id == nav_category.id else ''">
-                                    <a t-attf-href="/blog/#{nav_category.id}">
-                                        <t t-field="nav_category.name"/>
-                                    </a>
-                                </li>
-                            </t>
-                        </ul>
-                        <t t-if="category">
-                            <a t-if="editable" t-attf-href="/blog/#{category.id}/new" class="btn btn-default">New Blog Post</a>
-                            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
-                        </t>
-                    </div>
-                    <div class="col-md-9" t-if="blog_post">
-                        <t t-call="website_blog.view_blog_post"><t t-set="blog_post" t-value="blog_post"/></t>
+                    <div class="col-md-3 col-lg-offset-1" id="left_column">
                     </div>
 
-                    <div class="col-md-9" t-if="not blog_post and blog_posts">
+                    <div class="col-lg-8 col-md-9" t-if="not blog_post and blog_posts">
+                        <t t-if="category">
+                            <div>
+                                <a t-if="editable" t-attf-href="/blog/#{category.id}/new" class="btn btn-default">New Blog Post</a>
+                            </div>
+                            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
+                        </t>
                         <t t-foreach="blog_posts" t-as="blog_post" data-publish="">
                             <t t-call="website_blog.view_blog_post_short"/>
                         </t>
                         <div class="text-center" t-call="website.pager"/>
                     </div>
+                    <div class="col-md-9 col-lg-8" t-if="blog_post">
+                        <t t-call="website_blog.view_blog_post">
+                          <t t-set="blog_post" t-value="blog_post"/>
+                        </t>
+                    </div>
+
                 </div>
             </div>
           </div>
@@ -142,5 +136,21 @@
             </ul>
         </xpath>
     </template>
+
+    <template id="blog_categories" inherit_option_id="website_blog.index" name="Blogs">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <h4>Blogs</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <t t-foreach="categories" t-as="nav_category">
+                    <li t-att-class="'active' if category and category.id == nav_category.id else ''">
+                        <a t-attf-href="/blog/#{nav_category.id}">
+                            <t t-field="nav_category.name"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+        </xpath>
+    </template>
+
  </data>
 </openerp>
