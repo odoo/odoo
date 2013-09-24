@@ -358,10 +358,24 @@ class res_partner(osv.osv, format_address):
         value = {}
         value['title'] = False
         if is_company:
+            value['use_parent_address'] = False
             domain = {'title': [('domain', '=', 'partner')]}
         else:
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
+
+    def onchange_use_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+        def value_or_id(val):
+            """ return val or val.id if val is a browse record """
+            return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
+        result = {}
+        address_fields = self._address_fields(cr, uid, context=context)
+        if parent_id and use_parent_address:
+            parent = self.browse(cr, uid, parent_id, context=context)
+            result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+        else:
+            result['value'] = dict((key,"") for key in address_fields)
+        return result
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
         def value_or_id(val):
@@ -381,10 +395,6 @@ class res_partner(osv.osv, format_address):
             address_fields = self._address_fields(cr, uid, context=context)
             if use_parent_address:
                 result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
-            else:
-                result['value'] = dict((key,None) for key in address_fields)
-        else:
-            result['value'] = {'use_parent_address': False}
         return result
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):

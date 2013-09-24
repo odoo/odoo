@@ -140,7 +140,8 @@
                         <field name="parent_id"
                             placeholder="Company"
                             domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
-                            attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"/>
+                            attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
+                            on_change="onchange_address(use_parent_address, parent_id)"/>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons"> </div>
@@ -156,9 +157,9 @@
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="use_parent_address" class="oe_edit_only oe_inline"
-                                       on_change="onchange_address(use_parent_address, parent_id)"
-                                       attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
-                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                       on_change="onchange_use_address(use_parent_address, parent_id)"
+                                       attrs="{'invisible': [('is_company', '=', True)]}"/>
+                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': [('is_company', '=', True)]}"/>
                                 <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
                                         attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
                                 <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
