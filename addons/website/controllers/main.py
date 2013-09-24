@@ -161,10 +161,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         return result
 
     @website.route('/website/get_view_translations', type='json', auth='admin')
-    def get_view_translations(self, xml_id, optional=False):
-        view = request.registry.get("ir.ui.view")
-        views = view._views_get(request.cr, request.uid, xml_id, request.context)
-        return []
+    def get_view_translations(self, xml_id, lang=None):
+        lang = lang or request.context.get('lang')
+        views = self.customize_template_get(xml_id, optional=False)
+        views_ids = [view.get('id') for view in views if view.get('active')]
+        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        irt = request.registry.get('ir.translation')
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
 
     @website.route('/website/set_translations', type='json', auth='admin')
     def set_translations(self, data, lang):
@@ -174,17 +177,21 @@ class Website(openerp.addons.web.controllers.main.Home):
             for t in trans:
                 initial_content = t['initial_content'].strip()
                 new_content = t['new_content'].strip()
-                old_trans = irt.search_read(
-                    request.cr, request.uid,
-                    [
-                        ('type', '=', 'view'),
-                        ('res_id', '=', view_id),
-                        ('lang', '=', lang),
-                        ('src', '=', initial_content),
-                    ])
-                if old_trans:
+                tid = t['translation_id']
+                if not tid:
+                    old_trans = irt.search_read(
+                        request.cr, request.uid,
+                        [
+                            ('type', '=', 'view'),
+                            ('res_id', '=', view_id),
+                            ('lang', '=', lang),
+                            ('src', '=', initial_content),
+                        ])
+                    if old_trans:
+                        tid = old_trans[0]['id']
+                if tid:
                     vals = {'value': new_content}
-                    irt.write(request.cr, request.uid, [old_trans[0]['id']], vals)
+                    irt.write(request.cr, request.uid, [tid], vals)
                 else:
                     new_trans = {
                         'name': 'website',

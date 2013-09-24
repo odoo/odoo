@@ -40,7 +40,7 @@
             this.translations = null;
             openerp.jsonRpc('/website/get_view_translations', 'call', {
                 'xml_id': $(document.documentElement).data('view-xmlid'),
-                'context': website.get_context(),
+                'lang': website.get_context().lang,
             }).then(function (translations) {
                 self.translations = translations;
                 self.processTranslatableNodes();
@@ -48,12 +48,13 @@
         },
         processTranslatableNodes: function () {
             var self = this;
-            var $editables = $('[data-oe-model]')
+            var $editables = $('[data-oe-model="ir.ui.view"]')
                     .not('link, script')
                     .not('.oe_snippets,.oe_snippet, .oe_snippet *')
                     .not('[data-oe-type]');
+
             $editables.each(function () {
-                self.transNode(this);
+                self.transNode(this, $(this).attr('data-oe-id')|0);
             });
             $('.oe_translatable_text').prop('contenteditable', true).on('paste', function () {
                 var node = $(this);
@@ -64,7 +65,7 @@
             $(document).on('blur keyup paste', '.oe_translatable_text[contenteditable]', function(ev) {
                 var $node = $(this);
                 setTimeout(function () {
-                    // Doing stuff next tick because past and keyup are
+                    // Doing stuff next tick because paste and keyup events are
                     // fired before the content is changed
                     if (ev.type == 'paste') {
                         self.sanitizeNode($node[0]);
@@ -84,26 +85,35 @@
         isTranslatable: function (text) {
             return text && _.str.trim(text) !== '';
         },
-        markTranslatableNode: function (node) {
+        markTranslatableNode: function (node, view_id) {
             // TODO: link nodes with same content
-            node.className += ' oe_translatable_text oe_translatable_todo';
+            node.className += ' oe_translatable_text';
+            node.setAttribute('data-oe-translation-view-id', view_id);
+            var content = node.childNodes[0].data.trim();
+            var trans = this.translations.filter(function (t) {
+                return t.res_id === view_id && t.value === content;
+            });
+            if (trans.length) {
+                node.setAttribute('data-oe-translation-id', trans[0].id);
+            } else {
+                node.className += ' oe_translatable_todo';
+            }
             node.contentEditable = true;
-            $(node).data('initial_content', node.childNodes[0].data);
+            $(node).data('initial_content', content);
         },
         save: function () {
             var trans = {};
             // this._super.apply(this, arguments);
             $('.oe_translatable_text.oe_dirty').each(function () {
                 var $node = $(this);
-                var text = $node.text();
-                var view_id = $(this).parents('[data-oe-model="ir.ui.view"]')
-                                     .not('[data-oe-type]').first().data().oeId;
-                if (!trans[view_id]) {
-                    trans[view_id] = [];
+                var data = $node.data();
+                if (!trans[data.oeTranslationViewId]) {
+                    trans[data.oeTranslationViewId] = [];
                 }
-                trans[view_id].push({
-                    initial_content: $node.data('initial_content'),
-                    new_content: text
+                trans[data.oeTranslationViewId].push({
+                    initial_content: data.initial_content,
+                    new_content: $node.text(),
+                    translation_id: data.oeTranslationId || null
                 });
             });
             openerp.jsonRpc('/website/set_translations', 'call', {
@@ -116,11 +126,11 @@
                 alert("Could not save translation");
             });
         },
-        transNode: function (node, context) {
+        transNode: function (node, view_id) {
             if (node.childNodes.length === 1
                     && this.isTextNode(node.childNodes[0])
                     && !node.getAttribute('data-oe-model')) {
-                this.markTranslatableNode(node);
+                this.markTranslatableNode(node, view_id);
             } else {
                 for (var i = 0, l = node.childNodes.length; i < l; i ++) {
                     var n = node.childNodes[i];
@@ -129,10 +139,10 @@
                             var container = document.createElement('span');
                             node.insertBefore(container, n);
                             container.appendChild(n);
-                            this.markTranslatableNode(container);
+                            this.markTranslatableNode(container, view_id);
                         }
                     } else {
-                        this.transNode(n);
+                        this.transNode(n, view_id);
                     }
                 }
             }
