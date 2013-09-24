@@ -4,10 +4,25 @@ from openerp.tests.common import TransactionCase
 
 from .. import models
 
-ID_FIELD = {'id': 'id', 'name': 'id', 'string': "External ID", 'required': False, 'fields': []}
+ID_FIELD = {
+    'id': 'id',
+    'name': 'id',
+    'string': "External ID",
+    'required': False,
+    'fields': [],
+}
+DISPLAY_NAME_FIELD = {
+    'id': 'display_name',
+    'name': 'display_name',
+    'string': "Name",
+    'required': False,
+    'fields': [],
+}
+
 def make_field(name='value', string='unknown', required=False, fields=[]):
     return [
         ID_FIELD,
+        DISPLAY_NAME_FIELD,
         {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields},
     ]
 
@@ -35,7 +50,7 @@ class test_basic_fields(BaseImportCase):
 
     def test_readonly(self):
         """ Readonly fields should be filtered out"""
-        self.assertEqualFields(self.get_fields('char.readonly'), [ID_FIELD])
+        self.assertEqualFields(self.get_fields('char.readonly'), [ID_FIELD, DISPLAY_NAME_FIELD])
 
     def test_readonly_states(self):
         """ Readonly fields with states should not be filtered out"""
@@ -44,12 +59,12 @@ class test_basic_fields(BaseImportCase):
     def test_readonly_states_noreadonly(self):
         """ Readonly fields with states having nothing to do with
         readonly should still be filtered out"""
-        self.assertEqualFields(self.get_fields('char.noreadonly'), [ID_FIELD])
+        self.assertEqualFields(self.get_fields('char.noreadonly'), [ID_FIELD, DISPLAY_NAME_FIELD])
 
     def test_readonly_states_stillreadonly(self):
         """ Readonly fields with readonly states leaving them readonly
         always... filtered out"""
-        self.assertEqualFields(self.get_fields('char.stillreadonly'), [ID_FIELD])
+        self.assertEqualFields(self.get_fields('char.stillreadonly'), [ID_FIELD, DISPLAY_NAME_FIELD])
 
     def test_m2o(self):
         """ M2O fields should allow import of themselves (name_get),
@@ -76,7 +91,8 @@ class test_o2m(BaseImportCase):
 
     def test_shallow(self):
         self.assertEqualFields(self.get_fields('o2m'), make_field(fields=[
-            {'id': 'id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
+            ID_FIELD,
+            DISPLAY_NAME_FIELD,
             # FIXME: should reverse field be ignored?
             {'id': 'parent_id', 'name': 'parent_id', 'string': 'unknown', 'required': False, 'fields': [
                 {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
@@ -233,7 +249,8 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
-            {'id': 'id', 'name': 'id', 'string': 'External ID', 'required':False, 'fields': []},
+            ID_FIELD,
+            DISPLAY_NAME_FIELD,
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
