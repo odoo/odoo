@@ -20,4 +20,6 @@
 ##############################################################################
 
 import controllers
-import mail_message
+import website_blog
+import res_config
+import wizard
