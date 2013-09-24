@@ -321,16 +321,16 @@
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
-            $(root).attr('data-cke-editable', 'true')
-                    .on('dragstart', 'img', function (e) {
-                        e.preventDefault();
-                    });
-            this.editor = CKEDITOR.inline(root, self._config());
-            this.editor.on('instanceReady', function () {
+            $(root).on('dragstart', 'img', function (e) {
+                e.preventDefault();
+            });
+            var editor = this.editor = CKEDITOR.inline(root, self._config());
+            editor.on('instanceReady', function () {
+                editor.setReadOnly(false);
                 // ckeditor set root to editable, disable it (only inner
                 // sections are editable)
                 // FIXME: are there cases where the whole editor is editable?
-                root.contentEditable = false;
+                editor.editable().setReadOnly(true);
 
                 self.setup_editables(root);
 
