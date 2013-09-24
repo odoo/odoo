@@ -1794,7 +1794,6 @@ openerp.mail = function (session) {
             this._super.apply(this, arguments);
             this.ParentViewManager = parent;
             this.node = _.clone(node);
-            console.log(self.node);
            this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
