@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 20123TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,26 +19,10 @@
 #
 ##############################################################################
 
-{
-    'name': 'Online Events',
-    'category': 'Website',
-    'summary': 'Schedule, Promote and Sell Events',
-    'version': '1.0',
-    'description': """
-Online Events
-=============
+from openerp.addons.website_blog.tests import test_controllers
 
-        """,
-    'author': 'OpenERP SA',
-    'depends': ['website', 'event_sale', 'website_sale'],
-    'data': [
-        'event_data.xml',
-        'views/website_event.xml',
-        'security/ir.model.access.csv',
-        'security/website_event.xml',
-        'event_demo.xml',
-    ],
-    'qweb': ['static/src/xml/*.xml'],
-    'demo': [],
-    'installable': True,
-}
+checks = [
+    test_controllers,
+]
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

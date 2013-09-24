@@ -19,26 +19,11 @@
 #
 ##############################################################################
 
-{
-    'name': 'Online Events',
-    'category': 'Website',
-    'summary': 'Schedule, Promote and Sell Events',
-    'version': '1.0',
-    'description': """
-Online Events
-=============
+from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.tools import mute_logger, email_split
 
-        """,
-    'author': 'OpenERP SA',
-    'depends': ['website', 'event_sale', 'website_sale'],
-    'data': [
-        'event_data.xml',
-        'views/website_event.xml',
-        'security/ir.model.access.csv',
-        'security/website_event.xml',
-        'event_demo.xml',
-    ],
-    'qweb': ['static/src/xml/*.xml'],
-    'demo': [],
-    'installable': True,
-}
+
+class TestControllers(TestMailBase):
+
+    def test_00(self):
+        cr, uid = self.cr, self.uid
