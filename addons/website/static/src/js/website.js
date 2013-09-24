@@ -116,20 +116,18 @@
 
     dom_ready.then(function () {
         /* ----- PUBLISHING STUFF ---- */
-        $('[data-publish]:has([data-publish])').each(function () {
-            var $pub = $("[data-publish]", this);
-            if($pub.size())
-                $(this).attr("data-publish", $pub.attr("data-publish"));
-            else
-                $(this).removeAttr("data-publish");
+        $('[data-publish]:has(.js_publish)').each(function () {
+            $(this).attr("data-publish", $(".js_publish li.active", this).size() ? "on" : 'off');
         });
 
-        $(document).on('click', '.js_publish', function (e) {
-            e.preventDefault();
-            var $data = $(":first", this).parents("[data-publish]");
-            $data.attr("data-publish", $data.first().attr("data-publish") == 'off' ? 'on' : 'off');
-            $.post('/website/publish', {'id': $(this).data('id'), 'object': $(this).data('object')}, function (result) {
-                $data.attr("data-publish", +result ? 'on' : 'off');
+        $(document).on('click', '.js_publish a.js_publish_btn', function (e) {
+            var $li = $(this).parent("li");
+            var $data = $li.parents(".js_publish:first");
+            var publish = $li.hasClass("active");
+            $li.toggleClass("active");
+            $.post('/website/publish', {'id': $data.data('id'), 'object': $data.data('object')}, function (result) {
+                $li.toggleClass("active", !!+result);
+                $li.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
             });
         });
 

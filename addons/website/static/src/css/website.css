@@ -375,17 +375,17 @@ a[data-publish][data-publish='on']:hover .css_published {
   opacity: 0.5;
 }
 
-[data-publish='off']:not(a) > :not([data-publish]) {
+[data-publish='off']:not(a) > :not(.js_publish) {
   opacity: 0.5;
 }
 
 [data-publish]:not(a) {
   position: relative;
   overflow: visible;
-  /*&:hover > [data-publish] */
+  /*&:hover .js_publish */
   /*     display: block */
 }
-[data-publish]:not(a) > [data-publish] {
+[data-publish]:not(a) .js_publish {
   position: absolute;
   right: -6px;
   top: -10px;

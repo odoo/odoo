@@ -285,15 +285,15 @@ a[data-publish]
 .unpublish
     opacity: 0.5
 [data-publish='off']:not(a)
-    >:not([data-publish])
+    >:not(.js_publish)
         opacity: 0.5
 [data-publish]:not(a)
     position: relative
     overflow: visible
-    >[data-publish]
+    .js_publish
         position: absolute
         right: -6px
         top: -10px
         display: none
-    /*&:hover > [data-publish]*/
+    /*&:hover .js_publish*/
     /*     display: block*/
