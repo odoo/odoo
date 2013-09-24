@@ -375,10 +375,11 @@ class stock_quant(osv.osv):
                 remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
                 if remaining_to_solve_quant_ids:
                     self.write(cr, uid, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
-            #price update + accounting entries adjustments
-            self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
+            quant_cost = solving_quant.cost
             #delete the reconciled quants, as it is replaced by the solving quant
             self.unlink(cr, SUPERUSER_ID, [quant_neg.id, solving_quant.id], context=context)
+            #price update + accounting entries adjustments
+            self._price_update(cr, uid, solved_quant_ids, quant_cost, context=context)
             solving_quant = remaining_solving_quant
 
             #solving_quant, dummy = self._reconcile_single_negative_quant(cr, uid, to_solve_quant, solving_quant, quant_neg, qty, context=context)

@@ -62,6 +62,7 @@ class stock_quant(osv.osv):
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
         if context is None:
             context = {}
+        super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
         ctx = context.copy()
         for quant in self.browse(cr, uid, quant_ids, context=context):
             move = self._get_latest_move(cr, uid, quant, context=context)
@@ -73,7 +74,6 @@ class stock_quant(osv.osv):
             #2) we just fixed a negative quant caused by an outgoing shipment
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
-        super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
 
     """
     Accounting Valuation Entries
