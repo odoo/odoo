@@ -111,7 +111,7 @@
                 <div class='row style_default'>
                   <div class="col-md-12" id="products_grid">
                     <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published" id="products_layout">
+                        <div t-attf-class="col-md-#{ search and 3 or product.website_sizex } oe_product oe-height-#{ search and 2 or product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published" id="products_layout">
 
                             <div class="oe_product_description">
                                 <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
