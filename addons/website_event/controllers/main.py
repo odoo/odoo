@@ -37,7 +37,10 @@ class website_event(http.Controller):
 
     @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
     def events(self, page=1, **searches):
+        cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
+        type_obj = request.registry['event.type']
+        country_obj = request.registry['res.country']
 
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
@@ -73,13 +76,19 @@ class website_event(http.Controller):
         ]
 
         # search domains
+        current_date = dates[0][1]
+        current_type = None
+        current_country = None
         for date in dates:
-            if searches.get("date") == date[0]:
+            if searches["date"] == date[0]:
                 domain_search["date"] = date[2]
-        if searches.get("type", "all") != 'all':
-            domain_search["type"] = [("type", "=", int(searches.get("type")))]
-        if searches.get("country", "all") != 'all':
-            domain_search["country"] = [("country_id", "=", int(searches.get("country")))]
+                current_date = date[1]
+        if searches["type"] != 'all':
+            current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
+            domain_search["type"] = [("type", "=", int(searches["type"]))]
+        if searches["country"] != 'all':
+            current_country = country_obj.browse(cr, uid, int(searches['country']), context=context)
+            domain_search["country"] = [("country_id", "=", int(searches["country"]))]
 
         def dom_without(without):
             domain = SUPERUSER_ID != request.uid and [('website_published', '=', True)] or [(1, "=", 1)]
@@ -128,6 +137,9 @@ class website_event(http.Controller):
                                       context=request.context)
 
         values = {
+            'current_date': current_date,
+            'current_country': current_country,
+            'current_type': current_type,
             'event_ids': events_ids,
             'dates': dates,
             'types': types,

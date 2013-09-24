@@ -29,9 +29,6 @@
           </t>
           <t t-set="title">Events</t>
           <div id="wrap">
-            <div class="oe_structure">
-                <h1 class="text-center">Our Events</h1>
-            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 css_noprint" id="left_column">
@@ -50,6 +47,17 @@
                         </t>
                     </div>
                     <div class="col-md-8">
+                        <div class="oe_structure">
+                            <h2>
+                                Events for <t t-esc="current_date"/>
+                                <t t-if="current_type">
+                                    in <t t-esc="current_type.name"/>
+                                </t>
+                                <t t-if="current_country">
+                                    in <t t-esc="current_country.name"/>
+                                </t>
+                            </h2>
+                        </div>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
                                 <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
