@@ -724,7 +724,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.trigger("save", result);
             self.to_view_mode();
         }).then(function(result) {
-            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
+            var parent = self.ViewManager.ActionManager.getParent();
+            if(parent){
+                parent.menu.do_reload_needaction();
+            }
         });
     },
     on_button_cancel: function(event) {
@@ -2997,8 +3000,11 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
 })();
 
 /**
- * A mixin containing some useful methods to handle completion inputs.
- */
+    A mixin containing some useful methods to handle completion inputs.
+    
+    The widget containing this option can have these arguments in its widget options:
+    - no_quick_create: if true, it will disable the quick create
+*/
 instance.web.form.CompletionFieldMixin = {
     init: function() {
         this.limit = 7;
@@ -3044,7 +3050,8 @@ instance.web.form.CompletionFieldMixin = {
             }
             // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];});
-            if (search_val.length > 0 && !_.include(raw_result, search_val)) {
+            if (search_val.length > 0 && !_.include(raw_result, search_val) &&
+                ! (self.options && self.options.no_quick_create)) {
                 values.push({
                     label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
                         $('<span />').text(search_val).html()),
@@ -4053,7 +4060,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             else
                 return $.when();
         }).done(function () {
-            self.handle_button(name, id, callback);
+            if (!self.o2m.options.reload_on_button) {
+                self.handle_button(name, id, callback);
+            }else {
+                self.handle_button(name, id, function(){
+                    self.o2m.view.reload();
+                });
+            }
         });
     },
 

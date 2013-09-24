@@ -528,27 +528,35 @@ class Home(http.Controller):
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, debug=False, **kw):
         debug = debug != False
-        if db is not None:
-            lst = http.db_list(True)
-            if db in lst and db != request.session.db:
-                request.session.logout()
-                request.session.db = db
 
-        if db != request.session.db:
+        lst = http.db_list(True)
+        if db not in lst:
+            db = None
+        guessed_db = http.db_monodb(request.httprequest)
+        if guessed_db is None and len(lst) > 0:
+            guessed_db = lst[0]
+
+        def redirect(db):
             query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-            query.update({'db': request.session.db})
+            query.update({'db': db})
             redirect = request.httprequest.path + '?' + urllib.urlencode(query)
             return redirect_with_hash(redirect)
-                
-        db = request.session.db
 
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
+        if db is None and guessed_db is not None:
+            return redirect(guessed_db)
+
+        if db is not None and db != guessed_db:
+            request.session.logout()
+            request.session.db = db
+            guessed_db = db
+
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=guessed_db, debug=debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=guessed_db, debug=debug))
 
         r = html_template % {
             'js': js,
             'css': css,
-            'modules': simplejson.dumps(module_boot(db=db)),
+            'modules': simplejson.dumps(module_boot(db=guessed_db)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
         return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
@@ -729,7 +737,7 @@ class Database(http.Controller):
     def get_list(self):
         # TODO change js to avoid calling this method if in monodb mode
         try:
-            return db_list()
+            return http.db_list()
         except openerp.exceptions.AccessDenied:
             monodb = db_monodb()
             if monodb:

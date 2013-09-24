@@ -18,16 +18,16 @@ openerp.testing.section('data.model.group_by', {
                       "should have single grouping field");
             return group_result;
         });
-        mock('foo:search_read', function (args, kwargs) {
-            deepEqual(kwargs.domain, [['bar', '=', 3]],
+        mock('/web/dataset/search_read', function (args) {
+            deepEqual(args.params.domain, [['bar', '=', 3]],
                       "should have domain matching that of group_by result");
-            return [
+            return {records: [
                 {bar: 3, id: 1},
                 {bar: 3, id: 2},
                 {bar: 3, id: 4},
                 {bar: 3, id: 8},
                 {bar: 3, id: 16}
-            ];
+            ], length: 5};
         });
 
         return m.query().group_by('bar')
