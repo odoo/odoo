@@ -111,7 +111,7 @@
                 <div class='row style_default'>
                   <div class="col-md-12" id="products_grid">
                     <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published">
+                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published" id="products_layout">
 
                             <div class="oe_product_description">
                                 <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
@@ -119,9 +119,7 @@
                                 </a>
                                 <!-- This should be an option -->
                                 <div t-if="product.description_sale" class="text-muted oe_subdescription">
-
-                                    <!-- TODO: replace by a smart t-field on field.text: description_sale -->
-                                    <small t-raw="product.description_sale.replace('\n','&lt;br/&gt;') "/>
+                                    <div id="product_description" t-att-data-name="product.id"/>
                                 </div>
                                 <div>
                                     <b>
@@ -132,9 +130,7 @@
                                         </t>
                                         <t t-esc="product.product_variant_ids[0].price" /> €
                                     </b>
-                                    <a t-attf-href="./add_cart/?product_id=#{ product.id }">
-                                        <span class="icon-shopping-cart"/>
-                                    </a>
+                                    <span id="add_to_cart" t-att-data-name="product.id"/>
                                 </div>
                             </div>
 
@@ -156,6 +152,36 @@
             </div>
         </t>
     </template>
+
+    <!-- Product Description-->
+
+    <template id="product_description" inherit_option_id="website_sale.products" name="Product Description">
+        <xpath expr="//div[@id='product_description']" position="replace">
+            <small>
+                <t t-field="product.description_sale"/>
+            </small>
+        </xpath>
+    </template>
+
+    <!-- Add to cart button-->
+
+    <template id="add_to_basket" inherit_option_id="website_sale.products" name="Add to Cart">
+        <xpath expr="//span[@id='add_to_cart']" position="replace">
+            <a t-attf-href="./add_cart/?product_id=#{ product.id }">
+                <span class="icon-shopping-cart"/>
+            </a>
+        </xpath>
+    </template>
+
+    <!-- List view of products -->
+
+    <template id="list_view" inherit_option_id="website_sale.products" name="List View">
+        <xpath  expr="//div[@id='products_layout']" position="attributes">
+            <attribute name="class">col-md-12 oe_products oe-height-1</attribute>
+        </xpath>
+
+    </template>
+
 
     <!-- product --> 
 
