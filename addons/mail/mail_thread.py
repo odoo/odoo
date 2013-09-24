@@ -35,6 +35,7 @@ from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv, orm
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from lxml import etree
 
 _logger = logging.getLogger(__name__)
 
@@ -1313,6 +1314,12 @@ class mail_thread(osv.AbstractModel):
                 "Invalid thread_id; should be 0, False, an ID or a list with one ID"
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
+            
+        #check login user is employee
+        #raise error on comment message if user is not employee
+        employee = self._check_user_is_employee(cr, uid, context=context)
+        if not employee and type == 'comment':
+            raise orm.except_orm(_('Access Denied'),_('Restricted to employees.'))
 
         # if we're processing a message directly coming from the gateway, the destination model was
         # set in the context.
@@ -1661,18 +1668,21 @@ class mail_thread(osv.AbstractModel):
             threads.append(data)
         return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None: context = {}
+    def _check_user_is_employee(self, cr, uid, context=None):
         flag = 0
-        from lxml import etree
-        group =  self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        group = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         if group:
             users = self.pool.get('res.groups').read(cr, uid, group[1], ['users'])['users']
             flag = uid in users and 1 or 0
+        return flag
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None: 
+            context = {}
         res = super(mail_thread, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         doc = etree.XML(res['arch'])
         if view_type == 'form':
             for node in doc.xpath("//field[@name='message_ids']"):
-                node.set('display_log_button',str(flag))
-        res['arch'] = etree.tostring(doc)
+                node.set('display_log_button', str(self._check_user_is_employee(cr, uid, context=context)))
+            res['arch'] = etree.tostring(doc)
         return res
