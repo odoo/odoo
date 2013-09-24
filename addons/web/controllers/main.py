@@ -1086,7 +1086,7 @@ class DataSet(http.Controller):
                 return records
 
         if method.startswith('_'):
-            raise Exception("Access denied")
+            raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
 
         return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
