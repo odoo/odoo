@@ -87,8 +87,8 @@
 		                    <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
 		                </form>
 		            </div>
-		        <t t-call="website.publish"><t t-set="object" t-value="job"/></t>
-                    </div>
+		            <t t-call="website.publish"><t t-set="object" t-value="job"/></t>
+                    	</div>
                     </div>
 		    <div class="oe_structure" style="clear:both;">
 	                <h1 class="text-center" t-field="job.name"></h1>
@@ -99,18 +99,18 @@
 				<i class="icon-map-marker"></i> <span t-field="job.company_id.city"> </span>  <span t-if="job.company_id.state_id" t-field="job.company_id.state_id.name"> </span>, <span t-field="job.company_id.country_id.name"> </span></h5>
 
                     </div>			
-  		    <div class="container">
+  		    <div class="container oe_structure">
 			<hr/>
 		        <div class="row">
-			<div class="pull-left">
-            	    </div>
-			<h4>Description</h4>
-			<p class="oe_structure" t-field="job.description"></p>
-			<h4>Requirements</h4>
-			<p t-field="job.requirements"></p>
-			<t t-call="website_hr_recruitment.applyjobpost"/>				
+			    <div class="pull-left">
+		    	    </div>
+			    <h4>Description</h4>
+			    <p class="oe_structure" t-field="job.description"></p>
+			    <h4>Requirements</h4>
+			    <p class="oe_structure" t-field="job.requirements"></p>
+			    <t t-call="website_hr_recruitment.applyjobpost"/>				
+		        </div>
 		    </div>
-		</div>
 		</div>
             </t>
         </template>
