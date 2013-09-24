@@ -107,7 +107,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.website.render('website.themes', {'theme_changed': True})
 
-    @website.route('/page/<path:path>', type='http', auth="admin")
+    @website.route('/page/<path:path>', type='http', auth="admin", multilang=True)
     def page(self, path, **kwargs):
         values = {
             'path': path,
