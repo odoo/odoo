@@ -492,43 +492,43 @@
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Name and firstname</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="name" class="form-control" t-att-value="checkout.get('name', '')"/>
+                                    <input type="text" name="name" class="form-control" t-att-value="checkout['name']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Telephone</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone', '')"/>
+                                    <input type="tel" name="phone" class="form-control" t-att-value="checkout['phone']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('fax') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Fax</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="fax" class="form-control" t-att-value="checkout.get('fax', '')"/>
+                                    <input type="tel" name="fax" class="form-control" t-att-value="checkout['fax']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Company</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="company" class="form-control" t-att-value="checkout.get('company', '')"/>
+                                    <input type="text" name="company" class="form-control" t-att-value="checkout['company']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Email address</label>
                                 <div class="col-lg-4">
-                                    <input type="email" name="email" class="form-control" t-att-value="checkout.get('email', '')"/>
+                                    <input type="email" name="email" class="form-control" t-att-value="checkout['email']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Street</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="street" class="form-control" t-att-value="checkout.get('street', '')"/>
+                                    <input type="text" name="street" class="form-control" t-att-value="checkout['street']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">City</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="city" class="form-control" t-att-value="checkout.get('city', '')"/>
+                                    <input type="text" name="city" class="form-control" t-att-value="checkout['city']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''}">
@@ -537,7 +537,7 @@
                                     <select name="state_id" class="form-control">
                                         <option value="">State / Province...</option>
                                         <t t-foreach="states or []" t-as="state">
-                                            <option t-att-value="state.id" t-att-selected="state.id == checkout.get('state_id')"><t t-esc="state.name"/></option>
+                                            <option t-att-value="state.id" t-att-selected="state.id == checkout['state_id']"><t t-esc="state.name"/></option>
                                         </t>
                                     </select>
                                 </div>
@@ -545,7 +545,7 @@
                             <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Zip / Postal Code</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip', '')"/>
+                                    <input type="text" name="zip" class="form-control" t-att-value="checkout['zip']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''}">
@@ -554,7 +554,7 @@
                                     <select name="country_id" class="form-control">
                                         <option value="">Country...</option>
                                         <t t-foreach="countries or []" t-as="country">
-                                            <option t-att-value="country.id" t-att-selected="country.id == checkout.get('country_id')"><t t-esc="country.name"/></option>
+                                            <option t-att-value="country.id" t-att-selected="country.id == checkout['country_id']"><t t-esc="country.name"/></option>
                                         </t>
                                     </select>
                                 </div>
@@ -630,7 +630,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-default">Last stape</button>
+                        <button type="submit" class="btn btn-default">Confirm</button>
                     </form>
                 </div>
             </div>

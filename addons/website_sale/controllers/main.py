@@ -286,9 +286,12 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/checkout/'], type='http', auth="public")
     def checkout(self, **post):
+        classic_fields = ["name", "phone", "fax", "email", "street", "city", "state_id", "zip"]
+        rel_fields = ['country_id', 'state_id']
+
         order = get_current_order()
 
-        if order.state != 'draft' or not order.order_line:
+        if not order or order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
 
         partner_obj = request.registry.get('res.partner')
@@ -301,24 +304,21 @@ class Ecommerce(http.Controller):
             'error': post.get("error") and dict.fromkeys(post.get("error").split(","), 'error') or {}
         }
 
-        checkout = {}
+        checkout = dict((field_name, '') for field_name in classic_fields + rel_fields)
         if not request.context['is_public_user']:
             partner = user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id
-            partner_id = partner.id
-            fields = ["name", "phone", "fax", "company", "email", "street", "city", "state_id", "zip", "country_id"]
-            checkout = user_obj.read(request.cr, SUPERUSER_ID, [partner_id], fields, request.context)[0]
+            checkout.update(dict((field_name, getattr(partner, field_name)) for field_name in classic_fields if getattr(partner, field_name)))
+            checkout['state_id'] = partner.state_id and partner.state_id.id or ''
+            checkout['country_id'] = partner.country_id and partner.country_id.id or ''
             checkout['company'] = partner.parent_id and partner.parent_id.name or ''
 
-            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner_id), ('type', "=", 'delivery')], context=request.context)
+            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=request.context)
             if shipping_ids:
-                for k,v in partner_obj.read(request.cr, request.uid, shipping_ids[0], request.context).items():
+                for k, v in partner_obj.read(request.cr, request.uid, shipping_ids[0], request.context).items():
                     checkout['shipping_'+k] = v or ''
 
-        checkout.update(request.session.setdefault('checkout', {}))
-        for k,v in checkout.items():
-            checkout[k] = v or ''
         values['checkout'] = checkout
-
+        print checkout
         countries_ids = country_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
         values['countries'] = country_obj.browse(request.cr, SUPERUSER_ID, countries_ids, request.context)
         states_ids = country_state_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
