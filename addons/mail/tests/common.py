@@ -129,4 +129,4 @@ class TestMail(common.TransactionCase):
         # Remove mocks
         self.registry('ir.mail_server')._revert_method('build_email')
         self.registry('ir.mail_server')._revert_method('send_email')
-        super(TestMailBase, self).tearDown()
+        super(TestMail, self).tearDown()
