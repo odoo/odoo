@@ -22,7 +22,6 @@
     </template>
 
     <!-- Page --> 
- 
     <template id="index" name="Events" page="True">
         <t t-call="website.layout">
           <t t-set="head">
@@ -119,7 +118,7 @@
         </xpath>
     </template>
 
-    <template id="detail">
+    <template id="event_description_full">
         <t t-call="website.layout">
           <t t-set="head">
               <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
@@ -128,21 +127,10 @@
           <t t-set="title">Events</t>
           <div id="wrap">
             <div class="container">
-                <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
                 <div class="row">
-                    <div class="col-md-4">
-                        <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
-                            <div class="col-lg-7">
-                                <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
-                            </div>
-                            <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
-                        </form>
-                        <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
-                            <input type="hidden" name="email" t-att-value="subscribe"/>
-                            <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
-                        </form>
-                    </div><br/><br/>
                     <div class="col-md-8">
+                        <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
+                        <t t-call="website_mail.follow"><t t-set="object" t-value="event_id"/></t>
                         <h1 class="text-center" t-field="event_id.name"></h1>
                         <h4 class="text-center">
                             <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
@@ -201,7 +189,7 @@
                         <div t-field="event_id.description"></div>
                         <hr/>
                         <ul class="media-list" id="comment">
-                            <li t-foreach="message_ids" t-as="comment" class="media">
+                            <li t-foreach="event_id.website_message_ids" t-as="comment" class="media">
                                 <div class="media-body">
                                     <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
                                     <t t-raw="comment.body"/>

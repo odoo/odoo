@@ -35,6 +35,15 @@ class event(osv.osv):
     _inherit = 'event.event'
     _columns = {
         'website_published': fields.boolean('Available in the website'),
+        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', ('model', '=', self._name), ('type', '=', 'comment')
+            ],
+            string='Website Messages',
+            help="Website communication history",
+        ),
     }
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
