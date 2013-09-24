@@ -50,10 +50,22 @@ class Website(osv.osv):
 class Ecommerce(http.Controller):
 
     def get_categories(self):
+        domain = [('parent_id', '=', False)]
+
         category_obj = request.registry.get('product.public.category')
-        category_ids = category_obj.search(request.cr, SUPERUSER_ID, [('parent_id', '=', False)], context=request.context)
+        category_ids = category_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
         categories = category_obj.browse(request.cr, SUPERUSER_ID, category_ids, context=request.context)
-        return categories
+
+        product_obj = request.registry.get('product.product')
+        groups = product_obj.read_group(request.cr, SUPERUSER_ID, [("sale_ok", "=", True), ('website_published', '=', True)], ['public_categ_id'], 'public_categ_id', context=request.context)
+        full_category_ids = [group['public_categ_id'][0] for group in groups if group['public_categ_id']]
+        for cat_id in category_obj.browse(request.cr, SUPERUSER_ID, full_category_ids, context=request.context):
+            while cat_id.parent_id:
+                cat_id = cat_id.parent_id
+                full_category_ids.append(cat_id.id)
+        full_category_ids.append(1)
+
+        return (categories, full_category_ids)
 
     @website.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
@@ -63,7 +75,7 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.template')
 
         domain = [("sale_ok", "=", True)]
-        domain += [('website_published', '=', True)]
+        #domain += [('website_published', '=', True)]
 
         if post.get("search"):
             domain += ['|', '|', '|',
@@ -84,7 +96,7 @@ class Ecommerce(http.Controller):
         request.context['pricelist'] = self.get_pricelist()
 
         values = {
-            'categories': self.get_categories(),
+            'get_categories': self.get_categories,
             'category_id': cat_id,
             'products': product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context),
             'search': post.get("search"),
@@ -117,7 +129,7 @@ class Ecommerce(http.Controller):
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
             'category': category,
             'search': post.get("search"),
-            'categories': self.get_categories(),
+            'get_categories': self.get_categories,
             'category_list': category_list,
             'product': product,
         }
@@ -241,7 +253,7 @@ class Ecommerce(http.Controller):
             suggested_products.append(suggested_ids.pop(index))
 
         values = {
-            'categories': self.get_categories(),
+            'get_categories': self.get_categories,
             'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products, request.context),
         }
         return request.website.render("website_sale.mycart", values)
