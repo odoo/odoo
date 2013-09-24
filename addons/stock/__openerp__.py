@@ -93,6 +93,7 @@ Dashboard / Reports for Warehouse Management will include:
         'test/procrule.yml',
         'test/shipment.yml',
         'test/packing.yml',
+        'test/packingneg.yml',
     ],
     'installable': True,
     'application': True,
