@@ -14,27 +14,27 @@
 
     <!-- Blog Post Summary -->
     <template id="view_blog_post_short" name="Blog Post Short">
-        <div class="media-body">
-            <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
-            <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
-            <small class="text-muted">
-                <t t-field="blog_post.create_uid"/> on <t t-field="blog_post.create_date"/>
-            </small>
-            <h4 class="media-heading" ><a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment" t-field="blog_post.name"></a></h4>
-            <div class="media">
-                <div t-field="blog_post.shortened_content"/>
-                <small class="pull-left muted text-right">
-                    <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> Comment</a>
-                    <a t-if="len(blog_post.message_ids) > 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> Comments</a>
-                </small>
-            </div>
+        <div>
+            <h2 class="text-center">
+                <a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment" t-field="blog_post.name"></a>
+            </h2>
+            <p class="post-meta text-muted text-center">
+                <span class="icon-calendar"> <t t-field="blog_post.create_date"/></span> &amp;nbsp;
+                <span class="icon-user"> By <t t-field="blog_post.create_uid"/></span> &amp;nbsp;
+                <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
+                    <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> comment</a>
+                    <a t-if="len(blog_post.message_ids) > 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> comments</a>
+                </span>
+            </p>
+            <div t-field="blog_post.shortened_content" class="blog_content"/>
+            <hr/>
+
         </div>
     </template>
 
     <!-- Blog Post Complete -->
     <template id="view_blog_post" name="Blog Post">
-        <div class="media">
-            <div class="media-body">
+            <div>
                 <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
                 <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
                 <small class="text-muted">
@@ -42,7 +42,7 @@
                 </small>
                 <h3 t-field="blog_post.name"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a class="btn btn-sm btn-info" href="/blog/tag/#{tag.id}"><t t-esc="tag.name"/></a>
+                    <a class="label label-default" href="/blog/tag/#{tag.id}"><t t-esc="tag.name"/></a>
                 </t>
                 <div t-field="blog_post.content"/>
             </div>
@@ -77,7 +77,6 @@
                     </div>
                 </li>
             </ul>
-        </div>
     </template>
 
     <!-- Page --> 
@@ -113,14 +112,10 @@
                     </div>
 
                     <div class="col-md-9" t-if="not blog_post and blog_posts">
-                        <ul class="media-list">
-                            <li t-foreach="blog_posts" t-as="blog_post" data-publish="">
-                                <t t-call="website_blog.view_blog_post_short"/>
-                            </li>
-                        </ul>
-                        <div class="text-center">
-                            <t t-call="website.pager"/>
-                        </div>
+                        <t t-foreach="blog_posts" t-as="blog_post" data-publish="">
+                            <t t-call="website_blog.view_blog_post_short"/>
+                        </t>
+                        <div class="text-center" t-call="website.pager"/>
                     </div>
                 </div>
             </div>

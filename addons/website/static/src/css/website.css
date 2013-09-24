@@ -229,13 +229,17 @@ footer {
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here";
+  content: "Click Edit To Change Page";
   text-align: center;
   display: block;
   padding-top: 100px;
   padding-bottom: 50px;
   color: grey;
   font-size: 24px;
+}
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here";
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
