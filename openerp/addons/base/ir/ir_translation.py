@@ -161,18 +161,20 @@ class ir_translation(osv.osv):
         '''
         if context is None:
             context = {}
-        res = {}
+        res = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
             if record.type != 'model':
                 res[record.id] = record.src
             else:
                 model_name, field = record.name.split(',')
                 model = self.pool.get(model_name)
-                #We need to take the context without the language information, because we want to read the
-                #value store in db and not on the one associate with current language.
-                context_wo_lang = context.copy()
-                context_wo_lang.pop('lang', None)
-                res[record.id] = model.read(cr, uid, record.res_id, [field], context=context_wo_lang)[field]
+                if model and model.exists(cr, uid, record.res_id, context=context):
+                    #We need to take the context without the language information, because we want to read the
+                    #value store in db and not on the one associate with current language.
+                    context_wo_lang = context.copy()
+                    context_wo_lang.pop('lang', None)
+                    result = model.read(cr, uid, record.res_id, [field], context=context_wo_lang)
+                    res[record.id] = result and result[field] or False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):
