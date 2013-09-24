@@ -6,8 +6,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                        <h2 class="modal-title">Promote <small class="js_seo_page_url"></small></h2>
-                        <h4>Get your page efficiently referenced in Google to attract more visitors.</h4>
+                        <h3 class="modal-title js_seo_page_url"></h3>
+                        <h4 class="text-muted">Get this page efficiently referenced in Google to attract more visitors.</h4>
                     </div>
                     <div class="modal-body">
                         <div class="js_seo_tips" />
@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-muted">Here are the most searched topics related to these keywords, ordered by importance:</span>
+                            <span class="text-muted">Most searched topics related your keywords, ordered by importance:</span>
                             <!-- filled in JS -->
                         </section>
                         <section>
@@ -46,10 +46,10 @@
                                 </div>
                             </div>
                         </section>
-                        <section>
+                        <section class="js_image_section">
                             <h3 class="page-header">3. Describe your images</h3>
                             <div class="row js_seo_image_list">
-                                  <!-- filled in JS -->
+                                <!-- filled in JS -->
                             </div>
                         </section>
                         <hr/>
@@ -69,16 +69,15 @@
     </t>
 
     <t t-name="website.seo_tip">
-        <div t-attf-class="alert alert-#{widget.type}">
-              <button title="Dismiss" type="button" class="close" data-action="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <t t-raw="widget.message"/>
+        <div t-attf-class="alert alert-#{ widget.type }">
+            <t t-raw="widget.message"/>
         </div>
     </t>
 
     <t t-name="website.seo_keyword">
         <dl class="dl-horizontal">
             <dt>
-                <span t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_keyword" t-att-data-keyword="widget.keyword">
+                <span t-attf-title="#{ widget.tooltip() }" t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_keyword" t-att-data-keyword="widget.keyword">
                     <a href="#" class="oe_remove" data-action="remove-keyword">x</a> <t t-raw="widget.keyword"/>
                 </span>
             </dt>
@@ -90,7 +89,7 @@
 
     <t t-name="website.seo_suggestion">
         <li class="oe_seo_suggestion">
-            <span t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_suggestion" t-att-data-keyword="widget.keyword">
+            <span t-attf-title="#{ widget.tooltip() }" t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_suggestion" t-att-data-keyword="widget.keyword">
                 <t t-raw="widget.keyword"/>
             </span>
         </li>

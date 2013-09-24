@@ -114,6 +114,10 @@ table.editorbar-panel
 .modal .image-preview
     margin-bottom: 0.5em
 
+// "remove" drag & drop of CKE widgets
+.cke_widget_drag_handler_container
+    display: none !important
+
 /* ---- SNIPPET EDITOR ---- */
 
 #oe_snippets
@@ -249,27 +253,18 @@ table.editorbar-panel
 /* ---- SNIPPET MANIPULATOR ---- */
 
 .oe_overlay
-    display: block
+    display: none
     position: absolute
     background: transparent
     border-radius: 3px
-    opacity: 0
     transition: opacity 100ms linear
     box-sizing: border-box
     pointer-events: none
-    &.oe_hover
-        opacity: 1
-        cursor: pointer
-    &.oe_selected, &.oe_active
-        opacity: 1
+    &.oe_active
+        display: block
         border-style: dashed
         border-width: 1px
         box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
-    &.oe_selected
-        border-color: rgba(0, 153, 255, 0.5)
-    .oe_handle
-        display: none !important
-    &.oe_active
         border-color: rgba(153, 0, 255, 0.5)
         .oe_handle
             display: block !important
@@ -310,31 +305,17 @@ table.editorbar-panel
         width: 100%
         text-align: center
         top: -11px
-        display: none
         z-index: 1002
-        > *
-            margin: 0 -2px 0 -3px
-            display: inline-block
-        *
-            border-radius: 0
         .btn, a
             pointer-events: auto
             cursor: pointer
+        .dropdown
+            display: inline-block
         .dropdown-menu
             text-align: left
             min-width: 180px
-        .oe_label
-            position: absolute
-            top: 3px
-            right: 6px
-            background: #fff
-            font-size: 75%
-            color: rgba(153, 0, 255, 0.5)
-            padding: 0 5px
         .dropdown-menu select,.dropdown-menu input
             display: block
-    &.oe_active .oe_overlay_options
-        display: block
 
 .oe_handle
     pointer-events: auto
@@ -432,21 +413,26 @@ $remove_color: $icon_close
 $in_title_color: #5cb85c
 $in_description_color: #428bca
 $in_body_color: #5bc0de
+$highlighted_text_color: #ffffff
 .oe_seo_configuration
     .modal-dialog
         width: 80%
     .oe_remove
         color: $remove_color
-    .oe_seo_keyword
+    .oe_seo_suggestion
         cursor: pointer
+    .oe_seo_keyword
         padding: .2em .4em .2em .5em
         border-radius: .4em
     .keyword-in-title
         background-color: $in_title_color
+        color: $highlighted_text_color
     .keyword-in-description
         background-color: $in_description_color
+        color: $highlighted_text_color
     .keyword-in-body
         background-color: $in_body_color
+        color: $highlighted_text_color
 
 /* ---- ACE EDITOR ---- */
 
@@ -455,6 +441,10 @@ $editorbar_height: 40px
 // TODO Fix => might break with themes
 $navbar_height: 51px
 
+@mixin editor-font
+    font-size: 14px
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
+    line-height: normal
 .oe_ace_view_editor
     transition: all 0.2s ease-in
     -webkit-transition: all 0.2s ease-in
@@ -476,9 +466,11 @@ $navbar_height: 51px
         .oe_view_list
             width: 50%
             height: $editorbar_height - 8px
+            @include editor-font
         .btn
             height: $editorbar_height - 8px
             padding: 0 4px 0 4px
+            @include editor-font
     .ace_editor
         position: absolute
         top: $editorbar_height

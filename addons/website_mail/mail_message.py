@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,25 +19,43 @@
 #
 ##############################################################################
 
+from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
 
-class mail_message(osv.osv):
-    _inherit = "mail.message"
+class MailMessage(osv.Model):
+    _inherit = 'mail.message'
+
     _columns = {
-        'website_published': fields.boolean('Publish', help="Publish on the website as a blog"),
+        'website_published': fields.boolean(
+            'Publish', help="Publish on the website as a blog"
+        ),
     }
 
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
+                context=None, count=False, access_rights_uid=None):
+        """ Override that adds specific access rights of mail.message, to restrict
+        messages to published messages for public users. """
+        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
+        if group_user_id in [group.id for group in group_ids]:
+            args = ['&', ('website_published', '=', True)] + list(args)
 
-class mail_group(osv.Model):
-    _inherit = 'mail.group'
+        return super(MailMessage, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+                                                context=context, count=False, access_rights_uid=access_rights_uid)
 
-    def get_domain_public_blog(self, cr, uid, context=None):
-        mail_group_ids = self.search(cr, uid, [('public', '=', 'public')], context=context)
-        return [ ("type", "in", ['comment']),
-                    ("parent_id", "=", False),
-                    ("model", "=", 'mail.group'), ("res_id", "in", mail_group_ids)]
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """ Add Access rules of mail.message for non-employee user:
+            - read:
+                - raise if the type is comment and subtype NULL (internal note)
+        """
+        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
+        if group_user_id in [group.id for group in group_ids]:
+            cr.execute('SELECT DISTINCT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (ids,))
+            if cr.fetchall():
+                raise osv.except_osv(
+                    _('Access Denied'),
+                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
 
-    def get_public_message_ids(self, cr, uid, domain=None, order="create_date desc", limit=None, offset=0, context=None):
-        domain += self.get_domain_public_blog(cr, uid, context=context)
-        return self.pool.get('mail.message').search(cr, uid, domain, order=order, limit=limit, offset=offset, context=context)
+        return super(MailMessage, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)

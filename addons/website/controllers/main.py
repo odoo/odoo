@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             module = 'website'
             idname = path
-        path = "%s.%s" % (module, idname)
+        xid = "%s.%s" % (module, idname)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -63,7 +63,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         newview = view.browse(
             request.cr, request.uid, newview_id, context=request.context)
         newview.write({
-            'arch': newview.arch.replace("website.default_page", path),
+            'arch': newview.arch.replace("website.default_page", xid),
             'name': "page/%s" % path,
             'page': True,
         })
@@ -270,5 +270,13 @@ class Website(openerp.addons.web.controllers.main.Home):
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
         return request.website.kanban_col(**post)
+
+    @website.route(['/robots.txt'], type='http', auth="public")
+    def robots(self):
+        return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+
+    @website.route(['/sitemap.xml'], type='http', auth="public")
+    def sitemap(self):
+        return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

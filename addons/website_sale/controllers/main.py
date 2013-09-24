@@ -63,8 +63,7 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.template')
 
         domain = [("sale_ok", "=", True)]
-        if SUPERUSER_ID != request.uid:
-            domain += [('website_published', '=', True)]
+        domain += [('website_published', '=', True)]
 
         if post.get("search"):
             domain += ['|', '|', '|',
@@ -109,9 +108,14 @@ class Ecommerce(http.Controller):
 
         request.context['pricelist'] = self.get_pricelist()
 
+        category = None
+        if post.get('category_id') and int(post.get('category_id')):
+            category = category_obj.browse(request.cr, request.uid, int(post.get('category_id')), context=request.context)
+
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
         values = {
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
+            'category': category,
             'search': post.get("search"),
             'categories': self.get_categories(),
             'category_list': category_list,

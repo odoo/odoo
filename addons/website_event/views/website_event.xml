@@ -5,10 +5,10 @@
     <!-- Layout add nav and footer -->
 
     <template id="header_footer" inherit_id="website_sale.header_footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li><a href="/event">Events</a></li>
         </xpath>
-        <xpath expr="//body/footer//ul[@name='products']/li" position="after">
+        <xpath expr="//footer//ul[@name='products']/li" position="after">
             <li><a href="/event">Events</a></li>
         </xpath>
     </template>
@@ -182,9 +182,9 @@
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
-                                        <td t-field="ticket.name"/>
-                                        <td t-field="ticket.deadline"/>
-                                        <td t-field="ticket.price"/>
+                                        <td><span t-field="ticket.name"/></td>
+                                        <td><span t-field="ticket.deadline"/></td>
+                                        <td><span t-field="ticket.price"/></td>
                                         <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>
                                         <td>
                                             <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">

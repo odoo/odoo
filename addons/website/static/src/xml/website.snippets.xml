@@ -73,14 +73,16 @@
     <t t-name="website.snippet_overlay">
         <div class="oe_overlay">
             <div class="oe_overlay_options">
-                <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Get Container Block"><span class="glyphicon glyphicon-open"/></a>
-                <div class="dropdown oe_options hidden">
-                    <a href="#" data-toggle="dropdown" class="btn btn-default btn-sm" title="Customize">Customize <span class="caret"/></a>
-                    <ul class="dropdown-menu" role="menu"></ul>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Get Container Block"><span class="glyphicon glyphicon-open"/></a>
+                    <div class="dropdown oe_options hidden btn-group">
+                        <a href="#" data-toggle="dropdown" class="btn btn-default btn-sm" title="Customize">Customize <span class="caret"/></a>
+                        <ul class="dropdown-menu" role="menu"></ul>
+                    </div>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate"><span class="glyphicon glyphicon-tags"/></a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_move" title="move"><span class="glyphicon glyphicon-move"/></a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove"><span class="glyphicon glyphicon-remove"/></a>
                 </div>
-                <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate"><span class="glyphicon glyphicon-tags"/></a>
-                <a href="#" class="btn btn-default btn-sm oe_snippet_move" title="move"><span class="glyphicon glyphicon-move"/></a>
-                <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove"><span class="glyphicon glyphicon-remove"/></a>
             </div>
         </div>
     </t>
@@ -109,54 +111,49 @@
     <div t-name="website.snippets.carousel" data-snippet-id='carousel' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         
         <!-- editor bar to display inside the top edit bar -->
-        <li class='oe_snippet_options'>
-            <a class="carousel-style">
-                <select class="form-control" name="carousel-size">
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="big">Big</option>
-                </select>
-            </a>
+        <li class='oe_snippet_options dropdown-submenu'>
+            <a tabindex="-1" href="#">Size</a>
+            <ul class="dropdown-menu" name="carousel-size">
+                <li data-value="oe_small"><a>Small</a></li>
+                <li data-value="oe_medium"><a>Medium</a></li>
+                <li data-value="oe_big"><a>Big</a></li>
+            </ul>
         </li>
         <li class="divider"></li>
         <li class='oe_snippet_options'>
             <a href="#" class="button js_add">Add Slide</a>
         </li>
+        <li class="oe_snippet_options dropdown-submenu">
+            <a tabindex="-1" href="#">Background</a>
+            <ul class="dropdown-menu" name="carousel-background">
+                <li data-value="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                <li data-value="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                <li data-value="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                <li data-value="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+                <li data-value="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                <li data-value="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+                <li data-value="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                <li data-value="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                <li data-value="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                <li data-value="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+                <li data-value="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+                <li data-value="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                <li data-value="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+                <li data-value="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+                <li data-value="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                <li class="oe_custom_bg"><b></b></li>
+            </ul>
+        </li>
+        <li class='oe_snippet_options dropdown-submenu'>
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu" name="carousel-style">
+                <li data-value="text_only"><a>Text Only</a></li>
+                <li data-value="image_text"><a>Image - Text</a></li>
+                <li data-value="text_image"><a>Text - Image</a></li>
+            </ul>
+        </li>
         <li class='oe_snippet_options'>
             <a href="#" class="button js_remove">Remove Slide</a>
-        </li>
-        <li class='oe_snippet_options'>
-            <a class="carousel-background">
-                Background
-                <select class="form-control" name="carousel-background">
-                    <option value="/website/static/src/img/banner/aqua.jpg">Aqua</option>
-                    <option value="/website/static/src/img/banner/baby_blue.jpg">Baby Blue</option>
-                    <option value="/website/static/src/img/banner/black.jpg">Black</option>
-                    <option value="/website/static/src/img/banner/business_guy.jpg">Business Guy</option>
-                    <option value="/website/static/src/img/banner/color_splash.jpg">Color Splash</option>
-                    <option value="/website/static/src/img/banner/flower_field.jpg">Flowers Field</option>
-                    <option value="/website/static/src/img/banner/greenfields.jpg">Greenfields</option>
-                    <option value="/website/static/src/img/banner/landscape.jpg">Landscape</option>
-                    <option value="/website/static/src/img/banner/mango.jpg">Mango</option>
-                    <option value="/website/static/src/img/banner/mountains.jpg">Mountains</option>
-                    <option value="/website/static/src/img/banner/orange_red.jpg">Orange Red</option>
-                    <option value="/website/static/src/img/banner/flower.jpg">Purple</option>
-                    <option value="/website/static/src/img/banner/velour.jpg">Velour</option>
-                    <option value="/website/static/src/img/banner/wood.jpg">Wood</option>
-                    <option value="/website/static/src/img/banner/yellow_green.jpg">Yellow Green</option>
-                </select>
-                <input class="form-control input-sm" type="text" placeholder="http://...."/>
-            </a>
-        </li>
-        <li class='oe_snippet_options'>
-            <a class="carousel-style">
-                Style
-                <select class="form-control" name="carousel-style">
-                    <option value="text_only">Text Only</option>
-                    <option value="image_text">Image - Text</option>
-                    <option value="text_image">Text - Image</option>
-                </select>
-            </a>
         </li>
 
         <!-- thumbnail to display inside the bottom widget list editor -->
@@ -170,7 +167,8 @@
         <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000">
             <!-- Carousel items -->
             <div class="carousel-inner">
-                <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg); background-size: cover;">
+                <div class="item image_text active">
+                    <img src="/website/static/src/img/banner/color_splash.jpg" width="100%" height="100%"/>
                     <div class="container">
                         <div class="carousel-caption content">
                             <h1>Set Your Banner Title</h1>
@@ -179,15 +177,15 @@
                                 <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
                             </p>
                         </div>
-                        <div class="carousel-image">
+                        <div class="carousel-image hidden-xs">
                             <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Carousel nav -->
-            <a class="carousel-control left" href="#myCarousel" data-slide="prev" style="width: 10%"></a>
-            <a class="carousel-control right" href="#myCarousel" data-slide="next" style="width: 10%"></a>
+            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-circle-arrow-left"><span class="hidden">.</span></span></a>
+            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-circle-arrow-right"><span class="hidden">.</span></span></a>
         </div>
     </div>
 
@@ -244,8 +242,8 @@
         <section class="oe_snippet_body">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
-                        <h3 class="mt48">Enterprise Social Network</h3>
+                    <div class="col-md-6 mt32">
+                        <h3>Enterprise Social Network</h3>
                         <p>
                             Make every employee feel more connected and engaged
                             with twitter-like features for your own company. Follow
@@ -258,8 +256,8 @@
                             and business applications.
                         </p>
                     </div>
-                    <div class="col-md-6">
-                        <img class="img-responsive shadow mt32 mb32" src="/website/static/src/img/text_image.png"/>
+                    <div class="col-md-6 mt16 mb16">
+                        <img class="img-responsive shadow" src="/website/static/src/img/text_image.png"/>
                     </div>
                 </div>
             </div>
@@ -274,11 +272,11 @@
         <section class="oe_snippet_body">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
-                        <img class="img-responsive shadow mt32 mb32" src="/website/static/src/img/image_text.jpg"/>
+                    <div class="col-md-6 mt16 mb16">
+                        <img class="img-responsive shadow" src="/website/static/src/img/image_text.jpg"/>
                     </div>
-                    <div class="col-md-6">
-                        <h3 class="mt48">Manage Your Shops</h3>
+                    <div class="col-md-6 mt32">
+                        <h3>Manage Your Shops</h3>
                         <p>
                             OpenERP's Point of Sale introduces a super clean
                             interface with no installation required that runs
@@ -344,10 +342,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt16 mb32">
-                        <h1>
-                            OpenERP Project Management<br/>
-                            <small>Infinitely flexible. Incredibly easy to use.</small>
-                        </h1>
+                        <h2>
+                            OpenERP Project Management
+                        </h2>
+                        <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
                     </div>
                     <div class="col-md-12 mb16 mt16">
                         <p>
@@ -357,7 +355,7 @@
                             minute details, from the customer contract to the
                             billing.
                         </p><p>
-                            Organize projects around your own processes. Work
+                            Organize projects around <b>your own processes</b>. Work
                             on tasks and issues using the kanban view, schedule
                             tasks using the gantt chart and control deadlines
                             in the calendar view. Every project may have it's
@@ -367,6 +365,16 @@
                 </div>
             </div>
         </section>
+    </div>
+
+    <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class="oe_snippet_thumbnail">Title</div>
+        <div class="oe_snippet_body row">
+            <div class="col-md-12">
+                <h2>Your Website Title</h2>
+                <h3 class="text-muted">Great products for great people</h3>
+            </div>
+        </div>
     </div>
 
     <div t-name="website.snippets.hr" data-snippet-id='hr' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
@@ -395,7 +403,7 @@
         <section class="oe_snippet_body dark mt16 mb16">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 text-center mt32 mb16">
+                    <div class="col-md-12 text-center mt32 mb32">
                         <h2>Work with the hardware you already have...</h2>
                     </div>
                     <div class="col-md-12">
@@ -730,7 +738,6 @@
         </section>
     </div>
 
-
     <div t-name="website.snippets.references" data-snippet-id='references' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>References</div>
         <section class="oe_snippet_body mb32 mt16">
@@ -744,8 +751,8 @@
                             More than 500 happy customers.
                         </h3>
                     </div>
-                    <div class="col-md-4 col-md-offset-1">
-                        <blockquote class="mt16 mb32" data-snippet-id="quote">
+                    <div class="col-md-4 col-md-offset-1 mt16 mb32">
+                        <blockquote data-snippet-id="quote">
                             <p>
                                 OpenERP provides essential platform for our project management.
                                 Things are better organized and more visible with it.
@@ -753,8 +760,8 @@
                             <small>John Doe, CEO</small>
                         </blockquote>
                     </div>
-                    <div class="col-md-4 col-md-offset-2">
-                        <blockquote class="mt16 mb32" data-snippet-id="quote">
+                    <div class="col-md-4 col-md-offset-2 mt16 mb32">
+                        <blockquote data-snippet-id="quote">
                             <p>
                                 OpenERP provides essential platform for our project management.
                                 Things are better organized and more visible with it.
@@ -762,7 +769,6 @@
                             <small>John Doe, CEO</small>
                         </blockquote>
                     </div>
-                    <div class="clearfix"/>
                     <div class="col-md-2 col-md-offset-1">
                         <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
                     </div>
