@@ -91,14 +91,6 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Event Details" groups="base.group_no_one">
-                                <group colspan="4">
-                                    <field name="reply_to"/>
-                                    <field name="email_registration_id"/>
-                                    <field name="email_confirmation_id"/>
-                                </group>
-                                <field name="note" nolabel="1" placeholder="Event Description..."/>
-                            </page>
                             <page string="Registrations">
                                 <group>
                                     <group>
@@ -148,6 +140,16 @@
                                             </group>
                                     </form>
                                 </field>
+                            </page>
+                            <page string="Description">
+                                <field name="description" nolabel="1" placeholder="Event Description..."/>
+                            </page>
+                            <page string='Event Details' groups="base.group_no_one">
+                                <group colspan="4">
+                                    <field name="reply_to"/>
+                                    <field name="email_registration_id"/>
+                                    <field name="email_confirmation_id"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
