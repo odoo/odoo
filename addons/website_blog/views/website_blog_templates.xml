@@ -34,49 +34,60 @@
 
     <!-- Blog Post Complete -->
     <template id="view_blog_post" name="Blog Post">
+        <div>
+          <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
+          <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
+        </div><div class="clearfix"/>
+
+        <h2 class="text-center" t-field="blog_post.name"/>
+        <p class="post-meta text-muted text-center">
+            <span class="icon-calendar"> <t t-field="blog_post.create_date"/></span> &amp;nbsp;
+            <span class="icon-user"> By <t t-field="blog_post.create_uid"/></span> &amp;nbsp;
+            <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
+                <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="#comments"><t t-esc="len(blog_post.message_ids)"/> comment</a>
+                <a t-if="len(blog_post.message_ids) > 1" t-attf-href="#comments"><t t-esc="len(blog_post.message_ids)"/> comments</a>
+            </span>
+        </p>
+        <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+            <span class="icon-tags"/>
+            <t t-foreach="blog_post.tag_ids" t-as="tag">
+                <a href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+            </t>
+        </p>
+
+        <div t-field="blog_post.content" class="mt32"/>
+
+        <hr/>
+        <div class="clearfix">
+            <div class="pull-right text-right">
+                <t t-call="website.pager" class="pull-right"/>
+            </div>
+            <t t-if="len(blog_post.website_message_ids) &lt;= 1">
+                <t t-esc="len(blog_post.website_message_ids)"/> Comment
+            </t>
+            <t t-if="len(blog_post.website_message_ids) > 1">
+                <t t-esc="len(blog_post.website_message_ids)"/> Comments
+            </t>
+        </div>
+        <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
+                method="POST" class="form-horizontal text-center"
+                groups="group_website_blog_reply">
             <div>
-                <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
-                <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
-                <small class="text-muted">
-                    <t t-field="blog_post.create_uid"/> on <t t-field="blog_post.create_date"/>
-                </small>
-                <h3 t-field="blog_post.name"/>
-                <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a class="label label-default" href="/blog/tag/#{tag.id}"><t t-esc="tag.name"/></a>
-                </t>
-                <div t-field="blog_post.content"/>
+                <textarea rows="4" placeholder="Your comment" class="form-control"></textarea>
             </div>
-            <hr />
-            <div class="clearfix">
-                <div class="pull-right text-right">
-                    <t t-call="website.pager" class="pull-right"/>
+            <button type="submit" class="btn btn-default">Post your comment</button>
+        </form>
+        <ul class="media-list" id="comments">
+            <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
+                <div class="media-body well well-sm">
+                    <t t-call="website.publish"><t t-set="object" t-value="message"/></t>
+                    <t t-raw="message.body"/>
+                    <small class="pull-left text-muted text-left">
+                        <t t-field="message.author_id"/> on <t t-field="message.date"/>
+                    </small>
                 </div>
-                <t t-if="len(blog_post.website_message_ids) &lt;= 1">
-                    <t t-esc="len(blog_post.website_message_ids)"/> Comment
-                </t>
-                <t t-if="len(blog_post.website_message_ids) > 1">
-                    <t t-esc="len(blog_post.website_message_ids)"/> Comments
-                </t>
-            </div>
-            <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
-                    method="POST" class="form-horizontal text-center"
-                    groups="group_website_blog_reply">
-                <div>
-                    <textarea rows="4" placeholder="Your comment" class="form-control"></textarea>
-                </div>
-                <button type="submit" class="btn btn-default">Post your comment</button>
-            </form>
-            <ul class="media-list" id="comments">
-                <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
-                    <div class="media-body well well-sm">
-                        <t t-call="website.publish"><t t-set="object" t-value="message"/></t>
-                        <t t-raw="message.body"/>
-                        <small class="pull-left text-muted text-left">
-                            <t t-field="message.author_id"/> on <t t-field="message.date"/>
-                        </small>
-                    </div>
-                </li>
-            </ul>
+            </li>
+        </ul>
     </template>
 
     <!-- Page --> 
@@ -90,22 +101,19 @@
           <div id="wrap">
             <div class="container mt16 js_website_blog">
                 <div class="row">
-                    <div class="col-md-3 col-lg-offset-1" id="left_column">
+                    <div class="col-sm-3 hidden-xs" id="left_column">
                     </div>
 
-                    <div class="col-lg-8 col-md-9" t-if="not blog_post and blog_posts">
+                    <div class="col-lg-8 col-sm-9 col-lg-offset-1" t-if="not blog_post and blog_posts">
                         <t t-if="category">
-                            <div>
-                                <a t-if="editable" t-attf-href="/blog/#{category.id}/new" class="btn btn-default">New Blog Post</a>
-                            </div>
-                            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
+                            <a t-if="editable" t-attf-href="/blog/#{category.id}/new" class="btn btn-default">New Blog Post</a>
                         </t>
                         <t t-foreach="blog_posts" t-as="blog_post" data-publish="">
                             <t t-call="website_blog.view_blog_post_short"/>
                         </t>
                         <div class="text-center" t-call="website.pager"/>
                     </div>
-                    <div class="col-md-9 col-lg-8" t-if="blog_post">
+                    <div class="col-md-9 col-lg-8 col-lg-offset-1" t-if="blog_post">
                         <t t-call="website_blog.view_blog_post">
                           <t t-set="blog_post" t-value="blog_post"/>
                         </t>
@@ -137,10 +145,38 @@
         </xpath>
     </template>
 
+    <template id="blog_aboutus" inherit_option_id="website_blog.index" name="About">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <h4>About us</h4>
+            <p>
+                Write here a small text for <b>new visitors</b> finding your website
+                through your <b>blog entries</b>, referenced in Google.
+            </p>
+            <div>
+                <button src="/contactus" class="btn btn-primary mb32">Contact us</button>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="blog_followus" inherit_option_id="website_blog.index" name="Follow us">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <h4>Follow us</h4>
+            <p class="text-muted">
+                Why should visitor follow you?
+            </p>
+            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
+            <div class="mb16">
+                <a href="http://facebook.com/openerp"><span class="icon-facebook"/></a>
+                <a href="http://twitter.com/openerp"><span class="icon-twitter"/></a>
+                <a href="http://www.linkedin.com/groups/OpenERP-165657"><span class="icon-linkedin"/></a>
+            </div>
+        </xpath>
+    </template>
+
     <template id="blog_categories" inherit_option_id="website_blog.index" name="Blogs">
         <xpath expr="//div[@id='left_column']" position="inside">
             <h4>Blogs</h4>
-            <ul class="nav nav-pills nav-stacked">
+            <ul class="nav nav-pills nav-stacked mb32">
                 <t t-foreach="categories" t-as="nav_category">
                     <li t-att-class="'active' if category and category.id == nav_category.id else ''">
                         <a t-attf-href="/blog/#{nav_category.id}">
