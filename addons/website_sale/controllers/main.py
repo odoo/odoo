@@ -318,7 +318,6 @@ class Ecommerce(http.Controller):
                     checkout['shipping_'+k] = v or ''
 
         values['checkout'] = checkout
-        print checkout
         countries_ids = country_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
         values['countries'] = country_obj.browse(request.cr, SUPERUSER_ID, countries_ids, request.context)
         states_ids = country_state_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
