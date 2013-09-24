@@ -104,10 +104,7 @@
 		        <div class="row">
 			    <div class="pull-left">
 		    	    </div>
-			    <h4>Description</h4>
-			    <p class="oe_structure" t-field="job.description"></p>
-			    <h4>Requirements</h4>
-			    <p class="oe_structure" t-field="job.requirements"></p>
+			    <p t-field="job.description_website"></p>
 			    <t t-call="website_hr_recruitment.applyjobpost"/>				
 		        </div>
 		    </div>
