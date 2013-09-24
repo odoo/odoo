@@ -7,6 +7,7 @@ from openerp.osv import osv, fields
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 import urllib
+from urlparse import urljoin
 import math
 import traceback
 from openerp.tools.safe_eval import safe_eval
@@ -18,7 +19,8 @@ logger = logging.getLogger(__name__)
 def route(routes, *route_args, **route_kwargs):
     def decorator(f):
         new_routes = routes if isinstance(routes, list) else [routes]
-        if route_kwargs.get('multilang', False):
+        f.multilang = route_kwargs.get('multilang', False)
+        if f.multilang:
             route_kwargs.pop('multilang')
             for r in list(new_routes):
                 new_routes.append('/<string(length=5):lang_code>' + r)
@@ -27,6 +29,7 @@ def route(routes, *route_args, **route_kwargs):
         def wrap(*args, **kwargs):
             request.route_lang = kwargs.get('lang_code', None)
             if not hasattr(request, 'website'):
+                request.multilang = f.multilang
                 request.website = request.registry['website'].get_current()
                 if request.route_lang:
                     lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
@@ -45,6 +48,17 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
+def url_for(path, lang=None):
+    if request:
+        path = urljoin(request.httprequest.path, path)
+        ps = path.split('/')
+        lang = lang or request.context.get('lang')
+        if ps[1] in request.context.get('langs'):
+            ps[1] = lang
+        if ps[1] not in request.context.get('langs'):
+            ps.insert(1, lang)
+        path = '/'.join(ps)
+    return path
 
 def urlplus(url, params):
     if not params:
@@ -91,10 +105,11 @@ class website(osv.osv):
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
             'lang': lang,
+            'langs': [lg.code for lg in request.website.language_ids],
             'is_public_user': is_public_user,
             'is_master_lang': is_master_lang,
             'editable': not is_public_user,
-            'translatable': not is_public_user and not is_master_lang,
+            'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
 
     def get_current(self):
@@ -115,6 +130,7 @@ class website(osv.osv):
             'registry': request.registry,
             'json': simplejson,
             'website': request.website,
+            'url_for': url_for,
             'res_company': request.website.company_id,
         })
 
