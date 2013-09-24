@@ -602,7 +602,7 @@ class BaseModel(object):
               '2013-06-18 08:31:32.821177'
         """
         if 'id' not in cls._columns and not hasattr(cls, 'id'):
-            cls._set_field_descriptor('id', fields2.Id(string='ID'))
+            cls._set_field_descriptor('id', fields2.Id())
 
         if 'display_name' not in cls._columns and not hasattr(cls, 'display_name'):
             cls._set_field_descriptor('display_name',
@@ -616,12 +616,10 @@ class BaseModel(object):
 
         if log_access:
             # FIXME: what if these fields are already defined on the class?
-            cls._set_field_descriptor(
-                'create_uid', fields2.Many2one('res.users', ondelete='set null'))
+            cls._set_field_descriptor('create_uid', fields2.Many2one('res.users'))
             cls._set_field_descriptor('create_date', fields2.Datetime())
 
-            cls._set_field_descriptor(
-                'write_uid', fields2.Many2one('res.users', ondelete='set null'))
+            cls._set_field_descriptor('write_uid', fields2.Many2one('res.users'))
             cls._set_field_descriptor('write_date', fields2.Datetime())
 
             compute_concurrency_field = 'compute_concurrency_field_with_access'
