@@ -95,10 +95,10 @@ class website(osv.osv):
 
         qweb_context = request.context.copy()
 
-        if values is None:
-            values = {}
+        if values:
+            qweb_context.update(values)
 
-        values.update(
+        qweb_context.update(
             request=request,
             registry=request.registry,
             json=simplejson,
@@ -107,7 +107,6 @@ class website(osv.osv):
             user_id=user.browse(cr, openerp.SUPERUSER_ID, uid),
         )
 
-        qweb_context.update(values)
         context = {
             'inherit_branding': qweb_context.setdefault('editable', False),
         }
