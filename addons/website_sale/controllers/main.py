@@ -59,6 +59,7 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.product')
         groups = product_obj.read_group(request.cr, SUPERUSER_ID, [("sale_ok", "=", True), ('website_published', '=', True)], ['public_categ_id'], 'public_categ_id', context=request.context)
         full_category_ids = [group['public_categ_id'][0] for group in groups if group['public_categ_id']]
+
         for cat_id in category_obj.browse(request.cr, SUPERUSER_ID, full_category_ids, context=request.context):
             while cat_id.parent_id:
                 cat_id = cat_id.parent_id
@@ -246,6 +247,7 @@ class Ecommerce(http.Controller):
             for line in order.order_line:
                 suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or [] for line in order.order_line]
         suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)], context=request.context)
+
         # select 3 random products
         suggested_products = []
         while len(suggested_products) < 3 and suggested_ids:
