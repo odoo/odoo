@@ -517,7 +517,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
         
         scan: function(type,code){
-            console.log('scan',type,code);
             if (type === 'ean13'){
                 var parse_result = this.parse_ean(code);
             }else if(type === 'reference'){
@@ -556,14 +555,21 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var code = "";
             var timeStamp  = 0;
             var onlynumbers = true;
+            var timeout = null;
 
             this.handler = function(e){
+
+                if(e.which === 13){ //ignore returns
+                    return;
+                }
+
                 if(timeStamp + 50 < new Date().getTime()){
                     code = "";
                     onlynumbers = true;
                 }
 
                 timeStamp = new Date().getTime();
+                clearTimeout(timeout);
 
                 if( e.which < 48 || e.which >= 58 ){ // not a number
                     onlynumbers = false;
@@ -571,16 +577,21 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
                 code += String.fromCharCode(e.which);
 
-                if(code.length >= 2 && self.pos.db.get_product_by_reference(code)){
-                    self.scan('reference',code);
+                // we wait for a while after the last input to be sure that we are not mistakingly
+                // returning a code which is a prefix of a bigger one :
+                // Internal Ref 5449 vs EAN13 5449000...
+
+                timeout = setTimeout(function(){
+                    if(code.length === 13 && onlynumbers){
+                        self.scan('ean13',code);
+                    }else if(code.length >= 3 && self.pos.db.get_product_by_reference(code)){
+                        self.scan('reference',code);
+                    }
                     code = "";
                     onlynumbers = true;
-                }else if(code.length === 13 && onlynumbers){
-                    self.scan('ean13',code);
-                    code = "";
-                    onlynumbers = true;
-                }
+                },100);
             };
+
             $('body').on('keypress', this.handler);
         },
 
