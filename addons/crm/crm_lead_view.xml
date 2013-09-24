@@ -169,16 +169,17 @@
                         <field name="description"/>
                     </page>
                     <page string="Extra Info">
-                        <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
-                            <field name="company_id"
-                                groups="base.group_multi_company"
-                                widget="selection" colspan="2"/>
-                        </group>
-                        <group string="Mailings">
-                            <field name="opt_out"/>
-                        </group>
-                        <group string="Misc">
-                            <group>
+                        <group>
+                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
+                                <field name="company_id"
+                                    groups="base.group_multi_company"
+                                    widget="selection"/>
+                            </group>
+                            <group string="Mailings">
+                                <field name="opt_out"/>
+                                <field name="message_bounce"/>
+                            </group>
+                            <group string="Misc">
                                 <field name="probability" groups="base.group_no_one"/>
                                 <field name="active"/>
                                 <field name="referred"/>

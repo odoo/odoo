@@ -52,6 +52,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'pos_config':       null,
                 'units':            null,
                 'units_by_id':      null,
+                'pricelist':        null,
 
                 'selectedOrder':    null,
             });
@@ -113,10 +114,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
 
-                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('company').currency_id[0]]]);
-                }).then(function(currencies){
-                    self.set('currency',currencies[0]);
-
                     return self.fetch('product.uom', null, null);
                 }).then(function(units){
                     self.set('units',units);
@@ -172,6 +169,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(shops){
                     self.set('shop',shops[0]);
 
+                    return self.fetch('product.pricelist',['currency_id'],[['id','=',self.get('pos_config').pricelist_id[0]]]);
+                }).then(function(pricelists){
+                    self.set('pricelist',pricelists[0]);
+
+                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('pricelist').currency_id[0]]]);
+                }).then(function(currencies){
+                    self.set('currency',currencies[0]);
+
                     return self.fetch('product.packaging',['ean','product_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
@@ -185,7 +190,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
-                        {pricelist: self.get('pos_config').pricelist_id[0]} // context for price
+                        {pricelist: self.get('pricelist').id} // context for price
                     );
                 }).then(function(products){
                     self.db.add_products(products);
@@ -263,13 +268,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         //removes the current order
         delete_current_order: function(){
             this.get('selectedOrder').destroy({'reason':'abandon'});
-            console.log('coucou!');
         },
 
         // saves the order locally and try to send it to the backend. 
         // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
         push_order: function(order) {
             var self = this;
+            this.proxy.log('push_order',order.export_as_JSON());
             var order_id = this.db.add_order(order.export_as_JSON());
             var pushed = new $.Deferred();
 
@@ -423,19 +428,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return tried_all;
         },
 
-        scan_product: function(parsed_ean){
+        scan_product: function(parsed_code){
             var self = this;
-            var product = this.db.get_product_by_ean13(parsed_ean.base_ean);
             var selectedOrder = this.get('selectedOrder');
+            if(parsed_code.encoding === 'ean13'){
+                var product = this.db.get_product_by_ean13(parsed_code.base_code);
+            }else if(parsed_code.encoding === 'reference'){
+                var product = this.db.get_product_by_reference(parsed_code.code);
+            }
 
             if(!product){
                 return false;
             }
 
-            if(parsed_ean.type === 'price'){
-                selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
-            }else if(parsed_ean.type === 'weight'){
-                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
+            if(parsed_code.type === 'price'){
+                selectedOrder.addProduct(new module.Product(product), {price:parsed_code.value});
+            }else if(parsed_code.type === 'weight'){
+                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_code.value, merge:false});
             }else{
                 selectedOrder.addProduct(new module.Product(product));
             }

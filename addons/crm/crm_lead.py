@@ -253,6 +253,8 @@ class crm_lead(format_address, osv.osv):
                                 multi='day_close', type="float", store=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
+        # Messaging and marketing
+        'message_bounce': fields.integer('Bounce'),
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
@@ -296,7 +298,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
     }
 
     _sql_constraints = [

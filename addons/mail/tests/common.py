@@ -22,7 +22,7 @@
 from openerp.tests import common
 
 
-class TestMailBase(common.TransactionCase):
+class TestMail(common.TransactionCase):
 
     def _mock_smtp_gateway(self, *args, **kwargs):
         return args[2]['Message-Id']
@@ -39,7 +39,7 @@ class TestMailBase(common.TransactionCase):
         return self._build_email(*args, **kwargs)
 
     def setUp(self):
-        super(TestMailBase, self).setUp()
+        super(TestMail, self).setUp()
         cr, uid = self.cr, self.uid
 
         # Install mock SMTP gateway
@@ -68,12 +68,46 @@ class TestMailBase(common.TransactionCase):
         group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
 
+        # Partner Data
+
+        # User Data: employee, noone
+        self.user_employee_id = self.res_users.create(cr, uid, {
+            'name': 'Ernest Employee',
+            'login': 'ernest',
+            'alias_name': 'ernest',
+            'email': 'e.e@example.com',
+            'signature': '--\nErnest',
+            'notification_email_send': 'comment',
+            'groups_id': [(6, 0, [self.group_employee_id])]
+        }, {'no_reset_password': True})
+        self.user_noone_id = self.res_users.create(cr, uid, {
+            'name': 'Noemie NoOne',
+            'login': 'noemie',
+            'alias_name': 'noemie',
+            'email': 'n.n@example.com',
+            'signature': '--\nNoemie',
+            'notification_email_send': 'comment',
+            'groups_id': [(6, 0, [])]
+        }, {'no_reset_password': True})
+
         # Test users to use through the various tests
         self.res_users.write(cr, uid, uid, {'name': 'Administrator'})
-        self.user_raoul_id = self.res_users.create(cr, uid,
-            {'name': 'Raoul Grosbedon', 'signature': 'SignRaoul', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'alias_name': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
-        self.user_bert_id = self.res_users.create(cr, uid,
-            {'name': 'Bert Tartignole', 'signature': 'SignBert', 'email': 'bert@bert.fr', 'login': 'bert', 'alias_name': 'bert', 'groups_id': [(6, 0, [])]})
+        self.user_raoul_id = self.res_users.create(cr, uid, {
+            'name': 'Raoul Grosbedon',
+            'signature': 'SignRaoul',
+            'email': 'raoul@raoul.fr',
+            'login': 'raoul',
+            'alias_name': 'raoul',
+            'groups_id': [(6, 0, [self.group_employee_id])]
+        })
+        self.user_bert_id = self.res_users.create(cr, uid, {
+            'name': 'Bert Tartignole',
+            'signature': 'SignBert',
+            'email': 'bert@bert.fr',
+            'login': 'bert',
+            'alias_name': 'bert',
+            'groups_id': [(6, 0, [])]
+        })
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
         self.user_admin = self.res_users.browse(cr, uid, uid)
@@ -82,13 +116,19 @@ class TestMailBase(common.TransactionCase):
         self.partner_bert_id = self.user_bert.partner_id.id
 
         # Test 'pigs' group to use through the various tests
-        self.group_pigs_id = self.mail_group.create(cr, uid,
+        self.group_pigs_id = self.mail_group.create(
+            cr, uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !', 'alias_name': 'group+pigs'},
-            {'mail_create_nolog': True})
+            {'mail_create_nolog': True}
+        )
         self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        # Test mail.group: public to provide access to everyone
+        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
+        # Test mail.group: private to restrict access
+        self.group_priv_id = self.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
 
     def tearDown(self):
         # Remove mocks
         self.registry('ir.mail_server').build_email = self._build_email
         self.registry('ir.mail_server').send_email = self._send_email
-        super(TestMailBase, self).tearDown()
+        super(TestMail, self).tearDown()
