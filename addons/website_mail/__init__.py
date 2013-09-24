@@ -21,3 +21,4 @@
 
 import controllers
 import mail_message
+import mail_thread

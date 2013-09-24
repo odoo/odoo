@@ -107,6 +107,7 @@ class BlogPost(osv.Model):
         'website_published_datetime': fields.datetime(
             'Publish Date'
         ),
+        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
