@@ -3,6 +3,7 @@
 
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.translator.xml');
+    var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
         start: function () {
@@ -17,10 +18,11 @@
         },
         edit: function () {
             var self = this;
-            if (!localStorage['website_translator_nodialog']) {
+            if (!localStorage[nodialog]) {
                 var dialog = new website.TranslatorDialog();
                 dialog.appendTo($(document.body));
                 dialog.on('activate', this, function () {
+                    localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
                     this.translate();
                 });
