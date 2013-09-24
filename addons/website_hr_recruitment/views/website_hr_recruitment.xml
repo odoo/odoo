@@ -27,7 +27,7 @@
 			<div class="row">
 			    <div class="col-md-4 css_noprint" id="left_column">
 		                <ul class="nav nav-pills nav-stacked">
-		                    <li class="nav-header">Departments</li>
+		                    <li class="nav-header">All Departments</li>
 				    <t t-foreach="departments" t-as="department">
 					<li t-att-class="department.id == active and 'active' or ''">
 				    	    <a t-attf-href="/department/#{ department.id }/" ><t t-field="department.name"/></a>
