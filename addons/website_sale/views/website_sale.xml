@@ -81,6 +81,35 @@
 
     <!-- Product list --> 
 
+    <template id="products_cart">
+      <div class="oe_product_description">
+          <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+              <b t-field="product.name"/>
+          </a>
+          <!-- This should be an option -->
+          <div t-if="product.description_sale" class="text-muted oe_subdescription">
+              <div id="product_description" t-att-data-name="product.id"/>
+          </div>
+          <div>
+              <b>
+                  <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                    <span class="text-danger" style="text-decoration: line-through;">
+                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                    </span>&amp;nbsp;
+                  </t>
+                  <t t-esc="product.product_variant_ids[0].price" /> €
+              </b>
+              <span id="add_to_cart" t-att-data-name="product.id"/>
+          </div>
+      </div>
+
+      <div class="oe_product_image text-center">
+          <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+              <img class="img" t-att-src="product.img('image')"/>
+          </a>
+      </div>
+    </template>
+
     <template id="products" page="True">
         <t t-call="website.layout">
             <t t-set="head">
@@ -110,41 +139,32 @@
                     </div>
                 </div>
 
-                <div class='row style_default'>
-                  <div class="col-md-12" id="products_grid">
-                    <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ search and 3 or product.website_sizex } oe_product oe-height-#{ search and 2 or product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published and 'on' or 'off'" data-name="products_layout">
-
-                            <div class="oe_product_description">
-                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
-                                    <b t-field="product.name"/>
-                                </a>
-                                <!-- This should be an option -->
-                                <div t-if="product.description_sale" class="text-muted oe_subdescription">
-                                    <div id="product_description" t-att-data-name="product.id"/>
-                                </div>
-                                <div>
-                                    <b>
-                                        <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                          <span class="text-danger" style="text-decoration: line-through;">
-                                              <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                                          </span>&amp;nbsp;
-                                        </t>
-                                        <t t-esc="product.product_variant_ids[0].price" /> €
-                                    </b>
-                                    <span id="add_to_cart" t-att-data-name="product.id"/>
-                                </div>
-                            </div>
-
-                            <div class="oe_product_image text-center">
-                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
-                                    <img class="img" t-att-src="product.img('image')"/>
-                                </a>
-                            </div>
-
-                        </div>
-                    </t>
-                  </div>
+                <div class='style_default'>
+                  <table class="col-md-12" id="products_grid">
+                    <colgroup>
+                      <col style="width: 1px; margin-right: -1px;" />
+                      <col class="col-md-3" />
+                      <col class="col-md-3" />
+                      <col class="col-md-3" />
+                      <col class="col-md-3" />
+                    </colgroup>
+                    <tbody>
+                      <tr t-foreach="table_products" t-as="tr_product">
+                        <td class="oe-height-2"></td>
+                        <t t-foreach="tr_product" t-as="td_product">
+                          <t t-if="td_product">
+                          <t t-set="product" t-value="td_product['product']"/>
+                          <td t-att-colspan="td_product['x']"
+                              t-att-rowspan="td_product['y']"
+                              t-attf-class="oe_product #{ td_product['class'] }"
+                              t-att-data-publish="product.website_published and 'on' or 'off'">
+                              <t t-call="website_sale.products_cart"/>
+                          </td>
+                          </t>
+                        </t>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <div class="text-center">
                     <t t-call="website.pager" />
@@ -178,7 +198,7 @@
     <!-- List view of products -->
 
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
-        <xpath  expr="//div[@data-name='products_layout']" position="attributes">
+        <xpath  expr="//div[@id='products_grid']" position="replace">
             <attribute name="class">col-md-12 oe_list_products oe-height-1</attribute>
         </xpath>
     </template>

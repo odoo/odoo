@@ -68,6 +68,125 @@ class Ecommerce(http.Controller):
 
         return (categories, full_category_ids)
 
+    def bin_packing_product_ids(self, domain, limit, offset):
+        product_obj = request.registry.get('product.template')
+        data_obj = request.registry.get('ir.model.data')
+
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=limit, offset=offset, context=request.context)
+
+        size_ids = {}
+        data_domain = [('model', '=', 'website.product.style'), ('name', 'like', 'size%')]
+        data_ids = data_obj.search(request.cr, SUPERUSER_ID, data_domain, context=request.context)
+        for data in data_obj.read(request.cr, SUPERUSER_ID, data_ids, ['name', 'res_id'], context=request.context):
+            size_ids[data['res_id']] = [int(data['name'][-3]), int(data['name'][-1])]
+
+        product_list = []
+        bin_packing = {}
+        bin_packing[0] = {}
+
+        for product in product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context):
+            index = len(product_list)
+
+            # get size and all html classes
+            _class = ""
+            x = 1
+            y = 1
+            for style_id in product.website_style_ids:
+                if style_id.id in size_ids:
+                    size = size_ids[style_id.id]
+                    x = size[0]
+                    y = size[1]
+                elif style_id.html_class:
+                    _class += " " + style_id.html_class
+            product_list.append({'product': product, 'x': x, 'y': y, 'class': _class })
+
+            # bin packing products
+            insert = False
+            line = 0
+            while not insert:
+                # if not full column get next line
+                if len(bin_packing.setdefault(line, {})) >= 4:
+                    line += 1
+                    continue
+
+                col = 0
+                while col < 4:
+                    if bin_packing[line].get(col, None) != None:
+                        col += 1
+                        continue
+
+                    insert = True
+
+                    copy_line = line
+                    copy_y = y
+                    while copy_y > 0:
+                        # check if the box can be inserted
+                        copy_col = col
+                        copy_x = x
+                        while copy_x > 0:
+                            if copy_col >= 4 or bin_packing.setdefault(copy_line, {}).get(copy_col, None) != None:
+                                insert = False
+                                break
+                            copy_col += 1
+                            copy_x -= 1
+                        if not insert:
+                            break
+                        copy_line += 1
+                        copy_y -= 1
+
+                    if not insert:
+                        col += 1
+                        continue
+
+                    copy_y = y
+                    while copy_y > 0:
+                        copy_y -= 1
+                        copy_x = x
+                        while copy_x > 0:
+                            copy_x -= 1
+                            bin_packing[line + copy_y][col + copy_x] = False
+                    bin_packing[line + copy_y][col + copy_x] = product_list[index]
+                    break
+            
+                if not insert:
+                    line += 1
+                else:
+                    break
+
+
+        # complete empty cell and packaging in list (from dict)
+        nb_empty = 0
+        line = 0
+        length = len(bin_packing)
+        while line < length:
+            col = 0
+            while col < 4:
+                if bin_packing[line].get(col) == None:
+                    nb_empty += 1
+                col += 1
+            line += 1
+
+        products = []
+        if nb_empty:
+            product_ids = product_obj.search(request.cr, request.uid, domain, limit=nb_empty, offset=offset+limit, context=request.context)
+            if product_ids:
+                for product in product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context):
+                    products.append(product)
+                products.reverse()
+
+        bin_packing_list = []
+        line = 0
+        while line < length:
+            bin_packing_list.append([])
+            col = 0
+            while col < 4:
+                if products and bin_packing[line].get(col) == None:
+                    bin_packing[line][col] = {'product': products.pop(), 'x': 1, 'y': 1, 'class': _class }
+                bin_packing_list[line].append(bin_packing[line].get(col, False))
+                col += 1
+            line += 1
+        return bin_packing_list
+
     @website.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
     def category(self, cat_id=0, page=0, **post):
 
@@ -92,14 +211,12 @@ class Ecommerce(http.Controller):
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = request.website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], context=request.context)
-
         request.context['pricelist'] = self.get_pricelist()
 
         values = {
             'get_categories': self.get_categories,
             'category_id': cat_id,
-            'products': product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context),
+            'table_products': self.bin_packing_product_ids(domain, limit=step, offset=pager['offset']),
             'search': post.get("search"),
             'pager': pager,
         }

@@ -8,9 +8,7 @@
         
         <record id="product.product_product_4" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_product_class">oe_image_full</field>
-            <field name="website_sizex">6</field>
-            <field name="website_sizey">4</field>
+            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full'),ref('website_sale.size2x2')])]"/>
             <field name="website_description" type="html">
                 <section snippet-id="text-image" class="mt16 mb16 dark">
                     <div class="container">
@@ -59,11 +57,11 @@
         </record>
         <record id="product.product_product_5" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_sizex">6</field>
+            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.size2x1')])]"/>
         </record>
         <record id="product.product_product_6" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_product_class">oe_image_full</field>
+            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
         </record>
         <record id="product.product_product_7" model="product.product">
             <field name="website_published" eval="True"/>
