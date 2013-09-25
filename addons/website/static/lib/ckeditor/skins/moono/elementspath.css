@@ -1,0 +1,80 @@
+/*
+Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+/*
+elementspath.css (part of editor.css)
+=======================================
+
+This file styles the "Elements Path", whith is the list of element names
+present at the the bottom bar of the CKEditor interface.
+
+The following is a visual representation of its main elements:
+
++-- .cke_path ---------------------------------------------------------------+
+| +-- .cke_path_item ----+ +-- .cke_path_item ----+ +-- .cke_path_empty ---+ |
+| |                      | |                      | |                      | |
+| +----------------------+ +----------------------+ +----------------------+ |
++----------------------------------------------------------------------------+
+*/
+
+/* The box that holds the entire elements path. */
+.cke_path
+{
+	float: left;
+	margin: -2px 0 2px;
+}
+
+/* Each item of the elements path. */
+.cke_path_item,
+/* Empty element available at the end of the elements path, to help us keeping
+   the proper box size when the elements path is empty. */
+.cke_path_empty
+{
+	display: inline-block;
+	float: left;
+	padding: 3px 4px;
+	margin-right: 2px;
+	cursor: default;
+	text-decoration: none;
+	outline: 0;
+	border: 0;
+	color: #4c4c4c;
+	text-shadow: 0 1px 0 #fff;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+.cke_rtl .cke_path,
+.cke_rtl .cke_path_item,
+.cke_rtl .cke_path_empty
+{
+	float: right;
+}
+
+/* The items are <a> elements, so we define its hover states here. */
+a.cke_path_item:hover,
+a.cke_path_item:focus,
+a.cke_path_item:active
+{
+	background-color: #bfbfbf;
+	color: #333;
+	text-shadow: 0 1px 0 rgba(255,255,255,.5);
+
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+
+	-moz-box-shadow: 0 0 4px rgba(0,0,0,.5) inset, 0 1px 0 rgba(255,255,255,.5);
+	-webkit-box-shadow: 0 0 4px rgba(0,0,0,.5) inset, 0 1px 0 rgba(255,255,255,.5);
+	box-shadow: 0 0 4px rgba(0,0,0,.5) inset, 0 1px 0 rgba(255,255,255,.5);
+}
+
+.cke_hc a.cke_path_item:hover,
+.cke_hc a.cke_path_item:focus,
+.cke_hc a.cke_path_item:active
+{
+	border: 2px solid;
+	padding: 1px 2px;
+}

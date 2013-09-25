@@ -191,12 +191,12 @@ h1.text-muted, h2.text-muted, h3.text-muted {
 }
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
-html, body {
+html, body, #wrapwrap {
   box-sizing: border-box;
   height: 100%;
 }
 
-body {
+#wrapwrap {
   display: table;
   width: 100%;
 }
@@ -229,13 +229,17 @@ footer {
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here";
+  content: "Click Edit To Create Content";
   text-align: center;
   display: block;
   padding-top: 100px;
   padding-bottom: 50px;
   color: grey;
   font-size: 24px;
+}
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here";
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -247,6 +251,15 @@ footer {
   height: 100%;
 }
 
+.carousel.oe_small .carousel-inner {
+  height: 200px;
+}
+.carousel.oe_medium .carousel-inner {
+  height: 300px;
+}
+.carousel.oe_big .carousel-inner {
+  height: 450px;
+}
 .carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -272,7 +285,7 @@ footer {
   background: rgba(0, 0, 0, 0.4);
 }
 .carousel .item.text_only .carousel-image {
-  display: none;
+  display: none !important;
 }
 .carousel .item.text_only .carousel-caption {
   left: 10%;
@@ -291,6 +304,20 @@ footer {
 .carousel .item.image_text .carousel-image {
   right: 50%;
   left: 10%;
+}
+.carousel .carousel-control {
+  cursor: pointer;
+}
+.carousel .carousel-control span {
+  top: 50%;
+  position: absolute;
+  margin-top: -8px;
+}
+.carousel .carousel-control.left span {
+  left: 10px;
+}
+.carousel .carousel-control.right span {
+  right: 10px;
 }
 
 /* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
@@ -348,17 +375,21 @@ a[data-publish][data-publish='on']:hover .css_published {
   display: none;
 }
 
-[data-publish='off']:not(a) > :not([data-publish]) {
+.unpublish {
+  opacity: 0.5;
+}
+
+[data-publish='off']:not(a) > :not(.js_publish) {
   opacity: 0.5;
 }
 
 [data-publish]:not(a) {
   position: relative;
   overflow: visible;
-  /*&:hover > [data-publish] */
+  /*&:hover .js_publish */
   /*     display: block */
 }
-[data-publish]:not(a) > [data-publish] {
+[data-publish]:not(a) .js_publish {
   position: absolute;
   right: -6px;
   top: -10px;

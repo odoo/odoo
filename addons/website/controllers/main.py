@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             module = 'website'
             idname = path
-        path = "%s.%s" % (module, idname)
+        xid = "%s.%s" % (module, idname)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -63,7 +63,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         newview = view.browse(
             request.cr, request.uid, newview_id, context=request.context)
         newview.write({
-            'arch': newview.arch.replace("website.default_page", path),
+            'arch': newview.arch.replace("website.default_page", xid),
             'name': "page/%s" % path,
             'page': True,
         })
@@ -265,12 +265,16 @@ class Website(openerp.addons.web.controllers.main.Home):
         hashed_session = hashlib.md5(request.session_id).hexdigest()
         retag = hashed_session
         try:
+            ids = Model.read(request.cr, request.uid, [('id', '=', id)], request.context)
+            if not ids:
+                id = Model.read(request.cr, openerp.SUPERUSER_ID, [('id', '=', id), ('website_published', '=', True)], request.context)[0]
+
             if etag:
-                date = Model.read(request.cr, request.uid, [id], [last_update], request.context)[0].get(last_update)
+                date = Model.read(request.cr, openerp.SUPERUSER_ID, [id], [last_update], request.context)[0].get(last_update)
                 if hashlib.md5(date).hexdigest() == etag:
                     return werkzeug.wrappers.Response(status=304)
 
-            res = Model.read(request.cr, request.uid, [id], [last_update, field], request.context)[0]
+            res = Model.read(request.cr, openerp.SUPERUSER_ID, [id], [last_update, field], request.context)[0]
             retag = hashlib.md5(res.get(last_update)).hexdigest()
             image_base64 = res.get(field)
 
@@ -315,5 +319,13 @@ class Website(openerp.addons.web.controllers.main.Home):
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
         return request.website.kanban_col(**post)
+
+    @website.route(['/robots.txt'], type='http', auth="public")
+    def robots(self):
+        return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+
+    @website.route(['/sitemap.xml'], type='http', auth="public")
+    def sitemap(self):
+        return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

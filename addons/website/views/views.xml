@@ -31,38 +31,27 @@
                         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
+                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+
                         <t t-if="editable">
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
                             <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
 
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
-                            <script type="text/javascript">
-                                CKEDITOR.disableAutoInline = true;
-                                // EDIT ALL THE THINGS
-                                CKEDITOR.dtd.$editable = $.extend( {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
-                            </script>
-                            <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-                        </t>
 
-                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-
-                        <t t-if="editable">
                             <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                            <t t-if="not translatable">
-                                <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
-                                <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-                            </t>
-                            <t t-if="translatable">
-                                <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-                            </t>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+                            <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
                         </t>
 
                         <t t-raw="head or ''"/>
@@ -71,95 +60,98 @@
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                     </head>
                     <body>
-                        <header>
-                            <div class="navbar navbar-default navbar-static-top">
-                                <div class="container">
-                                    <div class="navbar-header">
-                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                            <span class="sr-only">Toggle navigation</span>
-                                            <span class="icon-bar"></span>
-                                            <span class="icon-bar"></span>
-                                            <span class="icon-bar"></span>
-                                        </button>
-                                        <a class="navbar-brand" t-href="/page/website.homepage"><em>Your</em><b>Company</b></a>
-                                    </div>
-                                    <div class="collapse navbar-collapse navbar-top-collapse">
-                                        <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                            <li><a t-href="/page/website.contactus">Contact us</a></li>
-                                            <li><a href="/admin">Sign in</a></li>
-                                            <li t-if="request.multilang and len(website.language_ids) &gt; 1" class="dropdown">
-                                                <!-- TODO: use flags for language selection -->
-                                                <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
-                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                                    <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
-                                                </a>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li t-foreach="website.language_ids" t-as="lg">
-                                                        <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
-                                                            <strong t-att-class="'icon-check' if lg.code == lang
-                                                                else 'icon-check-empty'"></strong>
-                                                            <t t-esc="lg.name"/>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-                        <t t-raw="0"/>
-                        <footer>
-                            <div class="container" id="footer_container">
-                                <div class="row">
-                                    <div class="col-md-3" name="product">
-                                        <h4>Our products &amp; Services</h4>
-                                        <ul class="list-unstyled" name="products">
-                                            <li><a t-href="/">Home</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-3" name="info">
-                                        <h4 name="info_title">Connect with us</h4>
-                                        <ul class="list-unstyled">
-                                            <li><a t-href="/page/website.contactus">Contact us</a></li>
-                                        </ul>
-                                        <ul class="list-unstyled">
-                                            <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
-                                            <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
-                                        </ul>
-                                        <h1>
-                                            <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
-                                            <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
-                                            <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
-                                        </h1>
-                                    </div>
-                                    <div class="col-md-5 col-lg-offset-1" name="about_us">
-                                        <h4>
-                                            <span t-field="res_company.name">Your Company</span>
-                                            <small> - <a t-href="/page/website.aboutus">About us</a></small>
-                                        </h4>
-                                        <p>
-                                            We are a team of passionated people whose goal is to improve everyone's
-                                            life through disruptive products. We build great products to solve your
-                                            business problems.
-                                        </p>
-                                        <p>
-                                            Our products are designed for small to medium companies willing to optimize
-                                            their performance.
-                                        </p>
+                        <div id="wrapwrap">
+                            <header>
+                                <div class="navbar navbar-default navbar-static-top">
+                                    <div class="container">
+                                        <div class="navbar-header">
+                                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                                                <span class="sr-only">Toggle navigation</span>
+                                                <span class="icon-bar"></span>
+                                                <span class="icon-bar"></span>
+                                                <span class="icon-bar"></span>
+                                            </button>
+                                            <a class="navbar-brand" t-href="/page/website.homepage"><em>Your</em><b>Company</b></a>
+                                        </div>
+                                        <div class="collapse navbar-collapse navbar-top-collapse">
+                                            <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                                <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
+                                                <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
+                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><t t-field="user_id.name"/></a></li>
+                                                <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                    <!-- TODO: use flags for language selection -->
+                                                    <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                        <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li t-foreach="website.language_ids" t-as="lg">
+                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
+                                                                <strong t-att-class="'icon-check' if lg.code == lang
+                                                                    else 'icon-check-empty'"></strong>
+                                                                <t t-esc="lg.name"/>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="container mt16">
-                                <div class="pull-right" t-ignore="1">
-                                    Create a <a href="http://openerp.com/apps/website">free website</a> with
-                                    <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
+                            </header>
+                            <t t-raw="0"/>
+                            <footer>
+                                <div class="container" id="footer_container">
+                                    <div class="row">
+                                        <div class="col-md-3" name="product">
+                                            <h4>Our products &amp; Services</h4>
+                                            <ul class="list-unstyled" name="products">
+                                                <li><a t-href="/">Home</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-3" name="info">
+                                            <h4 name="info_title">Connect with us</h4>
+                                            <ul class="list-unstyled">
+                                                <li><a t-href="/page/website.contactus">Contact us</a></li>
+                                            </ul>
+                                            <ul class="list-unstyled">
+                                                <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
+                                                <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                            </ul>
+                                            <h1>
+                                                <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
+                                                <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
+                                                <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-5 col-lg-offset-1" name="about_us">
+                                            <h4>
+                                                <span t-field="res_company.name">Your Company</span>
+                                                <small> - <a t-href="/page/website.aboutus">About us</a></small>
+                                            </h4>
+                                            <p>
+                                                We are a team of passionated people whose goal is to improve everyone's
+                                                life through disruptive products. We build great products to solve your
+                                                business problems.
+                                            </p>
+                                            <p>
+                                                Our products are designed for small to medium companies willing to optimize
+                                                their performance.
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="pull-left text-muted">
-                                    Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a t-href="/sitemap">Sitemap</a>
+                                <div class="container mt16">
+                                    <div class="pull-right" t-ignore="1">
+                                        Create a <a href="http://openerp.com/apps/website">free website</a> with
+                                        <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
+                                    </div>
+                                    <div class="pull-left text-muted">
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a t-href="/sitemap">Sitemap</a>
+                                    </div>
                                 </div>
-                            </div>
-                        </footer>
+                            </footer>
+                        </div>
                     </body>
                 </html>
         </template>
@@ -347,12 +339,15 @@
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.id and object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
-                <span t-attf-class="label label-success css_publish">Publish</span>
-                <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
-                <span t-attf-class="label label-success css_published">Published</span>
-                <span t-attf-class="label label-danger css_unpublished">Unpublished</span>
-            </a>
+            <t t-if="editable" t-ignore="true">
+              <div class="dropdown js_publish pull-right" t-att-data-id="object.id" t-att-data-object="object._name">
+                <a class="btn btn-default" id="dopprod" role="button" data-toggle="dropdown"> Manage <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dopprod">
+                  <li t-att-class="object.id and object.website_published and 'active' or ''"><a href="#" class="js_publish_btn">Publish</a></li>
+                  <li><a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)">Manage Products</a></li>
+                </ul>
+              </div>
+            </t>
         </template>
 
         <template id="kanban">
@@ -396,6 +391,18 @@
                     </tr>
                 </tbody>
             </table>
+        </template>
+        <template id="robots">
+# robotstxt.org/
+User-agent: *
+Sitemap: <t t-esc="url_root"/>sitemap.xml
+        </template>
+        <template id="sitemap">
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                <t t-foreach="pages" t-as="page">
+                    <url t-esc="page['url']"/>
+                </t>
+            </urlset>
         </template>
      </data>
 </openerp>

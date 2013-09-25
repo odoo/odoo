@@ -281,13 +281,13 @@
             return $('body').children().not('.js_seo_configuration').text();
         },
         isInBody: function (text) {
-            return new RegExp(text, "gi").test(this.bodyText());
+            return new RegExp("\\b"+text+"\\b", "gi").test(this.bodyText());
         },
         isInTitle: function (text) {
-            return new RegExp(text, "gi").test(this.title());
+            return new RegExp("\\b"+text+"\\b", "gi").test(this.title());
         },
         isInDescription: function (text) {
-            return new RegExp(text, "gi").test(this.description());
+            return new RegExp("\\b"+text+"\\b", "gi").test(this.description());
         },
     });
 

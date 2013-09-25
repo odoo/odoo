@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <!-- <data noupdate="1"> -->
+    <data>
+
+        <!-- TAGS -->
+        <record id="blog_tag_1" model="blog.tag">
+            <field name="name">functional</field>
+        </record>
+        <record id="blog_tag_2" model="blog.tag">
+            <field name="name">pos</field>
+        </record>
+
+        <!-- POSTS -->
+        <record id="blog_post_1" model="blog.post">
+            <field name="name">OpenERP 7.0 Functional Demo</field>
+            <field name="category_id" ref="blog_category_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="content">
+<![CDATA[<p>The news is out, OpenERP's latest version 7.0 is here.  It's more
+user-friendly, even more business oriented and efficient to manage your company.</p>
+<p>How to discover the latest version 6.1.?</p>
+<ul>
+    <li>
+        <a target="http://demo.openerp.com" href="http://demo.openerp.com" style="background: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFZJREFUeF59z4EJADEIQ1F36k7u5E7ZKXeUQPACJ3wK7UNokVxVk9kHnQH7bY9hbDyDhNXgjpRLqFlo4M2GgfyJHhjq8V4agfrgPQX3JtJQGbofmCHgA/nAKks+JAjFAAAAAElFTkSuQmCC&quot;) no-repeat scroll right center transparent;padding-right: 13px;">Demo</a>
+    </li><li>
+        <a target="http://openerp.com/online" href="http://openerp.com/online" style="background: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFZJREFUeF59z4EJADEIQ1F36k7u5E7ZKXeUQPACJ3wK7UNokVxVk9kHnQH7bY9hbDyDhNXgjpRLqFlo4M2GgfyJHhjq8V4agfrgPQX3JtJQGbofmCHgA/nAKks+JAjFAAAAAElFTkSuQmCC&quot;) no-repeat scroll right center transparent;padding-right: 13px;">Online</a>
+    </li><li>
+        <a target="http://openerp.com/downloads" href="http://openerp.com/downloads" style="background: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFZJREFUeF59z4EJADEIQ1F36k7u5E7ZKXeUQPACJ3wK7UNokVxVk9kHnQH7bY9hbDyDhNXgjpRLqFlo4M2GgfyJHhjq8V4agfrgPQX3JtJQGbofmCHgA/nAKks+JAjFAAAAAElFTkSuQmCC&quot;) no-repeat scroll right center transparent;padding-right: 13px;">Download</a>
+    </li>
+</ul>
+<p>We have also put together a functional demo that presents 6.1. Watch this video
+to learn directly from us what OpenERP 6.1. can do for you. Share it in your
+company, with your clients and implement it now for your business.</p>
+<h3>Watch on Youtube!</h3>
+<iframe width="480" height="390" src="http://www.youtube.com/embed/7jES2jxKMso " frameborder="0" allowfullscreen=""></iframe>
+]]>
+</field>
+        </record>
+
+        <record id="blog_post_2" model="blog.post">
+            <field name="name">Personalise Dashboards</field>
+            <field name="category_id" ref="blog_category_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="content">
+<![CDATA[
+<p>You like OpenERP, but feel like you want to personalise it more? Now, OpenERP
+goes a step further and lets you customize your dashboard.  Thanks to a new
+feature that allows you to customize your dashboard by adding new boards of any
+search view.</p>
+<h3>How is it done?</h3>
+<ul>
+    <li>Step 1: access one search view</li>
+    <li>Step 2: apply the filter you want to see at each connection to the application
+(eg. on sales, manufacturing, etc)</li>
+    <li>Step 3: add it into the dashboard in the same space where you can save the filter</li>
+    <li>Step 4: choose the application you want it visible on and the name of the array</li>
+</ul>
+<p>Look at this simple example below from Purchase, where I want to put on the
+application's dashboard "Purchases to Approve". After I access the search view
+and apply the filter for "Purchases to Approve", I can add it immediately to my
+Purchase dashboard.</p>
+<img src="http://www.openerp.com/sites/default/files/fileattach/dashboard2_1(1).png" alt="">
+<p>In less than a minute, the search view is visible on the dashboard</p>
+<img src="http://www.openerp.com/sites/default/files/fileattach/dashboard2_2.png" alt="">
+<p>Of course, you are free to delete what you don't need or like, but just in case<br>
+you change your mind there is a reset button to return to the default view.</p>
+]]>
+</field>
+        </record>
+
+        <record id="blog_post_3" model="blog.post">
+            <field name="name">Touchscreen Point of Sale</field>
+            <field name="category_id" ref="blog_category_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
+            <field name="content">
+<![CDATA[<p>The brand new OpenERP touchscreen point of sale available with 6.1 allows you
+to manage your shop sales very easily.  It's fully web based so that you don't
+have to install or deploy any software and all the sales shops can be easily
+consolidated.  It works in connected and disconnected modes so that you can
+continue to sell if you lose your internet connection.</p>
+<img src="http://www.openerp.com/sites/default/files/fileattach/POS(2).png" alt="">
+<h3>Here's a summary of its main features and benefits:</h3>
+<ul>
+    <li>100% WEB based</li>
+    <li>available for any touchscreen device (ipod, ipad, any tablet)mobile (with portable devices)</li>
+    <li>no installation required</li>
+    <li>no synchronization needed, completely integrated</li>
+    <li>continue working even when your connection is down if you close your browser, data won't be lost</li>
+    <li>fully web based with a clean interface smart interface</li>
+</ul>
+<p>You have different options to select your products. You can do it through the
+barcode reader, just browse through the categories you have put in place (ie.
+drinks, snacks, meals, etc.), or text search in case neither of the other
+options work for you.  If you need to use the POS for your restaurant, for
+example, your employees can record at the same time multiple tickets without
+having to wait to do one transaction at a time. Along, to facilitate payment,
+the application allows multiple payment methods.</p>
+<p>The POS application is so simple and accessible to use that your shop or
+restaurant will never need any other tool to manage orders. Due to its smart
+and user-friendly interface you don't need any training to learn how to use it.
+Think of it as an out-of-the-box solution to boost your business' productivity.
+</p>
+]]>
+</field>
+        </record>
+
+    </data>
+</openerp>

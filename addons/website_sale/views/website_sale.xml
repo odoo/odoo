@@ -43,7 +43,7 @@
     <!-- Layout add nav and footer -->
 
     <template id="header_footer" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//body/header//ul[@id='top_menu']/li" position="before">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">
@@ -53,7 +53,7 @@
                 </a>
             </li>
         </xpath>
-        <xpath expr="//body/footer//ul[@name='products']" position="inside">
+        <xpath expr="//footer//ul[@name='products']" position="inside">
             <li><a href="/shop/">Shop</a></li>
             <li>
                 <a href="/shop/mycart/">
@@ -68,10 +68,12 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == category_id and 'active' or ''">
-            <a t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
+            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
-                    <t t-call="website_sale.categories_recursive"/>
+                    <t t-if="category.id in categ[1] or editable">
+                        <t t-call="website_sale.categories_recursive"/>
+                    </t>
                 </t>
             </ul>
         </li>
@@ -111,7 +113,7 @@
                 <div class='row style_default'>
                   <div class="col-md-12" id="products_grid">
                     <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ product.website_sizex } oe_product oe-height-#{ product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published" data-snippet-id="colmd">
+                        <div t-attf-class="col-md-#{ search and 3 or product.website_sizex } oe_product oe-height-#{ search and 2 or product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published and 'on' or 'off'" data-name="products_layout">
 
                             <div class="oe_product_description">
                                 <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
@@ -119,9 +121,7 @@
                                 </a>
                                 <!-- This should be an option -->
                                 <div t-if="product.description_sale" class="text-muted oe_subdescription">
-
-                                    <!-- TODO: replace by a smart t-field on field.text: description_sale -->
-                                    <small t-raw="product.description_sale.replace('\n','&lt;br/&gt;') "/>
+                                    <div id="product_description" t-att-data-name="product.id"/>
                                 </div>
                                 <div>
                                     <b>
@@ -132,9 +132,7 @@
                                         </t>
                                         <t t-esc="product.product_variant_ids[0].price" /> €
                                     </b>
-                                    <a t-attf-href="./add_cart/?product_id=#{ product.id }">
-                                        <span class="icon-shopping-cart"/>
-                                    </a>
+                                    <span id="add_to_cart" t-att-data-name="product.id"/>
                                 </div>
                             </div>
 
@@ -156,6 +154,35 @@
             </div>
         </t>
     </template>
+
+    <!-- Product Description-->
+
+    <template id="product_description" inherit_option_id="website_sale.products" name="Product Description">
+        <xpath expr="//div[@id='product_description']" position="replace">
+            <small>
+                <t t-field="product.description_sale"/>
+            </small>
+        </xpath>
+    </template>
+
+    <!-- Add to cart button-->
+
+    <template id="add_to_basket" inherit_option_id="website_sale.products" name="Add to Cart">
+        <xpath expr="//span[@id='add_to_cart']" position="replace">
+            <a t-attf-href="./add_cart/?product_id=#{ product.id }">
+                <span class="icon-shopping-cart"/>
+            </a>
+        </xpath>
+    </template>
+
+    <!-- List view of products -->
+
+    <template id="list_view" inherit_option_id="website_sale.products" name="List View">
+        <xpath  expr="//div[@data-name='products_layout']" position="attributes">
+            <attribute name="class">col-md-12 oe_list_products oe-height-1</attribute>
+        </xpath>
+    </template>
+
 
     <!-- product --> 
 
@@ -241,12 +268,16 @@
                 <div class='row mt16' style="margin-left: 15px !important;">
                 <t t-foreach="product.recommended_products()" t-as="product">
                     <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
-                        <a t-attf-href="/shop/product/#{ product.id }/">
-                            <div class='mt16 text-center'>
-                                <img t-att-src="product.img('image_small')"/>
-                                <h5 t-field='product.name'></h5>
-                            </div>
-                        </a>
+                        <div class='mt16 text-center'>
+                            <img t-att-src="product.img('image_small')"/>
+                            <h5>
+                                <a t-attf-href="/shop/product/#{ product.id }/"
+                                   style="display: block">
+                                    <span t-field='product.name'
+                                          style="display: block"/>
+                                </a>
+                            </h5>
+                        </div>
                     </div>
                 </t>
                 </div>
@@ -340,7 +371,8 @@
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <li t-att-class=" '' if category_id else 'active' "><a href="/shop/">All Products</a></li>
-                    <t t-foreach="categories" t-as="category">
+                    <t t-set="categ" t-value="get_categories()"/>
+                    <t t-foreach="categ[0]" t-as="category">
                         <t t-call="website_sale.categories_recursive"/>
                     </t>
                 </ul>
@@ -393,12 +425,16 @@
                 <div class='row mt16'>
                 <t t-foreach="suggested_products" t-as="product">
                     <div class='col-md-2 thumbnail'>
-                        <a t-attf-href="/shop/product/#{ product.id }/">
-                            <div class='mt16 text-center'>
+                        <div class='mt16 text-center'>
+                            <a t-attf-href="/shop/product/#{ product.id }/">
                                 <img t-att-src="product.img('image_small')"/>
-                                <h5 t-field='product.name'></h5>
-                            </div>
-                        </a>
+                            </a>
+                            <h5>
+                                <a t-attf-href="/shop/product/#{ product.id }/" style="display: block;">
+                                    <span t-field="product.name"/>
+                                </a>
+                            </h5>
+                        </div>
                     </div>
                 </t>
                 </div>
@@ -459,43 +495,43 @@
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Name and firstname</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="name" class="form-control" t-att-value="checkout.get('name', '')"/>
+                                    <input type="text" name="name" class="form-control" t-att-value="checkout['name']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Telephone</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone', '')"/>
+                                    <input type="tel" name="phone" class="form-control" t-att-value="checkout['phone']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('fax') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Fax</label>
                                 <div class="col-lg-4">
-                                    <input type="tel" name="fax" class="form-control" t-att-value="checkout.get('fax', '')"/>
+                                    <input type="tel" name="fax" class="form-control" t-att-value="checkout['fax']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Company</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="company" class="form-control" t-att-value="checkout.get('company', '')"/>
+                                    <input type="text" name="company" class="form-control" t-att-value="checkout['company']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Email address</label>
                                 <div class="col-lg-4">
-                                    <input type="email" name="email" class="form-control" t-att-value="checkout.get('email', '')"/>
+                                    <input type="email" name="email" class="form-control" t-att-value="checkout['email']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Street</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="street" class="form-control" t-att-value="checkout.get('street', '')"/>
+                                    <input type="text" name="street" class="form-control" t-att-value="checkout['street']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">City</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="city" class="form-control" t-att-value="checkout.get('city', '')"/>
+                                    <input type="text" name="city" class="form-control" t-att-value="checkout['city']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''}">
@@ -504,7 +540,7 @@
                                     <select name="state_id" class="form-control">
                                         <option value="">State / Province...</option>
                                         <t t-foreach="states or []" t-as="state">
-                                            <option t-att-value="state.id" t-att-selected="state.id == checkout.get('state_id')"><t t-esc="state.name"/></option>
+                                            <option t-att-value="state.id" t-att-selected="state.id == checkout['state_id']"><t t-esc="state.name"/></option>
                                         </t>
                                     </select>
                                 </div>
@@ -512,7 +548,7 @@
                             <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''}">
                                 <label class="col-lg-3 control-label" for="contact_name">Zip / Postal Code</label>
                                 <div class="col-lg-4">
-                                    <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip', '')"/>
+                                    <input type="text" name="zip" class="form-control" t-att-value="checkout['zip']"/>
                                 </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''}">
@@ -521,7 +557,7 @@
                                     <select name="country_id" class="form-control">
                                         <option value="">Country...</option>
                                         <t t-foreach="countries or []" t-as="country">
-                                            <option t-att-value="country.id" t-att-selected="country.id == checkout.get('country_id')"><t t-esc="country.name"/></option>
+                                            <option t-att-value="country.id" t-att-selected="country.id == checkout['country_id']"><t t-esc="country.name"/></option>
                                         </t>
                                     </select>
                                 </div>
@@ -597,7 +633,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-default">Last stape</button>
+                        <button type="submit" class="btn btn-default">Confirm</button>
                     </form>
                 </div>
             </div>

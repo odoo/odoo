@@ -56,22 +56,22 @@
                             </label>
                         </h3>
                         <input type="text" class="form-control pages url-source"
-                               id="link-new" placeholder="Create new page"/>
+                               id="link-new" pattern="[\\w/-]+"/>
                     </li>
                     <li class="list-group-item form-group clearfix">
+                        <h3 class="list-group-item-heading">
+                            <label for="link-external" class="control-label">
+                                External Website
+                            </label>
+                        </h3>
+                        <input type="text" class="form-control url url-source"
+                               id="link-external" placeholder="http://openerp.com"/>
                         <div class="pull-right">
                             <label>
                                 <input type="checkbox" class="window-new"/>
                                 Open in new window
                             </label>
                         </div>
-                        <h3 class="list-group-item-heading">
-                            <label for="link-external" class="control-label">
-                                External Page
-                            </label>
-                        </h3>
-                        <input type="text" class="form-control url url-source"
-                               id="link-external" placeholder="http://openerp.com"/>
                     </li>
                     <li class="list-group-item form-group">
                         <h3 class="list-group-item-heading">
@@ -83,6 +83,17 @@
                                id="link-email" placeholder="you@yourwebsite.com"/>
                     </li>
                 </ul>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="link-text" class="col-sm-2 control-label">
+                            Link text
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control"
+                                   id="link-text"/>
+                        </div>
+                    </div>
+                </div>
             </form>
         </t>
     </t>
