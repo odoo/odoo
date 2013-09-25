@@ -60,14 +60,16 @@ class stock_quant(osv.osv):
         return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
 
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
+        ''' This function is called at the end of negative quant reconciliation and does the accounting entries adjustemnts and the update of the product cost price if needed
+        '''
         if context is None:
             context = {}
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
         ctx = context.copy()
         for quant in self.browse(cr, uid, quant_ids, context=context):
             move = self._get_latest_move(cr, uid, quant, context=context)
-            ctx['force_valuation_amount'] = newprice - quant.cost
             # this is where we post accounting entries for adjustment
+            ctx['force_valuation_amount'] = newprice - quant.cost
             self._account_entry_move(cr, uid, quant, move, context=ctx)
             #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
             #1) the product cost's method is 'real'
@@ -122,10 +124,12 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
-    def move_single_quant(self, cr, uid, quant, qty, move, context=None):
-        quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
+
+    def move_single_quant(self, cr, uid, quant, qty, move, lot_id=False, owner_id=False, package_id= False, context=None):
+        quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, lot_id = lot_id, owner_id = owner_id, package_id = package_id, context=context)
         self._account_entry_move(cr, uid, quant_record, move, context=context)
         return quant_record
+
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
@@ -221,9 +225,9 @@ class stock_quant(osv.osv):
 class stock_move(osv.osv):
     _inherit = "stock.move"
 
-    def action_done(self, cr, uid, ids, context=None):
+    def action_done(self, cr, uid, ids, negatives = False, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        super(stock_move, self).action_done(cr, uid, ids, context=context)
+        super(stock_move, self).action_done(cr, uid, ids, negatives=negatives, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
 
     def _store_average_cost_price(self, cr, uid, move, context=None):

@@ -323,13 +323,9 @@
   Process the delivery of the outgoing shipments
 - 
   !python {model: stock.picking}: |
-    quant_obj = self.pool.get("stock.quant")
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
     picking_obj1 = self.browse(cr, uid, ref("outgoing_fifo_shipment_neg2"))
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.id) for x in quant_obj.browse(cr, uid, quants)]
     picking_obj1.do_partial(context=context)
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.id) for x in quant_obj.browse(cr, uid, quants)]
+
 - 
   Receive purchase order with 50 kg FIFO Ice Cream at 50 euro/kg
 - 
@@ -351,19 +347,13 @@
   Process the reception of purchase order 1
 -
   !python {model: stock.picking}: |
-    quant_obj = self.pool.get("stock.quant")
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
     picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg")).picking_ids[0]
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.id) for x in quant_obj.browse(cr, uid, quants)]
     picking_obj.do_partial(context=context)
 - 
   Assert price on product is still the old price as the out move has not been received fully yet
 - 
   !python {model: product.product}: |
-    quant_obj = self.pool.get("stock.quant")
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.id) for x in quant_obj.browse(cr, uid, quants)]
+
     assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 70, 'The product price should not have been updated'
 - 
   Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
@@ -386,16 +376,10 @@
   Process the reception of purchase order 2
 - 
   !python {model: stock.picking}: |
-    quant_obj = self.pool.get("stock.quant")
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.id) for x in quant_obj.browse(cr, uid, quants)]
     picking_obj = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_neg2")).picking_ids[0]
     picking_obj.do_partial(context=context)
 - 
   The price of the product should have changed back to 65.0 
 - 
   !python {model: product.product}: |
-    quant_obj = self.pool.get("stock.quant")
-    quants = quant_obj.search(cr, uid, [('product_id','=',ref("product_fifo_negative"))])
-    print "Quants:", [(x.qty, x.location_id.name, x.in_date, x.cost, x.id) for x in quant_obj.browse(cr, uid, quants)]
     assert self.browse(cr, uid, ref("product_fifo_negative")).standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.browse(cr, uid, ref("product_fifo_negative")).standard_price,)
