@@ -36,7 +36,7 @@ class QWebContext(dict):
         self.undefined_handler = undefined_handler
         dic = BUILTINS.copy()
         dic.update(data)
-        dict.__init__(self, dic)
+        super(QWebContext, self).__init__(dic)
         self['defined'] = lambda key: key in self
 
     def __getitem__(self, key):
@@ -330,14 +330,16 @@ class QWebXml(object):
         node_name = e.nodeName
         assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td"),\
             "RTE widgets do not work correctly on %r elements" % node_name
+        assert node_name != 't',\
+            "t-field can not be used on a t element, provide an actual HTML node"
 
         record, field = t_att["field"].rsplit('.', 1)
         record = self.eval_object(record, v)
 
         inner = None
-        column = record._model._all_columns[field].column
+        field_type = record._model._all_columns[field].column._type
         try:
-            if column._type == 'many2one':
+            if field_type == 'many2one':
                 field_data = record.read([field])[0].get(field)
                 inner = field_data and field_data[1]
             else:
@@ -345,9 +347,6 @@ class QWebXml(object):
 
             if isinstance(inner, unicode):
                 inner = inner.encode("utf8")
-
-            if node_name == 't':
-                e.nodeName = DEFAULT_TAG_BY_TYPE[column._type]
 
             g_att += ''.join(
                 ' %s="%s"' % (name, cgi.escape(str(value), True))
@@ -364,22 +363,5 @@ class QWebXml(object):
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
         return self.render_element(e, t_att, g_att, v, str(inner or ""))
-
-# If a t-field is set on a <t> element, by default only its text will be
-# rendered losing the information that it's a tag and completely breaking
-# edition => replace <t> by some default tag depending on field type
-DEFAULT_TAG_BY_TYPE = {
-    'integer': 'span',
-    'float': 'span',
-    'char': 'span',
-    'date': 'span',
-    'datetime': 'span',
-    'time': 'span',
-    'many2one': 'span',
-
-    'text': 'p',
-
-    'html': 'div',
-}
 
 # leave this, al.

@@ -103,7 +103,6 @@ class TestACL(common.TransactionCase):
         finally:
             self.res_partner._columns['email'].groups = False
 
-
 if __name__ == '__main__':
     unittest2.main()
 
