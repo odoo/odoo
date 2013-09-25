@@ -336,12 +336,15 @@
         </template>
 
         <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.id and object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
-                <span t-attf-class="label label-success css_publish">Publish</span>
-                <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
-                <span t-attf-class="label label-success css_published">Published</span>
-                <span t-attf-class="label label-danger css_unpublished">Unpublished</span>
-            </a>
+            <t t-if="editable" t-ignore="true">
+              <div class="dropdown js_publish pull-right" t-att-data-id="object.id" t-att-data-object="object._name">
+                <a class="btn btn-default" id="dopprod" role="button" data-toggle="dropdown"> Manage <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dopprod">
+                  <li t-att-class="object.id and object.website_published and 'active' or ''"><a href="#" class="js_publish_btn">Publish</a></li>
+                  <li><a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)">Manage Products</a></li>
+                </ul>
+              </div>
+            </t>
         </template>
 
         <template id="kanban">

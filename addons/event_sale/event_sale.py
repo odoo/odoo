@@ -117,10 +117,8 @@ class event_event(osv.osv):
         return result
 
     _columns = {
-        'website_published': fields.boolean('Available in the website'),
-        'description_website': fields.html('Description for the website'),
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
-        'organizer_id': fields.many2one('res.partner', "Orgonizer"),
+        'organizer_id': fields.many2one('res.partner', "Organizer"),
         'phone': fields.related('organizer_id', 'phone', type='char', string='Phone'),
         'email': fields.related('organizer_id', 'email', type='char', string='Email'),
         'register_max': fields.function(_get_register_max,

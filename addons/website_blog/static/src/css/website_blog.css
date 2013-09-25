@@ -1,3 +1,4 @@
+@import url(compass/css3.css);
 .css_website_mail .has-error {
   border-color: red;
 }
@@ -6,4 +7,17 @@
 }
 .css_website_mail .css_nav_month:first-of-type {
   display: block;
+}
+
+.blog_content a.oe_mail_expand:after {
+  content: " →";
+}
+.blog_content a.oe_mail_expand {
+  font-weight: bold;
+  display: block;
+}
+
+p.post-meta {
+  position: relative;
+  top: -5px;
 }

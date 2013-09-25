@@ -155,13 +155,16 @@ footer
     position: static
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
-    content: 'Drag Building Blocks Here'
+    content: 'Click Edit To Create Content'
     text-align: center
     display: block
     padding-top: 100px
     padding-bottom: 50px
     color: grey
     font-size: 24px
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
+    content: 'Drag Building Blocks Here'
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
@@ -282,16 +285,18 @@ a[data-publish]
         &:hover .css_published
             display: none
 
+.unpublish
+    opacity: 0.5
 [data-publish='off']:not(a)
-    >:not([data-publish])
+    >:not(.js_publish)
         opacity: 0.5
 [data-publish]:not(a)
     position: relative
     overflow: visible
-    >[data-publish]
+    .js_publish
         position: absolute
         right: -6px
         top: -10px
         display: none
-    /*&:hover > [data-publish]*/
+    /*&:hover .js_publish*/
     /*     display: block*/

@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -228,13 +229,17 @@ footer {
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here";
+  content: "Click Edit To Create Content";
   text-align: center;
   display: block;
   padding-top: 100px;
   padding-bottom: 50px;
   color: grey;
   font-size: 24px;
+}
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here";
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -370,17 +375,21 @@ a[data-publish][data-publish='on']:hover .css_published {
   display: none;
 }
 
-[data-publish='off']:not(a) > :not([data-publish]) {
+.unpublish {
+  opacity: 0.5;
+}
+
+[data-publish='off']:not(a) > :not(.js_publish) {
   opacity: 0.5;
 }
 
 [data-publish]:not(a) {
   position: relative;
   overflow: visible;
-  /*&:hover > [data-publish] */
+  /*&:hover .js_publish */
   /*     display: block */
 }
-[data-publish]:not(a) > [data-publish] {
+[data-publish]:not(a) .js_publish {
   position: absolute;
   right: -6px;
   top: -10px;

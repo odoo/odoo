@@ -19,5 +19,19 @@
 #
 ##############################################################################
 
-import controllers
-import event
+from openerp.osv import osv, fields
+
+
+class MailThread(osv.Model):
+    _inherit = 'mail.thread'
+
+    _columns = {
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', ('model', '=', self._name), ('type', '=', 'comment')
+            ],
+            string='Website Messages',
+            help="Website communication history",
+        ),
+    }

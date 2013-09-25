@@ -1,15 +1,16 @@
+
 {
-'name': 'Public Projects',
+    'name': 'Public Projects',
     'category': 'Website',
     'summary': 'Publish Your Public Projects',
     'version': '1.0',
     'description': """
-OpenERP Blog
-============
+OpenERP Projects
+================
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'project'],
+    'depends': ['website_mail', 'project'],
     'data': [
         'views/website_project.xml',
     ],

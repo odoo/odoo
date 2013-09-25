@@ -321,16 +321,16 @@
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
-            $(root).attr('data-cke-editable', 'true')
-                    .on('dragstart', 'img', function (e) {
-                        e.preventDefault();
-                    });
-            this.editor = CKEDITOR.inline(root, self._config());
-            this.editor.on('instanceReady', function () {
+            $(root).on('dragstart', 'img', function (e) {
+                e.preventDefault();
+            });
+            var editor = this.editor = CKEDITOR.inline(root, self._config());
+            editor.on('instanceReady', function () {
+                editor.setReadOnly(false);
                 // ckeditor set root to editable, disable it (only inner
                 // sections are editable)
                 // FIXME: are there cases where the whole editor is editable?
-                root.contentEditable = false;
+                editor.editable().setReadOnly(true);
 
                 self.setup_editables(root);
 
@@ -496,11 +496,15 @@
                 this.changed($target.find('.url-source'));
             },
             'click button.remove': 'remove_link',
+            'change input#link-text': function (e) {
+                this.text = $(e.target).val()
+            },
         }),
         init: function (editor) {
             this._super(editor);
             // url -> name mapping for existing pages
             this.pages = Object.create(null);
+            this.text = null;
         },
         start: function () {
             var element;
@@ -554,13 +558,15 @@
             if (this.element) {
                 this.element.setAttributes(attributes);
                 this.element.removeAttributes(to_remove);
+                if (this.text) { this.element.setText(this.text); }
             } else {
                 var selection = this.editor.getSelection();
                 var range = selection.getRanges(true)[0];
 
                 if (range.collapsed) {
                     //noinspection JSPotentiallyInvalidConstructorUsage
-                    var text = new CKEDITOR.dom.text(label || url);
+                    var text = new CKEDITOR.dom.text(
+                        this.text || label || url);
                     range.insertNode(text);
                     range.selectNodeContents(text);
                 }
@@ -628,6 +634,7 @@
 
             this.changed($control);
 
+            this.$('input#link-text').val(this.element.getText());
             this.$('input.window-new').prop(
                 'checked', this.element.getAttribute('target') === '_blank');
         },
