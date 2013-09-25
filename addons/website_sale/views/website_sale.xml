@@ -184,7 +184,7 @@
     <template id="product_description" inherit_option_id="website_sale.products" name="Product Description">
         <xpath expr="//div[@id='product_description']" position="replace">
             <small>
-                <t t-field="product.description_sale"/>
+                <span t-field="product.description_sale"/>
             </small>
         </xpath>
     </template>
@@ -230,7 +230,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a href="/shop">Products</a></li>
-                          <li t-if="category"><a t-att-href="'/shop/category/%s' % (category_id,)"><t t-field="category.name"/></a></li>
+                          <li t-if="category"><a t-att-href="'/shop/category/%s' % (category_id,)"><span t-field="category.name"/></a></li>
                           <li class="active" t-field="product.name">Product Name</li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -284,11 +284,11 @@
                           </t>
                           <div>
                               <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                              <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><t t-field="product.product_variant_ids[0].lst_price" /> €</h5>
+                              <h5 class="text-error" style="text-decoration: line-through;" title="Price without reduction"><span t-field="product.product_variant_ids[0].lst_price" /> €</h5>
                               <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
                               </t>
                               <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price">
-                                  <b><t t-field="product.product_variant_ids[0].lst_price" /> €</b>
+                                  <b><span t-field="product.product_variant_ids[0].lst_price" /> €</b>
                               </h4>
                           </div>
                           <button class="btn btn-primary btn-lg mt8">Add to Cart</button>

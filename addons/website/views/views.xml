@@ -77,7 +77,7 @@
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
                                                 <li name="contactus"><a href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
-                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><t t-field="user_id.name"/></a></li>
+                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><span t-field="user_id.name"/></a></li>
                                                 <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
                                                     <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
