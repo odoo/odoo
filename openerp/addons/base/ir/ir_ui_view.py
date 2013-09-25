@@ -254,13 +254,14 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id):
+    def inherit_branding(self, specs_tree, view_id, source_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath':
-                self.inherit_branding(node, view_id)
+                self.inherit_branding(node, view_id, source_id)
             else:
                 node.set('data-oe-id', str(view_id))
+                node.set('data-oe-source-id', str(source_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -349,7 +350,7 @@ class view(osv.osv):
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
-                self.inherit_branding(specs_tree, view_id)
+                self.inherit_branding(specs_tree, view_id, source_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
             source = self.apply_view_inheritance(cr, uid, source, view_id, model, context=context)
         return source
