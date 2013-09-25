@@ -502,9 +502,9 @@ class mrp_production(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
             help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
-        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume',
+        'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
             domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
-        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products',
+        'move_lines2': fields.one2many('stock.move', 'raw_material_production_id', 'Consumed Products',
             domain=[('state','in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
         'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce',
             domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
@@ -824,14 +824,6 @@ class mrp_production(osv.osv):
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
-        for raw_product in production.move_lines2:
-            new_parent_ids = []
-            parent_move_ids = [x.id for x in raw_product.move_history_ids]
-            for final_product in production.move_created_ids2:
-                if final_product.id not in parent_move_ids:
-                    new_parent_ids.append(final_product.id)
-            for new_parent_id in new_parent_ids:
-                stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
         return True
@@ -886,15 +878,17 @@ class mrp_production(osv.osv):
         """
         return self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-    def test_if_product(self, cr, uid, ids):
-        """
-        @return: True or False
-        """
-        res = True
+    def consume_lines_get(self, cr, uid, ids, *args):
+        res = []
+        for order in self.browse(cr, uid, ids, context={}):
+            res += [x.id for x in order.move_lines]
+        return res
+    
+    def test_ready(self, cr, uid, ids):
+        res = False
         for production in self.browse(cr, uid, ids):
-            if not production.product_lines:
-                if not self.action_compute(cr, uid, [production.id]):
-                    res = False
+            if production.ready_production:
+                res = True
         return res
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
@@ -933,9 +927,8 @@ class mrp_production(osv.osv):
             'name': production.name,
             'date': production.date_planned,
             'product_id': production_line.product_id.id,
-            'product_qty': production_line.product_qty,
-            'product_uom_qty': production.product_qty, 
-            'product_uom': production_line.product_uom.id,
+            'product_uom_qty': production_line.product_qty,
+            'product_uom': production_line.product_uom.id, 
             'product_uos_qty': production_line.product_uos and production_line.product_uos_qty or False,
             'product_uos': production_line.product_uos and production_line.product_uos.id or False,
             'location_id': source_location_id,
@@ -972,8 +965,10 @@ class mrp_production(osv.osv):
         @param *args: Arguments
         @return: True
         """
-        pick_obj = self.pool.get('stock.picking')
-        pick_obj.force_assign(cr, uid, [prod.picking_id.id for prod in self.browse(cr, uid, ids)])
+        
+        move_obj = self.pool.get('stock.move')
+        for order in self.browse(cr, uid, ids):
+            move_obj.force_assign(cr, uid, [x.id for x in order.move_lines])
         return True
 
 

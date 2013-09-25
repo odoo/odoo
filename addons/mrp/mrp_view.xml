@@ -619,7 +619,7 @@
                 <form string="Manufacturing Orders" version="7.0">
                 <header>
                     <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
-                    <button name="%(act_mrp_product_produce)d" states="confirmed,ready,in_production" string="Produce" type="action" class="oe_highlight"/>
+                    <button name="%(act_mrp_product_produce)d" states="ready,in_production" string="Produce" type="action" class="oe_highlight"/>
                     <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
