@@ -1,6 +1,7 @@
 
 function openerp_picking_widgets(instance){
     var module = instance.stock;
+    var _t = instance.web._t;
 
     module.PickingEditorWidget = instance.web.Widget.extend({
         template: 'PickingEditorWidget',
@@ -127,8 +128,21 @@ function openerp_picking_widgets(instance){
                 var picking = new instance.web.Model('stock.picking')
                     .call('get_picking_for_packing_ui')
                     .then(function(picking_id){
-                        console.log('Provided Picking Id:',picking_id);
-                        return new instance.web.Model('stock.picking').call('read',[[picking_id],[]]);
+                        if(!picking_id){
+                            (new instance.web.Dialog(self,{
+                                title: _t('No Picking Available'),
+                                buttons: [{ 
+                                    text:_t('Ok'), 
+                                    click: function(){
+                                        self.quit();
+                                    }
+                                }]
+                            }, _t('<p>We could not find a picking to display.</p>'))).open();
+
+                            return (new $.Deferred()).reject();
+                        }else{
+                            return new instance.web.Model('stock.picking').call('read',[[picking_id],[]]);
+                        }
                     });
             }
 
@@ -378,7 +392,7 @@ function openerp_picking_widgets(instance){
             console.log('Quit');
             this.disconnect_barcode_scanner_and_numpad();
             instance.webclient.set_content_full_screen(false);
-            window.location = '/'; // FIXME THIS IS SHIT NIV WILL KILL YOU (BY MULTIPLE FACE-STABBING) IF YOU MERGE THIS IN TRUNK
+            window.location = '/'; // FIXME Ask niv how to do it correctly
         },
     });
 }
