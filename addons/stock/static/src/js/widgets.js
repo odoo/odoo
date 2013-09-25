@@ -122,13 +122,13 @@ function openerp_picking_widgets(instance){
             console.log('LOADING DATA FROM SERVER');
 
             if(picking_id){
-                var picking = new instance.web.Model('stock.picking.in').call('read',[[picking_id], []]);
+                var picking = new instance.web.Model('stock.picking').call('read',[[picking_id], []]);
             }else{ 
-                var picking = new instance.web.Model('stock.picking.in')
-                    .call('_get_picking_for_packing_ui')
+                var picking = new instance.web.Model('stock.picking')
+                    .call('get_picking_for_packing_ui')
                     .then(function(picking_id){
                         console.log('Provided Picking Id:',picking_id);
-                        return new instance.web.Model('stock.picking.in').call('read',[[picking_id],[]]);
+                        return new instance.web.Model('stock.picking').call('read',[[picking_id],[]]);
                     });
             }
 

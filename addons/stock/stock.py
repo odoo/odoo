@@ -1019,14 +1019,14 @@ class stock_picking(osv.osv):
 
     # Methods for the barcode UI
 
-    def _get_picking_for_packing_ui(self, cr, uid, context=None):
+    def get_picking_for_packing_ui(self, cr, uid, context=None):
         res = self.search(cr, uid, [('state', '=', 'assigned')], limit=1, context=context)
         return res and res[0] or False  # TODO: what to do if nothing is left to do?
 
     def action_done_from_packing_ui(self, cr, uid, picking_id, only_split_lines=False, context=None):
         self.do_partial(cr, uid, picking_id, only_split_lines, context=context)
         #return id of next picking to work on
-        return self._get_picking_for_packing_ui(cr, uid, context=context)
+        return self.get_picking_for_packing_ui(cr, uid, context=context)
 
     def action_pack(self, cr, uid, picking_ids, context=None):
         stock_operation_obj = self.pool.get('stock.pack.operation')
