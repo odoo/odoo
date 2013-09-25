@@ -181,7 +181,7 @@
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="route_id" attrs="{'invisible': [('route_id', '=', False)]}"/>
+                    <field name="route_ids" attrs="{'invisible': [('route_id', '=', False)]}"/>
                     
                 </xpath>
                 <xpath expr="//group[last()]" position="after">

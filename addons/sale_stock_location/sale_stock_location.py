@@ -36,10 +36,10 @@ class sale_order(osv.osv):
         '''
         res = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         routes = []
-        route_id = order.warehouse_id and order.warehouse_id.route_id and order.warehouse_id.route_id.id or False
-        routes += route_id and [(4, route_id)] or []
-        route_id = line.route_id and line.route_id.id or False
-        routes += route_id and [(4, route_id)] or []
+        route_ids = order.warehouse_id and [(4, x.id) for x in order.warehouse_id.route_ids] or []
+        routes += route_ids
+        route_id = line.route_id and [(4, line.route_id.id)] or []
+        routes += route_id
         res.update({
                 'route_ids': routes
                 })

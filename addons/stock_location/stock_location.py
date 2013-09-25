@@ -41,7 +41,7 @@ class stock_location_route(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Default Delivery Route', domain="[('warehouse_selectable', '=', True)]", help='Default route through the warehouse'),
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id', 'Routes', domain="[('warehouse_selectable', '=', True)]", help='Defaults routes through the warehouse'),
     }
 
 
