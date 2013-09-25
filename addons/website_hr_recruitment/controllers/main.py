@@ -20,7 +20,8 @@ class website_hr_recruitment(http.Controller):
         domain = [(1, '=', 1)] or [('website_published', '=', True)]
         search = [("state", 'in', ['recruit', 'open'])]
         domain += search
-
+        if id != 0:
+            domain += [('department_id','=', id)]
         jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain)
         request.cr.execute("select distinct(com.id) from hr_job job, res_company com where com.id=job.company_id")
         ids = []
@@ -36,25 +37,21 @@ class website_hr_recruitment(http.Controller):
         request.cr.execute("select * from hr_department")
         for i in request.cr.fetchall():
             department_ids.append(i[0])
-        if not id:
-            id = 1
         active = id
-        jobids = hr_job_obj.search(request.cr, request.uid, [('department_id','=',id)])
         step = 5
-        pager = request.website.pager(url="/jobs/", total=len(jobids), page=page, step=step, scope=5)
-        jobids = hr_job_obj.search(request.cr, request.uid, [('department_id','=',id)], limit=step, offset=pager['offset'])
+        pager = request.website.pager(url="/jobs/", total=len(jobpost_ids), page=page, step=step, scope=5)
+        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
         
         values = {
             'active': active,
             'companies': companies,
-            'res_job': hr_job_obj.browse(request.cr, request.uid, jobids),
+            'res_job': hr_job_obj.browse(request.cr, request.uid, jobpost_ids),
             'departments': hr_department_obj.browse(request.cr, request.uid, department_ids),
             'vals': vals,
             'no_of_jobs': len(hr_job_obj.browse(request.cr, request.uid, jobpost_ids)),
             'pager': pager
         }
         return request.website.render("website_hr_recruitment.index", values)
-
 
     @website.route(['/job/detail/<id>'], type='http', auth="public")
     def detail(self, id=0):
