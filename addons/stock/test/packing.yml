@@ -85,7 +85,7 @@
     backorder = self.search(cr, uid, [('backorder_id', '=', ref('pick1'))])
     assert not backorder, ""
     #Check extra moves created
-    assert len(picking.move_lines) == 1, "" 
+    assert len(picking.move_lines) == 1, ""
 - 
   Make a delivery order of 300 pieces to the customer
 - 
@@ -114,9 +114,9 @@
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Pallet 2':
         lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product1')), ('name','=','Lot A')])
-        stock_pack.write(cr, uid, rec.id, {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0]}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0]}, context=context)
       if rec.package_id.name == 'Pallet 3':
-        stock_pack.write(cr, uid, rec.id, {'product_id': ref('product1'),'product_qty': 10}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'),'product_qty': 10}, context=context)
 - 
   Process this picking
 - 
