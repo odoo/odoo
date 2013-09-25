@@ -21,6 +21,15 @@
                         <meta name="openerp.company" t-att-value="res_company.name" />
                         <meta name="description" value="" />
                         <meta name="keywords" value="" />
+
+                        <!-- Load stylesheets before scripts to avoid blocking -->
+                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+                        <t t-if="editable">
+                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
+                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+                        </t>
+                        <t t-call="website.theme"/>
+
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
@@ -32,9 +41,6 @@
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
 
                         <t t-if="editable">
-                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
@@ -52,9 +58,6 @@
                         </t>
 
                         <t t-raw="head or ''"/>
-                        <t t-call="website.theme"/>
-
-                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                     </head>
                     <body>
                         <div id="wrapwrap">
