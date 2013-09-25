@@ -99,7 +99,7 @@ def html_sanitize(src, silent=True):
 # HTML Cleaner
 #----------------------------------------------------------
 
-def html_email_clean(html, remove=False, shorten=False, max_length=300):
+def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_options=None):
     """ html_email_clean: clean the html by doing the following steps:
 
      - try to strip email quotes, by removing blockquotes or having some client-
@@ -169,6 +169,9 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
             idx = item.end()
             iteration += 1
         new_node = _insert_new_node(node, -1, new_node_tag, text[idx:] + (cur_node.tail or ''), None, {})
+
+    if expand_options is None:
+        expand_options = {}
 
     if not html or not isinstance(html, basestring):
         return html
@@ -252,14 +255,26 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
                 stop_idx = len(outertext)
             node.text = innertext + outertext[0:stop_idx]
             # create <span> ... <a href="#">read more</a></span> node
-            read_more_node = _create_node('span', ' ... ', None, {'class': 'oe_mail_expand'})
-            read_more_link_node = _create_node('a', 'read more', None, {'href': '#', 'class': 'oe_mail_expand'})
+            read_more_node = _create_node(
+                'span',
+                ' ... ',
+                None,
+                {'class': expand_options.get('oe_expand_span_class', 'oe_mail_expand')}
+            )
+            read_more_link_node = _create_node(
+                'a',
+                'read more',
+                None,
+                {
+                    'href': expand_options.get('oe_expand_href', '#'),
+                    'class': expand_options.get('oe_expand_a_class', 'oe_mail_expand'),
+                }
+            )
             read_more_node.append(read_more_link_node)
             # create outertext node
             new_node = _create_node('span', outertext[stop_idx:])
             # add newly created nodes in dom
-            node.addnext(new_node)
-            node.addnext(read_more_node)
+            node.append(read_more_node)
             # tag node
             new_node.set('in_overlength', '1')
 
