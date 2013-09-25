@@ -151,9 +151,9 @@ class share_wizard(osv.TransientModel):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
             if this.result_line_ids:
-                ctx = dict(context, share_url_template_hash_arguments=['action_id'])
+                ctx = dict(context, share_url_template_hash_arguments=['action'])
                 user = this.result_line_ids[0]
-                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action_id=this.action_id.id)
+                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action=this.action_id.id)
                 result[this.id] = this.share_url_template(context=ctx) % data
         return result
 
