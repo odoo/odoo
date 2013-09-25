@@ -138,9 +138,10 @@ class website(osv.osv):
             user_id=user.browse(cr, openerp.SUPERUSER_ID, uid),
         )
 
-        context = {
-            'inherit_branding': qweb_context.setdefault('editable', False),
-        }
+        context = request.context.copy()
+        context.update(
+            inherit_branding=qweb_context.setdefault('editable', False),
+        )
 
         # check if xmlid of the template exists
         try:
