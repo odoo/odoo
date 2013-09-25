@@ -1768,7 +1768,7 @@ class stock_move(osv.osv):
             uos_qty = quantity / move_qty * move.product_uos_qty
             if quantity_rest > 0:
                 default_val = {
-                    'product_qty': quantity,
+                    'product_uom_qty': quantity,
                     'product_uos_qty': uos_qty,
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
@@ -1776,7 +1776,7 @@ class stock_move(osv.osv):
                 current_move = self.copy(cr, uid, move.id, default_val)
                 res += [current_move]
                 update_val = {}
-                update_val['product_qty'] = quantity_rest
+                update_val['product_uom_qty'] = quantity_rest
                 update_val['product_uos_qty'] = uos_qty_rest
                 self.write(cr, uid, [move.id], update_val)
 
@@ -1785,7 +1785,7 @@ class stock_move(osv.osv):
                 uos_qty_rest =  uos_qty
                 res += [move.id]
                 update_val = {
-                        'product_qty' : quantity_rest,
+                        'product_uom_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
                         'location_id': location_id or move.location_id.id,
                 }
