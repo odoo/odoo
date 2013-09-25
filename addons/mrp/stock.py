@@ -27,7 +27,8 @@ class StockMove(osv.osv):
     _inherit = 'stock.move'
     
     _columns = {
-        'production_id': fields.many2one('mrp.production', 'Production', select=True),
+        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True),
+        'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
     }
 
     
@@ -137,15 +138,14 @@ class StockMove(osv.osv):
                 res.append(new_move)
         return res
 
-
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
         for move in self.browse(cr, uid, ids, context=context):
-            if move.production_id and move.production_id.state == 'confirmed':
-                workflow.trg_trigger(uid, 'stock.move', move.production_id.id, cr)
+            if move.raw_material_production_id and move.raw_material_production_id.state == 'confirmed':
+                workflow.trg_trigger(uid, 'stock.move', move.id, cr)
         return res
 
 class StockPicking(osv.osv):

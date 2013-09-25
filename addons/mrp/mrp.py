@@ -502,9 +502,9 @@ class mrp_production(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
             help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
-        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume',
+        'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
             domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
-        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products',
+        'move_lines2': fields.one2many('stock.move', 'raw_material_production_id', 'Consumed Products',
             domain=[('state','in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
         'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce',
             domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
@@ -886,37 +886,17 @@ class mrp_production(osv.osv):
         """
         return self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-    def test_if_product(self, cr, uid, ids):
-        """
-        @return: True or False
-        """
-        res = True
-        for production in self.browse(cr, uid, ids):
-            if not production.product_lines:
-                if not self.action_compute(cr, uid, [production.id]):
-                    res = False
-        return res
-    
     def consume_lines_get(self, cr, uid, ids, *args):
         res = []
         for order in self.browse(cr, uid, ids, context={}):
             res += [x.id for x in order.move_lines]
         return res
     
-    
-    def test_ready2(self, cr, uid, ids):
-        res = True
-        assign = self._moves_assigned(cr, uid, ids, False, False)
-        for production in ids:
-            if not assign[production]:
-                res = False
-        return res
-    
     def test_ready(self, cr, uid, ids):
-        res = True
+        res = False
         for production in self.browse(cr, uid, ids):
-            if not production.ready_production:
-                res = False
+            if production.ready_production:
+                res = True
         return res
 
     def _make_production_produce_line(self, cr, uid, production, context=None):

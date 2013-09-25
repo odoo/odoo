@@ -17,6 +17,7 @@
         <record id="prod_act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="name">confirmed</field>
+            <field name="kind">function</field>
             <field name="action">action_confirm()</field>
         </record>
         <record id="prod_act_ready" model="workflow.activity">
