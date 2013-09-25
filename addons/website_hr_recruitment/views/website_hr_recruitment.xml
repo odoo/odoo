@@ -98,15 +98,22 @@
   		    <div class="container oe_structure">
 			<hr/>
 		        <div class="row">
-			    <div class="pull-left">
-		    	    </div>
-			    <p t-field="job.description_website"></p>
+			    <div t-if="job.website_description">
+                                <div id="job_description" t-att-data-name="job.id"/>
+                            </div>
 			    <t t-call="website_hr_recruitment.applyjobpost"/>				
 		        </div>
 		    </div>
 		</div>
             </t>
         </template>
+
+	<template id="job_description" inherit_option_id="website_hr_recruitment.detail" name="Job Description">
+            <xpath expr="//div[@id='job_description']" position="replace">
+            	    <t t-field="job.website_description"/>
+            </xpath>
+        </template>
+
         <template id="applyjobpost">
             <t t-set="title">Apply Job</t>
             <section id="forms">

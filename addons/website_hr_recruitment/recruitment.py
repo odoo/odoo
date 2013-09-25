@@ -8,5 +8,5 @@ class hr_job(osv.osv):
     _columns = {
         'write_date': fields.datetime('Update Date', readonly=True),
         'website_published': fields.boolean('Available in the website'),
-        'description_website': fields.html('Description for the website'),
+        'website_description': fields.html('Description for the website'),
     }
