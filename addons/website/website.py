@@ -51,13 +51,15 @@ http.auth_methods['public'] = auth_method_public
 def url_for(path, lang=None):
     if request:
         path = urljoin(request.httprequest.path, path)
-        ps = path.split('/')
-        lang = lang or request.context.get('lang')
-        if ps[1] in request.context.get('langs'):
-            ps[1] = lang
-        if ps[1] not in request.context.get('langs'):
-            ps.insert(1, lang)
-        path = '/'.join(ps)
+        langs = request.context.get('langs')
+        if path[0] == '/' and len(langs) > 1:
+            ps = path.split('/')
+            lang = lang or request.context.get('lang')
+            if ps[1] in langs:
+                ps[1] = lang
+            else:
+                ps.insert(1, lang)
+            path = '/'.join(ps)
     return path
 
 def urlplus(url, params):
