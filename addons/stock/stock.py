@@ -353,6 +353,10 @@ class stock_quant(osv.osv):
         if quant.location_id.usage != 'internal':
             return False
         solving_quant = quant
+        dom = [('qty', '<', 0)]
+        dom += [('lot_id', '=', quant.lot_id and quant.lot_id.id or False)]
+        dom += [('owner_id', '=', quant.owner_id and quant.owner_id.id or False)]
+        dom += [('package_id', '=', quant.package_id and quant.package_id.id or False)]
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty', '<', '0')], context=context)
         for quant_neg, qty in quants:
             if not quant_neg:
