@@ -54,7 +54,8 @@
                     .not('[data-oe-type]');
 
             $editables.each(function () {
-                self.transNode(this, $(this).attr('data-oe-id')|0);
+                var view_id = $(this).attr('data-oe-source-id') || $(this).attr('data-oe-id');
+                self.transNode(this, view_id|0);
             });
             $('.oe_translatable_text').prop('contenteditable', true).on('paste', function () {
                 var node = $(this);
