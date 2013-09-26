@@ -116,19 +116,24 @@
 
     dom_ready.then(function () {
         /* ----- PUBLISHING STUFF ---- */
-        $('[data-publish]:has(.js_publish)').each(function () {
-            $(this).attr("data-publish", $(".js_publish li.active", this).size() ? "on" : 'off');
+        $('[data-publish]:has(.js_publish_management)').each(function () {
+            $(this).attr("data-publish", $(".js_publish_management .btn-success", this).size() ? "on" : 'off');
         });
 
-        $(document).on('click', '.js_publish a.js_publish_btn', function (e) {
-            var $li = $(this).parent("li");
-            var $data = $li.parents(".js_publish:first");
-            var publish = $li.hasClass("active");
-            $li.toggleClass("active");
-            $.post('/website/publish', {'id': $data.data('id'), 'object': $data.data('object')}, function (result) {
-                $li.toggleClass("active", !!+result);
-                $li.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
-            });
+        $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
+            var $data = $(this).parents(".js_publish_management:first");
+            var $btn = $data.find('.btn:first');
+            var publish = $btn.hasClass("btn-success");
+
+            $data.toggleClass("css_unpublish css_publish");
+            $btn.removeClass("btn-default btn-success");
+
+            openerp.jsonRpc('/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
+                .then(function (result) {
+                    $btn.toggleClass("btn-default", !+result).toggleClass("btn-success", !!+result);
+                    $data.toggleClass("css_unpublish", !+result).toggleClass("css_publish", !!+result);
+                    $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+                });
         });
 
         /* ----- KANBAN WEBSITE ---- */

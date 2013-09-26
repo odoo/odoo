@@ -24,6 +24,7 @@
                 <group name="website" string="Website">
                     <field name="website_published"/>
                     <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="website_style_ids" widget="many2many_tags"/>
                 </group>
             </group>
         </field>
@@ -162,6 +163,7 @@
                                 <t t-call="website_sale.products_cart"/>
                             </td>
                             </t>
+                            <td t-if="td_product == None"/>
                           </t>
                         </tr>
                       </tbody>
@@ -232,7 +234,16 @@
                           <li class="active" t-field="product.name">Product Name</li>
                       </ol>
                   </div><div class="col-sm-3">
-                      <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
+                      <t t-call="website.publish_management">
+                        <t t-set="object" t-value="product"/>
+                        <li class='dropdown-submenu'>
+                            <a tabindex="-1" href="#">Sequence</a>
+                            <ul class="dropdown-menu" name="sequence">
+                                <li><a href="#" class="js_go_to_top">Push on top</a></li>
+                                <li><a href="#" class="js_go_to_bottom">Push on bottom</a></li>
+                            </ul>
+                        </li>
+                      </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
                       <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
                           <div class="input-group">

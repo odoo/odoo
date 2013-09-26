@@ -49,6 +49,8 @@ class Website(osv.osv):
 
 class Ecommerce(http.Controller):
 
+    _order = 'website_sequence desc, website_published'
+
     def get_categories(self):
         domain = [('parent_id', '=', False)]
 
@@ -93,7 +95,8 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.template')
         data_obj = request.registry.get('ir.model.data')
 
-        product_ids = product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)
+        # search for checking of access rules and keep order
+        product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
 
         size_ids = {}
         data_domain = [('model', '=', 'website.product.style'), ('name', 'like', 'size%')]
@@ -180,7 +183,8 @@ class Ecommerce(http.Controller):
         # browse product to fill the holes
         if fill_hole:
             fill_hole_products = []
-            fill_hole = product_obj.search(request.cr, request.uid, [("id", 'in', fill_hole)], context=request.context)
+            # search for checking of access rules and keep order
+            fill_hole = [id for id in fill_hole if id in product_obj.search(request.cr, request.uid, [("id", 'in', fill_hole)], context=request.context)]
             for product in product_obj.browse(request.cr, SUPERUSER_ID, fill_hole, context=request.context):
                 fill_hole_products.append(product)
             fill_hole_products.reverse()
@@ -202,7 +206,8 @@ class Ecommerce(http.Controller):
 
     def get_products(self, product_ids):
         product_obj = request.registry.get('product.template')
-        product_ids = product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)
+        # search for checking of access rules and keep order
+        product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
         return product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context)
 
     @website.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public")
@@ -230,9 +235,9 @@ class Ecommerce(http.Controller):
         pager = request.website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
 
         request.context['pricelist'] = self.get_pricelist()
-        
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], context=request.context)
-        fill_hole = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset']+step, context=request.context)
+
+        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], order=self._order, context=request.context)
+        fill_hole = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset']+step, order=self._order, context=request.context)
 
         values = {
             'get_categories': self.get_categories,
@@ -577,5 +582,14 @@ class Ecommerce(http.Controller):
         request.httprequest.session['ecommerce_order_id'] = False
         request.httprequest.session['ecommerce_pricelist'] = False
         return werkzeug.utils.redirect("/shop/")
+
+    @website.route(['/shop/change_sequence/'], type='json', auth="public")
+    def change_sequence(self, id, top):
+        product_obj = request.registry.get('product.template')
+        if top:
+            product_obj.set_sequence_top(request.cr, request.uid, [id], request.context)
+        else:
+            product_obj.set_sequence_bottom(request.cr, request.uid, [id], request.context)
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

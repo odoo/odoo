@@ -38,7 +38,19 @@ class product_template(osv.Model):
         'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
         'website_style_ids' : fields.many2many('website.product.style','product_website_style_rel', 'product_id', 'style_id', 'Styles'),
+        'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
     }
+    _defaults = {
+        'website_sequence': 0,
+    }
+
+    def set_sequence_top(self, cr, uid, ids, context=None):
+        cr.execute('SELECT MAX(website_sequence) FROM product_template')
+        max_sequence = cr.fetchone()[0] or 0
+        return self.write(cr, uid, ids, {'website_sequence': max_sequence + 1}, context=context)
+
+    def set_sequence_bottom(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'website_sequence': 0}, context=context)
 
     def recommended_products(self, cr, uid, ids, context=None):
         id = ids[0]

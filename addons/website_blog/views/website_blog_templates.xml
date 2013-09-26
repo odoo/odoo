@@ -36,7 +36,7 @@
     <template id="view_blog_post" name="Blog Post">
         <div>
           <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
-          <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
+          <t t-call="website.publish_management"><t t-set="object" t-value="blog_post"/></t>
         </div><div class="clearfix"/>
 
         <h2 class="text-center" t-field="blog_post.name"/>
@@ -80,7 +80,7 @@
         <ul class="media-list" id="comments">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                 <div class="media-body well well-sm">
-                    <t t-call="website.publish"><t t-set="object" t-value="message"/></t>
+                    <t t-call="website.publish_management"><t t-set="object" t-value="message"/></t>
                     <t t-raw="message.body"/>
                     <small class="pull-left text-muted text-left">
                         <t t-field="message.author_id"/> on <t t-field="message.date"/>
