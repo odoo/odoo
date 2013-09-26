@@ -383,8 +383,8 @@
                                     <td>
                                         <div class="pull-right">
                                             <input type="text" class="js_quantity input-sm col-md-5" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
-                                            <a t-attf-href="./remove_cart/?order_line_id=#{ line.id }" class="btn btn-default mb8 btn-sm btn-inverse">-</a>
-                                            <a t-attf-href="./add_cart/?order_line_id=#{ line.id }" class="btn btn-default mb8 btn-sm btn-success">+</a>
+                                            <a t-attf-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="btn btn-default mb8 btn-sm btn-inverse">-</a>
+                                            <a t-attf-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="btn btn-default mb8 btn-sm btn-success">+</a>
                                         </div>
                                     </td>
                                 </tr>
