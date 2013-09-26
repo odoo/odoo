@@ -105,13 +105,17 @@
         </template>
 
         <template id="applyjobpost">
+		<t t-call="website.layout">
             <t t-set="title">Apply Job</t>
+		<div id="wrap">
+		    <div class="container">
+		        <h1>Apply</h1>
+		        <div class="row">
             <section id="forms">
-                <h1>Apply</h1>
                     <form class="form-horizontal mt32" action="/job/success" method="post" enctype="multipart/form-data">
-                        <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
+                       <!-- <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
                         <input type="hidden" t-att-value="job.id" name="job_id"/>
-                        <input type="hidden" t-att-value="job.name" name="name"/>
+                        <input type="hidden" t-att-value="job.name" name="name"/>-->
                         <div class="form-group">
                             <label class="col-md-3 col-sm-4 control-label" for="partner_name">Name</label>
                             <div class="col-md-7 col-sm-8">
@@ -143,6 +147,10 @@
                         </div>
                     </form>
             </section>
+		</div>
+		</div>
+	</div>
+	</t>
         </template>
         <template id="thankyou">
             <t t-call="website.layout">
