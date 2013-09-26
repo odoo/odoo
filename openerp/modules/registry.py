@@ -33,7 +33,7 @@ import openerp.osv.orm
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
-from openerp.tools import assertion_report
+from openerp.tools import assertion_report, snake_dict
 
 _logger = logging.getLogger(__name__)
 
@@ -47,10 +47,10 @@ class Registry(Mapping):
 
     def __init__(self, db_name):
         super(Registry, self).__init__()
-        self.models = {}    # model name/model instance mapping
+        self.models = snake_dict()                  # {model: model_obj, ...}
         self._sql_error = {}
-        self._store_function = {}
-        self._pure_function_fields = {}         # {model: [field, ...], ...}
+        self._store_function = snake_dict()         # {model: [tuple, ...], ...}
+        self._pure_function_fields = snake_dict()   # {model: [field, ...], ...}
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
@@ -95,10 +95,6 @@ class Registry(Mapping):
     def __iter__(self):
         """ Return an iterator over all model names. """
         return iter(self.models)
-
-    def __contains__(self, model_name):
-        """ Test whether the model with the given name exists. """
-        return model_name in self.models
 
     def __getitem__(self, model_name):
         """ Return the model with the given name or raise KeyError if it doesn't exist."""

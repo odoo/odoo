@@ -60,7 +60,7 @@ from scope import proxy as scope_proxy
 import fields
 import openerp
 import openerp.tools as tools
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, snake_str, snake_dict
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
@@ -665,6 +665,7 @@ class BaseModel(object):
         if parent_names:
             parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
             name = cls._name or (len(parent_names) == 1 and parent_names[0]) or cls.__name__
+            name = snake_str(name)
 
             for parent_name in parent_names:
                 if parent_name not in pool:
@@ -718,10 +719,9 @@ class BaseModel(object):
                     '_local_constraints': cls.__dict__.get('_constraints', []),
                     '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
                 }
-                cls = type(name, (cls, parent_class), attrs)
+                cls = type(str(name), (cls, parent_class), attrs)
         else:
-            if not cls._name:
-                cls._name = cls.__name__
+            cls._name = snake_str(cls._name or cls.__name__)
             cls._local_constraints = cls.__dict__.get('_constraints', [])
             cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
@@ -731,11 +731,11 @@ class BaseModel(object):
             '_register': False,
             '_columns': dict(cls._columns),
             '_defaults': dict(cls._defaults),
-            '_inherits': dict(cls._inherits),
+            '_inherits': snake_dict(cls._inherits),
             '_constraints': list(cls._constraints),
             '_sql_constraints': list(cls._sql_constraints),
         }
-        cls = type(cls._name, (cls,), attrs)
+        cls = type(str(cls._name), (cls,), attrs)
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
@@ -5577,8 +5577,7 @@ class BaseModel(object):
         return self._id
 
     def __str__(self):
-        model_name = self._name.replace('.', '_')
-        return "%s%s" % (model_name, tuple(self._ids))
+        return "%s%s" % (self._name, tuple(self._ids))
 
     def __unicode__(self):
         return unicode(str(self))
