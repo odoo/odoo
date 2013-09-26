@@ -489,6 +489,9 @@ class ir_fields_converter(orm.Model):
             image = Image.open(cStringIO.StringIO(value.decode('base64')))
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
+        try: image.verify()
+        except: # no idea what "suitable exceptions" are
+            raise ValueError("Invalid image content")
 
         mime = PIL_MIME_MAPPING.get(image.format)
         if mime is None:
