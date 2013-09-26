@@ -70,7 +70,7 @@ class ir_cron(osv.osv):
         'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),
         'doall' : fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
         'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
-        'model': fields.char('Object', size=64, help="Model name on which the method to be called is located, e.g. 'res.partner'."),
+        'model': fields.model('Object', size=64, help="Model name on which the method to be called is located, e.g. 'res.partner'."),
         'function': fields.char('Method', size=64, help="Name of the method to be called when this job is processed."),
         'args': fields.text('Arguments', help="Arguments to be passed to the method, e.g. (uid,)."),
         'priority': fields.integer('Priority', help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')

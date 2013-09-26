@@ -141,7 +141,7 @@ class ir_values(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True),
-        'model': fields.char('Model Name', size=128, select=True, required=True,
+        'model': fields.model('Model Name', size=128, select=True, required=True,
                              help="Model to which this entry applies"),
 
         # TODO: model_id and action_id should be read-write function fields

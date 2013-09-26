@@ -62,7 +62,7 @@ class view(osv.osv):
 
     _columns = {
         'name': fields.char('View Name', required=True),
-        'model': fields.char('Object', size=64, required=True, select=True),
+        'model': fields.model('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),

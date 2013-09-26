@@ -31,7 +31,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv.orm import BaseModel, Model, except_orm
 from openerp.osv.scope import proxy as scope
-from openerp.tools import config
+from openerp.tools import config, snake_case
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -97,7 +97,7 @@ class ir_model(osv.osv):
 
     _columns = {
         'name': fields.char('Model Description', size=64, translate=True, required=True),
-        'model': fields.char('Model', size=64, required=True, select=1),
+        'model': fields.model('Model', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
@@ -218,7 +218,7 @@ class ir_model_fields(osv.osv):
 
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
-        'model': fields.char('Object Name', size=64, required=True, select=1,
+        'model': fields.model('Object Name', size=64, required=True, select=1,
             help="The technical name of the model this field belongs to"),
         'relation': fields.char('Object Relation', size=64,
             help="For relationship fields, the technical name of the target model"),
@@ -812,7 +812,7 @@ class ir_model_data(osv.osv):
                                  "data integration with third-party systems"),
         'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
         'display_name': fields.function(_display_name_get, type='char', string='Record Name'),
-        'model': fields.char('Model Name', required=True, size=64, select=1),
+        'model': fields.model('Model Name', required=True, size=64, select=1),
         'module': fields.char('Module', required=True, size=64, select=1),
         'res_id': fields.integer('Record ID', select=1,
                                  help="ID of the target record in the database"),
@@ -909,6 +909,7 @@ class ir_model_data(osv.osv):
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
+        model = snake_case(model)
         model_obj = self.pool[model]
         if not context:
             context = {}
@@ -995,10 +996,10 @@ class ir_model_data(osv.osv):
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
         if isinstance(models[0], (list, tuple)):
-            model,res_id = models[0]
+            model, res_id = models[0]
         else:
-            res_id=None
-            model = models[0]
+            model, res_id = models[0], None
+        model = snake_case(model)
 
         if res_id:
             where = ' and res_id=%s' % (res_id,)
