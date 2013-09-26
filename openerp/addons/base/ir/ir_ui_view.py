@@ -26,6 +26,7 @@ import sys
 import re
 import time
 
+import HTMLParser
 from lxml import etree, html
 from functools import partial
 
@@ -253,13 +254,14 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id):
+    def inherit_branding(self, specs_tree, view_id, source_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath':
-                self.inherit_branding(node, view_id)
+                self.inherit_branding(node, view_id, source_id)
             else:
                 node.set('data-oe-id', str(view_id))
+                node.set('data-oe-source-id', str(source_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -348,7 +350,7 @@ class view(osv.osv):
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
-                self.inherit_branding(specs_tree, view_id)
+                self.inherit_branding(specs_tree, view_id, source_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
             source = self.apply_view_inheritance(cr, uid, source, view_id, model, context=context)
         return source
@@ -661,29 +663,21 @@ class view(osv.osv):
         try:
             id_ = int(id_)
         except ValueError:
-            if '/' not in id_ and '.' not in id_:
+            if '.' not in id_:
                 raise ValueError('Invalid id: %r' % (id_,))
-            s = id_.find('/')
-            s = s if s >= 0 else sys.maxint
-            d = id_.find('.')
-            d = d if d >= 0 else sys.maxint
+            IMD = self.pool['ir.model.data']
+            m, _, n = id_.partition('.')
+            _, id_ = IMD.get_object_reference(cr, uid, m, n)
 
-            if d < s:
-                # xml id
-                IMD = self.pool['ir.model.data']
-                m, _, n = id_.partition('.')
-                _, id_ = IMD.get_object_reference(cr, uid, m, n)
-            else:
-                # path id => read directly on disk
-                # TODO apply inheritence
-                try:
-                    with misc.file_open(id_) as f:
-                        return f.read().decode('utf-8')
-                except Exception:
-                    raise ValueError('Invalid id: %r' % (id_,))
-
-        r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
-        return r['arch']
+        arch = self.read_combined(cr, uid, id_, fields=['arch'], context=context)['arch']
+        arch_tree = etree.fromstring(arch)
+        if 'lang' in context:
+            arch_tree = self.translate_qweb(cr, uid, id_, arch_tree, context['lang'], context)
+        self.distribute_branding(arch_tree)
+        root = etree.Element('tpl')
+        root.append(arch_tree)
+        arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+        return arch
 
     def distribute_branding(self, e, branding=None, parent_xpath='',
                             index_map=misc.ConstantMapping(1)):
@@ -733,15 +727,42 @@ class view(osv.osv):
             for attr in node.attrib
         )
 
+    def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
+        # TODO: this should be moved in a place before inheritance is applied
+        #       but process() is only called on fields_view_get()
+        Translations = self.pool['ir.translation']
+        h = HTMLParser.HTMLParser()
+        def get_trans(text):
+            if not text or not text.strip():
+                return None
+            text = h.unescape(text.strip())
+            if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
+                return None
+            # if text == 'Our Events':
+            #     from pudb import set_trace;set_trace() ############################## Breakpoint ##############################
+            return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
+
+        if arch.tag not in ['script']:
+            text = get_trans(arch.text)
+            if text:
+                arch.text = arch.text.replace(arch.text.strip(), text)
+            tail = get_trans(arch.tail)
+            if tail:
+                arch.tail = arch.tail.replace(arch.tail.strip(), tail)
+
+            for attr_name in ('title', 'alt', 'placeholder'):
+                attr = get_trans(arch.get(attr_name))
+                if attr:
+                    arch.set(attr_name, attr)
+            for node in arch.iterchildren("*"):
+                self.translate_qweb(cr, uid, id_, node, lang, context)
+        return arch
+
     def render(self, cr, uid, id_or_xml_id, values, context=None):
+        if not context:
+            context = {}
         def loader(name):
-            arch = self.read_template(cr, uid, name, context=context)
-            arch_tree = etree.fromstring(arch)
-            self.distribute_branding(arch_tree)
-            root = etree.Element('tpl')
-            root.append(arch_tree)
-            arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
-            return arch
+            return self.read_template(cr, uid, name, context=context)
 
         engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
         return engine.render(id_or_xml_id, values)
