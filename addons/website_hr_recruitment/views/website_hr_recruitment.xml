@@ -26,9 +26,6 @@
 		    <div class="oe_structure"/>
                     <div class="container oe_website_jobs">
 			<div class="row">
-			    <div class="col-md-4">
-				<h1>Departments</h1>
-		   	    </div>
 			    <div class="col-sm-4">
 				<t t-call="website.pager">
                             	    <t t-set="classname">pull-left</t>
@@ -179,6 +176,11 @@
 		</xpath>
 		<xpath expr="//div[@id='jobs_grid']" position="attributes">
 		    <attribute name="class">col-md-9</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']/div" position="before">
+		    <div class="col-md-4">
+			<h1>Departments</h1>
+		    </div>
 		</xpath>
 	</template>
      </data>
