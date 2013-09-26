@@ -9,7 +9,7 @@ import urllib
 
 class website_crm_partner_assign(http.Controller):
 
-    @website.route(['/partners/', '/partners/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/partners/', '/partners/page/<int:page>/'], type='http', auth="public", multilang=True)
     def partners(self, page=0, **post):
         partner_obj = request.registry['res.partner']
 
@@ -84,7 +84,7 @@ class website_crm_partner_assign(http.Controller):
         }
         return request.website.render("website_crm_partner_assign.index", values)
 
-    @website.route(['/partners/<int:ref_id>/'], type='http', auth="public")
+    @website.route(['/partners/<int:ref_id>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, ref_id=0, **post):
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(
