@@ -34,7 +34,7 @@
                     <div class="oe_msg_attachment_list"></div>
                     <button class="oe_post">
                         <t t-if="!widget.is_log">Send</t>
-                        <t t-if="widget.is_log">Log a note</t>
+                        <t t-if="widget.is_log">Log an internal note</t>
                     </button>
                     <t t-call="mail.compose_message.add_attachment"/>
                 </div>
@@ -53,7 +53,7 @@
                     <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Send a message</a>
                     <t t-if="widget.options.display_log_button">
                        <span class="oe_grey oe_sep_word">or</span>
-                       <a class="oe_compose_log">Log a note</a>
+                       <a class="oe_compose_log">Log an internal note</a>
                     </t>
                 </div>
             </t>
@@ -157,7 +157,7 @@
             </t>
         </div>
         <div t-if="widget.is_log">
-            <span>Attach a note that will not be sent to the followers</span>
+            <span>Add an internal note that will not be sent to the followers</span>
         </div>
     </t>
 
