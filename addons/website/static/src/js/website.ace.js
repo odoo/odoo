@@ -18,7 +18,7 @@
         if (globalEditor) {
             globalEditor.open();
         } else {
-            globalEditor = new website.ace.ViewEditor(this);
+            globalEditor = new website.ace.ViewEditor();
             globalEditor.appendTo($(document.body));
         }
     }
@@ -111,7 +111,7 @@
                 method: 'read',
                 args: [[viewId], ['arch'], website.get_context()],
             }).then(function(result) {
-                var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);;
+                var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);
                 editingSession.setMode("ace/mode/xml");
                 editingSession.setUndoManager(new ace.UndoManager());
                 editingSession.on("change", function () {
