@@ -35,7 +35,7 @@ PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif'
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
-    @website.route('/', type='http', auth="admin", multilang=True)
+    @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
         return self.page("website.homepage")
 
@@ -107,7 +107,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.website.render('website.themes', {'theme_changed': True})
 
-    @website.route('/page/<path:path>', type='http', auth="admin", multilang=True)
+    @website.route('/page/<path:path>', type='http', auth="public", multilang=True)
     def page(self, path, **kwargs):
         values = {
             'path': path,
@@ -303,18 +303,17 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return request.make_response(image_data, headers)
 
-    @website.route(['/website/publish/'], type='http', auth="public")
-    def publish(self, **post):
-        _id = int(post['id'])
-        _object = request.registry[post['object']]
+    @website.route(['/website/publish'], type='json', auth="public")
+    def publish(self, id, object):
+        _id = int(id)
+        _object = request.registry[object]
 
         obj = _object.browse(request.cr, request.uid, _id)
         _object.write(request.cr, request.uid, [_id],
                       {'website_published': not obj.website_published},
                       context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
-
-        return obj.website_published and "1" or "0"
+        return obj.website_published and True or False
 
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):

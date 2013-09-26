@@ -12,8 +12,11 @@
         </template>
 
         <template id="website.layout" inherit_id="website.layout" inherit_option_id="website.layout">
-            <xpath expr="//head" position="inside">
+            <!-- Load stylesheets before scripts to avoid blocking -->
+            <xpath expr="//head/link" position="after">
                 <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.css'/>
+            </xpath>
+            <xpath expr="//head" position="inside">
                 <script type="text/javascript" src="/website_mail/static/src/js/website_mail.js"></script>
             </xpath>
         </template>

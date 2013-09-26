@@ -76,7 +76,7 @@
                                 <h3 class="text-center well"><span t-field="partner.grade_id"/> Partners</h3>
                             </t>
                             <div class="media thumbnail" data-publish="">
-                                <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
+                                <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
                                 <a class="pull-left" t-attf-href="/partners/#{ partner.id }/">
                                     <img class="media-object" t-att-src="partner.img('image_small')"/>
                                 </a>
@@ -110,7 +110,7 @@
     <template id="details" name="Partner Detail">
         <t t-call="website_crm_partner_assign.layout">
             <t t-set="ref_content">
-                <t t-call="website.publish"><t t-set="object" t-value="partner_id"/></t>
+                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
                 <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
                 <div class="col-md-4">
                     <div class="text-center">

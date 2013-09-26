@@ -60,7 +60,7 @@
                         </div>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
-                                <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
+                                <t t-call="website.publish_management"><t t-set="object" t-value="event"/></t>
                                 <div class="media-body">
                                     <span t-if="not event.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
                                     <t t-if="event.event_ticket_ids">
@@ -137,7 +137,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8">
-                        <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
+                        <t t-call="website.publish_management"><t t-set="object" t-value="event_id"/></t>
                         <t t-call="website_mail.follow"><t t-set="object" t-value="event_id"/></t>
                         <h1 class="text-center" t-field="event_id.name"></h1>
                         <h4 class="text-center">
@@ -199,7 +199,7 @@
                         <ul class="media-list" id="comment">
                             <li t-foreach="event_id.website_message_ids" t-as="comment" class="media">
                                 <div class="media-body">
-                                    <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
+                                    <t t-call="website.publish_management"><t t-set="object" t-value="comment"/></t>
                                     <t t-raw="comment.body"/>
                                     <small class="pull-right muted text-right">
                                         <div t-field="comment.author_id"/>

@@ -267,23 +267,11 @@ ul.nav-stacked > li > a
     text-transform: uppercase
 
 /* ---- PUBLISH ---- */
-a[data-publish]
-    text-decoration: none !important
-    z-index: 2
-    .label
-        padding: 5px 8px
-    .css_unpublish, .css_publish, .css_unpublished, .css_published
-        display: none
-    &[data-publish='off']
-        .css_unpublished, &:hover .css_publish
-            display: inline
-        &:hover .css_unpublished
-            display: none
-    &[data-publish='on']
-        .css_published, &:hover .css_unpublish
-            display: inline
-        &:hover .css_published
-            display: none
+
+.dropdown .css_unpublish, .dropdown .css_publish
+    display: none
+.dropdown.css_publish .css_unpublish, .dropdown.css_unpublish .css_publish
+    display: block
 
 .unpublish
     opacity: 0.5

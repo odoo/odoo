@@ -327,7 +327,7 @@
             self.suggestImprovements();
             self.imageList = new website.seo.ImageList(self, { page: htmlPage });
             if (htmlPage.images().length === 0) {
-                $modal.find('.js_image_section').remove()
+                $modal.find('.js_image_section').remove();
             } else {
                 self.imageList.appendTo($modal.find('.js_seo_image_list'));
             }
