@@ -34,6 +34,7 @@ import werkzeug
 
 
 class website_event(http.Controller):
+    _order = 'website_published desc, date_begin desc'
 
     @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
     def events(self, page=1, **searches):
@@ -132,7 +133,7 @@ class website_event(http.Controller):
         pager = request.website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
         obj_ids = event_obj.search(
             request.cr, request.uid, dom_without("none"), limit=step,
-            offset=pager['offset'], order="date_begin DESC", context=request.context)
+            offset=pager['offset'], order=self._order, context=request.context)
         events_ids = event_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
 

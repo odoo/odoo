@@ -49,7 +49,7 @@ class Website(osv.osv):
 
 class Ecommerce(http.Controller):
 
-    _order = 'website_sequence desc, website_published'
+    _order = 'website_sequence desc, website_published desc'
 
     def get_categories(self):
         domain = [('parent_id', '=', False)]
