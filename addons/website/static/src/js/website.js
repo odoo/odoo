@@ -80,7 +80,7 @@
                     $pagination.last().before(col);
                 });
 
-                var page_start = page - parseInt(Math.floor((scope-1)/2));
+                var page_start = page - parseInt(Math.floor((scope-1)/2), 10);
                 if (page_start < 1 ) page_start = 1;
                 var page_end = page_start + (scope-1);
                 if (page_end > page_count ) page_end = page_count;
@@ -108,10 +108,10 @@
      */
     website.ready = function() {
         if (!all_ready) {
-            all_ready = dom_ready.then(function () {
-                // TODO: load translations
-                return website.load_templates(templates);
-            });
+            var tpl = website.load_templates(templates);
+            // var session;
+            // var trads = openerp._t.database.load_translations(session, ['website'], website.get_context().lang);
+            all_ready = $.when(dom_ready, tpl);
         }
         return all_ready;
     };
