@@ -333,9 +333,9 @@ class QWebXml(object):
         record = self.eval_object(record, v)
 
         inner = None
-        field_type = record._model._all_columns[field].column._type
+        column = record._model._all_columns[field].column
         try:
-            if field_type == 'many2one':
+            if column._type == 'many2one':
                 field_data = record.read([field])[0].get(field)
                 inner = field_data and field_data[1]
             else:
@@ -345,7 +345,7 @@ class QWebXml(object):
                 inner = inner.encode("utf8")
 
             if node_name == 't':
-                e.nodeName = DEFAULT_TAG_BY_TYPE[field_type]
+                e.nodeName = DEFAULT_TAG_BY_TYPE[column._type]
 
             g_att += ''.join(
                 ' %s="%s"' % (name, cgi.escape(str(value), True))
@@ -353,7 +353,8 @@ class QWebXml(object):
                     ('data-oe-model', record._model._name),
                     ('data-oe-id', str(record.id)),
                     ('data-oe-field', field),
-                    ('data-oe-type', field_type),
+                    ('data-oe-type', column._type),
+                    ('data-oe-translate', '1' if column.translate else '0'),
                     ('data-oe-expression', t_att['field']),
                 ]
             )
