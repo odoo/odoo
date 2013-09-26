@@ -241,6 +241,8 @@ class QWebXml(object):
         return self.url_for(e, an, av, v)
     def render_att_src(self, e, an, av, v):
         return self.url_for(e, an, av, v)
+    def render_att_action(self, e, an, av, v):
+        return self.url_for(e, an, av, v)
     def url_for(self, e, an, av, v):
         if 'url_for' not in v:
             raise KeyError("qweb: no 'url_for' found in context")
