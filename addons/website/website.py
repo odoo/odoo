@@ -12,6 +12,7 @@ import math
 import traceback
 from openerp.tools.safe_eval import safe_eval
 from openerp.exceptions import AccessError, AccessDenied
+import werkzeug
 
 import logging
 logger = logging.getLogger(__name__)
@@ -102,6 +103,10 @@ class website(osv.osv):
         return lang
 
     def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+        def redirect(url):
+            return werkzeug.utils.redirect(url_for(url))
+        request.redirect = redirect
+
         is_public_user = request.uid == self.get_public_user().id
         lang = self.get_lang()
         is_master_lang = lang == request.website.default_lang_id.code
