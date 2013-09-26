@@ -3083,16 +3083,6 @@ class BaseModel(object):
                     help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context['lang'])
                     if help_trans:
                         res[f]['help'] = help_trans
-                if 'selection' in res[f]:
-                    if isinstance(field.selection, (tuple, list)):
-                        sel = field.selection
-                        sel2 = []
-                        for key, val in sel:
-                            val2 = None
-                            if val:
-                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection',  context['lang'], val)
-                            sel2.append((key, val2 or val))
-                        res[f]['selection'] = sel2
 
         return res
 

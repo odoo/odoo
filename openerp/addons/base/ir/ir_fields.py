@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
+import cStringIO
 import datetime
 import functools
 import operator
 import itertools
 import time
+import Image
 
 import psycopg2
 import pytz
+import werkzeug.utils
+import openerp.osv.fields
 
+import openerp.tools.func
 from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
@@ -136,6 +141,30 @@ class ir_fields_converter(orm.Model):
         # FIXME: return None
         converter = getattr(
             self, '_%s_to_%s' % (fromtype.__name__, column._type), None)
+        if not converter: return None
+
+        return functools.partial(
+            converter, cr, uid, model, column, context=context)
+
+    def from_field(self, cr, uid, model, column, totype='str', context=None):
+        """ Fetches a converter for the provided column object, to the
+        specified type.
+
+        A converter is a callable taking a value as returned by a read on the
+        column, and returning a formatted value of type ``totype``.
+
+        By default, tries to get a method on itself with a name matching the
+        pattern ``_$totype_from_${column._type}`` and returns it.
+
+        Error conditions are similar to :meth:`~.to_field`
+
+        :param column: column object to generate a value from
+        :param str totype:
+        :return: a function (column.read_type -> totype)
+        :rtype: Callable | None
+        """
+        converter = getattr(
+            self, '_%s_from_%s' % (totype, column._type), None)
         if not converter: return None
 
         return functools.partial(
@@ -428,3 +457,43 @@ class ir_fields_converter(orm.Model):
                 commands.append(CREATE(writable))
 
         return commands, warnings
+
+    def _html_from_passthrough(self, cr, uid, model, column, value, context=None):
+        """
+        escapes the value and returns it directly
+        """
+        return werkzeug.utils.escape(value), []
+
+    _html_from_char = _html_from_integer = _html_from_float = \
+        _html_from_date = _html_from_datetime = _html_from_passthrough
+
+    def _html_from_text(self, cr, uid, model, column, value, context=None):
+        """
+        Escapes the value and converts newlines to br. This is bullshit.
+        """
+        return werkzeug.utils.escape(value).replace('\n', '<br>\n'), []
+
+    def _html_from_selection(self, cr, uid, model, column, value, context=None):
+        selection = dict(openerp.osv.fields.selection.reify(
+            cr, uid, model, column, context=context))
+        return werkzeug.utils.escape(selection[value]), []
+
+    def _html_from_html(self, cr, uid, model, column, value, context=None):
+        return value, []
+
+    def _html_from_many2one(self, cr, uid, model, column, value, context=None):
+        return werkzeug.utils.escape(value.name_get()[0][1]), []
+
+    def _html_from_binary(self, cr, uid, model, column, value, context=None):
+        try:
+            image = Image.open(cStringIO.StringIO(value.decode('base64')))
+        except IOError:
+            raise ValueError("Non-image binary fields can not be converted to HTML")
+
+        mime = PIL_MIME_MAPPING.get(image.format)
+        if mime is None:
+            raise ValueError("Unknown PIL format %s" % image.format)
+
+        return ('<img src="data:%s;base64,%s">' % (mime, value)), []
+
+PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }

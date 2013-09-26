@@ -37,6 +37,7 @@
 
 import base64
 import datetime as DT
+import functools
 import logging
 import pytz
 import re
@@ -448,6 +449,39 @@ class selection(_column):
     def __init__(self, selection, string='unknown', **args):
         _column.__init__(self, string=string, **args)
         self.selection = selection
+
+    @classmethod
+    def reify(cls, cr, uid, model, field, context=None):
+        """ Munges the field's ``selection`` attribute as necessary to get
+        something useable out of it: calls it if it's a function, applies
+        translations to labels if it's not.
+
+        A callable ``selection`` is considered translated on its own.
+
+        :param orm.Model model:
+        :param _column field:
+        """
+        if callable(field.selection):
+            return field.selection(model, cr, uid, context)
+
+        if not (context and 'lang' in context):
+            return field.selection
+
+        # field_to_dict isn't given a field name, only a field object, we
+        # need to get the name back in order to perform the translation lookup
+        field_name = next(
+            name for name, column in model._columns.iteritems()
+            if column == field)
+
+        translation_filter = "%s,%s" % (model._name, field_name)
+        translate = functools.partial(
+            (model.pool['ir.translation'])._get_source,
+            cr, uid, translation_filter, 'selection', context['lang'])
+
+        return [
+            (value, translate(source=label))
+            for value, label in field.selection
+        ]
 
 # ---------------------------------------------------------
 # Relationals fields
@@ -1553,11 +1587,7 @@ def field_to_dict(model, cr, user, field, context=None):
             res[arg] = getattr(field, arg)
 
     if hasattr(field, 'selection'):
-        if isinstance(field.selection, (tuple, list)):
-            res['selection'] = field.selection
-        else:
-            # call the 'dynamic selection' function
-            res['selection'] = field.selection(model, cr, user, context)
+        res['selection'] = selection.reify(cr, user, model, field, context=context)
     if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
         res['domain'] = field._domain(model) if callable(field._domain) else field._domain
