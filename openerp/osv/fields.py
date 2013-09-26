@@ -475,11 +475,11 @@ class selection(_column):
 
         translation_filter = "%s,%s" % (model._name, field_name)
         translate = functools.partial(
-            (model.pool['ir.translation'])._get_source,
+            model.pool['ir.translation']._get_source,
             cr, uid, translation_filter, 'selection', context['lang'])
 
         return [
-            (value, translate(source=label))
+            (value, translate(label))
             for value, label in field.selection
         ]
 

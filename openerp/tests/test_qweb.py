@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import namedtuple
 from xml.dom import minidom as dom
 
 import common
@@ -7,6 +8,13 @@ from ..tools import qweb
 
 impl = dom.getDOMImplementation()
 document = impl.createDocument(None, None, None)
+
+Request = namedtuple('Request', 'cr uid registry')
+class RegistryProxy(object):
+    def __init__(self, func):
+        self.func = func
+    def __getitem__(self, name):
+        return self.func(name)
 
 class TestQWebTField(common.TransactionCase):
     def setUp(self):
@@ -23,7 +31,10 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, {'company': root_company})
+        result = self.engine.render_node(field, {
+            'company': root_company,
+            'request': Request(self.cr, self.uid, RegistryProxy(self.registry))
+        })
 
         self.assertEqual(
             result,

@@ -1,7 +1,7 @@
-import cgi
 import logging
 import re
 
+import werkzeug.utils
 #from openerp.tools.safe_eval import safe_eval as eval
 
 import xml   # FIXME use lxml
@@ -183,7 +183,7 @@ class QWebXml(object):
                             t_render = an[2:]
                         t_att[an[2:]] = av
                 else:
-                    g_att += ' %s="%s"' % (an, cgi.escape(av, 1))
+                    g_att += ' %s="%s"' % (an, werkzeug.utils.escape(av))
 
             if 'debug' in t_att:
                 debugger = t_att.get('debug', 'pdb')
@@ -193,6 +193,8 @@ class QWebXml(object):
                     r = self._render_tag[t_render](self, e, t_att, g_att, v)
             else:
                 r = self.render_element(e, t_att, g_att, v)
+        if isinstance(r, unicode):
+            return r.encode('utf-8')
         return r
 
     def render_element(self, e, t_att, g_att, v, inner=None):
@@ -235,7 +237,7 @@ class QWebXml(object):
                 val = val.encode("utf8")
         else:
             att, val = self.eval_object(av, v)
-        return val and ' %s="%s"' % (att, cgi.escape(str(val), 1)) or " "
+        return val and ' %s="%s"' % (att, werkzeug.utils.escape(val)) or " "
 
     def render_att_href(self, e, an, av, v):
         return self.url_for(e, an, av, v)
@@ -259,11 +261,11 @@ class QWebXml(object):
         return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_esc(self, e, t_att, g_att, v):
-        inner = cgi.escape(self.eval_str(t_att["esc"], v))
+        inner = werkzeug.utils.escape(self.eval_str(t_att["esc"], v))
         return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_escf(self, e, t_att, g_att, v):
-        inner = cgi.escape(self.eval_format(t_att["escf"], v))
+        inner = werkzeug.utils.escape(self.eval_format(t_att["escf"], v))
         return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_foreach(self, e, t_att, g_att, v):
@@ -336,32 +338,34 @@ class QWebXml(object):
         record, field = t_att["field"].rsplit('.', 1)
         record = self.eval_object(record, v)
 
-        inner = None
-        field_type = record._model._all_columns[field].column._type
+        column = record._model._all_columns[field].column
+        field_type = column._type
+
+        req = v['request']
+        converter = req.registry['ir.fields.converter'].from_field(
+            req.cr, req.uid, record._model, column, totype='html')
+
+        content = None
         try:
-            if field_type == 'many2one':
-                field_data = record.read([field])[0].get(field)
-                inner = field_data and field_data[1]
-            else:
-                inner = getattr(record, field)
-
-            if isinstance(inner, unicode):
-                inner = inner.encode("utf8")
-
-            g_att += ''.join(
-                ' %s="%s"' % (name, cgi.escape(str(value), True))
-                for name, value in [
-                    ('data-oe-model', record._model._name),
-                    ('data-oe-id', str(record.id)),
-                    ('data-oe-field', field),
-                    ('data-oe-type', column._type),
-                    ('data-oe-translate', '1' if column.translate else '0'),
-                    ('data-oe-expression', t_att['field']),
-                ]
-            )
-        except AttributeError:
+            value = record[field]
+            if value:
+                content, warnings = converter(value)
+                assert not warnings
+        except KeyError:
             _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att, g_att, v, str(inner or ""))
+        g_att += ''.join(
+            ' %s="%s"' % (name, werkzeug.utils.escape(value))
+            for name, value in [
+                ('data-oe-model', record._model._name),
+                ('data-oe-id', record.id),
+                ('data-oe-field', field),
+                ('data-oe-type', field_type),
+                ('data-oe-translate', '1' if column.translate else '0'),
+                ('data-oe-expression', t_att['field']),
+            ]
+        )
+
+        return self.render_element(e, t_att, g_att, v, content or "")
 
 # leave this, al.
