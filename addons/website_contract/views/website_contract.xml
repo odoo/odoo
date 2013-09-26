@@ -62,7 +62,7 @@
 
                     <div>
                         <div t-foreach="partner_ids" t-as="partner" class="media thumbnail" data-publish="">
-                            <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
+                            <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
                             <a class="pull-left" t-attf-href="/references/#{ partner.id }/">
                                 <img class="media-object" t-att-src="partner.img('image_small')"/>
                             </a>
@@ -95,7 +95,7 @@
     <template id="details" name="Reference Detail">
         <t t-call="website_contract.layout">
             <t t-set="ref_content">
-                <t t-call="website.publish"><t t-set="object" t-value="partner_id"/></t>
+                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
                 <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
                 <div class="col-md-4">
                     <div class="text-center">

@@ -24,6 +24,7 @@
                 <group name="website" string="Website">
                     <field name="website_published"/>
                     <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="website_style_ids" widget="many2many_tags"/>
                 </group>
             </group>
         </field>
@@ -81,6 +82,34 @@
 
     <!-- Product list --> 
 
+    <template id="products_cart">
+      <div class="oe_product_description">
+          <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+              <b t-field="product.name"/>
+          </a>
+          <!-- This should be an option -->
+          <div t-if="product.description_sale" class="text-muted oe_subdescription">
+              <div id="product_description" t-att-data-name="product.id"/>
+          </div>
+          <div class="product_price">
+              <b>
+                  <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                    <span class="text-danger" style="text-decoration: line-through;">
+                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                    </span>&amp;nbsp;
+                  </t>
+                  <t t-esc="product.product_variant_ids[0].price" /> €
+              </b>
+          </div>
+      </div>
+
+      <div class="oe_product_image text-center">
+          <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+              <img class="img" t-att-src="product.img('image')"/>
+          </a>
+      </div>
+    </template>
+
     <template id="products" page="True">
         <t t-call="website.layout">
             <t t-set="head">
@@ -110,40 +139,35 @@
                     </div>
                 </div>
 
-                <div class='row style_default'>
+                <div class='style_default'>
                   <div class="col-md-12" id="products_grid">
-                    <t t-foreach="products" t-as="product">
-                        <div t-attf-class="col-md-#{ search and 3 or product.website_sizex } oe_product oe-height-#{ search and 2 or product.website_sizey } #{ product.website_product_class}" t-att-data-publish="product.website_published and 'on' or 'off'" data-name="products_layout">
-
-                            <div class="oe_product_description">
-                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
-                                    <b t-field="product.name"/>
-                                </a>
-                                <!-- This should be an option -->
-                                <div t-if="product.description_sale" class="text-muted oe_subdescription">
-                                    <div id="product_description" t-att-data-name="product.id"/>
-                                </div>
-                                <div>
-                                    <b>
-                                        <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                          <span class="text-danger" style="text-decoration: line-through;">
-                                              <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                                          </span>&amp;nbsp;
-                                        </t>
-                                        <t t-esc="product.product_variant_ids[0].price" /> €
-                                    </b>
-                                    <span id="add_to_cart" t-att-data-name="product.id"/>
-                                </div>
-                            </div>
-
-                            <div class="oe_product_image text-center">
-                                <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
-                                    <img class="img" t-att-src="product.img('image')"/>
-                                </a>
-                            </div>
-
-                        </div>
-                    </t>
+                    <table width="100%">
+                      <colgroup>
+                        <col style="width: 1px; margin-right: -1px;" />
+                        <col class="col-md-3" />
+                        <col class="col-md-3" />
+                        <col class="col-md-3" />
+                        <col class="col-md-3" />
+                      </colgroup>
+                      <tbody>
+                        <t t-set="table_products" t-value="get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
+                        <tr t-foreach="table_products" t-as="tr_product">
+                          <td class="oe-height-2"></td>
+                          <t t-foreach="tr_product" t-as="td_product">
+                            <t t-if="td_product">
+                            <t t-set="product" t-value="td_product['product']"/>
+                            <td t-att-colspan="td_product['x']"
+                                t-att-rowspan="td_product['y']"
+                                t-attf-class="oe_product #{ td_product['class'] }"
+                                t-att-data-publish="product.website_published and 'on' or 'off'">
+                                <t t-call="website_sale.products_cart"/>
+                            </td>
+                            </t>
+                            <td t-if="td_product == None"/>
+                          </t>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
                 <div class="text-center">
@@ -167,8 +191,8 @@
 
     <!-- Add to cart button-->
 
-    <template id="add_to_basket" inherit_option_id="website_sale.products" name="Add to Cart">
-        <xpath expr="//span[@id='add_to_cart']" position="replace">
+    <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
+        <xpath expr="//div[@class='product_price']" position="inside">
             <a t-attf-href="./add_cart/?product_id=#{ product.id }">
                 <span class="icon-shopping-cart"/>
             </a>
@@ -178,8 +202,15 @@
     <!-- List view of products -->
 
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
-        <xpath  expr="//div[@data-name='products_layout']" position="attributes">
-            <attribute name="class">col-md-12 oe_list_products oe-height-1</attribute>
+        <xpath expr="//div[@id='products_grid']/table" position="replace">
+          <div class="row">
+            <t t-set="products" t-value="get_products(product_ids)"/>
+            <t t-foreach="products" t-as="product">
+              <div class="col-md-12 oe_list_products oe-height-1">
+                <t t-call="website_sale.products_cart"/>
+              </div>
+            </t>
+          </div>
         </xpath>
     </template>
 
@@ -203,7 +234,16 @@
                           <li class="active" t-field="product.name">Product Name</li>
                       </ol>
                   </div><div class="col-sm-3">
-                      <t t-call="website.publish"><t t-set="object" t-value="product"/></t>
+                      <t t-call="website.publish_management">
+                        <t t-set="object" t-value="product"/>
+                        <li class='dropdown-submenu'>
+                            <a tabindex="-1" href="#">Sequence</a>
+                            <ul class="dropdown-menu" name="sequence">
+                                <li><a href="#" class="js_go_to_top">Push on top</a></li>
+                                <li><a href="#" class="js_go_to_bottom">Push on bottom</a></li>
+                            </ul>
+                        </li>
+                      </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
                       <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
                           <div class="input-group">

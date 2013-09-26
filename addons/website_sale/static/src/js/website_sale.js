@@ -64,4 +64,9 @@ $(document).ready(function () {
         return false;
     });
 
+    $('.js_go_to_top, .js_go_to_bottom').on('click', function () {
+        var $data = $(this).parents(".js_publish_management:first");
+        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $(this).hasClass('js_go_to_top')});
+    });
+
 });

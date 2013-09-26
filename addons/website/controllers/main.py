@@ -258,17 +258,16 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return request.make_response(image_data, headers)
 
-    @website.route(['/website/publish/'], type='http', auth="public")
-    def publish(self, **post):
-        _id = int(post['id'])
-        _object = request.registry[post['object']]
+    @website.route(['/website/publish'], type='json', auth="public")
+    def publish(self, id, object):
+        _id = int(id)
+        _object = request.registry[object]
 
         obj = _object.browse(request.cr, request.uid, _id)
         _object.write(request.cr, request.uid, [_id],
                       {'website_published': not obj.website_published},
                       context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
-
         return obj.website_published and "1" or "0"
 
     @website.route(['/website/kanban/'], type='http', auth="public")
