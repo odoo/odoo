@@ -24,12 +24,12 @@
                 dialog.on('activate', this, function () {
                     localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
-                    this.translate();
+                    this.translate().then(function () {
+                        mysuper.call(self);
+                    });
                 });
             } else {
                 this.translate().then(function () {
-                    // Disable non translatable t-fields
-                    $('[data-oe-type][data-oe-translate=0]').removeAttr('data-oe-type');
                     mysuper.call(self);
                 });
             }
@@ -43,6 +43,8 @@
             }).then(function (translations) {
                 self.translations = translations;
                 self.processTranslatableNodes();
+                // Disable non translatable t-fields
+                $('[data-oe-type][data-oe-translate=0]').removeAttr('data-oe-type');
             });
         },
         processTranslatableNodes: function () {
