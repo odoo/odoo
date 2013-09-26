@@ -35,7 +35,7 @@ PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif'
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
-    @website.route('/', type='http', auth="public")
+    @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
         return self.page("website.homepage")
 
@@ -85,7 +85,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
-    @website.route('/website/theme_change', type='http', auth="admin") # FIXME: auth
+    @website.route('/website/theme_change', type='http', auth="admin")
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
         view = request.registry['ir.ui.view']
@@ -107,7 +107,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.website.render('website.themes', {'theme_changed': True})
 
-    @website.route('/page/<path:path>', type='http', auth="public")
+    @website.route('/page/<path:path>', type='http', auth="public", multilang=True)
     def page(self, path, **kwargs):
         values = {
             'path': path,
@@ -159,6 +159,51 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
                 })
         return result
+
+    @website.route('/website/get_view_translations', type='json', auth='admin')
+    def get_view_translations(self, xml_id, lang=None):
+        lang = lang or request.context.get('lang')
+        views = self.customize_template_get(xml_id, optional=False)
+        views_ids = [view.get('id') for view in views if view.get('active')]
+        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        irt = request.registry.get('ir.translation')
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
+
+    @website.route('/website/set_translations', type='json', auth='admin')
+    def set_translations(self, data, lang):
+        irt = request.registry.get('ir.translation')
+        for view_id, trans in data.items():
+            view_id = int(view_id)
+            for t in trans:
+                initial_content = t['initial_content'].strip()
+                new_content = t['new_content'].strip()
+                tid = t['translation_id']
+                if not tid:
+                    old_trans = irt.search_read(
+                        request.cr, request.uid,
+                        [
+                            ('type', '=', 'view'),
+                            ('res_id', '=', view_id),
+                            ('lang', '=', lang),
+                            ('src', '=', initial_content),
+                        ])
+                    if old_trans:
+                        tid = old_trans[0]['id']
+                if tid:
+                    vals = {'value': new_content}
+                    irt.write(request.cr, request.uid, [tid], vals)
+                else:
+                    new_trans = {
+                        'name': 'website',
+                        'res_id': view_id,
+                        'lang': lang,
+                        'type': 'view',
+                        'source': initial_content,
+                        'value': new_content,
+                    }
+                    irt.create(request.cr, request.uid, new_trans)
+        irt._get_source.clear_cache(irt) # FIXME: find why ir.translation does not invalidate
+        return True
 
     #  # FIXME: auth, anybody can upload an attachment if URL known/found
     @website.route('/website/attach', type='http', auth='admin')

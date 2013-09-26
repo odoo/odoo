@@ -39,7 +39,7 @@ class Website(osv.Model):
 
 class website_project(http.Controller):
 
-    @website.route(['/project/<int:project_id>/'], type='http', auth="public")
+    @website.route(['/project/<int:project_id>/'], type='http', auth="public", multilang=True)
     def project(self, project_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         project_obj = request.registry['project.project']
@@ -51,7 +51,7 @@ class website_project(http.Controller):
         }
         return request.website.render("website_project.index", render_values)
 
-    @website.route(['/project/task/<int:task_id>'], type='http', auth="public")
+    @website.route(['/project/task/<int:task_id>'], type='http', auth="public", multilang=True)
     def task(self, task_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         task_obj = request.registry['project.task']

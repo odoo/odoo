@@ -36,7 +36,7 @@ import werkzeug
 class website_event(http.Controller):
     _order = 'website_published desc, date_begin desc'
 
-    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public", multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -152,7 +152,7 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @website.route(['/event/<int:event_id>'], type='http', auth="public")
+    @website.route(['/event/<int:event_id>'], type='http', auth="public", multilang=True)
     def event(self, event_id=None, **post):
         event_obj = request.registry['event.event']
         values = {
@@ -162,7 +162,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public")
+    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public", multilang=True)
     def add_cart(self, event_id=None, **post):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
@@ -210,5 +210,5 @@ class website_event(http.Controller):
             order.write({'order_line': [(4, order_line_id)]}, context=request.context)
 
         if not _values:
-            return werkzeug.utils.redirect("/event/%s/" % event_id)
-        return werkzeug.utils.redirect("/shop/checkout")
+            return request.redirect("/event/%s/" % event_id)
+        return request.redirect("/shop/checkout")

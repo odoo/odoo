@@ -45,9 +45,9 @@
 
     <template id="header_footer" inherit_id="website.layout" name="Custom Footer">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-            <li><a href="/shop/">Shop</a></li>
+            <li><a t-href="/shop/">Shop</a></li>
             <li>
-                <a href="/shop/mycart/">
+                <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
@@ -55,9 +55,9 @@
             </li>
         </xpath>
         <xpath expr="//footer//ul[@name='products']" position="inside">
-            <li><a href="/shop/">Shop</a></li>
+            <li><a t-href="/shop/">Shop</a></li>
             <li>
-                <a href="/shop/mycart/">
+                <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
@@ -69,7 +69,7 @@
 
     <template id="categories_recursive">
         <li t-att-class="category.id == category_id and 'active' or ''">
-            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-attf-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
+            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-if="category.id in categ[1] or editable">
@@ -84,7 +84,7 @@
 
     <template id="products_cart">
       <div class="oe_product_description">
-          <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+          <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <b t-field="product.name"/>
           </a>
           <!-- This should be an option -->
@@ -104,7 +104,7 @@
       </div>
 
       <div class="oe_product_image text-center">
-          <a t-attf-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+          <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <img class="img" t-att-src="product.img('image')"/>
           </a>
       </div>
@@ -125,9 +125,9 @@
                     <div class="col-sm-4">
                         <h1>Our Products</h1>
                     </div><div class="col-sm-4 pagination text-center">
-                        <a t-if="editable" t-attf-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-default">New Product</a>
+                        <a t-if="editable" t-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-default">New Product</a>
                     </div><div class="col-sm-4">
-                        <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
+                        <form t-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination">
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
                                 <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
@@ -193,7 +193,7 @@
 
     <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
         <xpath expr="//div[@class='product_price']" position="inside">
-            <a t-attf-href="./add_cart/?product_id=#{ product.id }">
+            <a t-href="./add_cart/?product_id=#{ product.id }">
                 <span class="icon-shopping-cart"/>
             </a>
         </xpath>
@@ -229,8 +229,8 @@
                 <div class="row">
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
-                          <li><a href="/shop">Products</a></li>
-                          <li t-if="category"><a t-att-href="'/shop/category/%s' % (category_id,)"><span t-field="category.name"/></a></li>
+                          <li><a t-href="/shop">Products</a></li>
+                          <li t-if="category"><a t-href="'/shop/category/%s' % (category_id,)"><span t-field="category.name"/></a></li>
                           <li class="active" t-field="product.name">Product Name</li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -253,7 +253,7 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                      <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
+                      <form t-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
                           <div class="input-group">
                               <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
                               <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
@@ -270,7 +270,7 @@
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
-                      <form action="./add_cart/">
+                      <form t-action="./add_cart/">
                           <input type="hidden" t-if="len(product.product_variant_ids) &lt;= 1" name="product_id" t-att-value="product.id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
                               <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
@@ -319,7 +319,7 @@
                         <div class='mt16 text-center'>
                             <img t-att-src="product.img('image_small')"/>
                             <h5>
-                                <a t-attf-href="/shop/product/#{ product.id }/"
+                                <a t-href="/shop/product/#{ product.id }/"
                                    style="display: block">
                                     <span t-field='product.name'
                                           style="display: block"/>
@@ -368,10 +368,10 @@
                                 <tr>
                                     <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                     <td t-if="line.product_id.product_tmpl_id">
-                                        <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
+                                        <a t-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
                                     </td>
                                     <td t-if="line.product_id.product_tmpl_id">
-                                        <a t-attf-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><span t-field="line.name"/></a><br/>
+                                        <a t-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><span t-field="line.name"/></a><br/>
                                         <small t-field="line.product_id.description_sale"/>
                                     </td>
                                     <td>
@@ -383,8 +383,8 @@
                                     <td>
                                         <div class="pull-right">
                                             <input type="text" class="js_quantity input-sm col-md-5" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
-                                            <a t-attf-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="btn btn-default mb8 btn-sm btn-inverse">-</a>
-                                            <a t-attf-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="btn btn-default mb8 btn-sm btn-success">+</a>
+                                            <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="btn btn-default mb8 btn-sm btn-inverse">-</a>
+                                            <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="btn btn-default mb8 btn-sm btn-success">+</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -404,7 +404,7 @@
                             <tr> <th colspan="3"><h4>Total</h4></th> <th><h4><t t-esc="website_sale_order and website_sale_order.amount_total or 0"/> €</h4></th></tr>
                         </thead>
                     </table>
-                    <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
+                    <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-success">Proceed To Payment</a>
                 </div>
               </div>
               <div class="oe_structure"/>
@@ -418,7 +418,7 @@
         <xpath expr="//div[@id='products_grid']" position="before">
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if category_id else 'active' "><a href="/shop/">All Products</a></li>
+                    <li t-att-class=" '' if category_id else 'active' "><a t-href="/shop/">All Products</a></li>
                     <t t-set="categ" t-value="get_categories()"/>
                     <t t-foreach="categ[0]" t-as="category">
                         <t t-call="website_sale.categories_recursive"/>
@@ -449,7 +449,7 @@
                     <t t-foreach="suggested_products" t-as="product">
                         <tr>
                             <td>
-                                <a t-attf-href="/shop/product/#{ product.id }/"><span t-field="product.name"/></a><br/>
+                                <a t-href="/shop/product/#{ product.id }/"><span t-field="product.name"/></a><br/>
                                 <small t-field="product.description_sale"/>
                             </td>
                             <td>
@@ -457,7 +457,7 @@
                             </td>
                             <td>
                                 <div class="pull-right">
-                                    <a t-attf-href="./add_cart/?product_id=#{ product.id }" class="btn btn-sm btn-success">+</a>
+                                    <a t-href="./add_cart/?product_id=#{ product.id }" class="btn btn-sm btn-success">+</a>
                                 </div>
                             </td>
                         </tr>
@@ -474,11 +474,11 @@
                 <t t-foreach="suggested_products" t-as="product">
                     <div class='col-md-2 thumbnail'>
                         <div class='mt16 text-center'>
-                            <a t-attf-href="/shop/product/#{ product.id }/">
+                            <a t-href="/shop/product/#{ product.id }/">
                                 <img t-att-src="product.img('image_small')"/>
                             </a>
                             <h5>
-                                <a t-attf-href="/shop/product/#{ product.id }/" style="display: block;">
+                                <a t-href="/shop/product/#{ product.id }/" style="display: block;">
                                     <span t-field="product.name"/>
                                 </a>
                             </h5>
@@ -491,7 +491,7 @@
     </template>
     <template id="reduction_code" inherit_option_id="website_sale.mycart" name="Reduction Code">
         <xpath expr="//table[@id='mycart_total']" position="after">
-            <form t-if="website_sale_order and website_sale_order.order_line" class="well" action="/shop/mycart/" method="post">
+            <form t-if="website_sale_order and website_sale_order.order_line" class="well" t-action="/shop/mycart/" method="post">
                 <input name="promo" class='input' type="text" placeholder="Reduction Code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
                 <button class="btn">Apply Code</button>
             </form>
@@ -536,7 +536,7 @@
                             </tfoot>
                         </table>
                     </div>
-                    <form class="col-md-8 form-horizontal" action="/shop/confirm_order/" method="post">
+                    <form class="col-md-8 form-horizontal" t-action="/shop/confirm_order/" method="post">
                         <div class=" row">
                             <a t-if="not partner" t-attf-href="/admin#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/" class="btn btn-primary">Log me, I have an account</a>
                             <h3 class="col-md-10">Billing Information</h3>
@@ -737,7 +737,7 @@
                             <t t-foreach="payments or []" t-as="payment">
                                 <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden col-md-6"/>
                             </t>
-                            <a href="/shop/payment_validate/" class="hidden btn btn-default">I validate my payment</a>
+                            <a t-href="/shop/payment_validate/" class="hidden btn btn-default">I validate my payment</a>
                         </div>
                     </div>
                 </div>

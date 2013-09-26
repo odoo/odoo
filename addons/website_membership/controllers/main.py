@@ -9,7 +9,7 @@ import urllib
 
 class website_crm_partner_assign(http.Controller):
 
-    @website.route(['/members/', '/members/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/members/', '/members/page/<int:page>/'], type='http', auth="public", multilang=True)
     def members(self, page=0, **post):
         membership_obj = request.registry['membership.membership_line']
 
@@ -56,7 +56,7 @@ class website_crm_partner_assign(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @website.route(['/members/<int:ref_id>/'], type='http', auth="public")
+    @website.route(['/members/<int:ref_id>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, ref_id=0, **post):
         partner_obj = request.registry['res.partner']
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', ref_id)], context=request.context)

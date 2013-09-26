@@ -7,22 +7,35 @@ from openerp.osv import osv, fields
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 import urllib
+from urlparse import urljoin
 import math
 import traceback
 from openerp.tools.safe_eval import safe_eval
 from openerp.exceptions import AccessError, AccessDenied
+import werkzeug
 
 import logging
 logger = logging.getLogger(__name__)
 
-def route(*route_args, **route_kwargs):
+def route(routes, *route_args, **route_kwargs):
     def decorator(f):
-        @http.route(*route_args, **route_kwargs)
+        new_routes = routes if isinstance(routes, list) else [routes]
+        f.multilang = route_kwargs.get('multilang', False)
+        if f.multilang:
+            route_kwargs.pop('multilang')
+            for r in list(new_routes):
+                new_routes.append('/<string(length=5):lang_code>' + r)
+        @http.route(new_routes, *route_args, **route_kwargs)
         @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
         def wrap(*args, **kwargs):
-            request.route_lang = None # WIP: decorator will support lang argument
+            request.route_lang = kwargs.get('lang_code', None)
             if not hasattr(request, 'website'):
+                request.multilang = f.multilang
                 request.website = request.registry['website'].get_current()
+                if request.route_lang:
+                    lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
+                    if not lang_ok:
+                        return request.not_found()
                 request.website.preprocess_request(*args, **kwargs)
             return f(*args, **kwargs)
         return wrap
@@ -36,6 +49,19 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
+def url_for(path, lang=None):
+    if request:
+        path = urljoin(request.httprequest.path, path)
+        langs = request.context.get('langs')
+        if path[0] == '/' and len(langs) > 1:
+            ps = path.split('/')
+            lang = lang or request.context.get('lang')
+            if ps[1] in langs:
+                ps[1] = lang
+            else:
+                ps.insert(1, lang)
+            path = '/'.join(ps)
+    return path
 
 def urlplus(url, params):
     if not params:
@@ -77,12 +103,22 @@ class website(osv.osv):
         return lang
 
     def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+        def redirect(url):
+            return werkzeug.utils.redirect(url_for(url))
+        request.redirect = redirect
+
         is_public_user = request.uid == self.get_public_user().id
+        lang = self.get_lang()
+        is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
+            'lang': lang,
+            'langs': [lg.code for lg in request.website.language_ids],
+            'multilang': request.multilang,
             'is_public_user': is_public_user,
-            'editable': not is_public_user, # TODO: check perms
+            'is_master_lang': is_master_lang,
+            'editable': not is_public_user,
+            'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
-        request.context['lang'] = self.get_lang()
 
     def get_current(self):
         # WIP, currently hard coded
@@ -103,13 +139,15 @@ class website(osv.osv):
             registry=request.registry,
             json=simplejson,
             website=request.website,
+            url_for=url_for,
             res_company=request.website.company_id,
             user_id=user.browse(cr, openerp.SUPERUSER_ID, uid),
         )
 
-        context = {
-            'inherit_branding': qweb_context.setdefault('editable', False),
-        }
+        context = request.context.copy()
+        context.update(
+            inherit_branding=qweb_context.setdefault('editable', False),
+        )
 
         # check if xmlid of the template exists
         try:
