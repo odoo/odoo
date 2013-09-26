@@ -180,12 +180,20 @@
             <field name="model">stock.warehouse</field>
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="route_ids" invisible="1"/>
-                    
-                </xpath>
                 <xpath expr="//group[last()]" position="after">
-                <button name="%(action_view_stock_configure_wh)d" class="oe_right oe_highlight" string="Configure this warehouse" type="action" attrs="{'invisible': [('route_id', '!=', False)]}"/>
+                    <notebook colspan="4">
+                        <page string="Warehouse Configuration" colspan="4">
+                          <group colspan="4">
+                              <field name="reception_steps" widget='radio'/>
+                              <field name="delivery_steps" widget='radio'/>
+                          </group>
+                      </page>
+                      <page string="Routes Information" colspan="4">
+                      <group colspan="4">
+                        <field name="route_ids" nolabel="1" readonly="1"/>
+                        </group>
+                    </page>
+                </notebook>
                 </xpath>
             </field>
         </record>
@@ -209,6 +217,9 @@
 			<field name="model">stock.location.route</field>
 			<field name="inherit_id" ref="stock.stock_location_route_form_view"/>
 			<field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence']" position="after">
+                    <field name="active"/>
+                </xpath>
 			    <xpath expr="//group[@string='Pull Rules']" position="before">
 			        <separator string="Applicable On"/>
                     <p class="oe_grey">Check these box so that the user can select this route during the following operations</p>

@@ -4,23 +4,20 @@
   !record {model: stock.location.route, id: stock_location_route}:
     name: 'Route from one company to the other'
     pull_ids: 
-      - invoice_state: none
-        location_id: stock.stock_location_shop0
+      - location_id: stock.stock_location_shop0
         location_src_id: stock.stock_location_intermediatelocation0
         name: E001
         procure_method: make_to_order
         picking_type_id: stock.picking_type_in
         action: move
-      - invoice_state: none
-        location_id: stock.stock_location_shop1
+      - location_id: stock.stock_location_shop1
         procure_method: make_to_order
         location_src_id: stock.stock_location_intermediatelocation0
         name: E002
         picking_type_id: stock.picking_type_in
         procure_method: make_to_order
         action: move
-      - invoice_state: none
-        location_id: stock.stock_location_intermediatelocation0
+      - location_id: stock.stock_location_intermediatelocation0
         location_src_id: stock.stock_location_stock
         name: E003
         action: move

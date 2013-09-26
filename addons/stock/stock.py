@@ -96,7 +96,7 @@ class stock_location(osv.osv):
                       """, select = True),
 
         'complete_name': fields.function(_complete_name, type='char', string="Location Name",
-                            store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
+                            store={'stock.location': (_get_sublocations, ['name', 'location_id', 'active'], 10)}),
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
@@ -2114,6 +2114,7 @@ class stock_warehouse(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
+        'code': fields.char('Warehouse Unique Identifier', size=5, required=True, help="Short name used to identify your warehouse"),
     }
 
     def _default_stock_id(self, cr, uid, context=None):
@@ -2124,6 +2125,10 @@ class stock_warehouse(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
         'lot_stock_id': _default_stock_id,
     }
+    _sql_constraints = [
+        ('warehouse_name_uniq', 'unique (name, company_id)', 'The name of the warehouse must be unique per company!'),
+        ('warehouse_code_uniq', 'unique (code, company_id)', 'The code of the warehouse must be unique per company !'),
+    ]
 
 
 # -------------------------

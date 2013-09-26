@@ -56,12 +56,14 @@ class procurement_rule(osv.osv):
         'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence', store={'stock.location.route': (_get_rules, ['sequence'], 10)}),
         'sequence': fields.integer('Sequence'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', 
-            help="Picking Type determines the way the picking should be shown in the view, reports, ...")
+            help="Picking Type determines the way the picking should be shown in the view, reports, ..."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the rule without removing it."),
     }
 
     _defaults = {
         'procure_method': 'make_to_stock',
         'sequence': 20,
+        'active': True,
     }
 
 class procurement_order(osv.osv):

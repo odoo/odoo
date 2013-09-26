@@ -503,11 +503,12 @@
             <field name="arch" type="xml">
                 <form string="Warehouse" version="7.0">
                     <sheet>
-                    <label for="name" class="oe_edit_only" string="Warehouse Short Name"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
-                            <field name="lot_stock_id" groups="stock.group_locations" string="Inventory Location"/>
+                            <field name="code"/>
+                            <field name="lot_stock_id" groups="stock.group_locations" string="Inventory Location" invisible="1"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
