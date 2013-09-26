@@ -8,7 +8,7 @@ from urllib import quote_plus
 
 class contactus(http.Controller):
 
-    @website.route(['/crm/contactus'], type='http', auth="admin")
+    @website.route(['/crm/contactus'], type='http', auth="admin", multilang=True)
     def contactus(self, *arg, **post):
         post['user_id'] = False
         request.registry['crm.lead'].create(request.cr, request.uid,
