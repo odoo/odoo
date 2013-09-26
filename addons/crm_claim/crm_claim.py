@@ -108,7 +108,7 @@ class crm_claim(osv.osv):
     _defaults = {
         'user_id': lambda s, cr, uid, c: uid,
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
-        'date': fields.datetime.now(),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'active': lambda *a: 1,
