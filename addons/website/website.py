@@ -108,6 +108,7 @@ class website(osv.osv):
         request.context.update({
             'lang': lang,
             'langs': [lg.code for lg in request.website.language_ids],
+            'multilang': request.multilang,
             'is_public_user': is_public_user,
             'is_master_lang': is_master_lang,
             'editable': not is_public_user,

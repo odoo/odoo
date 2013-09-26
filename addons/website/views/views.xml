@@ -78,7 +78,7 @@
                                                 <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
                                                 <li t-if="user_id.id != website.public_user.id"><a href="/admin"><t t-field="user_id.name"/></a></li>
-                                                <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                <li t-if="request.multilang and len(website.language_ids) &gt; 1" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
                                                     <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
