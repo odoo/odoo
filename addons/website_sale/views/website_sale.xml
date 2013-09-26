@@ -149,6 +149,7 @@
                       <col class="col-md-3" />
                     </colgroup>
                     <tbody>
+                      <t t-set="table_products" t-value="get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
                       <tr t-foreach="table_products" t-as="tr_product">
                         <td class="oe-height-2"></td>
                         <t t-foreach="tr_product" t-as="td_product">
@@ -198,8 +199,15 @@
     <!-- List view of products -->
 
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
-        <xpath  expr="//div[@id='products_grid']" position="replace">
-            <attribute name="class">col-md-12 oe_list_products oe-height-1</attribute>
+        <xpath  expr="//table[@id='products_grid']" position="replace">
+          <div class="col-md-12">
+            <t t-set="products" t-value="get_products(product_ids)"/>
+            <t t-foreach="products" t-as="product">
+              <div class="col-md-12 oe_list_products oe-height-1">
+                <t t-call="website_sale.products_cart"/>
+              </div>
+            </t>
+          </div>
         </xpath>
     </template>
 
