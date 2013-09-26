@@ -93,16 +93,15 @@ class Ecommerce(http.Controller):
         }
         """
         product_obj = request.registry.get('product.template')
-        data_obj = request.registry.get('ir.model.data')
+        style_obj = request.registry.get('website.product.style')
 
         # search for checking of access rules and keep order
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
 
         size_ids = {}
-        data_domain = [('model', '=', 'website.product.style'), ('name', 'like', 'size%')]
-        data_ids = data_obj.search(request.cr, SUPERUSER_ID, data_domain, context=request.context)
-        for data in data_obj.read(request.cr, SUPERUSER_ID, data_ids, ['name', 'res_id'], context=request.context):
-            size_ids[data['res_id']] = [int(data['name'][-3]), int(data['name'][-1])]
+        style_ids = style_obj.search(request.cr, SUPERUSER_ID, [('html_class', 'like', 'size_%')], context=request.context)
+        for style in style_obj.browse(request.cr, SUPERUSER_ID, style_ids, context=request.context):
+            size_ids[style.id] = [int(style.html_class[-3]), int(style.html_class[-1])]
 
         product_list = []
         bin_packing = {}
@@ -272,6 +271,16 @@ class Ecommerce(http.Controller):
             category = category_obj.browse(request.cr, request.uid, int(post.get('category_id')), context=request.context)
 
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
+
+        styles = []
+        styles_used = []
+        if not request.context['is_public_user']:
+            style_obj = request.registry.get('website.product.style')
+            style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
+            styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
+            for style in product.website_style_ids:
+                styles_used.append(style.id)
+
         values = {
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
             'category': category,
@@ -279,6 +288,8 @@ class Ecommerce(http.Controller):
             'get_categories': self.get_categories,
             'category_list': category_list,
             'product': product,
+            'styles': styles,
+            'styles_used': styles_used,
         }
         return request.website.render("website_sale.product", values)
 
@@ -590,6 +601,34 @@ class Ecommerce(http.Controller):
             product_obj.set_sequence_top(request.cr, request.uid, [id], request.context)
         else:
             product_obj.set_sequence_bottom(request.cr, request.uid, [id], request.context)
+
+    @website.route(['/shop/change_styles/'], type='json', auth="public")
+    def change_styles(self, id, style_id):
+        product = request.registry.get('product.template').browse(request.cr, request.uid, id, request.context)
+
+        remove = []
+        active = False
+        for style in product.website_style_ids:
+            if style.id == style_id:
+                remove.append(style.id)
+                active = True
+                break
+
+        style = request.registry.get('website.product.style').browse(request.cr, request.uid, style_id, request.context)
+
+        if 'size_' in style.html_class and style.html_class.index('size_') == 0:
+            remove = []
+            for pstyle in product.website_style_ids:
+                if 'size_' in pstyle.html_class and pstyle.html_class.index('size_') == 0:
+                    remove.append(pstyle.id)
+
+        if remove:
+            product.write({'website_style_ids': [(3, rid) for rid in remove]})
+
+        if not active:
+            product.write({'website_style_ids': [(4, style.id)]})
+
+        return not active
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

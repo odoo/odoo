@@ -41,7 +41,7 @@ class product_template(osv.Model):
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
     }
     _defaults = {
-        'website_sequence': 0,
+        'website_sequence': 1,
     }
 
     def set_sequence_top(self, cr, uid, ids, context=None):

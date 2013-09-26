@@ -243,6 +243,14 @@
                                 <li><a href="#" class="js_go_to_bottom">Push on bottom</a></li>
                             </ul>
                         </li>
+                        <li class='dropdown-submenu'>
+                            <a tabindex="-1" href="#">Styles</a>
+                            <ul class="dropdown-menu" name="style">
+                                <t t-foreach="styles" t-as="style">
+                                    <li t-att-class="style.id in styles_used and 'active' or ''"><a href="#" t-att-data-value="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
+                                </t>
+                            </ul>
+                        </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
                       <form t-attf-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">

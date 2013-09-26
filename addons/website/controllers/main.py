@@ -268,7 +268,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                       {'website_published': not obj.website_published},
                       context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
-        return obj.website_published and "1" or "0"
+        return obj.website_published and True or False
 
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):

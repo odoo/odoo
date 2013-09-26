@@ -64,9 +64,25 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.js_go_to_top, .js_go_to_bottom').on('click', function () {
+    $('.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom').on('click', function () {
         var $data = $(this).parents(".js_publish_management:first");
         openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $(this).hasClass('js_go_to_top')});
+    });
+
+    $('.js_publish_management ul[name="style"] a').on('click', function () {
+        var $a = $(this);
+        var $li = $a.parent();
+        var $data = $(this).parents(".js_publish_management:first");
+
+        var data = $a.data();
+        if (data.class.toLowerCase().indexOf('size_') === 0) {
+            $('.js_publish_management ul[name="style"] li:has(a[data-class^="size_"])').removeClass("active");
+        }
+        $li.parent().removeClass("active");
+        openerp.jsonRpc('/shop/change_styles/', 'call', {'id': $data.data('id'), 'style_id': data.value})
+            .then(function (result) {
+                $li.toggleClass("active", result);
+            });
     });
 
 });

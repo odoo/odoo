@@ -130,8 +130,8 @@
 
             openerp.jsonRpc('/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
                 .then(function (result) {
-                    $btn.toggleClass("btn-default", !+result).toggleClass("btn-success", !!+result);
-                    $data.toggleClass("css_unpublish", !+result).toggleClass("css_publish", !!+result);
+                    $btn.toggleClass("btn-default", !result).toggleClass("btn-success", result);
+                    $data.toggleClass("css_unpublish", !result).toggleClass("css_publish", result);
                     $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
                 });
         });
