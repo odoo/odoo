@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <record id="product.product_product_consultant" model="product.product">
             <field name="image" file="website/static/description/website_edit.png"/>
@@ -8,7 +8,7 @@
         
         <record id="product.product_product_4" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full'),ref('website_sale.size2x2')])]"/>
+            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.size2x2')])]"/>
             <field name="website_description" type="html">
                 <section snippet-id="text-image" class="mt16 mb16 dark">
                     <div class="container">
@@ -74,7 +74,7 @@
         </record>
         <record id="product.product_product_11" model="product.product">
             <field name="website_published" eval="True"/>
+            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.size1x2')])]"/>
         </record>
-
     </data>
 </openerp>
