@@ -9,8 +9,6 @@
         start: function () {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
-                // TODO: refactor once xmo's feature branch is merged
-                //       and make t-field's work as well as text translation
                 self.$('button[data-action=edit]').text("Translate");
                 self.$('[data-action=snippet]').hide();
                 self.$('#customize-menu-button').hide();
@@ -18,6 +16,7 @@
         },
         edit: function () {
             var self = this;
+            var mysuper = this._super;
             if (!localStorage[nodialog]) {
                 var dialog = new website.TranslatorDialog();
                 dialog.appendTo($(document.body));
@@ -27,18 +26,17 @@
                     this.translate();
                 });
             } else {
-                this.translate();
+                this.translate().then(function () {
+                    // Disable non translatable t-fields
+                    $('[data-oe-type][data-oe-translate=0]').removeAttr('data-oe-type');
+                    mysuper.call(self);
+                });
             }
         },
         translate: function () {
             var self = this;
-            // this.edit();
-            this.$('#website-top-view').hide();
-            this.$('#website-top-edit').show();
-            $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
-
             this.translations = null;
-            openerp.jsonRpc('/website/get_view_translations', 'call', {
+            return openerp.jsonRpc('/website/get_view_translations', 'call', {
                 'xml_id': $(document.documentElement).data('view-xmlid'),
                 'lang': website.get_context().lang,
             }).then(function (translations) {
@@ -54,10 +52,11 @@
                     .not('[data-oe-type]');
 
             $editables.each(function () {
-                var view_id = $(this).attr('data-oe-source-id') || $(this).attr('data-oe-id');
+                var $node = $(this);
+                var view_id = $node.attr('data-oe-source-id') || $node.attr('data-oe-id');
                 self.transNode(this, view_id|0);
             });
-            $('.oe_translatable_text').prop('contenteditable', true).on('paste', function () {
+            $('.oe_translatable_text').on('paste', function () {
                 var node = $(this);
                 setTimeout(function () {
                     self.sanitizeNode(node);
@@ -128,7 +127,14 @@
             });
         },
         transNode: function (node, view_id) {
-            if (node.childNodes.length === 1
+            // Mostly handling text and cdata nodes here
+            // so avoid jquery usage in this function
+            if (node.attributes['data-oe-type']) {
+                if (node.attributes['data-oe-translate'].value == '1') {
+                    node.className += ' oe_translatable_field';
+                }
+                return;
+            } else if (node.childNodes.length === 1
                     && this.isTextNode(node.childNodes[0])
                     && !node.getAttribute('data-oe-model')) {
                 this.markTranslatableNode(node, view_id);
@@ -148,6 +154,19 @@
                 }
             }
         },
+    });
+
+    website.RTE.include({
+        start: function () {
+            this._super.apply(this, arguments);
+            this.$el.hide();
+        },
+        fetch_editables: function (root) {
+            $(root).click(function (ev) {
+                ev.preventDefault();
+            });
+            return $('[data-oe-translate=1]');
+        }
     });
 
     website.TranslatorDialog = openerp.Widget.extend({
