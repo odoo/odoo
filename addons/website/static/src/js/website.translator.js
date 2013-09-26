@@ -8,6 +8,7 @@
     website.EditorBar.include({
         start: function () {
             var self = this;
+            this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
                 self.$('button[data-action=edit]').text("Translate");
                 self.$('[data-action=snippet]').hide();
@@ -70,11 +71,14 @@
                     if (ev.type == 'paste') {
                         self.sanitizeNode($node[0]);
                     }
-                    if ($node.data('initial_content') !== $node.text()) {
+                    if (self.getInitialContent($node[0]) !== $node.text()) {
                         $node.addClass('oe_dirty').removeClass('oe_translatable_todo');
                     }
                 }, 0);
             });
+        },
+        getInitialContent: function (node) {
+            return this.initial_content[node.attributes['data-oe-nodeid'].value];
         },
         sanitizeNode: function (node) {
             node.text(node.text());
@@ -99,9 +103,13 @@
                 node.className += ' oe_translatable_todo';
             }
             node.contentEditable = true;
-            $(node).data('initial_content', content);
+            var nid = _.uniqueId();
+            $(node).attr('data-oe-nodeid', nid);
+            this.initial_content[nid] = content;
         },
         save: function () {
+            var self = this;
+            var mysuper = this._super;
             var trans = {};
             // this._super.apply(this, arguments);
             $('.oe_translatable_text.oe_dirty').each(function () {
@@ -111,7 +119,7 @@
                     trans[data.oeTranslationViewId] = [];
                 }
                 trans[data.oeTranslationViewId].push({
-                    initial_content: data.initial_content,
+                    initial_content: self.getInitialContent(this),
                     new_content: $node.text(),
                     translation_id: data.oeTranslationId || null
                 });
@@ -120,7 +128,7 @@
                 'data': trans,
                 'lang': website.get_context()['lang'],
             }).then(function () {
-                website.reload();
+                mysuper.call(self);
             }).fail(function () {
                 // TODO: bootstrap alert with error message
                 alert("Could not save translation");
