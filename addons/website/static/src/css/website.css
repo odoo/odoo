@@ -215,6 +215,29 @@ footer {
   padding-bottom: 12px;
 }
 
+.oe_structure.oe_empty_edit:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty_edit > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: url("/web/static/src/img/view_empty_arrow.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  height: 200px !important;
+}
+
+.oe_structure.oe_empty_edit > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  position: static;
+}
+
+.oe_structure.oe_empty_edit:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty_edit > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Click here to build you website and edit the content";
+  text-align: left;
+  display: block;
+  padding-top: 60px;
+  padding-bottom: 50px;
+  padding-left: 90px;
+  color: grey;
+  font-size: 24px;
+}
+
+
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/drag_here.png");
