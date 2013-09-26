@@ -21,6 +21,8 @@
 
 import instance
 
+from openerp.tools import snake_case
+
 wkf_on_create_cache = {}
 
 def clear_cache(cr, uid):
@@ -36,6 +38,7 @@ def trg_write(uid, res_type, res_id, cr):
     :param res_id: the model instance id the workflow belongs to
     :param cr: a database cursor
     """
+    res_type = snake_case(res_type)
     ident = (uid,res_type,res_id)
     cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id or None,res_type or None, 'active'))
     for (id,) in cr.fetchall():
@@ -52,6 +55,7 @@ def trg_trigger(uid, res_type, res_id, cr):
     :param res_id: the model instance id the workflow belongs to
     :param cr: a database cursor
     """
+    res_type = snake_case(res_type)
     cr.execute('select instance_id from wkf_triggers where res_id=%s and model=%s', (res_id,res_type))
     res = cr.fetchall()
     for (instance_id,) in res:
@@ -67,6 +71,7 @@ def trg_delete(uid, res_type, res_id, cr):
     :param res_id: the model instance id the workflow belongs to
     :param cr: a database cursor
     """
+    res_type = snake_case(res_type)
     ident = (uid,res_type,res_id)
     instance.delete(cr, ident)
 
@@ -78,6 +83,7 @@ def trg_create(uid, res_type, res_id, cr):
     :param res_id: the model instance id to own the created worfklow instance
     :param cr: a database cursor
     """
+    res_type = snake_case(res_type)
     ident = (uid,res_type,res_id)
     wkf_on_create_cache.setdefault(cr.dbname, {})
     if res_type in wkf_on_create_cache[cr.dbname]:
@@ -98,8 +104,9 @@ def trg_validate(uid, res_type, res_id, signal, cr):
     :signal: the signal name to be fired
     :param cr: a database cursor
     """
-    result = False
+    res_type = snake_case(res_type)
     ident = (uid,res_type,res_id)
+    result = False
     # ids of all active workflow instances for a corresponding resource (id, model_nam)
     cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id, res_type, 'active'))
     for (id,) in cr.fetchall():
@@ -122,6 +129,7 @@ def trg_redirect(uid, res_type, res_id, new_rid, cr):
     """
     # get ids of wkf instances for the old resource (res_id)
 #CHECKME: shouldn't we get only active instances?
+    res_type = snake_case(res_type)
     cr.execute('select id, wkf_id from wkf_instance where res_id=%s and res_type=%s', (res_id, res_type))
     for old_inst_id, wkf_id in cr.fetchall():
         # first active instance for new resource (new_rid), using same wkf
