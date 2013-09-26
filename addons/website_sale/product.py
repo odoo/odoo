@@ -31,7 +31,7 @@ class product_pricelist(osv.Model):
 
 class product_template(osv.Model):
     _inherit = "product.template"
-    _order = 'website_published,name'
+    _order = 'website_sequence desc, website_published, name'
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
@@ -42,6 +42,7 @@ class product_template(osv.Model):
     }
     _defaults = {
         'website_sequence': 1,
+        'website_published': False,
     }
 
     def set_sequence_top(self, cr, uid, ids, context=None):

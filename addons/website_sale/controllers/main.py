@@ -49,7 +49,7 @@ class Website(osv.osv):
 
 class Ecommerce(http.Controller):
 
-    _order = 'website_sequence desc, website_published'
+    _order = 'website_sequence desc, website_published desc'
 
     def get_categories(self):
         domain = [('parent_id', '=', False)]
@@ -299,13 +299,6 @@ class Ecommerce(http.Controller):
             {'name': 'New Product', 'public_categ_id': cat_id}, request.context)
         return werkzeug.utils.redirect("/shop/product/%s/?unable_editor=1" % product_id)
 
-    @website.route(['/shop/change_category/<product_id>/'], type='http', auth="public")
-    def edit_product(self, product_id=0, **post):
-        request.registry.get('product.template').write(
-            request.cr, request.uid, [int(product_id)],
-            {'public_categ_id': int(post.get('public_categ_id', 0))}, request.context)
-        return "1"
-
     def get_pricelist(self):
         if not request.httprequest.session.get('ecommerce_pricelist'):
             self.change_pricelist(None)
@@ -386,6 +379,7 @@ class Ecommerce(http.Controller):
             if not quantity:
                 order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=context)
         else:
+            #values['name'] = "website order"
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=context)
             order.write({'order_line': [(4, order_line_id)]}, context=context)
 
@@ -418,28 +412,17 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.mycart", values)
 
     @website.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/'], type='http', auth="public")
-    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None, json=None):
-        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
-        if json:
-            return simplejson.dumps(quantity)
-        if path:
-            return werkzeug.utils.redirect("/shop/%s/" % path)
-        else:
-            return werkzeug.utils.redirect("/shop/")
+    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None):
+        self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        return werkzeug.utils.redirect("/shop/mycart/")
 
-    @website.route(['/shop/remove_cart/', '/shop/<path:path>/remove_cart/'], type='http', auth="public")
-    def remove_cart(self, path=None, product_id=None, order_line_id=None, json=None):
-        return self.add_cart(product_id=product_id, order_line_id=order_line_id, path=path, remove=True, json=json)
+    @website.route(['/shop/add_cart_json/'], type='json', auth="public")
+    def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
+        return self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
 
-    @website.route(['/shop/set_cart/', '/shop/<path:path>/set_cart/'], type='http', auth="public")
-    def set_cart(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
-        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
-        if json:
-            return simplejson.dumps(quantity)
-        if path:
-            return werkzeug.utils.redirect("/shop/%s/" % path)
-        else:
-            return werkzeug.utils.redirect("/shop/")
+    @website.route(['/shop/set_cart_json/'], type='json', auth="public")
+    def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
+        return self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, set_number=set_number)
 
     @website.route(['/shop/checkout/'], type='http', auth="public")
     def checkout(self, **post):
@@ -623,9 +606,11 @@ class Ecommerce(http.Controller):
                     remove.append(pstyle.id)
 
         if remove:
+            print "remove", remove
             product.write({'website_style_ids': [(3, rid) for rid in remove]})
 
         if not active:
+            print "add", style.id
             product.write({'website_style_ids': [(4, style.id)]})
 
         return not active
