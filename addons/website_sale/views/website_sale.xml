@@ -90,7 +90,7 @@
           <div t-if="product.description_sale" class="text-muted oe_subdescription">
               <div id="product_description" t-att-data-name="product.id"/>
           </div>
-          <div>
+          <div class="product_price">
               <b>
                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                     <span class="text-danger" style="text-decoration: line-through;">
@@ -99,7 +99,6 @@
                   </t>
                   <t t-esc="product.product_variant_ids[0].price" /> €
               </b>
-              <span id="add_to_cart" t-att-data-name="product.id"/>
           </div>
       </div>
 
@@ -190,8 +189,8 @@
 
     <!-- Add to cart button-->
 
-    <template id="add_to_basket" inherit_option_id="website_sale.products" name="Add to Cart">
-        <xpath expr="//span[@id='add_to_cart']" position="replace">
+    <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
+        <xpath expr="//div[@class='product_price']" position="inside">
             <a t-attf-href="./add_cart/?product_id=#{ product.id }">
                 <span class="icon-shopping-cart"/>
             </a>
