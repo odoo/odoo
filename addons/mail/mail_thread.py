@@ -1314,12 +1314,6 @@ class mail_thread(osv.AbstractModel):
                 "Invalid thread_id; should be 0, False, an ID or a list with one ID"
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-            
-        #check login user is employee
-        #raise error on comment message if user is not employee
-        employee = self._check_user_is_employee(cr, uid, context=context)
-        if not employee and type == 'comment':
-            raise orm.except_orm(_('Warning'),_('Oops! Something went wrong, You are not allowed to post a note.'))
 
         # if we're processing a message directly coming from the gateway, the destination model was
         # set in the context.
