@@ -60,11 +60,13 @@
                   <li><a href="#snippet_structure">Structure</a></li>
                   <li><a href="#snippet_content">Content</a></li>
                   <li><a href="#snippet_business">Business</a></li>
+                  <li><a href="#snippet_effect">Effects</a></li>
                 </ul>
                 <div class="pill-content">
                     <div id="snippet_structure"><label><div>Structure</div></label></div>
                     <div id="snippet_content"><label><div>Content</div></label></div>
                     <div id="snippet_business"><label><div>Business</div></label></div>
+                    <div id="snippet_effect"><label><div>Effects</div></label></div>
                 </div>
             </div>
         </div>
@@ -369,12 +371,16 @@
 
     <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class="oe_snippet_thumbnail">Title</div>
-        <div class="oe_snippet_body row">
-            <div class="col-md-12">
-                <h2>Your Website Title</h2>
-                <h3 class="text-muted">Great products for great people</h3>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center">Your Website Title</h2>
+                        <h3 class="text-muted text-center">Great products for great people</h3>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <div t-name="website.snippets.hr" data-snippet-id='hr' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
@@ -783,6 +789,24 @@
                     </div>
                     <div class="col-md-2">
                         <img src="/website/static/src/img/openerp_logo.png" class="img-responsive img-thumbnail"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div t-name="website.snippets.parallax" data-snippet-id='parallax' data-category='effect' data-selector-children='.oe_structure, [data-oe-type=html]'>
+        <div class='oe_snippet_thumbnail'>Parallax</div>
+        <section class="oe_snippet_body parallax_full oe_structure">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mt128 mb32">
+                        <h1 class="text-center">
+                            <b>Our References</b>
+                        </h1>
+                        <h3 class="text-center">
+                            More than 500 happy customers.
+                        </h3>
                     </div>
                 </div>
             </div>

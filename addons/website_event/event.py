@@ -45,6 +45,9 @@ class event(osv.osv):
             help="Website communication history",
         ),
     }
+    _defaults = {
+        'website_published': False,
+    }
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)

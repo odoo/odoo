@@ -5,7 +5,7 @@
         <!-- Layout add nav and footer -->
         <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
             <xpath expr="//footer//ul[@name='products']" position="inside">
-                <li t-foreach="website_project_ids" t-as="project"><a t-attf-href="/project/#{ project.id }/"><t t-esc="project.name"/></a></li>
+                <li t-foreach="website_project_ids" t-as="project"><a t-href="/project/#{ project.id }/"><t t-esc="project.name"/></a></li>
             </xpath>
         </template>
 
@@ -24,7 +24,7 @@
         <!-- Project --> 
         <template id="task_kanban_card" name="TaskKanban">
             <div class="thumbnail">
-                <a t-attf-href="/project/task/#{object_id.id}/"><span t-field="object_id.name"/></a>
+                <a t-href="/project/task/#{object_id.id}/"><span t-field="object_id.name"/></a>
                 <div>
                     Assigned to <span t-field="object_id.user_id"/>
                 </div>

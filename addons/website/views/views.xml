@@ -15,6 +15,7 @@
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
                       t-att-data-editable="'1' if editable else '0'"
+                      t-att-data-translatable="'1' if translatable else '0'"
                       t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
@@ -30,6 +31,7 @@
                         </t>
                         <t t-call="website.theme"/>
 
+                        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
@@ -43,7 +45,7 @@
                         <t t-if="editable">
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
@@ -53,8 +55,9 @@
                             <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+                            <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
                         </t>
 
                         <t t-raw="head or ''"/>
@@ -71,14 +74,14 @@
                                                 <span class="icon-bar"></span>
                                                 <span class="icon-bar"></span>
                                             </button>
-                                            <a class="navbar-brand" href="/page/website.homepage"><em>Your</em><b>Company</b></a>
+                                            <a class="navbar-brand" t-href="/page/website.homepage"><em>Your</em><b>Company</b></a>
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <li name="contactus"><a href="/page/website.contactus">Contact us</a></li>
+                                                <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
-                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><t t-field="user_id.name"/></a></li>
-                                                <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><span t-field="user_id.name"/></a></li>
+                                                <li t-if="request.multilang and len(website.language_ids) &gt; 1" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
                                                     <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -86,7 +89,7 @@
                                                     </a>
                                                     <ul class="dropdown-menu" role="menu">
                                                         <li t-foreach="website.language_ids" t-as="lg">
-                                                            <a href="#" role="menuitem">
+                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
                                                                 <strong t-att-class="'icon-check' if lg.code == lang
                                                                     else 'icon-check-empty'"></strong>
                                                                 <t t-esc="lg.name"/>
@@ -106,13 +109,13 @@
                                         <div class="col-md-3" name="product">
                                             <h4>Our products &amp; Services</h4>
                                             <ul class="list-unstyled" name="products">
-                                                <li><a href="/">Home</a></li>
+                                                <li><a t-href="/">Home</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-md-3" name="info">
                                             <h4 name="info_title">Connect with us</h4>
                                             <ul class="list-unstyled">
-                                                <li><a href="/page/website.contactus">Contact us</a></li>
+                                                <li><a t-href="/page/website.contactus">Contact us</a></li>
                                             </ul>
                                             <ul class="list-unstyled">
                                                 <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
@@ -127,7 +130,7 @@
                                         <div class="col-md-5 col-lg-offset-1" name="about_us">
                                             <h4>
                                                 <span t-field="res_company.name">Your Company</span>
-                                                <small> - <a href="/page/website.aboutus">About us</a></small>
+                                                <small> - <a t-href="/page/website.aboutus">About us</a></small>
                                             </h4>
                                             <p>
                                                 We are a team of passionated people whose goal is to improve everyone's
@@ -147,7 +150,7 @@
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>
                                     <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a t-href="/sitemap">Sitemap</a>
                                     </div>
                                 </div>
                             </footer>
@@ -164,7 +167,7 @@
                             <div class="col-md-4">
                                 <h4 class="mt16">Subtitle</h4>
                                 <p>
-                                    <a href="/">Homepage</a>
+                                    <a t-href="/">Homepage</a>
                                 </p>
                             </div>
                             <div class="col-md-4">
@@ -208,7 +211,7 @@
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
                         <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
-                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
+                        <span class="text-muted">or</span> <a t-href="/sitemap">Search a Page</a>
                     </div>
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
@@ -223,8 +226,8 @@
                         </p>
                         <p>Maybe you were looking for one of these popular pages ?</p>
                         <ul>
-                            <li><a href="/">Homepage</a></li>
-                            <li><a href="/">Contact Us</a></li>
+                            <li><a t-href="/">Homepage</a></li>
+                            <li><a t-href="/page/website.contactus/">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -257,8 +260,8 @@
                     </p>
                     <pre t-if="editable" t-esc="error"/>
                     <ul>
-                        <li><a href="/">Homepage</a></li>
-                        <li><a href="/">Contact Us</a></li>
+                        <li><a t-href="/">Homepage</a></li>
+                        <li><a t-href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
               </div>
@@ -281,7 +284,7 @@
                                 <p>We'll do our best to get back to you as soon as possible.</p>
                             </div>
                             <div class="text-center mt64" name="mail_button">
-                                <a t-att-href="'mailto:'+res_company.email" class="btn btn-primary">Send us an email</a>
+                                <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary">Send us an email</a>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -338,13 +341,17 @@
             </ul>
         </template>
 
-        <template id="publish">
+        <template id="publish_management">
             <t t-if="editable" t-ignore="true">
-              <div class="dropdown js_publish pull-right" t-att-data-id="object.id" t-att-data-object="object._name">
-                <a class="btn btn-default" id="dopprod" role="button" data-toggle="dropdown"> Manage <span class="caret"></span></a>
+              <div t-attf-class="dropdown js_publish_management pull-right #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
+                <a t-attf-class="btn btn-#{object.id and object.website_published and 'success' or 'default'}" id="dopprod" role="button" data-toggle="dropdown"> Publish options <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dopprod">
-                  <li t-att-class="object.id and object.website_published and 'active' or ''"><a href="#" class="js_publish_btn">Publish</a></li>
-                  <li><a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)">Manage Products</a></li>
+                    <t t-raw="0"/>
+                    <li>
+                        <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
+                        <a href="#" class="js_publish_btn css_publish">Publish</a>
+                    </li>
+                    <li><a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)">Manage</a></li>
                 </ul>
               </div>
             </t>

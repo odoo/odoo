@@ -93,6 +93,22 @@ table.editorbar-panel
     td.selected
         background-color: #b1c9d9
 
+// ---- TRANSLATIONS ---- {{{
+.oe_translate_examples li
+    margin: 10px
+    padding: 4px
+.oe_translatable_text
+    outline: 1px solid black
+.oe_translatable_field
+    outline: 1px dashed black
+.oe_translatable_text.oe_dirty, .oe_translatable_field.oe_dirty
+    outline-color: red
+.oe_translatable_text.oe_dirty:empty
+    padding: 0 10px
+.oe_translatable_todo
+    background: rgb(255, 255, 182)
+// }}}
+
 /* ---- RTE ---- */
 
 // bootstrap makes .btn elements unselectable -> RTE double-click can't know
@@ -485,3 +501,5 @@ $navbar_height: 51px
     &.oe_ace_closed
         width: 0
         opacity: 0
+
+// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

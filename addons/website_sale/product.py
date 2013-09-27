@@ -31,21 +31,27 @@ class product_pricelist(osv.Model):
 
 class product_template(osv.Model):
     _inherit = "product.template"
-    _order = 'website_published,name'
+    _order = 'website_sequence desc, website_published, name'
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
         'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
-        'website_sizex': fields.selection(map(lambda x: (str(x+1),str(x+1)), range(12)), 'Size X'),
-        'website_sizey': fields.selection(map(lambda x: (str(x+1),str(x+1)), range(6)), 'Size Y'),
-        'website_product_class': fields.selection([('','Default'), ('oe_image_full','Image Full')], 'Size Y'),
+        'website_style_ids' : fields.many2many('website.product.style','product_website_style_rel', 'product_id', 'style_id', 'Styles'),
+        'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
     }
     _defaults = {
-        'website_sizex': '3',
-        'website_sizey': '2',
-        'website_product_class': '',
+        'website_sequence': 1,
+        'website_published': False,
     }
+
+    def set_sequence_top(self, cr, uid, ids, context=None):
+        cr.execute('SELECT MAX(website_sequence) FROM product_template')
+        max_sequence = cr.fetchone()[0] or 0
+        return self.write(cr, uid, ids, {'website_sequence': max_sequence + 1}, context=context)
+
+    def set_sequence_bottom(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'website_sequence': 0}, context=context)
 
     def recommended_products(self, cr, uid, ids, context=None):
         id = ids[0]

@@ -19,8 +19,8 @@
                 <a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center">
-                <span class="icon-calendar"> <t t-field="blog_post.create_date"/></span> &amp;nbsp;
-                <span class="icon-user"> By <t t-field="blog_post.create_uid"/></span> &amp;nbsp;
+                <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
+                <span class="icon-user"> By <span t-field="blog_post.create_uid"/></span> &amp;nbsp;
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
                     <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> comment</a>
                     <a t-if="len(blog_post.message_ids) > 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> comments</a>
@@ -36,13 +36,13 @@
     <template id="view_blog_post" name="Blog Post">
         <div>
           <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
-          <t t-call="website.publish"><t t-set="object" t-value="blog_post"/></t>
+          <t t-call="website.publish_management"><t t-set="object" t-value="blog_post"/></t>
         </div><div class="clearfix"/>
 
         <h2 class="text-center" t-field="blog_post.name"/>
         <p class="post-meta text-muted text-center">
-            <span class="icon-calendar"> <t t-field="blog_post.create_date"/></span> &amp;nbsp;
-            <span class="icon-user"> By <t t-field="blog_post.create_uid"/></span> &amp;nbsp;
+            <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
+            <span class="icon-user"> By <span t-field="blog_post.create_uid"/></span> &amp;nbsp;
             <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
                 <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="#comments"><t t-esc="len(blog_post.message_ids)"/> comment</a>
                 <a t-if="len(blog_post.message_ids) > 1" t-attf-href="#comments"><t t-esc="len(blog_post.message_ids)"/> comments</a>
@@ -80,10 +80,10 @@
         <ul class="media-list" id="comments">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                 <div class="media-body well well-sm">
-                    <t t-call="website.publish"><t t-set="object" t-value="message"/></t>
+                    <t t-call="website.publish_management"><t t-set="object" t-value="message"/></t>
                     <t t-raw="message.body"/>
                     <small class="pull-left text-muted text-left">
-                        <t t-field="message.author_id"/> on <t t-field="message.date"/>
+                        <span t-field="message.author_id"/> on <span t-field="message.date"/>
                     </small>
                 </div>
             </li>
@@ -180,7 +180,7 @@
                 <t t-foreach="categories" t-as="nav_category">
                     <li t-att-class="'active' if category and category.id == nav_category.id else ''">
                         <a t-attf-href="/blog/#{nav_category.id}">
-                            <t t-field="nav_category.name"/>
+                            <span t-field="nav_category.name"/>
                         </a>
                     </li>
                 </t>

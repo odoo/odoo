@@ -282,7 +282,7 @@
                     });
                 }).get();
             return $.when.apply(null, defs).then(function () {
-                window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
+                website.reload();
             });
         },
         /**

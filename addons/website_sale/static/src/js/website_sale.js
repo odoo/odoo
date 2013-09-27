@@ -23,45 +23,52 @@ $(document).ready(function () {
         var $input = $(this);
         var value = parseInt($input.val());
         if (isNaN(value)) value = 0;
-        $.get("./set_cart/", {'order_line_id': $input.data('id'), 'set_number': value, 'json': true}, function (data) {
-            var data = JSON.parse(data);
-            set_my_cart_quantity(data[1]);
-            $input.val(data[0]);
-            if (!+data[0]) {
-                $.get('/shop/remove_cart/', {'order_line_id': $input.data('id'), 'json': true,}, function (data) {
-                    location.reload();
-                });
-            }
-        });
+        openerp.jsonRpc("/shop/set_cart_json/", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
+            .then(function (data) {
+                set_my_cart_quantity(data[1]);
+                $input.val(data[0]);
+                if (!data[0]) {
+                    openerp.jsonRpc('/shop/add_cart_json/', 'call', {'order_line_id': $input.data('id')}).then(function (data) {
+                        location.reload();
+                    });
+                }
+            });
     });
-
-    $(".oe_website_sale #product_detail select[name='public_categ_id']").change(function () {
-        var $select = $(this);
-        $.get("/shop/change_category/"+$select.data('id')+"/", {'public_categ_id': $select.val()});
-    });
-
     
     // hack to add and rome from cart with json
     $('.oe_website_sale a[href*="/add_cart/"], a[href*="/remove_cart/"]').on('click', function (ev) {
         ev.preventDefault();
-        $link = $(ev.currentTarget);
-        $.get($link.attr("href"), {'json': true}, function (data) {
-            var data = JSON.parse(data);
-            if (!+data[0]) {
-                location.reload();
-            }
-            set_my_cart_quantity(data[1]);
-            $link.parent().find(".js_quantity").val(data[0]);
-        });
+        var $link = $(ev.currentTarget);
+        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
+            .then(function (data) {
+                if (!data[0]) {
+                    location.reload();
+                }
+                set_my_cart_quantity(data[1]);
+                $link.parent().find(".js_quantity").val(data[0]);
+            });
         return false;
     });
-    $('.oe_website_sale form[action*="/add_cart/"]').on('submit', function (ev) {
-        ev.preventDefault();
-        $form = $(ev.currentTarget);
-        $.get($form.attr("action"), {'product_id': $form.find('input[name="product_id"]:checked').val(), 'json': true}, function (data) {
-            set_my_cart_quantity(JSON.parse(data)[1]);
-        });
-        return false;
+
+    $('.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom').on('click', function () {
+        var $data = $(this).parents(".js_publish_management:first");
+        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $(this).hasClass('js_go_to_top')});
+    });
+
+    $('.js_publish_management ul[name="style"] a').on('click', function () {
+        var $a = $(this);
+        var $li = $a.parent();
+        var $data = $(this).parents(".js_publish_management:first");
+
+        var data = $a.data();
+        if (data.class.toLowerCase().indexOf('size_') === 0) {
+            $('.js_publish_management ul[name="style"] li:has(a[data-class^="size_"])').removeClass("active");
+        }
+        $li.parent().removeClass("active");
+        openerp.jsonRpc('/shop/change_styles/', 'call', {'id': $data.data('id'), 'style_id': data.value})
+            .then(function (result) {
+                $li.toggleClass("active", result);
+            });
     });
 
 });

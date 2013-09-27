@@ -7,7 +7,7 @@
 
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/partners/">Partners</a></li>
+            <li><a t-href="/partners/">Partners</a></li>
         </xpath>
     </template>
 
@@ -40,7 +40,7 @@
                             <t t-call="website.pager">
                                <t t-set="classname">pull-left</t>
                             </t>
-                            <form action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
+                            <form t-action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
                                 <div class="form-group">
                                     <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search') or '' or ''"/>
                                 </div>
@@ -76,12 +76,12 @@
                                 <h3 class="text-center well"><span t-field="partner.grade_id"/> Partners</h3>
                             </t>
                             <div class="media thumbnail" data-publish="">
-                                <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
-                                <a class="pull-left" t-attf-href="/partners/#{ partner.id }/">
+                                <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
+                                <a class="pull-left" t-href="/partners/#{ partner.id }/">
                                     <img class="media-object" t-att-src="partner.img('image_small')"/>
                                 </a>
                                 <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-attf-href="/partners/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a> - <span t-field="partner.grade_id"/>
+                                    <a class="media-heading" t-href="/partners/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a> - <span t-field="partner.grade_id"/>
                                     <div t-field="partner.website_short_description"/>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
     <template id="details" name="Partner Detail">
         <t t-call="website_crm_partner_assign.layout">
             <t t-set="ref_content">
-                <t t-call="website.publish"><t t-set="object" t-value="partner_id"/></t>
+                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
                 <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
                 <div class="col-md-4">
                     <div class="text-center">
