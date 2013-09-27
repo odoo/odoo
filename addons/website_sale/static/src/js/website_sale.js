@@ -39,7 +39,11 @@ $(document).ready(function () {
     $('.oe_website_sale a[href*="/add_cart/"], a[href*="/remove_cart/"]').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
+        var product_id = $link.attr("href").match(/product_id=([0-9]+)/)[1];
+        if (product_id) {
+            product_id = +product_id;
+        }
+        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'product_id': product_id, 'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
             .then(function (data) {
                 if (!data[0]) {
                     location.reload();
