@@ -8,7 +8,7 @@
         </record>
 
 	<template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
-	    <xpath expr="//header//ul[@id='top_menu']/li" position="before">
+	    <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
             	<li><a href="/jobs">Jobs</a></li>
 	    </xpath>
 	    <xpath expr="//footer//div[@name='info']/ul" position="inside">
@@ -37,9 +37,9 @@
 				<ul class="media-list">
         	                    <li t-foreach="res_job" t-as="job" class="media" data-publish="">
 					<div class="media-body">
-					    <span t-if="not job.no_of_recruitment" class="label label-default pull-right">No recruitment needed.</span>
+					    <span t-if="not job.no_of_recruitment" class="label label-default pull-right">No Vacancies.</span>
 					    <t t-if="job.no_of_recruitment">
-						<span class="label label-default pull-right label-info"><t t-esc="vals[job.id]['count']"/> Recruitment availables.</span>
+						<span class="label label-default pull-right label-info"><t t-esc="vals[job.id]['count']"/> Vacancies.</span>
 					    </t>
                                     	    <h4 class="media-heading"><a t-attf-href="/job/detail/#{ job.id }/"><span t-field="job.name"> </span></a></h4>
 					    <div>
@@ -85,11 +85,11 @@
                     </div>
 		    <div class="oe_structure" style="clear:both;">
 	                <h1 class="text-center" t-field="job.name"></h1>
-			<h4 class="text-center">
-                            <i class="icon-time"></i> <span><t t-esc="vals_date"/></span>
-			</h4>
 			<h5 class="text-center">
 				<i class="icon-map-marker"></i> <span t-field="job.company_id.city"> </span>  <span t-if="job.company_id.state_id" t-field="job.company_id.state_id.name"> </span>, <span t-field="job.company_id.country_id.name"> </span></h5>
+			<h5 class="text-center text-muted">
+                            <i class="icon-time"></i> <span><t t-esc="vals_date"/></span>
+			</h5>
 
                     </div>			
   		    <div class="container oe_structure">
@@ -102,7 +102,6 @@
 				        <div class="row">
 					    <hr/>
 					    <div class="col-md-12 text-center mt16 mb16">
-					    	<a href="/page/website.aboutus" class="btn btn-info btn-lg">About us</a>
 					    	<a t-attf-href="/apply/#{ job.id }/" class="btn btn-primary btn-lg">Apply</a>
 					    </div>
 				      	</div>
@@ -177,7 +176,7 @@
 		<xpath expr="//div[@id='jobs_grid']" position="before">
 		    <div class="col-md-3">
 		        <ul class="nav nav-pills nav-stacked mt16">
-		            <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Jobs</a></li>
+		            <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
 		            <t t-foreach="departments" t-as="department">
 		                <li t-att-class="department.id == active and 'active' or ''">
 			    	    <a t-attf-href="/department/#{ department.id }/" ><t t-field="department.name"/></a>
