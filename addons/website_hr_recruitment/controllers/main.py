@@ -82,9 +82,14 @@ class website_hr_recruitment(http.Controller):
            }
         return request.website.render("website_hr_recruitment.thankyou", values)
    
-    @website.route(['/apply'], type='http', auth="public")
-    def applyjobpost(self, **post):
-        return request.website.render("website_hr_recruitment.applyjobpost")
+    @website.route(['/apply/<int:id>'], type='http', auth="public")
+    def applyjobpost(self, id=0):
+        id = id and int(id) or 0
+        job = request.registry['hr.job'].browse(request.cr, request.uid, id)
+        values = {
+            'job': job
+        }
+        return request.website.render("website_hr_recruitment.applyjobpost", values)
 
     @website.route(['/job/detail/<int:job_id>/subscribe'], type='http', auth="public")
     def subscribe(self, job_id=None, **post):
