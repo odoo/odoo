@@ -91,6 +91,7 @@ class Ecommerce(http.Controller):
         """
         product_obj = request.registry.get('product.template')
         style_obj = request.registry.get('website.product.style')
+        request.context['pricelist'] = self.get_pricelist()
 
         # search for checking of access rules and keep order
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
@@ -196,6 +197,7 @@ class Ecommerce(http.Controller):
 
     def get_products(self, product_ids):
         product_obj = request.registry.get('product.template')
+        request.context['pricelist'] = self.get_pricelist()
         # search for checking of access rules and keep order
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
         return product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context)

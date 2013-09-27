@@ -10,6 +10,7 @@
             <field name="website_published" eval="True"/>
             <field name="website_size_x">2</field>
             <field name="website_size_y">2</field>
+            <field name="website_sequence">5</field>
             <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
             <field name="website_description" type="html">
                 <section snippet-id="text-image" class="mt16 mb16 dark">
@@ -77,6 +78,15 @@
         <record id="product.product_product_11" model="product.product">
             <field name="website_published" eval="True"/>
             <field name="website_size_y">2</field>
+        </record>
+
+        <record id="item1" model="product.pricelist.item">
+            <field name="price_version_id" ref="product.ver0"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="name">Demo Discount</field>
+            <field name="price_discount">-0.2000</field>
+            <field name="sequence">1</field>
         </record>
     </data>
 </openerp>
