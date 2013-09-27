@@ -223,7 +223,9 @@ class QWebXml(object):
         if name == "t":
             return inner
         elif len(inner) or name not in self._void_elements:
-            return "<%s%s>%s</%s>" % (name, g_att, inner, name)
+            return "<%s%s>%s</%s>" % tuple(
+                v if isinstance(v, str) else v.encode('utf-8')
+                for v in (name, g_att, inner, name))
         else:
             return "<%s%s/>" % (name, g_att)
 
