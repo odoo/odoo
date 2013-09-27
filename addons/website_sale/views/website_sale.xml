@@ -277,7 +277,7 @@
                       <ol class="breadcrumb">
                           <li><a t-href="/shop">Products</a></li>
                           <li t-if="category"><a t-att-href="'/shop/category/%s' % (category_id,)"><span t-field="category.name"/></a></li>
-                          <li class="active" t-field="product.name">Product Name</li>
+                          <li class="active"><span t-field="product.name"></span></li>
                       </ol>
                   </div><div class="col-sm-3">
                       <t t-call="website.publish_management">
