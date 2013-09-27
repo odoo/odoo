@@ -663,7 +663,7 @@ class pos_order(osv.osv):
 
     def _get_out_picking_type(self, cr, uid, context=None):
         try:
-            picking_type = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'picking_type_out', context=context).id
+            picking_type = self.pool.get('ir.model.data').get_object(cr, uid, 'point_of_sale', 'picking_type_posout', context=context).id
         except:
             picking_type = False
         return picking_type
@@ -742,8 +742,7 @@ class pos_order(osv.osv):
                 }, context=context)
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
-            
-            picking_obj.signal_button_confirm(cr, uid, [picking_id])
+            picking_obj.action_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
@@ -754,7 +753,7 @@ class pos_order(osv.osv):
         stock_picking_obj = self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, ids, context=context):
-            stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
+            stock_picking_obj.action_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
