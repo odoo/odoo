@@ -249,7 +249,7 @@ class QWebXml(object):
         if 'url_for' not in v:
             raise KeyError("qweb: no 'url_for' found in context")
         path = str(v['url_for'](self.eval_format(av, v)))
-        return ' %s="%s"' % (an[2:], cgi.escape(path, 1))
+        return ' %s="%s"' % (an[2:], werkzeug.utils.escape(path))
 
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
