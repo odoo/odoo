@@ -700,10 +700,6 @@
             this.$overlay.on('click', '.oe_snippet_clone', function () {
                 var $clone = self.$target.clone(false);
                 self.$target.after($clone);
-                setTimeout(function () {
-                    self.parent.create_overlay($clone);
-                    self.parent.make_active($clone);
-                },0);
             });
         },
 
