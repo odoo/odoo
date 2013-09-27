@@ -96,6 +96,7 @@
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
+        <field name="template_id" ref="email_template_approve_applicant"/>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
@@ -108,7 +109,6 @@
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
-        <field name="template_id" ref="email_template_approve_applicant"/>
         <field name="sequence">5</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">

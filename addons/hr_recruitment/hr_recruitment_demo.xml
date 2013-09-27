@@ -2,7 +2,7 @@
 <openerp>
   <data noupdate="1">
     <record id="hr_case_salesman0" model="hr.applicant">
-        <field name="name">Salesperson</field>
+        <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
@@ -17,8 +17,8 @@
     </record>
     <record id="hr_case_traineemca0" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
-        <field name="job_id" ref="hr.job_developer"/>
-        <field name="type_id" ref="degree_bac5"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
         <field name="user_id" ref="base.user_demo"/>
@@ -32,8 +32,8 @@
     </record>
     <record id="hr_case_fresher0" model="hr.applicant">
         <field name="name">Fresher</field>
-        <field name="job_id" ref="hr.job_developer"/>
-        <field name="type_id" ref="degree_licenced"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="type_id" ref="degree_bachelor"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
         <field name="user_id" ref="base.user_demo"/>
@@ -47,7 +47,7 @@
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
         <field name="name">Marketing Job</field>
         <field name="job_id" ref="hr.job_marketing"/>
-        <field name="type_id" ref="degree_bac5"/>
+        <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
         <field name="user_id" ref="base.user_root"/>
@@ -69,7 +69,7 @@
         <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_financejob0" model="hr.applicant">
-        <field name="name">Finance Job</field>
+        <field name="name">Finance Manager</field>
         <field name="job_id" ref="hr.job_hrm"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
@@ -84,8 +84,8 @@
     </record>
     <record id="hr_case_traineemca1" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
-        <field name="job_id" ref="hr.job_developer"/>
-        <field name="type_id" ref="degree_bac5"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
         <field name="partner_name">Tina Augustie</field>
@@ -98,7 +98,7 @@
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
         <field name="job_id" ref="hr.job_developer"/>
-        <field name="type_id" ref="degree_bac5"/>
+        <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
         <field name="partner_name">Shane Williams</field>
@@ -124,6 +124,8 @@
     </record>
 
     <record id="hr.job_developer" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">4</field>
         <field name="survey_id" ref="survey_job_0"/>
     </record>
     <record id="hr.job_ceo" model="hr.job">
@@ -133,15 +135,23 @@
         <field name="survey_id" ref="survey_job_0"/>
     </record>
     <record id="hr.job_consultant" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">1</field>
         <field name="survey_id" ref="survey_job_0"/>
     </record>
     <record id="hr.job_hrm" model="hr.job">
+        <field name="no_of_recruitment">1</field>
+        <field name="state">recruit</field>
         <field name="survey_id" ref="survey_job_0"/>
     </record>
     <record id="hr.job_marketing" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">3</field>
         <field name="survey_id" ref="survey_job_0"/>
     </record>
     <record id="hr.job_trainee" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">6</field>
         <field name="survey_id" ref="survey_job_0"/>
     </record>
 
