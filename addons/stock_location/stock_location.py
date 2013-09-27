@@ -57,6 +57,9 @@ class stock_warehouse(osv.osv):
         'wh_qc_stock_loc_id': fields.many2one('stock.location', 'Quality Control Location'),
         'wh_output_stock_loc_id': fields.many2one('stock.location', 'Output Location'),
         'wh_pack_stock_loc_id': fields.many2one('stock.location', 'Packing Location'),
+        'ship_route_mto': fields.many2one('stock.location.route', 'ship MTO route'),
+        'pick_ship_route_mto': fields.many2one('stock.location.route', 'pick-ship MTO route'),
+        'pick_pack_ship_route_mto': fields.many2one('stock.location.route', 'pick-pack-ship MTO route'),
         
     }
     _defaults = {
@@ -86,7 +89,7 @@ class stock_warehouse(osv.osv):
             if new_delivery_step == 'pick_pack_ship':
                 location_obj.write(cr, uid, warehouse.wh_pack_stock_loc_id.id, {'active': True}, context=context)  
                 
-        return True#(wh_input_stock_loc, wh_output_stock_loc, wh_pack_stock_loc, wh_qc_stock_loc)
+        return True
 
     def create_route(self, cr, uid, ids, warehouse, context=None):
         default_route_ids = []
@@ -133,8 +136,8 @@ class stock_warehouse(osv.osv):
                 first_rule = False
 
         
-        keys = ('ship_only', 'pick_ship', 'pick_pack_ship')
-        for delivery in keys:
+        keys = {'ship_only': 'ship_route_mto', 'pick_ship': 'pick_ship_route_mto', 'pick_pack_ship': 'pick_pack_ship_route_mto'}
+        for delivery, field in keys.items():
             active = False
             #create pull rules for delivery, which include all routes in MTS on the warehouse and a specific route MTO to be set on the product
             route_name, values = routes_dict[delivery]
@@ -154,7 +157,7 @@ class stock_warehouse(osv.osv):
                 'product_selectable': True,
                 'active': active,
             })
-            default_route_ids.append((4, mto_route_id))
+            self.write(cr, uid, warehouse.id, {field: mto_route_id}, context=context)
             first_rule = True
             for from_loc, dest_loc, pick_type_id in values:
                 pull_obj.create(cr, uid, {
@@ -228,7 +231,7 @@ class stock_warehouse(osv.osv):
         set_inactive_route_ids = []
         for route in warehouse.route_ids:
             #put active route that are associated to reception and delivery method choosen if it's not already the case
-            if route.name == reception_name or route.name == delivery_name or route.name == delivery_name+ _(' (MTO)'):
+            if route.name == reception_name or route.name == delivery_name:
                 if not route.active:
                     set_active_route_ids.append(route.id)
             #put previous active route that are no longer needed to active=False
@@ -254,8 +257,22 @@ class stock_warehouse(osv.osv):
                         first_rule = False
                         i+=1
                 continue
-        self.set_route_active_status(cr, uid, ids, set_active_route_ids, True, context=context)
+        #deactivate previous mto route
+        if warehouse.ship_route_mto.active:
+            set_inactive_route_ids.append(warehouse.ship_route_mto.id)
+        if warehouse.pick_ship_route_mto.active:
+            set_inactive_route_ids.append(warehouse.pick_ship_route_mto.id)
+        if warehouse.pick_pack_ship_route_mto.active:
+            set_inactive_route_ids.append(warehouse.pick_pack_ship_route_mto.id)
+        #activate new mto route
+        if new_delivery_step == 'ship_only':
+            set_active_route_ids.append(warehouse.ship_route_mto.id)
+        elif new_delivery_step == 'pick_ship':
+            set_active_route_ids.append(warehouse.pick_ship_route_mto.id)
+        elif new_delivery_step == 'pick_pack_ship':
+            set_active_route_ids.append(warehouse.pick_pack_ship_route_mto.id)
         self.set_route_active_status(cr, uid, ids, set_inactive_route_ids, False, context=context)
+        self.set_route_active_status(cr, uid, ids, set_active_route_ids, True, context=context)
         return True
 
     def set_route_active_status(self, cr, uid, ids, route_ids, status=True, context=None):
@@ -483,6 +500,10 @@ class stock_warehouse(osv.osv):
                 self.change_route(cr, uid, ids, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
 
             #TODO rename routes, location, pull/push rules name if warehouse name has changed
+            if rename:
+                #rename location
+                location_id = warehouse.lot_stock_id.location_id.id
+
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):

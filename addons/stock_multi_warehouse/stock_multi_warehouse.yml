@@ -38,15 +38,9 @@
     name: 'WH1'
     lot_stock_id: wh1_stock_id
     partner_id: panama_address
--
-  !record {model: stock.configure.wh, id: panama_config_wiz}:
     code: 'WH1'
     reception_steps: 'three_steps'
     delivery_steps: 'pick_pack_ship'
--
-  !python {model: stock.configure.wh}: |
-    context = {'active_id': ref('wh1_id')}
-    self.configure_wh(cr, uid, ref('panama_config_wiz'), context=context)
 -
   Create WH2 warehouse in Dubai and configure it
 -
@@ -72,15 +66,9 @@
     name: 'WH2'
     lot_stock_id: wh2_stock_id
     partner_id: dubai_address
--
-  !record {model: stock.configure.wh, id: dubai_config_wiz}:
     code: 'WH2'
     reception_steps: 'one_step'
     delivery_steps: 'ship_only'
--
-  !python {model: stock.configure.wh}: |
-    context = {'active_id': ref('wh2_id')}
-    self.configure_wh(cr, uid, ref('dubai_config_wiz'), context=context)
 -
   Create Products
 -
