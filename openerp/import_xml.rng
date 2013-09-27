@@ -130,11 +130,18 @@
                 <rng:group>
                     <rng:attribute name="type">
                         <rng:choice>
+                            <rng:value>base64</rng:value>
                             <rng:value>char</rng:value>
                             <rng:value>file</rng:value>
                         </rng:choice>
                     </rng:attribute>
-                    <rng:text/>
+                    <rng:choice>
+                        <rng:group>
+                            <rng:attribute name="file"/>
+                            <rng:empty/>
+                        </rng:group>
+                        <rng:text/>
+                    </rng:choice>
                 </rng:group>
                 <rng:group>
                     <rng:attribute name="type"><rng:value>int</rng:value></rng:attribute>
@@ -168,10 +175,6 @@
                     </rng:oneOrMore>
                 </rng:group>
                 <rng:group>
-                    <rng:attribute name="file"/>
-                    <rng:empty/>
-                </rng:group>
-                <rng:group>
                     <rng:attribute name="ref"/>
                     <rng:empty/>
                 </rng:group>
@@ -186,9 +189,7 @@
                     <rng:optional><rng:attribute name="use"/></rng:optional>
                     <rng:empty/>
                 </rng:group>
-                <rng:group>
-                    <rng:text/>
-                </rng:group>
+                <rng:text/>
             </rng:choice>
         </rng:element>
     </rng:define>

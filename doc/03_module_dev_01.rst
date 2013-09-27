@@ -206,8 +206,8 @@ Extra attributes can either preprocess the body or replace its use entirely:
 ``@type`` (optional)
 
     One of ``char``, ``int``, ``float``, ``list``, ``tuple``, ``xml`` or
-    ``html`` or ``file``. Converts the ``field``'s body to the specified type
-    (or validates the body's content)
+    ``html``, ``file`` or ``base64``. Converts the ``field``'s body to the
+    specified type (or validates the body's content)
 
     * ``xml`` will join multiple XML nodes under a single ``<data>`` root
     * in ``xml`` and ``html``, external ids can be referenced using
@@ -217,6 +217,13 @@ Extra attributes can either preprocess the body or replace its use entirely:
     * ``file`` expects a module-local path and will save the path prefixed with
       the current module's name, separated by a ``,`` (comma). For use with
       :py:func:`~openerp.modules.module.get_module_resource`.
+    * ``base64`` expects binary data, encodes it to base64 and sets it. Mostly
+      useful with ``@file``
+
+``@file``
+
+    Can be used with types ``char`` and ``base64``, sources the field's content
+    from the specified file instead of the field's text body.
 
 ``@model``
 

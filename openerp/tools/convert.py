@@ -175,34 +175,38 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         if t == 'html':
             return _process("".join([etree.tostring(n, encoding='utf-8')
                                    for n in node]), idref)
+
+        data = node.text
         if node.get('file'):
-            import openerp.tools
-            import base64
-            fp = openerp.tools.file_open(node.get('file'))
-            result = base64.b64encode(fp.read())
-            return result
+            with openerp.tools.file_open(node.get('file'), 'rb') as f:
+                data = f.read()
 
         if t == 'file':
             from ..modules import module
-            path = node.text.strip()
+            path = data.strip()
             if not module.get_module_resource(self.module, path):
                 raise IOError("No such file or directory: '%s' in %s" % (
                     path, self.module))
             return '%s,%s' % (self.module, path)
-        if t in ('char', 'int', 'float'):
-            d = node.text
-            if t == 'int':
-                d = d.strip()
-                if d == 'None':
-                    return None
-                else:
-                    return int(d.strip())
-            elif t == 'float':
-                return float(d.strip())
-            return d
-        elif t in ('list','tuple'):
+
+        if t == 'char':
+            return data
+
+        if t == 'base64':
+            return data.encode('base64')
+
+        if t == 'int':
+            d = data.strip()
+            if d == 'None':
+                return None
+            return int(d)
+
+        if t == 'float':
+            return float(data.strip())
+
+        if t in ('list','tuple'):
             res=[]
-            for n in node.findall('./value'):
+            for n in node.iterchildren(tag='value'):
                 res.append(_eval_xml(self,n,pool,cr,uid,idref))
             if t=='tuple':
                 return tuple(res)
