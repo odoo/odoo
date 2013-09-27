@@ -75,6 +75,7 @@ class procurement_rule(osv.osv):
     _defaults = {
         'procure_method': 'make_to_stock',
         'sequence': 20,
+        'active': True, 
     }
 
 class procurement_order(osv.osv):
