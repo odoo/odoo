@@ -344,8 +344,8 @@
         <template id="publish_management">
             <t t-if="editable" t-ignore="true">
               <div t-attf-class="dropdown js_publish_management pull-right #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
-                <a t-attf-class="btn btn-#{object.id and object.website_published and 'success' or 'default'}" id="dopprod" role="button" data-toggle="dropdown"> Publish options <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dopprod">
+                <a t-attf-class="btn btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown"> Publish options <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                     <t t-raw="0"/>
                     <li>
                         <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>

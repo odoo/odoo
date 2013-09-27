@@ -8,7 +8,9 @@
         
         <record id="product.product_product_4" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.size2x2')])]"/>
+            <field name="website_size_x">2</field>
+            <field name="website_size_y">2</field>
+            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
             <field name="website_description" type="html">
                 <section snippet-id="text-image" class="mt16 mb16 dark">
                     <div class="container">
@@ -57,7 +59,7 @@
         </record>
         <record id="product.product_product_5" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.size2x1')])]"/>
+            <field name="website_size_x">2</field>
         </record>
         <record id="product.product_product_6" model="product.product">
             <field name="website_published" eval="True"/>
@@ -74,7 +76,7 @@
         </record>
         <record id="product.product_product_11" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.size1x2')])]"/>
+            <field name="website_size_y">2</field>
         </record>
     </data>
 </openerp>

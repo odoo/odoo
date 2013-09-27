@@ -37,10 +37,14 @@ class product_template(osv.Model):
         'website_description': fields.html('Description for the website'),
         'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
+        'website_size_x': fields.integer('Size X'),
+        'website_size_y': fields.integer('Size Y'),
         'website_style_ids' : fields.many2many('website.product.style','product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
     }
     _defaults = {
+        'website_size_x': 1,
+        'website_size_y': 1,
         'website_sequence': 1,
         'website_published': False,
     }

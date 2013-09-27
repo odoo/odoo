@@ -6,13 +6,10 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website import website
 import random
-import werkzeug
-import simplejson
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
     # check if order allready exists
-    context = {}
     if order_id:
         try:
             order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, request.context)
@@ -73,8 +70,8 @@ class Ecommerce(http.Controller):
     def get_bin_packing_products(self, product_ids, fill_hole, col_number=4):
         """
         Packing all products of the search into a table of #col_number columns in function of the product sizes
-        The size datas of website_style_ids is use for fill table (default 1x1)
-        The other website_style_ids datas are concatenate in a html class
+        The website_size_x, website_size_y is use for fill table (default 1x1)
+        The website_style_ids datas are concatenate in a html class
 
         @values:
 
@@ -111,17 +108,11 @@ class Ecommerce(http.Controller):
             index = len(product_list)
 
             # get size and all html classes
-            _class = ""
-            x = 1
-            y = 1
-            for style_id in product.website_style_ids:
-                if style_id.id in size_ids:
-                    size = size_ids[style_id.id]
-                    x = size[0]
-                    y = size[1]
-                elif style_id.html_class:
-                    _class += " " + style_id.html_class
-            product_list.append({'product': product, 'x': x, 'y': y, 'class': _class })
+            x = product.website_size_x or 1
+            y = product.website_size_y or 1
+            html_class = " ".join([str(style_id.html_class) for style_id in product.website_style_ids])
+
+            product_list.append({'product': product, 'x': x, 'y': y, 'class': html_class })
 
             # bin packing products
             insert = False
@@ -196,7 +187,7 @@ class Ecommerce(http.Controller):
             col = 0
             while col < col_number:
                 if fill_hole and fill_hole_products and bin_packing[line].get(col) == None:
-                    bin_packing[line][col] = {'product': fill_hole_products.pop(), 'x': 1, 'y': 1, 'class': _class }
+                    bin_packing[line][col] = {'product': fill_hole_products.pop(), 'x': 1, 'y': 1, 'class': "" }
                 bin_packing_list[line].append(bin_packing[line].get(col))
                 col += 1
             line += 1
@@ -238,6 +229,12 @@ class Ecommerce(http.Controller):
         product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], order=self._order, context=request.context)
         fill_hole = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset']+step, order=self._order, context=request.context)
 
+        styles = []
+        if not request.context['is_public_user']:
+            style_obj = request.registry.get('website.product.style')
+            style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
+            styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
+
         values = {
             'get_categories': self.get_categories,
             'category_id': cat_id,
@@ -247,6 +244,7 @@ class Ecommerce(http.Controller):
             'get_products': self.get_products,
             'search': post.get("search"),
             'pager': pager,
+            'styles': styles,
         }
         return request.website.render("website_sale.products", values)
 
@@ -272,15 +270,6 @@ class Ecommerce(http.Controller):
 
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
 
-        styles = []
-        styles_used = []
-        if not request.context['is_public_user']:
-            style_obj = request.registry.get('website.product.style')
-            style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
-            styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
-            for style in product.website_style_ids:
-                styles_used.append(style.id)
-
         values = {
             'category_id': post.get('category_id') and int(post.get('category_id')) or None,
             'category': category,
@@ -288,8 +277,6 @@ class Ecommerce(http.Controller):
             'get_categories': self.get_categories,
             'category_list': category_list,
             'product': product,
-            'styles': styles,
-            'styles_used': styles_used,
         }
         return request.website.render("website_sale.product", values)
 
@@ -587,7 +574,8 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/change_styles/'], type='json', auth="public")
     def change_styles(self, id, style_id):
-        product = request.registry.get('product.template').browse(request.cr, request.uid, id, request.context)
+        product_obj = request.registry.get('product.template')
+        product = product_obj.browse(request.cr, request.uid, id, request.context)
 
         remove = []
         active = False
@@ -599,12 +587,6 @@ class Ecommerce(http.Controller):
 
         style = request.registry.get('website.product.style').browse(request.cr, request.uid, style_id, request.context)
 
-        if 'size_' in style.html_class and style.html_class.index('size_') == 0:
-            remove = []
-            for pstyle in product.website_style_ids:
-                if 'size_' in pstyle.html_class and pstyle.html_class.index('size_') == 0:
-                    remove.append(pstyle.id)
-
         if remove:
             print "remove", remove
             product.write({'website_style_ids': [(3, rid) for rid in remove]})
@@ -615,5 +597,10 @@ class Ecommerce(http.Controller):
 
         return not active
 
+    @website.route(['/shop/change_size/'], type='json', auth="public")
+    def change_size(self, id, x, y):
+        product_obj = request.registry.get('product.template')
+        product = product_obj.browse(request.cr, request.uid, id, request.context)
+        return product.write({'website_size_x': x, 'website_size_y': y})
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
