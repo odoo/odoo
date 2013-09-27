@@ -743,7 +743,8 @@ class pos_order(osv.osv):
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
             picking_obj.action_confirm(cr, uid, [picking_id])
-            picking_obj.force_assign(cr, uid, [picking_id], context)
+            picking_obj.force_assign(cr, uid, [picking_id], context=context)
+            picking_obj.action_done(cr, uid, [picking_id], context=context)
         return True
 
     def cancel_order(self, cr, uid, ids, context=None):
