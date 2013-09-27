@@ -87,10 +87,6 @@
           <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <b t-field="product.name"/>
           </a>
-          <!-- This should be an option -->
-          <div t-if="product.description_sale" class="text-muted oe_subdescription">
-              <div id="product_description" t-att-data-name="product.id"/>
-          </div>
           <div class="product_price">
               <b>
                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
@@ -181,11 +177,11 @@
 
     <!-- Product Description-->
 
-    <template id="product_description" inherit_option_id="website_sale.products" name="Product Description">
-        <xpath expr="//div[@id='product_description']" position="replace">
-            <small>
+    <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
+        <xpath expr="//div[@class='product_price']" position="before">
+            <p class="text-muted oe_subdescription">
                 <span t-field="product.description_sale"/>
-            </small>
+            </p>
         </xpath>
     </template>
 
