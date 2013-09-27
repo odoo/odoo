@@ -46,6 +46,15 @@ class procurement_rule(osv.osv):
             res += [x.id for x in route.pull_ids]
         return res
 
+    def _get_route(self, cr, uid, ids, context=None):
+        result = {}
+        context_with_inactive = context.copy()
+        context_with_inactive['active_test']=False
+        for route in self.pool.get('stock.location.route').browse(cr, uid, ids, context=context_with_inactive):
+            for pull_rule in route.pull_ids:
+                result[pull_rule.id] = True
+        return result.keys()
+
     _columns = {
         'location_id': fields.many2one('stock.location', 'Procurement Location'),
         'location_src_id': fields.many2one('stock.location', 'Source Location',
@@ -57,13 +66,15 @@ class procurement_rule(osv.osv):
         'sequence': fields.integer('Sequence'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', 
             help="Picking Type determines the way the picking should be shown in the view, reports, ..."),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the rule without removing it."),
+        'active': fields.related('route_id', 'active', type='boolean', string='Active', store={
+                    'stock.location.route': (_get_route, ['active'], 20),
+                    'procurement.rule': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 20),},
+                help="If the active field is set to False, it will allow you to hide the rule without removing it." ),
     }
 
     _defaults = {
         'procure_method': 'make_to_stock',
         'sequence': 20,
-        'active': True,
     }
 
 class procurement_order(osv.osv):
