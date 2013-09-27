@@ -99,7 +99,8 @@ $(document).ready(function () {
         var y = $td.parent().index()+1;
         openerp.jsonRpc('/shop/change_size/', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
             .then(function () {
-                location.href =  location.href.replace(/\?|$/, '?') + '&unable_editor=1';
+                var search = location.search.replace(/\?|$/, '?unable_editor=1&');
+                location.href = location.href.replace(/(\?|#).*/, search + location.hash);
             });
     });
 
