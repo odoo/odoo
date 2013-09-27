@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-09-16 20:46+0000\n"
+"PO-Revision-Date: 2013-09-25 18:42+0000\n"
 "Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-17 05:19+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-09-26 05:54+0000\n"
+"X-Generator: Launchpad (build 16771)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -454,6 +454,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Kommende beholdning (Fysisk lagerbeholdning - udgående + indkommende)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -477,6 +486,9 @@ msgid ""
 "Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Hvor meget større eller mindre denne enhed er sammenlignet med reference "
+"enheden for denne kategori:\n"
+"1 * (reference enhed) = kvotient * (denne enhed)"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -531,7 +543,7 @@ msgstr "Enheds type"
 #. module: product
 #: model:product.template,name:product.product_product_32_product_template
 msgid "Headset standard"
-msgstr ""
+msgstr "Headset standard"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -551,6 +563,15 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"Antal varer, der forventes at ankomme.\n"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with "
+"'internal' type."
 
 #. module: product
 #: constraint:product.template:0
@@ -649,7 +670,7 @@ msgstr ""
 #. module: product
 #: view:product.price_list:0
 msgid "or"
-msgstr ""
+msgstr "eller"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -855,7 +876,7 @@ msgstr "Kunde reference"
 #. module: product
 #: field:product.pricelist.type,key:0
 msgid "Key"
-msgstr ""
+msgstr "Nøgle"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
@@ -957,7 +978,7 @@ msgstr "Pakke totalvægt"
 #. module: product
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
-msgstr ""
+msgstr "Kode for transportenheden"
 
 #. module: product
 #: view:product.price.type:0
@@ -986,6 +1007,9 @@ msgid ""
 "Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Hvor meget større eller mindre denne enhed er sammenlignet med reference "
+"enheden for denne kategori:\n"
+"1 * (reference enhed) = kvotient * (denne enhed)"
 
 #. module: product
 #: view:product.template:0
@@ -1080,6 +1104,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette en ny vare.\n"
+"              </p><p>\n"
+"                Du skal oprette en vare for alt du sælger uanset om det er "
+"en\n"
+"                fysisk vare, en forbrugsvare eller en servcie.\n"
+"              </p><p>\n"
+"                Vareskærmbilledet indeholder information m.h.p. at "
+"simplificere\n"
+"                dit arbejde med at sælge, f.eks. pris, styring af bogføring, "
+"info,\n"
+"                om genbestillings-politik etc.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1140,7 +1178,7 @@ msgstr "Pris"
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr ""
+msgstr "Overpris"
 
 #. module: product
 #: code:addons/product/pricelist.py:380
@@ -1735,6 +1773,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier Unit of "
 "Measure if any or in the default Unit of Measure of the product otherrwise."
 msgstr ""
+"Minimumsantal for at udløse denne regel, udtrykt i leverandør enheden  (hvis "
+"udfyldt) eller i standard enheden på produktet."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1841,6 +1881,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"Det beregnede antal vil være multiplum af denne værdi. Brug 1.0 for en enhed "
+"som ikke kan deles yderligere, f.eks. stk."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1896,17 +1938,17 @@ msgstr ""
 #: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr ""
+msgstr "Kan ikke ændre kategorien af den nuværende enhed '%s'."
 
 #. module: product
 #: help:product.packaging,height:0
 msgid "The height of the package"
-msgstr ""
+msgstr "Pakkens højde"
 
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price List"
-msgstr ""
+msgstr "Varens prisliste"
 
 #. module: product
 #: field:product.pricelist,company_id:0
@@ -1916,131 +1958,131 @@ msgstr ""
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
 msgid "Laptop S3450"
-msgstr ""
+msgstr "Laptop S3450"
 
 #. module: product
 #: view:product.product:0
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "Standard enhed"
 
 #. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
-msgstr ""
+msgstr "Navn på denne slags pris."
 
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
-msgstr ""
+msgstr "Andre varer"
 
 #. module: product
 #: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
+msgstr "Varen er defineret med eksempel på push/pull flows"
 
 #. module: product
 #: field:product.product,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Beskeder"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "stk/enheder"
 
 #. module: product
 #: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fejl!"
 
 #. module: product
 #: field:product.packaging,length:0
 msgid "Length"
-msgstr ""
+msgstr "Længde"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "Længde/distance"
 
 #. module: product
 #: model:product.category,name:product.product_category_8
 msgid "Components"
-msgstr ""
+msgstr "Komponenter"
 
 #. module: product
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Intern reference"
 
 #. module: product
 #: view:product.product:0
 msgid "e.g. 5901234123457"
-msgstr ""
+msgstr "f.eks. 5901234123457"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 msgid "Pricelist Type"
-msgstr ""
+msgstr "Prisliste type"
 
 #. module: product
 #: model:product.category,name:product.product_category_6
 msgid "External Devices"
-msgstr ""
+msgstr "Eksterne enheder"
 
 #. module: product
 #: field:product.product,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Farve index"
 
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Angiv hvis varen kan vælges på en salgsordrelinier."
 
 #. module: product
 #: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "Kan sælges"
 
 #. module: product
 #: field:product.template,produce_delay:0
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Produktions gennemløbstid"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
 msgid "Supplier Pricelist"
-msgstr ""
+msgstr "Leverandør prisliste"
 
 #. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
-msgstr ""
+msgstr "Baseret på"
 
 #. module: product
 #: model:product.category,name:product.product_category_10
 msgid "Raw Materials"
-msgstr ""
+msgstr "Råvarer"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
-msgstr ""
+msgstr "RAM SR5"
 
 #. module: product
 #: model:product.template,name:product.product_product_14_product_template
 msgid "RAM SR2"
-msgstr ""
+msgstr "RAM SR2"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action_puchased
@@ -2062,38 +2104,52 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette en ny vare.\n"
+"              </p><p>\n"
+"                Du skal oprette en vare for alt du køber, uanset om\n"
+"                det er en fysisk vare, en forbrugsvare eller en service\n"
+"                du køber hos underleverandører.\n"
+"              </p><p>\n"
+"                Vareskærmbilledet indeholder detaljeret information m.h.p at "
+"lette\n"
+"                indkøbsprocessen vedr. priser, bestillinger, regnskab, "
+"leverandører,\n"
+"                etc.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
 msgid "Full featured image editing software."
-msgstr ""
+msgstr "Komplet billedbehandlings software."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
 msgid "Pricelist Version"
-msgstr ""
+msgstr "Prisliste-version"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "* ( 1 + "
-msgstr ""
+msgstr "* ( 1 + "
 
 #. module: product
 #: model:product.template,name:product.product_product_31_product_template
 msgid "Multimedia Speakers"
-msgstr ""
+msgstr "Multimedie højttalere"
 
 #. module: product
 #: field:product.product,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Followers"
 
 #. module: product
 #: view:product.product:0
 msgid "Sale Conditions"
-msgstr ""
+msgstr "Salgsbetingelser"
 
 #. module: product
 #: view:product.packaging:0
@@ -2104,22 +2160,22 @@ msgstr ""
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Prisliste navn"
 
 #. module: product
 #: view:product.product:0
 msgid "Description for Suppliers"
-msgstr ""
+msgstr "Leverandør beskrivelser"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Leveringstid"
 
 #. module: product
 #: view:product.product:0
 msgid "months"
-msgstr ""
+msgstr "måneder"
 
 #. module: product
 #: help:product.uom,active:0
@@ -2127,21 +2183,23 @@ msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
 msgstr ""
+"Ved at fjerne afmærkning på det aktive felt, kan du inaktivere en enhed uden "
+"at slette den."
 
 #. module: product
 #: field:product.product,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr ""
+msgstr "Leverandør leveringstid"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "Decimal præcision"
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Box"
-msgstr ""
+msgstr "Kasse"
 
 #. module: product
 #: help:product.pricelist.item,price_surcharge:0
@@ -2149,6 +2207,8 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Angiv det faste beløb for tillæg eller fratræk (negativ) til beløbet "
+"beregnet efter rabatten."
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -2163,6 +2223,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Aktuelt antal varer.\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 
 #. module: product
 #: help:product.template,type:0
@@ -2170,6 +2239,8 @@ msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
 msgstr ""
+"Forbrugsvare: Ingen lagerstyring på denne vare. \n"
+"Lagerført vare: Lagerstyring på denne vare."
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -2189,16 +2260,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette en ny vare.\n"
+"              </p><p>\n"
+"                Du skal oprette en vare for alt du køber eller sælger,\n"
+"                uanset om det er en fysisk-, forbrugs- eller servicevare.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.product:0
 msgid "Context..."
-msgstr ""
+msgstr "Kontekst"
 
 #. module: product
 #: field:product.packaging,ul:0
 msgid "Type of Package"
-msgstr ""
+msgstr "Pakningstype"
 
 #. module: product
 #: help:product.category,type:0
@@ -2206,11 +2284,13 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"En kategori på denne \"view-type\" er en virtuel kategori, som kan bruges "
+"som moder for en anden kategori for at danne en hiearkisk struktur."
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr ""
+msgstr "Pakke"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -2218,6 +2298,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"Angive en skabelon hvis denne regel gælder én eller flere vare skabeloner. "
+"Ellers efterlad tom."
 
 #. module: product
 #: model:product.template,description:product.product_product_2_product_template
@@ -2225,16 +2307,18 @@ msgid ""
 "This type of service include assistance for security questions, system "
 "configuration requirements, implementation or special needs."
 msgstr ""
+"Denne type service indeholder assistance ved sikkerhedsspørgsmål, "
+"systemkonfigurations behov, eller implementerings- eller specielle behov."
 
 #. module: product
 #: field:product.product,image:0
 msgid "Image"
-msgstr ""
+msgstr "Billede"
 
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
-msgstr ""
+msgstr "Enheds kategorier"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -2244,37 +2328,41 @@ msgid ""
 "2GB RAM\n"
 "HDD SH-1"
 msgstr ""
+"19\" LCD Monitor\n"
+"Processor Core i5 2.70 Ghz\n"
+"2GB RAM\n"
+"HDD SH-1"
 
 #. module: product
 #: view:product.template:0
 msgid "Descriptions"
-msgstr ""
+msgstr "Beskrivelser"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr ""
+msgstr "Håndtér varepakning"
 
 #. module: product
 #: model:product.category,name:product.product_category_2
 msgid "Internal"
-msgstr ""
+msgstr "Intern"
 
 #. module: product
 #: model:product.template,name:product.product_product_45_product_template
 msgid "Router R430"
-msgstr ""
+msgstr "Router R430"
 
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
+msgstr "Styrer rækkefølgen ved visning af en pakkeliste."
 
 #. module: product
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: product
 #: code:addons/product/pricelist.py:179
@@ -2283,11 +2371,13 @@ msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
 msgstr ""
+"Mindst en prisliste har ikke en aktiv version !\n"
+"Opret eller aktivér én."
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "Maks pris margin"
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -2295,6 +2385,8 @@ msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
 "and used as a base price on purchase orders."
 msgstr ""
+"Kostpris på varen der bruges ved lagerværdiopgørelse i finans og som bruges "
+"som basispris på indkøbsordrer."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2302,6 +2394,8 @@ msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Denne leverandørs varenavn vil blive brugt ved udskrivning af forespørgsel. "
+"Efterlad tom for at bruge det interne varenavn."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
@@ -2325,41 +2419,59 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette en prisliste.\n"
+"              </p><p>\n"
+"                A price list contains rules to be evaluated in order to "
+"compute\n"
+"                the purchase price. The default price list has only one "
+"rule; use\n"
+"                the cost price defined on the product form, so that you do "
+"not have to\n"
+"                worry about supplier pricelists if you have very simple "
+"needs.\n"
+"              </p><p>\n"
+"                But you can also import complex price lists form your "
+"supplier\n"
+"                that may depends on the quantities ordered or the current\n"
+"                promotions.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
-msgstr ""
+msgstr "variabel"
 
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "Kan lejes"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
 msgid "Cost Price"
-msgstr ""
+msgstr "Kostpris"
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "Min. pris margin"
 
 #. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr ""
+msgstr "Håndtering af mange enheder"
 
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "Vægten af en fuld pakke, palle eller boks."
 
 #. module: product
 #: view:product.uom:0
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "e.g: 1 * (denne enhed) = ratio * (reference enhed)"
 
 #. module: product
 #: model:product.template,description:product.product_product_25_product_template
@@ -2369,6 +2481,10 @@ msgid ""
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
 msgstr ""
+"17\" Monitor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
+"QWERTY keyboard"
 
 #. module: product
 #: field:product.category,sequence:0
@@ -2376,7 +2492,7 @@ msgstr ""
 #: field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Rækkefølge"
 
 #. module: product
 #: help:product.template,produce_delay:0
@@ -2384,11 +2500,13 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Gennemsnits forsinkelse i dage for at producere denne vare. Ved multi-niveau "
+"stykliste, vil produktionsgennemløbstiden på komponenterne blive tilføjet."
 
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Samlings service omkostning"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2406,26 +2524,33 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kik for at tilføje en ny enhed.\n"
+"              </p><p>\n"
+"                Du skal angive omregningsfaktor mellem mange enheder\n"
+"                indenfor samme kategori.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Mouse, Laser"
-msgstr ""
+msgstr "Mouse, Laser"
 
 #. module: product
 #: view:product.template:0
 msgid "Delays"
-msgstr ""
+msgstr "Forsinkelser"
 
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Kategori type"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "Oprettelse af vare"
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2434,23 +2559,23 @@ msgstr ""
 #: view:product.product:0
 #: field:product.template,description:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #. module: product
 #: field:product.packaging,ean:0
 msgid "EAN"
-msgstr ""
+msgstr "EAN"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid " ) + "
-msgstr ""
+msgstr " ) + "
 
 #. module: product
 #: field:product.template,volume:0
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #. module: product
 #: help:product.product,image_small:0
@@ -2459,43 +2584,45 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Lille billede af denne vare. Justeres automatisk til 64x64 pixel, med aspect "
+"ratio i behold. Brug dette felt overalt et billede er nødvendigt."
 
 #. module: product
 #: model:product.template,name:product.product_product_40_product_template
 msgid "Windows 7 Professional"
-msgstr ""
+msgstr "Windows 7 Professional"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "Reference enhed for denne kategori"
 
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier Unit of Measure"
-msgstr ""
+msgstr "Leverandør enhed"
 
 #. module: product
 #: view:product.product:0
 msgid "note to be displayed on quotations..."
-msgstr ""
+msgstr "Note der vises på tilbud..."
 
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Vare variant"
 
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
 msgid "15” LCD Monitor"
-msgstr ""
+msgstr "15” LCD Monitor"
 
 #. module: product
 #: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
-msgstr ""
+msgstr "Andre prislister"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2517,6 +2644,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette en prisliste.\n"
+"              </p><p>\n"
+"                En prisliste bestemmer salgsprisen på varen ud fra regler.\n"
+"              </p><p>\n"
+"                Prislister kan findes i flere versioner(2010, 2011, Tilbud "
+"i\n"
+"                Februar 2010, etc.) med forskellige regelsæt.\n"
+"                (e.g. the customer price of a product category will be based "
+"on\n"
+"                the supplier price multiplied by 1.80).\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2524,34 +2664,34 @@ msgstr ""
 #: field:product.product,product_tmpl_id:0
 #: view:product.template:0
 msgid "Product Template"
-msgstr ""
+msgstr "Produktskabelon"
 
 #. module: product
 #: field:product.template,cost_method:0
 #: model:res.groups,name:product.group_costing_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Kost metode"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Produkt katagori"
 
 #. module: product
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
+msgstr "\"Ved behov\" harddisk der har kapacitet efter behovet."
 
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
-msgstr ""
+msgstr "Livscyklus slut"
 
 #. module: product
 #: model:product.template,name:product.product_product_15_product_template
 msgid "RAM SR3"
-msgstr ""
+msgstr "RAM SR3"
 
 #. module: product
 #: help:product.product,packaging:0
@@ -2559,13 +2699,15 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Angiver flere måder at pakke den samme vare. Har ingen indflydelse på pluk-"
+"ordrer og bruges mest i EDI modulet."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Prisliste versioner"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2578,7 +2720,7 @@ msgstr ""
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
-msgstr ""
+msgstr "Salgs pris"
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -2586,11 +2728,13 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Omregning mellem enheder kan kun ske hvis de tilhører samme kategori. "
+"Omregningen vil ske ud fra forholdstallene."
 
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Fejl! Du kan ikke oprette rekursive kategorier."
 
 #. module: product
 #: help:product.product,image_medium:0
