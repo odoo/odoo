@@ -332,7 +332,8 @@ class QWebXml(object):
     def render_tag_field(self, e, t_att, g_att, v):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
         node_name = e.nodeName
-        assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td"),\
+        assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td",
+                                 "ol", "ul", "ol", "dl", "dt", "dd"),\
             "RTE widgets do not work correctly on %r elements" % node_name
         assert node_name != 't',\
             "t-field can not be used on a t element, provide an actual HTML node"
