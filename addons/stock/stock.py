@@ -2616,6 +2616,8 @@ class stock_picking_type(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         """Overides orm name_get method to display 'Warehouse_name: PickingType_name' """
+        if context is None:
+            context = {}
         if not isinstance(ids, list):
             ids = [ids]
         res = []
@@ -2625,6 +2627,11 @@ class stock_picking_type(osv.osv):
             name = record.name
             if record.warehouse_id:
                 name = record.warehouse_id.name + ': ' +name
+            if context.get('special_shortened_wh_name'):
+                if record.warehouse_id:
+                    name = record.warehouse_id.name
+                else:
+                    name = _('Customer') + ' (' + record.name + ')'
             res.append((record.id, name))
         return res
 
