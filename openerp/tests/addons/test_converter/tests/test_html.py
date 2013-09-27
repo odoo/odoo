@@ -45,6 +45,25 @@ class TestHTMLExport(common.TransactionCase):
         self.assertEqual(value, "42.0")
         self.assertEqual(warnings, [])
 
+        value, warnings = converter(42.0100)
+        self.assertEqual(value, "42.01")
+        self.assertEqual(warnings, [])
+
+        value, warnings = converter(42.01234)
+        self.assertEqual(value, "42.01234")
+        self.assertEqual(warnings, [])
+
+    def test_numeric(self):
+        converter = self.get_converter('numeric')
+
+        value, warnings = converter(42.0)
+        self.assertEqual(value, '42.00')
+        self.assertEqual(warnings, [])
+
+        value, warnings = converter(42.01234)
+        self.assertEqual(value, '42.01')
+        self.assertEqual(warnings, [])
+
     def test_text(self):
         converter = self.get_converter('text')
 

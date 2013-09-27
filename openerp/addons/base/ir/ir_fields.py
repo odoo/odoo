@@ -464,8 +464,18 @@ class ir_fields_converter(orm.Model):
         """
         return werkzeug.utils.escape(value), []
 
-    _html_from_char = _html_from_integer = _html_from_float = \
+    _html_from_char = _html_from_integer = \
         _html_from_date = _html_from_datetime = _html_from_passthrough
+
+    def _html_from_float(self, cr, uid, model, column, value, context=None):
+        width, precision = column.digits or (None, None)
+        if precision is None:
+            fmt = '{value}'
+        else:
+            fmt = '{value:.{precision}f}'
+
+        return werkzeug.utils.escape(
+            fmt.format(value=value, width=width, precision=precision, )), []
 
     def _html_from_text(self, cr, uid, model, column, value, context=None):
         """

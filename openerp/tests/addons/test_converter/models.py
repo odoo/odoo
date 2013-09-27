@@ -8,6 +8,7 @@ class test_model(orm.Model):
         'char': fields.char(),
         'integer': fields.integer(),
         'float': fields.float(),
+        'numeric': fields.float(digits=(16, 2)),
         'many2one': fields.many2one('test_converter.test_model.sub'),
         'binary': fields.binary(),
         'date': fields.date(),
