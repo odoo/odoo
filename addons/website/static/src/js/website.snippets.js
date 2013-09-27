@@ -710,7 +710,7 @@
         load_style_options: function () {
             var self = this;
             var $styles = this.$overlay.find('.oe_options');
-            var $ul = $styles.find('ul');
+            var $ul = $styles.find('ul:first');
             _.each(this.parent.style_templates, function (val, key) {
                 if (!self.parent.dom_filter(val.selector).is(self.$target)) {
                     return;
@@ -998,12 +998,6 @@
             this.change_background();
             this.change_style();
             this.change_size();
-
-            // remove cke image seletor
-            this.$target.on('mousedown mouseup', '.carousel-inner .item > img', function (event) {
-                event.preventDefault();
-                return false;
-            });
         },
         on_add: function (e) {
             e.preventDefault();
@@ -1043,7 +1037,7 @@
             $ul.find("li").removeClass("active");
             var selected = $ul.find('[data-value="' + bg + '"], [data-value="' + bg.replace(/.*:\/\/[^\/]+/, '') + '"]')
                 .addClass('active').length;
-            this.$editor.find('.oe_custom_bg b').val(selected ? "" : bg);
+            this.$editor.find('.oe_custom_bg b').html(selected ? "" : bg);
         },
         change_background: function () {
             var self = this;
@@ -1129,6 +1123,56 @@
                     $el.addClass($ul.find('li.active').data("value"));
                 });
         }
+    });
+
+    website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
+        start : function () {
+            this._super();
+            this.change_background();
+        },
+        onFocus: function () {
+            this.$imagebg = $("<img/>");
+            this.$imagebg.prependTo(this.$target);
+            this.set_options_background();
+            this._super();
+        },
+        onBlur : function () {
+            this._super();
+            this.$imagebg.remove();
+        },
+        set_options_background: function () {
+            var bg = this.$target.css("background-image").replace(/url\(|\)/g, "");
+            this.$imagebg.attr("src", bg);
+
+            var $ul = this.$editor.find('ul[name="parallax-background"]');
+            $ul.find("li").removeClass("active");
+            var selected = $ul.find('[data-value="' + bg + '"], [data-value="' + bg.replace(/.*:\/\/[^\/]+/, '') + '"]')
+                .addClass('active').length;
+            this.$editor.find('.oe_custom_bg b').html(selected ? "" : bg);
+        },
+        change_background: function () {
+            var self = this;
+            var $ul = this.$editor.find('ul[name="parallax-background"]');
+            var $li = $ul.find("li");
+
+            $li.on('click', function (event) {
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                    self.$editor.find('input').val("");
+                })
+                .on('mouseover', function (event) {
+                    if ($(this).data("value")) {
+                        var src = $(this).data("value");
+                        self.$imagebg.attr('src', src);
+                        self.$target.css("background-image", "url(" + src + ")");
+                    }
+                })
+                .on('mouseout', function (event) {
+                    var src = $ul.find('li.active').data("value");
+                    self.$imagebg.attr('src', src);
+                    self.$target.css("background-image", "url(" + src + ")");
+                });
+        },
     });
 
     website.snippet.animationRegistry.vomify = website.snippet.Animation.extend({

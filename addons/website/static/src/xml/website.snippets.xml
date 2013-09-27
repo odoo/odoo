@@ -797,7 +797,24 @@
 
     <div t-name="website.snippets.parallax" data-snippet-id='parallax' data-category='effect' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>Parallax</div>
-        <section class="oe_snippet_body parallax_full oe_structure">
+
+        <li class="oe_snippet_options dropdown-submenu">
+            <a tabindex="-1" href="#">Background</a>
+            <ul class="dropdown-menu" name="parallax-background">
+                <li data-value="/website/static/src/img/parallax/parallax_bg.jpg"><a>Parallax</a></li>
+                <li data-value="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                <li data-value="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                <li data-value="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                <li data-value="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                <li data-value="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                <li data-value="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                <li data-value="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                <li data-value="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                <li class="oe_custom_bg"><b></b></li>
+            </ul>
+        </li>
+
+        <section class="oe_snippet_body parallax_full oe_structure" style="background-image: url(/website/static/src/img/parallax/parallax_bg.jpg)">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 mt128 mb32">
