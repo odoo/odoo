@@ -133,14 +133,17 @@ class ir_fields_converter(orm.Model):
 
         :param column: column object to generate a value for
         :type column: :class:`fields._column`
-        :param type fromtype: type to convert to something fitting for ``column``
+        :param fromtype: type to convert to something fitting for ``column``
+        :type fromtype: type | str
         :param context: openerp request context
         :return: a function (fromtype -> column.write_type), if a converter is found
         :rtype: Callable | None
         """
+        assert isinstance(fromtype, (type, str))
         # FIXME: return None
+        typename = fromtype.__name__ if isinstance(fromtype, type) else fromtype
         converter = getattr(
-            self, '_%s_to_%s' % (fromtype.__name__, column._type), None)
+            self, '_%s_to_%s' % (typename, column._type), None)
         if not converter: return None
 
         return functools.partial(
