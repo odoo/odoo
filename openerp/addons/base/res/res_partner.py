@@ -395,6 +395,8 @@ class res_partner(osv.osv, format_address):
             address_fields = self._address_fields(cr, uid, context=context)
             if use_parent_address:
                 result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+        else:
+            result['value'] = {'use_parent_address': False}
         return result
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
