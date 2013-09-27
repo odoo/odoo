@@ -5629,6 +5629,76 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
     },
 });
 
+/*
+
+*/
+instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    className: "oe_form_many2many_checkboxes",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", {});
+        this.set("records", []);
+        this.field_manager.on("view_content_has_changed", this, function() {
+            var domain = new openerp.web.CompoundDomain(this.build_domain()).eval();
+            if (! _.isEqual(domain, this.get("domain"))) {
+                this.set("domain", domain);
+            }
+        });
+        this.records_orderer = new instance.web.DropMisordered();
+    },
+    initialize_field: function() {
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this)
+        this.on("change:domain", this, this.query_records);
+        this.set("domain", new openerp.web.CompoundDomain(this.build_domain()).eval());
+        this.on("change:records", this, this.render_value);
+    },
+    query_records: function() {
+        var self = this;
+        var model = new openerp.Model(openerp.session, this.field.relation);
+        this.records_orderer.add(model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
+            return model.call("name_get", [record_ids] , {"context": self.build_context()});
+        })).then(function(res) {
+            self.set("records", res);
+        });
+    },
+    render_value: function() {
+        this.$().html(QWeb.render("FieldMany2ManyCheckBoxes", {widget: this, selected: this.get("value")}));
+        var inputs = this.$("input");
+        inputs.change(_.bind(this.from_dom, this));
+        if (this.get("effective_readonly"))
+            inputs.attr("disabled", "true");
+    },
+    from_dom: function() {
+        var new_value = {};
+        this.$("input").each(function() {
+            var elem = $(this);
+            new_value[elem.data("record-id")] = elem.attr("checked") ? true : undefined;
+        });
+        if (! _.isEqual(new_value, this.get("value")))
+            this.internal_set_value(new_value);
+    },
+    set_value: function(value) {
+        value = value || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
+        var formatted = {};
+        _.each(value, function(el) {
+            formatted[JSON.stringify(el)] = true;
+        });
+        this._super(formatted);
+    },
+    get_value: function() {
+        var value = _.filter(_.keys(this.get("value")), function(el) {
+            return this.get("value")[el];
+        }, this);
+        value = _.map(value, function(el) {
+            return JSON.parse(el);
+        });
+        return [commands.replace_with(value)];
+    },
+});
+
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
@@ -5664,6 +5734,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2many_binary': 'instance.web.form.FieldMany2ManyBinaryMultiFiles',
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
+    'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
 });
 
 /**
