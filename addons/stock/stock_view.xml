@@ -1649,8 +1649,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='general']" position="after" >
                    <newline/>
-                   <group>
-                       <field name="route_ids" widget="many2many_tags"/>
+                   <group string="Supply Chain Information">
+                       <field name="route_ids" widget="many2many_checkboxes"/>
                    </group>
                    <newline/>
                 </xpath>
