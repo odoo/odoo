@@ -495,7 +495,7 @@ class ir_fields_converter(orm.Model):
         return value, []
 
     def _html_from_many2one(self, cr, uid, model, column, value, context=None):
-        return werkzeug.utils.escape(value.name_get()[0][1]), []
+        return werkzeug.utils.escape(value.name_get()[0][1]).replace('\n', '<br>\n'), []
 
     def _html_from_binary(self, cr, uid, model, column, value, context=None):
         try:

@@ -210,6 +210,7 @@ class res_partner(osv.osv, format_address):
     def _display_name_compute(self, cr, uid, ids, name, args, context=None):
         context = dict(context or {})
         context.pop('show_address', None)
+        context.pop('show_address_only', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     # indirections to avoid passing a copy of the overridable method when declaring the function field
@@ -546,13 +547,16 @@ class res_partner(osv.osv, format_address):
             name = record.name
             if record.parent_id and not record.is_company:
                 name =  "%s, %s" % (record.parent_id.name, name)
+            if context.get('show_address_only'):
+                name = self._display_address(cr, uid, record, without_company=True, context=context)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
-                name = name.replace('\n\n','\n')
-                name = name.replace('\n\n','\n')
+            name = name.replace('\n\n','\n')
+            name = name.replace('\n\n','\n')
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
+        print '*', res, context
         return res
 
     def _parse_partner_name(self, text, context=None):
