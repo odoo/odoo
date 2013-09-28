@@ -63,16 +63,12 @@
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
                                 <t t-call="website.publish_management"><t t-set="object" t-value="event"/></t>
                                 <div class="media-body">
-                                    <span t-if="not event.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
+                                    <span t-if="not event.event_ticket_ids" class="label label-danger pull-right">Registration Closed</span>
                                     <t t-if="event.event_ticket_ids">
-                                        <span t-if="event.register_avail == 9999" class="label label-default pull-right label-info">Tickets availables.</span>
-                                        <span t-if="not event.register_avail" class="label label-default pull-right">No ticket available.</span>
+                                        <span t-if="event.register_avail == 9999" class="label label-default pull-right label-info">Tickets Available</span>
+                                        <span t-if="not event.register_avail" class="label label-danger pull-right">Sold Out</span>
                                         <span t-if="event.register_avail and event.register_avail != 9999" t-attf-class="label label-default pull-right label-#{ event.register_avail &lt;= 10 and 'warning' or 'info' }">
-                                            <t t-if="event.register_avail &lt;= 10">Only</t>
-                                            <t t-esc="event.register_avail"/>
-                                            <t t-if="event.register_avail &gt; 1">tickets</t>
-                                            <t t-if="event.register_avail == 1">ticket</t>
-                                            available.
+                                            Tickets Available
                                         </span>
                                     </t>
                                     <h4 class="media-heading"><a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
@@ -190,7 +186,7 @@
                             <hr/>
                         </form>
                         <div t-field="event_id.description"></div>
-                        <hr/>
+                        <div class="clearfix"/>
                         <ul class="media-list" id="comment">
                             <li t-foreach="event_id.website_message_ids" t-as="comment" class="media">
                                 <div class="media-body">
@@ -259,10 +255,21 @@
 
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4>Share</h4>
+                                <h4>Social Stream</h4>
                             </div>
                             <div class="panel-body">
                                 <t t-call="website_mail.follow"><t t-set="object" t-value="event_id"/></t>
+                                <div t-if="event_id.twitter_hashtag">
+                                    <p><strong>Join the Experience</strong></p>
+                                    <p class="text-muted">
+                                        Find out what others are seeing and
+                                        saying about this event, and join the
+                                        conversation.
+                                    </p>
+                                    <p><strong>Use this tag:
+                                        <a t-att-href="'twitter.com/search?q=#'+event_id.twitter_hashtag" class="label label-primary">#<span t-field="event_id.twitter_hashtag"/></a>
+                                    </strong></p>
+                                </div>
                             </div>
                         </div>
 
