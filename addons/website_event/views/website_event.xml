@@ -142,8 +142,6 @@
           <div id="wrap">
             <div class="container">
 
-                <t t-call="website.publish_management"><t t-set="object" t-value="event_id"/></t>
-
                 <h1 class="text-center" t-field="event_id.name"></h1>
                 <h4 class="text-center text-muted">
                     <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
@@ -155,16 +153,16 @@
                     <span t-field="event_id.country_id"/>
                 </h4>
 
-                <div class="row mt32">
+                <div class="row mt32 mb32">
                     <div class="col-md-8">
                         <form t-action="/event/#{ event_id.id }/add_cart" method="post" t-if="event_id.event_ticket_ids">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Ticket</th>
+                                        <th>Ticket Type</th>
                                         <th>Sales End</th>
                                         <th>Price</th>
-                                        <th>Seats</th>
+                                        <th></th>
                                         <th>Quantity</th>
                                     </tr>
                                 </thead>
@@ -173,20 +171,24 @@
                                         <td><span t-field="ticket.name"/></td>
                                         <td><span t-field="ticket.deadline"/></td>
                                         <td><span t-field="ticket.price"/></td>
-                                        <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<span t-field="ticket.register_max"/></span></td>
+                                        <td>
+                                            <span t-if="ticket.register_max and (float(ticket.register_current or 0) / ticket.register_max)&lt;=0.2" class="text-muted">
+                                                <t t-esc="ticket.register_max - ticket.register_current"/> <span>left</span>
+                                            </span>
+                                        </td>
                                         <td>
                                             <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">
                                                 <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
                                             </select>
-                                            <span t-if="not ticket.register_avail">No tickets available</span>
+                                            <span t-if="not ticket.register_avail">Sold Out</span>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event_id.register_avail">Order Now</button>
+                            <div class="clearfix"/>
                             <hr/>
                         </form>
-                        <div class="clearfix"/>
                         <div t-field="event_id.description"></div>
                         <hr/>
                         <ul class="media-list" id="comment">
@@ -207,6 +209,7 @@
 
                         <div class="panel panel-default" t-if="event_id.address_id">
                             <div class="panel-heading">
+                                <t t-call="website.publish_management"><t t-set="object" t-value="event_id"/></t>
                                 <h4>Where</h4>
                             </div>
                             <div class="panel-body">
@@ -244,13 +247,13 @@
                                 <h4>Organizer</h4>
                             </div>
                             <div class="panel-body">
-                                <strong t-field="event_id.organizer_id.display_name"/>
-                                <t t-if="event_id.phone">
+                                <p><strong t-field="event_id.organizer_id.display_name"/></p>
+                                <div t-if="event_id.phone">
                                     <span class="icon-phone"/> <span t-field="event_id.phone"/>
-                                </t>
-                                <t t-if="event_id.email">
+                                </div>
+                                <div t-if="event_id.email">
                                     <i class="icon-envelope"/> <span t-field="event_id.email"/>
-                                </t>
+                                </div>
                             </div>
                         </div>
 
@@ -264,7 +267,13 @@
                         </div>
 
                         <ul class="list-unstyled">
-
+                            <li t-if="event_id.type">
+                                <a t-att-href="'/event?type='+str(event_id.type.id)"><strong><span class="icon-double-angle-right"/> Other <t t-esc="event_id.type.name"/></strong></a>
+                            </li>
+                            <li t-if="event_id.country_id">
+                                <a t-att-href="'/event?country='+str(event_id.country_id.id)"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
+                            </li>
+                            <li><a href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
                         </ul>
                     </div>
                 </div>

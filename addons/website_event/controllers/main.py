@@ -157,7 +157,8 @@ class website_event(http.Controller):
         values = {
             'event_id': event_obj.browse(request.cr, request.uid, event_id,
                                          dict(request.context, show_address_only=1)),
-            'range': range
+            'range': range,
+            'float': float,
         }
         return request.website.render("website_event.event_description_full", values)
 
