@@ -156,7 +156,7 @@ class website_event(http.Controller):
         event_obj = request.registry['event.event']
         values = {
             'event_id': event_obj.browse(request.cr, request.uid, event_id,
-                                         dict(request.context, show_address=1)),
+                                         dict(request.context, show_address_only=1)),
             'range': range
         }
         return request.website.render("website_event.event_description_full", values)
