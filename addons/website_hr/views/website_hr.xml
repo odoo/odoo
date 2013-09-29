@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-
-    <!-- Mail group for the company's jobs -->
-
-    <record id="website_mail_job" model="mail.group">
-        <field name="name">Job</field>
-        <field name="public">public</field>
-        <field name="description">Job offer displayed on your website</field>
-    </record>
-
-    <!-- Layout add nav and footer -->
-
-    <template id="footer_custom" inherit_option_id="website.layout" name="Job Announces">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
-        </xpath>
-    </template>
-
     <!-- Page --> 
-
  
     <template id="aboutus" inherit_id="website.aboutus" name="Our Team">
         <xpath expr="//div[@id='aboutus']" position="inside">

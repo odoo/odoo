@@ -50,5 +50,22 @@ Additional ressources
             <field name="relation_field">category_id</field>
         </record>
 
+
+    <!-- Mail group for the company's jobs -->
+
+    <record id="blog_category_2" model="blog.category">
+        <field name="name">Jobs</field>
+        <field name="description">Job Announces</field>
+    </record>
+
+    <!-- Layout add nav and footer -->
+
+    <template id="footer_custom" inherit_option_id="website.layout" name="Job Announces">
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
+            <li><a t-href="/blog/%(website_blog.blog_category_2)d/">Jobs</a></li>
+        </xpath>
+    </template>
+
+
     </data>
 </openerp>
