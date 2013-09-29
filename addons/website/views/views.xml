@@ -122,9 +122,12 @@
                                                 <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
                                             </ul>
                                             <h2>
-                                                <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
-                                                <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
-                                                <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
+                                                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
+                                                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
+                                                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
+                                                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
+                                                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
+                                                <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
                                             </h2>
                                         </div>
                                         <div class="col-md-5 col-lg-offset-1" name="about_us">
