@@ -75,6 +75,7 @@ class website_mail(http.Controller):
         blog_post_obj = request.registry['blog.post']
         tag_obj = request.registry['blog.tag']
         category_obj = request.registry['blog.category']
+        user_obj = request.registry['res.users']
 
         tag = None
         category = None
@@ -142,6 +143,7 @@ class website_mail(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
+            'uid': request.uid,
             'unable_editor': post.get('unable_editor')
         }
 
