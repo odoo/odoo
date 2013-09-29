@@ -16,7 +16,7 @@
     <template id="view_blog_post_short" name="Blog Post Summary">
         <div>
             <h2 class="text-center">
-                <a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comment" t-field="blog_post.name"></a>
+                <a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center">
                 <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
