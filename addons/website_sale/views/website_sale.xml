@@ -83,6 +83,9 @@
     <!-- Product list --> 
 
     <template id="products_cart">
+      <div class="ribbon-wrapper">
+        <div class="ribbon">Promo</div>
+      </div>
       <div class="oe_product_description">
           <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <b t-field="product.name"/>

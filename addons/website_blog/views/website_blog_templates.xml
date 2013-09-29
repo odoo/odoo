@@ -44,7 +44,7 @@
           <t t-call="website.publish_management"><t t-set="object" t-value="blog_post"/></t>
         </div><div class="clearfix"/>
 
-        <h2 class="text-center" t-field="blog_post.name"/>
+        <h1 class="text-center" t-field="blog_post.name"/>
         <p class="post-meta text-muted text-center">
             <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
             <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
