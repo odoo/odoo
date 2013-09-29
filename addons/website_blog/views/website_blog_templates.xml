@@ -56,11 +56,11 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="icon-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                <a t-attf-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
             </t>
         </p>
 
-        <div t-field="blog_post.content" class="mt32"/>
+        <div t-field="blog_post.content" class="mt16"/>
         <hr class="mb32"/>
 
         <a id="comments"/>
