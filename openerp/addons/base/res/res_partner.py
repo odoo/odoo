@@ -233,7 +233,7 @@ class res_partner(osv.osv, format_address):
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company'),
-        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override    
+        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
@@ -556,7 +556,6 @@ class res_partner(osv.osv, format_address):
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
-        print '*', res, context
         return res
 
     def _parse_partner_name(self, text, context=None):

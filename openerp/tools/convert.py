@@ -868,7 +868,7 @@ form: module.record_id""" % (xml_id,)
             'id': tpl_id,
             'model': 'ir.ui.view',
         }
-        for att in ['forcecreate', 'context']:
+        for att in ['forcecreate', 'context', 'priority']:
             if att in el.keys():
                 record_attrs[att] = el.attrib.pop(att)
 
