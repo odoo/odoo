@@ -12,7 +12,7 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+    <template id="footer_custom" inherit_id="website.layout" name="Jobs">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
         </xpath>
@@ -22,27 +22,27 @@
 
  
     <template id="aboutus" inherit_id="website.aboutus">
-        <xpath expr="//div[@class='col-md-8']" position="inside">
+        <xpath expr="//div[@class='row']" position="inside">
             <t t-set="head">
                 <t t-raw="head or ''"/>
             </t>
-            <h3>Our team</h3>
-            <div class="thumbnails">
-                <div t-foreach="employee_ids" t-as="employee" class="col-md-4 mt16">
-                    <div class="media img-thumbnail" data-publish="">
-                        <t t-call="website.publish_management"><t t-set="object" t-value="employee"/></t>
-                        <a class="pull-left" href="#">
-                            <img class="media-object" t-att-src="employee.img('image_small')"/>
-                        </a>
-                        <div class="media-body" style="min-height: 64px; min-width: 130px;">
-                            <h5 class="media-heading" t-field="employee.name"/>
-                            <div t-field="employee.department_id"/>
-                            <div t-field="employee.job_id"/>
-                            <div t-field="employee.work_location"/>
-                            <div t-field="employee.work_phone"/>
-                            <div t-field="employee.work_email"/>
-                            <div t-field="employee.public_info"/>
-                        </div>
+            <div class="col-sm-12 text-center">
+                <h2>Our team</h2>
+            </div>
+            <div t-foreach="employee_ids" t-as="employee" class="col-md-4 mt16">
+                <div class="img-rounded" data-publish="">
+                    <t t-call="website.publish_management"><t t-set="object" t-value="employee"/></t>
+                    <a class="pull-left" href="#">
+                        <img t-att-src="employee.img('image_small')"/>
+                    </a>
+                    <div style="min-height: 64px; min-width: 130px;">
+                        <h5 t-field="employee.name"/>
+                        <div t-field="employee.department_id"/>
+                        <div t-field="employee.job_id"/>
+                        <div t-field="employee.work_location"/>
+                        <div t-field="employee.work_phone"/>
+                        <div t-field="employee.work_email"/>
+                        <div t-field="employee.public_info"> </field>
                     </div>
                 </div>
             </div>

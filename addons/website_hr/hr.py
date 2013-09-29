@@ -7,6 +7,7 @@ class hr(osv.osv):
     _inherit = 'hr.employee'
     _columns = {
         'website_published': fields.boolean('Available in the website'),
+        'public_info': fields.text('Public Info'),
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):
