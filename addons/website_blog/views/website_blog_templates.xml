@@ -91,7 +91,7 @@
             <h4>Leave a Comment</h4>
             <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
                     method="POST">
-                <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(uid)" style="width: 50px; margin-right: 10px;"/>
+                <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                 <div class="pull-left" style="width: 75%%">
                     <textarea rows="3" class="form-control" placeholder="Write a comment..."></textarea>
                     <button type="submit" class="btn btn-danger mt8">Post</button>

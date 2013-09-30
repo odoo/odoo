@@ -111,6 +111,23 @@
   height: 280px;
 }
 
+@media (max-width: 728px) {
+  .oe_product {
+    float: left;
+    width: 100%;
+    height: 200px;
+    display: inline-block;
+  }
+
+  #products_grid table, #products_grid tbody, #products_grid tr, #products_grid td {
+    float: left;
+    width: 100%;
+    display: inline-block;
+  }
+  #products_grid table td.oe-height-2 {
+    display: none;
+  }
+}
 @media (min-width: 992px) {
   .col-md-12 .oe-height-1 {
     height: 95px;
@@ -138,7 +155,6 @@
     height: 288px;
   }
 }
-
 @media (min-width: 1200px) {
   .col-md-12 .oe-height-1 {
     height: 125px;
@@ -166,7 +182,6 @@
     height: 380px;
   }
 }
-
 /* ---- Product list style ---- */
 .oe_list_products {
   border: none;

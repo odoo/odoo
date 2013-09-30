@@ -77,7 +77,8 @@ class BlogPost(osv.Model):
                     max_length=self._shorten_max_char,
                     expand_options={
                         'oe_expand_href': '/blog/%d/%d' % (page.category_id.id, page.id),
-                    }
+                        'oe_expand_a_class': 'oe_mail_expand btn btn-info'
+                    }, br=True
                 )
             except Exception:
                 body_short = False
