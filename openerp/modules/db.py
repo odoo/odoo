@@ -87,7 +87,7 @@ def initialize(cr):
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_'+i, 'ir.module.module', 'base', id, True))
+                'module_'+i, 'ir_module_module', 'base', id, True))
         dependencies = info['depends']
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \
@@ -122,7 +122,7 @@ def create_categories(cr, categories):
         xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
         # search via xml_id (because some categories are renamed)
         cr.execute("SELECT res_id FROM ir_model_data WHERE name=%s AND module=%s AND model=%s",
-                   (xml_id, "base", "ir.module.category"))
+                   (xml_id, "base", "ir_module_category"))
 
         c_id = cr.fetchone()
         if not c_id:
@@ -131,7 +131,7 @@ def create_categories(cr, categories):
                     VALUES (%s, %s) RETURNING id', (categories[0], p_id))
             c_id = cr.fetchone()[0]
             cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
-                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
+                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir_module_category'))
         else:
             c_id = c_id[0]
         p_id = c_id

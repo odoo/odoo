@@ -151,7 +151,7 @@ class Field(object):
     @lazy_property
     def model(self):
         """ return the model instance of `self` """
-        return scope.model(self.model_name)
+        return scope[self.model_name]
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -695,7 +695,7 @@ class Reference(Selection):
                 return value.scoped() or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return scope.model(res_model).browse(int(res_id))
+            return scope[res_model].browse(int(res_id))
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
@@ -720,7 +720,7 @@ class _Relational(Field):
     @lazy_property
     def comodel(self):
         """ return the comodel instance of `self` """
-        return scope.model(self.comodel_name)
+        return scope[self.comodel_name]
 
     def get_description(self):
         desc = super(_Relational, self).get_description()

@@ -90,10 +90,10 @@ class ir_ui_menu(osv.osv):
                     # we check if the user has access to the action of the menu
                     data = menu.action
                     if data:
-                        model_field = { 'ir.actions.act_window':    'res_model',
-                                        'ir.actions.report.xml':    'model',
-                                        'ir.actions.wizard':        'model',
-                                        'ir.actions.server':        'model_id',
+                        model_field = { 'ir_actions_act_window':    'res_model',
+                                        'ir_actions_report_xml':    'model',
+                                        'ir_actions_wizard':        'model',
+                                        'ir_actions_server':        'model_id',
                                       }
 
                         field = model_field.get(menu.action._name)

@@ -45,9 +45,26 @@ class res_partner(osv.Model):
 from openerp import Model, fields
 from openerp import constrains, depends, model, multi, one, scope
 
-class res_partner(Model):
-    _inherit = 'res.partner'
+#
+# Dummy models defined incrementally to check:
+#  - model name given by class name
+#  - inherit model with Model.<model_name>
+#
 
+class test_new_api_foo(Model):
+    def foo(self):
+        return 'foo'
+
+class test_new_api_foo(Model.inherit('test_new_api_foo')):
+    def foo(self):
+        return super(test_new_api_foo, self).foo() + 'bar'
+
+
+#
+# Computed fields
+#
+
+class res_partner(Model.inherit('res_partner')):
     number_of_employees = fields.Integer(compute='default_number_of_employees')
     some_float_field = fields.Float(digits=(10,2))
     some_reference_field = fields.Reference(selection='_references_models')
@@ -114,11 +131,13 @@ class res_partner(Model):
     company_name = fields.Char(related='company_id.name', store=False)
 
 
+#
+# Computed fields with inverse
+#
+
 email_re = re.compile("^(.*) <(.*)>$")
 
-class field_inverse(Model):
-    _name = 'test_new_api.inverse'
-
+class test_new_api_inverse(Model):
     name = fields.Char()
     email = fields.Char()
     full_name = fields.Char(store=False,
@@ -142,15 +161,16 @@ class field_inverse(Model):
         self.name, self.email = email_re.match(self.full_name).groups()
 
 
-class on_change_test(Model):
-    _name = 'test_new_api.on_change'
+#
+# Onchange methods
+#
 
+class test_new_api_on_change(Model):
     name = fields.Char()
     name_size = fields.Integer(compute='compute_name_size', store=False)
     name_utf8_size = fields.Integer(compute='compute_utf8_size', store=False)
     description = fields.Char(compute='compute_description')
     trick = fields.Char(compute='whatever', store=False)
-
 
     @one
     @depends('name')
@@ -177,19 +197,22 @@ class on_change_test(Model):
         self.trick = "wheeeeeld.null()eld.null"
 
 
-class defaults(Model):
-    _name = 'test_new_api.defaults'
+#
+# Default values
+#
 
+class test_new_api_defaults(Model):
     name = fields.Char(required=True, compute=fields.default(u'Bob the Builder'))
     description = fields.Char()
 
 
-class InheritsParent(Model):
-    _name = 'test_new_api.inherits_parent'
+#
+# New-style _inherits with delegate=True
+#
+
+class test_new_api_inherits_parent(Model):
     name = fields.Char()
 
-
-class InheritsChild(Model):
-    _name = 'test_new_api.inherits_child'
-    parent = fields.Many2one('test_new_api.inherits_parent', delegate=True)
+class test_new_api_inherits_child(Model):
+    parent = fields.Many2one('test_new_api_inherits_parent', delegate=True)
 

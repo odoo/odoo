@@ -269,7 +269,7 @@ class Cache(defaultdict):
         # re-fetch the records, and compare with their former cache
         invalids = []
         for model_name, model_dump in cache_dump.iteritems():
-            model = scope.model(model_name)
+            model = scope[model_name]
             records = model.browse(model_dump)
             for record, record_dump in zip(records, model_dump.itervalues()):
                 for field, value in record_dump.iteritems():

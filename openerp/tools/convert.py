@@ -335,12 +335,12 @@ form: module.record_id""" % (xml_id,)
 
         if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
-            value = 'ir.actions.report.xml,'+str(id)
+            value = 'ir_actions_report_xml,'+str(id)
             replace = rec.get('replace', True)
             self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
         elif self.mode=='update' and eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
-            value = 'ir.actions.report.xml,'+str(id)
+            value = 'ir_actions_report_xml,'+str(id)
             self._remove_ir_values(cr, res['name'], value, res['model'])
         return id
 
@@ -378,12 +378,12 @@ form: module.record_id""" % (xml_id,)
         # ir_set
         if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
-            value = 'ir.actions.wizard,'+str(id)
+            value = 'ir_actions_wizard,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
         elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
             # Special check for wizard having attribute menu=False on update
-            value = 'ir.actions.wizard,'+str(id)
+            value = 'ir_actions_wizard,'+str(id)
             self._remove_ir_values(cr, string, value, model)
 
     def _tag_url(self, cr, rec, data_node=None):
@@ -501,7 +501,7 @@ form: module.record_id""" % (xml_id,)
         if src_model:
             #keyword = 'client_action_relate'
             keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
-            value = 'ir.actions.act_window,'+str(id)
+            value = 'ir_actions_act_window,'+str(id)
             replace = rec.get('replace','') or True
             self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
         # TODO add remove ir.model.data
@@ -590,33 +590,27 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action','').encode('utf8')
 
             # determine the type of action
-            a_type, a_id = self.model_id_get(cr, a_action)
-            a_type = a_type.split('.')[-1] # keep only type part
+            action = self.record_get(cr, a_action)
 
             icons = {
-                "act_window": 'STOCK_NEW',
-                "report.xml": 'STOCK_PASTE',
-                "wizard": 'STOCK_EXECUTE',
-                "url": 'STOCK_JUMP_TO',
-                "client": 'STOCK_EXECUTE',
-                "server": 'STOCK_EXECUTE',
+                "ir_actions_act_window": 'STOCK_NEW',
+                "ir_actions_report_xml": 'STOCK_PASTE',
+                "ir_actions_wizard": 'STOCK_EXECUTE',
+                "ir_actions_url": 'STOCK_JUMP_TO',
+                "ir_actions_client": 'STOCK_EXECUTE',
+                "ir_actions_server": 'STOCK_EXECUTE',
             }
-            values['icon'] = icons.get(a_type,'STOCK_NEW')
+            values['icon'] = icons.get(action._name, 'STOCK_NEW')
 
-            if a_type=='act_window':
-                cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (int(a_id),))
-                rrres = cr.fetchone()
-                assert rrres, "No window action defined for this id %s !\n" \
-                    "Verify that this is a window action or add a type argument." % (a_action,)
-                action_type,action_mode,action_name,view_id,target = rrres
-                if view_id:
-                    cr.execute('SELECT arch FROM ir_ui_view WHERE id=%s', (int(view_id),))
-                    arch, = cr.fetchone()
+            if action._name == 'ir_actions_act_window':
+                action_mode = action.view_mode
+                if action.view_id:
+                    arch = action.view_id.arch
                     action_mode = etree.fromstring(arch.encode('utf8')).tag
-                cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (int(a_id),))
-                if cr.rowcount:
-                    action_mode, = cr.fetchone()
-                if action_type=='tree':
+                if action.view_ids:
+                    action_mode = action.view_ids.view_mode
+
+                if action.view_type=='tree':
                     values['icon'] = 'STOCK_INDENT'
                 elif action_mode and action_mode.startswith(('tree','kanban','gantt')):
                     values['icon'] = 'STOCK_JUSTIFY_FILL'
@@ -624,17 +618,14 @@ form: module.record_id""" % (xml_id,)
                     values['icon'] = 'terp-graph'
                 elif action_mode and action_mode.startswith('calendar'):
                     values['icon'] = 'terp-calendar'
-                if target=='new':
+                if action.target=='new':
                     values['icon'] = 'STOCK_EXECUTE'
-                if not values.get('name', False):
-                    values['name'] = action_name
+                if not values.get('name'):
+                    values['name'] = action.name
 
-            elif a_type in ['wizard', 'url', 'client', 'server'] and not values.get('name'):
-                a_table = 'ir_act_%s' % a_type
-                cr.execute('select name from %s where id=%%s' % a_table, (int(a_id),))
-                resw = cr.fetchone()
-                if resw:
-                    values['name'] = resw[0]
+            elif action._name in ['ir_actions_wizard', 'ir_actions_url',
+                    'ir_actions_client', 'ir_actions_server'] and not values.get('name'):
+                values['name'] = action.name
 
         if not values.get('name'):
             # ensure menu has a name
@@ -667,8 +658,8 @@ form: module.record_id""" % (xml_id,)
             self.idref[rec_id] = int(pid)
 
         if rec.get('action') and pid:
-            action = "ir.actions.%s,%d" % (a_type, a_id)
-            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
+            reference = "%s,%s" % (action._name, action.id)
+            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], reference, True, True, xml_id=rec_id)
         return 'ir.ui.menu', pid
 
     def _assert_equals(self, f1, f2, prec=4):
@@ -824,19 +815,21 @@ form: module.record_id""" % (xml_id,)
             cr.commit()
         return rec_model, id
 
+    def record_get(self, cr, id_str):
+        """ return the record corresponding to the xml id `id_str` """
+        module = self.module
+        if '.' in id_str:
+            module, id_str = id_str.split('.')
+        return self.pool['ir.model.data'].get_object(cr, self.uid, module, id_str)
+
     def id_get(self, cr, id_str):
         if id_str in self.idref:
             return self.idref[id_str]
-        res = self.model_id_get(cr, id_str)
-        if res and len(res)>1: res = res[1]
-        return res
+        return self.record_get(cr, id_str).id
 
     def model_id_get(self, cr, id_str):
-        model_data_obj = self.pool['ir.model.data']
-        mod = self.module
-        if '.' in id_str:
-            mod,id_str = id_str.split('.')
-        return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
+        rec = self.record_get(cr, id_str)
+        return rec._name, rec.id
 
     def parse(self, de):
         if de.tag != 'openerp':

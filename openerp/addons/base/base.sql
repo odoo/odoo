@@ -360,16 +360,16 @@ CREATE TABLE ir_model_relation (
 -- Users
 ---------------------------------
 insert into res_users (id,login,password,active,company_id,partner_id) VALUES (1,'admin','admin',true,1,1);
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('user_root','base','res.users',true,1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('user_root','base','res_users',true,1);
 
 insert into res_partner (id, name, lang, company_id) VALUES (1, 'Your Company', 'en_US', 1);
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_partner','base','res.partner',true,1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_partner','base','res_partner',true,1);
 
 insert into res_currency (id, name) VALUES (1, 'EUR');
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('EUR','base','res.currency',true,1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('EUR','base','res_currency',true,1);
 
 insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'Your Company', 1, 1);
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_company','base','res.company',true,1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_company','base','res_company',true,1);
 
 select setval('res_company_id_seq', 2);
 select setval('res_users_id_seq', 2);

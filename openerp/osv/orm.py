@@ -60,7 +60,7 @@ from scope import proxy as scope_proxy
 import fields
 import openerp
 import openerp.tools as tools
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, snake_str, snake_dict
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
@@ -360,6 +360,14 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+    def inherit(self, *model_names):
+        """ Return a dummy class that declares model inheritance. """
+        class Inherit(self):
+            _register = False
+            _inherit_models = model_names
+
+        return Inherit
+
 
 # special columns automatically created by the ORM
 MAGIC_COLUMNS = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']
@@ -478,7 +486,7 @@ class BaseModel(object):
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
-                    (name_id, context['module'], 'ir.model', model_id)
+                    (name_id, context['module'], 'ir_model', model_id)
                 )
 
         cr.commit()
@@ -543,7 +551,7 @@ class BaseModel(object):
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
                     cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
-                        (name1, context['module'], 'ir.model.fields', id)
+                        (name1, context['module'], 'ir_model_fields', id)
                     )
             else:
                 for key, val in vals.items():
@@ -661,10 +669,19 @@ class BaseModel(object):
         # we cannot use that "registry class" for combining model classes by
         # inheritance, since it confuses the metadata inference process.
 
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
-            name = cls._name or (len(parent_names) == 1 and parent_names[0]) or cls.__name__
+        # retrieve old-style and new-style declarations
+        inherit = getattr(cls, '_inherit', None)
+        inherit_models = getattr(cls, '_inherit_models', ())
+
+        if inherit or inherit_models:
+            if inherit:
+                # old-style declaration
+                parent_names = [inherit] if isinstance(inherit, basestring) else inherit
+                name = snake_str(cls._name or (len(parent_names) == 1 and parent_names[0]))
+            else:
+                # new-style declaration
+                parent_names = inherit_models
+                name = snake_str(cls._name or cls.__name__)
 
             for parent_name in parent_names:
                 if parent_name not in pool:
@@ -718,10 +735,9 @@ class BaseModel(object):
                     '_local_constraints': cls.__dict__.get('_constraints', []),
                     '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
                 }
-                cls = type(name, (cls, parent_class), attrs)
+                cls = type(str(name), (cls, parent_class), attrs)
         else:
-            if not cls._name:
-                cls._name = cls.__name__
+            cls._name = snake_str(cls._name or cls.__name__)
             cls._local_constraints = cls.__dict__.get('_constraints', [])
             cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
@@ -731,11 +747,11 @@ class BaseModel(object):
             '_register': False,
             '_columns': dict(cls._columns),
             '_defaults': dict(cls._defaults),
-            '_inherits': dict(cls._inherits),
+            '_inherits': snake_dict(cls._inherits),
             '_constraints': list(cls._constraints),
             '_sql_constraints': list(cls._sql_constraints),
         }
-        cls = type(cls._name, (cls,), attrs)
+        cls = type(str(cls._name), (cls,), attrs)
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
@@ -1303,7 +1319,7 @@ class BaseModel(object):
         field_names = set(field_names)
 
         # old-style constraint methods
-        trans = scope_proxy.model('ir.translation')
+        trans = scope_proxy['ir.translation']
         cr, uid, context = scope_proxy.args
         lang = scope_proxy.lang
         ids = self.unbrowse()
@@ -2608,17 +2624,17 @@ class BaseModel(object):
                 pass
             if not val_id:
                 raise except_orm(_('ValidateError'),
-                                 _('Invalid value for reference field "%s.%s" (last part must be a non-zero integer): "%s"') % (self._table, field, value))
-            val = val_model
+                                 _('Invalid value for reference field "%s.%s" (last part must be a non-zero integer): "%s"') % (self._name, field, value))
+            val = snake_str(val_model)
         else:
             val = value
-        if isinstance(self._columns[field].selection, (tuple, list)):
-            if val in dict(self._columns[field].selection):
-                return
-        elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
+        selection = self._columns[field].selection
+        if callable(selection):
+            selection = selection(self, cr, uid, context=context)
+        if val in (item[0] for item in selection):
             return
         raise except_orm(_('ValidateError'),
-                         _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+                         _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._name, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
@@ -5577,8 +5593,7 @@ class BaseModel(object):
         return self._id
 
     def __str__(self):
-        model_name = self._name.replace('.', '_')
-        return "%s%s" % (model_name, tuple(self._ids))
+        return "%s%s" % (self._name, tuple(self._ids))
 
     def __unicode__(self):
         return unicode(str(self))

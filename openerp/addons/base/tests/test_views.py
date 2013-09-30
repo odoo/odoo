@@ -54,7 +54,7 @@ class test_views(common.TransactionCase):
 
     def test_10_validate_custom_views(self):
         Views = self.registry('ir.ui.view')
-        model = 'ir.actions.act_url'
+        model = 'ir_actions_act_url'
 
         validate = partial(Views._validate_custom_views, self.cr, self.uid, model)
 

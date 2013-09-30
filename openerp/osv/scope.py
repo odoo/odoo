@@ -54,6 +54,9 @@ class ScopeProxy(object):
             release_local(_local)
         return res
 
+    def __getitem__(self, name):
+        return self.current[name]
+
     def __getattr__(self, name):
         return getattr(self.current, name)
 
@@ -146,6 +149,14 @@ class Scope(object):
     def __exit__(self, exc_type, exc_value, traceback):
         proxy.pop()
 
+    def __getitem__(self, model_name):
+        """ return a given model """
+        return self.registry[model_name]
+
+    def __getattr__(self, model_name):
+        """ return a given model """
+        return self.registry[model_name]
+
     def __call__(self, cr=None, user=None, context=(), **kwargs):
         """ Return a scope based on `self` with modified parameters.
 
@@ -176,14 +187,10 @@ class Scope(object):
         """ Return a scope based on `self`, with the superuser. """
         return self(user=SUPERUSER_ID)
 
-    def model(self, model_name):
-        """ return a given model """
-        return self.registry[model_name]
-
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
         module, name = xml_id.split('.')
-        return self.model('ir.model.data').get_object(module, name)
+        return self.registry['ir.model.data'].get_object(module, name)
 
     @property
     def user(self):
@@ -194,9 +201,7 @@ class Scope(object):
     @property
     def lang(self):
         """ return the current language code """
-        if not hasattr(self, '_lang'):
-            self._lang = self.context.get('lang') or 'en_US'
-        return self._lang
+        return self.context.get('lang') or 'en_US'
 
 
 #
