@@ -41,7 +41,10 @@
     <!-- Blog Post Complete -->
     <template id="view_blog_post" name="Blog Post">
         <div>
-          <t t-call="website.publish_management"><t t-set="object" t-value="blog_post"/></t>
+            <t t-call="website.publish_management">
+                <t t-set="object" t-value="blog_post"/>
+                <t t-set="publish_edit" t-value="true"/>
+            </t>
         </div><div class="clearfix"/>
 
         <h1 class="text-center" t-field="blog_post.name"/>
@@ -77,7 +80,9 @@
                 <div class="media-body">
                     <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
                     <div class="media-body">
-                        <t t-call="website.publish_management"><t t-set="object" t-value="message"/></t>
+                        <t t-call="website.publish_short">
+                            <t t-set="object" t-value="message"/>
+                        </t>
                         <h5 class="media-heading">
                             <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
                         </h5>
