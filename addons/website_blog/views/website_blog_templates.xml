@@ -186,19 +186,25 @@
     <template id="blog_followus" inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column" name="Follow us" priority="2">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">
-            <h4>Follow us</h4>
-            <p class="text-muted">
-                Participate on our social stream.
-            </p>
-            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
-            <h2>
-                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
-                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
-                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
-                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
-                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
-                <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
-            </h2>
+                <h4>Follow us</h4>
+                <p class="text-muted">
+                    Be notified of new blog posts in <t t-esc="category.name"/>
+                </p>
+                <t t-call="website_mail.follow">
+                    <t t-set="email" t-value="current_user.email"/>
+                    <t t-set="object" t-value="category"/>
+                </t>
+                <p class="text-muted">
+                    Participate on our social stream.
+                </p>
+                <h2>
+                    <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
+                    <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
+                    <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
+                    <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
+                    <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
+                    <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
+                </h2>
             </section>
         </xpath>
     </template>
