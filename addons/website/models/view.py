@@ -55,57 +55,19 @@ class view(osv.osv):
     def extract_embedded_fields(self, cr, uid, arch, context=None):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
-    def convert_embedded_field(self, cr, uid, el, column,
-                               type_override=None, context=None):
-        """ Converts the content of an embedded field to a value acceptable
-        for writing in the column
-
-        :param etree._Element el: embedded field being saved
-        :param fields._column column: column object corresponding to the field
-        :param type type_override: column type to dispatch on instead of the
-                                   column's actual type (for proxy column types
-                                   e.g. relateds)
-        :return: converted value
-        """
-        column_type = type_override or type(column)
-
-        if issubclass(column_type, fields.html):
-            content = []
-            if el.text: content.append(el.text)
-            content.extend(html.tostring(child)
-                           for child in el.iterchildren(tag=etree.Element))
-            return '\n'.join(content)
-        elif issubclass(column_type, fields.integer):
-            return int(el.text_content())
-        elif issubclass(column_type, fields.float):
-            return float(el.text_content())
-        elif issubclass(column_type, (fields.char, fields.text,
-                                      fields.date, fields.datetime)):
-            return el.text_content()
-        # TODO: fields.selection
-        elif issubclass(column_type, fields.many2one):
-            matches = self.pool[column._obj].name_search(
-                cr, uid, name=el.text_content().strip(), context=context)
-            # FIXME: more than one match, error reporting
-            return matches[0][0]
-        elif issubclass(column_type, fields.function):
-            # FIXME: special-case selection as in get_pg_type?
-            return self.convert_embedded_field(
-                cr, uid, el, column,
-                type_override=getattr(fields, column._type),
-                context=context)
-        # TODO?: fields.many2many, fields.one2many
-        # TODO?: fields.reference
-        else:
-            raise TypeError("Un-convertable column type %s" % column_type)
-
     def save_embedded_field(self, cr, uid, el, context=None):
         Model = self.pool[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
         column = Model._all_columns[field].column
+        convert = self.pool['ir.fields.converter'].to_field(
+            cr, uid, Model, column, fromtype="html", context=context)
+        value, warnings = convert(el)
+        # FIXME: report error
+        if warnings: return
+
         Model.write(cr, uid, [int(el.get('data-oe-id'))], {
-            field: self.convert_embedded_field(cr, uid, el, column, context=context)
+            field: value
         }, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
@@ -137,7 +99,8 @@ class view(osv.osv):
         """
         res_id = int(res_id)
 
-        arch_section = html.fromstring(value)
+        arch_section = html.fromstring(
+            value, parser=html.HTMLParser(encoding='utf-8'))
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
