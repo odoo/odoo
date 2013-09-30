@@ -865,8 +865,7 @@ class Root(object):
         self.addons = {}
         self.statics = {}
 
-        self.db_routers = {}
-        self.db_routers_lock = threading.Lock()
+        self.no_db_router = None
 
         self.load_addons()
 
@@ -915,10 +914,7 @@ class Root(object):
             db = request.db
 
             if db:
-                updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                if updated:
-                    with self.db_routers_lock:
-                        del self.db_routers[db]
+                openerp.modules.registry.RegistryManager.check_registry_signaling(db)
 
             with set_request(request):
                 self.find_handler()
@@ -1030,12 +1026,16 @@ class Root(object):
         return routing_map
 
     def get_db_router(self, db):
-        with self.db_routers_lock:
-            router = self.db_routers.get(db)
+        if db is None:
+            router = self.no_db_router
+        else:
+            router = getattr(openerp.modules.registry.RegistryManager.get(db), "werkzeug_http_router", None)
         if not router:
             router = self._build_router(db)
-            with self.db_routers_lock:
-                self.db_routers[db] = router
+            if db is None:
+                self.no_db_router = router
+            else:
+                openerp.modules.registry.RegistryManager.get(db).werkzeug_http_router = router
         return router
 
     def find_handler(self):
