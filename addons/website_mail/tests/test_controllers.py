@@ -20,10 +20,23 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.website_mail.controllers.main import WebsiteMail
 from openerp.tools import mute_logger, email_split
 
 
 class TestControllers(TestMailBase):
 
-    def test_00(self):
+    def test_00_subscribe(self):
+        # from openerp.addons.web.http import request
+        # print request
+
         cr, uid = self.cr, self.uid
+        # context = {
+        #     'is_public_user': True,
+        # }
+        # email = 'Marcel Dupuis <marcel.dupuis@example.com>'
+        # website_mail = WebsiteMail()
+
+        # pid = website_mail._find_or_create_partner(email, context)
+        # partner = self.res_partner.browse(cr, uid, pid)
+        # print partner.name, partner.email
