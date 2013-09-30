@@ -37,7 +37,6 @@
 				<ul class="media-list">
         	                    <li t-foreach="res_job" t-as="job" class="media">
 					<div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
-					    <span t-if="not job.no_of_recruitment" class="label label-default pull-right">No Vacancies.</span>
 					    <t t-if="job.no_of_recruitment">
 						<span class="label label-default pull-right label-info"><t t-esc="vals[job.id]['count']"/> Vacancies.</span>
 					    </t>
