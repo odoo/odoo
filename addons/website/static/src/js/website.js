@@ -117,9 +117,29 @@
     };
 
     dom_ready.then(function () {
+
         /* ----- PUBLISHING STUFF ---- */
+        $('[data-publish]:has(.js_publish)').each(function () {
+            var $pub = $("[data-publish]", this);
+            if($pub.size())
+                $(this).attr("data-publish", $pub.attr("data-publish"));
+            else
+                $(this).removeAttr("data-publish");
+        });
+
         $('[data-publish]:has(.js_publish_management)').each(function () {
             $(this).attr("data-publish", $(".js_publish_management .btn-success", this).size() ? "on" : 'off');
+            $(this).attr("data-publish", $(".js_publish_management .btn-success", this).size() ? "on" : 'off');
+        });
+
+        $(document).on('click', '.js_publish', function (e) {
+            e.preventDefault();
+            var $data = $(":first", this).parents("[data-publish]");
+            $data.attr("data-publish", $data.first().attr("data-publish") == 'off' ? 'on' : 'off');
+            openerp.jsonRpc('/website/publish', 'call', {'id': $(this).data('id'), 'object': $(this).data('object')})
+                .then(function (result) {
+                    $data.attr("data-publish", +result ? 'on' : 'off');
+                });
         });
 
         $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {

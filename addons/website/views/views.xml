@@ -361,19 +361,34 @@
         <template id="publish_management">
             <t t-if="editable" t-ignore="true">
               <div t-attf-class="dropdown js_publish_management pull-right #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
-                <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+                <a t-attf-class="btn btn-xs btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                     <t t-raw="0"/>
                     <li>
-                        <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
-                        <a href="#" class="js_publish_btn css_publish">Publish</a>
+                        <a href="#" class="js_publish_btn css_unpublish"><small>Unpublish</small></a>
+                        <a href="#" class="js_publish_btn css_publish"><small>Publish</small></a>
                     </li>
-                    <li class="divider"/>
-                    <li>
-                        <a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)">Edit</a>
-                    </li>
+                    <t t-if="publish_edit">
+                        <li class="divider"/>
+                        <li>
+                            <a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)"><small>Edit</small></a>
+                        </li>
+                    </t>
                 </ul>
               </div>
+            </t>
+        </template>
+
+        <template id="publish_short">
+            <t t-if="editable" t-ignore="true">
+                <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
+                        t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
+                        class="pull-right js_publish">
+                    <span t-attf-class="text-success css_publish glyphicon glyphicon-ok"></span>
+                    <span t-attf-class="text-danger css_unpublish glyphicon glyphicon-remove-circle"></span>
+                    <span t-attf-class="text-muted css_published glyphicon glyphicon-ok"></span>
+                    <span t-attf-class="text-muted css_unpublished glyphicon glyphicon-remove-circle"></span>
+                </a>
             </t>
         </template>
 
