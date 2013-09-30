@@ -40,7 +40,7 @@
     may also be written as::
 
         with scope(cr, uid, context):       # cr, uid, context introduced once
-            model = scope.model(MODEL)      # scope proxies the current scope
+            model = scope[MODEL]            # scope proxies the current scope
             recs = model.search(DOMAIN)     # search returns a recordset
             for rec in recs:                # iterate over the records
                 print rec.name

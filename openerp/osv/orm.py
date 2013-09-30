@@ -1303,7 +1303,7 @@ class BaseModel(object):
         field_names = set(field_names)
 
         # old-style constraint methods
-        trans = scope_proxy.model('ir.translation')
+        trans = scope_proxy['ir.translation']
         cr, uid, context = scope_proxy.args
         lang = scope_proxy.lang
         ids = self.unbrowse()

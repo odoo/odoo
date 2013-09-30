@@ -162,7 +162,7 @@ class res_partner_title(osv.osv):
 
 @model
 def _lang_get(self):
-    languages = scope.model('res.lang').search([])
+    languages = scope['res.lang'].search([])
     return [(language.code, language.name) for language in languages]
 
 # fields copy if 'use_parent_address' is checked
@@ -332,7 +332,7 @@ class res_partner(osv.Model, format_address):
 
     @model
     def _default_company(self):
-        return scope.model('res.company')._company_default_get('res.partner')
+        return scope['res.company']._company_default_get('res.partner')
 
     _defaults = {
         'active': True,
@@ -391,7 +391,7 @@ class res_partner(osv.Model, format_address):
     @multi
     def onchange_state(self, state_id):
         if state_id:
-            state = scope.model('res.country.state').browse(state_id)
+            state = scope['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
 
