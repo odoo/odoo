@@ -40,7 +40,7 @@ class website_hr_recruitment(http.Controller):
         active = id
         step = 5
         pager = request.website.pager(url="/jobs/", total=len(jobpost_ids), page=page, step=step, scope=5)
-        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
+        #jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
         
         values = {
             'active': active,
@@ -49,7 +49,7 @@ class website_hr_recruitment(http.Controller):
             'departments': hr_department_obj.browse(request.cr, request.uid, department_ids),
             'vals': vals,
             'no_of_jobs': len(hr_job_obj.browse(request.cr, request.uid, jobpost_ids)),
-            'pager': pager
+           # 'pager': pager
         }
         return request.website.render("website_hr_recruitment.index", values)
 
