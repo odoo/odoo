@@ -32,9 +32,17 @@
         </div>
     </template>
 
+    <!-- Options: Blog Post Summary: hide author -->
     <template id="view_blog_post_short_author" inherit_option_id="website_blog.view_blog_post_short" name="Hide Authors">
         <xpath expr="//span[@class='icon-user']" position="attributes">
             <attribute name="class">hidden</attribute>
+        </xpath>
+    </template>
+
+    <!-- Options: Blog Post Summary: show category -->
+    <template id="view_blog_post_short_category" inherit_option_id="website_blog.view_blog_post_short" name="Show Blog Name">
+        <xpath expr="//span[@class='icon-user']" position="after">
+            <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
         </xpath>
     </template>
 
@@ -104,12 +112,19 @@
         </section>
     </template>
 
+    <!-- Options: Blog Post: hide author -->
     <template id="view_blog_post_author" inherit_option_id="website_blog.view_blog_post" name="Hide Authors">
         <xpath expr="//span[@class='icon-user']" position="attributes">
             <attribute name="class">hidden</attribute>
         </xpath>
     </template>
 
+    <!-- Options: Blog Post: show category -->
+    <template id="view_blog_post_show_category" inherit_option_id="website_blog.view_blog_post" name="Show Blog Name">
+        <xpath expr="//span[@class='icon-user']" position="after">
+            <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
+        </xpath>
+    </template>
 
     <!-- Page --> 
     <template id="index" name="Blogs" page="True">
@@ -139,6 +154,7 @@
         </t>
     </template>
 
+    <!-- Option: right column -->
     <template id="blog_right_column" inherit_id="website_blog.index" inherit_option_id="website_blog.index" name="Right Column">
         <xpath expr="//div[@class='row']" position="inside">
             <div class="col-sm-3 hidden-xs col-lg-offset-1 mb32" id="right_column">
@@ -150,7 +166,7 @@
         </xpath>
     </template>
 
-    <!-- Option: archives -->
+    <!-- Option: Right Column: archives -->
     <template id="blog_history" inherit_id="website_blog.blog_right_column" inherit_option_id="website_blog.blog_right_column" name="Archives">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section>
@@ -172,6 +188,7 @@
         </xpath>
     </template>
 
+    <!-- Option: Right Column: about us -->
     <template id="blog_aboutus" inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column" name="About" priority="4">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">
@@ -187,16 +204,19 @@
         </xpath>
     </template>
 
+    <!-- Option: Right Column: follow us -->
     <template id="blog_followus" inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column" name="Follow us" priority="2">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">
                 <h4>Follow us</h4>
-                <p class="text-muted">
-                    Be notified of new blog posts in <t t-esc="category.name"/>
-                </p>
-                <t t-call="website_mail.follow">
-                    <t t-set="email" t-value="current_user.email"/>
-                    <t t-set="object" t-value="category"/>
+                <t t-if="category">
+                    <p class="text-muted">
+                        Be notified of new blog posts in <t t-esc="category.name"/>
+                    </p>
+                    <t t-call="website_mail.follow">
+                        <t t-set="email" t-value="current_user.email"/>
+                        <t t-set="object" t-value="category"/>
+                    </t>
                 </t>
                 <p class="text-muted">
                     Participate on our social stream.
@@ -213,6 +233,7 @@
         </xpath>
     </template>
 
+    <!-- Option: Right Column: categories + category in blog post -->
     <template id="blog_categories" inherit_option_id="website_blog.blog_right_column" name="Other Blogs" priority="6">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">
