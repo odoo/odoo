@@ -5,11 +5,7 @@
         </record>
 
         <record id="stock_location_qualitytest0" model="stock.location">
-                <field name="location_id" ref="stock.stock_location_company"/>
-                <field eval="0" name="scrap_location"/>
-                <field name="company_id" ref="base.main_company"/>
-                <field name="usage">internal</field>
-                <field name="name">Quality Control</field>
+                <field name="active">True</field>
         </record>
         <record id="stock_location_path_4" model="stock.location.path">
             <field model="stock.location" name="location_from_id" search="[('name', '=', u'Input')]"/>

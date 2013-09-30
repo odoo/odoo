@@ -454,6 +454,8 @@ class stock_warehouse(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if context is None:
+            context = {}
         seq_obj = self.pool.get('ir.sequence')
         location_obj = self.pool.get('stock.location')
         route_obj = self.pool.get('stock.location.route')
@@ -518,6 +520,8 @@ class stock_location_path(osv.osv):
 
     def _get_route(self, cr, uid, ids, context=None):
         result = {}
+        if context is None:
+            context = {}
         context_with_inactive = context.copy()
         context_with_inactive['active_test']=False
         for route in self.pool.get('stock.location.route').browse(cr, uid, ids, context=context_with_inactive):
