@@ -99,7 +99,7 @@ def html_sanitize(src, silent=True):
 # HTML Cleaner
 #----------------------------------------------------------
 
-def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_options=None):
+def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_options=None, br=False):
     """ html_email_clean: clean the html by doing the following steps:
 
      - try to strip email quotes, by removing blockquotes or having some client-
@@ -261,6 +261,8 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
                 None,
                 {'class': expand_options.get('oe_expand_span_class', 'oe_mail_expand')}
             )
+            if br:
+                read_more_node.append(_create_node('br','',None, {}))
             read_more_link_node = _create_node(
                 'a',
                 'read more',
