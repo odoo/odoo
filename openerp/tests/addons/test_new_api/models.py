@@ -45,6 +45,21 @@ class res_partner(osv.Model):
 from openerp import Model, fields
 from openerp import constrains, depends, model, multi, one, scope
 
+#
+# Dummy models defined incrementally to check:
+#  - model name given by class name
+#  - inherit model with Model.<model_name>
+#
+
+class test_new_api_foo(Model):
+    def foo(self):
+        return 'foo'
+
+class test_new_api_foo(Model.inherit('test_new_api_foo')):
+    def foo(self):
+        return super(test_new_api_foo, self).foo() + 'bar'
+
+
 class res_partner(Model):
     _inherit = 'res.partner'
 

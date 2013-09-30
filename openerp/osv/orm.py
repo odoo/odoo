@@ -360,6 +360,14 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+    def inherit(self, *model_names):
+        """ Return a dummy class that declares model inheritance. """
+        class Inherit(self):
+            _register = False
+            _inherit_models = model_names
+
+        return Inherit
+
 
 # special columns automatically created by the ORM
 MAGIC_COLUMNS = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']
@@ -661,11 +669,19 @@ class BaseModel(object):
         # we cannot use that "registry class" for combining model classes by
         # inheritance, since it confuses the metadata inference process.
 
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
-            name = cls._name or (len(parent_names) == 1 and parent_names[0]) or cls.__name__
-            name = snake_str(name)
+        # retrieve old-style and new-style declarations
+        inherit = getattr(cls, '_inherit', None)
+        inherit_models = getattr(cls, '_inherit_models', ())
+
+        if inherit or inherit_models:
+            if inherit:
+                # old-style declaration
+                parent_names = [inherit] if isinstance(inherit, basestring) else inherit
+                name = snake_str(cls._name or (len(parent_names) == 1 and parent_names[0]))
+            else:
+                # new-style declaration
+                parent_names = inherit_models
+                name = snake_str(cls._name or cls.__name__)
 
             for parent_name in parent_names:
                 if parent_name not in pool:
