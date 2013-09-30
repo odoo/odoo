@@ -75,7 +75,7 @@
         <ul class="media-list">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                 <div class="media-body">
-                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
                     <div class="media-body">
                         <t t-call="website.publish_management"><t t-set="object" t-value="message"/></t>
                         <h5 class="media-heading">
