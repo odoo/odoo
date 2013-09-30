@@ -278,6 +278,7 @@
                   <t t-raw="res_company.name"></t>
               </t>
               <div id="wrap">
+                <div class="oe_structure"/>
                 <div class="container">
                     <h1>Contact us</h1>
                     <div class="row">
@@ -306,6 +307,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="oe_structure"/>
               </div>
             </t>
         </template>
@@ -314,28 +316,30 @@
             <t t-call="website.layout">
               <t t-set="title">About <t t-raw="res_company.name"></t>
               </t>
-              <div id="wrap" class="oe_structure">
-                <div class="container mb32">
-                    <div class="row col-wrap" id="aboutus">
-                        <div class="col-sm-12 text-center">
-                            <h1>About us</h1>
-                            <h3 class="text-muted">A passion for great products</h3>
-                        </div>
-                        <div class="col-sm-8 mt16">
-                            <p>
-                                We are a team of passionated people whose goal is to improve everyone's
-                                life through disruptive products. We build great products to solve your
-                                business problems.
-                            </p>
-                            <p>
-                                Our products are designed for small to medium companies willing to optimize
-                                their performance.
-                            </p>
-                        </div><div class="col-sm-3 col-sm-offset-1">
-                            <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Out Team"/>
-                        </div>
-                    </div>
-                </div>
+              <div id="wrap">
+                  <div class="oe_structure"/>
+                  <div class="container mb32">
+                      <div class="row col-wrap" id="aboutus">
+                          <div class="col-sm-12 text-center">
+                              <h1>About us</h1>
+                              <h3 class="text-muted">A passion for great products</h3>
+                          </div>
+                          <div class="col-sm-8 mt16">
+                              <p>
+                                  We are a team of passionated people whose goal is to improve everyone's
+                                  life through disruptive products. We build great products to solve your
+                                  business problems.
+                              </p>
+                              <p>
+                                  Our products are designed for small to medium companies willing to optimize
+                                  their performance.
+                              </p>
+                          </div><div class="col-sm-3 col-sm-offset-1">
+                              <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Out Team"/>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="oe_structure"/>
               </div>
             </t>
         </template>

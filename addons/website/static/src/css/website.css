@@ -345,18 +345,13 @@ footer {
 
 /* Parallax Theme */
 .parallax_full {
-  background: #eeeeee top left repeat;
+  background: #eeeeee bottom center repeat fixed;
   min-height: 650px;
   width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-.parallax_full > img {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
+/* overflow: hidden
+ * position: relative */
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;

@@ -30,8 +30,8 @@ import werkzeug
 
 
 class website_mail(http.Controller):
-    _category_post_per_page = 2
-    _post_comment_per_page = 2
+    _category_post_per_page = 6
+    _post_comment_per_page = 6
 
     @website.route([
         '/blog/',
