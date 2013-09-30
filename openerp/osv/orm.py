@@ -1008,8 +1008,10 @@ class BaseModel(object):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                t = (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length)
+                if not t in self.pool._store_function[object]:
+                    self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
             self.pool._sql_error[self._table+'_'+key] = msg
