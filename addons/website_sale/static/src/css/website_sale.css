@@ -86,37 +86,93 @@
 
 /* ---- Product Sizes ---- */
 .col-md-12 .oe-height-1 {
-  height: 125px;
+  height: 75px;
 }
 .col-md-12 .oe-height-2 {
-  height: 250px;
+  height: 150px;
 }
 .col-md-12 .oe-height-3 {
-  height: 375px;
+  height: 225px;
 }
 .col-md-12 .oe-height-4 {
-  height: 499.9px;
+  height: 300px;
 }
 
 .col-md-9 .oe-height-1 {
-  height: 95px;
+  height: 70px;
 }
 .col-md-9 .oe-height-2 {
-  height: 190px;
+  height: 140px;
 }
 .col-md-9 .oe-height-3 {
-  height: 285px;
+  height: 210px;
 }
 .col-md-9 .oe-height-4 {
-  height: 380px;
+  height: 280px;
+}
+
+@media (min-width: 992px) {
+  .col-md-12 .oe-height-1 {
+    height: 95px;
+  }
+  .col-md-12 .oe-height-2 {
+    height: 190px;
+  }
+  .col-md-12 .oe-height-3 {
+    height: 285px;
+  }
+  .col-md-12 .oe-height-4 {
+    height: 380px;
+  }
+
+  .col-md-9 .oe-height-1 {
+    height: 72px;
+  }
+  .col-md-9 .oe-height-2 {
+    height: 144px;
+  }
+  .col-md-9 .oe-height-3 {
+    height: 216px;
+  }
+  .col-md-9 .oe-height-4 {
+    height: 288px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .col-md-12 .oe-height-1 {
+    height: 125px;
+  }
+  .col-md-12 .oe-height-2 {
+    height: 250px;
+  }
+  .col-md-12 .oe-height-3 {
+    height: 375px;
+  }
+  .col-md-12 .oe-height-4 {
+    height: 499.9px;
+  }
+
+  .col-md-9 .oe-height-1 {
+    height: 95px;
+  }
+  .col-md-9 .oe-height-2 {
+    height: 190px;
+  }
+  .col-md-9 .oe-height-3 {
+    height: 285px;
+  }
+  .col-md-9 .oe-height-4 {
+    height: 380px;
+  }
 }
 
 /* ---- Product list style ---- */
 .oe_list_products {
-  border: 1px solid rgba(100, 100, 100, 0.2);
-  max-width: 100%;
-  max-height: 140px;
-  position: relative;
+  border: none;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.2);
+  width: 100%;
+  min-height: 140px;
 }
 .oe_list_products .oe_product_image {
   position: absolute;
@@ -126,24 +182,90 @@
   bottom: 0;
   width: 150px;
 }
-.oe_list_products .oe_product_image img {
-  max-width: 100%;
-  max-height: 100%;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
 .oe_list_products .oe_product_description {
-  bottom: 0;
+  bottom: auto;
   position: absolute;
   left: 180px;
   right: 0;
-  border-top: 1px solid #dddddd;
+  border-top: none;
+  top: 15px;
 }
 
 .oe_website_sale .row .row .col-md-12 {
   float: none;
+}
+
+/* ---- Publish managment and options ---- */
+#products_grid .css_options {
+  display: none;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  z-index: 10;
+}
+#products_grid .css_options .dropdown {
+  position: relative;
+  left: -50%;
+}
+#products_grid .css_options .dropdown [name="size"] table {
+  margin-left: 20px;
+}
+#products_grid .css_options .dropdown [name="size"] td {
+  margin: 0;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px #dddddd solid;
+  cursor: pointer;
+}
+#products_grid .css_options .dropdown [name="size"] td.selected, #products_grid .css_options .dropdown [name="size"] td.select {
+  background-color: #b1d4f1;
+}
+#products_grid .css_options .dropdown [name="size"] table.oe_hover td.selected:not(.select) {
+  background-color: transparent;
+}
+
+.cke_editable #products_grid td:hover > .css_options {
+  display: block;
+}
+
+/* Ribbon for promotionso on products */
+.oe_ribbon_promo .ribbon-wrapper {
+  display: block;
+}
+
+.ribbon-wrapper {
+  display: none;
+  width: 85px;
+  height: 88px;
+  z-index: 5;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.ribbon {
+  font: bold 15px Sans-Serif;
+  color: white;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 0px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  position: relative;
+  padding: 7px 0;
+  left: -5px;
+  top: 15px;
+  width: 120px;
+  background-color: #aa0000;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#880000), to(#aa0000));
+  background-image: -webkit-linear-gradient(top, #880000, #aa0000);
+  background-image: -moz-linear-gradient(top, #880000, #aa0000);
+  background-image: -ms-linear-gradient(top, #880000, #aa0000);
+  background-image: -o-linear-gradient(top, #880000, #aa0000);
+  -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
 }

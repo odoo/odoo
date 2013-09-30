@@ -216,6 +216,12 @@ footer {
   padding-bottom: 12px;
 }
 
+/* ----- BOOTSTRAP FIX ----- */
+.col-md-12 {
+  float: left;
+  width: 100%;
+}
+
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/drag_here.png");
@@ -339,10 +345,16 @@ footer {
 
 /* Parallax Theme */
 .parallax_full {
-  background: #eeeeee url(/website/static/src/img/parallax/parallax_bg.jpg) bottom center repeat fixed;
+  background: #eeeeee top left repeat;
   min-height: 650px;
   width: 100%;
-  z-index: -999;
+  overflow: hidden;
+  position: relative;
+}
+.parallax_full > img {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
@@ -387,4 +399,8 @@ ul.nav-stacked > li > a {
   right: -6px;
   top: -10px;
   display: none;
+}
+
+::selection {
+  background: rgba(150, 150, 220, 0.3);
 }

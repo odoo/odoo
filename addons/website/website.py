@@ -79,6 +79,12 @@ class website(osv.osv):
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'social_twitter': fields.char('Twitter Account'),
+        'social_facebook': fields.char('Facebook Account'),
+        'social_github': fields.char('GitHub Account'),
+        'social_linkedin': fields.char('LinkedIn Account'),
+        'social_youtube': fields.char('Youtube Account'),
+        'social_googleplus': fields.char('Google+ Account'),
     }
 
     public_user = None

@@ -30,7 +30,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
-import werkzeug
 
 
 class website_event(http.Controller):
@@ -157,8 +156,9 @@ class website_event(http.Controller):
         event_obj = request.registry['event.event']
         values = {
             'event_id': event_obj.browse(request.cr, request.uid, event_id,
-                                         dict(request.context, show_address=1)),
-            'range': range
+                                         dict(request.context, show_address_only=1)),
+            'range': range,
+            'float': float,
         }
         return request.website.render("website_event.event_description_full", values)
 

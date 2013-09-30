@@ -39,7 +39,11 @@ $(document).ready(function () {
     $('.oe_website_sale a[href*="/add_cart/"], a[href*="/remove_cart/"]').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
+        var product_id = $link.attr("href").match(/product_id=([0-9]+)/)[1];
+        if (product_id) {
+            product_id = +product_id;
+        }
+        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'product_id': product_id, 'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
             .then(function (data) {
                 if (!data[0]) {
                     location.reload();
@@ -50,24 +54,57 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom').on('click', function () {
-        var $data = $(this).parents(".js_publish_management:first");
-        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $(this).hasClass('js_go_to_top')});
+    $(document).on('click', '.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom', function (event) {
+        var $a = $(event.currentTarget);
+        var $data = $a.parents(".js_publish_management:first");
+        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $a.hasClass('js_go_to_top')});
     });
 
-    $('.js_publish_management ul[name="style"] a').on('click', function () {
-        var $a = $(this);
+    $(document).on('click', '#products_grid .js_options ul[name="style"] a', function (event) {
+        var $a = $(event.currentTarget);
         var $li = $a.parent();
-        var $data = $(this).parents(".js_publish_management:first");
+        var $data = $a.parents(".js_options:first");
+        var $product = $a.parents(".oe_product:first");
 
-        var data = $a.data();
-        if (data.class.toLowerCase().indexOf('size_') === 0) {
-            $('.js_publish_management ul[name="style"] li:has(a[data-class^="size_"])').removeClass("active");
-        }
         $li.parent().removeClass("active");
-        openerp.jsonRpc('/shop/change_styles/', 'call', {'id': $data.data('id'), 'style_id': data.value})
+        openerp.jsonRpc('/shop/change_styles/', 'call', {'id': $data.data('id'), 'style_id': $a.data("id")})
             .then(function (result) {
+                $product.toggleClass($a.data("class"));
                 $li.toggleClass("active", result);
+            });
+    });
+
+    $(document).on('mouseenter', '#products_grid .js_options ul[name="size"] table', function (event) {
+        $(event.currentTarget).addClass("oe_hover");
+    });
+    $(document).on('mouseleave', '#products_grid .js_options ul[name="size"] table', function (event) {
+        $(event.currentTarget).removeClass("oe_hover");
+    });
+    $(document).on('mouseover', '#products_grid .js_options ul[name="size"] td', function (event) {
+        var $td = $(event.currentTarget);
+        var $table = $td.parents("table:first");
+        var x = $td.index()+1;
+        var y = $td.parent().index()+1;
+
+        var tr = [];
+        for (var yi=0; yi<y; yi++) tr.push("tr:eq("+yi+")");
+        var $select_tr = $table.find(tr.join(","));
+        var td = [];
+        for (var xi=0; xi<x; xi++) td.push("td:eq("+xi+")");
+        var $select_td = $select_tr.find(td.join(","));
+
+        $table.find("td").removeClass("select");
+        $select_td.addClass("select");
+    });
+    $(document).on('click', '#products_grid .js_options ul[name="size"] td', function (event) {
+        var $td = $(event.currentTarget);
+        var $data = $td.parents(".js_options:first");
+        var x = $td.index()+1;
+        var y = $td.parent().index()+1;
+        openerp.jsonRpc('/shop/change_size/', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
+            .then(function () {
+                var search = location.search.replace(/\?|$/, '?unable_editor=1&');
+                location.href = location.href.replace(/(\?|#).*/, search + location.hash);
             });
     });
 
