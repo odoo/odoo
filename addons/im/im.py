@@ -303,7 +303,7 @@ class im_user(osv.osv):
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
         'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
-        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade', oldname='user'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),

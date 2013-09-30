@@ -212,7 +212,7 @@ class mail_message(osv.Model):
 
     _defaults = {
         'type': 'email',
-        'date': fields.datetime.now(),
+        'date': fields.datetime.now,
         'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),

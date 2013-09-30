@@ -274,7 +274,7 @@ class MassMailing(osv.Model):
     }
 
     _defaults = {
-        'date': fields.datetime.now(),
+        'date': fields.datetime.now,
     }
 
 

@@ -82,7 +82,7 @@ class PointOfSaleController(http.Controller):
         """
         print 'scan_item_success: ' + str(ean)
 
-    @http.route('/pos/scan_item_error_unrecognized')
+    @http.route('/pos/scan_item_error_unrecognized', type='json', auth='admin')
     def scan_item_error_unrecognized(self, ean):
         """
         A product has been scanned without success
