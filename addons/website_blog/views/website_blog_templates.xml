@@ -87,7 +87,6 @@
             </li>
         </ul>
         <section groups="group_website_blog_reply" class="mb32">
-            <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
             <h4>Leave a Comment</h4>
             <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
                     method="POST">
