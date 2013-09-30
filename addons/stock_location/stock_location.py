@@ -33,11 +33,9 @@ class stock_location_route(osv.osv):
         'product_selectable': fields.boolean('Selectable on Product'),
         'product_categ_selectable': fields.boolean('Selectable on Product Category'),
         'warehouse_selectable': fields.boolean('Selectable on Warehouse'),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it.")
     }
     _defaults = {
         'product_selectable': True,
-        'active': True,
     }
 
 class stock_warehouse(osv.osv):
@@ -457,6 +455,11 @@ class stock_warehouse(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         seq_obj = self.pool.get('ir.sequence')
+        location_obj = self.pool.get('stock.location')
+        route_obj = self.pool.get('stock.location.route')
+        pull_obj = self.pool.get('procurement.rule')
+        push_obj = self.pool.get('stock.location.path')
+
         context_with_inactive = context.copy()
         context_with_inactive['active_test']=False
         for warehouse in self.browse(cr, uid, ids, context=context_with_inactive):
@@ -467,12 +470,13 @@ class stock_warehouse(osv.osv):
                 #rename sequence
                 if vals.get('name'):
                     rename = True
+                    name = vals.get('name')
                 in_seq = seq_obj.search(cr, uid, [('name', '=', name + _(' Picking in'))], context=context)
                 out_seq = seq_obj.search(cr, uid, [('name', '=', name + _(' Picking out'))], context=context)
                 internal_seq  = seq_obj.search(cr, uid, [('name', '=', name + _(' Picking internal'))], context=context)
-                seq_obj.write(cr, uid, in_seq, {'name': vals.get('name', name), 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
-                seq_obj.write(cr, uid, out_seq, {'name': vals.get('name', name), 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
-                seq_obj.write(cr, uid, internal_seq, {'name': vals.get('name', name), 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
+                seq_obj.write(cr, uid, in_seq, {'name': name, 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
+                seq_obj.write(cr, uid, out_seq, {'name': name, 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
+                seq_obj.write(cr, uid, internal_seq, {'name': name, 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
             #first of all, check if we need to delete and recreate route
             if vals.get('reception_steps') or vals.get('delivery_steps'):
                 #activate and deactivate location according to reception and delivery option
@@ -480,11 +484,27 @@ class stock_warehouse(osv.osv):
                 # switch between route
                 self.change_route(cr, uid, ids, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
 
-            #TODO rename routes, location, pull/push rules name if warehouse name has changed
             if rename:
                 #rename location
                 location_id = warehouse.lot_stock_id.location_id.id
-
+                location_obj.write(cr, uid, location_id, {'name': name}, context=context_with_inactive)
+                #rename route and push-pull rules
+                for route in warehouse.route_ids:
+                    route_obj.write(cr, uid, route.id, {'name': route.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                    for pull in route.pull_ids:
+                        pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                    for push in route.push_ids:
+                        push_obj.write(cr, uid, push.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                #change the 3 mto route name
+                route_obj.write(cr, uid, warehouse.ship_route_mto.id, {'name': warehouse.ship_route_mto.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                for pull in warehouse.ship_route_mto.pull_ids:
+                    pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                route_obj.write(cr, uid, warehouse.pick_ship_route_mto.id, {'name': warehouse.pick_ship_route_mto.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                for pull in warehouse.pick_ship_route_mto.pull_ids:
+                    pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                route_obj.write(cr, uid, warehouse.pick_pack_ship_route_mto.id, {'name': warehouse.pick_pack_ship_route_mto.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
+                for pull in warehouse.pick_pack_ship_route_mto.pull_ids:
+                    pull_obj.write(cr, uid, pull.id, {'name': pull.name.replace(warehouse.name, name, 1)}, context=context_with_inactive)
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -539,6 +559,7 @@ class stock_location_path(osv.osv):
         'invoice_state': 'none',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c),
         'propagate': True,
+        'active': True,
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')

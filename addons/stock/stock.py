@@ -80,7 +80,9 @@ class stock_location(osv.osv):
 
     def _get_sublocations(self, cr, uid, ids, context=None):
         """ return all sublocations of the given stock locations (included) """
-        return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
+        context_with_inactive = context.copy()
+        context_with_inactive['active_test']=False
+        return self.search(cr, uid, [('id', 'child_of', ids)], context=context_with_inactive)
 
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
