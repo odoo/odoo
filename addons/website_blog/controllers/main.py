@@ -143,7 +143,6 @@ class website_mail(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
-            'uid': request.uid,
             'unable_editor': post.get('unable_editor')
         }
 
