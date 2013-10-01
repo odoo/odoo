@@ -597,41 +597,41 @@
                         <div class="row">
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
                                 <label for="contact_name">Your Name</label>
-                                <input type="text" name="name" class="form-control" t-att-value="checkout['name']"/>
+                                <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''} col-lg-6">
                                 <label for="company">Your Company</label>
-                                <input type="text" name="company" class="form-control" t-att-value="checkout['company']"/>
+                                <input type="text" name="company" class="form-control" t-att-value="checkout.get('company')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
                                 <label for="contact_name">Email</label>
-                                <input type="email" name="email" class="form-control" t-att-value="checkout['email']"/>
+                                <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
                                 <label for="phone">Telephone</label>
-                                <input type="tel" name="phone" class="form-control" t-att-value="checkout['phone']"/>
+                                <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                             </div>
 
                             <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
                                 <label for="street">Street</label>
-                                <input type="text" name="street" class="form-control" t-att-value="checkout['street']"/>
+                                <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
                             </div>
                             <div class="clearfix"/>
 
                             <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
                                 <label for="city">City</label>
-                                <input type="text" name="city" class="form-control" t-att-value="checkout['city']"/>
+                                <input type="text" name="city" class="form-control" t-att-value="checkout.get('city')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
                                 <label for="zip">Zip / Postal Code</label>
-                                <input type="text" name="zip" class="form-control" t-att-value="checkout['zip']"/>
+                                <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
                                 <label for="state_id">State / Province</label>
                                 <select name="state_id" class="form-control">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
-                                        <option t-att-value="state.id" t-att-selected="state.id == checkout['state_id']"><t t-esc="state.name"/></option>
+                                        <option t-att-value="state.id" t-att-selected="state.id == checkout.get('state_id')"><t t-esc="state.name"/></option>
                                     </t>
                                 </select>
                             </div>
@@ -640,7 +640,7 @@
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
-                                        <option t-att-value="country.id" t-att-selected="country.id == checkout['country_id']"><t t-esc="country.name"/></option>
+                                        <option t-att-value="country.id" t-att-selected="country.id == checkout.get('country_id')"><t t-esc="country.name"/></option>
                                     </t>
                                 </select>
                             </div>
