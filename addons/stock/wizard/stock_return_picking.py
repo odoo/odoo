@@ -202,23 +202,22 @@ class stock_return_picking(osv.osv_memory):
         pick_obj.force_assign(cr, uid, [new_picking], context)
         # Update view id in context, lp:702939
         view_list = {
-                'out': 'view_picking_out_tree',
-                'in': 'view_picking_in_tree',
-                'internal': 'vpicktree',
-            }
-        data_obj = self.pool.get('ir.model.data')
-        res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(new_type, 'vpicktree'))
-        context.update({'view_id': res and res[1] or False})
-        return {
-            'domain': "[('id', 'in', ["+str(new_picking)+"])]",
-            'name': 'Picking List',
-            'view_type':'form',
-            'view_mode':'tree,form',
-            'res_model':'stock.picking',
-            'type':'ir.actions.act_window',
-            'context':context,
+            'out': 'action_picking_tree',
+            'in': 'action_picking_tree4',
+            'internal': 'action_picking_tree6',
         }
-
+        data_pool = self.pool.get('ir.model.data')
+        action = {}
+        try:
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'stock', view_list.get(new_type,'action_picking_tree6'))
+        except ValueError:
+            raise osv.except_osv(_('Error'), _('Object reference %s not found' % view_list.get(new_type,'action_picking_tree6')))
+        if action_model:
+            action_pool = self.pool.get(action_model)
+            action = action_pool.read(cr, uid, action_id, context=context)
+            action['domain'] = "[('id','=', "+str(new_picking)+")]"
+            action['context'] = context
+        return action
 stock_return_picking()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
