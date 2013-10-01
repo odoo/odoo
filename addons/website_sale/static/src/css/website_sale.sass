@@ -220,10 +220,12 @@
                 height: 20px
                 border: 1px #dddddd solid
                 cursor: pointer
-                &.selected, &.select
+                &.selected
                     background-color: #B1D4F1
-            table.oe_hover td.selected:not(.select)
+            table.oe_hover td.selected
                 background-color: transparent
+            table.oe_hover td.select
+                background-color: #B1D4F1
 
 .cke_editable
     #products_grid .oe_product_cart:hover > .css_options

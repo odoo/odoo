@@ -257,11 +257,14 @@
   border: 1px #dddddd solid;
   cursor: pointer;
 }
-#products_grid .css_options .dropdown [name="size"] td.selected, #products_grid .css_options .dropdown [name="size"] td.select {
+#products_grid .css_options .dropdown [name="size"] td.selected {
   background-color: #b1d4f1;
 }
-#products_grid .css_options .dropdown [name="size"] table.oe_hover td.selected:not(.select) {
+#products_grid .css_options .dropdown [name="size"] table.oe_hover td.selected {
   background-color: transparent;
+}
+#products_grid .css_options .dropdown [name="size"] table.oe_hover td.select {
+  background-color: #b1d4f1;
 }
 
 .cke_editable #products_grid .oe_product_cart:hover > .css_options {
