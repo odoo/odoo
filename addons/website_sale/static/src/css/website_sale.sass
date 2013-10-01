@@ -1,6 +1,18 @@
 @charset "utf-8"
 
-/* ---- Default Styles Description ---- */
+/* ---- Default Styles ---- */
+
+.oe_product
+    border: 1px solid rgba(100,100,100,0.2)
+    
+.oe_product_description
+    background: rgba(255,255, 255, 0.8)
+    padding: 5px 0 5px 0
+    z-index: 5
+
+.oe_subdescription
+    line-height: 1.2
+    margin-bottom: 4px
 
 .oe_product_image
     position: absolute
@@ -13,6 +25,15 @@
         left: 0
         bottom: 0
         right: 0
+        z-index: 4
+
+.oe_product
+    .oe_product_cart
+        position: relative
+        width: 100%
+        height: 100%
+
+/* ---- Default Styles Description ---- */
 
 .oe_product
     .oe_product_image
@@ -58,26 +79,6 @@
         top: 0
         bottom: 0
 
-/* ---- Default Styles ---- */
-
-.oe_product
-    border: 1px solid rgba(100,100,100,0.2)
-    
-.oe_product .oe_product_image img
-    max-width: 100%
-    max-height: 100%
-    z-index: 4
-
-.oe_product_description
-    background: rgba(255,255, 255, 0.8)
-    padding: 5px 0 5px 0
-    z-index: 5
-
-.oe_subdescription
-    line-height: 1.2
-    margin-bottom: 4px
-
-
 /* ---- Grid Style ---- */
 
 .style1
@@ -94,19 +95,23 @@
         height: 75px
     .oe-height-2
         height: 150px
-    .oe-height-3
-        height: 225px
     .oe-height-4
         height: 300px
+    .oe-height-6
+        height: 450px
+    .oe-height-8
+        height: 600px
 .col-md-9
     .oe-height-1
         height: 70px
     .oe-height-2
         height: 140px
-    .oe-height-3
-        height: 210px
     .oe-height-4
         height: 280px
+    .oe-height-6
+        height: 420px
+    .oe-height-8
+        height: 560px
 
 @media (max-width: 728px)
     .oe_product
@@ -128,19 +133,23 @@
             height: 95px
         .oe-height-2
             height: 190px
-        .oe-height-3
-            height: 285px
         .oe-height-4
             height: 380px
+        .oe-height-6
+            height: 570px
+        .oe-height-8
+            height: 760px
     .col-md-9
         .oe-height-1
             height: 72px
         .oe-height-2
             height: 144px
-        .oe-height-3
-            height: 216px
         .oe-height-4
             height: 288px
+        .oe-height-6
+            height: 432px
+        .oe-height-8
+            height: 576px
 
 @media (min-width: 1200px)
     .col-md-12
@@ -148,19 +157,23 @@
             height: 125px
         .oe-height-2
             height: 250px
-        .oe-height-3
-            height: 375px
         .oe-height-4
-            height: 499.9px
+            height: 500px
+        .oe-height-6
+            height: 750px
+        .oe-height-8
+            height: 1000px
     .col-md-9
         .oe-height-1
             height: 95px
         .oe-height-2
             height: 190px
-        .oe-height-3
-            height: 285px
         .oe-height-4
             height: 380px
+        .oe-height-6
+            height: 570px
+        .oe-height-8
+            height: 760px
 
 /* ---- Product list style ---- */
 .oe_list_products
@@ -213,7 +226,7 @@
                 background-color: transparent
 
 .cke_editable
-    #products_grid td:hover > .css_options
+    #products_grid .oe_product_cart:hover > .css_options
         display: block
 
 /* Ribbon for promotionso on products */

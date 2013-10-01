@@ -797,41 +797,10 @@
                 this.$background_img.detach();
         },
 
-        /*
-        * active the cke rte editor for change image url
-        */
-        active_change_image: function ($image) {
-            var self = this;
-            // cke select image with mousedown on image
-            var $image = $($image);
-            var image = $image[0];
-            var event = document.createEvent( 'HTMLEvents' );
-            event.initEvent( 'mousedown', true, true );
-            image.dispatchEvent( event );
-
-            // hack to active editor with doubleclick on editor
-            var dblclick = null;
-            $image.on("dblclick", function (evt) {
-                evt.preventDefault();
-                dblclick = new CKEDITOR.dom.event(evt.originalEvent);
-                return;
-            });
-            var event = document.createEvent( 'HTMLEvents' );
-            event.initEvent( 'dblclick', true, true );
-            image.dispatchEvent( event );
-        },
-
         change_background: function (bg, ul_options) {
             var self = this;
             var $ul = this.$editor.find(ul_options);
             var bg_value = $(bg).css("background-image").replace(/url\(|\)/g, "");
-
-            // must add an image in the DOM for rte editor
-            this.$background_img = $("<img src='"+bg_value+"'/>").css({position: "absolute", zIndex: -10, left:-1000000, top:-1000000});
-            this.$background_img.prependTo(this.$target);
-            this.$background_img.on("node_changed", function () {
-                $(bg).css("background-image", "url(" + $(this).attr('src') + ")");
-            });
 
             // select in ul options
             $ul.find("li").removeClass("active");
@@ -849,18 +818,23 @@
                         $(this).addClass("active");
                         self.$editor.find('input').val("");
                     } else {
-                        self.active_change_image(self.$background_img);
+                        var editor = new website.editor.ImageDialog();
+                        editor.on('start', self, function (o) {o.url = bg_value;});
+                        editor.on('save', self, function (o) {
+                            $(bg).css("background-image", "url(" + o.url + ")");
+                        });
+                        editor.appendTo($('body'));
                     }
                 })
                 .on('mouseover', function (event) {
                     if ($(this).data("value")) {
                         var src = $(this).data("value");
-                        self.$background_img.attr('src', src);
+                        $(bg).css("background-image", "url(" + src + ")");
                     }
                 })
                 .on('mouseout', function (event) {
                     var src = $ul.find('li.active').data("value");
-                    self.$background_img.attr('src', src);
+                    $(bg).css("background-image", "url(" + src + ")");
                 });
         },
     });

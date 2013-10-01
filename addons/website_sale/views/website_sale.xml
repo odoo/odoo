@@ -49,17 +49,7 @@
             <li>
                 <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
-                                  t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
-                </a>
-            </li>
-        </xpath>
-        <xpath expr="//footer//ul[@name='products']" position="inside">
-            <li><a t-href="/shop/">Shop</a></li>
-            <li>
-                <a t-href="/shop/mycart/">
-                    <i class="icon-shopping-cart"></i>
-                    My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
+                    My cart <sup t-attf-class="my_cart_quantity label label-primary #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
             </li>
@@ -141,7 +131,6 @@
                   <div class="col-md-12" id="products_grid">
                     <table width="100%">
                       <colgroup>
-                        <col style="width: 1px; margin-right: -1px;" />
                         <col class="col-md-3" />
                         <col class="col-md-3" />
                         <col class="col-md-3" />
@@ -150,65 +139,67 @@
                       <tbody>
                         <t t-set="table_products" t-value="get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
                         <tr t-foreach="table_products" t-as="tr_product">
-                          <td class="oe-height-2"></td>
                           <t t-foreach="tr_product" t-as="td_product">
                             <t t-if="td_product">
                             <t t-set="product" t-value="td_product['product']"/>
                             <td t-att-colspan="td_product['x']"
                                 t-att-rowspan="td_product['y']"
-                                t-attf-class="oe_product #{ td_product['class'] }"
-                                t-att-data-publish="product.website_published and 'on' or 'off'">
+                                t-attf-class="oe_product oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
-                                <div class="css_options" t-ignore="true">
-                                  <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
-                                    <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
-                                      <li class='dropdown-submenu'>
-                                        <a tabindex="-1" href="#">Size</a>
-                                        <ul class="dropdown-menu" name="size">
-                                          <li><a href="#">
-                                            <table>
-                                              <tr>
-                                                <td class="selected"></td>
-                                                <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                              <tr>
-                                                <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                              <tr>
-                                                <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                              <tr>
-                                                <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                            </table>
-                                          </a></li>
-                                        </ul>
-                                      </li>
-                                      <li class='dropdown-submenu'>
-                                        <a tabindex="-1" href="#">Styles</a>
-                                        <ul class="dropdown-menu" name="style">
-                                          <t t-foreach="styles" t-as="style">
-                                            <li t-att-class="style.id in [s.id for s in product.website_style_ids] and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
-                                          </t>
-                                        </ul>
-                                      </li>
-                                    </ul>
+                                <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
+                                  
+                                  <div class="css_options" t-ignore="true" t-if="editable">
+                                    <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
+                                      <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+                                      <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
+                                        <li class='dropdown-submenu'>
+                                          <a tabindex="-1" href="#">Size</a>
+                                          <ul class="dropdown-menu" name="size">
+                                            <li><a href="#">
+                                              <table>
+                                                <tr>
+                                                  <td class="selected"></td>
+                                                  <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                              </table>
+                                            </a></li>
+                                          </ul>
+                                        </li>
+                                        <li class='dropdown-submenu'>
+                                          <a tabindex="-1" href="#">Styles</a>
+                                          <ul class="dropdown-menu" name="style">
+                                            <t t-foreach="styles" t-as="style">
+                                              <li t-att-class="style.id in [s.id for s in product.website_style_ids] and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
+                                            </t>
+                                          </ul>
+                                        </li>
+                                      </ul>
+                                    </div>
                                   </div>
+
+                                  <t t-call="website_sale.products_cart"/>
                                 </div>
 
-                                <t t-call="website_sale.products_cart"/>
                             </td>
                             </t>
                             <td t-if="td_product == None"/>
@@ -608,41 +599,41 @@
                         <div class="row">
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
                                 <label for="contact_name">Your Name</label>
-                                <input type="text" name="name" class="form-control" t-att-value="checkout['name']"/>
+                                <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''} col-lg-6">
                                 <label for="company">Your Company</label>
-                                <input type="text" name="company" class="form-control" t-att-value="checkout['company']"/>
+                                <input type="text" name="company" class="form-control" t-att-value="checkout.get('company')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
                                 <label for="contact_name">Email</label>
-                                <input type="email" name="email" class="form-control" t-att-value="checkout['email']"/>
+                                <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
                                 <label for="phone">Telephone</label>
-                                <input type="tel" name="phone" class="form-control" t-att-value="checkout['phone']"/>
+                                <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                             </div>
 
                             <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
                                 <label for="street">Street</label>
-                                <input type="text" name="street" class="form-control" t-att-value="checkout['street']"/>
+                                <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
                             </div>
                             <div class="clearfix"/>
 
                             <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
                                 <label for="city">City</label>
-                                <input type="text" name="city" class="form-control" t-att-value="checkout['city']"/>
+                                <input type="text" name="city" class="form-control" t-att-value="checkout.get('city')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
                                 <label for="zip">Zip / Postal Code</label>
-                                <input type="text" name="zip" class="form-control" t-att-value="checkout['zip']"/>
+                                <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
                                 <label for="state_id">State / Province</label>
                                 <select name="state_id" class="form-control">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
-                                        <option t-att-value="state.id" t-att-selected="state.id == checkout['state_id']"><t t-esc="state.name"/></option>
+                                        <option t-att-value="state.id" t-att-selected="state.id == checkout.get('state_id')"><t t-esc="state.name"/></option>
                                     </t>
                                 </select>
                             </div>
@@ -651,7 +642,7 @@
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
-                                        <option t-att-value="country.id" t-att-selected="country.id == checkout['country_id']"><t t-esc="country.name"/></option>
+                                        <option t-att-value="country.id" t-att-selected="country.id == checkout.get('country_id')"><t t-esc="country.name"/></option>
                                     </t>
                                 </select>
                             </div>

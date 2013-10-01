@@ -24,7 +24,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons import website_sale
-from openerp.addons.website import website
+from openerp.addons.website.models import website
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
