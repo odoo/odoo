@@ -158,23 +158,29 @@
             var $pill = self.$(".pill-content");
             var padding = parseInt($pill.css("padding-left"));
             var $scroll = this.$(".scroll");
-
-            $scroll.scroll(function () {
+            
+           $scroll.scroll(function () {
                 $pill.find("> div").each(function () {
+                	/*
                     if ($(this).position().left <= padding) {
                         $ul.find("> li").removeClass('active');
                         $ul.find("a[href='#" + $(this).attr("id") + "']").parent("li").addClass('active');
-                    }
+                    }*/
                 });
             });
 
             $ul.find("a").click(function (event) {
                 event.preventDefault();
-                $scroll.scrollLeft( $scroll.scrollLeft() + $($(event.currentTarget).attr("href")).position().left - padding );
+                $pill.find("> div").hide();
+            	$pill.find( $(event.currentTarget).attr('href')).show();
+            	$ul.find('> li').removeClass('active');
+            	$(event.currentTarget).parent().addClass('active');
                 return false;
             });
 
-            $pill.css("padding-right", self.$el.outerWidth() - padding + 10 - $pill.find("> div:last").outerWidth());
+           // $pill.css("padding-right", self.$el.outerWidth() - padding + 10 - $pill.find("> div:last").outerWidth());
+            $pill.find("> div").hide();
+            $pill.find("div:first").show();
             $ul.find("> li:first").addClass('active');
         },
         cover_target: function ($el, $target){

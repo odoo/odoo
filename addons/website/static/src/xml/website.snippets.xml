@@ -63,10 +63,10 @@
                   <li><a href="#snippet_effect">Effects</a></li>
                 </ul>
                 <div class="pill-content">
-                    <div id="snippet_structure"><label><div>Structure</div></label></div>
-                    <div id="snippet_content"><label><div>Content</div></label></div>
-                    <div id="snippet_business"><label><div>Business</div></label></div>
-                    <div id="snippet_effect"><label><div>Effects</div></label></div>
+                    <div id="snippet_structure"></div>
+                    <div id="snippet_content"></div>
+                    <div id="snippet_business"></div>
+                    <div id="snippet_effect"></div>
                 </div>
             </div>
         </div>
@@ -139,7 +139,7 @@
                 <li data-value="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
                 <li data-value="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
                 <li data-value="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
-                <li class="oe_custom_bg"><a><b>Enter your image</b></a></li>
+                <li class="oe_custom_bg"><b></b></li>
             </ul>
         </li>
         <li class='oe_snippet_options dropdown-submenu'>
@@ -160,16 +160,15 @@
 
         <!-- thumbnail to display inside the bottom widget list editor -->
         <div class='oe_snippet_thumbnail'>
-            <img src="/website/static/src/img/banner/color_splash.jpg" style="position: absolute; left: 0; top: 40px; max-width: 100%"/>
-            <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; left: 10px; top: 52px; max-width: 25%"/>
-            <span style="position: absolute; top: 50px; right: 10px;">Banner</span>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_banner.png"/>
+            <span class="oe_snippet_thumbnail_title">Banner</span>         
         </div>
-
         <!-- body to insert after drag and drop thumbnail -->
         <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000">
             <!-- Carousel items -->
             <div class="carousel-inner">
-                <div class="item image_text active" style="background-image: url(/website/static/src/img/banner/color_splash.jpg)">
+                <div class="item image_text active">
+                    <img src="/website/static/src/img/banner/color_splash.jpg" width="100%" height="100%"/>
                     <div class="container">
                         <div class="carousel-caption content">
                             <h2>Set Your Banner Title</h2>
@@ -195,17 +194,20 @@
         <div class='oe_snippet_class'>dark</div>
     </div>
 
-    <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
+    <!-- <div t-name="website.snippets.well" data-snippet-id='well' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
         <div class='oe_snippet_thumbnail'>Well</div>
         <div class="oe_snippet_body well">
             Manage your sales funnel with no effort with OpenERP CRM. Attract
             leads, follow-up on phone calls and meetings. Analyse the quality
             of your leads to make informed decisions.
         </div>
-    </div>
+    </div> -->
 
     <div t-name="website.snippets.quote" data-snippet-id='quote' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
-        <div class='oe_snippet_thumbnail'>Quote</div>
+        <div class='oe_snippet_thumbnail'>            
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quote.png"/>
+            <span class="oe_snippet_thumbnail_title">Quote</span>
+        </div>
         <blockquote class="oe_snippet_body">
             <p>
                 OpenERP provides essential platform for our project management.
@@ -216,7 +218,10 @@
     </div>
 
     <div t-name="website.snippets.panel" data-snippet-id='panel' data-category='content' data-selector-siblings='p, h1, h2, h3, blockquote'>
-        <div class='oe_snippet_thumbnail'>Panel</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_panel.png"/>
+            <span class="oe_snippet_thumbnail_title">Panel</span>
+        </div>
         <div class="oe_snippet_body panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">OpenERP Features</h3>
@@ -232,13 +237,16 @@
 
     <div t-name="website.snippets.surprise" data-snippet-id='vomify' data-category='content' data-selector-children='.oe_structure'>
         <div class="oe_snippet_body" style="height: 0; position: absolute;"></div>
-        <div class='oe_snippet_thumbnail' style='background-image:radial-gradient(red,orange,yellow,green,blue);'>Surprise!</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_surprise.png"/>
+            <span class="oe_snippet_thumbnail_title">Surprise!</span>
+        </div>
     </div>
 
     <div t-name="website.snippets.text-image" data-snippet-id='text-image' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>
-            <span style="position: absolute; top: 50px; left: 5px;">Text-Image</span>
-            <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; right: 5px; top: 50px; max-width: 28%"/>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
+            <span class="oe_snippet_thumbnail_title">Text-Image</span>
         </div>
         <section class="oe_snippet_body">
             <div class="container">
@@ -267,8 +275,8 @@
 
     <div t-name="website.snippets.image-text" data-snippet-id='image-text' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>
-            <img src="/website/static/src/img/banner/banner_picture.png" style="position: absolute; left: 5px; top: 50px; max-width: 28%"/>
-            <span style="position: absolute; top: 50px; right: 5px;">Image-Text</span>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_text.png"/>
+            <span class="oe_snippet_thumbnail_title">Image-Text</span>
         </div>
         <section class="oe_snippet_body">
             <div class="container">
@@ -296,15 +304,8 @@
 
     <div t-name="website.snippets.jumbotron" data-snippet-id='jumbotron' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>
-            <div style="position: absolute; top: 30px; background-color: #eee; width: 100%; padding: 8px 0 6px 4px;">
-                <div style="color: #000; display: block; text-align: left;">
-                    Jumbotron
-                    <div style="font-size: 9px; line-height: 9px; text-shadow: none;">
-                        Jumbotron Sub-title
-                        <br/><span class="label label-primary">Contact us</span>
-                    </div>
-                </div>
-            </div>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_jumbotron.png"/>
+            <span class="oe_snippet_thumbnail_title">Jumbotron</span>
         </div>
         <section class="oe_snippet_body jumbotron mt16 mb16">
             <div class="container">
@@ -323,21 +324,8 @@
 
     <div t-name="website.snippets.text-block" data-snippet-id='text-block' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>
-            <div style="position: absolute; top: 26px; left: 5px;  width: 94%;">
-                <div style="display: block;">
-                    Text Block
-                    <div style="text-shadow: none;font-size: 9px; line-height: 9px; color: #bbb;margin-bottom: 5px;">
-                        Jumbotron Sub-title
-                    </div>
-                    <div style="text-shadow: none;font-size: 6px; line-height: 6px; text-align: left;">
-                        Organize projects around your own processes. Work
-                        on tasks and issues using the kanban view, schedule
-                        tasks using the gantt chart and control deadlines
-                        in the calendar view. Every project may have it's
-                        own stages allowing teams to optimize their job.
-                    </div>
-                </div>
-            </div>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
+            <span class="oe_snippet_thumbnail_title">Text Block</span>
         </div>
         <section class="oe_snippet_body mt16 mb16">
             <div class="container">
@@ -369,7 +357,10 @@
     </div>
 
     <div t-name="website.snippets.title" data-snippet-id='title' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class="oe_snippet_thumbnail">Title</div>
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_title.png"/>
+            <span class="oe_snippet_thumbnail_title">Title</span>
+        </div>
         <section class="oe_snippet_body">
             <div class="container">
                 <div class="row">
@@ -384,8 +375,8 @@
 
     <div t-name="website.snippets.hr" data-snippet-id='hr' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class="oe_snippet_thumbnail">
-            <hr style="position: absolute;top: 61px;margin: 0;width: 100%;border-color: #888;"/>
-            <div style="position: absolute;width: 100%;top: 51px;">Separator</div>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
+            <span class="oe_snippet_thumbnail_title">Separator</span>        
         </div>
         <hr class="oe_snippet_body"/>
     </div>
@@ -393,17 +384,8 @@
 
     <div t-name="website.snippets.big-picture" data-snippet-id='big-picture' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>
-            <div style="position: absolute; top: 8px; left: 5px;  width: 94%;">
-                <div style="display: block;">
-                    Big Picture
-                    <img src="/website/static/src/img/big_picture.png" style="max-width: 100%"/>
-                    <div style="text-shadow: none;font-size: 6px; line-height: 6px; margin: 5px 10px">
-                        OpenERP's Point of Sale introduces a super clean
-                        interface with no installation required.
-                    </div>
-                </div>
-            </div>
-
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_big_picture.png"/>
+            <span class="oe_snippet_thumbnail_title">Big Picture</span>          
         </div>
         <section class="oe_snippet_body dark mt16 mb16">
             <div class="container">
@@ -435,23 +417,8 @@
 
     <div t-name="website.snippets.three-columns" data-snippet-id='three-columns' data-category='structure' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class="oe_snippet_thumbnail">
-            <div style="padding-top: 22px;">
-                Three Columns
-                <div class="clearfix" style="font-size: 6px;text-shadow: none;">
-                    <div class="pull-left" style="width: 33%;line-height: 6px;">
-                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 90%;"/>
-                        Post job offers and keep track of each application received.
-                    </div>
-                    <div class="pull-left" style="width: 33%;line-height: 6px;">
-                        <img src="/website/static/src/img/desert_thumb.jpg" style="max-width: 90%;"/>
-                        Break down information silos. Share knowledge and best practices amongst all employees.
-                    </div>
-                    <div class="pull-left" style="width: 33%; line-height: 6px;">
-                        <img src="/website/static/src/img/deers_thumb.jpg" style="max-width: 90%;"/>
-                        The agenda of each employee is updated accordingly.
-                    </div>
-                </div>
-            </div>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_three_columns.png"/>
+            <span class="oe_snippet_thumbnail_title">Three Columns</span>            
         </div>
         <section class="oe_snippet_body mt16 mb16">
             <div class="container">
@@ -502,7 +469,10 @@
     </div>
 
     <div t-name="website.snippets.portfolio" data-snippet-id='portfolio' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class='oe_snippet_thumbnail'>Portfolio</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_portfolio.png"/>
+            <span class="oe_snippet_thumbnail_title">Portfolio</span>      
+        </div>
         <section class="oe_snippet_body">
             <div class="container">
                 <div class="row">
@@ -532,21 +502,8 @@
 
     <div t-name="website.snippets.image-gallery" data-snippet-id='image-gallery' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
         <div class='oe_snippet_thumbnail'>
-            <div style="padding-top: 22px;">
-                Image Gallery
-                <div class="clearfix">
-                    <div style="float: right; width: 56px;height: 30px;">
-                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
-                        <img src="/website/static/src/img/deers_thumb.jpg" style="max-width: 24px;"/>
-                        <img src="/website/static/src/img/desert_thumb.jpg" style="max-width: 24px;"/>
-                        <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
-                    </div>
-                    <img src="/website/static/src/img/desert.jpg" style="float-left; width: 50px;height: 31px;margin-top: 4px;"/>
-                    <img src="/website/static/src/img/deers_thumb.jpg" style="float-left; max-width: 24px;"/>
-                    <img src="/website/static/src/img/landscape.jpg" style="float-left; max-width: 50px;"/>
-                    <img src="/website/static/src/img/china_thumb.jpg" style="max-width: 24px;"/>
-                </div>
-            </div>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_gallery.png"/>
+            <span class="oe_snippet_thumbnail_title">Image Gallery</span> 
         </div>
         <section class="oe_snippet_body">
             <div class="container">
@@ -585,7 +542,10 @@
     </div>
 
     <div t-name="website.snippets.pricing" data-snippet-id='pricing' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class='oe_snippet_thumbnail'>Comparisons</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_comparison.png"/>
+            <span class="oe_snippet_thumbnail_title">Comparisons</span>         
+        </div>
         <section class="oe_snippet_body">
             <div class="container">
               <div class="row">
@@ -687,7 +647,10 @@
     </div>
 
     <div t-name="website.snippets.cta" data-snippet-id='cta' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class='oe_snippet_thumbnail'>Buttons</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
+            <span class="oe_snippet_thumbnail_title">Button</span>   
+        </div>
         <section class="oe_snippet_body dark">
             <div class="container">
               <div class="row">
@@ -701,7 +664,10 @@
     </div>
 
     <div t-name="website.snippets.faq" data-snippet-id='faq' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class='oe_snippet_thumbnail'>FAQ</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_faq.png"/>
+            <span class="oe_snippet_thumbnail_title">FAQ</span>  
+        </div>
         <section class="oe_snippet_body">
             <div class="container">
                 <h2 class="page-header">
@@ -744,7 +710,10 @@
     </div>
 
     <div t-name="website.snippets.references" data-snippet-id='references' data-category='business' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class='oe_snippet_thumbnail'>References</div>
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_references.png"/>
+            <span class="oe_snippet_thumbnail_title">References</span> 
+        </div>
         <section class="oe_snippet_body mb32 mt16">
             <div class="container">
                 <div class="row">
@@ -795,25 +764,11 @@
     </div>
 
     <div t-name="website.snippets.parallax" data-snippet-id='parallax' data-category='effect' data-selector-children='.oe_structure, [data-oe-type=html]'>
-        <div class='oe_snippet_thumbnail'>Parallax</div>
-
-        <li class="oe_snippet_options dropdown-submenu">
-            <a tabindex="-1" href="#">Background</a>
-            <ul class="dropdown-menu" name="parallax-background">
-                <li data-value="/website/static/src/img/parallax/parallax_bg.jpg"><a>Parallax</a></li>
-                <li data-value="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
-                <li data-value="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
-                <li data-value="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
-                <li data-value="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
-                <li data-value="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
-                <li data-value="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
-                <li data-value="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
-                <li data-value="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
-                <li class="oe_custom_bg"><a><b>Enter your image</b></a></li>
-            </ul>
-        </li>
-
-        <section class="oe_snippet_body parallax_full oe_structure" style="background-image: url(/website/static/src/img/parallax/parallax_bg.jpg)">
+        <div class='oe_snippet_thumbnail'>
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+            <span class="oe_snippet_thumbnail_title">Parallax</span>        
+        </div>
+        <section class="oe_snippet_body parallax_full oe_structure">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 mt128 mb32">
@@ -827,7 +782,7 @@
                 </div>
             </div>
         </section>
-
     </div>
+
 
 </templates>
