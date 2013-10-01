@@ -5630,7 +5630,9 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
 });
 
 /*
-
+    This type of field display a list of checkboxes. It works only with m2ms. This field will display one checkbox for each
+    record existing in the model targeted by the relation, according to the given domain if one is specified. Checked records
+    will be added to the relation.
 */
 instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     className: "oe_form_many2many_checkboxes",
