@@ -146,58 +146,60 @@
                                 t-att-rowspan="td_product['y']"
                                 t-attf-class="oe_product oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
-                                <div class="css_options" t-ignore="true" t-if="editable">
-                                  <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
-                                    <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
-                                      <li class='dropdown-submenu'>
-                                        <a tabindex="-1" href="#">Size</a>
-                                        <ul class="dropdown-menu" name="size">
-                                          <li><a href="#">
-                                            <table>
-                                              <tr>
-                                                <td class="selected"></td>
-                                                <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                              <tr>
-                                                <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                              <tr>
-                                                <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                              <tr>
-                                                <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
-                                                <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
-                                              </tr>
-                                            </table>
-                                          </a></li>
-                                        </ul>
-                                      </li>
-                                      <li class='dropdown-submenu'>
-                                        <a tabindex="-1" href="#">Styles</a>
-                                        <ul class="dropdown-menu" name="style">
-                                          <t t-foreach="styles" t-as="style">
-                                            <li t-att-class="style.id in [s.id for s in product.website_style_ids] and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
-                                          </t>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
+                                  
+                                  <div class="css_options" t-ignore="true" t-if="editable">
+                                    <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
+                                      <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+                                      <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
+                                        <li class='dropdown-submenu'>
+                                          <a tabindex="-1" href="#">Size</a>
+                                          <ul class="dropdown-menu" name="size">
+                                            <li><a href="#">
+                                              <table>
+                                                <tr>
+                                                  <td class="selected"></td>
+                                                  <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
+                                                  <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
+                                                </tr>
+                                              </table>
+                                            </a></li>
+                                          </ul>
+                                        </li>
+                                        <li class='dropdown-submenu'>
+                                          <a tabindex="-1" href="#">Styles</a>
+                                          <ul class="dropdown-menu" name="style">
+                                            <t t-foreach="styles" t-as="style">
+                                              <li t-att-class="style.id in [s.id for s in product.website_style_ids] and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
+                                            </t>
+                                          </ul>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+
                                   <t t-call="website_sale.products_cart"/>
                                 </div>
+
                             </td>
                             </t>
                             <td t-if="td_product == None"/>

@@ -714,7 +714,7 @@
 
             if (o.url) {
                 if (o.style) {
-                    this.$('.image-style').val(o.style)
+                    this.$('.image-style').val(o.style);
                 }
                 this.set_image(o.url);
             }
