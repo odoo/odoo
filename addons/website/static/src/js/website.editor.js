@@ -18,7 +18,7 @@
         return new website.editor.LinkDialog(editor).appendTo(document.body);
     }
     function image_dialog(editor) {
-        return new website.editor.ImageDialog(editor).appendTo(document.body);
+        return new website.editor.RTEImageDialog(editor).appendTo(document.body);
     }
 
     if (website.is_editable) {
@@ -673,6 +673,23 @@
             });
         },
     });
+    /**
+     * ImageDialog widget. Lets users change an image, including uploading a
+     * new image in OpenERP or selecting the image style (if supported by
+     * the caller).
+     *
+     * Initialized as usual, but the caller can hook into two events:
+     *
+     * @event start({url, style}) called during dialog initialization and
+     *                            opening, the handler can *set* the ``url``
+     *                            and ``style`` properties on its parameter
+     *                            to provide these as default values to the
+     *                            dialog
+     * @event save({url, style}) called during dialog finalization, the handler
+     *                           is provided with the image url and style
+     *                           selected by the users (or possibly the ones
+     *                           originally passed in)
+     */
     website.editor.ImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
@@ -685,47 +702,27 @@
             'click a[href=#existing]': 'browse_existing',
             'change select.image-style': 'preview_image',
         }),
+
         start: function () {
-            var selection = this.editor.getSelection();
-            var el = selection && selection.getSelectedElement();
-            this.element = null;
+            var o = { url: null, style: null, };
+            // avoid typos, prevent addition of new properties to the object
+            Object.preventExtensions(o);
+            this.trigger('start', o);
 
-            var $select = this.$('.image-style');
-            var $options = $select.children();
-            this.image_styles = $options.map(function () { return this.value; }).get();
-
-            if (el && el.is('img')) {
-                this.element = el;
-                _(this.image_styles).each(function (style) {
-                    if (el.hasClass(style)) {
-                        $select.val(style);
-                    }
-                });
-                // set_image must follow setup of image style
-                this.set_image(el.getAttribute('src'));
+            if (o.url) {
+                if (o.style) {
+                    this.$('.image-style').val(o.style)
+                }
+                this.set_image(o.url);
             }
 
             return this._super();
         },
         save: function () {
-            var url = this.$('input.url').val();
-            var style = this.$('.image-style').val();
-            var element, editor = this.editor;
-            if (!(element = this.element)) {
-                element = editor.document.createElement('img');
-                // focus event handler interactions between bootstrap (modal)
-                // and ckeditor (RTE) lead to blowing the stack in Safari and
-                // Chrome (but not FF) when this is done synchronously =>
-                // defer insertion so modal has been hidden & destroyed before
-                // it happens
-                setTimeout(function () {
-                    editor.insertElement(element);
-                }, 0);
-            }
-            element.setAttribute('src', url);
-            $(element.$).removeClass(this.image_styles.join(' '));
-            if (style) { element.addClass(style); }
-
+            this.trigger('save', {
+                url: this.$('input.url').val(),
+                style: this.$('.image-style').val(),
+            });
             return this._super();
         },
 
@@ -769,10 +766,55 @@
                 .removeClass(this.image_styles.join(' '))
                 .addClass(this.$('select.image-style').val());
         },
-
         browse_existing: function (e) {
             e.preventDefault();
             new website.editor.ExistingImageDialog(this).appendTo(document.body);
+        },
+    });
+    website.editor.RTEImageDialog = website.editor.ImageDialog.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.on('start', this, this.proxy('started'));
+            this.on('save', this, this.proxy('saved'));
+        },
+        started: function (holder) {
+            var selection = this.editor.getSelection();
+            var el = selection && selection.getSelectedElement();
+            this.element = null;
+
+            var $select = this.$('.image-style');
+            var $options = $select.children();
+            this.image_styles = $options.map(function () { return this.value; }).get();
+
+            if (el && el.is('img')) {
+                this.element = el;
+                _(this.image_styles).each(function (style) {
+                    if (el.hasClass(style)) {
+                        holder.style = style;
+                    }
+                });
+                holder.url = el.getAttribute('src');
+            }
+        },
+        saved: function (data) {
+            var element, editor = this.editor;
+            if (!(element = this.element)) {
+                element = editor.document.createElement('img');
+                // focus event handler interactions between bootstrap (modal)
+                // and ckeditor (RTE) lead to blowing the stack in Safari and
+                // Chrome (but not FF) when this is done synchronously =>
+                // defer insertion so modal has been hidden & destroyed before
+                // it happens
+                setTimeout(function () {
+                    editor.insertElement(element);
+                }, 0);
+            }
+
+            var style = data.style;
+            element.setAttribute('src', data.url);
+            $(element.$).removeClass(this.image_styles.join(' '));
+            if (style) { element.addClass(style); }
         },
     });
 
