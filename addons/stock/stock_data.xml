@@ -105,7 +105,7 @@
             <field name="sequence_id" ref="seq_picking_type_in"/>
             <field name="default_location_src_id" ref="stock_location_suppliers"/>
             <field name="default_location_dest_id" ref="stock_location_stock"/>
-            <field name="code_id">incoming</field>
+            <field name="code_id">incoming</field>            
             <field name="auto_force_assign">True</field>
         </record>
         
@@ -113,7 +113,7 @@
             <field name="name">Delivery Orders</field>
             <field name="sequence_id" ref="seq_picking_type_out"/>
             <field name="default_location_src_id" ref="stock_location_stock"/>
-            <field name="default_location_dest_id" ref="stock_location_customers"/>
+            <field name="default_location_dest_id" ref="stock_location_customers"/>            
             <field name="code_id">outgoing</field>
         </record>
         
@@ -150,9 +150,6 @@ watch your stock valuation, and track production lots upstream and downstream (b
         </record>
 
 
-
-
-
         <!--
              Procurement rules
         -->
@@ -168,12 +165,12 @@ watch your stock valuation, and track production lots upstream and downstream (b
 
     
         <record id="route_warehouse0_mto" model='stock.location.route'>
-            <field name="name">Your Company: Ship Only (MTO)</field>
+            <field name="name">Your Company: Ship Only (MTO)</field>            
             <field name="sequence">10</field>
         </record>
 
         <record id="procurement_rule_customer_mto" model="procurement.rule">
-            <field name="name">Your Company: Stock → Customer</field>
+            <field name="name">Your Company: Stock → Customer</field>            
             <field name="action">move</field>
             <field name="location_id" ref="stock_location_customers"/>
             <field name="location_src_id" ref="stock_location_stock"/>
@@ -259,5 +256,8 @@ watch your stock valuation, and track production lots upstream and downstream (b
         <record id="picking_type_internal" model="stock.picking.type">
             <field name="warehouse_id" ref="warehouse0"/>
         </record>
+        
+       
+
     </data>
 </openerp>

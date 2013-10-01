@@ -609,7 +609,7 @@
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}"/>
+                            <field name="min_date" attrs="{'invisible': [('min_date','=',False)]}"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
                         </group>
                     </group>
@@ -640,8 +640,7 @@
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
                                     <field name="priority"/>
-                                    <field name="quant_reserved_exist" invisible="1"/>
-                                    
+                                    <field name="quant_reserved_exist" invisible="1"/>                                    
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -877,7 +876,7 @@
                     <group>
                         <group name="main_grp" string="Details">
                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                            <field name="procure_method"/>
+                            <field name="procure_method" attrs="{'invisible': [('state', '==', 'confirmed')],'readonly': [('group_id', '==', False)] }" />
                             <field name="group_id"/>
                             <label for="product_uom_qty"/>
                             <div>
@@ -1335,12 +1334,25 @@
               </p>
             </field>
         </record>
+        
+		<record id="action_picking_type_list" model="ir.actions.act_window">
+            <field name="name">All Operations</field>
+            <field name="res_model">stock.picking.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">list,form</field>            
+        </record>
 
         <menuitem
             action="action_picking_type_form"
             id="menu_action_picking_type_form"
             parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
+        <menuitem 
+        	id="menu_pickingtype" 
+        	name="Types of Operation" 
+        	parent="stock.menu_stock_configuration" 
+        	action="action_picking_type_list" />
         
 
         <!-- Order Point -->
@@ -1616,6 +1628,7 @@
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
         <menuitem id="menu_quants" name="Current Inventory" parent="stock.menu_stock_inventory_control" sequence="20" action="quantsact"/>
     <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
+    <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list" groups="base.group_no_one"/>
 
 
 

@@ -478,6 +478,12 @@ class stock_picking(osv.osv):
     _inherit = ['mail.thread']
     _description = "Picking List"
     _order = "priority desc, date desc, id desc"
+    
+    def _set_min_date(self, cr, uid, id,  field, value,arg,context=None):
+        move_obj = self.pool.get("stock.move")        
+        move_obj.write(cr,uid,[move.id for move in self.browse(cr,uid,id,context=context).move_lines],{'date_expected' : value })
+        
+        
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds minimum and maximum dates for picking.
         @return: Dictionary of values
@@ -596,7 +602,7 @@ class stock_picking(osv.osv):
         ),
         'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Priority', required=True),
         
-        'min_date': fields.function(get_min_max_date, multi="min_max_date",
+        'min_date': fields.function(get_min_max_date, multi="min_max_date",fnct_inv=_set_min_date, readonly=False,
                  store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed"),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
                  store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),

@@ -67,6 +67,7 @@ class procurement_group(osv.osv):
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
         'move_type': lambda self, cr, uid, c: 'one'
     }
+    
 
 class procurement_rule(osv.osv):
     '''
