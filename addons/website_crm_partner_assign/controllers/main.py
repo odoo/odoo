@@ -4,7 +4,7 @@ import openerp
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
-from openerp.addons.website import website
+from openerp.addons.website.models import website
 import urllib
 
 class website_crm_partner_assign(http.Controller):
