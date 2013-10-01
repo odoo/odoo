@@ -8,8 +8,8 @@
         start: function () {
             var self = this;
             $("[data-oe-model]").on('click', function (event) {
-                var tag = event.srcElement.tagName.toLowerCase();
                 var $this = $(event.srcElement);
+                var tag = $this[0].tagName.toLowerCase();
                 if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
                     self.$('[data-action="edit"]').parent().effect('bounce', {distance: 18, times: 5}, 250);
                 }
@@ -824,7 +824,8 @@
                         var editor = new website.editor.ImageDialog();
                         editor.on('start', self, function (o) {o.url = bg_value;});
                         editor.on('save', self, function (o) {
-                            (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image", "url('" + o.url + "')");
+                            var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
+                            $bg.css("background-image", "url('" + o.url + "')");
                         });
                         editor.appendTo($('body'));
                     }
@@ -832,12 +833,14 @@
                 .on('mouseover', function (event) {
                     if ($(this).data("value")) {
                         var src = $(this).data("value");
-                        (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image", "url('" + src + "')");
+                        var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
+                        $bg.css("background-image", "url('" + src + "')");
                     }
                 })
                 .on('mouseout', function (event) {
                     var src = $ul.find('li.active').data("value");
-                    (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image", "url('" + src + "')");
+                    var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
+                    $bg.css("background-image", "url('" + src + "')");
                 });
         },
     });
