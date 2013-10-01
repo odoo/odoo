@@ -556,7 +556,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):            
             res[pick.id] = False
             for move in pick.move_lines:
-                if len(move.reserved_quant_ids):
+                if move.reserved_quant_ids:
                     res[pick.id] = True        
         return res
 
