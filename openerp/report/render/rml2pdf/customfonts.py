@@ -145,7 +145,8 @@ def RegisterCustomFonts():
         for dirname in all_system_fonts:
             try:
                 font_info = ttfonts.TTFontFile(dirname)
-                _fonts_cache['registered_fonts'].append((font_info.name, font_info.name))
+                if font_info.styleName in ('Regular','Normal','Book','Medium'):
+                    _fonts_cache['registered_fonts'].append((font_info.name, font_info.name))
                 registered_font_list.append((font_info.familyName, font_info.name, dirname.split('/')[-1], font_info.styleName.lower().replace(" ", "")))
                 _logger.debug("Found font %s at %s", font_info.name, dirname)
             except:
