@@ -237,7 +237,7 @@ class model(char):
     """ char field that stores a model name """
 
     def _symbol_set_char(self, name):
-        name = snake_case(name)
+        name = snake_case(name) if name else None
         return super(model, self)._symbol_set_char(name)
 
     def _symbol_get(self, name):
