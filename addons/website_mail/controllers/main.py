@@ -32,10 +32,10 @@ class WebsiteMail(http.Controller):
         partner_obj = request.registry['res.partner']
         user_obj = request.registry['res.users']
         partner_ids = []
-        if request.context['is_public_user'] and email:
+        if request.context['is_public_user'] and email and email != u'false':  # post contains stringified booleans
             partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)], context=request.context)
             if not partner_ids:
-                partner_ids = [partner_obj.create(request.cr, SUPERUSER_ID, {"email": email, "name": email}, request.context)]
+                partner_ids = [partner_obj.name_create(request.cr, SUPERUSER_ID, email, request.context)]
         else:
             partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
         return partner_ids

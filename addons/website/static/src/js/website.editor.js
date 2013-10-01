@@ -911,6 +911,7 @@
                 while (node && !$(node).hasClass('oe_editable')) {
                     node = node.parentNode;
                 }
+                $(m.target).trigger('node_changed');
                 return node;
             })
             .compact()

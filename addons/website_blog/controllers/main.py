@@ -29,7 +29,7 @@ import simplejson
 import werkzeug
 
 
-class website_mail(http.Controller):
+class WebsiteBlog(http.Controller):
     _category_post_per_page = 6
     _post_comment_per_page = 6
 
@@ -75,7 +75,8 @@ class website_mail(http.Controller):
         blog_post_obj = request.registry['blog.post']
         tag_obj = request.registry['blog.tag']
         category_obj = request.registry['blog.category']
-        user_obj = request.registry['res.users']
+
+        current_user = request.registry['res.users'].browse(cr, uid, uid, context=context)
 
         tag = None
         category = None
@@ -103,6 +104,9 @@ class website_mail(http.Controller):
                 blog_posts = category.blog_post_ids
             elif tag:
                 blog_posts = tag.blog_post_ids
+            else:
+                blog_post_ids = blog_post_obj.search(cr, uid, [], context=context)
+                blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         if blog_posts:
             pager = request.website.pager(
@@ -143,6 +147,7 @@ class website_mail(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
+            'current_user': current_user,
             'unable_editor': post.get('unable_editor')
         }
 

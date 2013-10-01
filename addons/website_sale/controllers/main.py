@@ -395,6 +395,7 @@ class Ecommerce(http.Controller):
             suggested_products.append(suggested_ids.pop(index))
 
         values = {
+            'int': int,
             'get_categories': self.get_categories,
             'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products, request.context),
         }
@@ -415,7 +416,7 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/checkout/'], type='http', auth="public", multilang=True)
     def checkout(self, **post):
-        classic_fields = ["name", "phone", "fax", "email", "street", "city", "state_id", "zip"]
+        classic_fields = ["name", "phone", "email", "street", "city", "state_id", "zip"]
         rel_fields = ['country_id', 'state_id']
 
         order = get_current_order()
@@ -488,7 +489,6 @@ class Ecommerce(http.Controller):
                 company_id = partner_obj.create(request.cr, SUPERUSER_ID, {'name': post['company'], 'is_company': True}, request.context)
 
         partner_value = {
-            'fax': post['fax'],
             'phone': post['phone'],
             'zip': post['zip'],
             'email': post['email'],
@@ -508,7 +508,6 @@ class Ecommerce(http.Controller):
         shipping_id = None
         if post.get('shipping_different'):
             shipping_value = {
-                'fax': post['shipping_fax'],
                 'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
                 'street': post['shipping_street'],
