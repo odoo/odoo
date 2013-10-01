@@ -704,6 +704,9 @@
         }),
 
         start: function () {
+            var $options = this.$('.image-style').children();
+            this.image_styles = $options.map(function () { return this.value; }).get();
+
             var o = { url: null, style: null, };
             // avoid typos, prevent addition of new properties to the object
             Object.preventExtensions(o);
@@ -782,10 +785,6 @@
             var selection = this.editor.getSelection();
             var el = selection && selection.getSelectedElement();
             this.element = null;
-
-            var $select = this.$('.image-style');
-            var $options = $select.children();
-            this.image_styles = $options.map(function () { return this.value; }).get();
 
             if (el && el.is('img')) {
                 this.element = el;
