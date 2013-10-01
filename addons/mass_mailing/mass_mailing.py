@@ -298,7 +298,7 @@ class MailMailStats(osv.Model):
         'message_id': fields.char(
             'Message-ID',
         ),
-        'model': fields.char(
+        'model': fields.model(
             'Document model',
         ),
         'res_id': fields.integer(

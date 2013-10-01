@@ -54,7 +54,7 @@ class ir_model_fields_anonymization(osv.osv):
     _rec_name = 'field_id'
 
     _columns = {
-        'model_name': fields.char('Object Name', size=128, required=True),
+        'model_name': fields.model('Object Name', size=128, required=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'field_name': fields.char('Field Name', size=128, required=True),
         'field_id': fields.many2one('ir.model.fields', 'Field', ondelete='set null'),
@@ -626,7 +626,7 @@ class ir_model_fields_anonymization_migration_fix(osv.osv):
 
     _columns = {
         'target_version': fields.char('Target Version'),
-        'model_name': fields.char('Model'),
+        'model_name': fields.model('Model'),
         'field_name': fields.char('Field'),
         'query': fields.text('Query'),
         'query_type': fields.selection(string='Query', selection=[('sql', 'sql'), ('python', 'python')]),

@@ -22,7 +22,7 @@ class ir_import(orm.TransientModel):
     _transient_max_hours = 12.0
 
     _columns = {
-        'res_model': fields.char('Model', size=64),
+        'res_model': fields.model('Model', size=64),
         'file': fields.binary(
             'File', help="File to check and/or import, raw binary (not base64)"),
         'file_name': fields.char('File Name', size=None),

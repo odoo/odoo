@@ -46,7 +46,7 @@ class mail_message_subtype(osv.osv):
             help='Field used to link the related model to the subtype model when '\
                     'using automatic subscription on a related document. The field '\
                     'is used to compute getattr(related_document.relation_field).'),
-        'res_model': fields.char('Model',
+        'res_model': fields.model('Model',
             help="Model the subtype applies to. If False, this subtype applies to all models."),
         'default': fields.boolean('Default',
             help="Activated by default when subscribing."),
