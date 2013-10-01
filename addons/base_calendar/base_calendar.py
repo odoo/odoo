@@ -1121,20 +1121,44 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             new_rrule_str = ';'.join(new_rrule_str)
             rdates = get_recurrent_dates(str(new_rrule_str), exdate, event_date, data['exrule'])
             for r_date in rdates:
-                ok = True
+                # fix domain evaluation
+                # step 1: check date and replace expression by True or False, replace other expressions by True
+                # step 2: evaluation of & and |
+                # check if there are one False
+                pile = []
                 for arg in domain:
-                    if arg[0] in ('date', 'date_deadline'):
-                        if (arg[1]=='='):
-                            ok = ok and r_date.strftime('%Y-%m-%d')==arg[2]
-                        if (arg[1]=='>'):
-                            ok = ok and r_date.strftime('%Y-%m-%d')>arg[2]
-                        if (arg[1]=='<'):
-                            ok = ok and r_date.strftime('%Y-%m-%d')<arg[2]
-                        if (arg[1]=='>='):
-                            ok = ok and r_date.strftime('%Y-%m-%d')>=arg[2]
-                        if (arg[1]=='<='):
-                            ok = ok and r_date.strftime('%Y-%m-%d')<=arg[2]
-                if not ok:
+                    if str(arg[0]) in (str('date'), str('date_deadline')):
+                        if (arg[1] == '='):
+                            ok = r_date.strftime('%Y-%m-%d')==arg[2]
+                        if (arg[1] == '>'):
+                            ok = r_date.strftime('%Y-%m-%d')>arg[2]
+                        if (arg[1] == '<'):
+                            ok = r_date.strftime('%Y-%m-%d')<arg[2]
+                        if (arg[1] == '>='):
+                            ok = r_date.strftime('%Y-%m-%d')>=arg[2]
+                        if (arg[1] == '<='):
+                            ok = r_date.strftime('%Y-%m-%d')<=arg[2]
+                        pile.append(ok)
+                    elif str(arg) == str('&') or str(arg) == str('|'):
+                        pile.append(arg)
+                    else:
+                        pile.append(True)
+                pile.reverse()
+                new_pile = []
+                for item in pile:
+                    if not isinstance(item, basestring):
+                        res = item
+                    elif str(item) == str('&'):
+                        first = new_pile.pop()
+                        second = new_pile.pop()
+                        res = first and second
+                    elif str(item) == str('|'):
+                        first = new_pile.pop()
+                        second = new_pile.pop()
+                        res = first or second
+                    new_pile.append(res)
+
+                if [True for item in new_pile if not item]:
                     continue
                 idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
                 result.append(idval)
@@ -1259,18 +1283,17 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
         for arg in args:
             new_arg = arg
-            if arg[0] in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
+            if arg[0] in ('date_deadline', unicode('date_deadline')):
                 if context.get('virtual_id', True):
-                    new_args += ['|','&',('recurrency','=',1),('recurrent_id_date', arg[1], arg[2])]
+                    new_args += ['|','&',('recurrency','=',1),('end_date', arg[1], arg[2])]
             elif arg[0] == "id":
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
-
         #offset, limit and count must be treated separately as we may need to deal with virtual ids
         res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         if context.get('virtual_id', True):
-            res = self.get_recurrent_ids(cr, uid, res, new_args, limit, context=context)
+            res = self.get_recurrent_ids(cr, uid, res, args, limit, context=context)
         if count:
             return len(res)
         elif limit:
@@ -1349,6 +1372,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             vals['vtimezone'] = vals['vtimezone'][40:]
 
         res = super(calendar_event, self).write(cr, uid, ids, vals, context=context)
+
+        # set end_date for calendar searching
+        if vals.get('recurrency', True) and vals.get('end_type', 'count') in ('count', unicode('count')) and \
+                (vals.get('rrule_type') or vals.get('count') or vals.get('date') or vals.get('date_deadline')):
+            for data in self.read(cr, uid, ids, ['date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context):
+                end_date = self._set_recurrency_end_date(data, context=context)
+                super(calendar_event, self).write(cr, uid, [data['id']], {'end_date': end_date}, context=context)
+
         if vals.get('partner_ids', False):
             self.create_attendees(cr, uid, ids, context)
 
@@ -1467,6 +1498,21 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         self.unlink_events(cr, uid, ids, context=context)
         return res
 
+    def _set_recurrency_end_date(self, data, context=None):
+        end_date = data.get('end_date')
+        if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
+            data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
+            if data.get('rrule_type') in ('daily', unicode('count')):
+                rel_date = relativedelta(days=data.get('count')+1)
+            elif data.get('rrule_type') in ('weekly', unicode('weekly')):
+                rel_date = relativedelta(days=(data.get('count')+1)*7)
+            elif data.get('rrule_type') in ('monthly', unicode('monthly')):
+                rel_date = relativedelta(months=data.get('count')+1)
+            elif data.get('rrule_type') in ('yearly', unicode('yearly')):
+                rel_date = relativedelta(years=data.get('count')+1)
+            end_date = data_date_deadline + rel_date
+        return end_date
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -1474,7 +1520,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
 
+        vals['end_date'] = self._set_recurrency_end_date(vals, context=context)
         res = super(calendar_event, self).create(cr, uid, vals, context)
+
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         self.create_attendees(cr, uid, [res], context)
