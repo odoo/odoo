@@ -556,7 +556,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):            
             res[pick.id] = False
             for move in pick.move_lines:
-                if len(move.reserved_quant_ids)>0:
+                if len(move.reserved_quant_ids):
                     res[pick.id] = True        
         return res
 
@@ -1267,7 +1267,7 @@ class stock_move(osv.osv):
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
-        'picking_priority': fields.related('picking_id','priority', type='selection', selection=[('0','Low'),('1','Normal'),('2','High')],relation='stock.picking', string='Picking Priority'),
+        'picking_priority': fields.related('picking_id','priority', type='selection', selection=[('0','Low'),('1','Normal'),('2','High')], string='Picking Priority'),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
