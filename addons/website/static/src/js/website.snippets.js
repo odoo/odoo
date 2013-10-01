@@ -395,7 +395,7 @@
                 },
                 stop: function(){
                     $('.oe_drop_zone').droppable('destroy').remove();
-                    if (!dropped) {
+                    if (!dropped && self.$modal.find('input:not(:checked)').length) {
                         self.$modal.modal('toggle');
                     }
                 },
