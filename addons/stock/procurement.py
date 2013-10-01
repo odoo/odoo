@@ -48,6 +48,8 @@ class procurement_rule(osv.osv):
 
     def _get_route(self, cr, uid, ids, context=None):
         result = {}
+        if context is None:
+            context = {}
         context_with_inactive = context.copy()
         context_with_inactive['active_test']=False
         for route in self.pool.get('stock.location.route').browse(cr, uid, ids, context=context_with_inactive):
@@ -75,6 +77,7 @@ class procurement_rule(osv.osv):
     _defaults = {
         'procure_method': 'make_to_stock',
         'sequence': 20,
+        'active': True, 
     }
 
 class procurement_order(osv.osv):

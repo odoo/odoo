@@ -36,25 +36,7 @@
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_drop_shipping"/>
             <field name="picking_type_id" ref="picking_type_dropship"/>
-        </record>
-
-
-        <!-- Crossdock -->
-        <record id="stock_location.route_warehouse0_crossdock" model='stock.location.route'>
-            <field name="name">Crossdock</field>
-            <field name="sale_selectable" eval="True"/>
-            <field name="product_categ_selectable" eval="True"/>
-            
-        </record>
-        <record id="procurement_rule_customer0_xdock" model="procurement.rule">
-            <field name="name"> Supplier → Output</field>
-            <field name="action">buy</field>
-            <field name="location_id" ref="stock.stock_location_output"/>
-            <field name="location_src_id" ref="stock.stock_location_suppliers"/>
-            <field name="route_id" ref="stock_location.route_warehouse0_crossdock"/>
-            <field name="picking_type_id" ref="stock.picking_type_in"/>
-        </record>
-        
+        </record>  
         
     </data>
 </openerp>

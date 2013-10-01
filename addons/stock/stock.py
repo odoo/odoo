@@ -80,7 +80,11 @@ class stock_location(osv.osv):
 
     def _get_sublocations(self, cr, uid, ids, context=None):
         """ return all sublocations of the given stock locations (included) """
-        return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
+        if context is None:
+            context = {}
+        context_with_inactive = context.copy()
+        context_with_inactive['active_test']=False
+        return self.search(cr, uid, [('id', 'child_of', ids)], context=context_with_inactive)
 
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
@@ -814,7 +818,7 @@ class stock_picking(osv.osv):
     
     def _reserve_quants_ops_move(self, cr, uid, ops, move, qty, create=False, context=None):
         """
-          Will return the quantity that got reserved
+          Will return the quantity that could not be reserved
         """
         quant_obj = self.pool.get("stock.quant")
         op_obj = self.pool.get("stock.pack.operation")
@@ -827,7 +831,7 @@ class stock_picking(osv.osv):
             return 0
         else:
             #Quants get
-            prefered_order = "reservation_id IS NOT NULL"
+            prefered_order = "reservation_id IS NOT NULL" #TODO: reservation_id as such might work
             dom = op_obj._get_domain(cr, uid, ops, context=context)
             dom = dom + [('reservation_id', 'not in', [x.id for x in move.picking_id.move_lines])]
             quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_order=prefered_order, context=context)
@@ -840,19 +844,13 @@ class stock_picking(osv.osv):
             return res_qty
         
         
-        
-    #
-    # TODO:rereserve should be improved for giving negative quants when a certain lot is not there
-    # (Suppose you have a pack op for 20 lot B and lot B does not have any quants in the source location
-    # and could be used also instead of do_split
-    #
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
-            This will unreserve all products and reserve the quants from the operations
-            :return: Tuple (res, res2)
+            This will unreserve all products and reserve the quants from the operations again
+            :return: Tuple (res, res2, resneg)
                 res: dictionary of ops with quantity that could not be processed matching ops and moves
-                res2: dictionary of moves with quantity that could not be processed
-                resneg: the negative quants to be created: resneg[move][ops] gives negative quant to be created (TODO:)
+                res2: dictionary of moves with quantity that could not be processed matching ops and moves
+                resneg: the negative quants to be created: resneg[move][ops] gives negative quant to be created
             tuple of dictionary with quantities of quant operation and product that can not be matched between ops and moves
             and dictionary with remaining values on moves
             
@@ -863,7 +861,7 @@ class stock_picking(osv.osv):
         pack_obj = self.pool.get("stock.quant.package")
         res = {} # Qty still to do from ops
         res2 = {} #what is left from moves
-        resneg= {} #Number of negative quants to create for move : op
+        resneg= {} #Number of negative quants to create for move/op
         for picking in self.browse(cr, uid, picking_ids, context=context):
             products_moves = {}
             # unreserve everything and initialize res2
@@ -875,16 +873,15 @@ class stock_picking(osv.osv):
                     products_moves.setdefault(move.product_id.id, []).append(move)
                 
                 
-            # Resort pack_operation_ids
+            # Resort pack_operation_ids such that package transfers happen first and then the most specific operations from the product
             
             orderedpackops = picking.pack_operation_ids
-            #Sort packing operations such that only transferring packages happens first and then packing operations with most specific information 
             orderedpackops.sort(key = lambda x: ((x.package_id and not x.product_id) and -3 or 0) + (x.package_id and -1 or 0) + (x.lot_id and -1 or 0))
 
             for ops in orderedpackops:
-                #Find moves that correspond
+                #If a product is specified in the ops, search for appropriate quants
                 if ops.product_id:
-                    #TODO: Should have order such that things with lots and packings are searched first
+                    # Match with moves
                     move_ids = ops.product_id.id in products_moves and filter(lambda x: res2[x.id] > 0, products_moves[ops.product_id.id]) or []
                     qty_to_do = ops.product_qty
                     while qty_to_do > 0 and move_ids:
@@ -902,10 +899,12 @@ class stock_picking(osv.osv):
                         res2[move.id] -= qty
                     res[ops.id] = {}
                     res[ops.id][ops.product_id.id] = qty_to_do
+                # In case only a package is specified, take all the quants from the package
                 elif ops.package_id:
                     quants = quant_obj.browse(cr, uid, pack_obj.get_content(cr, uid, [ops.package_id.id], context=context))
                     quants = [x for x in quants if x.qty > 0] #Negative quants should not be moved
                     for quant in quants:
+                        # Match with moves
                         move_ids = quant.product_id.id in products_moves and filter(lambda x: res2[x.id] > 0, products_moves[quant.product_id.id]) or []
                         qty_to_do = quant.qty
                         while qty_to_do > 0 and move_ids:
@@ -926,7 +925,7 @@ class stock_picking(osv.osv):
 
     def do_partial(self, cr, uid, picking_ids, context=None):
         """
-            If no pack operation, we close the whole move
+            If no pack operation, we do simple action_done of the picking
             Otherwise, do the pack operations
         """
         if not context:
@@ -937,8 +936,9 @@ class stock_picking(osv.osv):
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
             else:
-                #First thing that needs to happen is rereserving the quants
-                res = self.rereserve(cr, uid, [picking.id], create = True, context = context) #This time, quants need to be created
+                # Rereserve quants
+                # TODO: quants could have been created already in Supplier, so create parameter could disappear
+                res = self.rereserve(cr, uid, [picking.id], create = True, context = context) #This time, quants need to be created 
                 resneg = res[2]
                 orig_moves = picking.move_lines
                 orig_qtys = {}
