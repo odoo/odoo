@@ -76,9 +76,14 @@ class BlogPost(osv.Model):
                     shorten=True,
                     max_length=self._shorten_max_char,
                     expand_options={
-                        'oe_expand_href': '/blog/%d/%d' % (page.category_id.id, page.id),
-                        'oe_expand_a_class': 'oe_mail_expand btn btn-info'
-                    }, br=True
+                        'oe_expand_container_tag': 'div',
+                        'oe_expand_container_class': 'oe_mail_expand text-center',
+                        'oe_expand_container_content': '',
+                        'oe_expand_a_href': '/blog/%d/%d' % (page.category_id.id, page.id),
+                        'oe_expand_a_class': 'oe_mail_expand btn btn-info',
+                        'oe_expand_separator_node': 'br',
+                    },
+                    protect_sections=True,
                 )
             except Exception:
                 body_short = False
