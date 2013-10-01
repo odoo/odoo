@@ -705,6 +705,7 @@
             this.$overlay.on('click', '.oe_snippet_clone', function () {
                 var $clone = self.$target.clone(false);
                 self.$target.after($clone);
+                return false;
             });
         },
 
@@ -790,8 +791,6 @@
         */
         onFocus : function () {
             this.$overlay.addClass('oe_active');
-            if (this.$background_img)
-                this.$background_img.prependTo(this.$target);
         },
 
         /* onFocus
@@ -799,14 +798,12 @@
         */
         onBlur : function () {
             this.$overlay.removeClass('oe_active');
-            if (this.$background_img)
-                this.$background_img.detach();
         },
 
         change_background: function (bg, ul_options) {
             var self = this;
             var $ul = this.$editor.find(ul_options);
-            var bg_value = $(bg).css("background-image").replace(/url\(|\)/g, "");
+            var bg_value = (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
 
             // select in ul options
             $ul.find("li").removeClass("active");
@@ -827,7 +824,7 @@
                         var editor = new website.editor.ImageDialog();
                         editor.on('start', self, function (o) {o.url = bg_value;});
                         editor.on('save', self, function (o) {
-                            $(bg).css("background-image", "url(" + o.url + ")");
+                            (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image", "url('" + o.url + "')");
                         });
                         editor.appendTo($('body'));
                     }
@@ -835,12 +832,12 @@
                 .on('mouseover', function (event) {
                     if ($(this).data("value")) {
                         var src = $(this).data("value");
-                        $(bg).css("background-image", "url(" + src + ")");
+                        (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image", "url('" + src + "')");
                     }
                 })
                 .on('mouseout', function (event) {
                     var src = $ul.find('li.active').data("value");
-                    $(bg).css("background-image", "url(" + src + ")");
+                    (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image", "url('" + src + "')");
                 });
         },
     });
@@ -913,13 +910,13 @@
 
                         var change = false;
                         if (dd > (2*resize[1][next] + resize[1][current])/3) {
-                            self.$target.attr("class",self.$target.attr("class").replace(regClass, ''));
+                            self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
                             self.$target.addClass(resize[0][next]);
                             current = next;
                             change = true;
                         }
                         if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
-                            self.$target.attr("class",self.$target.attr("class").replace(regClass, ''));
+                            self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
                             self.$target.addClass(resize[0][prev]);
                             current = prev;
                             change = true;
@@ -1043,6 +1040,7 @@
 
             this.change_background(".item.active", 'ul[name="carousel-background"]');
             this.change_style();
+            this.set_options_style();
             this.change_size();
         },
         on_add: function (e) {
@@ -1064,16 +1062,11 @@
                     .find('.item.active').remove().end()
                     .find('.item:first').addClass('active');
                 this.$target.carousel(0);
-                this.set_options_background();
                 this.set_options_style();
             }
             if (nb <= 1) {
                 this.$target.find('.carousel-control').addClass("hidden");
             }
-        },
-        onFocus: function () {
-            this.set_options_style();
-            this._super();
         },
         set_options_style: function () {
             var style = false;

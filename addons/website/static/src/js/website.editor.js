@@ -934,7 +934,7 @@
                     if (m.attributeName !== 'class') { return true; }
 
                     // find out what classes were added or removed
-                    var oldClasses = m.oldValue.split(/\s+/);
+                    var oldClasses = (m.oldValue || '').split(/\s+/);
                     var newClasses = m.target.className.split(/\s+/);
                     var change = _.union(_.difference(oldClasses, newClasses),
                                          _.difference(newClasses, oldClasses));
