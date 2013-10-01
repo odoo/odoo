@@ -49,17 +49,7 @@
             <li>
                 <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
-                                  t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
-                </a>
-            </li>
-        </xpath>
-        <xpath expr="//footer//ul[@name='products']" position="inside">
-            <li><a t-href="/shop/">Shop</a></li>
-            <li>
-                <a t-href="/shop/mycart/">
-                    <i class="icon-shopping-cart"></i>
-                    My cart <span t-attf-class="my_cart_quantity badge #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
+                    My cart <sup t-attf-class="my_cart_quantity label label-primary #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
             </li>
