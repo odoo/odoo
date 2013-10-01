@@ -16,10 +16,10 @@ instance.base_calendar = {}
         },
         start: function() {
             var self = this;
-            if (instance.session.session_is_valid(self.db)) {
+            if (instance.session.session_is_valid(self.db) && (this.view_type == 'calendar' || this.view_type == 'form' && this.session.username != 'anonymous')) {
                 self.show_meeting();
-            } else {
-                self.show_login()
+            }else {
+                self.show_login();
             }
         },
         show_login: function(action) {
@@ -46,7 +46,7 @@ instance.base_calendar = {}
         },
         show_meeting : function(){
             var db = this.db;
-            var att_status = "do_decline";
+            var att_status = false;
             var self = this;
             var reload_page = function(){
                 if(self.view_type === 'form'){
@@ -56,11 +56,16 @@ instance.base_calendar = {}
                     return location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s',self.db,self.view_type,self.action));
                 }
             }
-            if(self.status === 'accepted'){att_status = "do_accept";}
+            if(self.status === 'accepted'){
+                att_status = "do_accept";
+            }
+            else if(self.status === 'declined'){
+                att_status === "do_decline";
+            }
             var calender_attendee = new instance.web.Model('calendar.attendee')
             
             return calender_attendee.get_func("search_read")([["id", "=", parseInt(this.token)]],['state']).done(function(res){
-                if(res[0] && res[0]['state'] === "needs-action"){
+                if(res[0] && res[0]['state'] === "needs-action" && att_status){
                     return calender_attendee.call(att_status,[[parseInt(self.token)]]).done(reload_page);
                 }
                 reload_page();

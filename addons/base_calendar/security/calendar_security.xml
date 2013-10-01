@@ -10,6 +10,7 @@
             <field ref="model_crm_meeting" name="model_id"/>
             <field eval="1" name="personal"/>
             <field name="domain_force">['|',('attendee_ids.partner_id','=',user.partner_id.id),('attendee_ids','=',False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         </record>
    </data>
 </openerp>
