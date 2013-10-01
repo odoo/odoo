@@ -224,7 +224,6 @@
                     <h1><label for="number" string="Purchase Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
 
                     <field name="pay_now" invisible="1"/>
-                    <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                     <field name="type" invisible="True"/>
                     <group>
                         <group>
@@ -284,6 +283,9 @@
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
 			            </div>
                                     <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
+                                </group>
+                                <group>
+                                    <field name="account_id" domain="[('type','=','other')]" attrs="{'invisible': [('partner_id','!=', False)]}"/>
                                 </group>
                             </group>
                         </page>
