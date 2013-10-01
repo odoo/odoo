@@ -43,6 +43,10 @@ _logger = logging.getLogger(__name__)
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
 tags_to_remove = ['html', 'body', 'font']
 
+# allow new semantic HTML5 tags
+allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure'.split())
+safe_attrs = clean.defs.safe_attrs | frozenset(['style'])
+
 
 def html_sanitize(src, silent=True):
     if not src:
@@ -59,6 +63,8 @@ def html_sanitize(src, silent=True):
         'page_structure': True,
         'style': False,             # do not remove style attributes
         'forms': True,              # remove form tags
+        'remove_unknown_tags': False,
+        'allow_tags': allowed_tags,
     }
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
@@ -72,7 +78,7 @@ def html_sanitize(src, silent=True):
     if etree.LXML_VERSION >= (3, 1, 0):
         kwargs.update({
             'safe_attrs_only': True,
-            'safe_attrs': clean.defs.safe_attrs | set(['style']),
+            'safe_attrs': safe_attrs,
         })
     else:
         # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
@@ -99,7 +105,8 @@ def html_sanitize(src, silent=True):
 # HTML Cleaner
 #----------------------------------------------------------
 
-def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_options=None, br=False):
+def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_options=None,
+                     protect_sections=False):
     """ html_email_clean: clean the html by doing the following steps:
 
      - try to strip email quotes, by removing blockquotes or having some client-
@@ -124,6 +131,32 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
                             be flagged as to remove
     :param int max_length: if shortening, maximum number of characters before
                            shortening
+    :param dict expand_options: options for the read more link when shortening
+                                the content.The used keys are the following:
+
+                                 - oe_expand_container_tag: class applied to the
+                                   container of the whole read more link
+                                 - oe_expand_container_class: class applied to the
+                                   link container (default: oe_mail_expand)
+                                 - oe_expand_container_content: content of the
+                                   container (default: ...)
+                                 - oe_expand_separator_node: optional separator, like
+                                   adding ... <br /><br /> <a ...>read more</a> (default: void)
+                                 - oe_expand_a_href: href of the read more link itself
+                                   (default: #)
+                                 - oe_expand_a_class: class applied to the <a> containing
+                                   the link itself (default: oe_mail_expand)
+                                 - oe_expand_a_content: content of the <a> (default: read more)
+
+                                The formatted read more link is the following:
+                                <cont_tag class="oe_expand_container_class">
+                                    oe_expand_container_content
+                                    if expand_options.get('oe_expand_separator_node'):
+                                        <oe_expand_separator_node/>
+                                    <a href="oe_expand_a_href" class="oe_expand_a_class">
+                                        oe_expand_a_content
+                                    </a>
+                                </span>
     """
     def _replace_matching_regex(regex, source, replace=''):
         """ Replace all matching expressions in source by replace """
@@ -169,6 +202,50 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             idx = item.end()
             iteration += 1
         new_node = _insert_new_node(node, -1, new_node_tag, text[idx:] + (cur_node.tail or ''), None, {})
+
+    def _truncate_node(node, position, find_first_blank=True):
+        # truncate text
+        innertext = node.text[0:position]
+        outertext = node.text[position:]
+        if find_first_blank:
+            stop_idx = outertext.find(' ')
+            if stop_idx == -1:
+                stop_idx = len(outertext)
+        else:
+            stop_idx = 0
+        node.text = innertext + outertext[0:stop_idx]
+        # create <span> ... <a href="#">read more</a></span> node
+        read_more_node = _create_node(
+            expand_options.get('oe_expand_container_tag', 'span'),
+            expand_options.get('oe_expand_container_content', ' ... '),
+            None,
+            {'class': expand_options.get('oe_expand_container_class', 'oe_mail_expand')}
+        )
+        if expand_options.get('oe_expand_separator_node'):
+            read_more_separator_node = _create_node(
+                expand_options.get('oe_expand_separator_node'),
+                '',
+                None,
+                {}
+            )
+            read_more_node.append(read_more_separator_node)
+        read_more_link_node = _create_node(
+            'a',
+            expand_options.get('oe_expand_a_content', 'read more'),
+            None,
+            {
+                'href': expand_options.get('oe_expand_a_href', '#'),
+                'class': expand_options.get('oe_expand_a_class', 'oe_mail_expand'),
+            }
+        )
+        read_more_node.append(read_more_link_node)
+        # create outertext node
+        overtext_node = _create_node('span', outertext[stop_idx:])
+        # tag node
+        overtext_node.set('in_overlength', '1')
+        # add newly created nodes in dom
+        node.append(read_more_node)
+        node.append(overtext_node)
 
     if expand_options is None:
         expand_options = {}
@@ -216,22 +293,39 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
     # signature_begin = False  # try dynamic signature recognition
     quote_begin = False
     overlength = False
+    overlength_section_id = None
+    overlength_section_count = 0
     cur_char_nbr = 0
-    for node in root.getiterator():
+    # for node in root.getiterator():
+    for node in root.iter():
+        # update: add a text argument
+        if node.text is None:
+            node.text = ''
+
         # root: try to tag the client used to write the html
         if 'WordSection1' in node.get('class', '') or 'MsoNormal' in node.get('class', ''):
             root.set('msoffice', '1')
         if 'SkyDrivePlaceholder' in node.get('class', '') or 'SkyDrivePlaceholder' in node.get('id', ''):
             root.set('hotmail', '1')
 
-        # state of the parsing
+        # protect sections by tagging section limits and blocks contained inside sections, using an increasing id to re-find them later
+        if node.tag == 'section':
+            overlength_section_count += 1
+            node.set('section_closure', str(overlength_section_count))
+        if node.getparent() is not None and (node.getparent().get('section_closure') or node.getparent().get('section_inner')):
+            node.set('section_inner', str(overlength_section_count))
+
+        # state of the parsing: flag quotes and tails to remove
         if quote_begin:
             node.set('in_quote', '1')
             node.set('tail_remove', '1')
+        # state of the parsing: flag when being in over-length content, depending on section content if defined (only when having protect_sections)
         if overlength:
-            node.set('in_overlength', '1')
-            node.set('tail_remove', '1')
+            if not overlength_section_id or int(node.get('section_inner', overlength_section_count + 1)) > overlength_section_count:
+                node.set('in_overlength', '1')
+                node.set('tail_remove', '1')
 
+        # find quote in msoffice / hotmail / blockquote / text quote and signatures
         if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
             quote_begin = True
             node.set('in_quote', '1')
@@ -240,56 +334,49 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             quote_begin = True
             node.set('in_quote', '1')
             node.set('tail_remove', '1')
-
-        # shorten:
-        # 1/ truncate the text at the next available space
-        # 2/ create a 'read more' node, next to current node
-        # 3/ add the truncated text in a new node, next to 'read more' node
-        if shorten and not overlength and cur_char_nbr + len(node.text or '') > max_length:
-            overlength = True
-            # truncate text
-            innertext = node.text[0:(max_length - cur_char_nbr)]
-            outertext = node.text[(max_length - cur_char_nbr):]
-            stop_idx = outertext.find(' ')
-            if stop_idx == -1:
-                stop_idx = len(outertext)
-            node.text = innertext + outertext[0:stop_idx]
-            # create <span> ... <a href="#">read more</a></span> node
-            read_more_node = _create_node(
-                'span',
-                ' ... ',
-                None,
-                {'class': expand_options.get('oe_expand_span_class', 'oe_mail_expand')}
-            )
-            if br:
-                read_more_node.append(_create_node('br','',None, {}))
-            read_more_link_node = _create_node(
-                'a',
-                'read more',
-                None,
-                {
-                    'href': expand_options.get('oe_expand_href', '#'),
-                    'class': expand_options.get('oe_expand_a_class', 'oe_mail_expand'),
-                }
-            )
-            read_more_node.append(read_more_link_node)
-            # create outertext node
-            new_node = _create_node('span', outertext[stop_idx:])
-            # add newly created nodes in dom
-            node.append(read_more_node)
-            # tag node
-            new_node.set('in_overlength', '1')
-
-            cur_char_nbr += len(node.text or '')
-
         if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
             node.set('in_quote', '1')
+
+        # shorten:
+        # if protect section:
+        #   1/ find the first parent not being inside a section
+        #   2/ add the read more link
+        # else:
+        #   1/ truncate the text at the next available space
+        #   2/ create a 'read more' node, next to current node
+        #   3/ add the truncated text in a new node, next to 'read more' node
+        node_text = (node.text or '').strip().strip('\n').strip()
+        if shorten and not overlength and cur_char_nbr + len(node_text) > max_length:
+            overlength = True
+            if protect_sections:
+                node_to_truncate = node
+                while node_to_truncate.getparent() is not None and \
+                        (node_to_truncate.getparent().get('section_inner') or node_to_truncate.getparent().get('section_closure')):
+                    node_to_truncate = node_to_truncate.getparent()
+                overlength_section_id = node_to_truncate.get('section_closure')
+                position = len(node_to_truncate.text)
+                find_first_blank = False
+            else:
+                node_to_truncate = node
+                position = max_length - cur_char_nbr
+                find_first_blank = True
+            node_to_truncate.set('truncate', '1')
+            node_to_truncate.set('truncate_position', str(position))
+            node_to_truncate.set('truncate_blank', str(find_first_blank))
+        cur_char_nbr += len(node_text)
+
+    # Tree modification
+    # ------------------------------------------------------------
+
+    for node in root.iter():
+        if node.get('truncate'):
+            _truncate_node(node, int(node.get('truncate_position', '0')), bool(node.get('truncate_blank', 'True')))
 
     # Post processing
     # ------------------------------------------------------------
 
     to_remove = []
-    for node in root.getiterator():
+    for node in root.iter():
         if node.get('in_quote') or node.get('in_overlength'):
             # copy the node tail into parent text
             if node.tail and not node.get('tail_remove'):
@@ -302,7 +389,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         if remove:
             node.getparent().remove(node)
         else:
-            if not 'oe_mail_expand' in node.get('class', ''):  # trick: read more link should be displayed even if it's in overlength
+            if not expand_options.get('oe_expand_a_class', 'oe_mail_expand') in node.get('class', ''):  # trick: read more link should be displayed even if it's in overlength
                 node_class = node.get('class', '') + ' ' + 'oe_mail_cleaned'
                 node.set('class', node_class)
 
