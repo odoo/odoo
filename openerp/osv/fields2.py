@@ -49,16 +49,12 @@ def compute_related(field, records):
     """ Compute the related `field` on `records`. """
     sudo_scope = scope.SUDO()
     for record in records:
-        try:
-            # bypass access rights check when traversing the related path
-            value = record.scoped(sudo_scope) if record.id else record
-            for name in field.related:
-                value = value[name]
-            # /!\ do not "scope" value: read() needs to name_get() it as SUPERUSER
-            record[field.name] = value
-        except Exception:
-            # let the field unassigned; the cache will raise an exception
-            _logger.debug("Error while computing %s on %s", field.name, record)
+        # bypass access rights check when traversing the related path
+        value = record.scoped(sudo_scope) if record.id else record
+        for name in field.related:
+            value = value[name]
+        # /!\ do not "scope" value: read() needs to name_get() it as SUPERUSER
+        record[field.name] = value
 
 def inverse_related(field, records):
     """ Inverse the related `field` on `records`. """
@@ -259,12 +255,18 @@ class Field(object):
     # Management of the computation of field values.
     #
 
-    def compute_value(self, records):
-        """ Invoke the compute method on `records`. """
+    def compute_value(self, records, check=False):
+        """ Invoke the compute method on `records`. If `check` is ``True``, the
+            method filters out non-existing records before computing them.
+        """
         batch = len(records) > 1
         recompute = bool(records & scope.recomputation.todo(self))
         for cache in records._caches:
             cache.set_busy(self.name, batch=batch, recompute=recompute)
+
+        # if required, keep new and existing records only
+        if check:
+            records = sum((rec for rec in records if not rec.id), records.exists())
 
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
@@ -309,14 +311,6 @@ class Field(object):
                 record = records.browse(data['id'])
                 record._update_cache({name: data[name]})
 
-            failed = records.browse()
-            for record in records:
-                if name not in record._record_cache:
-                    failed += record
-
-            if failed:
-                raise AccessError("Cannot read %s on %s." % (name, failed))
-
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
         if self.store:
@@ -330,7 +324,7 @@ class Field(object):
         else:
             # compute self for the records without value for self in their cache
             recs = record.browse(record._model_cache.without_field(self.name))
-            self.compute_value(recs)
+            self.compute_value(recs, check=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
@@ -979,7 +973,7 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from openerp.exceptions import AccessError, Warning
+from openerp.exceptions import Warning
 from openerp.osv import fields
 from openerp.osv.orm import BaseModel
 from openerp.osv.scope import proxy as scope
