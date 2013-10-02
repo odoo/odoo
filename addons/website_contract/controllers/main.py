@@ -91,7 +91,7 @@ class website_contract(http.Controller):
             partner_id = partner_ids and partner_ids[0] or None
 
         if not partner_id:
-            return self.references(post)
+            return self.references(post=post)
 
         values = {
             'partner_id': partner_obj.browse(
