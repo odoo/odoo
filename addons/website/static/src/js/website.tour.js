@@ -75,7 +75,7 @@
                     backdrop: true,
                     title: "Welcome to your website!",
                     content: "This tutorial will guide you through the firsts steps to build your enterprise class website.",
-                    template: openerp.qweb.render('website.tour_confirm', { confirm: "Ok, tell me more!" }),
+                    template: openerp.qweb.render('website.tour_confirm', { confirm: "Tell me more!" }),
                 },
                 {
                     step_id: 'edit-page',
@@ -129,7 +129,20 @@
                     placement: 'top',
                     title: "Change the title",
                     content: "Click on the title and modify it to fit your needs.",
-                    template: openerp.qweb.render('website.tour_confirm', { confirm: "Ok, done!" }),
+                    template: openerp.qweb.render('website.tour_confirm', { confirm: "Done!" }),
+                },
+                {
+                    step_id: 'customize-banner',
+                    element: '.oe_overlay_options .oe_options',
+                    placement: 'left',
+                    title: "Customize the banner",
+                    content: "Click on <b>Customize</b> and change the background of your banner.",
+                    template: openerp.qweb.render('website.tour_simple'),
+                    onShow: function () {
+                        $('.dropdown-menu [name=carousel-background]').click(function () {
+                            self.movetoStep('save-changes');
+                        });
+                    },
                 },
                 {
                     step_id: 'save-changes',
