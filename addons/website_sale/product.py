@@ -32,6 +32,14 @@ class product_pricelist(osv.Model):
 class product_template(osv.Model):
     _inherit = "product.template"
     _order = 'website_sequence desc, website_published, name'
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        for prod in self.browse(cr, uid, ids, context=context):
+            res[prod.id] = "%s/shop/product/%s/" % (base_url, prod.product_variant_ids[0].id)
+        return res
+
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
@@ -41,6 +49,7 @@ class product_template(osv.Model):
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids' : fields.many2many('website.product.style','product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
+        'website_url': fields.function(_website_url, string="Website url"),
     }
     _defaults = {
         'website_size_x': 1,

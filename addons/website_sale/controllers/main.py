@@ -379,10 +379,14 @@ class Ecommerce(http.Controller):
             self.change_pricelist(post.get('promo'))
 
         suggested_ids = []
+        product_ids = []
         if order:
             for line in order.order_line:
                 suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or [] for line in order.order_line]
-        suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)], context=request.context)
+                product_ids.append(line.product_id.id)
+        suggested_ids = list(set(suggested_ids) - set(product_ids))
+        if suggested_ids:
+            suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)], context=request.context)
 
         # select 3 random products
         suggested_products = []

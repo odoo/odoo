@@ -40,6 +40,36 @@
             </field>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="product_template_form_view">
+        <field name="name">product.template.product.website.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <p attrs="{'invisible': [('website_published', '=', True)]}">
+                        This product is <b>not available</b> for public user in your ecommerce.
+                    </p>
+                    <p attrs="{'invisible': [('website_published', '=', False)]}">
+                        This product is <b>available</b> for public user in your ecommerce.
+                    </p>
+                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
+                </div>
+            </xpath>
+
+            <xpath expr="//group[@string='Product Type']" position="inside">
+                    <field name="website_published"/>
+            </xpath>
+            <xpath expr="//page[@string='Information']" position="inside">
+                <group colspan="4" string="Products On Ecommerce">
+                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="website_style_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
     
     <!-- Layout add nav and footer -->
 
@@ -232,7 +262,7 @@
 
     <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
         <xpath expr="//div[@class='product_price']" position="inside">
-            <a t-href="./add_cart/?product_id=#{ product.id }">
+            <a t-href="./add_cart/?product_id=#{ product.id }" class="js_add_cart_json">
                 <span class="icon-shopping-cart"/>
             </a>
         </xpath>
@@ -302,7 +332,7 @@
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
-                      <form t-action="./add_cart/">
+                      <form t-action="./add_cart/" class="js_add_cart_json">
                           <input type="hidden" t-if="len(product.product_variant_ids) &lt;= 1" name="product_id" t-att-value="product.id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
                               <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
@@ -430,14 +460,14 @@
                                 <td>
                                     <div class="input-group">
                                         <span class="input-group-addon">
-                                            <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8">
+                                            <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 js_add_cart_json">
                                                 <span class="icon-minus"/>
                                             </a>
                                         </span>
                                         <input type="text" class="js_quantity form-control"
                                             t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                         <span class="input-group-addon">
-                                            <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left">
+                                            <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left js_add_cart_json">
                                                 <span class="icon-plus"/>
                                             </a>
                                         </span>
