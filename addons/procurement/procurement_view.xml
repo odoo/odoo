@@ -88,16 +88,16 @@
         </record>
         
 <!-- 
-        TODO-JKE
-
 		<record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Pickings for Groups  </field>
-            <field name="res_model">stock.move</field>
+            <field name="res_model">stock.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
 			<field name="domain">[('group_id','=',active_id)]</field>			
         </record>
---> 
+        <button name="%(do_view_pickings)d" string="View all procurements" type="action" />
+-->
+ 
                 
  		<record id="procurement_group_form_view" model="ir.ui.view">
             <field name="name">procurement.group.form</field>
@@ -107,7 +107,6 @@
                     <sheet>
 						<div class="oe_right oe_button_box">
 							<button name="%(do_view_procurements)d" string="View all procurements" type="action" />
-														                            
             			</div>
                         <group>
                             <field name="name"/>
