@@ -128,6 +128,7 @@ class res_company(osv.osv):
         'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
+        'font': fields.selection(_get_font, "Font",help="Set your favorite font into company header"),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
             'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
@@ -151,7 +152,6 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
-        'font': fields.selection(_get_font, "Font",help="Set your favorite font into company header"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
