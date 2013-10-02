@@ -47,6 +47,9 @@ class procurement_rule(osv.osv):
         return res
 
     def _get_route(self, cr, uid, ids, context=None):
+        #WARNING TODO route_id is not required, so a field related seems a bad idea >-< 
+        if context is None:
+            context = {}
         result = {}
         if context is None:
             context = {}

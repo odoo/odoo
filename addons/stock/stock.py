@@ -147,7 +147,7 @@ class stock_location_route(osv.osv):
     }
 
     _defaults = {
-        'sequence': lambda self,cr,uid,ctx: 0,
+        'sequence': lambda self, cr, uid, ctx: 0,
         'active': True,
     }
 
@@ -2653,6 +2653,7 @@ class stock_picking_type(osv.osv):
         'code_id': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
+        'active': fields.boolean('Active'),
 
         # Statistics for the kanban view
         'weekly_picking': fields.function(_get_picking_data,
@@ -2687,5 +2688,6 @@ class stock_picking_type(osv.osv):
     }
     _defaults = {
         'warehouse_id': _default_warehouse,
+        'active': True,
     }
 
