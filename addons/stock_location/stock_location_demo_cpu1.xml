@@ -4,7 +4,7 @@
             <field name="description">This product is configured with example of push/pull flows</field>
         </record>
 
-        <record id="stock_location_qualitytest0" model="stock.location">
+        <record id="stock_location_quality" model="stock.location">
                 <field name="active">True</field>
         </record>
         <record id="stock_location_path_4" model="stock.location.path">
@@ -14,12 +14,12 @@
             <field name="invoice_state">none</field>
             <field eval="1" name="delay"/>
             <field name="name">Receptions to Quality Control</field>
-            <field name="location_dest_id" ref="stock_location_qualitytest0"/>
+            <field name="location_dest_id" ref="stock_location_quality"/>
             <field name="location_from_id" ref="stock.stock_location_stock"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
         <record id="stock_location_path_5" model="stock.location.path">
-            <field name="location_from_id" ref="stock_location_qualitytest0"/>
+            <field name="location_from_id" ref="stock_location_quality"/>
             <field name="product_id" ref="product.product_product_10"/>
             <field name="auto">manual</field>
             <field name="invoice_state">none</field>
