@@ -5,18 +5,6 @@
             <div class="arrow"></div>
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
-            <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="end">Stop tour</button>
-            </nav>
-            <!--
-            <nav class="popover-navigation">
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-default" data-role="prev">« Prev</button>
-                    <button class="btn btn-sm btn-default" data-role="next">Next »</button>
-                </div>
-                <button class="btn btn-sm btn-default" data-role="end">Stop tour</button>
-            </nav>
-            -->
         </div>
     </t>
     <t t-name="website.tour_confirm">
@@ -25,9 +13,11 @@
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
             <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="next">OK, what's next?</button>
-                <button class="btn btn-sm btn-default" data-role="end">Stop tour</button>
+                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="confirm"/></button>
             </nav>
         </div>
+    </t>
+    <t t-name="website.tour_title">
+        <t t-esc="title"/><button title="Close" type="button" class="close" data-role="end">×</button>
     </t>
 </templates>
