@@ -9,7 +9,7 @@ OpenERP Website Google Map
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'crm_partner_assign'],
+    'depends': ['website_partner', 'crm_partner_assign'],
     'data': [
         'views/google_map.xml',
     ],

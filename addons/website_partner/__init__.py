@@ -19,26 +19,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'Website Mail',
-    'category': 'Website',
-    'summary': 'Website Module for Mail',
-    'version': '0.1',
-    'description': """Glue module holding mail improvements for website.""",
-    'author': 'OpenERP SA',
-    'depends': ['website', 'mail'],
-    'data': [
-        'views/website_mail.xml',
-    ],
-    'css': [
-        'static/src/css/website_mail.css',
-    ],
-    'js': [
-        'static/src/js/website_mail.js',
-    ],
-    'qweb': [
-        'static/src/xml/website_mail.xml'
-    ],
-    'installable': True,
-    'auto_install': True,
-}
+import models
