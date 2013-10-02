@@ -421,10 +421,10 @@
                                     <div class="text-muted" t-field="line.product_id.description_sale"/>
                                 </td>
                                 <td class="text-center">
-                                   <span t-field="line.price_unit"></span> €
                                    <div class="text-danger" style="text-decoration: line-through;" t-if="line.product_id.lst_price &gt; line.price_unit">
                                        <t t-esc="line.product_id.lst_price" /> €
                                    </div>
+                                   <span t-field="line.price_unit"></span> €
                                 </td>
                                 <td>
                                     <div class="input-group">
