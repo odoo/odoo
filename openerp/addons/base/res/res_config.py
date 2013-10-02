@@ -49,10 +49,10 @@ class res_config_module_installation_mixin(object):
                 to_install_missing_names.append(name)
             elif module.state == 'uninstalled':
                 to_install_ids.append(module.id)
-
+        result = None
         if to_install_ids:
-            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
-
+            result = ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
+        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
         if to_install_missing_names:
             return {
                 'type': 'ir.actions.client',
@@ -60,7 +60,7 @@ class res_config_module_installation_mixin(object):
                 'params': {'modules': to_install_missing_names},
             }
 
-        return None
+        return result
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
