@@ -38,6 +38,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
+            'get_target_move': self._get_target_move,
         })
         self.context = context
 

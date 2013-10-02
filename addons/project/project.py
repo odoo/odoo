@@ -265,7 +265,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
@@ -717,6 +717,16 @@ class task(osv.osv):
                 new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        stage = self._get_default_stage_id(cr, uid, context=context)
+        if stage:
+            default['stage_id'] = stage
+        return super(task, self).copy(cr, uid, id, default, context)
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -794,7 +804,7 @@ class task(osv.osv):
     _defaults = {
         'stage_id': _get_default_stage_id,
         'project_id': _get_default_project_id,
-        'date_last_stage_update': lambda *a: fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
@@ -1247,6 +1257,18 @@ class account_analytic_account(osv.osv):
         if analytic_ids:
             raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if args is None:
+            args = []
+        if context is None:
+            context={}
+        if context.get('current_model') == 'project.project':
+            project_ids = self.search(cr, uid, args + [('name', operator, name)], limit=limit, context=context)
+            return self.name_get(cr, uid, project_ids, context=context)
+
+        return super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
+
 
 class project_project(osv.osv):
     _inherit = 'project.project'
