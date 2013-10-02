@@ -7,6 +7,7 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 import urllib
 
+
 class website_contract(http.Controller):
 
     @website.route(['/references/', '/references/page/<int:page>/'], type='http', auth="public")
@@ -23,21 +24,19 @@ class website_contract(http.Controller):
         domain = ['|', ('id', "in", contract_project_ids), ('id', "child_of", contract_project_ids)]
 
         if post.get('search'):
-            domain += ['|',
+            domain += [
+                '|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")),
-                ('website_description', 'ilike', "%%%s%%" % post.get("search"))]
+                ('website_description', 'ilike', "%%%s%%" % post.get("search"))
+            ]
+        if request.context['is_public_user']:
+            domain = ['&'] + domain + [('website_published', '=', True)]
 
         # public partner profile
         partner_ids = partner_obj.search(
             request.cr, openerp.SUPERUSER_ID,
             domain + [('website_published', '=', True)], context=request.context)
         google_map_partner_ids = ",".join([str(p) for p in partner_ids])
-
-        if not request.context['is_public_user']:
-            # search without website_published
-            partner_ids += partner_obj.search(request.cr, request.uid,
-                                              domain, context=request.context)
-            partner_ids = list(set(partner_ids))
 
         # group by country
         countries = partner_obj.read_group(
@@ -75,22 +74,28 @@ class website_contract(http.Controller):
         }
         return request.website.render("website_contract.index", values)
 
-    @website.route(['/references/<int:ref_id>/'], type='http', auth="public")
-    def references_ref(self, ref_id=0, **post):
+    @website.route(['/references/<int:partner_id>/'], type='http', auth="public")
+    def references_ref(self, partner_id=None, **post):
+        """ Route for displaying a single partner.
+
+        :param integer partner_id: partner to display. If not set or not valid
+                                   call basic references method.
+        """
         partner_obj = request.registry['res.partner']
-        partner_ids = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, [
-                ('website_published', '=', True),
-                ('id', '=', ref_id)
-            ], context=request.context)
-        if not request.context['is_public_user']:
-            partner_ids += partner_obj.search(
-                request.cr, request.uid, [('id', '=', ref_id)],
-                context=request.context)
+        if request.context['is_public_user']:
+            partner_ids = partner_obj.search(
+                request.cr, openerp.SUPERUSER_ID, [
+                    ('website_published', '=', True),
+                    ('id', '=', partner_id)
+                ], context=request.context)
+            partner_id = partner_ids and partner_ids[0] or None
+
+        if not partner_id:
+            return self.references(post)
 
         values = {
             'partner_id': partner_obj.browse(
-                request.cr, openerp.SUPERUSER_ID, partner_ids[0],
+                request.cr, openerp.SUPERUSER_ID, partner_id,
                 dict(request.context, show_address=True)),
         }
 
