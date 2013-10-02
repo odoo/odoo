@@ -176,7 +176,7 @@ class Ecommerce(http.Controller):
             fill_hole_products = []
             # search for checking of access rules and keep order
             fill_hole = [id for id in fill_hole if id in product_obj.search(request.cr, request.uid, [("id", 'in', fill_hole)], context=request.context)]
-            for product in product_obj.browse(request.cr, SUPERUSER_ID, fill_hole, context=request.context):
+            for product in product_obj.browse(request.cr, request.uid, fill_hole, context=request.context):
                 fill_hole_products.append(product)
             fill_hole_products.reverse()
 
@@ -200,7 +200,7 @@ class Ecommerce(http.Controller):
         request.context['pricelist'] = self.get_pricelist()
         # search for checking of access rules and keep order
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
-        return product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context)
+        return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
     @website.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
     def category(self, cat_id=0, page=0, **post):
