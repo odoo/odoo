@@ -182,11 +182,11 @@ class module(osv.osv):
 
         dmodels = []
         if field_name is None or 'views_by_module' in field_name:
-            dmodels.append('ir.ui.view')
+            dmodels.append('ir_ui_view')
         if field_name is None or 'reports_by_module' in field_name:
-            dmodels.append('ir.actions.report.xml')
+            dmodels.append('ir_actions_report_xml')
         if field_name is None or 'menus_by_module' in field_name:
-            dmodels.append('ir.ui.menu')
+            dmodels.append('ir_ui_menu')
         assert dmodels, "no models for %s" % field_name
 
         for module_rec in self.browse(cr, uid, ids, context=context):
