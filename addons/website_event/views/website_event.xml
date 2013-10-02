@@ -13,14 +13,6 @@
         </xpath>
     </template>
 
-    <template id="event_website_sale_mycart" inherit_id="website_sale.mycart">
-        <xpath expr="//small[@class='text-error']" position="replace">
-            <t t-if="(not line.event_id or line.event_ticket_id and line.event_ticket_id.price == line.product_id.lst_price)">
-                <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
-            </t>
-        </xpath>
-    </template>
-
     <!-- Page --> 
     <template id="index" name="Events" page="True">
         <t t-call="website.layout">
@@ -156,15 +148,18 @@
                                 <thead>
                                     <tr>
                                         <th>Ticket Type</th>
-                                        <th>Sales End</th>
-                                        <th>Price</th>
+                                        <th style="min-width: 100px">Sales End</th>
+                                        <th style="min-width: 100px">Price</th>
                                         <th></th>
                                         <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
-                                        <td><span t-field="ticket.name"/></td>
+                                        <td>
+                                            <div t-field="ticket.name"/>
+                                            <div><small t-field="ticket.product_id.description_sale"/></div>
+                                        </td>
                                         <td><span t-field="ticket.deadline"/></td>
                                         <td><span t-field="ticket.price"/></td>
                                         <td>

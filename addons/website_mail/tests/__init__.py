@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.website_blog.tests import test_controllers
+from openerp.addons.website_mail.tests import test_controllers
 
 checks = [
     test_controllers,

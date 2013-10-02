@@ -32,16 +32,27 @@
         </div>
     </template>
 
+    <!-- Options: Blog Post Summary: hide author -->
     <template id="view_blog_post_short_author" inherit_option_id="website_blog.view_blog_post_short" name="Hide Authors">
         <xpath expr="//span[@class='icon-user']" position="attributes">
             <attribute name="class">hidden</attribute>
         </xpath>
     </template>
 
+    <!-- Options: Blog Post Summary: show category -->
+    <template id="view_blog_post_short_category" inherit_option_id="website_blog.view_blog_post_short" name="Show Blog Name">
+        <xpath expr="//span[@class='icon-user']" position="after">
+            <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
+        </xpath>
+    </template>
+
     <!-- Blog Post Complete -->
     <template id="view_blog_post" name="Blog Post">
         <div>
-          <t t-call="website.publish_management"><t t-set="object" t-value="blog_post"/></t>
+            <t t-call="website.publish_management">
+                <t t-set="object" t-value="blog_post"/>
+                <t t-set="publish_edit" t-value="true"/>
+            </t>
         </div><div class="clearfix"/>
 
         <h1 class="text-center" t-field="blog_post.name"/>
@@ -75,9 +86,11 @@
         <ul class="media-list">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                 <div class="media-body">
-                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.users&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                    <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
                     <div class="media-body">
-                        <t t-call="website.publish_management"><t t-set="object" t-value="message"/></t>
+                        <t t-call="website.publish_short">
+                            <t t-set="object" t-value="message"/>
+                        </t>
                         <h5 class="media-heading">
                             <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
                         </h5>
@@ -87,12 +100,11 @@
             </li>
         </ul>
         <section groups="group_website_blog_reply" class="mb32">
-            <t t-call="website_mail.follow"><t t-set="object" t-value="blog_post"/></t>
             <h4>Leave a Comment</h4>
             <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
                     method="POST">
                 <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
-                <div class="pull-left" style="width: 75%%">
+                <div class="pull-left mb32" style="width: 75%%">
                     <textarea rows="3" class="form-control" placeholder="Write a comment..."></textarea>
                     <button type="submit" class="btn btn-danger mt8">Post</button>
                 </div>
@@ -100,12 +112,19 @@
         </section>
     </template>
 
+    <!-- Options: Blog Post: hide author -->
     <template id="view_blog_post_author" inherit_option_id="website_blog.view_blog_post" name="Hide Authors">
         <xpath expr="//span[@class='icon-user']" position="attributes">
             <attribute name="class">hidden</attribute>
         </xpath>
     </template>
 
+    <!-- Options: Blog Post: show category -->
+    <template id="view_blog_post_show_category" inherit_option_id="website_blog.view_blog_post" name="Show Blog Name">
+        <xpath expr="//span[@class='icon-user']" position="after">
+            <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
+        </xpath>
+    </template>
 
     <!-- Page --> 
     <template id="index" name="Blogs" page="True">
@@ -135,6 +154,7 @@
         </t>
     </template>
 
+    <!-- Option: right column -->
     <template id="blog_right_column" inherit_id="website_blog.index" inherit_option_id="website_blog.index" name="Right Column">
         <xpath expr="//div[@class='row']" position="inside">
             <div class="col-sm-3 hidden-xs col-lg-offset-1 mb32" id="right_column">
@@ -146,7 +166,7 @@
         </xpath>
     </template>
 
-    <!-- Option: archives -->
+    <!-- Option: Right Column: archives -->
     <template id="blog_history" inherit_id="website_blog.blog_right_column" inherit_option_id="website_blog.blog_right_column" name="Archives">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section>
@@ -168,6 +188,7 @@
         </xpath>
     </template>
 
+    <!-- Option: Right Column: about us -->
     <template id="blog_aboutus" inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column" name="About" priority="4">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">
@@ -183,26 +204,36 @@
         </xpath>
     </template>
 
+    <!-- Option: Right Column: follow us -->
     <template id="blog_followus" inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column" name="Follow us" priority="2">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">
-            <h4>Follow us</h4>
-            <p class="text-muted">
-                Participate on our social stream.
-            </p>
-            <t t-call="website_mail.follow"><t t-set="object" t-value="category"/></t>
-            <h2>
-                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
-                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
-                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
-                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
-                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
-                <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
-            </h2>
+                <h4>Follow us</h4>
+                <t t-if="category">
+                    <p class="text-muted">
+                        Be notified of new blog posts in <t t-esc="category.name"/>
+                    </p>
+                    <t t-call="website_mail.follow">
+                        <t t-set="email" t-value="current_user.email"/>
+                        <t t-set="object" t-value="category"/>
+                    </t>
+                </t>
+                <p class="text-muted">
+                    Participate on our social stream.
+                </p>
+                <h2>
+                    <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
+                    <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
+                    <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
+                    <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
+                    <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
+                    <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
+                </h2>
             </section>
         </xpath>
     </template>
 
+    <!-- Option: Right Column: categories + category in blog post -->
     <template id="blog_categories" inherit_option_id="website_blog.blog_right_column" name="Other Blogs" priority="6">
         <xpath expr="//div[@id='right_column']" position="inside">
             <section class="mb16">

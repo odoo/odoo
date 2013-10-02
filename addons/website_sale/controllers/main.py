@@ -4,7 +4,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website import website
+from openerp.addons.website.models import website
 import random
 
 def get_order(order_id=None):
@@ -12,19 +12,19 @@ def get_order(order_id=None):
     # check if order allready exists
     if order_id:
         try:
-            order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, request.context)
+            order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=request.context)
             order.pricelist_id
         except:
             order_id = None
     if not order_id:
         fields = [k for k, v in order_obj._columns.items()]
-        order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields, request.context)
+        order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
         if request.httprequest.session.get('ecommerce_pricelist'):
             order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
-        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, request.context).partner_id.id
+        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, context=request.context).partner_id.id
         order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context=request.context)['value'])
-        order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value, request.context)
-        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, request.context)
+        order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value, context=request.context)
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=request.context)
         request.httprequest.session['ecommerce_order_id'] = order.id
 
     return order_obj.browse(request.cr, SUPERUSER_ID, order_id,
@@ -176,7 +176,7 @@ class Ecommerce(http.Controller):
             fill_hole_products = []
             # search for checking of access rules and keep order
             fill_hole = [id for id in fill_hole if id in product_obj.search(request.cr, request.uid, [("id", 'in', fill_hole)], context=request.context)]
-            for product in product_obj.browse(request.cr, SUPERUSER_ID, fill_hole, context=request.context):
+            for product in product_obj.browse(request.cr, request.uid, fill_hole, context=request.context):
                 fill_hole_products.append(product)
             fill_hole_products.reverse()
 
@@ -200,7 +200,7 @@ class Ecommerce(http.Controller):
         request.context['pricelist'] = self.get_pricelist()
         # search for checking of access rules and keep order
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
-        return product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context)
+        return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
     @website.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
     def category(self, cat_id=0, page=0, **post):
@@ -250,26 +250,24 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.products", values)
 
-    @website.route(['/shop/product/<product_id>/'], type='http', auth="public", multilang=True)
+    @website.route(['/shop/product/<int:product_id>/'], type='http', auth="public", multilang=True)
     def product(self, cat_id=0, product_id=0, **post):
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
 
-        product_id = product_id and int(product_id) or 0
         product_obj = request.registry.get('product.template')
         category_obj = request.registry.get('product.public.category')
 
         category_ids = category_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
-        category_list = category_obj.name_get(request.cr, request.uid, category_ids, request.context)
+        category_list = category_obj.name_get(request.cr, request.uid, category_ids, context=request.context)
         category_list = sorted(category_list, key=lambda category: category[1])
-
-        request.context['pricelist'] = self.get_pricelist()
 
         category = None
         if post.get('category_id') and int(post.get('category_id')):
             category = category_obj.browse(request.cr, request.uid, int(post.get('category_id')), context=request.context)
 
+        request.context['pricelist'] = self.get_pricelist()
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
 
         values = {
@@ -282,7 +280,7 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @website.route(['/shop/add_product/', '/shop/category/<cat_id>/add_product/'], type='http', auth="public", multilang=True)
+    @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="public", multilang=True)
     def add_product(self, cat_id=0, **post):
         product_id = request.registry.get('product.product').create(request.cr, request.uid, 
             {'name': 'New Product', 'public_categ_id': cat_id}, request.context)
@@ -320,13 +318,11 @@ class Ecommerce(http.Controller):
     def add_product_to_cart(self, product_id=0, order_line_id=0, number=1, set_number=-1):
         order_line_obj = request.registry.get('sale.order.line')
 
-        product_id = product_id and int(product_id) or 0
-
         order = get_current_order()
         if not order:
             order = get_order()
 
-        context = dict(request.context, pricelist=self.get_pricelist())
+        request.context = dict(request.context, pricelist=self.get_pricelist())
 
         quantity = 0
 
@@ -339,9 +335,9 @@ class Ecommerce(http.Controller):
         else:
             domain += [('product_id', '=', product_id)]
 
-        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, domain, context=context)
+        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
         if order_line_ids:
-            order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=context)[0]
+            order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=request.context)[0]
             if not product_id:
                 product_id = order_line['product_id'][0]
             if set_number >= 0:
@@ -352,11 +348,11 @@ class Ecommerce(http.Controller):
                 quantity = 0
         else:
             fields = [k for k, v in order_line_obj._columns.items()]
-            values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=context)
+            values = order_line_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
             quantity = 1
 
         # change and record value
-        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=context)
+        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=request.context)
         values.update(vals)
 
         values['product_uom_qty'] = quantity
@@ -364,13 +360,13 @@ class Ecommerce(http.Controller):
         values['order_id'] = order.id
 
         if order_line_ids:
-            order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=context)
+            order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=request.context)
             if not quantity:
-                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=context)
+                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=request.context)
         else:
             #values['name'] = "website order"
-            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=context)
-            order.write({'order_line': [(4, order_line_id)]}, context=context)
+            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
+            order.write({'order_line': [(4, order_line_id)]}, context=request.context)
 
         return [quantity, order.get_total_quantity()]
 
@@ -395,6 +391,7 @@ class Ecommerce(http.Controller):
             suggested_products.append(suggested_ids.pop(index))
 
         values = {
+            'int': int,
             'get_categories': self.get_categories,
             'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products, request.context),
         }
@@ -402,7 +399,7 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/<path:path>/add_cart/', '/shop/add_cart/'], type='http', auth="public", multilang=True)
     def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        self.add_product_to_cart(product_id=product_id and int(product_id), order_line_id=order_line_id and int(order_line_id), number=(remove and -1 or 1))
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
@@ -415,7 +412,7 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/checkout/'], type='http', auth="public", multilang=True)
     def checkout(self, **post):
-        classic_fields = ["name", "phone", "fax", "email", "street", "city", "state_id", "zip"]
+        classic_fields = ["name", "phone", "email", "street", "city", "state_id", "zip"]
         rel_fields = ['country_id', 'state_id']
 
         order = get_current_order()
@@ -488,7 +485,6 @@ class Ecommerce(http.Controller):
                 company_id = partner_obj.create(request.cr, SUPERUSER_ID, {'name': post['company'], 'is_company': True}, request.context)
 
         partner_value = {
-            'fax': post['fax'],
             'phone': post['phone'],
             'zip': post['zip'],
             'email': post['email'],
@@ -508,7 +504,6 @@ class Ecommerce(http.Controller):
         shipping_id = None
         if post.get('shipping_different'):
             shipping_value = {
-                'fax': post['shipping_fax'],
                 'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
                 'street': post['shipping_street'],
@@ -570,14 +565,14 @@ class Ecommerce(http.Controller):
     def change_sequence(self, id, top):
         product_obj = request.registry.get('product.template')
         if top:
-            product_obj.set_sequence_top(request.cr, request.uid, [id], request.context)
+            product_obj.set_sequence_top(request.cr, request.uid, [id], context=request.context)
         else:
-            product_obj.set_sequence_bottom(request.cr, request.uid, [id], request.context)
+            product_obj.set_sequence_bottom(request.cr, request.uid, [id], context=request.context)
 
     @website.route(['/shop/change_styles/'], type='json', auth="public")
     def change_styles(self, id, style_id):
         product_obj = request.registry.get('product.template')
-        product = product_obj.browse(request.cr, request.uid, id, request.context)
+        product = product_obj.browse(request.cr, request.uid, id, context=request.context)
 
         remove = []
         active = False
@@ -587,14 +582,11 @@ class Ecommerce(http.Controller):
                 active = True
                 break
 
-        style = request.registry.get('website.product.style').browse(request.cr, request.uid, style_id, request.context)
+        style = request.registry.get('website.product.style').browse(request.cr, request.uid, style_id, context=request.context)
 
         if remove:
-            print "remove", remove
             product.write({'website_style_ids': [(3, rid) for rid in remove]})
-
         if not active:
-            print "add", style.id
             product.write({'website_style_ids': [(4, style.id)]})
 
         return not active
@@ -602,7 +594,7 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/change_size/'], type='json', auth="public")
     def change_size(self, id, x, y):
         product_obj = request.registry.get('product.template')
-        product = product_obj.browse(request.cr, request.uid, id, request.context)
+        product = product_obj.browse(request.cr, request.uid, id, context=request.context)
         return product.write({'website_size_x': x, 'website_size_y': y})
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

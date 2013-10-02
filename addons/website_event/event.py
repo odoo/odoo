@@ -64,7 +64,7 @@ class event(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
-    def _recalculate_product_values(self, cr, uid, ids, product_id=None, context=None):
+    def _recalculate_product_values(self, cr, uid, ids, product_id=0, context=None):
         if not ids:
             return super(sale_order_line, self)._recalculate_product_values(cr, uid, ids, product_id, context=context)
 

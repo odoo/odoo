@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 /* ---- CKEditor Minimal Reset ---- */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
@@ -167,7 +167,6 @@ table.editorbar-panel td.selected {
   box-shadow: 0px 10px 10px -10px black inset;
   z-index: 1010;
   overflow: hidden;
-  height: 110px;
 }
 #oe_snippets:hover {
   height: auto;
@@ -177,16 +176,13 @@ table.editorbar-panel td.selected {
   overflow-y: auto;
 }
 #oe_snippets .nav {
-  padding: 3px 15px;
-  width: 162px;
-  background: #444444;
   position: fixed;
   z-index: 1;
-  height: 108px;
 }
 #oe_snippets .nav > li {
-  display: block;
+  display: inline-block;
   float: none;
+  font-size: 13px;
 }
 #oe_snippets .nav > li > a {
   padding: 2px 10px !important;
@@ -194,13 +190,14 @@ table.editorbar-panel td.selected {
   display: block;
 }
 #oe_snippets .pill-content {
+  margin-top: 24px;
   display: inline-block;
-  height: 110px;
   white-space: nowrap;
-  padding-left: 166px;
 }
 #oe_snippets .pill-content > div {
   display: inline-block;
+  background: black;
+  padding: 5px;
 }
 #oe_snippets .pill-content > div label {
   width: 44px;
@@ -211,23 +208,23 @@ table.editorbar-panel td.selected {
 #oe_snippets .pill-content > div label div {
   width: 100px;
   text-align: center;
-  -webkit-transform: translate(-39px, 44px) rotate(-90deg);
-  -moz-transform: translate(-39px, 44px) rotate(-90deg);
-  -o-transform: translate(-39px, 44px) rotate(-90deg);
-  transform: translate(-39px, 44px) rotate(-90deg);
-  -webkit-transform-origin: 50% 50%;
-  -moz-transform-origin: 50% 50%;
-  -ms-transform-origin: 50% 50%;
-  -o-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
+  -webkit-transform: translate(-39px, 44px);
+  -moz-transform: translate(-39px, 44px);
+  -ms-transform: translate(-39px, 44px);
+  -o-transform: translate(-39px, 44px);
+  transform: translate(-39px, 44px);
+  -webkit-transform-origin: 50% 50% 50%;
+  -moz-transform-origin: 50% 50% 50%;
+  -ms-transform-origin: 50% 50% 50%;
+  -o-transform-origin: 50% 50% 50%;
+  transform-origin: 50% 50% 50%;
 }
 
 .oe_snippet {
   display: inline-block;
   vertical-align: top;
-  width: 108px;
-  height: 108px;
-  border-radius: 3px;
+  width: 100px;
+  height: 100px;
   margin: 1px;
   margin-top: 0px;
   position: relative;
@@ -243,8 +240,14 @@ table.editorbar-panel td.selected {
   height: 100%;
   background: transparent;
   color: white;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.95);
   position: relative;
+}
+.oe_snippet .oe_snippet_thumbnail .oe_snippet_thumbnail_title {
+  font-size: 12px;
+  display: block;
+}
+.oe_snippet .oe_snippet_thumbnail .oe_snippet_thumbnail_img {
+  box-shadow: inset 0px 0px 0px 3px #333333;
 }
 .oe_snippet .oe_snippet_thumbnail span, .oe_snippet .oe_snippet_thumbnail div {
   line-height: 18px;
@@ -256,7 +259,6 @@ table.editorbar-panel td.selected {
 #oe_snippets .oe_snippet_thumbnail {
   background: #747474;
   background-image: radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
-  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.07) inset;
 }
 
 /* ---- SNIPPETS DROP ZONES ---- */

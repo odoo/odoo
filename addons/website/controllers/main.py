@@ -14,7 +14,7 @@ import werkzeug.wrappers
 from PIL import Image
 
 import openerp
-from openerp.addons.website import website
+from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
