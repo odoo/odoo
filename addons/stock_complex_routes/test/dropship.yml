@@ -42,6 +42,11 @@
     !python {model: procurement.group}: |
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200 
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 - 
     Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
 -
