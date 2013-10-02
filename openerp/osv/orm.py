@@ -2142,11 +2142,19 @@ class BaseModel(object):
 
     def _inverse_display_name(self):
         name = self._rec_name
-        for record in self:
-            record[name] = record.display_name
+        if name in self._fields and not self._fields[name].relational:
+            for record in self:
+                record[name] = record.display_name
+        else:
+            _logger.warning("Cannot inverse field display_name on %s", self._name)
 
     def _search_display_name(self, operator, value):
-        return [(self._rec_name, operator, value)]
+        name = self._rec_name
+        if name in self._fields:
+            return [(name, operator, value)]
+        else:
+            _logger.warning("Cannot search field display_name on %s", self._name)
+            return [(0, '=', 1)]
 
     @api.multi
     def name_get(self):
