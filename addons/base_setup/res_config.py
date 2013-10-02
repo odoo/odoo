@@ -44,7 +44,7 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
-        'font': fields.selection(_get_font, "Select Font",help="Set your favorite font into company header"),
+        'font': fields.selection(_get_font, "Select Font", help="Set your favorite font into company header"),
     }
     
     _defaults= {
@@ -103,5 +103,5 @@ class sale_config_settings(osv.osv_memory):
             'Manage mass mailing campaigns',
             help='Get access to statistics with your mass mailing, manage campaigns.'),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
