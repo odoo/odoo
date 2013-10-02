@@ -1135,7 +1135,7 @@ class procurement_order(osv.osv):
         return rule_id
 
     def _run(self, cr, uid, procurement, context=None):
-        print "dans le _run de purchase", procurement.rule_id and procurement.rule_id.name or 'pas de rule'
+        print "dans le run de purchase", procurement.rule_id and procurement.rule_id.name or 'pas de rule'
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             print "go pour make_po"
             #make a purchase order for the procurement

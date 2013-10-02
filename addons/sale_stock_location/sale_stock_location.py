@@ -40,6 +40,7 @@ class sale_order(osv.osv):
         routes += route_ids
         route_id = line.route_id and [(4, line.route_id.id)] or []
         routes += route_id
+        print 'toutes les routes sur le procurement', routes
         res.update({
                 'route_ids': routes
                 })
