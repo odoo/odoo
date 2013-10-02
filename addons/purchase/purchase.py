@@ -1138,6 +1138,9 @@ class procurement_order(osv.osv):
         print "dans le run de purchase"
         print procurement
         print procurement.rule_id
+        if procurement.rule_id:
+            print procurement.rule_id.action
+            print procurement.rule_id.name
         #a = procurement.rule_id and procurement.rule_id.name or 'pas de rule'
         #print a
         if procurement.rule_id and procurement.rule_id.action == 'buy':
