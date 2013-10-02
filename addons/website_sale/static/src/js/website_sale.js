@@ -36,20 +36,18 @@ $(document).ready(function () {
     });
     
     // hack to add and rome from cart with json
-    $('.oe_website_sale a[href*="/add_cart/"], a[href*="/remove_cart/"]').on('click', function (ev) {
+    $('.oe_website_sale a[href*="/add_cart/"],.oe_website_sale a[href*="/remove_cart/"]').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var product_id = $link.attr("href").match(/product_id=([0-9]+)/)[1];
-        if (product_id) {
-            product_id = +product_id;
-        }
+        var product = $link.attr("href").match(/product_id=([0-9]+)/);
+        var product_id = product ? +product[1] : 0;
         openerp.jsonRpc("/shop/add_cart_json/", 'call', {'product_id': product_id, 'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
             .then(function (data) {
                 if (!data[0]) {
                     location.reload();
                 }
                 set_my_cart_quantity(data[1]);
-                $link.parent().find(".js_quantity").val(data[0]);
+                $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
             });
         return false;
     });

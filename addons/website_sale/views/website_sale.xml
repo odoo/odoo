@@ -313,14 +313,16 @@
                               </label>
                               <br/>
                           </t>
-                          <div>
-                              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                              <h5 class="text-danger" style="text-decoration: line-through;" title="Price without reduction"><span t-field="product.product_variant_ids[0].lst_price" /> €</h5>
-                              <h4><t t-esc="product.product_variant_ids[0].price" /> €</h4>
-                              </t>
-                              <h4 t-if="product.product_variant_ids[0].lst_price == product.product_variant_ids[0].price">
-                                  <b><span t-field="product.product_variant_ids[0].lst_price" /> €</b>
-                              </h4>
+
+                          <div class="product_price">
+                              <b>
+                                  <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                                    <span class="text-danger" style="text-decoration: line-through;">
+                                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                                    </span>&amp;nbsp;
+                                  </t>
+                                  <h4><b><t t-esc="product.product_variant_ids[0].price" /> €</b></h4>
+                              </b>
                           </div>
                           <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
                           <hr t-if="product.description_sale"/>
@@ -427,14 +429,14 @@
                                 <td>
                                     <div class="input-group">
                                         <span class="input-group-addon">
-                                            <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8">
+                                            <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8">
                                                 <span class="icon-minus"/>
                                             </a>
                                         </span>
                                         <input type="text" class="js_quantity form-control"
                                             t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                         <span class="input-group-addon">
-                                            <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left">
+                                            <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left">
                                                 <span class="icon-plus"/>
                                             </a>
                                         </span>

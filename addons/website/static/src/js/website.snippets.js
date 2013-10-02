@@ -825,7 +825,7 @@
                         editor.on('start', self, function (o) {o.url = bg_value;});
                         editor.on('save', self, function (o) {
                             var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
-                            $bg.css("background-image", "url('" + o.url + "')");
+                            $bg.css("background-image", "url(" + o.url + ")");
                         });
                         editor.appendTo($('body'));
                     }
@@ -834,13 +834,13 @@
                     if ($(this).data("value")) {
                         var src = $(this).data("value");
                         var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
-                        $bg.css("background-image", "url('" + src + "')");
+                        $bg.css("background-image", "url(" + src + ")");
                     }
                 })
                 .on('mouseout', function (event) {
                     var src = $ul.find('li.active').data("value");
                     var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
-                    $bg.css("background-image", "url('" + src + "')");
+                    $bg.css("background-image", "url(" + src + ")");
                 });
         },
     });
