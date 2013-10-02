@@ -8,18 +8,18 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-12-17 14:54+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:40+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr "Kostenplaatsen voor verkoop"
+msgstr "Kostenplaatsen voor verkopen"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -129,7 +129,7 @@ msgid "March"
 msgstr "Maart"
 
 #. module: sale
-#: code:addons/sale/sale.py:567
+#: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr ""
@@ -266,7 +266,7 @@ msgstr "Verkooporderregels welke zich bevinden in de 'gereed' status."
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "Maak op bestelling"
+msgstr "Maak op order"
 
 #. module: sale
 #: field:sale.order,message_ids:0
@@ -296,9 +296,9 @@ msgstr "Project"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:368
-#: code:addons/sale/sale.py:509
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:363
+#: code:addons/sale/sale.py:504
+#: code:addons/sale/sale.py:598
 #: code:addons/sale/sale.py:763
 #: code:addons/sale/sale.py:780
 #, python-format
@@ -436,7 +436,7 @@ msgid "Tax"
 msgstr "Belasting"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #: code:addons/sale/sale.py:820
 #: code:addons/sale/sale.py:983
 #, python-format
@@ -500,7 +500,7 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -525,8 +525,8 @@ msgid "Contract Features"
 msgstr "Contract opties"
 
 #. module: sale
-#: code:addons/sale/sale.py:288
-#: code:addons/sale/sale.py:586
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -729,7 +729,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr "Datum gemaakt"
+msgstr "Aanmaakdatum"
 
 #. module: sale
 #: view:sale.order:0
@@ -834,7 +834,7 @@ msgstr "Configuratiefout!"
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr "Verkoop kostenplaatsen"
+msgstr "Kostenplaatsen voor verkopen"
 
 #. module: sale
 #: view:sale.order:0
@@ -886,7 +886,7 @@ msgid "Sales Order done"
 msgstr "Verkooporder gereed"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr "Definieer het verkoopboek voor dit bedrijf: \"%s\" (id:%d)."
@@ -941,7 +941,7 @@ msgid "Sales Make Invoice"
 msgstr "Verkoopfactuur maken"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:307
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Prijslijst waarschuwing"
@@ -952,7 +952,7 @@ msgid "Discount (%)"
 msgstr "Krt. (%)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1019,7 +1019,7 @@ msgid "Category of Product"
 msgstr "Productcategorie"
 
 #. module: sale
-#: code:addons/sale/sale.py:566
+#: code:addons/sale/sale.py:564
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Het is niet mogelijk deze verkooporder te annuleren!"
@@ -1077,7 +1077,7 @@ msgid "Open Sale Menu"
 msgstr "Open verkoop menu"
 
 #. module: sale
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr ""
@@ -1362,8 +1362,8 @@ msgid ""
 msgstr ""
 "Alle regels van deze order worden gefactureerd. het is ook mogelijk een "
 "percentage van de verkooporder te factureren\n"
-"                    of een vast bedrag (als voorschot) direct vanuit de "
-"verkooporder."
+"                    of een vast bedrag (als vooruitbetaling) direct vanuit "
+"de verkooporder."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1440,7 +1440,7 @@ msgstr "Geen geldige prijslijst gevonden!:"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:115
 #, python-format
 msgid "Advance of %s %s"
-msgstr "Voorschot van %s %s"
+msgstr "Vooruitbetaling van %s %s"
 
 #. module: sale
 #: view:sale.report:0
@@ -1515,7 +1515,7 @@ msgid "TVA :"
 msgstr "BTW :"
 
 #. module: sale
-#: code:addons/sale/sale.py:449
+#: code:addons/sale/sale.py:444
 #, python-format
 msgid "Customer Invoices"
 msgstr "Klantfacturen"
@@ -1538,10 +1538,10 @@ msgstr "Volgorde"
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
-msgstr "Verkopen"
+msgstr "Offertes/Orders"
 
 #. module: sale
-#: code:addons/sale/sale.py:309
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1586,7 +1586,8 @@ msgid "Invoice address :"
 msgstr "Factuuradres:"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:124
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
 #, python-format
@@ -1674,7 +1675,7 @@ msgid "Shipping address :"
 msgstr "Afleveradres :"
 
 #. module: sale
-#: code:addons/sale/sale.py:510
+#: code:addons/sale/sale.py:505
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -1853,8 +1854,8 @@ msgstr ""
 "\n"
 "    <p>Hallo ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Hier is uw ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} van ${object.company_id.name}: </p>\n"
+"    <p>Hier is uw ${object.state in ('draft', 'sent') and 'offerte' or "
+"'orderbevestiging'} van ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENTIE</strong><br />\n"
@@ -2090,7 +2091,7 @@ msgstr "Eigenschappen op regels"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr "Verkopen om te factureren"
+msgstr "Verkopen te factureren"
 
 #. module: sale
 #: view:sale.order:0
@@ -2196,8 +2197,9 @@ msgid "Manual In Progress"
 msgstr "Handmatig in behandeling"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
-#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"

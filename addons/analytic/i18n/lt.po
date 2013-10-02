@@ -14,24 +14,24 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-30 05:29+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:14+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "Vaikinės sąskaitos"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Vykdoma"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:229
 #, python-format
 msgid "Contract: "
-msgstr ""
+msgstr "Sutartis: "
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -40,18 +40,19 @@ msgstr ""
 
 #. module: analytic
 #: view:account.analytic.account:0
+#: field:account.analytic.account,date:0
 msgid "End Date"
-msgstr ""
+msgstr "Pabaigos data"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Nurodo produkto kiekį."
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
 msgid "Debit"
-msgstr ""
+msgstr "Debetas"
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -79,31 +80,39 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
+"Kai tik pasibaigia sutartis\n"
+"                                        arba maksimaliai kartų atlikus "
+"paslaugas\n"
+"                                        (pvz. techninės pagalbos sutartis),\n"
+"                                        sąskaitos valdytojas yra įspėjamas\n"
+"                                        el. laišku, kad atnaujintų sutartį "
+"su\n"
+"                                        pirkėju."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Contract or Project"
-msgstr ""
+msgstr "Sutartis arba projektas"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr ""
+msgstr "Sąskaitos/sutarties pavadinimas"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr ""
+msgstr "Sąskaitos valdytojas"
 
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Prenumeratoriai"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Uždaryta"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
@@ -113,23 +122,23 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Naujas"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Projekto vadovas"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "Status"
-msgstr ""
+msgstr "Būsena"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:271
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopija)"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -140,12 +149,12 @@ msgstr ""
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Aprašymas"
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neperžiūrėtos žinutės"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -156,17 +165,17 @@ msgstr ""
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Renewal"
-msgstr ""
+msgstr "Pratęsimas"
 
 #. module: analytic
 #: help:account.analytic.account,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Žinučių ir pranešimų istorija"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
@@ -195,12 +204,12 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ar prenumeratorius"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Naudotojas"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_pending
@@ -210,7 +219,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.line,date:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
@@ -220,7 +229,7 @@ msgstr ""
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Sąlygos"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -228,11 +237,13 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Apskaičiuota dauginant kiekį iš nurodyto Produkto savikainos. Suma visada "
+"išreikšta pagrindine įmonės valiuta."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Pirkėjas"
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
@@ -242,28 +253,28 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Pranešimai"
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr ""
+msgstr "Tėvinė analitinė sąskaita"
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Contract Information"
-msgstr ""
+msgstr "Sutarties duomenys"
 
 #. module: analytic
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr ""
+msgstr "Sutarties šablonas"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Santrauka"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
@@ -273,7 +284,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,credit:0
 msgid "Credit"
-msgstr ""
+msgstr "Kreditas"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
@@ -288,22 +299,22 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Atšauktas"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr ""
+msgstr "Analitinė apžvalga"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Balansas"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -314,7 +325,7 @@ msgstr ""
 #: field:account.analytic.account,quantity:0
 #: field:account.analytic.line,unit_amount:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kiekis"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -324,23 +335,23 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
-msgstr ""
+msgstr "Numeris"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Klaida!"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analitinė apskaita"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Suma"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -353,12 +364,12 @@ msgstr ""
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitinė sąskaita"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valiuta"
 
 #. module: analytic
 #: help:account.analytic.account,message_summary:0
@@ -366,16 +377,18 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html "
+"formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
-msgstr ""
+msgstr "Sąskaitos tipas"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Pradžios data"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
@@ -385,4 +398,4 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Analitiniai įrašai"

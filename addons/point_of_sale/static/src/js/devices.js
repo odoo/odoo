@@ -1,16 +1,92 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 
+    // the JobQueue schedules a sequence of 'jobs'. each job is
+    // a function returning a deferred. the queue waits for each job to finish 
+    // before launching the next. Each job can also be scheduled with a delay. 
+    // the  is used to prevent parallel requests to the proxy.
+
+    module.JobQueue = function(){
+        var queue = [];
+        var running = false;
+        var scheduled_end_time = 0;
+        var end_of_queue = (new $.Deferred()).resolve();
+        var stoprepeat = false;
+
+        var run = function(){
+            if(end_of_queue.state() === 'resolved'){
+                end_of_queue =  new $.Deferred();
+            }
+            if(queue.length > 0){
+                running = true;
+                var job = queue[0];
+                if(!job.opts.repeat || stoprepeat){
+                    queue.shift();
+                    stoprepeat = false;
+                }
+
+                // the time scheduled for this job
+                scheduled_end_time = (new Date()).getTime() + (job.opts.duration || 0);
+
+                // we run the job and put in def when it finishes
+                var def = job.fun() || (new $.Deferred()).resolve();
+                
+                // we don't care if a job fails ... 
+                def.always(function(){
+                    // we run the next job after the scheduled_end_time, even if it finishes before
+                    setTimeout(function(){
+                        run();
+                    }, Math.max(0, scheduled_end_time - (new Date()).getTime()) ); 
+                });
+            }else{
+                running = false;
+                scheduled_end_time = 0;
+                end_of_queue.resolve();
+            }
+        };
+        
+        // adds a job to the schedule.
+        // opts : {
+        //    duration    : the job is guaranteed to finish no quicker than this (milisec)
+        //    repeat      : if true, the job will be endlessly repeated
+        //    important   : if true, the scheduled job cannot be canceled by a queue.clear()
+        // }
+        this.schedule  = function(fun, opts){
+            queue.push({fun:fun, opts:opts || {}});
+            if(!running){
+                run();
+            }
+        }
+
+        // remove all jobs from the schedule (except the ones marked as important)
+        this.clear = function(){
+            queue = _.filter(queue,function(job){job.opts.important === true}); 
+        };
+
+        // end the repetition of the current job
+        this.stoprepeat = function(){
+            stoprepeat = true;
+        };
+        
+        // returns a deferred that resolves when all scheduled 
+        // jobs have been run.
+        // ( jobs added after the call to this method are considered as well )
+        this.finished = function(){
+            return end_of_queue;
+        }
+
+    };
+
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
 
     module.ProxyDevice  = instance.web.Class.extend({
         init: function(options){
+            var self = this;
             options = options || {};
             url = options.url || 'http://localhost:8069';
             
-            this.weight = 0;
             this.weighting = false;
             this.debug_weight = 0;
             this.use_debug_weight = false;
@@ -25,26 +101,36 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };    
             this.custom_payment_status = this.default_payment_status;
 
-            this.connection = new instance.web.JsonRPC();
-            this.connection.setup(url);
-
-            this.bypass_proxy = false;
             this.notifications = {};
+            this.bypass_proxy = false;
+
+            this.connection = new instance.web.Session(undefined,url);
+            this.connection.session_id = _.uniqueId('posproxy');
+            this.test_connection();
+            window.proxy = this;
             
         },
+        close: function(){
+            this.connection.destroy();
+        },
         message : function(name,params){
-            var ret = new $.Deferred();
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-
-            this.connection.rpc('/pos/' + name, params || {}).done(function(result) {
-                ret.resolve(result);
-            }).fail(function(error) {
-                ret.reject(error);
-            });
-            return ret;
+            if(this.connected){
+                return this.connection.rpc('/pos/' + name, params || {});       
+            }else{
+                return (new $.Deferred()).reject();
+            }
+        },
+        test_connection: function(){
+            var self = this;
+            this.connected = true;
+            return this.message('test_connection').fail(function(){
+                    self.connected = false;
+                    console.error('Could not connect to the Proxy');
+                });
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 
@@ -55,6 +141,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             this.notifications[name].push(callback);
         },
+
+        
         
         //a product has been scanned and recognized with success
         // ean is a parsed ean object
@@ -80,13 +168,32 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //the client is starting to weight
         weighting_start: function(){
+            var ret = new $.Deferred();
             if(!this.weighting){
                 this.weighting = true;
-                if(!this.bypass_proxy){
-                    this.weight = 0;
-                    return this.message('weighting_start');
-                }
+                this.message('weighting_start').always(function(){
+                    ret.resolve();
+                });
+            }else{
+                console.error('Weighting already started!!!');
+                ret.resolve();
             }
+            return ret;
+        },
+
+        // the client has finished weighting products
+        weighting_end: function(){
+            var ret = new $.Deferred();
+            if(this.weighting){
+                this.weighting = false;
+                this.message('weighting_end').always(function(){
+                    ret.resolve();
+                });
+            }else{
+                console.error('Weighting already ended !!!');
+                ret.resolve();
+            }
+            return ret;
         },
 
         //returns the weight on the scale. 
@@ -94,17 +201,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
+            var ret = new $.Deferred();
             this.message('weighting_read_kg',{})
-                .done(function(weight){
-                    if(self.weighting){
-                        if(self.use_debug_weight){
-                            self.weight = self.debug_weight;
-                        }else{
-                            self.weight = weight;
-                        }
-                    }
+                .then(function(weight){
+                    ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
+                }, function(){ //failed to read weight
+                    ret.resolve(self.use_debug_weight ? self.debug_weight : 0.0);
                 });
-            return this.weight;
+            return ret;
         },
 
         // sets a custom weight, ignoring the proxy returned value. 
@@ -119,12 +223,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.debug_weight = 0;
         },
 
-        // the client has finished weighting products
-        weighting_end: function(){
-            this.weight = 0;
-            this.weighting = false;
-            this.message('weighting_end');
-        },
 
         // the pos asks the client to pay 'price' units
         payment_request: function(price){
@@ -237,6 +335,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             return this.message('print_receipt',{receipt: receipt});
         },
 
+        // asks the proxy to log some information, as with the debug.log you can provide several arguments.
+        log: function(){
+            return this.message('log',{'arguments': _.toArray(arguments)});
+        },
+
         // asks the proxy to print an invoice in pdf form ( used to print invoices generated by the server ) 
         print_pdf_invoice: function(pdfinvoice){
             return this.message('print_pdf_invoice',{pdfinvoice: pdfinvoice});
@@ -347,7 +450,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // it will check its validity then return an object containing various
         // information about the ean.
         // most importantly : 
-        // - ean    : the ean
+        // - code    : the ean
         // - type   : the type of the ean: 
         //      'price' |  'weight' | 'unit' | 'cashier' | 'client' | 'discount' | 'error'
         //
@@ -357,13 +460,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // - unit   : if the encoded value has a unit, it will be put there. 
         //            not to be confused with the 'unit' type, which represent an unit of a 
         //            unique product
+        // - base_code : the ean code with all the encoding parts set to zero; the one put on
+        //               the product in the backend
 
         parse_ean: function(ean){
             var parse_result = {
-                type:'unknown', // 
+                encoding: 'ean13',
+                type:'unknown',  
                 prefix:'',
-                ean:ean,
-                base_ean: ean,
+                code:ean,
+                base_code: ean,
                 id:'',
                 value: 0,
                 unit: 'none',
@@ -384,13 +490,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 parse_result.type = 'error';
             } else if( match_prefix(this.price_prefix_set,'price')){
                 parse_result.id = ean.substring(0,7);
-                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.base_code = this.sanitize_ean(ean.substring(0,7));
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = 'euro';
             } else if( match_prefix(this.weight_prefix_set,'weight')){
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/1000.0;
-                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.base_code = this.sanitize_ean(ean.substring(0,7));
                 parse_result.unit = 'Kg';
             } else if( match_prefix(this.client_prefix_set,'client')){
                 parse_result.id = ean.substring(0,7);
@@ -399,7 +505,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 parse_result.id = ean.substring(0,7);
             } else if( match_prefix(this.discount_prefix_set,'discount')){
                 parse_result.id    = ean.substring(0,7);
-                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.base_code = this.sanitize_ean(ean.substring(0,7));
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = '%';
             } else {
@@ -409,9 +515,18 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             return parse_result;
         },
-
-        on_ean: function(ean){
-            var parse_result = this.parse_ean(ean);
+        
+        scan: function(type,code){
+            if (type === 'ean13'){
+                var parse_result = this.parse_ean(code);
+            }else if(type === 'reference'){
+                var parse_result = {
+                    encoding: 'reference',
+                    type: 'unit',
+                    code: code,
+                    prefix: '',
+                };
+            }
 
             if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
                 console.warn('WARNING: barcode checksum error:',parse_result);
@@ -419,7 +534,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 if(this.action_callback['product']){
                     this.action_callback['product'](parse_result);
                 }
-                //this.trigger("codebar",parse_result );
             }else{
                 if(this.action_callback[parse_result.type]){
                     this.action_callback[parse_result.type](parse_result);
@@ -427,49 +541,63 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
+        on_reference: function(code){
+            if(this.action_callback['reference']){
+                this.action_callback['reference'](code);
+            }
+        },
+
         // starts catching keyboard events and tries to interpret codebar 
         // calling the callbacks when needed.
         connect: function(){
+
             var self = this;
-            var codeNumbers = [];
-            var timeStamp = 0;
-            var lastTimeStamp = 0;
+            var code = "";
+            var timeStamp  = 0;
+            var onlynumbers = true;
+            var timeout = null;
 
-            // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
-            // barcode sequence in the typed keys, then act accordingly.
-            $('body').delegate('','keyup', function (e){
-                //console.log('keyup:'+String.fromCharCode(e.keyCode)+' '+e.keyCode,e);
-                //We only care about numbers
-                if (e.keyCode >= 48 && e.keyCode < 58){
+            this.handler = function(e){
 
-                    // The barcode reader sends keystrokes with a specific interval.
-                    // We look if the typed keys fit in the interval. 
-                    if (codeNumbers.length === 0) {
-                        timeStamp = new Date().getTime();
-                    } else {
-                        if (lastTimeStamp + 30 < new Date().getTime()) {
-                            // not a barcode reader
-                            codeNumbers = [];
-                            timeStamp = new Date().getTime();
-                        }
-                    }
-                    codeNumbers.push(e.keyCode - 48);
-                    lastTimeStamp = new Date().getTime();
-                    if (codeNumbers.length === 13) {
-                        //We have found what seems to be a valid codebar
-                        self.on_ean(codeNumbers.join(''));
-                        codeNumbers = [];
-                    }
-                } else {
-                    // NaN
-                    codeNumbers = [];
+                if(e.which === 13){ //ignore returns
+                    return;
                 }
-            });
+
+                if(timeStamp + 50 < new Date().getTime()){
+                    code = "";
+                    onlynumbers = true;
+                }
+
+                timeStamp = new Date().getTime();
+                clearTimeout(timeout);
+
+                if( e.which < 48 || e.which >= 58 ){ // not a number
+                    onlynumbers = false;
+                }
+
+                code += String.fromCharCode(e.which);
+
+                // we wait for a while after the last input to be sure that we are not mistakingly
+                // returning a code which is a prefix of a bigger one :
+                // Internal Ref 5449 vs EAN13 5449000...
+
+                timeout = setTimeout(function(){
+                    if(code.length === 13 && onlynumbers){
+                        self.scan('ean13',code);
+                    }else if(code.length >= 3 && self.pos.db.get_product_by_reference(code)){
+                        self.scan('reference',code);
+                    }
+                    code = "";
+                    onlynumbers = true;
+                },100);
+            };
+
+            $('body').on('keypress', this.handler);
         },
 
         // stops catching keyboard events 
         disconnect: function(){
-            $('body').undelegate('', 'keyup')
+            $('body').off('keypress', this.handler)
         },
     });
 

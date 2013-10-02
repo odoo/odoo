@@ -175,7 +175,7 @@ class im_livechat_channel(osv.osv):
         if len(users) == 0:
             return False
         user_id = random.choice(users).id
-        session = self.pool.get("im.session").session_get(cr, uid, user_id, uuid, context=context)
+        session = self.pool.get("im.session").session_get(cr, uid, [user_id], uuid, context=context)
         self.pool.get("im.session").write(cr, openerp.SUPERUSER_ID, session.get("id"), {'channel_id': channel_id}, context=context)
         return session.get("id")
 

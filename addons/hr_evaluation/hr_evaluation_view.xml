@@ -190,7 +190,7 @@
                                     <group>
                                         <field name="survey_id"/>
                                         <field name="user_to_review_id"/>
-                                        <field name="user_id" string="Interviewer"/>
+                                        <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                                     </group>
                                     <group>              
                                         <field name="date_deadline"/>
@@ -251,7 +251,7 @@
                         <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
                         <filter string='Status' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
-                        <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string='Appraisals Month' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" help="Appraisals by Month" />
                    </group>
                </search>
             </field>
@@ -313,7 +313,7 @@
                             <group>
                                 <field name="survey_id"/>
                                 <field name="user_to_review_id"/>
-                                <field name="user_id" string="Interviewer"/>
+                                <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                             </group>
                             <group>
                                 <field name="date_deadline"/>

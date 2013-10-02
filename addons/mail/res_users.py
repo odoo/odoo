@@ -36,7 +36,7 @@ class res_users(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     _columns = {
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),

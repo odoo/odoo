@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:42+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:18+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -34,12 +34,12 @@ msgstr "Exigences"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Application Summary"
-msgstr ""
+msgstr "Résumé de la candidature"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Start Interview"
-msgstr ""
+msgstr "Commencer l'entretien"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -120,7 +120,7 @@ msgstr "Origines des candidats"
 #: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
-msgstr ""
+msgstr "Vous devez définir le poste auquel ce candidat postule."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -153,12 +153,31 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour ajouter un nouveau candidat.\n"
+"              </p><p>\n"
+"                OpenERP vous permet de suivre les candidats dans le "
+"processus\n"
+"                de recrutement et de suivre toutes les opérations : "
+"réunions, entretiens, etc.\n"
+"              </p><p>\n"
+"                Si vous paramétrez la passerelle de courriel, les "
+"candidatures et leur CV\n"
+"               en pièce jointe sont enregistrés automatiquement quand un "
+"courriel est envoyé\n"
+"                à jobs@votresociete.com . Si vous installez le module de "
+"gestion\n"
+"                documentaire, tous les CV seront indexés automatiquement, ce "
+"qui vous \n"
+"                permettra de parcourir leur contenu.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
-msgstr ""
+msgstr "Candidatures"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_open:0
@@ -168,12 +187,12 @@ msgstr "Jours pour ouvrir"
 #. module: hr_recruitment
 #: field:hr.applicant,emp_id:0
 msgid "employee"
-msgstr ""
+msgstr "employé"
 
 #. module: hr_recruitment
 #: field:hr.config.settings,fetchmail_applicants:0
 msgid "Create applicants from an incoming email account"
-msgstr ""
+msgstr "Créer des candidats à partir d'un compte de courriel entrant"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -236,6 +255,8 @@ msgid ""
 "Stages of the recruitment process may be different per department. If this "
 "stage is common to all departments, keep this field empty."
 msgstr ""
+"Les étapes du processus de recrutement peuvent être différents par service.  "
+"Si cette étape est commune à tous les services, gardez ce champ vide."
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_unread:0
@@ -373,7 +394,7 @@ msgstr "Monster"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Candidat engagé"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -393,6 +414,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Cliquez pour ajouter une nouvelle étape dans le processus de "
+"recrutement.\n"
+"          </p><p>\n"
+"            Définissez ici vos étapes dans le processus de recrutement, par "
+"exemple:\n"
+"            qualification initiale, premier entretien, second entretien, "
+"refusé, contrat signé.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -410,6 +441,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Alias de courriel pour ce poste. Les nouveaux courriels vont automatiquement "
+"créer de nouveaux candidats pour ce poste."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -565,12 +598,12 @@ msgstr "En cours"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Hire & Create Employee"
-msgstr ""
+msgstr "Embaucher et créer l'employé"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Candidat engagé"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -611,7 +644,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr ""
+msgstr "Catégorie de candidat"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -654,7 +687,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
 msgid "Applicant Refused"
-msgstr ""
+msgstr "Candidat refusé"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -758,13 +791,13 @@ msgstr "Statut"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "Planifier un entretien avec ce candidat"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
-msgstr ""
+msgstr "Candidat <b>créé</b>"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -816,7 +849,7 @@ msgstr "Actif"
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,nbr:0
 msgid "# of Applications"
-msgstr ""
+msgstr "Nb. de candidatures"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -830,6 +863,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Cliquez pour ajouter une nouvelle étape dans le processus de "
+"recrutement.\n"
+"          </p><p>\n"
+"            N'oubliez pas de préciser le service si votre processus de "
+"recrutement\n"
+"            dépend du poste.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -844,7 +886,7 @@ msgstr "Octobre"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Autoriser l'indexation automatique des CV"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -860,7 +902,7 @@ msgstr "Janvier"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "A contact is already existing with the same name."
-msgstr ""
+msgstr "Un contact avec le même nom existe déjà."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
@@ -958,6 +1000,10 @@ msgid ""
 "(jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
+"Permet aux candidats d'envoyer leur candidature au poste à une adresse "
+"courriel (jobs@masociete.com),\n"
+"                                                          et crée "
+"automatiquement des documents de candidature dans le système."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1008,7 +1054,7 @@ msgstr "LinkedIn"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
-msgstr ""
+msgstr "Nouveau candidat"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1073,7 +1119,7 @@ msgstr "Bouche à oreille"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,fold:0
 msgid "Hide in views if empty"
-msgstr ""
+msgstr "Cacher dans les vues si vide"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,module_document_ftp:0
@@ -1108,7 +1154,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Departement:"
-msgstr ""
+msgstr "Service :"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1124,7 +1170,7 @@ msgstr "Degré de recrutement"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "Salaire moyen proposé"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1157,12 +1203,12 @@ msgstr "Novembre"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
 msgid "Avg. Expected Salary"
-msgstr ""
+msgstr "Salaire moyen attendu"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Expected Salary"
-msgstr ""
+msgstr "Salaire moyen attendu"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
@@ -1202,7 +1248,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
 msgid "Applicant refused"
-msgstr ""
+msgstr "Candidat refusé"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
@@ -1262,12 +1308,12 @@ msgstr "Ouvert"
 #. module: hr_recruitment
 #: view:board.board:0
 msgid "Applications to be Processed"
-msgstr ""
+msgstr "Candidatures à traiter"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Interview"
-msgstr ""
+msgstr "Planifier un entretien"
 
 #, python-format
 #~ msgid "A partner is already defined on this job request."
