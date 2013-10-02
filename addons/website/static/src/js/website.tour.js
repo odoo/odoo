@@ -106,14 +106,13 @@
             _.each(this.observers, function (observer) {
                 observer.disconnect();
             });
-            tourStorage.setItem("tour_current_step", 0);
-            tourStorage.setItem("tour_end", "yes");
         },
     });
 
     website.EditorBar.include({
         start: function () {
-            if (window.location.href.indexOf("tour=true") >= 0 && tourStorage.getItem("tour_end") !== "yes") {
+            if (window.location.hash.indexOf("tour") >= 0) {
+                window.location.hash = "";
                 var editorTour = new website.EditorTour();
                 editorTour.start();
                 this.on('rte:ready', this, function () {
