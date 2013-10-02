@@ -40,12 +40,12 @@ class WebsiteMail(http.Controller):
             partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
         return partner_ids
 
-    @website.route(['/website_mail/follow/'], type='http', auth="public")
-    def website_message_subscribe(self, **post):
-        _id = int(post['id'])
-        _message_is_follower = post['message_is_follower'] == 'on'
-        _object = request.registry[post['object']]
-        partner_ids = self._find_or_create_partner(post.get('email'), request.context)
+    @website.route(['/website_mail/follow/'], type='json', auth="public")
+    def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
+        _id = int(id)
+        _message_is_follower = message_is_follower == 'on'
+        _object = request.registry[object]
+        partner_ids = self._find_or_create_partner(email, request.context)
 
         if _message_is_follower:
             _object.check_access_rule(request.cr, request.uid, [_id], 'read', request.context)
@@ -55,4 +55,4 @@ class WebsiteMail(http.Controller):
             _object.message_subscribe(request.cr, SUPERUSER_ID, [_id], partner_ids, context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
 
-        return obj.message_is_follower and "1" or "0"
+        return obj.message_is_follower and 1 or 0
