@@ -31,7 +31,8 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">checkbox</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
-            <field name="domain">[('user_ids', 'in', user.id), ('name', '!=', 'Your Company')]</field>
+            <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'Your Company')]</field>
+            <field name="condition">lower</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
             <field name="res_id_field">user.company_id.id</field>
         </record>
@@ -116,7 +117,7 @@
         </record>
         <record model="gamification.goal.planline" id="planline_base_admin1">
             <field name="type_id" eval="ref('type_base_company_data')" />
-            <field name="target_goal">1</field>
+            <field name="target_goal">0</field>
             <field name="plan_id" eval="ref('plan_base_configure')" />
         </record>
         <record model="gamification.goal.planline" id="planline_base_admin3">
