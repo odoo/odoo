@@ -23,7 +23,7 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Ressources',
-    'depends': ['mail', 'email_template'],
+    'depends': ['mail', 'email_template', 'web_kanban_gauge'],
     'description': """
 Gamification process
 ====================
@@ -56,8 +56,6 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     'css': ['static/src/css/gamification.css'],
     'js': [
         'static/src/js/gamification.js',
-        # conficting with justgage from sale_crm
-        # 'static/lib/justgage/justgage.js',
     ],
     'qweb': ['static/src/xml/gamification.xml'],
 }

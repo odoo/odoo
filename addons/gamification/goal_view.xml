@@ -163,7 +163,7 @@
                                         </t>
                                         <t t-if="record.type_display.raw_value == 'progress'">
                                             <t t-if="record.type_condition.raw_value =='higher'">
-                                                <field name="current" widget="gage" style="width:160px; height: 120px;" options="{'max_field': 'target_goal', 'label_field': 'type_suffix'}" />
+                                                <field name="current" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'target_goal', 'label_field': 'type_suffix'}" />
                                             </t>
                                             <t t-if="record.type_condition.raw_value != 'higher'">
                                                 <div t-attf-class="oe_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'oe_orange' : record.current.raw_value &gt; record.target_goal.raw_value ? 'oe_red' : 'oe_green'}">

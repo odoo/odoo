@@ -139,36 +139,5 @@ openerp.gamification = function(instance) {
             }
         }
     });
-
-    instance.gamification.GoalWidget = instance.web_kanban.AbstractField.extend({
-        className: "oe_goal_gauge",
-        start: function() {
-            var self = this;
-            var max = 100;
-            if (this.options.max_field) {
-                max = self.getParent().record[this.options.max_field].raw_value;
-            }
-            var label = "";
-            if (this.options.label_field) {
-                label = self.getParent().record[this.options.label_field].raw_value;
-            }
-            this.g = new JustGage({
-                parentNode: self.$el[0],
-                value: self.get("value"),
-                min: 0,
-                max: max,
-                relativeGaugeSize: true,
-                humanFriendly: true,
-                label: label,
-                levelColors: [
-                    "#ff0000",
-                    "#f9c802",
-                    "#a9d70b"
-                ]
-            });
-        },
-    });
-    instance.web_kanban.fields_registry.add("goal", "instance.gamification.GoalWidget");
-
     
 };
