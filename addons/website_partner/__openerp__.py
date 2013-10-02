@@ -20,25 +20,22 @@
 ##############################################################################
 
 {
-    'name': 'Website Mail',
+    'name': 'Website Partner',
     'category': 'Website',
-    'summary': 'Website Module for Mail',
+    'summary': 'Partner Module for Website',
     'version': '0.1',
-    'description': """Glue module holding mail improvements for website.""",
+    'description': """Base module holding website-related stuff for partner model""",
     'author': 'OpenERP SA',
-    'depends': ['website', 'mail'],
+    'depends': ['website'],
     'data': [
-        'views/website_mail.xml',
+        'views/res_partner_view.xml',
     ],
     'css': [
-        'static/src/css/website_mail.css',
     ],
     'js': [
-        'static/src/js/website_mail.js',
     ],
     'qweb': [
-        'static/src/xml/website_mail.xml'
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

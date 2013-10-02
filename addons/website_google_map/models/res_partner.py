@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import osv, fields
+from openerp.osv import osv
+
 import simplejson
 import werkzeug.wrappers
 
-class res_partner(osv.osv):
+
+class res_partner(osv.Model):
     _inherit = 'res.partner'
-    _columns = {
-        'website_published': fields.boolean('Available in the website'),
-    }
 
     def google_map_json(self, cr, uid, ids, context=None):
         data = {

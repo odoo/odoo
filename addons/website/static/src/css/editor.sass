@@ -1,6 +1,8 @@
 @charset "utf-8"
 
 @import "compass/css3"
+@import "compass/css3/user-interface"
+@import "compass/css3/transition"
 
 /* ---- CKEditor Minimal Reset ---- */
 
@@ -39,8 +41,7 @@
     padding: 2px
     margin: 0
     z-index: 20000
-    background-color: #414141
-    background: -webkit-linear-gradient(#646060, #262626)
+    @include background(#414141, linear-gradient(#646060, #262626))
     box-sizing: border-box
     li
         display: inline
@@ -116,11 +117,7 @@ table.editorbar-panel
 // bootstrap makes .btn elements unselectable -> RTE double-click can't know
 // about them either
 .oe_editable .btn
-    -webkit-user-select: auto
-    -moz-user-select: auto
-    -ms-user-select: auto
-    -o-user-select: auto
-    user-select: auto
+    @include user-select(auto)
 
 .modal-dialog.select-image
     width: 80%
@@ -213,8 +210,7 @@ table.editorbar-panel
         display: none !important
 
 #oe_snippets .oe_snippet_thumbnail
-    background: rgb(116, 116, 116)
-    background-image: radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4))
+    @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
 /* ---- SNIPPETS DROP ZONES ---- */
 
@@ -224,7 +220,7 @@ table.editorbar-panel
     margin: 0px
     margin-top: -4px
     margin-bottom: -44px
-    -webkit-transition: margin 250ms linear
+    @include transition(margin 250ms linear)
     width: 100%
     position: absolute
     z-index: 1000
@@ -264,7 +260,7 @@ table.editorbar-panel
     position: absolute
     background: transparent
     border-radius: 3px
-    transition: opacity 100ms linear
+    @include transition(opacity 100ms linear)
     box-sizing: border-box
     pointer-events: none
     &.oe_active
@@ -291,7 +287,7 @@ table.editorbar-panel
                 font-size: 14px
                 line-height: 14px
                 color: rgba(153, 0, 255, 1)
-                -webkit-transition: background 100ms linear
+                @include transition(background 100ms linear)
             &:hover:before
                 background: rgba(153, 0, 255, 1)
                 color: #fff
@@ -379,9 +375,8 @@ $icon_close: #E00101
     &.modal .modal-content
         height: 660px
         background-color: $mobile_preview_background
-        border: 2px solid
+        border: 2px solid $mobile_preview_border
         border-radius: 10px
-        border-color: $mobile_preview_border
         margin: auto
         top: 0
         left: 0
@@ -453,11 +448,7 @@ $navbar_height: 51px
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
     line-height: normal
 .oe_ace_view_editor
-    transition: all 0.2s ease-in
-    -webkit-transition: all 0.2s ease-in
-    -ms-transition: all 0.2s ease-in
-    -o-transition: all 0.2s ease-in
-    -moz-transition: all 0.2s ease-in
+    @include transition(all 0.2s ease-in)
     opacity: 0.3
     position: fixed
     top: $navbar_height

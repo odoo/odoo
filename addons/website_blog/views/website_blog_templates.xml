@@ -214,7 +214,7 @@
                         Be notified of new blog posts in <t t-esc="category.name"/>
                     </p>
                     <t t-call="website_mail.follow">
-                        <t t-set="email" t-value="current_user.email"/>
+                        <t t-set="email" t-value="user_id.email"/>
                         <t t-set="object" t-value="category"/>
                     </t>
                 </t>

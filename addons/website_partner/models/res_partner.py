@@ -9,8 +9,12 @@ class WebsiteResPartner(osv.Model):
     _columns = {
         'website_published': fields.boolean(
             'Publish', help="Publish on the website"),
-        'website_description': fields.html('Description for the website'),
-        'website_short_description': fields.text('Sort description for the website'),
+        'website_description': fields.html(
+            'Website Partner Full Description'
+        ),
+        'website_short_description': fields.text(
+            'Website artner Short Description'
+        ),
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):

@@ -39,8 +39,11 @@
   padding: 2px;
   margin: 0;
   z-index: 20000;
-  background-color: #414141;
-  background: -webkit-linear-gradient(#646060, #262626);
+  background: #414141, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #646060), color-stop(100%, #262626));
+  background: #414141, -webkit-linear-gradient(#646060, #262626);
+  background: #414141, -moz-linear-gradient(#646060, #262626);
+  background: #414141, -o-linear-gradient(#646060, #262626);
+  background: #414141, linear-gradient(#646060, #262626);
   box-sizing: border-box;
 }
 .oe_website_editorbar li {
@@ -136,8 +139,6 @@ table.editorbar-panel td.selected {
 .oe_editable .btn {
   -webkit-user-select: auto;
   -moz-user-select: auto;
-  -ms-user-select: auto;
-  -o-user-select: auto;
   user-select: auto;
 }
 
@@ -257,8 +258,11 @@ table.editorbar-panel td.selected {
 }
 
 #oe_snippets .oe_snippet_thumbnail {
-  background: #747474;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  background: #747474, -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100, color-stop(0%, rgba(0, 0, 0, 0.25)), color-stop(100%, rgba(0, 0, 0, 0.4)));
+  background: #747474, -webkit-radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  background: #747474, -moz-radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  background: #747474, -o-radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
+  background: #747474, radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
 }
 
 /* ---- SNIPPETS DROP ZONES ---- */
@@ -269,6 +273,9 @@ table.editorbar-panel td.selected {
   margin-top: -4px;
   margin-bottom: -44px;
   -webkit-transition: margin 250ms linear;
+  -moz-transition: margin 250ms linear;
+  -o-transition: margin 250ms linear;
+  transition: margin 250ms linear;
   width: 100%;
   position: absolute;
   z-index: 1000;
@@ -315,6 +322,9 @@ table.editorbar-panel td.selected {
   position: absolute;
   background: transparent;
   border-radius: 3px;
+  -webkit-transition: opacity 100ms linear;
+  -moz-transition: opacity 100ms linear;
+  -o-transition: opacity 100ms linear;
   transition: opacity 100ms linear;
   box-sizing: border-box;
   pointer-events: none;
@@ -346,6 +356,9 @@ table.editorbar-panel td.selected {
   line-height: 14px;
   color: #9900ff;
   -webkit-transition: background 100ms linear;
+  -moz-transition: background 100ms linear;
+  -o-transition: background 100ms linear;
+  transition: background 100ms linear;
 }
 .oe_overlay.oe_active .oe_handle:hover:before {
   background: #9900ff;
@@ -454,9 +467,8 @@ table.editorbar-panel td.selected {
 .oe_mobile_preview.modal .modal-content {
   height: 660px;
   background-color: black;
-  border: 2px solid;
+  border: 2px solid #1c1f1f;
   border-radius: 10px;
-  border-color: #1c1f1f;
   margin: auto;
   top: 0;
   left: 0;
@@ -526,11 +538,10 @@ table.editorbar-panel td.selected {
 
 /* ---- ACE EDITOR ---- */
 .oe_ace_view_editor {
-  transition: all 0.2s ease-in;
   -webkit-transition: all 0.2s ease-in;
-  -ms-transition: all 0.2s ease-in;
-  -o-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
   opacity: 0.3;
   position: fixed;
   top: 51px;
