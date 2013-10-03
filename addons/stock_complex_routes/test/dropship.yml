@@ -57,6 +57,11 @@
         print 'procurement_order', procurement_order.state
         print 'test', procurement_order.purchase_line_id.order_id
         print 'test rule name', procurement_order.rule_id.name
+        print 'test route sequence', [(r.name, r.sequence) for r in procurement_order.route_ids]
+        rule_seq = []
+        for route in procurement_order.route_ids:
+            rule_seq += [(ru.name, ru.route_sequence, ru.sequence) for ru in route.pull_ids]
+        print '####RULES SEQ####', rule_seq
         purchase_id = procurement_order.purchase_line_id.order_id.id
         
         wf_service = netsvc.LocalService('workflow')

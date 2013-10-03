@@ -84,26 +84,29 @@
             <field name="product_categ_selectable" eval="True"/>
             <field name="warehouse_selectable" eval="True"/>
             <field name="product_selectable" eval="False"/>
+            <field name="active" eval="False"/>
         </record>
         
         <record id="procurement_rule_customer0_xdock" model="procurement.rule">
-            <field name="name">Your Company: Stock → Customers</field>
+            <field name="name">Your Company: Output → Customers</field>
             <field name="action">move</field>
             <field name="location_id" ref="stock.stock_location_customers"/>
-            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_src_id" ref="stock.stock_location_output"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_crossdock"/>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="active" eval="False"/>
         </record>
 
         <record id="procurement_rule_customer0_xdock_start" model="procurement.rule">
-            <field name="name">Your Company: Stock → Stock</field>
+            <field name="name">Your Company: Input → Output</field>
             <field name="action">move</field>
-            <field name="location_id" ref="stock.stock_location_stock"/>
-            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_id" ref="stock.stock_location_output"/>
+            <field name="location_src_id" ref="stock_location_input"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_warehouse0_crossdock"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
+            <field name="active" eval="False"/>
         </record>
         
         <!-- reception route  -->

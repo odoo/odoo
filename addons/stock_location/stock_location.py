@@ -581,26 +581,33 @@ class procurement_order(osv.osv):
             })
         return d
 
+    def _find_parent_locations(self, cr, uid, procurement, context=None):
+        location = procurement.location_id
+        res = [location.id]
+        while location.location_id:
+            location = location.location_id
+            res.append(location.id)
+        return res
+
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
-            rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', '=', procurement.location_id.id)], context=context) #action=move
+            #a rule defined on 'Stock' is suitable for a procurement in 'Stock\Bin A'
+            all_parent_location_ids = self._find_parent_locations(cr, uid, procurement, context=context)
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', 'in', all_parent_location_ids)], context=context)
             rule_id = rule_id and rule_id[0] or False
         return rule_id
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
-        categ_obj = self.pool.get("product.category")
-        categ_id = procurement.product_id.categ_id.id
-        route_ids1 = [x.id for x in procurement.product_id.route_ids + procurement.product_id.categ_id.total_route_ids]
-        route_ids2 = [x.id for x in procurement.route_ids]
-        res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids1)], order = 'route_sequence, sequence', context=context)
+        product_route_ids = [x.id for x in procurement.product_id.route_ids + procurement.product_id.categ_id.total_route_ids]
+        procurement_route_ids = [x.id for x in procurement.route_ids]
+        res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', product_route_ids)], order = 'route_sequence, sequence', context=context)
         if not res:
-            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids2)], order = 'route_sequence, sequence', context=context)
+            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', procurement_route_ids)], order = 'route_sequence, sequence', context=context)
             if not res:
                 res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
         return res
-
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'
