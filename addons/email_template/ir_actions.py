@@ -54,7 +54,8 @@ class actions_server(osv.Model):
             readonly=True, string='Body'
         ),
         'template_id': fields.many2one(
-            'email.template', 'Email Template', ondelete='set null'
+            'email.template', 'Email Template', ondelete='set null',
+            domain="[('model_id', '=', model_id)]",
         ),
     }
 
