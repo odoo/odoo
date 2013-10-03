@@ -65,6 +65,5 @@ openerp.stock = function(openerp) {
 
     openerp.stock = openerp.stock || {};
     openerp_picking_widgets(openerp);
-    openerp.web.client_actions.add('stock.ui', 'instance.stock.PickingMainWidget');
 
 };
