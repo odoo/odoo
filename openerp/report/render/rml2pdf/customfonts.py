@@ -70,14 +70,15 @@ def all_sysfonts_list():
     searchpath = []
     filepath = []
 
-    # Append the original search path of reportlab
+    # Perform the search for font files ourselves, as reportlab's
+    # TTFOpenFile is not very good at it.
     searchpath = list(set(TTFSearchPath + rl_config.TTFSearchPath))
     for dirname in searchpath:
         dirname = os.path.expanduser(dirname)
         if os.path.exists(dirname):
             for filename in [x for x in os.listdir(dirname) if x.lower().endswith('.ttf')]:
                 filepath.append(os.path.join(dirname, filename))
-    return sorted(filepath)
+    return filepath
 
 def init_new_font(familyName, name, font_dir):
     return {
@@ -143,6 +144,9 @@ def RegisterCustomFonts():
             CustomTTFonts.extend(font_modes.values())
 
         _fonts_cache['total_system_fonts'] = len(all_system_fonts)
+
+    # remove duplicates
+    _fonts_cache['registered_fonts'] = sorted(list(set(_fonts_cache['registered_fonts'])))
     return _fonts_cache['registered_fonts']
 
 def SetCustomFonts(rmldoc):
