@@ -48,7 +48,7 @@
 .oe_pick_widget .oe_pick_button{
     display: inline-block;
     min-width: 64px;
-    padding: 5px;
+    padding: 5px 10px;
     font-size: 18px;
     border-radius: 3px;
     margin: 10px 5px;
@@ -70,7 +70,8 @@
     box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.32) inset;
 }
 
-.oe_pick_widget .oe_pick_button:not(.oe_disabled):active{
+.oe_pick_widget .oe_pick_button:not(.oe_disabled):active,
+.oe_pick_widget .oe_pick_button:not(.oe_disabled).oe_active{
     background: rgb(92, 84, 133);
     box-shadow: 0px 1px 0px 1px rgba(0,0,0,0.3) inset;
     margin: 11px 6px;
@@ -99,6 +100,19 @@
 .oe_pick_widget .oe_invalid{ 
     background: rgb(255, 226, 226);
     color: rgb(168, 6, 6);
+}
+
+.oe_pick_widget .oe_pick_app_title{
+    font-size: 20px;
+    margin-top: 0px;
+}
+.oe_pick_widget .oe_pick_app_subtitle{
+    font-size: 16px;
+    font-weight: normal;
+}
+.oe_pick_widget .oe_pick_app_info{
+    margin-left: 4px;
+    opacity: 0.5;
 }
 
 /* ----------------------- *
