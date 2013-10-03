@@ -56,6 +56,7 @@
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
         print 'procurement_order', procurement_order.state
         print 'test', procurement_order.purchase_line_id.order_id
+        print 'test rule name', procurement_order.rule_id.name
         purchase_id = procurement_order.purchase_line_id.order_id.id
         
         wf_service = netsvc.LocalService('workflow')
