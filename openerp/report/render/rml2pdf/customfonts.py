@@ -21,6 +21,7 @@
 ##############################################################################
 
 from reportlab import rl_config
+from reportlab.lib import fonts
 from reportlab.pdfbase import pdfmetrics, ttfonts
 import logging
 import os,platform
@@ -39,8 +40,17 @@ and Ubuntu distros, we have to override the search path, too.
 _fonts_cache = {'registered_fonts': [], 'total_system_fonts': 0}
 _logger = logging.getLogger(__name__)
 
+# Basic fonts familly included in PDF standart, will always be in the font list
+BasePDFFonts = [
+    ('Helvetica', 'Helvetica'),
+    ('Times', 'Times-Roman'),
+    ('Courier', 'Courier'),
+]
+
+# List of fonts found on the disk
 CustomTTFonts = []
 
+# Search path for TTF files, in addition of rl_config.TTFSearchPath
 TTFSearchPath = [
             '/usr/share/fonts/truetype', # SuSE
             '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
@@ -67,7 +77,6 @@ def all_sysfonts_list():
     """
         This function returns list of font directories of system.
     """
-    searchpath = []
     filepath = []
 
     # Perform the search for font files ourselves, as reportlab's
@@ -93,17 +102,17 @@ def RegisterCustomFonts():
     This function prepares a list for all system fonts to be registered
     in reportlab and returns the updated list with new fonts.
     """
+    global CustomTTFonts
     all_system_fonts = all_sysfonts_list()
     if len(all_system_fonts) > _fonts_cache['total_system_fonts']:
-        global TTFSearchPath
-        font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'], TTFSearchPath = {}, "", [], [], []
+        font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'] = {}, "", [], list(BasePDFFonts)
 
         #Prepares a list of registered fonts. Remove such fonts those don't have cmap for Unicode.
         for dirname in all_system_fonts:
             try:
                 font_info = ttfonts.TTFontFile(dirname)
-                if font_info.styleName in ('Regular','Normal','Book','Medium'):
-                    _fonts_cache['registered_fonts'].append((font_info.name, font_info.name))
+                if font_info.styleName in ('Regular','Normal','Book','Medium', 'Roman'):
+                    _fonts_cache['registered_fonts'].append((font_info.name, font_info.fullName))
                 registered_font_list.append((font_info.familyName, font_info.name, dirname, font_info.styleName.lower().replace(" ", "")))
                 _logger.debug("Found font %s at %s", font_info.name, dirname)
             except:
@@ -125,7 +134,7 @@ def RegisterCustomFonts():
                 CustomTTFonts.extend(font_modes.values())
                 font_modes = init_new_font(familyName, name, font_dir)
 
-            if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
+            if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book') or (mode == 'roman'):
                 font_modes['regular'] = (familyName, name, font_dir, 'regular')
             elif (mode == 'italic') or (mode == 'oblique'):
                 font_modes['italic'] = (familyName, name, font_dir, 'italic')
@@ -146,6 +155,7 @@ def RegisterCustomFonts():
         _fonts_cache['total_system_fonts'] = len(all_system_fonts)
 
     # remove duplicates
+    CustomTTFonts = sorted(list(set(CustomTTFonts)))
     _fonts_cache['registered_fonts'] = sorted(list(set(_fonts_cache['registered_fonts'])))
     return _fonts_cache['registered_fonts']
 
