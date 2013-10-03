@@ -428,19 +428,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return tried_all;
         },
 
-        scan_product: function(parsed_ean){
+        scan_product: function(parsed_code){
             var self = this;
-            var product = this.db.get_product_by_ean13(parsed_ean.base_ean);
             var selectedOrder = this.get('selectedOrder');
+            if(parsed_code.encoding === 'ean13'){
+                var product = this.db.get_product_by_ean13(parsed_code.base_code);
+            }else if(parsed_code.encoding === 'reference'){
+                var product = this.db.get_product_by_reference(parsed_code.code);
+            }
 
             if(!product){
                 return false;
             }
 
-            if(parsed_ean.type === 'price'){
-                selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
-            }else if(parsed_ean.type === 'weight'){
-                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
+            if(parsed_code.type === 'price'){
+                selectedOrder.addProduct(new module.Product(product), {price:parsed_code.value});
+            }else if(parsed_code.type === 'weight'){
+                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_code.value, merge:false});
             }else{
                 selectedOrder.addProduct(new module.Product(product));
             }
