@@ -1114,7 +1114,9 @@ class expression(object):
                     if left == 'id':
                         instr = ','.join(['%s'] * len(params))
                     else:
-                        instr = ','.join([model._columns[left]._symbol_set[0]] * len(params))
+                        ss = model._columns[left]._symbol_set
+                        instr = ','.join([ss[0]] * len(params))
+                        params = map(ss[1], params)
                     query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
