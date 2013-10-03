@@ -803,7 +803,7 @@
         change_background: function (bg, ul_options) {
             var self = this;
             var $ul = this.$editor.find(ul_options);
-            var bg_value = (typeof bg == 'string' ? self.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+            var bg_value = (typeof bg === 'string' ? self.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
 
             // select in ul options
             $ul.find("li").removeClass("active");
@@ -824,7 +824,7 @@
                         var editor = new website.editor.ImageDialog();
                         editor.on('start', self, function (o) {o.url = bg_value;});
                         editor.on('save', self, function (o) {
-                            var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
+                            var $bg = typeof bg === 'string' ? self.$target.find(bg) : $(bg);
                             $bg.css("background-image", "url(" + o.url + ")");
                         });
                         editor.appendTo($('body'));
@@ -833,13 +833,13 @@
                 .on('mouseover', function (event) {
                     if ($(this).data("value")) {
                         var src = $(this).data("value");
-                        var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
+                        var $bg = typeof bg === 'string' ? self.$target.find(bg) : $(bg);
                         $bg.css("background-image", "url(" + src + ")");
                     }
                 })
                 .on('mouseout', function (event) {
                     var src = $ul.find('li.active').data("value");
-                    var $bg = typeof bg == 'string' ? self.$target.find(bg) : $(bg);
+                    var $bg = typeof bg === 'string' ? self.$target.find(bg) : $(bg);
                     $bg.css("background-image", "url(" + src + ")");
                 });
         },
