@@ -114,6 +114,7 @@
                             $('.popover.tour').remove();
                             $('body').off('mousedown', beginDrag);
                             function goToNextStep () {
+                                $('#oe_snippets').hide();
                                 self.movetoStep('edit-title');
                                 $('body').off('mouseup', goToNextStep);
                             }
