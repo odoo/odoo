@@ -527,6 +527,12 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, debug=False, **kw):
+        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
+        redirect = '/web' + '?' + urllib.urlencode(query)
+        return redirect_with_hash(redirect)
+
+    @http.route('/web', type='http', auth="none")
+    def web_client(self, s_action=None, db=None, debug=False, **kw):
         debug = debug != False
 
         lst = http.db_list(True)
