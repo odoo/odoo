@@ -17,6 +17,16 @@
             </nav>
         </div>
     </t>
+    <t t-name="website.tour_end">
+        <div class="popover tour">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <div class="popover-content"></div>
+            <nav class="popover-navigation">
+                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="confirm"/></button>
+            </nav>
+        </div>
+    </t>
     <t t-name="website.tour_title">
         <t t-esc="title"/><button title="Close" type="button" class="close" data-role="end">×</button>
     </t>

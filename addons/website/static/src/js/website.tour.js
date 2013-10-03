@@ -30,9 +30,7 @@
                step.title = render('website.tour_title', { title: step.title });
                return step;
             }));
-            if (self.doNotContinue()) {
-                self.tour.end();
-            } else {
+            if (!self.doNotContinue()) {
                 self.tour.start();
             }
         },
@@ -40,7 +38,7 @@
             return this.currentStepIndex() > 0 || this.tour.ended();
         },
         currentStepIndex: function () {
-            return this.tourStorage.getItem('tour_current_step');
+            return parseInt(this.tourStorage.getItem('tour_current_step'), 10);
         },
         indexOfStep: function (step_id) {
             var index = -1;
@@ -57,6 +55,10 @@
             if (index > -1) {
                 this.tour.goto(index);
             }
+        },
+        saveStep: function (step_id) {
+            var index = this.indexOfStep(step_id);
+            this.tourStorage.setItem('tour_current_step', index);
         },
         stop: function () {
             this.tour.end();
@@ -158,21 +160,24 @@
                     title: "Save your modifications",
                     content: "Click the <b>Save</b> button to apply modifications on your website.",
                     template: render('website.tour_simple'),
+                    onHide: function () {
+                        self.saveStep('part-2');
+                    }
                 },
                 {
-                    step_id: 'save-changes',
-                    element: 'button[data-action=save]',
-                    placement: 'right',
-                    reflex: true,
-                    title: "Save your modifications",
-                    content: "Click the <b>Save</b> button to apply modifications on your website.",
-                    template: render('website.tour_simple'),
+                    step_id: 'part-2',
+                    orphan: true,
+                    title: "Welcome to part 2",
+                    content: "Congratulations on your first modifications.",
+                    template: render('website.tour_end', { confirm: "Thanks :)" }),
                 },
             ];
             return this._super();
         },
         doNotContinue: function () {
-            return this.currentStepIndex() > 0;
+            var currentStepIndex = this.currentStepIndex();
+            var secondPartIndex = this.indexOfStep('part-2');
+            return currentStepIndex > 0 && currentStepIndex !== secondPartIndex;
         }
     });
 
