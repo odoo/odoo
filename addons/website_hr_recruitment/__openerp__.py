@@ -9,7 +9,7 @@ OpenERP Contact Form
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'hr', 'hr_recruitment', 'website_mail'],
+    'depends': ['hr_recruitment', 'website_mail'],
     'data': [
     'website_hr_recruitment_demo.xml',
     'website_hr_recruitment_data.xml',
@@ -17,8 +17,8 @@ OpenERP Contact Form
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
     ],
-    'css':[
-       'static/src/css/*.css'
-      ],
+    'css': [
+        'static/src/css/*.css'
+    ],
     'installable': True,
 }

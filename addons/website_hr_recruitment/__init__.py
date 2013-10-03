@@ -1,2 +1,2 @@
 import controllers
-import recruitment
+import models

@@ -28,7 +28,7 @@ class sale_order(osv.Model):
 
     def get_total_quantity(self, cr, uid, ids, context=None):
         order = self.browse(cr, uid, ids[0], context=context)
-        return sum(l.product_uom_qty for l in (order.order_line or []))
+        return int(sum(l.product_uom_qty for l in (order.order_line or [])))
 
 
 class sale_order_line(osv.Model):
