@@ -39,6 +39,8 @@ and Ubuntu distros, we have to override the search path, too.
 _fonts_cache = {'registered_fonts': [], 'total_system_fonts': 0}
 _logger = logging.getLogger(__name__)
 
+CustomTTFonts = []
+
 TTFSearchPath = [
             '/usr/share/fonts/truetype', # SuSE
             '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
@@ -107,19 +109,22 @@ def RegisterCustomFonts():
                 _logger.debug("Found font %s at %s", font_info.name, dirname)
             except:
                 _logger.warning("Could not register Font %s", dirname)
-       
+        
         #Prepare font list for mapping.Each font family requires four type of modes(regular,bold,italic,bolditalic).
         #If all modes are not found, dummy entries are made for remaining modes.
         for i,(familyName, name, font_dir, mode) in enumerate(sorted(registered_font_list)):
             if not last_family or not font_modes:
                 last_family = familyName
                 font_modes = init_new_font(familyName, name, font_dir)
-            if (last_family != familyName) or ((i+1) == len(registered_font_list)):
+
+            if last_family != familyName:
                 if not font_modes['italic']:
                     font_modes['italic'] = font_modes['regular'][:3]+('italic',)
                 if not font_modes['bolditalic']:
                     font_modes['bolditalic'] = font_modes['bold'][:3]+('bolditalic',)
+                CustomTTFonts.extend(font_modes.values())
                 font_modes = init_new_font(familyName, name, font_dir)
+
             if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book'):
                 font_modes['regular'] = (familyName, name, font_dir, 'regular')
             elif (mode == 'italic') or (mode == 'oblique'):
@@ -129,6 +134,15 @@ def RegisterCustomFonts():
             elif (mode == 'bolditalic') or (mode == 'boldoblique'):
                 font_modes['bolditalic'] = (familyName, name, font_dir, 'bolditalic')
             last_family = familyName
+
+        # add the last one
+        if font_modes:
+            if not font_modes['italic']:
+                font_modes['italic'] = font_modes['regular'][:3]+('italic',)
+            if not font_modes['bolditalic']:
+                font_modes['bolditalic'] = font_modes['bold'][:3]+('bolditalic',)
+            CustomTTFonts.extend(font_modes.values())
+
         _fonts_cache['total_system_fonts'] = len(all_system_fonts)
     return _fonts_cache['registered_fonts']
 
@@ -142,7 +156,7 @@ def SetCustomFonts(rmldoc):
     """
     if not _fonts_cache['registered_fonts']:
         RegisterCustomFonts()
-    for name, font, filename, mode in _fonts_cache['registered_fonts']:
+    for name, font, filename, mode in CustomTTFonts:
         if os.path.isabs(filename) and os.path.exists(filename):
             rmldoc.setTTFontMapping(name, font, filename, mode)
         elif filename in __foundFonts:
