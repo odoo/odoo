@@ -22,7 +22,7 @@
                         <group>
                             <field name="partner_id" readonly="True"/>
                             <field name="phone"/>
-                            <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>
+                            <field name="user_id" attrs="{'invisible': [('action','=','log')]}" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                             <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}" groups="base.group_multi_salesteams"/>
                         </group>
                     </group>

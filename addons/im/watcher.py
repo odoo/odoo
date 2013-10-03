@@ -51,8 +51,9 @@ class ImWatcher(object):
 
     def handle_message(self, message):
         if message["type"] == "message":
-            for waiter in self.users.get(message["receiver"], {}).values():
-                waiter.set()
+            for receiver in message["receivers"]:
+                for waiter in self.users.get(receiver, {}).values():
+                    waiter.set()
         else: #type status
             for waiter in self.users_watch.get(message["user"], {}).values():
                 waiter.set()

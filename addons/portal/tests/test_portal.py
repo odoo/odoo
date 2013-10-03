@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
 
-class test_portal(TestMailBase):
+class test_portal(TestMail):
 
     def setUp(self):
         super(test_portal, self).setUp()

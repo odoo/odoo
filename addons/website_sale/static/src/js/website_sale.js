@@ -36,7 +36,7 @@ $(document).ready(function () {
     });
     
     // hack to add and rome from cart with json
-    $('.oe_website_sale a[href*="/add_cart/"],.oe_website_sale a[href*="/remove_cart/"]').on('click', function (ev) {
+    $('.oe_website_sale a.js_add_cart_json').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var product = $link.attr("href").match(/product_id=([0-9]+)/);
