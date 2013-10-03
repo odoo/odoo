@@ -1239,6 +1239,7 @@ class procurement_order(osv.osv):
         acc_pos_obj = self.pool.get('account.fiscal.position')
         seq_obj = self.pool.get('ir.sequence')
         pass_ids = []
+        linked_po_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -1287,6 +1288,7 @@ class procurement_order(osv.osv):
                     po_id = available_draft_po_ids[0]
                     line_vals.update(order_id=po_id)
                     po_line_id = po_line_obj.create(cr, uid, line_vals, context=context)
+                    linked_po_ids.append(procurement.id)
                 else:
                     name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
                     po_vals = {
@@ -1303,11 +1305,13 @@ class procurement_order(osv.osv):
                     }
                     po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
+                    pass_ids.append(procurement.id)
                 res[procurement.id] = po_line_id
                 self.write(cr, uid, [procurement.id], {'purchase_line_id': po_line_id}, context=context)
-                pass_ids += [procurement.id]
         if pass_ids:
             self.message_post(cr, uid, pass_ids, body=_("Draft Purchase Order created"), context=context)
+        if linked_po_ids:
+            self.message_post(cr, uid, linked_po_ids, body=_("Purchase line created and linked to an existing Purchase Order"), context=context)
         return res
 
     def _product_virtual_get(self, cr, uid, order_point):
