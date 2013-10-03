@@ -48,7 +48,7 @@ class base_config_settings(osv.osv_memory):
     }
     
     _defaults= {
-        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font or 'DejaVuSans',
+        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font or 'Helvetica',
     }
     
     def open_company(self, cr, uid, ids, context=None):
