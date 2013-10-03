@@ -49,6 +49,7 @@ TTFSearchPath = [
             '/usr/share/fonts/TTF', # Arch Linux
             '/usr/lib/openoffice/share/fonts/truetype/',
             '~/.fonts',
+            '~/.local/share/fonts',
 
             # mac os X - from
             # http://developer.apple.com/technotes/tn/tn2024.html
@@ -112,12 +113,13 @@ def RegisterCustomFonts():
         
         #Prepare font list for mapping.Each font family requires four type of modes(regular,bold,italic,bolditalic).
         #If all modes are not found, dummy entries are made for remaining modes.
-        for i,(familyName, name, font_dir, mode) in enumerate(sorted(registered_font_list)):
+        for familyName, name, font_dir, mode in sorted(registered_font_list):
             if not last_family or not font_modes:
                 last_family = familyName
                 font_modes = init_new_font(familyName, name, font_dir)
 
             if last_family != familyName:
+                # new font familly, sorting
                 if not font_modes['italic']:
                     font_modes['italic'] = font_modes['regular'][:3]+('italic',)
                 if not font_modes['bolditalic']:
