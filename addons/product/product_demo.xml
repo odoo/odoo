@@ -177,6 +177,30 @@
           <field name="name">Services</field>
         </record>
 
+    <!-- Apple Products -->
+    <record id="apple" model="product.category">
+          <field name="name">Apple Products</field>
+        </record>
+        
+        <record id="ipad" model="product.category">
+          <field name="parent_id" ref="apple"/>
+          <field name="name">Ipad</field>
+        </record>
+    
+    <record id="ipod" model="product.category">
+          <field name="parent_id" ref="apple"/>
+          <field name="name">Ipod</field>
+        </record>
+
+    <record id="imac" model="product.category">
+          <field name="parent_id" ref="apple"/>
+          <field name="name">Imac</field>
+        </record>
+
+    <record id="accessories" model="product.category">
+          <field name="parent_id" ref="apple"/>
+          <field name="name">Apple Accessories</field>
+        </record>
         <!--
     Resource: product.product
     -->
@@ -228,8 +252,8 @@ HDD SH-1</field>
 
         <record id="product_product_4" model="product.product">
             <field name="name">iPad Retina Display</field>
-            <field name="default_code">PCSC349</field>
-            <field name="categ_id" ref="product_category_4"/>
+            <field name="default_code">A2323</field>
+            <field name="categ_id" ref="ipad"/>
             <field name="public_categ_id" ref="Computer_all_in_one"/>
             <field name="standard_price">500.0</field>
             <field name="list_price">750.0</field>
@@ -243,11 +267,11 @@ FaceTime HD Camera, 1.2 MP Photos</field>
 
         <record id="product_product_5" model="product.product">
             <field name="name">Bose Mini Bluetooth Speaker</field>
-            <field name="default_code">PC-DEM</field>
-            <field name="categ_id" ref="product_category_4"/>
+            <field name="default_code">B3423</field>
+            <field name="categ_id" ref="accessories"/>
             <field name="public_categ_id" ref="Speakers"/>
             <field name="standard_price">600.0</field>
-            <field name="list_price">900.0</field>
+            <field name="list_price">147.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
@@ -257,45 +281,43 @@ FaceTime HD Camera, 1.2 MP Photos</field>
 
         <record id="product_product_6" model="product.product">
             <field name="name">iPad Mini</field>
-            <field name="name">15” LCD Monitor</field>
-            <field name="default_code">LCD15</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="default_code">A1232</field>
+            <field name="categ_id" ref="ipad"/>
             <field name="public_categ_id" ref="Screen"/>
             <field name="standard_price">800.0</field>
-            <field name="list_price">1200.0</field>
+            <field name="list_price">320.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
         </record>
         <record id="product_product_7" model="product.product">
-            <field name="name">17” LCD Monitor</field>
-            <field name="default_code">LCD17</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="name">Apple In-Ear Headphones</field>
+            <field name="default_code">A8767</field>
+            <field name="categ_id" ref="accessories"/>
             <field name="public_categ_id" ref="Screen"/>
-            <field name="standard_price">880.0</field>
-            <field name="list_price">1350.0</field>
+            <field name="standard_price">70.0</field>
+            <field name="list_price">79.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
         </record>
         <record id="product_product_8" model="product.product">
-            <field name="name">iPod Accessory</field>
-            <field name="default_code">KeyQ</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="Keyboard_Mouse"/>
-            <field name="standard_price">10.0</field>
-            <field name="list_price">13.0</field>
+            <field name="name">iMac</field>
+            <field name="default_code">A1090</field>
+            <field name="categ_id" ref="imac"/>
+            <field name="standard_price">1299.0</field>
+            <field name="list_price">1799.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
         </record>
         <record id="product_product_9" model="product.product">
-            <field name="name">USB Keyboard, AZERTY</field>
-            <field name="default_code">KeyA</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="name">Apple Wireless Keyboard</field>
+            <field name="default_code">AK789</field>
+            <field name="categ_id" ref="accessories"/>
             <field name="public_categ_id" ref="Keyboard_Mouse"/>
             <field name="standard_price">10.0</field>
-            <field name="list_price">13.0</field>
+            <field name="list_price">47.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
@@ -314,8 +336,8 @@ FaceTime HD Camera, 1.2 MP Photos</field>
 
         <record id="product_product_11_temp" model="product.template">
             <field name="name">iPod</field>
-            <field name="default_code">M-Las</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="default_code">A6678</field>
+            <field name="categ_id" ref="ipod"/>
             <field name="public_categ_id" ref="Keyboard_Mouse"/>
             <field name="standard_price">14</field>
             <field name="list_price">16.50</field>
@@ -325,8 +347,8 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
         <record id="product_product_11" model="product.product">
             <field name="name">iPod</field>
-            <field name="default_code">M-Las</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="default_code">A6678</field>
+            <field name="categ_id" ref="ipod"/>
             <field name="public_categ_id" ref="Keyboard_Mouse"/>
             <field name="standard_price">14</field>
             <field name="list_price">16.50</field>
