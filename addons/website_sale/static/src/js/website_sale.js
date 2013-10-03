@@ -52,6 +52,17 @@ $(document).ready(function () {
         return false;
     });
 
+    // change price when they are variants
+    $('form.js_add_cart_json label').on('mouseup', function (ev) {
+        ev.preventDefault();
+        var $label = $(ev.currentTarget);
+        var $price = $label.parent("form").find(".oe_price");
+        if (!$price.data("price")) {
+            $price.data("price", parseFloat($price.html()));
+        }
+        $price.html($price.data("price")+parseFloat($label.find(".badge span").html() || 0));
+    });
+
     $(document).on('click', '.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom', function (event) {
         var $a = $(event.currentTarget);
         var $data = $a.parents(".js_publish_management:first");
