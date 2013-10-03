@@ -80,7 +80,7 @@
                 <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart <sup t-attf-class="my_cart_quantity label label-primary"
-                                  t-esc="website_sale_order and int(website_sale_order.get_total_quantity()) or ''"/>
+                                  t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
             </li>
         </xpath>
@@ -502,14 +502,14 @@
                   <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
                       <h4>Policies</h4>
                       <ul class="list-unstyled mb32">
-                        <li><span class="icon-check"/> 30-days money-back guarantee</li>
-                        <li><span class="icon-check"/> Invoice sent by e-Mail</li>
+                        <li>&#9745; 30-days money-back guarantee</li>
+                        <li>&#9745; Invoice sent by e-Mail</li>
                       </ul>
 
                       <h4>Secure Payment</h4>
                       <ul class="list-unstyled mb32">
-                        <li><span class="icon-lock"/> Transation 256bit encrypted</li>
-                        <li><span class="icon-check"/> Processed by Ogone</li>
+                        <li>&#9745; Transation 256bit encrypted</li>
+                        <li>&#9745; Processed by Ogone</li>
                       </ul>
 
                   </div>
