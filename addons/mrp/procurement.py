@@ -40,14 +40,6 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
-    def _find_suitable_rule(self, cr, uid, procurement, context=None):
-        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
-        if not rule_id:
-            #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
-            rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)], context=context)
-            rule_id = rule_id and rule_id[0] or False
-        return rule_id
-
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'manufacture':
             #make a manufacturing order for the procurement

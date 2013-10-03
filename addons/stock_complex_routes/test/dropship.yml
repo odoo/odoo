@@ -42,6 +42,11 @@
     !python {model: procurement.group}: |
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200 
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 - 
     Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
 -
@@ -50,6 +55,13 @@
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
         print 'procurement_order', procurement_order.state
+        print 'test', procurement_order.purchase_line_id.order_id
+        print 'test rule', procurement_order.rule_id.action
+        print 'test route sequence', [(r.name, r.sequence) for r in procurement_order.route_ids]
+        rule_seq = []
+        for route in procurement_order.route_ids:
+            rule_seq += [(ru.name, ru.route_sequence, ru.sequence) for ru in route.pull_ids]
+        print '####RULES SEQ####', rule_seq
         purchase_id = procurement_order.purchase_line_id.order_id.id
         
         wf_service = netsvc.LocalService('workflow')

@@ -31,13 +31,13 @@
     push_ids:
         - name: 'stock -> quality test'
           invoice_state: none
-          location_dest_id: stock_location.stock_location_qualitytest0
+          location_dest_id: stock_location.stock_location_quality
           location_from_id: stock.stock_location_stock
           picking_type_id: stock.picking_type_internal
         - name: 'quality test -> components'
           invoice_state: none
           location_dest_id: stock.stock_location_components
-          location_from_id: stock_location.stock_location_qualitytest0
+          location_from_id: stock_location.stock_location_quality
           picking_type_id: stock.picking_type_internal
 -
   !record {model: product.product, id: product_product_hpcdwriters01}:

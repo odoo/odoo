@@ -1126,16 +1126,16 @@ class procurement_order(osv.osv):
         'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order'),
     }
 
-    def _find_suitable_rule(self, cr, uid, procurement, context=None):
-        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
-        if not rule_id:
-            #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
-            rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
-            rule_id = rule_id and rule_id[0] or False
-        return rule_id
-
     def _run(self, cr, uid, procurement, context=None):
+        print "dans le run de purchase"
+        print procurement
+        print procurement.rule_id
+        if procurement.rule_id:
+            print procurement.rule_id.action
+        #a = procurement.rule_id and procurement.rule_id.name or 'pas de rule'
+        #print a
         if procurement.rule_id and procurement.rule_id.action == 'buy':
+            print "go pour make_po"
             #make a purchase order for the procurement
             return self.make_po(cr, uid, [procurement.id], context=context)[procurement.id]
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
