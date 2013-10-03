@@ -631,38 +631,38 @@
                     </h3>
                         <div class="row">
                             <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Your Name</label>
+                                <label class="control-label" for="contact_name">Your Name</label>
                                 <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''} col-lg-6">
-                                <label for="company">Your Company</label>
+                                <label class="control-label" for="company">Your Company</label>
                                 <input type="text" name="company" class="form-control" t-att-value="checkout.get('company')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Email</label>
+                                <label class="control-label" for="contact_name">Email</label>
                                 <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
-                                <label for="phone">Telephone</label>
+                                <label class="control-label" for="phone">Telephone</label>
                                 <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                             </div>
 
                             <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
-                                <label for="street">Street</label>
+                                <label class="control-label" for="street">Street</label>
                                 <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
                             </div>
                             <div class="clearfix"/>
 
                             <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
-                                <label for="city">City</label>
+                                <label class="control-label" for="city">City</label>
                                 <input type="text" name="city" class="form-control" t-att-value="checkout.get('city')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
-                                <label for="zip">Zip / Postal Code</label>
+                                <label class="control-label" for="zip">Zip / Postal Code</label>
                                 <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
-                                <label for="state_id">State / Province</label>
+                                <label class="control-label" for="state_id">State / Province</label>
                                 <select name="state_id" class="form-control">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
@@ -671,7 +671,7 @@
                                 </select>
                             </div>
                             <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Country</label>
+                                <label class="control-label" for="contact_name">Country</label>
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
@@ -695,28 +695,28 @@
                             <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                             <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Name (Shipping)</label>
+                                <label class="control-label" for="contact_name">Name (Shipping)</label>
                                 <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Telephone</label>
+                                <label class="control-label" for="contact_name">Telephone</label>
                                 <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Street</label>
+                                <label class="control-label" for="contact_name">Street</label>
                                 <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')"/>
                             </div>
                             <div class="clearfix"/>
                             <div t-attf-class="form-group #{error.get('shipping_city') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">City</label>
+                                <label class="control-label" for="contact_name">City</label>
                                 <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_zip') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Zip / Postal Code</label>
+                                <label class="control-label" for="contact_name">Zip / Postal Code</label>
                                 <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">State / Province</label>
+                                <label class="control-label" for="contact_name">State / Province</label>
                                 <select name="shipping_state_id" class="form-control">
                                     <option value="">State / Province...</option>
                                     <t t-foreach="states or []" t-as="state">
@@ -725,7 +725,7 @@
                                 </select>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''} col-lg-6">
-                                <label for="contact_name">Country</label>
+                                <label class="control-label" for="contact_name">Country</label>
                                 <select name="shipping_country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
