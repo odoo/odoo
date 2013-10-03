@@ -395,7 +395,7 @@ class res_company(osv.osv):
         'rml_header2': _header2,
         'rml_header3': _header3,
         'logo':_get_logo,
-        'font':'DejaVuSans'
+        'font':'Helvetica',
     }
 
     _constraints = [

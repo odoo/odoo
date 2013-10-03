@@ -104,7 +104,7 @@ def RegisterCustomFonts():
     """
     global CustomTTFonts
     all_system_fonts = all_sysfonts_list()
-    if len(all_system_fonts) > _fonts_cache['total_system_fonts']:
+    if len(all_system_fonts) != _fonts_cache['total_system_fonts']:
         font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'] = {}, "", [], list(BasePDFFonts)
 
         #Prepares a list of registered fonts. Remove such fonts those don't have cmap for Unicode.
