@@ -62,7 +62,7 @@ class stock_warehouse(osv.osv):
     }
     _defaults = {
         'reception_steps': 'one_step',
-        'delivery_steps': 'ship_only',
+        'delivery_steps': 'ship_only',        
     }
 
     def switch_location(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
@@ -274,7 +274,9 @@ class stock_warehouse(osv.osv):
         route_obj.write(cr, uid, set_active_route_ids, {'active': True}, context=context)
         return True
 
+            
     def create(self, cr, uid, vals, context=None):
+        
         if context is None:
             context = {}
         if vals is None:
@@ -368,6 +370,15 @@ class stock_warehouse(osv.osv):
         output_loc = wh_output_stock_loc
         if warehouse.delivery_steps == 'ship_only':
             output_loc = wh_stock_loc
+        
+        color = 0    
+        all_used_color = self.pool.get('stock.picking.type').search_read(cr,uid, [('warehouse_id','!=',False),('color','!=',False)],['color'],order='color')
+        for nColor in all_used_color:            
+            if nColor['color'] == color and color < 9:
+                color += 1 
+            elif nColor['color'] > color or color == 9:
+                break;
+                                
         in_picking_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
             'warehouse_id': new_id,
@@ -375,7 +386,8 @@ class stock_warehouse(osv.osv):
             'auto_force_assign': True,
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
-            'default_location_dest_id': input_loc.id}, context=context)
+            'default_location_dest_id': input_loc.id,
+            'color' : color }, context=context)
         out_picking_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Delivery Orders'),
             'warehouse_id': new_id,
@@ -383,7 +395,8 @@ class stock_warehouse(osv.osv):
             'sequence_id': out_seq_id,
             'delivery': True,
             'default_location_src_id': output_loc.id,
-            'default_location_dest_id': customer_loc.id}, context=context)
+            'default_location_dest_id': customer_loc.id,
+            'color' : color }, context=context)
         internal_picking_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Internal Transfers'),
             'warehouse_id': new_id,
@@ -391,7 +404,8 @@ class stock_warehouse(osv.osv):
             'sequence_id': internal_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
-            'pack': True,}, context=context)
+            'pack': True,
+            'color' : color }, context=context)
 
         #create routes and push/pull rules
         default_route_id = self.create_route(cr, uid, new_id, warehouse, context=context)

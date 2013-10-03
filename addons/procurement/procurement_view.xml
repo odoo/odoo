@@ -77,9 +77,8 @@
                 </form>
             </field>
         </record>
-        
 
-		<record id="do_view_procurements" model="ir.actions.act_window">
+        <record id="do_view_procurements" model="ir.actions.act_window">
             <field name="name">Procurement for Groups  </field>
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
@@ -87,26 +86,14 @@
 			<field name="domain">[('group_id','=',active_id)]</field>			
         </record>
         
-<!-- 
-		<record id="do_view_pickings" model="ir.actions.act_window">
-            <field name="name">Pickings for Groups  </field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-			<field name="domain">[('group_id','=',active_id)]</field>			
-        </record>
-        <button name="%(do_view_pickings)d" string="View all procurements" type="action" />
--->
- 
-                
- 		<record id="procurement_group_form_view" model="ir.ui.view">
+        <record id="procurement_group_form_view" model="ir.ui.view">
             <field name="name">procurement.group.form</field>
             <field name="model">procurement.group</field>
             <field name="arch" type="xml">
                 <form string="Procurement group" version="7.0">
                     <sheet>
 						<div class="oe_right oe_button_box">
-							<button name="%(do_view_procurements)d" string="View all procurements" type="action" />
+							<button name="%(do_view_procurements)d" string="View related procurements" type="action" />
             			</div>
                         <group>
                             <field name="name"/>
@@ -163,10 +150,6 @@
             </field>
         </record>
         
-		
-        
- 	        
-
         <record id="procurement_exceptions" model="ir.actions.act_window">
             <field name="name">Procurements</field>
             <field name="type">ir.actions.act_window</field>

@@ -1868,5 +1868,24 @@
                 </form>
             </field>
         </record>
+
+        <record id="do_view_pickings" model="ir.actions.act_window">
+            <field name="name">Pickings for Groups  </field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="domain">[('group_id','=',active_id)]</field>			
+        </record>
+        <record id="procurement_group_form_view_herited" model="ir.ui.view">
+            <field name="name">procurement.group.form.herited</field>
+            <field name="model">procurement.group</field>
+            <field name="inherit_id" ref="procurement.procurement_group_form_view"/>
+            <field name="arch" type="xml">
+		        <xpath expr="/form/sheet/div/button" position="after">
+		        	<button name="%(do_view_pickings)d" string="View related pickings" type="action" />
+		        </xpath>        
+            </field>
+        </record>
+        
     </data>
 </openerp>

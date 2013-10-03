@@ -2146,7 +2146,7 @@ class stock_warehouse(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
-        'code': fields.char('Warehouse Unique Identifier', size=5, required=True, help="Short name used to identify your warehouse"),
+        'code': fields.char('Warehouse Unique Identifier', size=5, required=True, help="Short name used to identify your warehouse"),        
     }
 
     def _default_stock_id(self, cr, uid, context=None):
