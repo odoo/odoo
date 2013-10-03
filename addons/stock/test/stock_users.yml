@@ -1,7 +1,7 @@
 -
    Create a user as 'Stock Manager'
 -
-  !record {model: res.users, id: res_users_stock_manager}:
+  !record {model: res.users, id: res_users_stock_manager, view: False}:
     company_id: base.main_company
     name: Stock Manager
     login: sam
@@ -16,7 +16,7 @@
 -
    Create a user as 'Stock User'
 -
-  !record {model: res.users, id: res_users_stock_user}:
+  !record {model: res.users, id: res_users_stock_user, view: False}:
     company_id: base.main_company
     name: Stock User
     login: sau
