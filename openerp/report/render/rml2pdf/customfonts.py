@@ -63,16 +63,12 @@ TTFSearchPath = [
             'c:/windows/fonts'
 ]
 
-__foundFonts = None
-
 def all_sysfonts_list():
     """
         This function returns list of font directories of system.
     """
     searchpath = []
     filepath = []
-    global __foundFonts
-    __foundFonts = {}
 
     # Append the original search path of reportlab
     searchpath = list(set(TTFSearchPath + rl_config.TTFSearchPath))
@@ -81,7 +77,6 @@ def all_sysfonts_list():
         if os.path.exists(dirname):
             for filename in [x for x in os.listdir(dirname) if x.lower().endswith('.ttf')]:
                 filepath.append(os.path.join(dirname, filename))
-                __foundFonts[filename]=os.path.join(dirname, filename)
     return sorted(filepath)
 
 def init_new_font(familyName, name, font_dir):
@@ -99,14 +94,16 @@ def RegisterCustomFonts():
     """
     all_system_fonts = all_sysfonts_list()
     if len(all_system_fonts) > _fonts_cache['total_system_fonts']:
-        font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'] = {}, "", [], []
+        global TTFSearchPath
+        font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'], TTFSearchPath = {}, "", [], [], []
+
         #Prepares a list of registered fonts. Remove such fonts those don't have cmap for Unicode.
         for dirname in all_system_fonts:
             try:
                 font_info = ttfonts.TTFontFile(dirname)
                 if font_info.styleName in ('Regular','Normal','Book','Medium'):
                     _fonts_cache['registered_fonts'].append((font_info.name, font_info.name))
-                registered_font_list.append((font_info.familyName, font_info.name, os.path.basename(dirname), font_info.styleName.lower().replace(" ", "")))
+                registered_font_list.append((font_info.familyName, font_info.name, dirname, font_info.styleName.lower().replace(" ", "")))
                 _logger.debug("Found font %s at %s", font_info.name, dirname)
             except:
                 _logger.warning("Could not register Font %s", dirname)
@@ -119,7 +116,7 @@ def RegisterCustomFonts():
                 font_modes = init_new_font(familyName, name, font_dir)
 
             if last_family != familyName:
-                # new font familly, sorting
+                # new font familly, adding previous to the list of fonts
                 if not font_modes['italic']:
                     font_modes['italic'] = font_modes['regular'][:3]+('italic',)
                 if not font_modes['bolditalic']:
@@ -161,8 +158,6 @@ def SetCustomFonts(rmldoc):
     for name, font, filename, mode in CustomTTFonts:
         if os.path.isabs(filename) and os.path.exists(filename):
             rmldoc.setTTFontMapping(name, font, filename, mode)
-        elif filename in __foundFonts:
-            rmldoc.setTTFontMapping(name, font, __foundFonts[filename], mode)
     return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
