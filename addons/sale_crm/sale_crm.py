@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import calendar
 from datetime import date
 from dateutil import relativedelta
 
@@ -48,12 +49,13 @@ class crm_case_section(osv.osv):
         obj = self.pool.get('sale.order')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_begin = month_begin - relativedelta.relativedelta(months=self._period_number - 1).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             res[id] = dict()
-            created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', groupby_begin)]
+            created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
-            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', groupby_begin)]
+            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm'], 'amount_total', 'date_confirm', context=context)
         return res
 
