@@ -49,7 +49,7 @@ class crm_case_section(osv.osv):
         obj = self.pool.get('sale.order')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
-        date_begin = month_begin - relativedelta.relativedelta(months=self._period_number - 1).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             res[id] = dict()
@@ -63,9 +63,10 @@ class crm_case_section(osv.osv):
         obj = self.pool.get('account.invoice.report')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
-            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', groupby_begin)]
+            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
             res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
         return res
 
