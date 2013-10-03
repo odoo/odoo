@@ -371,8 +371,8 @@ class res_partner(osv.osv, format_address):
         result = {}
         address_fields = self._address_fields(cr, uid, context=context)
         if parent_id and use_parent_address:
-            parent = self.browse(cr, uid, parent_id, context=context)
-            result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+            parent_company = self.browse(cr, uid, parent_id, context=context)
+            result['value'] = dict((key, value_or_id(parent_company[key])) for key in address_fields)
         else:
             result['value'] = dict((key,"") for key in address_fields)
         return result
@@ -391,10 +391,10 @@ class res_partner(osv.osv, format_address):
                                                       'was never correctly set. If an existing contact starts working for a new '
                                                       'company then a new contact should be created under that new '
                                                       'company. You can use the "Discard" button to abandon this change.')}
-            parent = self.browse(cr, uid, parent_id, context=context)
+            parent_company = self.browse(cr, uid, parent_id, context=context)
             address_fields = self._address_fields(cr, uid, context=context)
             if use_parent_address:
-                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+                result['value'] = dict((key, value_or_id(parent_company[key])) for key in address_fields)
         else:
             result['value'] = {'use_parent_address': False}
         return result
