@@ -16,7 +16,11 @@ $(document).ready(function () {
     });
 
     function set_my_cart_quantity(qty) {
-        $(".my_cart_quantity").html(qty.toString().indexOf(".") > -1 ? qty : qty + '.0').removeClass("hidden");
+        var $q = $(".my_cart_quantity");
+        $q.parent().parent().toggleClass("hidden", !qty);
+        $q.html(qty)
+            .hide()
+            .fadeIn(600);
     }
 
     $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
@@ -28,9 +32,7 @@ $(document).ready(function () {
                 set_my_cart_quantity(data[1]);
                 $input.val(data[0]);
                 if (!data[0]) {
-                    openerp.jsonRpc('/shop/add_cart_json/', 'call', {'order_line_id': $input.data('id')}).then(function (data) {
-                        location.reload();
-                    });
+                    location.reload();
                 }
             });
     });

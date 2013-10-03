@@ -73,14 +73,14 @@
     
     <!-- Layout add nav and footer -->
 
-    <template id="header_footer" inherit_id="website.layout" name="Custom Footer">
+    <template id="header" inherit_id="website.layout" name="Custom Header">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li><a t-href="/shop/">Shop</a></li>
-            <li>
+            <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
                 <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
-                    My cart <sup t-attf-class="my_cart_quantity label label-primary #{(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''}"
-                                  t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
+                    My cart <sup t-attf-class="my_cart_quantity label label-primary"
+                                  t-esc="website_sale_order and int(website_sale_order.get_total_quantity()) or ''"/>
                 </a>
             </li>
         </xpath>
@@ -441,7 +441,7 @@
                             <tr t-foreach="website_sale_order.order_line" t-as="line">
                                 <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                 <td t-if="line.product_id.product_tmpl_id">
-                                    <a t-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/"><img class="img-rounded" t-att-src="line.product_id.img('image_small')"/></a>
+                                    <img class="img-rounded" t-att-src="line.product_id.img('image_small')"/>
                                 </td>
                                 <td t-if="line.product_id.product_tmpl_id">
                                     <div>
