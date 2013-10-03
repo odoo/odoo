@@ -99,6 +99,11 @@
                 </div>
             </li>
         </ul>
+    </template>
+
+    <!-- Options: Blog Post: user can reply -->
+    <template id="view_blog_post_author" inherit_option_id="website_blog.view_blog_post" name="Hide Authors">
+        <xpath expr="//ul[last()]" position="after">
         <section groups="group_website_blog_reply" class="mb32">
             <h4>Leave a Comment</h4>
             <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
@@ -110,6 +115,7 @@
                 </div>
             </form>
         </section>
+        </xpath>
     </template>
 
     <!-- Options: Blog Post: hide author -->
