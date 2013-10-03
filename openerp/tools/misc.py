@@ -962,12 +962,18 @@ class snake_dict(MutableMapping):
             self.update(*args, **kwargs)
 
     def __getitem__(self, key):
+        if not isinstance(key, basestring):
+            raise KeyError(key)
         return self._data[snake_case(key)]
 
     def __setitem__(self, key, val):
+        if not isinstance(key, basestring):
+            raise KeyError(key)
         self._data[snake_case(key)] = val
 
     def __delitem__(self, key):
+        if not isinstance(key, basestring):
+            raise KeyError(key)
         del self._data[snake_case(key)]
 
     def __iter__(self):
@@ -977,7 +983,10 @@ class snake_dict(MutableMapping):
         return len(self._data)
 
     def __eq__(self, other):
-        return self._data == snake_dict(other)._data
+        try:
+            return self._data == snake_dict(other)._data
+        except KeyError:
+            return False
 
     def __ne__(self, other):
         return not self == other
