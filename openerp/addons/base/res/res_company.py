@@ -20,14 +20,15 @@
 ##############################################################################
 
 import os
-
+import re
 import openerp
 from openerp import SUPERUSER_ID, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-
+from openerp.report.render.rml2pdf import customfonts
+  
 class multi_company_default(osv.osv):
     """
     Manage multi company default value
@@ -74,7 +75,7 @@ class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
-
+    
     def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
         """ Read the 'address' functional fields. """
         result = {}
@@ -108,9 +109,12 @@ class res_company(osv.osv):
             size = (180, None)
             result[record.id] = image_resize_image(record.partner_id.image, size)
         return result
-
+        
     def _get_companies_from_partner(self, cr, uid, ids, context=None):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
+    
+    def _get_font(self, cr, uid, context=None):
+        return sorted(customfonts.RegisterCustomFonts())
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
@@ -124,6 +128,7 @@ class res_company(osv.osv):
         'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
+        'font': fields.selection(_get_font, "Font",help="Set the font into the report header, will be used for every RML report of the company"),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
             'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
@@ -178,6 +183,21 @@ class res_company(osv.osv):
         if state_id:
             return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
         return {}
+        
+    def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
+        """ To change default header style of all <para> and drawstring. """
+        
+        def _change_header(header,font):
+            """ Replace default fontname use in header and setfont tag """
+            
+            default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
+            return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+        return {'value':{
+                        'rml_header': _change_header(rml_header,font),
+                        'rml_header2':_change_header(rml_header2,font),
+                        'rml_header3':_change_header(rml_header3,font)
+                        }}
+
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         res = {'domain': {'state_id': []}}
         currency_id = self._get_euro(cr, uid, context=context)
@@ -374,7 +394,8 @@ class res_company(osv.osv):
         'rml_header':_get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,
-        'logo':_get_logo
+        'logo':_get_logo,
+        'font':'Helvetica',
     }
 
     _constraints = [
