@@ -67,7 +67,11 @@ class procurement_rule(osv.osv):
         'route_id': fields.many2one('stock.location.route', 'Route',
             help="If route_id is False, the rule is global"),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
-        'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence', store={'stock.location.route': (_get_rules, ['sequence'], 10)}),
+        'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
+            store={
+                'stock.location.route': (_get_rules, ['sequence'], 10),
+                'procurement.rule': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 10),
+        }),
         'sequence': fields.integer('Sequence'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', 
             help="Picking Type determines the way the picking should be shown in the view, reports, ..."),
