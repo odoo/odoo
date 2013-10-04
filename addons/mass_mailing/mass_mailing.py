@@ -194,10 +194,13 @@ class MassMailing(osv.Model):
         }
         for id in ids:
             res[id] = {}
-            date_begin = self.browse(cr, uid, id, context=context).date
-            domain = [('mass_mailing_id', '=', id), ('opened', '>=', date_begin)]
+            date_begin = datetime.strptime(self.browse(cr, uid, id, context=context).date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            date_end = date_begin + relativedelta.relativedelta(days=self._period_number - 1)
+            date_begin_str = date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            date_end_str = date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            domain = [('mass_mailing_id', '=', id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
             res[id]['opened_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened', context=context)
-            domain = [('mass_mailing_id', '=', id), ('replied', '>=', date_begin)]
+            domain = [('mass_mailing_id', '=', id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
             res[id]['replied_monthly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied', context=context)
         return res
 

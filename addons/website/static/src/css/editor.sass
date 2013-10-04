@@ -26,9 +26,7 @@
 .navbar.navbar-inverse .cke_top
     background: transparent
     border: none
-    box-shadow: none
-    -webkit-box-shadow: none
-    -moz-box-shadow: none
+    +box-shadow(none)
 
 /* ---- OpenERP Style ---- */
 
@@ -42,13 +40,13 @@
     margin: 0
     z-index: 20000
     @include background(#414141, linear-gradient(#646060, #262626))
-    box-sizing: border-box
+    +box-sizing(border-box)
     li
         display: inline
         color: #eee
         &:hover
             background: rgba(0,0,0,0.2)
-            text-shadow: black 0px 0px 3px
+            +text-shadow(black 0px 0px 3px)
             color: white
 
 .oe_website_editorbar .oe_rte_toolbar
@@ -141,7 +139,7 @@ table.editorbar-panel
     right: 0px
     top: 50px
     background: rgb(40,40,40)
-    box-shadow: 0px 10px 10px -10px black inset
+    +box-shadow(0px 10px 10px -10px black inset)
     z-index: 1010
     overflow: hidden
     &:hover
@@ -188,8 +186,7 @@ table.editorbar-panel
     margin-top: 0px
     position: relative
     overflow: hidden
-    -webkit-user-select: none
-    user-select: none
+    +user-select(none)
     cursor: move
     pointer-events: none
     .oe_snippet_thumbnail
@@ -203,7 +200,7 @@ table.editorbar-panel
             font-size: 12px
             display: block
         .oe_snippet_thumbnail_img
-            box-shadow: inset 0px 0px 0px 3px #333333
+            +box-shadow(inset 0px 0px 0px 3px #333333)
         span, div
             line-height: 18px
     & > :not(.oe_snippet_thumbnail)
@@ -243,7 +240,7 @@ table.editorbar-panel
 
 .oe_drop_zone, .oe_drop_zone_style
     background: rgba(153, 0, 255, 0.17)
-    border-radius: 3px
+    +border-radius(3px)
     &.oe_hover
         background: rgba(0, 255, 133, 0.22)
         z-index: 1001
@@ -259,15 +256,15 @@ table.editorbar-panel
     display: none
     position: absolute
     background: transparent
-    border-radius: 3px
+    +border-radius(3px)
     @include transition(opacity 100ms linear)
-    box-sizing: border-box
+    +box-sizing(border-box)
     pointer-events: none
     &.oe_active
         display: block
         border-style: dashed
         border-width: 1px
-        box-shadow: 0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset
+        +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset)
         border-color: rgba(153, 0, 255, 0.5)
         .oe_handle
             display: block !important
@@ -279,7 +276,7 @@ table.editorbar-panel
                 display: block
                 background: rgba(255, 255, 255, 1)
                 border: solid 1px rgba(153, 0, 255, 1)
-                border-radius: 8px
+                +border-radius(8px)
                 width: 16px
                 height: 16px
                 margin: -8px
@@ -326,7 +323,7 @@ table.editorbar-panel
     top: 50%
     left: 50%
     display: block
-    box-sizing: border-box
+    +box-sizing(border-box)
     width: 8px
     height: 8px
     margin: -4px
@@ -376,7 +373,7 @@ $icon_close: #E00101
         height: 660px
         background-color: $mobile_preview_background
         border: 2px solid $mobile_preview_border
-        border-radius: 10px
+        +border-radius(10px)
         margin: auto
         top: 0
         left: 0
@@ -386,16 +383,16 @@ $icon_close: #E00101
         .modal-header
             background-color: $mobile_preview_background
             border-bottom: 0
-            border-top-left-radius: 10px
-            border-top-right-radius: 10px
+            +border-top-left-radius(10px)
+            +border-top-right-radius(10px)
             .modal-title
                 color: $mobile_preview_border
             .close
                 color: lightgrey
-                opacity: 1
+                +opacity(1)
             .close:hover
                 color: $icon_close
-                opacity: 1
+                +opacity(1)
         .modal-body
             background-color: $mobile_preview_background
             max-height: 600px
@@ -425,9 +422,9 @@ $highlighted_text_color: #ffffff
         cursor: pointer
     .oe_seo_keyword
         padding: .2em .4em .2em .5em
-        border-radius: .4em
+        +border-radius(.4em)
     .keyword-in-title
-        background-color: $in_title_color
+        background-color: $in_title_color+pointer
         color: $highlighted_text_color
     .keyword-in-description
         background-color: $in_description_color
@@ -442,6 +439,10 @@ $ace_width: 720px
 $editorbar_height: 40px
 // TODO Fix => might break with themes
 $navbar_height: 51px
+@mixin pointer-events($type: none)
+    $type: unquote($type)
+    @include experimental(pointer-events, $type,-moz, -webkit, not -o, not -ms, -khtml, official)
+
 
 @mixin editor-font
     font-size: 14px
@@ -449,7 +450,7 @@ $navbar_height: 51px
     line-height: normal
 .oe_ace_view_editor
     @include transition(all 0.2s ease-in)
-    opacity: 0.3
+    +opacity(0.3)
     position: fixed
     top: $navbar_height
     right: 0
@@ -477,16 +478,15 @@ $navbar_height: 51px
         left: 0
         width: $ace_width
     &:hover
-        opacity: 1
+        +opacity(1)
     &.oe_ace_open
         width: $ace_width
     &.oe_ace_closed
         width: 0
-        opacity: 0
+        +opacity(0)
 
 /* ---- EDITOR TOUR ---- */
 
 .popover.tour
     z-index: 2010
-
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
