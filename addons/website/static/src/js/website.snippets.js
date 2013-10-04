@@ -81,7 +81,6 @@
             $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
         },
         dom_filter: function (dom, sibling) {
-            console.log(dom, sibling);
             if (typeof dom === "string") {
                 var include = "[data-oe-model]";
                 var sdom = dom.split(',');
@@ -95,7 +94,6 @@
                     }
                 });
                 dom = dom.replace(/,\s*$/g, '');
-                console.log($(dom));
                 return $(dom);
             } else {
                 return (!sibling && $(dom).is("[data-oe-model]")) || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
