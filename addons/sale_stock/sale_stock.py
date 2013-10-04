@@ -77,12 +77,12 @@ class sale_order(osv.osv):
             if not sale.procurement_group_id:
                 res[sale.id] = []
                 continue
-            picking_ids = {}
+            picking_ids = set()
             for procurement in sale.procurement_group_id.procurement_ids:
                 for move in procurement.move_ids:
                     if move.picking_id:
-                        picking_ids[move.picking_id.id] = True
-            res[sale.id] = picking_ids.keys()
+                        picking_ids.add(move.picking_id.id)
+            res[sale.id] = list(picking_ids)
         return res
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
@@ -134,28 +134,21 @@ class sale_order(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree')
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree_all')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
 
         #compute the number of delivery orders to display
         pick_ids = []
-        ctx = {}
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
-        if len(pick_ids)>0:
-            pick_type = self.pool.get('stock.picking').browse(cr, uid, pick_ids[0], context=context)['picking_type_id'].id
-            ctx = eval(result['context'],{'active_id': pick_type}, nocopy=True)
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
-            result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
+            result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
         else:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
             result['views'] = [(res and res[1] or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
-        result.update({
-            'context': ctx,
-        })
         return result
 
 

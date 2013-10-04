@@ -682,6 +682,20 @@
             </field>
         </record>
 
+        <record id="action_picking_tree_all" model="ir.actions.act_window">
+            <field name="name">Stock Operations</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'contact_display': 'partner_address',
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
+
         <record id="action_picking_tree_draft" model="ir.actions.act_window">
             <field name="name">Draft Transfers</field>
             <field name="res_model">stock.picking</field>
