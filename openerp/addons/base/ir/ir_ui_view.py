@@ -21,6 +21,8 @@
 import collections
 import copy
 import logging
+from lxml import etree
+from operator import itemgetter
 import os
 import time
 
@@ -100,6 +102,10 @@ class view(osv.osv):
         return self._relaxng_validator
 
     def _check_xml(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context['check_view_ids'] = ids
+
         for view in self.browse(cr, uid, ids, context):
             # Sanity check: the view should not break anything upon rendering!
             try:
@@ -194,15 +200,19 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+
         user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
 
+        check_view_ids = context and context.get('check_view_ids') or (0,)
         conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
         if self.pool._init:
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
             conditions.extend([
                 ['model_ids.model', '=', 'ir.ui.view'],
+                '|',
                 ['model_ids.module', 'in', tuple(self.pool._init_modules)],
+                ['id', 'in', check_view_ids],
             ])
         view_ids = self.search(cr, uid, conditions, context=context)
 
@@ -343,7 +353,7 @@ class view(osv.osv):
         :return: a modified source where all the modifying architecture are applied
         """
         if context is None: context = {}
-        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model)
+        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
@@ -842,6 +852,22 @@ class view(osv.osv):
             'model_ids': [],
         })
         return super(view, self).copy(cr, uid, id, default, context=context)
+
+    def _validate_custom_views(self, cr, uid, model):
+        """Validate architecture of custom views (= without xml id) for a given model.
+            This method is called at the end of registry update.
+        """
+        cr.execute("""SELECT max(v.id)
+                        FROM ir_ui_view v
+                   LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                       WHERE md.module IS NULL
+                         AND v.model = %s
+                    GROUP BY coalesce(v.inherit_id, v.id)
+                   """, (model,))
+
+        ids = map(itemgetter(0), cr.fetchall())
+        return self._check_xml(cr, uid, ids)
+
 
 MOVABLE_BRANDING = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
 

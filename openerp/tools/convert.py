@@ -33,6 +33,7 @@ import time
 import openerp
 import openerp.release
 import openerp.workflow
+from yaml_import import convert_yaml_import
 
 import assertion_report
 
@@ -942,6 +943,33 @@ form: module.record_id""" % (xml_id,)
             'act_window': self._tag_act_window,
             'url': self._tag_url
         }
+
+def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None):
+    pathname = os.path.join(module, filename)
+    fp = misc.file_open(pathname)
+    ext = os.path.splitext(filename)[1].lower()
+    try:
+        if ext == '.csv':
+            convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
+        elif ext == '.sql':
+            convert_sql_import(cr, fp)
+        elif ext == '.yml':
+            convert_yaml_import(cr, module, fp, kind, idref, mode, noupdate, report)
+        elif ext == '.xml':
+            convert_xml_import(cr, module, fp, idref, mode, noupdate, report)
+        elif ext == '.js':
+            pass # .js files are valid but ignored here.
+        else:
+            _logger.warning("Can't load unknown file type %s.", filename)
+    finally:
+        fp.close()
+
+def convert_sql_import(cr, fp):
+    queries = fp.read().split(';')
+    for query in queries:
+        new_query = ' '.join(query.split())
+        if new_query:
+            cr.execute(new_query)
 
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):
