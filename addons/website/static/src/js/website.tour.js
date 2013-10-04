@@ -6,26 +6,28 @@
 
     function render (template, dict)  {
         return openerp.qweb.render(template, dict);
-    };
+    }
 
     website.EditorTour = openerp.Class.extend({
         editor: undefined,
+        tour: undefined,
         steps: [],
         tourStorage: window.localStorage,
         init: function (editor) {
             this.editor = editor;
-            this.tour = new Tour({
-                storage: this.tourStorage,
-                keyboard: false,
-            });
         },
         reset: function () {
-            this.tourStorage.removeItem('tour_current_step');
-            this.tourStorage.removeItem('tour_end');
+            this.tourStorage.removeItem(this.id+'_current_step');
+            this.tourStorage.removeItem(this.id+'_end');
             $('.popover.tour').remove();
         },
         start: function () {
             var self = this;
+            self.tour = new Tour({
+                name: self.id,
+                storage: this.tourStorage,
+                keyboard: false,
+            });
             self.tour.addSteps(_.map(self.steps, function (step) {
                step.title = render('website.tour_title', { title: step.title });
                return step;
@@ -38,27 +40,27 @@
             return this.currentStepIndex() > 0 || this.tour.ended();
         },
         currentStepIndex: function () {
-            return parseInt(this.tourStorage.getItem('tour_current_step'), 10);
+            return parseInt(this.tourStorage.getItem(this.id+'_current_step'), 10);
         },
-        indexOfStep: function (step_id) {
+        indexOfStep: function (stepId) {
             var index = -1;
             _.each(this.steps, function (step, i) {
-               if (step.step_id === step_id) {
+               if (step.stepId === stepId) {
                    index = i;
                }
             });
             return index;
         },
-        movetoStep: function (step_id) {
+        movetoStep: function (stepId) {
             $('.popover.tour').remove();
-            var index = this.indexOfStep(step_id);
+            var index = this.indexOfStep(stepId);
             if (index > -1) {
                 this.tour.goto(index);
             }
         },
-        saveStep: function (step_id) {
-            var index = this.indexOfStep(step_id);
-            this.tourStorage.setItem('tour_current_step', index);
+        saveStep: function (stepId) {
+            var index = this.indexOfStep(stepId);
+            this.tourStorage.setItem(this.id+'_current_step', index);
         },
         stop: function () {
             this.tour.end();
@@ -66,12 +68,13 @@
     });
 
     website.EditorBasicTour = website.EditorTour.extend({
-        name: "Add a banner to your page",
+        id: 'add_banner_tour',
+        name: "How to add a banner",
         start: function () {
             var self = this;
             self.steps = [
                 {
-                    step_id: 'welcome',
+                    stepId: 'welcome',
                     orphan: true,
                     backdrop: true,
                     title: "Welcome to your website!",
@@ -79,7 +82,7 @@
                     template: render('website.tour_confirm', { confirm: "Tell me more!" }),
                 },
                 {
-                    step_id: 'edit-page',
+                    stepId: 'edit-page',
                     element: 'button[data-action=edit]',
                     placement: 'right',
                     reflex: true,
@@ -88,7 +91,7 @@
                     template: render('website.tour_simple'),
                 },
                 {
-                    step_id: 'show-bar',
+                    stepId: 'show-bar',
                     element: '#website-top-navbar',
                     placement: 'bottom',
                     title: "Editor bar",
@@ -96,7 +99,7 @@
                     template: render('website.tour_confirm', { confirm: "Got it, now what?" }),
                 },
                 {
-                    step_id: 'add-block',
+                    stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'right',
                     reflex: true,
@@ -105,7 +108,7 @@
                     template: render('website.tour_simple'),
                 },
                 {
-                    step_id: 'drag-banner',
+                    stepId: 'drag-banner',
                     element: '#website-top-navbar [data-snippet-id=carousel]',
                     placement: 'bottom',
                     title: "Add a banner to your page",
@@ -126,7 +129,7 @@
                     },
                 },
                 {
-                    step_id: 'edit-title',
+                    stepId: 'edit-title',
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
                     placement: 'top',
                     title: "Change the title",
@@ -140,7 +143,7 @@
                     },
                 },
                 {
-                    step_id: 'customize-banner',
+                    stepId: 'customize-banner',
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
                     title: "Customize the banner",
@@ -153,7 +156,7 @@
                     },
                 },
                 {
-                    step_id: 'save-changes',
+                    stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
                     reflex: true,
@@ -165,11 +168,19 @@
                     }
                 },
                 {
-                    step_id: 'part-2',
+                    stepId: 'part-2',
                     orphan: true,
                     title: "Welcome to part 2",
                     content: "Congratulations on your first modifications.",
-                    template: render('website.tour_end', { confirm: "Thanks :)" }),
+                    template: render('website.tour_confirm', { confirm: "Thanks :)" }),
+                },
+                {
+                    stepId: 'show-tutorials',
+                    element: '#help-menu-button',
+                    placement: 'left',
+                    title: "Help is always available",
+                    content: "You can find more tutorials in the <b>Help</b> menu.",
+                    template: render('website.tour_end', { confirm: "See you next time..." }),
                 },
             ];
             return this._super();
@@ -186,6 +197,15 @@
             website.tutorials = {
                 basic: new website.EditorBasicTour(this),
             };
+            var menu = $('#help-menu');
+            _.each(website.tutorials, function (tutorial) {
+                var $menuItem = $($.parseHTML('<li><a href="#">'+tutorial.name+'</a></li>'));
+                $menuItem.click(function () {
+                    tutorial.reset();
+                    tutorial.start();
+                })
+                menu.append($menuItem);
+            });
             website.tutorials.basic.start();
             return this._super();
         },
