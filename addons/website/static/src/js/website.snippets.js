@@ -205,7 +205,7 @@
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag = false;
-            $("body").on('click', "[data-snippet-id]", function (event) {
+            $("body").on('click', "[data-oe-model] [data-snippet-id], [data-oe-model][data-snippet-id]", function (event) {
                     if (snipped_event_flag) {
                         return;
                     }
@@ -1143,7 +1143,7 @@
         },
     });
 
-    website.snippet.animationRegistry.vomify = website.snippet.Animation.extend({
+    website.snippet.animationRegistry.surprise = website.snippet.Animation.extend({
         start: function() {
             this._super();
             var hue=0;
