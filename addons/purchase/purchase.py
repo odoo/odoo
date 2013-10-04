@@ -1046,10 +1046,7 @@ class procurement_order(osv.osv):
                 message = _('No address defined for the supplier')
 
             if message:
-                if procurement.message != message:
-                    # avoid sending too many messages
-                    self.message_post(cr, uid, [procurement.id], body=message)
-                    self.write(cr, uid, [procurement.id], {'message':message}, context=context)
+                self.write(cr, uid, [procurement.id], {'message':message}, context=context)
                 return False
 
             if user.company_id and user.company_id.partner_id:
