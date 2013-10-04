@@ -16,21 +16,21 @@
     name: 'Panama WH address'
     parent_id: base.main_partner     
 -
-  !record {model: stock.location, id: view_location}:
+  !record {model: stock, id: view_location}:
     name: 'Panama'
     location_id: stock.stock_location_locations
     usage: 'view' 
 -
-  !record {model: stock.location, id: wh1_stock_id}:
+  !record {model: stock, id: wh1_stock_id}:
     name: 'WH1: Stock'
     location_id: view_location
     usage: 'internal'
 -
-  !record {model: stock.location, id: wh1_stock_id_area1}:
+  !record {model: stock, id: wh1_stock_id_area1}:
     name: 'Area1'
     location_id: wh1_stock_id
 -
-  !record {model: stock.location, id: wh1_stock_id_area1_bin1}:
+  !record {model: stock, id: wh1_stock_id_area1_bin1}:
     name: 'Bin1'
     location_id: wh1_stock_id_area1
 -     
@@ -48,17 +48,17 @@
     name: 'Dubai WH address'
     parent_id: base.main_partner     
 -
-  !record {model: stock.location, id: view_location_dub}:
+  !record {model: stock, id: view_location_dub}:
     name: 'Dubai'
     location_id: stock.stock_location_locations
     usage: 'view' 
 -
-  !record {model: stock.location, id: wh2_stock_id}:
+  !record {model: stock, id: wh2_stock_id}:
     name: 'WH2: Stock'
     location_id: view_location_dub
     usage: 'internal'
 -
-  !record {model: stock.location, id: wh2_stock_id_area2}:
+  !record {model: stock, id: wh2_stock_id_area2}:
     name: 'Area2'
     location_id: wh2_stock_id
 -     
