@@ -134,16 +134,11 @@ class account_invoice_report(osv.osv):
                      / cr.rate as price_average,
 
                     cr.rate as currency_rate,
-                    sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
+                    sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',ail.create_date)))/(24*60*60)::decimal(16,2)
                         from account_move_line as aml
-                        left join account_invoice as a ON (a.move_id=aml.move_id)
-                        left join account_invoice_line as l ON (a.id=l.invoice_id)
-                        where a.id=ai.id)) as delay_to_pay,
-                    sum((select extract(epoch from avg(date_trunc('day',a.date_due)-date_trunc('day',a.date_invoice)))/(24*60*60)::decimal(16,2)
-                        from account_move_line as aml
-                        left join account_invoice as a ON (a.move_id=aml.move_id)
-                        left join account_invoice_line as l ON (a.id=l.invoice_id)
-                        where a.id=ai.id)) as due_delay,
+                        WHERE ai.move_id=aml.move_id AND ail.product_id=aml.product_id AND ai.partner_id=aml.partner_id
+                        )) as delay_to_pay,
+                    (select extract(epoch from avg(date_trunc('day',ai.date_due)-date_trunc('day',ai.date_invoice)))/(24*60*60)::decimal(16,2)) as due_delay,
                     (case when ai.type in ('out_refund','in_invoice') then
                       -ai.residual
                     else
