@@ -79,7 +79,14 @@ class QWeb(orm.AbstractModel):
     _void_elements = frozenset([
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
         'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
-    _format_regex = re.compile('(#\{(.*?)\})|(\{\{(.*?)\}\})')
+    _format_regex = re.compile(
+        '(?:'
+            # ruby-style pattern
+            '#\{(.+?)\}'
+        ')|(?:'
+            # jinja-style pattern
+            '\{\{(.+?)\}\}'
+        ')')
 
     def __init__(self, pool, cr):
         super(QWeb, self).__init__(pool, cr)
@@ -149,18 +156,17 @@ class QWeb(orm.AbstractModel):
         return str(val)
 
     def eval_format(self, expr, v):
-        use_native = True
-        for m in self._format_regex.finditer(expr):
-            use_native = False
-            expr = expr.replace(m.group(), self.eval_str(m.groups()[1] or m.groups()[3], v))
+        expr, replacements = self._format_regex.subn(
+            lambda m: self.eval_str(m.group(1) or m.group(2), v),
+            expr)
 
-        if not use_native:
+        if replacements:
             return expr
-        else:
-            try:
-                return str(expr % v)
-            except:
-                raise Exception("QWeb: format error '%s' " % expr)
+
+        try:
+            return str(expr % v)
+        except:
+            raise Exception("QWeb: format error '%s' " % expr)
 
     def eval_bool(self, expr, v):
         val = self.eval(expr, v)
