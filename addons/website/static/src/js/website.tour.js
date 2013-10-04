@@ -32,12 +32,12 @@
                step.title = render('website.tour_title', { title: step.title });
                return step;
             }));
-            if (!self.doNotContinue()) {
+            if (self.canResume()) {
                 self.tour.start();
             }
         },
-        doNotContinue: function () {
-            return this.currentStepIndex() > 0 || this.tour.ended();
+        canResume: function () {
+            return this.currentStepIndex() === 0 && !this.tour.ended();
         },
         currentStepIndex: function () {
             return parseInt(this.tourStorage.getItem(this.id+'_current_step'), 10);
@@ -185,10 +185,10 @@
             ];
             return this._super();
         },
-        doNotContinue: function () {
+        canResume: function () {
             var currentStepIndex = this.currentStepIndex();
             var secondPartIndex = this.indexOfStep('part-2');
-            return currentStepIndex > 0 && currentStepIndex !== secondPartIndex;
+            return currentStepIndex === 0 || currentStepIndex === secondPartIndex;
         }
     });
 
