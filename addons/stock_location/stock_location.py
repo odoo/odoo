@@ -636,32 +636,45 @@ class product_removal_strategy(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"), #Adds domain
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"),
     }
 
+    def action_view_routes(self, cr, uid, ids, context=None):
+        route_obj = self.pool.get("stock.location.route")
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        product_route_ids = set()
+        for product in self.browse(cr, uid, ids, context=context):
+            product_route_ids |= set([r.id for r in product.route_ids])
+            product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
+        route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
+        result = mod_obj.get_object_reference(cr, uid, 'stock_location', 'action_routes_form')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
+        return result
 
 class product_category(osv.osv):
     _inherit = 'product.category'
-    
+
     def calculate_total_routes(self, cr, uid, ids, name, args, context=None):
         res = {}
-        route_obj = self.pool.get("stock.location.route")
         for categ in self.browse(cr, uid, ids, context=context):
             categ2 = categ
-            routes = [x.id for x in categ.route_ids]
+            routes = set([x.id for x in categ.route_ids])
             while categ2.parent_id:
                 categ2 = categ2.parent_id
-                routes += [x.id for x in categ2.route_ids]
-            res[categ.id] = routes
+                routes |= set([x.id for x in categ2.route_ids])
+            res[categ.id] = list(routes)
         return res
-        
+
     _columns = {
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
         'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
         'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
     }
-    
+
 
 class stock_move_putaway(osv.osv):
     _name = 'stock.move.putaway'
