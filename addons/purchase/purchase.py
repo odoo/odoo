@@ -1045,7 +1045,7 @@ class procurement_order(osv.osv):
             elif not partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']:
                 message = _('No address defined for the supplier')
 
-            if message:
+            if message and procurement.message != message:
                 self.write(cr, uid, [procurement.id], {'message':message}, context=context)
                 return False
 
