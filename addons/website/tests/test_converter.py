@@ -3,13 +3,10 @@ from collections import namedtuple
 from functools import partial
 from xml.dom.minidom import getDOMImplementation
 
-from lxml import etree, html
+from lxml import html
 
 from openerp.tests import common
-from openerp.tools import qweb
-import unittest2
 
-renderer = qweb.QWebXml()
 impl = getDOMImplementation()
 document = impl.createDocument(None, None, None)
 
@@ -39,7 +36,7 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.setAttribute('t-field', field_value)
 
-        rendered = renderer.render_tag_field(
+        rendered = self.registry('ir.templating.qweb').render_tag_field(
             e, {'field': field_value}, '', {
                 'record': record,
                 'request': Request(self.cr, self.uid, RegistryProxy( self.registry)),
