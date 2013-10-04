@@ -15,7 +15,7 @@
                 <newline/>
             </xpath>
             <xpath expr="//field[@name='filter']" position="replace">
-                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
+                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
                 <field name="initial_balance" attrs="{'readonly':[('filter', 'in', ('filter_no', 'unreconciled'))]}" />
             </xpath>
             </data>

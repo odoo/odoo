@@ -20,14 +20,20 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import re
+from openerp.report.render.rml2pdf import customfonts
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
+    
+    def _get_font(self, cr, uid, context=None):
+        return sorted(customfonts.RegisterCustomFonts())
+        
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
-            help="""Work in multi-company environments, with appropriate security access between companies.
-                This installs the module multi_company."""),
+            help='Work in multi-company environments, with appropriate security access between companies.\n'
+                 '-This installs the module multi_company.'),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of openerp."""),
         'module_portal': fields.boolean('Activate the customer portal',
@@ -38,8 +44,13 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
+        'font': fields.selection(_get_font, "Select Font", help="Set the font into the report header, will be used for every RML report of the user company"),
     }
-
+    
+    _defaults= {
+        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font or 'Helvetica',
+    }
+    
     def open_company(self, cr, uid, ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
@@ -51,6 +62,20 @@ class base_config_settings(osv.osv_memory):
             'res_id': user.company_id.id,
             'target': 'current',
         }
+
+    def _change_header(self, header,font):
+        """ Replace default fontname use in header and setfont tag """
+        
+        default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
+        return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+    
+    def set_base_defaults(self, cr, uid, ids, context=None):
+        ir_model_data = self.pool.get('ir.model.data')
+        wizard = self.browse(cr, uid, ids)[0]
+        if wizard.font:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            user.company_id.write({'font':wizard.font,'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
+        return {}
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
@@ -64,18 +89,20 @@ class sale_config_settings(osv.osv_memory):
         'module_crm': fields.boolean('CRM'),
         'module_sale' : fields.boolean('SALE'),
         'module_plugin_thunderbird': fields.boolean('Enable Thunderbird plug-in',
-            help="""The plugin allows you archive email and its attachments to the selected
-                OpenERP objects. You can select a partner, or a lead and
-                attach the selected mail as a .eml file in
-                the attachment of a selected record. You can create documents for CRM Lead,
-                Partner from the selected emails.
-                This installs the module plugin_thunderbird."""),
+            help='The plugin allows you archive email and its attachments to the selected '
+                 'OpenERP objects. You can select a partner, or a lead and '
+                 'attach the selected mail as a .eml file in '
+                 'the attachment of a selected record. You can create documents for CRM Lead, '
+                 'Partner from the selected emails.\n'
+                 '-This installs the module plugin_thunderbird.'),
         'module_plugin_outlook': fields.boolean('Enable Outlook plug-in',
-            help="""The Outlook plugin allows you to select an object that you would like to add
-                to your email and its attachments from MS Outlook. You can select a partner,
-                or a lead object and archive a selected
-                email into an OpenERP mail message with attachments.
-                This installs the module plugin_outlook."""),
+            help='The Outlook plugin allows you to select an object that you would like to add '
+                 'to your email and its attachments from MS Outlook. You can select a partner, '
+                 'or a lead object and archive a selected email into an OpenERP mail message with attachments.\n'
+                 '-This installs the module plugin_outlook.'),
+        'module_mass_mailing': fields.boolean(
+            'Manage mass mailing campaigns',
+            help='Get access to statistics with your mass mailing, manage campaigns.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

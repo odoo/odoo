@@ -76,8 +76,6 @@ class WebsiteBlog(http.Controller):
         tag_obj = request.registry['blog.tag']
         category_obj = request.registry['blog.category']
 
-        current_user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-
         tag = None
         category = None
         blog_post = None
@@ -147,7 +145,6 @@ class WebsiteBlog(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
-            'current_user': current_user,
             'unable_editor': post.get('unable_editor')
         }
 

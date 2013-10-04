@@ -109,6 +109,10 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.website.render('website.themes', {'theme_changed': True})
 
+    @website.route(['/website/snippets'], type='json', auth="public")
+    def snippets(self):
+        return request.website.render('website.snippets')
+
     @website.route('/page/<path:path>', type='http', auth="public", multilang=True)
     def page(self, path, **kwargs):
         values = {

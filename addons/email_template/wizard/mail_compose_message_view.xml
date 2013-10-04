@@ -11,7 +11,7 @@
                     <label string="Template Recipients" for="partner_to"
                             groups="base.group_no_one"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                    <div groups="base.group_no_one"
+                    <div groups="base.group_no_one" name="template_recipients"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}">
                         <group class="oe_grey">
                             <!-- <label string="Partners" for="partner_to"/> -->

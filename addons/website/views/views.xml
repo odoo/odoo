@@ -135,15 +135,17 @@
                                                 <span t-field="res_company.name">Your Company</span>
                                                 <small> - <a t-href="/page/website.aboutus">About us</a></small>
                                             </h4>
-                                            <p>
-                                                We are a team of passionated people whose goal is to improve everyone's
-                                                life through disruptive products. We build great products to solve your
-                                                business problems.
-                                            </p>
-                                            <p>
-                                                Our products are designed for small to medium companies willing to optimize
-                                                their performance.
-                                            </p>
+                                            <span> <!-- fix me: not ediatable the editable render in chrome is wrong -->
+                                                <p>
+                                                    We are a team of passionated people whose goal is to improve everyone's
+                                                    life through disruptive products. We build great products to solve your
+                                                    business problems.
+                                                </p>
+                                                <p>
+                                                    Our products are designed for small to medium companies willing to optimize
+                                                    their performance.
+                                                </p>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -271,6 +273,20 @@
             </t>
         </template>
 
+        <template id="company_description" name="Company Description">
+            <address>
+                <strong t-field="res_company.name">Name</strong><br />
+                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
+                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
+                <span t-field="res_company.country_id"> </span><br />
+                <br />
+                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
+                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
+            </address>
+             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
+                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
+            </a>
+        </template>
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
@@ -292,18 +308,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <address>
-                                <strong t-field="res_company.name">Name</strong><br />
-                                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
-                                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
-                                <span t-field="res_company.country_id"> </span><br />
-                                <br />
-                                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
-                                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
-                            </address>
-                             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
-                                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
-                            </a>
+                            <t t-call="website.company_description"/>
                         </div>
                     </div>
                 </div>
@@ -360,7 +365,8 @@
 
         <template id="publish_management">
             <t t-if="editable" t-ignore="true">
-              <div t-attf-class="dropdown js_publish_management pull-right #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
+            <div class="pull-right btn-group">
+              <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
                 <a t-attf-class="btn btn-xs btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                     <t t-raw="0"/>
@@ -368,14 +374,12 @@
                         <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
                         <a href="#" class="js_publish_btn css_publish">Publish</a>
                     </li>
-                    <t t-if="publish_edit">
-                        <li class="divider"/>
-                        <li>
-                            <a t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)">Edit</a>
-                        </li>
-                    </t>
                 </ul>
               </div>
+              <t t-if="publish_edit">
+                <a class="btn btn-xs btn-default" title="Edit in backend" t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)"><span t-attf-class="glyphicon glyphicon-wrench"></span></a>
+              </t>
+            </div>
             </t>
         </template>
 

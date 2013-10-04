@@ -51,7 +51,7 @@
         <div>
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
-                <t t-set="publish_edit" t-value="true"/>
+                <t t-set="publish_edit" t-value="True"/>
             </t>
         </div><div class="clearfix"/>
 
@@ -99,6 +99,11 @@
                 </div>
             </li>
         </ul>
+    </template>
+
+    <!-- Options: Blog Post: user can reply -->
+    <template id="view_blog_post_author" inherit_option_id="website_blog.view_blog_post" name="Hide Authors">
+        <xpath expr="//ul[last()]" position="after">
         <section groups="group_website_blog_reply" class="mb32">
             <h4>Leave a Comment</h4>
             <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
@@ -110,6 +115,7 @@
                 </div>
             </form>
         </section>
+        </xpath>
     </template>
 
     <!-- Options: Blog Post: hide author -->
@@ -214,7 +220,7 @@
                         Be notified of new blog posts in <t t-esc="category.name"/>
                     </p>
                     <t t-call="website_mail.follow">
-                        <t t-set="email" t-value="current_user.email"/>
+                        <t t-set="email" t-value="user_id.email"/>
                         <t t-set="object" t-value="category"/>
                     </t>
                 </t>

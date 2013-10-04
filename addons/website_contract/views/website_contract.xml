@@ -101,7 +101,8 @@
                     <div class="text-center">
                         <img t-att-src="partner_id.img('image_medium')"/>
                     </div>
-                        <address>
+                    <div class="mt32" t-field="partner_id.website_short_description"/>
+                    <address>
                         <table style="margin: auto;" class="well">
                             <colgroup>
                                 <col width="100"/>
@@ -110,11 +111,11 @@
                             <tbody>
                                 <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
                                 <tr t-if="address or editable"><th>Address</th><td class="col-md-2" t-raw="address"/></tr>
-                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="col-md-2" t-field="partner_id.website"/></tr>
-                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="col-md-2" t-field="partner_id.phone"/></tr>
-                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="col-md-2" t-field="partner_id.mobile"/></tr>
-                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="col-md-2" t-field="partner_id.fax"/></tr>
-                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="col-md-2" t-field="partner_id.email"/></tr>
+                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="col-md-2"><span t-field="partner_id.website"/></td></tr>
+                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="col-md-2"><span t-field="partner_id.phone"/></td></tr>
+                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="col-md-2"><span t-field="partner_id.mobile"/></td></tr>
+                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="col-md-2"><span t-field="partner_id.fax"/></td></tr>
+                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="col-md-2"><span t-field="partner_id.email"/></td></tr>
                             </tbody>
                         </table>
                     </address>

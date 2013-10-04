@@ -80,7 +80,7 @@ class crm_helpdesk(osv.osv):
         'active': lambda *a: 1,
         'user_id': lambda s, cr, uid, c: uid,
         'state': lambda *a: 'draft',
-        'date': lambda *a: fields.datetime.now(),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }

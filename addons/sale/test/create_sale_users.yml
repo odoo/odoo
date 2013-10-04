@@ -1,0 +1,30 @@
+-
+   Create a user as 'Salesmanager'
+-
+  !record {model: res.users, id: res_users_salesmanager, view: False}:
+    company_id: base.main_company
+    name: Sales manager
+    login: sm
+    password: sm
+    email: salesmanager@yourcompany.com
+-
+  I added groups for Salesmanager.
+-
+  !record {model: res.users, id: res_users_salesmanager}:
+    groups_id:
+      - base.group_sale_manager
+-
+   Create a user as 'Salesman'
+-
+  !record {model: res.users, id: res_users_salesman, view: False}:
+    company_id: base.main_company
+    name: Salesman
+    login: su
+    password: su
+    email: salesman@yourcompany.com
+-
+  I added groups for Salesman.
+-
+  !record {model: res.users, id: res_users_salesman}:
+    groups_id:
+      - base.group_sale_salesman_all_leads

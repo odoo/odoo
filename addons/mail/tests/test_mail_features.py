@@ -21,12 +21,12 @@
 
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger, email_split
 from openerp.tools.mail import html_sanitize
 
 
-class test_mail(TestMailBase):
+class test_mail(TestMail):
 
     def test_000_alias_setup(self):
         """ Test basic mail.alias setup works, before trying to use them for routing """
@@ -631,6 +631,7 @@ class test_mail(TestMailBase):
             {
                 'subject': _subject,
                 'body': '${object.description}',
+                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',
@@ -684,6 +685,7 @@ class test_mail(TestMailBase):
             {
                 'subject': _subject,
                 'body': '${object.description}',
+                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',

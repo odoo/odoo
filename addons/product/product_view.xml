@@ -15,7 +15,7 @@
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <field name="categ_id"/>
                    <group expand="0" string="Context...">
-                       <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
+                       <field name="pricelist_id" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/>
                        <field name="company_id" groups="base.group_multi_company"/>
                    </group>
                    <group  expand='0' string='Group by...'>
@@ -113,7 +113,7 @@
                                     <group name="status" string="Status">
                                         <field name="state"/>
                                         <field name="product_manager"
-                                        context="{'default_groups_ref': ['base.group_user', 'base.group_sale_manager']}"/>
+                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_manager']}"/>
                                     </group>
                                     <group name="Weights" groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
@@ -749,74 +749,97 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <form string="Product Template" version="7.0">
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
-                    <label for="categ_id" class="oe_edit_only"/>
-                    <h2><field name="categ_id"/></h2>
-                    <notebook>
-                        <page string="Information">
-                        <group>
-                            <group string="Product Type">
-                                <field name="sale_ok"/>
-                            </group>
-                            <group string="Procurement">
-                                <field name="type"/>
-                            </group>
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Product Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="categ_id" class="oe_edit_only"/>
+                            <h2><field name="categ_id"/></h2>
+                            <label for="public_categ_id" class="oe_edit_only"/>
+                            <h3><field name="public_categ_id"/></h3>
+                        </div>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group string="Product Type">
+                                        <field name="sale_ok"/>
+                                    </group>
+                                    <group string="Procurement">
+                                        <field name="type"/>
+                                    </group>
 
-                            <group string="Base Prices">
-                                <field name="list_price"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                                <field name="cost_method"/>
-                            </group>
+                                    <group string="Base Prices">
+                                        <field name="list_price"/>
+                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                        <field name="cost_method"/>
+                                    </group>
 
-                            <group string="Weights">
-                                <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
-                            </group> 
+                                    <group string="Weights">
+                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                    </group> 
 
-                            <group name="status" string="Status">
-                                <field name="categ_id"/>
-                                <field name="state"/>
-                                <field name="product_manager"/>
-                            </group>
+                                    <group name="status" string="Status">
+                                        <field name="categ_id"/>
+                                        <field name="state"/>
+                                        <field name="product_manager" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_manager']}"/>
+                                    </group>
 
-                            <group name="uom" string="Unit of Measure">
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                <field name="uom_po_id"/>
-                            </group>
+                                    <group name="uom" string="Unit of Measure">
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field name="uom_po_id"/>
+                                    </group>
 
-                            <group name="uos" groups="product.group_uom" string="Second Unit of Measure">
-                                <field name="uos_id"/>
-                                <field name="uos_coeff"/>
-                                <field name="mes_type"/>
-                            </group>
-                        </group>
-                        </page>
-                        <page string="Procurement &amp; Locations">
-                            <group>
-                                <group name="delay" string="Delays">
-                                    <label for="produce_delay"/>
-                                    <div>
-                                        <field name="produce_delay" class="oe_inline"/> days
-                                    </div>
-                                    <field name="warranty"/>
+                                    <group name="uos" groups="product.group_uom" string="Second Unit of Measure">
+                                        <field name="uos_id"/>
+                                        <field name="uos_coeff"/>
+                                        <field name="mes_type"/>
+                                    </group>
+
+                                    <group colspan="4" string="Product Variants">
+                                        <field colspan="4" name="product_variant_ids" nolabel="1">
+                                            <tree string="Product Variants" editable="bottom">
+                                                <field name="active"/>
+                                                <field name="variants" required="1"/>
+                                                <field name="default_code"/>
+                                                <field name="price_margin"/>
+                                                <field name="price_extra"/>
+                                            </tree>
+                                        </field>
+                                    </group>
                                 </group>
-                            </group>
+                            </page>
+                            <page string="Procurement &amp; Locations">
+                                <group>
+                                    <group name="delay" string="Delays">
+                                        <label for="produce_delay"/>
+                                        <div>
+                                            <field name="produce_delay" class="oe_inline"/> days
+                                        </div>
+                                        <field name="warranty"/>
+                                    </group>
+                                </group>
 
-                        </page>
-                        <page string="Suppliers">
-                            <field name="seller_ids"/>
-                        </page>
-                        <page string="Descriptions">
-                            <separator string="Internal Description"/>
-                            <field name="description"/>
-                            <separator string="Sale Description"/>
-                            <field name="description_sale"/>
-                            <separator string="Purchase Description"/>
-                            <field name="description_purchase"/>
-                        </page>
-                    </notebook>
+                            </page>
+                            <page string="Suppliers">
+                                <field name="seller_ids"/>
+                            </page>
+                            <page string="Descriptions">
+                                <separator string="Internal Description"/>
+                                <field name="description"/>
+                                <separator string="Sale Description"/>
+                                <field name="description_sale"/>
+                                <separator string="Purchase Description"/>
+                                <field name="description_purchase"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
