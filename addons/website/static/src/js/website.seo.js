@@ -17,13 +17,13 @@
 
     function analyzeKeyword(htmlPage, keyword) {
         return  htmlPage.isInTitle(keyword) ? {
-                    title: 'keyword-in-title',
+                    title: 'label label-primary',
                     description: "This keyword is used in the page title",
                 } : htmlPage.isInDescription(keyword) ? {
-                    title: 'keyword-in-description',
+                    title: 'label label-info',
                     description: "This keyword is used in the page description",
                 } : htmlPage.isInBody(keyword) ? {
-                    title: 'keyword-in-body',
+                    title: 'label label-info',
                     description: "This keyword is used in the page content."
                 } : { title: "", description: "" };
     }
@@ -58,7 +58,7 @@
     });
 
     website.seo.SuggestionList = openerp.Widget.extend({
-        template: 'website.seo_list',
+        template: 'website.seo_suggestion_list',
         init: function (parent, options) {
             this.root = options.root;
             this.htmlPage = options.page;
@@ -155,7 +155,9 @@
                 });
             } else {
                 var companyName = self.htmlPage.company().toLowerCase();
-                self.add(companyName);
+                if (companyName != 'yourcompany') {
+                    self.add(companyName);
+                }
             }
         },
         keywords: function () {
@@ -361,24 +363,19 @@
                 }).appendTo(self.$('.js_seo_tips'));
             }
             var htmlPage = this.htmlPage;
-            if (htmlPage.headers('h1').length === 0) {
-                tips.push({
-                    type: 'warning',
-                    message: "This page seems to be missing an &lt;h1&gt; tag.",
-                });
-            }
-            if (htmlPage.headers('h1').length > 1) {
-                tips.push({
-                    type: 'warning',
-                    message: "The page contains more than one &lt;h1&gt; tag.",
-                });
-            }
+
+            // desactivated as too complex for end-users
+            // if (htmlPage.headers('h1').length === 0) {
+            //     tips.push({
+            //         type: 'warning',
+            //         message: "This page seems to be missing a title.",
+            //     });
+            // }
+
             if (tips.length > 0) {
                 _.each(tips, function (tip) {
                     displayTip(tip.message, tip.type);
                 });
-            } else {
-                displayTip("The markup on this page is appropriate for search engines.", 'success');
             }
         },
         confirmKeyword: function (e) {
