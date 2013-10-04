@@ -5719,50 +5719,21 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
         return this.view.recursive_save().then(_.bind(function() {
             var val = this.val();
             var context = {};
-
-/*
-Object {groups_id: Array[0], domain: false, help: "<p class='oe_view_nocontent_create'>Click here to …documents, etc.↵                </p>↵            ", res_model: "project.task", search_view_id: Array[2]…}
-auto_refresh: 0
-auto_search: true
-context: Class
-domain: false
-filter: false
-flags: Object
-groups_id: Array[0]
-help: "<p class='oe_view_nocontent_create'>Click here to add new tasks</p><p>↵                    OpenERP's project management allows you to manage the pipeline↵                    of tasks in order to get things done efficiently. You can↵                    track progress, discuss on tasks, attach documents, etc.↵                </p>↵            "
-id: 151
-limit: 80
-multi: false
-name: "Tasks"
-res_id: 0
-res_model: "project.task"
-search_view: "{'name': u'project.task.search.form', 'fields': {'categ_ids': {'domain': [], 'string': 'Tags', 'views': {}, 'm2m_join_columns': ['project_task_id', 'project_category_id'], 'm2m_join_table': 'project_category_project_task_rel', 'relation': 'project.category', 'context': {}, 'selectable': True, 'type': 'many2many'}, 'partner_id': {'domain': [], 'string': 'Customer', 'views': {}, 'relation': 'res.partner', 'context': {}, 'selectable': True, 'type': 'many2one'}, 'user_id': {'domain': [], 'string': 'Assigned to', 'views': {}, 'relation': 'res.users', 'context': {}, 'selectable': True, 'type': 'many2one'}, 'project_id': {'domain': [], 'string': 'Project', 'views': {}, 'relation': 'project.project', 'context': {}, 'selectable': True, 'type': 'many2one', 'select': '1'}, 'stage_id': {'domain': "[('project_ids', '=', project_id)]", 'string': 'Stage', 'views': {}, 'relation': 'project.task.type', 'context': {}, 'selectable': True, 'type': 'many2one'}, 'name': {'string': 'Task Summary', 'views': {}, 'required': True, 'selectable': True, 'type': 'char', 'select': True, 'size': 128}}, 'arch': '<search string="Tasks">\n                    <field name="name" string="Tasks" modifiers="{&quot;required&quot;: true}"/>\n                    <field name="categ_ids" modifiers="{}"/>\n                    <filter string="Unassigned" name="unassigned" domain="[(\'user_id\', \'=\', False)]"/>\n                    <filter string="New" name="draft" domain="[(\'stage_id.sequence\', \'=\', 1)]"/>\n                    <separator/>\n                    <filter string="My Tasks" domain="[(\'user_id\',\'=\',uid)]"/>\n                    <separator/>\n                    <filter string="Unread Messages" name="message_unread" domain="[(\'message_unread\',\'=\',True)]"/>\n                    <separator/>\n                    <filter string="Deadlines" context="{\'deadline_visible\': False}" domain="[(\'date_deadline\',\'&lt;&gt;\',False)]" help="Show only tasks having a deadline"/>\n                    <field name="partner_id" modifiers="{}"/>\n                    <field name="project_id" modifiers="{}"/>\n                    <field name="user_id" modifiers="{}"/>\n                    <field name="stage_id" domain="[]" modifiers="{}"/>\n                    <group expand="0" string="Group By...">\n                        <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]" context="{\'group_by\':\'user_id\'}"/>\n                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{\'group_by\':\'project_id\'}"/>\n                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{\'group_by\':\'stage_id\'}"/>\n                        <filter string="Last Stage Update" icon="terp-go-month" domain="[]" context="{\'group_by\':\'date_last_stage_update\'}"/>\n                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{\'group_by\':\'date_deadline\'}"/>\n                        <filter string="Start Month" icon="terp-go-month" domain="[]" context="{\'group_by\':\'date_start\'}"/>\n                        <filter string="End Month" icon="terp-go-month" domain="[]" context="{\'group_by\':\'date_end\'}" invisible="1" modifiers="{&quot;invisible&quot;: true}"/>\n                    </group>\n                </search>', 'model': 'project.task', 'type': u'search', 'view_id': 288, 'field_parent': False}"
-search_view_id: Array[2]
-src_model: false
-target: "current"
-type: "ir.actions.act_window"
-usage: false
-view_id: false
-view_ids: Array[0]
-view_mode: "kanban,list,form,calendar,gantt,graph"
-views: Array[6]
-__proto__: Object
-*/
-
             if (this.field.type === "one2many") {
                 context["default_" + this.field.relation_field] = this.view.datarecord.id;
+            } else if (this.field.type === "many2many") {
+                context["default_" + this.field.relation_field] = [6, 0, [this.view.datarecord.id]];
             }
             context["search_default_"+ this.field.relation_field] = [this.view.datarecord.id];
             return this.do_action({
                 type: 'ir.actions.act_window',
-                auto_search: true,
                 name: this.string,
                 res_model: this.field.relation,
                 res_id: val.length >= 1 ? val[0] : false,
                 res_ids: val,
                 views: this.options.views,
                 target: 'current',
-                context: {},
+                context: context,
             });
         }, this));
     },
