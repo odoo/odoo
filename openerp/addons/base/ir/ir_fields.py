@@ -506,10 +506,4 @@ class ir_fields_converter(orm.Model):
         except: # no idea what "suitable exceptions" are
             raise ValueError("Invalid image content")
 
-        mime = PIL_MIME_MAPPING.get(image.format)
-        if mime is None:
-            raise ValueError("Unknown PIL format %s" % image.format)
-
-        return ('<img src="data:%s;base64,%s">' % (mime, value)), []
-
-PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }
+        return ('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)), []
