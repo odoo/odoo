@@ -34,8 +34,6 @@ def auth_method_public():
 http.auth_methods['public'] = auth_method_public
 
 NOPE = object()
-# PIL images have a type flag, but no MIME. Reverse type flag to MIME.
-PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
@@ -327,7 +325,7 @@ class Images(http.Controller):
 
         # FIXME: unknown format or not an image
         image = Image.open(buf)
-        response.mimetype = PIL_MIME_MAPPING[image.format]
+        response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
         max_w, max_h = fit
