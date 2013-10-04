@@ -212,6 +212,19 @@ class crm_meeting(osv.Model):
                 attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
         return True
 
+    def get_day(self, cr, uid, ids, time= None, context=None):
+        rec = self.browse(cr, uid, ids,context=context)[0]
+        date = datetime.strptime(rec.date,'%Y-%m-%d %H:%M:%S')
+        if time == 'day':
+            res = str(date.day)
+        elif time == 'month':
+            res = date.strftime('%B') + " " + str(date.year)
+        elif time == 'dayname':
+            res = date.strftime('%A')
+        elif time == 'time':
+            res = date.strftime('%I:%M %p')
+        return res
+
 class mail_message(osv.osv):
     _inherit = "mail.message"
 
