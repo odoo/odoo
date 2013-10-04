@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
 import logging
 import re
 
 import werkzeug.utils
-#from openerp.tools.safe_eval import safe_eval as eval
 
 import xml   # FIXME use lxml
 import traceback
@@ -32,7 +32,8 @@ BUILTINS = {
 }
 
 class QWebContext(dict):
-    def __init__(self, data, undefined_handler=None):
+    def __init__(self, data, undefined_handler=None, loader=None):
+        self.loader = loader
         self.undefined_handler = undefined_handler
         dic = BUILTINS.copy()
         dic.update(data)
@@ -47,7 +48,15 @@ class QWebContext(dict):
         else:
             return self.get(key, self.undefined_handler(key, self))
 
-class QWebXml(object):
+    def copy(self):
+        return QWebContext(dict.copy(self),
+                           undefined_handler=self.undefined_handler,
+                           loader=self.loader)
+
+    def __copy__(self):
+        return self.copy()
+
+class QWeb(orm.AbstractModel):
     """QWeb Xml templating engine
 
     The templating engine use a very simple syntax, "magic" xml attributes, to
@@ -63,48 +72,61 @@ class QWebXml(object):
 
 
     """
-    def __init__(self, loader=None, undefined_handler=None):
-        self.loader = loader
-        self.undefined_handler = undefined_handler
-        self.node = xml.dom.Node
-        self._t = {}
-        self._render_tag = {}
-        self._format_regex = re.compile('(#\{(.*?)\})|(\{\{(.*?)\}\})')
-        self._void_elements = set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
-                                  'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
-        prefix = 'render_tag_'
-        for i in [j for j in dir(self) if j.startswith(prefix)]:
-            name = i[len(prefix):].replace('_', '-')
-            self._render_tag[name] = getattr(self.__class__, i)
 
-        self._render_att = {}
-        prefix = 'render_att_'
-        for i in [j for j in dir(self) if j.startswith(prefix)]:
-            name = i[len(prefix):].replace('_', '-')
-            self._render_att[name] = getattr(self.__class__, i)
+    _name = 'ir.templating.qweb'
+
+    node = xml.dom.Node
+    _void_elements = frozenset([
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
+        'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
+    _format_regex = re.compile('(#\{(.*?)\})|(\{\{(.*?)\}\})')
+
+    def __init__(self, pool, cr):
+        super(QWeb, self).__init__(pool, cr)
+        self._t = {}
+
+        self._render_tag = self.prefixed_methods('render_tag_')
+        self._render_att = self.prefixed_methods('render_att_')
+
+    def prefixed_methods(self, prefix):
+        """ Extracts all methods prefixed by ``prefix``, and returns a mapping
+        of (t-name, method) where the t-name is the method name with prefix
+        removed and underscore converted to dashes
+
+        :param str prefix:
+        :return: dict
+        """
+        return dict(
+            (name[len(prefix):].replace('_', '-'), getattr(type(self), name))
+            for name in dir(self)
+            if name.startswith(prefix))
 
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def add_template(self, x):
+    def load_document(self, x):
+        """
+        Loads an XML document and installs any contained template in the engine
+        """
         if hasattr(x, 'documentElement'):
             dom = x
         elif x.startswith("<?xml"):
             dom = xml.dom.minidom.parseString(x)
         else:
             dom = xml.dom.minidom.parse(x)
+
         for n in dom.documentElement.childNodes:
-            if n.nodeType == 1 and n.getAttribute('t-name'):
+            if n.nodeType == self.node.ELEMENT_NODE and n.getAttribute('t-name'):
                 self._t[str(n.getAttribute("t-name"))] = n
 
-    def get_template(self, name):
+    def get_template(self, name, context):
+        if context.loader and name not in self._t:
+            xml_doc = context.loader(name)
+            self.load_document(xml_doc)
+
         if name in self._t:
             return self._t[name]
-        elif self.loader:
-            xml = self.loader(name)
-            self.add_template(xml)
-            if name in self._t:
-                return self._t[name]
+
         raise KeyError('qweb: template "%s" not found' % name)
 
     def eval(self, expr, v):
@@ -147,17 +169,18 @@ class QWebXml(object):
         else:
             return 0
 
-    def render(self, tname, v=None, out=None):
+    def render(self, tname, v=None, out=None, loader=None, undefined_handler=None):
         if v is None:
             v = {}
+        if not isinstance(v, QWebContext):
+            v = QWebContext(v, undefined_handler=undefined_handler, loader=loader)
         v['__template__'] = tname
         stack = v.get('__stack__', [])
         if stack:
             v['__caller__'] = stack[-1]
         stack.append(tname)
         v['__stack__'] = stack
-        v = QWebContext(v, self.undefined_handler)
-        return self.render_node(self.get_template(tname), v)
+        return self.render_node(self.get_template(tname, v), v)
 
     def render_node(self, e, v):
         r = ""
@@ -189,8 +212,7 @@ class QWebXml(object):
                 debugger = t_att.get('debug', 'pdb')
                 __import__(debugger).set_trace() # pdb, ipdb, pudb, ...
             if t_render:
-                if t_render in self._render_tag:
-                    r = self._render_tag[t_render](self, e, t_att, g_att, v)
+                r = self._render_tag[t_render](self, e, t_att, g_att, v)
             else:
                 r = self.render_element(e, t_att, g_att, v)
         if isinstance(r, unicode):
@@ -275,7 +297,7 @@ class QWebXml(object):
         enum = self.eval_object(expr, v)
         if enum is not None:
             var = t_att.get('as', expr).replace('.', '_')
-            d = QWebContext(v.copy(), self.undefined_handler)
+            d = v.copy()
             size = -1
             if isinstance(enum, (list, tuple)):
                 size = len(enum)
@@ -313,11 +335,9 @@ class QWebXml(object):
             return ""
 
     def render_tag_call(self, e, t_att, g_att, v):
-        if "import" in t_att:
-            d = v
-        else:
-            d = QWebContext(v.copy(), self.undefined_handler)
+        d = v if 'import' in t_att else v.copy()
         d[0] = self.render_element(e, t_att, g_att, d)
+
         return self.render(self.eval_format(t_att["call"], d), d)
 
     def render_tag_set(self, e, t_att, g_att, v):

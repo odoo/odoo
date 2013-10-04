@@ -5,8 +5,6 @@ from xml.dom import minidom as dom
 
 import common
 
-from ..tools import qweb
-
 impl = dom.getDOMImplementation()
 document = impl.createDocument(None, None, None)
 
@@ -20,7 +18,7 @@ class RegistryProxy(object):
 class TestQWebTField(common.TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
-        self.engine = qweb.QWebXml()
+        self.engine = self.registry('ir.templating.qweb')
 
     def test_trivial(self):
         field = document.createElement('span')

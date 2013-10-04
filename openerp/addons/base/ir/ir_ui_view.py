@@ -22,20 +22,17 @@ import collections
 import copy
 import logging
 import os
-import sys
-import re
 import time
 
 import HTMLParser
-from lxml import etree, html
-from functools import partial
+from lxml import etree
 
 from openerp import tools
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
-from openerp.tools import misc, qweb
+from openerp.tools import misc
 
 _logger = logging.getLogger(__name__)
 
@@ -764,8 +761,10 @@ class view(osv.osv):
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
-        return engine.render(id_or_xml_id, values)
+        engine = self.pool['ir.templating.qweb']
+        return engine.render(
+            id_or_xml_id, values,
+            loader=loader, undefined_handler=lambda key, v: None)
 
     # maybe used to print the workflow ?
 
