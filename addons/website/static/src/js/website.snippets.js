@@ -522,13 +522,13 @@
         start: function () {
         },
         /* onFocusEdit
-        *  if they are an editor for this snippet-id 
+        *  if they are an editor for this data-snippet-id 
         *  Called before onFocus of snippet editor
         */
         onFocusEdit : function () {},
 
         /* onBlurEdit
-        *  if they are an editor for this snippet-id 
+        *  if they are an editor for this data-snippet-id 
         *  Called after onBlur of snippet editor
         */
         onBlurEdit : function () {},
