@@ -1,6 +1,6 @@
 {
     'name': 'Website Google Map',
-    'category': 'Website',
+    'category': 'Hidden',
     'summary': '',
     'version': '1.0',
     'description': """
@@ -14,4 +14,5 @@ OpenERP Website Google Map
         'views/google_map.xml',
     ],
     'installable': True,
+    'auto_install': True,
 }

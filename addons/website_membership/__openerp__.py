@@ -1,5 +1,5 @@
 {
-    'name': 'Public Partners Members',
+    'name': 'Public Members',
     'category': 'Website',
     'summary': 'Publish Members',
     'version': '1.0',
