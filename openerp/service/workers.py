@@ -482,7 +482,7 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
-            elif sig == signal.SIGTTOUT:
+            elif sig == signal.SIGTTOU:
                 # decrease number of workers
                 self.population -= 1
 
@@ -553,7 +553,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGCHLD, self.signal_handler)
         signal.signal(signal.SIGQUIT, self.signal_handler)
         signal.signal(signal.SIGTTIN, self.signal_handler)
-        signal.signal(signal.SIGTTOUT, self.signal_handler)
+        signal.signal(signal.SIGTTOU, self.signal_handler)
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
