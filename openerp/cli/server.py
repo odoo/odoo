@@ -177,7 +177,7 @@ def main(args):
 
     if not config["stop_after_init"]:
         setup_pid_file()
-        openerp.service.workers.start()
+        openerp.service.server.start()
         if config['pidfile']:
             os.unlink(config['pidfile'])
     else:

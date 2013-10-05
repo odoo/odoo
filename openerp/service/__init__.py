@@ -25,7 +25,7 @@ import db
 import model
 import report
 import wsgi_server
-import workers
+import server
 
 #.apidoc title: RPC Services
 
