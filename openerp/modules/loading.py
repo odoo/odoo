@@ -315,13 +315,21 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #            they are part of the "currently installed" modules. They will
         #            be dropped in STEP 6 later, before restarting the loading
         #            process.
-        states_to_load = ['installed', 'to upgrade', 'to remove']
-        processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
-        processed_modules.extend(processed)
-        if update_module:
-            states_to_load = ['to install']
-            processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
-            processed_modules.extend(processed)
+        # IMPORTANT 2: We have to loop here until all relevant modules have been
+        #              processed, because in some rare cases the dependencies have
+        #              changed, and modules that depend on an uninstalled module
+        #              will not be processed on the first pass.
+        #              It's especially useful for migrations.
+        previously_processed = -1
+        while previously_processed < len(processed_modules):
+            previously_processed = len(processed_modules)
+            processed_modules += load_marked_modules(cr, graph,
+                ['installed', 'to upgrade', 'to remove'],
+                force, status, report, loaded_modules, update_module)
+            if update_module:
+                processed_modules += load_marked_modules(cr, graph,
+                    ['to install'], force, status, report,
+                    loaded_modules, update_module)
 
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
@@ -392,12 +400,22 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 _logger.info('Reloading registry once more after uninstalling modules')
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
+        # STEP 7: verify custom views on every model
+        if update_module:
+            Views = registry['ir.ui.view']
+            custom_view_test = True
+            for model in registry.models.keys():
+                if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
+                    custom_view_test = False
+                    _logger.error('invalid custom view(s) for model %s', model)
+            report.record_result(custom_view_test)
+
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
         else:
             _logger.info('Modules loaded.')
 
-        # STEP 7: call _register_hook on every model
+        # STEP 8: call _register_hook on every model
         for model in registry.models.values():
             model._register_hook(cr)
 

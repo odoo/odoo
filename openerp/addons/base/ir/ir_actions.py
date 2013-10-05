@@ -110,7 +110,7 @@ class report_xml(osv.osv):
                         kwargs = {}
                     new_report = report_sxw('report.'+r['report_name'], r['model'],
                             opj('addons',r['report_rml'] or '/'), header=r['header'], register=False, **kwargs)
-                elif r['report_xsl']:
+                elif r['report_xsl'] and r['report_xml']:
                     new_report = report_rml('report.'+r['report_name'], r['model'],
                             opj('addons',r['report_xml']),
                             r['report_xsl'] and opj('addons',r['report_xsl']), register=False)
