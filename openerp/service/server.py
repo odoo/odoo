@@ -56,7 +56,9 @@ class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
         # dont listen as we use PreforkServer#socket
         pass
 
-# MAybe NOT useful BECAUSE of SOCKET_REUSE, need to test
+# _reexec() should set LISTEN_* to avoid connection refused during reload time. It
+# should also work with systemd socket activation. This is currently untested
+# and not yet used.
 
 class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
@@ -64,10 +66,11 @@ class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
     socket open when a reload happens.
     """
     def server_bind(self):
-        envfd = os.environ.get('OPENERP_AUTO_RELOAD_FD')
-        if envfd:
-            self.reload_socket = socket.fromfd
-            # close os.close()fd if fd has been diplucated ?!
+        envfd = os.environ.get('LISTEN_FDS')
+        if envfd and os.environ.get('LISTEN_PID') == str(os.getpid()):
+            self.reload_socket = True
+            self.socket = socket.fromfd(int(envfd), socket.AF_INET, socket.SOCK_STREAM)
+            # should we os.close(int(envfd)) ? it seem python duplicate the fd.
         else:
             self.reload_socket = False
             super(ThreadedWSGIServerReloadable, self).server_bind()
