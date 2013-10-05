@@ -6,21 +6,19 @@ import errno
 import fcntl
 import logging
 import os
+import os.path
+import platform
 import psutil
 import random
 import resource
 import select
 import signal
 import socket
+import subprocess
 import sys
 import threading
 import time
 import traceback
-import subprocess
-import os.path
-import platform
-
-import wsgi_server
 
 import werkzeug.serving
 try:
@@ -33,17 +31,60 @@ import openerp.tools.config as config
 from openerp.release import nt_service_name
 from openerp.tools.misc import stripped_sys_argv
 
+import wsgi_server
+
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60 # 1 min
 
 #----------------------------------------------------------
-# Common
+# Werkzeug WSGI servers patched
+#----------------------------------------------------------
+
+class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
+    """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
+    use this class, sets the socket and calls the process_request() manually
+    """
+    def __init__(self, app):
+        werkzeug.serving.BaseWSGIServer.__init__(self, "1", "1", app)
+    def server_bind(self):
+        # we dont bind beause we use the listen socket of PreforkServer#socket
+        # instead we close the socket
+        if self.socket:
+            self.socket.close()
+    def server_activate(self):
+        # dont listen as we use PreforkServer#socket
+        pass
+
+# MAybe NOT useful BECAUSE of SOCKET_REUSE, need to test
+
+class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
+    """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
+    given by the environement, this is used by autoreload to keep the listen
+    socket open when a reload happens.
+    """
+    def server_bind(self):
+        envfd = os.environ.get('OPENERP_AUTO_RELOAD_FD')
+        if envfd:
+            self.reload_socket = socket.fromfd
+            # close os.close()fd if fd has been diplucated ?!
+        else:
+            self.reload_socket = False
+            super(ThreadedWSGIServerReloadable, self).server_bind()
+
+    def server_activate(self):
+        if not self.reload_socket:
+            super(ThreadedWSGIServerReloadable, self).server_activate()
+
+#----------------------------------------------------------
+# AutoReload watcher
 #----------------------------------------------------------
 
 class AutoReload(object):
-    def __init__(self):
+    def __init__(self, server):
+        self.server = server
         self.files = {}
+        self.modules = {}
         import pyinotify
         class EventHandler(pyinotify.ProcessEvent):
             def __init__(self, autoreload):
@@ -65,40 +106,22 @@ class AutoReload(object):
             _logger.info('Watching addons folder %s', path)
             self.wm.add_watch(path, mask, rec=True)
 
-    def process_data(self, touched_files):
-        # pyinotify notifier + fs modiciation tracker
-        from openerp.modules.module import load_information_from_description_file as load_manifest
+    def process_data(self, files):
+        xml_files = [i for i in files if i.endswith('.xml')]
         addons_path = openerp.tools.config.options["addons_path"].split(',')
-        registries = openerp.modules.registry.RegistryManager.registries
-        keys = ['data', 'demo', 'test', 'init_xml', 'update_xml', 'demo_xml']
-        # This will only work for loaded registies, so we have to use  -d <database>
-        # al: proposed to move this code in the registry manager so it can be lazy
-        for db_name, registry in registries.items():
-            cr = registry.db.cursor()
-            try:
-                for tfile in touched_files:
-                    for path in addons_path:
-                        if tfile.startswith(path):
-                            # find out wich addons path the file belongs to
-                            # and extract it's module name
-                            right = tfile[len(path) + 1:].split('/')
-                            if len(right) < 2:
-                                continue
-                            module = right[0]
-                            relname = "/".join(right[1:])
-                            domain = [('name', '=', module), ('state', 'in', ['installed', 'to upgrade'])]
-                            if registry.get('ir.module.module').search(cr, openerp.SUPERUSER_ID, domain):
-                                manifest = load_manifest(module)
-                                kind = [key for key in keys if relname in manifest[key]]
-                                if kind:
-                                    _logger.info('Updating changed xml file: %s', tfile)
-                                    idref = {}
-                                    openerp.tools.convert_file(cr, module, relname, idref, mode='update', kind=kind[0])
-                cr.commit()
-            except Exception,e:
-                _logger.exception(e)
-            finally:
-                cr.close()
+        for i in xml_files:
+            for path in addons_path:
+                if i.startswith(path):
+                    # find out wich addons path the file belongs to
+                    # and extract it's module name
+                    right = i[len(path) + 1:].split('/')
+                    if len(right) < 2:
+                        continue
+                    module = right[0]
+                    self.modules[module]=1
+        if self.modules:
+            _logger.info('autoreload: xml change detected, autoreload activated')
+            restart()
 
     def process_python(self, files):
         # process python changes
@@ -118,19 +141,30 @@ class AutoReload(object):
                     _logger.info('autoreload: SyntaxError %s',i)
             else:
                 _logger.info('autoreload: python code updated, autoreload activated')
-                restart_server()
+                restart()
 
-    def check(self):
+    def check_thread(self):
         # Check if some files have been touched in the addons path.
         # If true, check if the touched file belongs to an installed module
         # in any of the database used in the registry manager.
-        while self.notifier.check_events(0):
-            self.notifier.read_events()
-            self.notifier.process_events()
-        l = self.files.keys()
-        self.files.clear()
-        self.process_data(l)
-        self.process_python(l)
+        while 1:
+            while self.notifier.check_events(1000):
+                self.notifier.read_events()
+                self.notifier.process_events()
+            l = self.files.keys()
+            self.files.clear()
+            self.process_data(l)
+            self.process_python(l)
+
+    def run(self):
+        t = threading.Thread(target=self.check_thread)
+        t.setDaemon(True)
+        t.start()
+        _logger.info('AutoReload watcher running')
+
+#----------------------------------------------------------
+# Servers: Threaded, Gevented and Prefork
+#----------------------------------------------------------
 
 class CommonServer(object):
     def __init__(self, app):
@@ -179,10 +213,6 @@ class CommonServer(object):
                 raise
         sock.close()
 
-#----------------------------------------------------------
-# Threaded
-#----------------------------------------------------------
-
 class ThreadedServer(CommonServer):
     def __init__(self, app):
         super(ThreadedServer, self).__init__(app)
@@ -193,7 +223,6 @@ class ThreadedServer(CommonServer):
 
         #self.socket = None
         self.httpd = None
-        self.autoreload = None
 
     def signal_handler(self, sig, frame):
         if sig in [signal.SIGINT,signal.SIGTERM]:
@@ -244,10 +273,8 @@ class ThreadedServer(CommonServer):
 
     def http_thread(self):
         def app(e,s):
-            if self.autoreload:
-                self.autoreload.check()
             return self.app(e,s)
-        self.httpd = werkzeug.serving.make_server(self.interface, self.port, app, threaded=True)
+        self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, app)
         self.httpd.serve_forever()
 
     def http_spawn(self):
@@ -267,7 +294,6 @@ class ThreadedServer(CommonServer):
             win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
         self.cron_spawn()
         self.http_spawn()
-        self.autoreload = AutoReload()
 
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
@@ -315,9 +341,8 @@ class ThreadedServer(CommonServer):
 
         self.stop()
 
-#----------------------------------------------------------
-# Gevent
-#----------------------------------------------------------
+    def reload(self):
+        os.kill(self.pid, signal.SIGHUP)
 
 class GeventServer(CommonServer):
     def __init__(self, app):
@@ -353,10 +378,6 @@ class GeventServer(CommonServer):
     def run(self):
         self.start()
         self.stop()
-
-#----------------------------------------------------------
-# Prefork
-#----------------------------------------------------------
 
 class PreforkServer(CommonServer):
     """ Multiprocessing inspired by (g)unicorn.
@@ -684,7 +705,7 @@ class WorkerHTTP(Worker):
         # Prevent fd inherientence close_on_exec
         flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
         fcntl.fcntl(client, fcntl.F_SETFD, flags)
-        # do request using WorkerBaseWSGIServer monkey patched with socket
+        # do request using BaseWSGIServerNoBind monkey patched with socket
         self.server.socket = client
         # tolerate broken pipe when the http client closes the socket before
         # receiving the full reply
@@ -705,21 +726,7 @@ class WorkerHTTP(Worker):
 
     def start(self):
         Worker.start(self)
-        self.server = WorkerBaseWSGIServer(self.multi.app)
-
-class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
-    """ werkzeug WSGI Server patched to allow using an external listen socket
-    """
-    def __init__(self, app):
-        werkzeug.serving.BaseWSGIServer.__init__(self, "1", "1", app)
-    def server_bind(self):
-        # we dont bind beause we use the listen socket of PreforkServer#socket
-        # instead we close the socket
-        if self.socket:
-            self.socket.close()
-    def server_activate(self):
-        # dont listen as we use PreforkServer#socket
-        pass
+        self.server = BaseWSGIServerNoBind(self.multi.app)
 
 class WorkerCron(Worker):
     """ Cron workers """
@@ -806,12 +813,13 @@ The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
             _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
-def _reexec():
+def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
     if openerp.tools.osutil.is_running_as_nt_service():
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
+    args +=  ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
     os.execv(sys.executable, args)
@@ -828,14 +836,22 @@ def start():
         server = GeventServer(openerp.service.wsgi_server.application)
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
+
+    if config['auto_reload']:
+        autoreload = AutoReload(server)
+        autoreload.run()
+
     server.run()
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        _reexec()
+        modules = []
+        if config['auto_reload']:
+            modules = autoreload.modules.keys()
+        _reexec(modules)
     sys.exit(0)
 
-def restart_server():
+def restart():
     """ Restart the server
     """
     if os.name == 'nt':
@@ -843,6 +859,5 @@ def restart_server():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
