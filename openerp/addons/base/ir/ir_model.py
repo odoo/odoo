@@ -219,9 +219,11 @@ class ir_model(osv.osv):
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
+    _rec_name = 'field_description'
 
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
+        'complete_name': fields.char('Complete Name', size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True, select=1,
             help="The technical name of the model this field belongs to"),
         'relation': fields.char('Object Relation', size=64,
