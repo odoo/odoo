@@ -76,7 +76,6 @@ The kernel of OpenERP, needed for all installation.
         'res/res_lang_view.xml',
         'res/res_partner_report.xml',
         'res/res_partner_view.xml',
-        'res/res_partner_shortcut_data.xml',
         'res/res_bank_view.xml',
         'res/res_country_view.xml',
         'res/res_currency_view.xml',
