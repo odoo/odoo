@@ -866,11 +866,6 @@ class Session(http.Controller):
             return {'error': _('The old password you provided is incorrect, your password was not changed.'), 'title': _('Change Password')}
         return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
 
-    @http.route('/web/session/sc_list', type='json', auth="user")
-    def sc_list(self):
-        return request.session.model('ir.ui.view_sc').get_sc(
-            request.session.uid, "ir.ui.menu", request.context)
-
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
         try:
