@@ -1016,13 +1016,6 @@ class Menu(http.Controller):
         """
         return request.session.model('ir.ui.menu').get_needaction_data(menu_ids, request.context)
 
-    @http.route('/web/menu/action', type='json', auth="user")
-    def action(self, menu_id):
-        # still used by web_shortcut
-        actions = load_actions_from_ir_values('action', 'tree_but_open',
-                                             [('ir.ui.menu', menu_id)], False)
-        return {"action": actions}
-
 class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
