@@ -32,8 +32,6 @@ import ir_filters
 import ir_values
 import ir_translation
 import ir_exports
-import workflow
-import workflow_report
 import ir_rule
 import ir_config_parameter
 import osv_memory_autovacuum
