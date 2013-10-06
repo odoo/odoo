@@ -182,7 +182,7 @@ class reference(_column):
     _type = 'reference'
     _classic_read = False # post-process to handle missing target
 
-    def __init__(self, string, selection, size, **args):
+    def __init__(self, string, selection, size=None, **args):
         _column.__init__(self, string=string, size=size, selection=selection, **args)
 
     def get(self, cr, obj, ids, name, uid=None, context=None, values=None):

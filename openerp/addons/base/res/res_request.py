@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import osv, fields
 
-def _links_get(self, cr, uid, context=None):
+def referencable_models(self, cr, uid, context=None):
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
@@ -40,8 +38,6 @@ class res_request_link(osv.osv):
         'priority': 5,
     }
     _order = 'priority'
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
