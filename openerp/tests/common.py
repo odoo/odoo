@@ -135,11 +135,11 @@ class RpcCase(unittest2.TestCase):
         self.proxy.object_60 = xmlrpclib.ServerProxy(url_60 + 'object')
         #self.proxy.edi_60 = xmlrpclib.ServerProxy(url_60 + 'edi')
 
-        # Use the new (6.1) API.
-        self.proxy.url_61 = url_61 = 'http://%s:%d/openerp/xmlrpc/1/' % (HOST, PORT)
-        self.proxy.common_61 = xmlrpclib.ServerProxy(url_61 + 'common')
-        self.proxy.db_61 = xmlrpclib.ServerProxy(url_61 + 'db')
-        self.proxy.model_61 = xmlrpclib.ServerProxy(url_61 + 'model/' + DB)
+        # Use the new (8) API.
+        self.proxy.url_8 = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, PORT)
+        self.proxy.common_8 = xmlrpclib.ServerProxy(url_8 + 'common')
+        self.proxy.db_8 = xmlrpclib.ServerProxy(url_8 + 'db')
+        self.proxy.object_8 = xmlrpclib.ServerProxy(url_8 + 'object')
 
     @classmethod
     def generate_database_name(cls):

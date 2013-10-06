@@ -57,13 +57,7 @@ RPC_FAULT_CODE_WARNING = 2
 RPC_FAULT_CODE_ACCESS_DENIED = 3
 RPC_FAULT_CODE_ACCESS_ERROR = 4
 
-# The new (6.1) versioned RPC paths.
-XML_RPC_PATH = '/openerp/xmlrpc'
-XML_RPC_PATH_1 = '/openerp/xmlrpc/1'
-JSON_RPC_PATH = '/openerp/jsonrpc'
-JSON_RPC_PATH_1 = '/openerp/jsonrpc/1'
-
-def xmlrpc_return(start_response, service, method, params, legacy_exceptions=False):
+def xmlrpc_return(start_response, service, method, params, string_faultcode=False):
     """
     Helper to call a service's method with some params, using a wsgi-supplied
     ``start_response`` callback.
@@ -81,14 +75,14 @@ def xmlrpc_return(start_response, service, method, params, legacy_exceptions=Fal
         result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except Exception, e:
-        if legacy_exceptions:
-            response = xmlrpc_handle_exception_legacy(e)
+        if string_faultcode:
+            response = xmlrpc_handle_exception_string(e)
         else:
-            response = xmlrpc_handle_exception(e)
+            response = xmlrpc_handle_exception_int(e)
     start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
     return [response]
 
-def xmlrpc_handle_exception(e):
+def xmlrpc_handle_exception_int(e):
     if isinstance(e, openerp.osv.orm.except_orm): # legacy
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
@@ -121,7 +115,7 @@ def xmlrpc_handle_exception(e):
             response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
 
-def xmlrpc_handle_exception_legacy(e):
+def xmlrpc_handle_exception_string(e):
     if isinstance(e, openerp.osv.orm.except_orm):
         fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
@@ -146,82 +140,29 @@ def xmlrpc_handle_exception_legacy(e):
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
 
-def wsgi_xmlrpc_1(environ, start_response):
-    """ The main OpenERP WSGI handler."""
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith(XML_RPC_PATH_1):
-        length = int(environ['CONTENT_LENGTH'])
-        data = environ['wsgi.input'].read(length)
-
-        params, method = xmlrpclib.loads(data)
-
-        path = environ['PATH_INFO'][len(XML_RPC_PATH_1):]
-        if path.startswith('/'): path = path[1:]
-        if path.endswith('/'): path = path[:-1]
-        path = path.split('/')
-
-        # All routes are hard-coded.
-
-        # No need for a db segment.
-        if len(path) == 1:
-            service = path[0]
-
-            if service == 'common':
-                if method in ('server_version',):
-                    service = 'db'
-            return xmlrpc_return(start_response, service, method, params)
-
-        # A db segment must be given.
-        elif len(path) == 2:
-            service, db_name = path
-            params = (db_name,) + params
-
-            return xmlrpc_return(start_response, service, method, params)
-
-        # A db segment and a model segment must be given.
-        elif len(path) == 3 and path[0] == 'model':
-            service, db_name, model_name = path
-            params = (db_name,) + params[:2] + (model_name,) + params[2:]
-            service = 'object'
-            return xmlrpc_return(start_response, service, method, params)
-
-        # The body has been read, need to raise an exception (not return None).
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_CLIENT_ERROR, '')
-        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
-        return [response]
-
 def wsgi_xmlrpc(environ, start_response):
-    """ WSGI handler to return the versions."""
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith(XML_RPC_PATH):
-        length = int(environ['CONTENT_LENGTH'])
-        data = environ['wsgi.input'].read(length)
+    """ Two routes are available for XML-RPC
 
-        params, method = xmlrpclib.loads(data)
+    /xmlrpc/<service> route returns faultCode as strings. This is a historic
+    violation of the protocol kept for compatibility.
 
-        path = environ['PATH_INFO'][len(XML_RPC_PATH):]
-        if path.startswith('/'): path = path[1:]
-        if path.endswith('/'): path = path[:-1]
-        path = path.split('/')
-
-        # All routes are hard-coded.
-
-        if len(path) == 1 and path[0] == '' and method in ('version',):
-            return xmlrpc_return(start_response, 'common', method, ())
-
-        # The body has been read, need to raise an exception (not return None).
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_CLIENT_ERROR, '')
-        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
-        return [response]
-
-def wsgi_xmlrpc_legacy(environ, start_response):
+    /xmlrpc/2/<service> is a new route that returns faultCode as int and is
+    therefore fully compliant.
+    """
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
         length = int(environ['CONTENT_LENGTH'])
         data = environ['wsgi.input'].read(length)
-        path = environ['PATH_INFO'][len('/xmlrpc/'):] # expected to be one of db, object, ...
+
+        # Distinguish betweed the 2 faultCode modes
+        string_faultcode = True
+        if environ['PATH_INFO'].startswith('/xmlrpc/2/'):
+            service = environ['PATH_INFO'][len('/xmlrpc/2/'):]
+            string_faultcode = False
+        else:
+            service = environ['PATH_INFO'][len('/xmlrpc/'):]
 
         params, method = xmlrpclib.loads(data)
-        return xmlrpc_return(start_response, path, method, params, True)
+        return xmlrpc_return(start_response, service, method, params, string_faultcode)
 
 def wsgi_webdav(environ, start_response):
     pi = environ['PATH_INFO']
@@ -401,7 +342,7 @@ def application_unproxied(environ, start_response):
         del threading.current_thread().dbname
 
     # Try all handlers until one returns some result (i.e. not None).
-    wsgi_handlers = [wsgi_xmlrpc_1, wsgi_xmlrpc, wsgi_xmlrpc_legacy, wsgi_webdav]
+    wsgi_handlers = [wsgi_xmlrpc, wsgi_webdav]
     wsgi_handlers += module_handlers
     for handler in wsgi_handlers:
         result = handler(environ, start_response)
