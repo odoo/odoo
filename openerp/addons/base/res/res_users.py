@@ -85,24 +85,24 @@ class res_groups(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
-            ids = super(groups, self).search(cr, uid, args, context=context)
+            ids = super(res_groups, self).search(cr, uid, args, context=context)
             gs = self.browse(cr, uid, ids, context)
             gs.sort(key=lambda g: g.full_name, reverse=order.endswith('DESC'))
             gs = gs[offset:offset+limit] if limit else gs[offset:]
             return map(int, gs)
-        return super(groups, self).search(cr, uid, args, offset, limit, order, context, count)
+        return super(res_groups, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': _('%s (copy)')%group_name})
-        return super(groups, self).copy(cr, uid, id, default, context)
+        return super(res_groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
-        res = super(groups, self).write(cr, uid, ids, vals, context=context)
+        res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         return res
 

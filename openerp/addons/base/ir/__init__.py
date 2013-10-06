@@ -33,6 +33,7 @@ import ir_values
 import ir_translation
 import ir_exports
 import workflow
+import workflow_report
 import ir_rule
 import wizard
 import ir_config_parameter
