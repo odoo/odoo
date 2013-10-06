@@ -258,13 +258,6 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
-def _links_get(self, cr, uid, context=None):
-    """Gets links value for reference field"""
-    obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['object', 'name'], context)
-    return [(r['object'], r['name']) for r in res]
-
 class crm_payment_mode(osv.osv):
     """ Payment Mode for Fund """
     _name = "crm.payment.mode"
