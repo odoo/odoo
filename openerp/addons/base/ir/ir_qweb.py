@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
+import cStringIO
+import json
 import logging
 import re
 
+import Image
 import werkzeug.utils
 
 import xml   # FIXME use lxml
 import traceback
-from openerp.osv import osv, orm
+from openerp.osv import osv, orm, fields
 
 _logger = logging.getLogger(__name__)
 
@@ -73,7 +76,7 @@ class QWeb(orm.AbstractModel):
 
     """
 
-    _name = 'ir.templating.qweb'
+    _name = 'ir.qweb'
 
     node = xml.dom.Node
     _void_elements = frozenset([
@@ -364,37 +367,139 @@ class QWeb(orm.AbstractModel):
         assert node_name != 't',\
             "t-field can not be used on a t element, provide an actual HTML node"
 
-        record, field = t_att["field"].rsplit('.', 1)
+        record, field_name = t_att["field"].rsplit('.', 1)
         record = self.eval_object(record, v)
 
-        column = record._model._all_columns[field].column
-        field_type = column._type
+        column = record._model._all_columns[field_name].column
+        options = json.loads(t_att.get('field-options') or '{}')
+        field_type = get_field_type(column, options)
 
-        req = v['request']
-        converter = req.registry['ir.fields.converter'].from_field(
-            req.cr, req.uid, record._model, column, totype='html')
+        converter = self.pool.get('ir.qweb.field.' + field_type,
+                                  self.pool['ir.qweb.field'])
 
+        return converter.to_html(record._cr, record._uid, field_name, record, options,
+                                 e, t_att, g_att, v)
+
+
+class FieldConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field'
+
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context):
+        column = record._model._all_columns[field_name].column
+        field_type = get_field_type(column, options)
+        return [
+            ('data-oe-model', record._model._name),
+            ('data-oe-id', record.id),
+            ('data-oe-field', field_name),
+            ('data-oe-type', field_type),
+            ('data-oe-translate', '1' if column.translate else '0'),
+            ('data-oe-expression', t_att['field']),
+        ]
+
+    def value_to_html(self, cr, uid, value, column, options=None):
+        """ Converts a single value to its HTML version/output
+        """
+        return werkzeug.utils.escape(value)
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+        """ Converts the specified field of a ``record`` to HTML
+        """
+        return self.value_to_html(
+            cr, uid, record[field_name], column, options=None)
+
+    def to_html(self, cr, uid, field_name, record, options,
+                source_element, t_att, g_att, qweb_context):
+        """ Converts a ``t-field[t-field-options]?`` to its HTML output
+        """
         content = None
         try:
-            value = record[field]
-            if value:
-                content, warnings = converter(value)
-                assert not warnings
+            content = self.record_to_html(
+                cr, uid, field_name, record,
+                record._model._all_columns[field_name].column,
+                options)
         except KeyError:
-            _logger.warning("t-field no field %s for model %s", field, record._model._name)
+            _logger.warning("t-field no field %s for model %s", field_name, record._model._name)
 
         g_att += ''.join(
             ' %s="%s"' % (name, werkzeug.utils.escape(value))
-            for name, value in [
-                ('data-oe-model', record._model._name),
-                ('data-oe-id', record.id),
-                ('data-oe-field', field),
-                ('data-oe-type', field_type),
-                ('data-oe-translate', '1' if column.translate else '0'),
-                ('data-oe-expression', t_att['field']),
-            ]
+            for name, value in self.attributes(
+                cr, uid, field_name, record, options,
+                source_element, g_att, t_att, qweb_context)
         )
 
-        return self.render_element(e, t_att, g_att, v, content or "")
+        return self.render_element(cr, uid, source_element, t_att, g_att,
+                                   qweb_context, content)
+
+    def render_element(self, cr, uid, source_element, t_att, g_att, qweb_context, content):
+        return self.pool['ir.qweb'].render_element(
+            source_element, t_att, g_att, qweb_context, content or '')
+
+class FloatConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.float'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None):
+        width, precision = column.digits or (None, None)
+        fmt = '{value}' if precision is None else '{value:.{precision}f}'
+
+        return werkzeug.utils.escape(
+            fmt.format(value=value, width=width, precision=precision, ))
+
+class TextConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.text'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None):
+        """
+        Escapes the value and converts newlines to br. This is bullshit.
+        """
+        return werkzeug.utils.escape(value).replace('\n', '<br>\n')
+
+class SelectionConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.selection'
+    _inherit = 'ir.qweb.field'
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+        # FIXME: context
+        value = record[field_name]
+        selection = dict(fields.selection.reify(
+            cr, uid, record._model, column))
+        return self.value_to_html(
+            cr, uid, selection[value], column, options=options)
+
+class ManyToOneConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.many2one'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None):
+        return werkzeug.utils.escape(value.name_get()[0][1]).replace('\n', '<br>\n')
+
+class HTMLConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.html'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None):
+        return value
+
+class BinaryConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.binary'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None):
+        try:
+            image = Image.open(cStringIO.StringIO(value.decode('base64')))
+        except IOError:
+            raise ValueError("Non-image binary fields can not be converted to HTML")
+        try: image.verify()
+        except: # no idea what "suitable exceptions" are
+            raise ValueError("Invalid image content")
+
+        return ('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
+
+def get_field_type(column, options):
+    """ Gets a t-field's effective type from the field's column and its options
+    """
+    return options.get('widget', column._type)
 
 # leave this, al.

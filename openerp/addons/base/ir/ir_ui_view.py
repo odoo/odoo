@@ -771,7 +771,7 @@ class view(osv.osv):
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        engine = self.pool['ir.templating.qweb']
+        engine = self.pool['ir.qweb']
         return engine.render(
             id_or_xml_id, values,
             loader=loader, undefined_handler=lambda key, v: None)

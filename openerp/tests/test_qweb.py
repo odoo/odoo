@@ -8,17 +8,10 @@ import common
 impl = dom.getDOMImplementation()
 document = impl.createDocument(None, None, None)
 
-Request = namedtuple('Request', 'cr uid registry')
-class RegistryProxy(object):
-    def __init__(self, func):
-        self.func = func
-    def __getitem__(self, name):
-        return self.func(name)
-
 class TestQWebTField(common.TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
-        self.engine = self.registry('ir.templating.qweb')
+        self.engine = self.registry('ir.qweb')
 
     def test_trivial(self):
         field = document.createElement('span')
@@ -32,7 +25,6 @@ class TestQWebTField(common.TransactionCase):
 
         result = self.engine.render_node(field, {
             'company': root_company,
-            'request': Request(self.cr, self.uid, RegistryProxy(self.registry))
         })
 
         self.assertEqual(
@@ -57,7 +49,6 @@ class TestQWebTField(common.TransactionCase):
 
         result = self.engine.render_node(field, {
             'company': root_company,
-            'request': Request(self.cr, self.uid, RegistryProxy(self.registry))
         })
         self.assertEqual(
             result,
