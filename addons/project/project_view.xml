@@ -93,9 +93,7 @@
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                        <field name="tasks" widget="x2many_counter" string="Tasks" attrs="{'invisible':[('use_tasks','=', 0)]}" options='{"views": [[false, "kanban"], [false, "tree"], [false, "form"], [false, "calendar"], [false, "gantt"], [false, "graph"]]}'/>
-                        <button name="%(act_project_project_2_project_task_all)d" string="Tasks"
-                            type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                        <field name="tasks" widget="x2many_counter" string="Tasks" attrs="{'invisible':[('use_tasks','=', False)]}" options='{"views": [[false, "kanban"], [false, "tree"], [false, "form"], [false, "calendar"], [false, "gantt"], [false, "graph"]]}'/>
                         <button name="attachment_tree_view" string="Documents" type="object"/>
                     </div>
                     <group>
