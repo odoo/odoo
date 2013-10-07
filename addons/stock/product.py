@@ -26,12 +26,6 @@ import openerp.addons.decimal_precision as dp
 class product_product(osv.osv):
     _inherit = "product.product"
 
-    ### FROM MOD STOCK LOCATION
-    _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"), #Adds domain
-    }
-    
-    
     def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
         move_pool=self.pool.get('stock.move')
@@ -222,7 +216,7 @@ class product_product(osv.osv):
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', 
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
     }
 
@@ -303,8 +297,7 @@ class product_template(osv.osv):
         'sale_delay': 7,
     }
     
-    
-### FROM MOD STOCK LOCATION [All under]    
+  
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'
     _description = 'Removal Strategy'
@@ -316,12 +309,16 @@ class product_removal_strategy(osv.osv):
         'location_id': fields.many2one('stock.location', 'Locations', required=True),
     }
 
-# 
-# class product_product(osv.osv):
-#     _inherit = 'product.product'
-#     _columns = {
-#         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]"), #Adds domain
-#     }
+
+class product_putaway_strategy(osv.osv):
+    _name = 'product.putaway'
+    _description = 'Put Away Strategy'
+    _columns = {
+        'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
+        'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen", required=True), #domain=[('type', '=', 'parent')], 
+        'method': fields.selection([('fixed', 'Fixed Location')], "Method", required = True),
+        'location_spec_id': fields.many2one('stock.location','Specific Location', help="When the location is specific, it will be put over there"), #domain=[('type', '=', 'parent')],
+    }
 
 
 class product_category(osv.osv):
@@ -344,17 +341,6 @@ class product_category(osv.osv):
         'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
         'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
-    }
-    
-
-class product_putaway_strategy(osv.osv):
-    _name = 'product.putaway'
-    _description = 'Put Away Strategy'
-    _columns = {
-        'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
-        'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen", required=True), #domain=[('type', '=', 'parent')], 
-        'method': fields.selection([('fixed', 'Fixed Location')], "Method", required = True),
-        'location_spec_id': fields.many2one('stock.location','Specific Location', help="When the location is specific, it will be put over there"), #domain=[('type', '=', 'parent')],
     }
 
 

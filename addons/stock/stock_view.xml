@@ -376,7 +376,7 @@
                     <h1><field name="name"/></h1>
                     <label for="location_id" class="oe_edit_only"/>
                     <h2><field name="location_id"/></h2>
-                    <group>                                        
+                    <group>
                         <group string="Additional Information">
                             <field name="usage"/>
                             <field name="partner_id"/>
@@ -390,8 +390,6 @@
                             <field name="posz"/>
                         </group>
                     </group>
-                    
-                    <!-- FROM MOD STOCK LOCATION -->
                     <separator string="Removal Strategies" groups="stock.group_adv_location"/>
                     <group  groups="stock.group_adv_location">
                         <div class="oe_inline">
@@ -422,9 +420,7 @@
                                 </tree>
                             </field>
                         </div>
-                    </group>
-                    <!-- END FROM MOD STOCK LOCATION -->
-                    
+                    </group>                   
                     <separator string="Additional Information"/>
                     <field name="comment"/>
                 </form>
@@ -458,8 +454,6 @@
             </field>
         </record>
         
-        <!-- FROM MOD STOCK LOCATION -->
-        
         <record id="view_putaway" model="ir.ui.view">
             <field name="name">product.putaway.form</field>
             <field name="model">product.putaway</field>
@@ -484,7 +478,6 @@
                </form>
             </field>
         </record>
-
 
         <record id="stock_location_path_tree" model="ir.ui.view">
             <field name="name">stock.location.path.tree</field>
@@ -573,7 +566,6 @@
                 </xpath>
             </field>
         </record>
-        <!-- END FROM MOD STOCK LOCATION -->
         
 
         <record id="action_location_form" model="ir.actions.act_window">
@@ -1694,7 +1686,6 @@
                                 <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
                                 <field name="route_id"/>
                                 <field name="group_id" groups="base.group_no_one"/>
-                                
                                 <field name="propagate" groups="stock.group_adv_location"/>
                                 <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
                                 <div>
@@ -2047,7 +2038,6 @@
                             <field name="active" groups="stock.group_adv_location" />
                         </group>
                     </group>
-                <!-- FROM MOD STOCK LOCATION -->                    
                     <separator string="Applicable On"/>
                     <p class="oe_grey">Check these box so that the user can select this route during the following operations</p>
                     <group>
@@ -2062,8 +2052,6 @@
                     <group string="Push Rules" colspan="4" >
                         <field name="push_ids" colspan="4" nolabel="1"/>
                     </group>
-                    
-                <!-- END FROM MOD STOCK LOCATION -->
                     <group string="Pull Rules" colspan="4" >
                         <field name="pull_ids" colspan="4" nolabel="1"/>
                     </group>
@@ -2089,8 +2077,6 @@
                     on procurement or sales order. </p>
             </field>
         </record>
-        
-        
         
         <menuitem action="action_routes_form" id="menu_stock_routes"
             parent="stock.menu_stock_configuration" sequence="11" />

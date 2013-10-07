@@ -182,9 +182,9 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="route_id" ref="route_warehouse0_mto"/>
         </record>
 
-        <!-- 
+        <!--
     Properties
-        -->    
+    -->
         <record forcecreate="True" id="property_stock_supplier" model="ir.property">
             <field name="name">property_stock_supplier</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
@@ -194,7 +194,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="name">property_stock_customer</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
-        </record> 
+        </record>
 
         <record id="base.main_partner" model="res.partner">
             <field name="property_stock_customer" eval="ref('stock_location_stock')"/>

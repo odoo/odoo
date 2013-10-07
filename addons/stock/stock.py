@@ -116,8 +116,6 @@ class stock_location(osv.osv):
 
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
-        
-        ### FROM MOD STOCK LOCATION
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
     }
@@ -130,7 +128,6 @@ class stock_location(osv.osv):
         'posz': 0,
         'scrap_location': False,
     }
-    
     
     def get_putaway_strategy(self, cr, uid, location, product, context=None):
         pa = self.pool.get('product.putaway')
@@ -146,7 +143,6 @@ class stock_location(osv.osv):
         ], context=context)
         if result:
             return pa.browse(cr, uid, result[0], context=context)
-        #return super(stock_location, self).get_putaway_strategy(cr, uid, location, product, context=context)
    
     def get_removal_strategy(self, cr, uid, location, product, context=None):
         pr = self.pool.get('product.removal')
@@ -161,9 +157,7 @@ class stock_location(osv.osv):
             ('product_categ_id', 'in', categs)
         ], context=context)
         if result:
-            return pr.browse(cr, uid, result[0], context=context).method        
-        return None
-    
+            return pr.browse(cr, uid, result[0], context=context).method
 
 
 #----------------------------------------------------------
@@ -180,19 +174,15 @@ class stock_location_route(osv.osv):
         'sequence': fields.integer('Sequence'),
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
-    
-        ### FROM MOD STOCK_LOCATION
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
         'product_selectable': fields.boolean('Selectable on Product'),
         'product_categ_selectable': fields.boolean('Selectable on Product Category'),
-        'warehouse_selectable': fields.boolean('Selectable on Warehouse'),    
+        'warehouse_selectable': fields.boolean('Selectable on Warehouse'),
     }
 
     _defaults = {
         'sequence': lambda self, cr, uid, ctx: 0,
         'active': True,
-        
-        ### FROM MOD STOCK_LOCATION
         'product_selectable': True,
     }
 
@@ -274,7 +264,6 @@ class stock_quant(osv.osv):
 
 
     def check_preferred_location(self, cr, uid, move, context=None):
-        ### FROM MOD STOCK LOCATION
         if move.putaway_ids and move.putaway_ids[0]:
             #Take only first suggestion for the moment
             return move.putaway_ids[0].location_id
@@ -1335,8 +1324,6 @@ class stock_move(osv.osv):
         'availability': fields.function(_get_product_availability, type='float', string='Availability'),
         'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'"),
         'restrict_partner_id': fields.many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'"),
-    
-        ### FROM MOD STOCK LOCATION
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
     }
@@ -1403,9 +1390,8 @@ class stock_move(osv.osv):
             'move_dest_id': move.id,
             'group_id': move.group_id and move.group_id.id or False,
             'route_ids' : [(4, x.id) for x in move.route_ids],
-        }        
-        
-    ### FROM MOD STOCK LOCATION
+        }
+
     def _push_apply(self, cr, uid, moves, context):
         categ_obj = self.pool.get("product.category")
         push_obj = self.pool.get("stock.location.path")
@@ -1432,7 +1418,6 @@ class stock_move(osv.osv):
                                                      'location_id': putaway.location_spec_id.id,
                                                      'quantity': move.product_uom_qty}, context=context)
         return True
-    ### END FROM MOD STOCK LOCATION
     
     def _create_procurement(self, cr, uid, move, context=None):
         """
@@ -1624,11 +1609,8 @@ class stock_move(osv.osv):
                     for move in self.browse(cr, uid, write_ids, context=context):
                         if move.procure_method == 'make_to_order':
                             self._create_procurement(cr, uid, move, context=context)
-             
-        ### FROM MOD STOCK LOCATION (2 lines)
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
-        
         return True
 
     def force_assign(self, cr, uid, ids, context=None):
@@ -1674,8 +1656,6 @@ class stock_move(osv.osv):
                 if all(map(lambda x:x[0], quants)):
                     done.append(move.id)
         self.write(cr, uid, done, {'state': 'assigned'})
-        
-        ### FROM MOD STOCK LOCATION (1 line)
         self._putaway_apply(cr, uid, ids, context=context)        
         return done
 
@@ -2207,9 +2187,6 @@ class stock_warehouse(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Address'),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
         'code': fields.char('Warehouse Unique Identifier', size=5, required=True, help="Short name used to identify your warehouse"),
-    
-    
-        ### FROM MOD STOCK_LOCATION
         'route_ids': fields.many2many('stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id', 'Routes', domain="[('warehouse_selectable', '=', True)]", help='Defaults routes through the warehouse'),
         'reception_steps': fields.selection([
             ('one_step', 'Receive goods directly in stock (1 step)'),
@@ -2232,7 +2209,6 @@ class stock_warehouse(osv.osv):
         'crossdock_route_id': fields.many2one('stock.location.route', 'Crossdock Route'),
         'reception_route_id': fields.many2one('stock.location.route', 'Reception Route'),
         'delivery_route_id': fields.many2one('stock.location.route', 'Delivery Route'),
-    
     }
 
     def _default_stock_id(self, cr, uid, context=None):
@@ -2242,8 +2218,6 @@ class stock_warehouse(osv.osv):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
         'lot_stock_id': _default_stock_id,
-        
-        ### FROM MOD STOCK_LOCATION
         'reception_steps': 'one_step',
         'delivery_steps': 'ship_only',
     }
@@ -2251,8 +2225,7 @@ class stock_warehouse(osv.osv):
         ('warehouse_name_uniq', 'unique (name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique (code, company_id)', 'The code of the warehouse must be unique per company !'),
     ]
-    
-    ### FROM MOD STOCK LOCATION [ALL UNDER]
+
     def _get_partner_locations(self, cr, uid, ids, context=None):
         ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
         data_obj = self.pool.get('ir.model.data')
@@ -2647,8 +2620,6 @@ class stock_warehouse(osv.osv):
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
 
 
-
-### FROM MOD STOCK LOCATION
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
