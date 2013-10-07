@@ -868,3 +868,5 @@ class view(osv.osv):
 
         ids = map(itemgetter(0), cr.fetchall())
         return self._check_xml(cr, uid, ids)
+
+MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
