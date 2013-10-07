@@ -156,14 +156,15 @@ table.editorbar-panel
                 padding: 2px 10px !important
                 width: 100%
                 display: block
+                border: 0
         position: fixed
         z-index: 1
-    .pill-content
+        border: 0
+    .tab-content
         margin-top: 24px
         display: inline-block
         white-space: nowrap
         > div
-            display: inline-block
             background: rgb(0,0,0)
             padding: 5px
             label
@@ -249,6 +250,7 @@ table.editorbar-panel
     color: white
     height: 48px
     margin-bottom: 32px
+    padding-top: 12px
 
 /* ---- SNIPPET MANIPULATOR ---- */
 
@@ -423,15 +425,6 @@ $highlighted_text_color: #ffffff
     .oe_seo_keyword
         padding: .2em .4em .2em .5em
         +border-radius(.4em)
-    .keyword-in-title
-        background-color: $in_title_color+pointer
-        color: $highlighted_text_color
-    .keyword-in-description
-        background-color: $in_description_color
-        color: $highlighted_text_color
-    .keyword-in-body
-        background-color: $in_body_color
-        color: $highlighted_text_color
 
 /* ---- ACE EDITOR ---- */
 

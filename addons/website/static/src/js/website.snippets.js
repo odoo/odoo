@@ -18,13 +18,8 @@
         },
         edit: function () {
             $("body").off('click');
-            var self = this;
-            self.on('rte:ready', this, function () {
-
-                window.snippets = self.snippets = new website.snippet.BuildingBlock(this);
-                self.snippets.appendTo(self.$el);
-
-            });
+            window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
+            this.snippets.appendTo(this.$el);
             return this._super.apply(this, arguments);
         },
         save: function () {
@@ -85,21 +80,23 @@
             hack_to_add_snippet_id();
             $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
         },
-        dom_filter: function (dom) {
+        dom_filter: function (dom, sibling) {
             if (typeof dom === "string") {
                 var include = "[data-oe-model]";
                 var sdom = dom.split(',');
                 dom = "";
                 _.each(sdom, function (val) {
                     val = val.replace(/^\s+|\s+$/g, '');
-                    dom += "body " + include + " " + val + ", ";
-                    val = val.split(" ");
-                    dom += "body "+ val.shift() + include + val.join(" ") + ", ";
+                    dom += include + " " + val + ", ";
+                    if (!sibling) {
+                        val = val.split(" ");
+                        dom += val.shift() + include + val.join(" ") + ", ";
+                    }
                 });
                 dom = dom.replace(/,\s*$/g, '');
                 return $(dom);
             } else {
-                return $(dom).is("[data-oe-model]") || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
+                return (!sibling && $(dom).is("[data-oe-model]")) || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
             }
         },
         start: function() {
@@ -115,11 +112,8 @@
 
             this.fetch_snippet_templates();
 
-            this.bind_selected_manipulator();
             this.bind_snippet_click_editor();
-            this.activate_overlay_zones();
 
-            this.scrollspy();
             this.$el.addClass("hidden");
 
             this.$modal = $(openerp.qweb.render('website.snippets_modal'));
@@ -129,59 +123,28 @@
             var self = this;
             this.style_templates = {};
 
-            _.each(openerp.qweb.compiled_templates, function (val, key) {
-                if (key.indexOf('website.snippets.') === 0) {
-                    var $snippet = $(openerp.qweb.render(key)).addClass("oe_snippet");
-                    var snipped_id = $snippet.data("snippet-id");
-                    if (snipped_id) {
+            openerp.jsonRpc("/website/snippets", 'call', {})
+                .then(function (html) {
+                    var $html = $(html);
 
-                        if ($snippet.data('category') === 'style') {
-                            self.style_templates[snipped_id] = {
-                                'snipped-id' : snipped_id,
-                                'selector': $snippet.data('selector'),
-                                'class': $snippet.find(".oe_snippet_class").text(),
-                                'label': $snippet.find(".oe_snippet_label").text(),
-                                '$el': $snippet
-                            };
-                        }
-                        if ($snippet.find(".oe_snippet_thumbnail").length) {
-                            self.$el.find('#snippet_' + $snippet.data('category')).append($snippet);
-                            self.make_snippet_draggable($snippet);
-                        }
-                    }
-                }
-            });
-        },
-        scrollspy: function (){
-            var self = this;
-            var $ul = this.$("ul");
-            var $pill = self.$(".pill-content");
-            var padding = parseInt($pill.css("padding-left"));
-            var $scroll = this.$(".scroll");
-            
-           $scroll.scroll(function () {
-                $pill.find("> div").each(function () {
-                	/*
-                    if ($(this).position().left <= padding) {
-                        $ul.find("> li").removeClass('active');
-                        $ul.find("a[href='#" + $(this).attr("id") + "']").parent("li").addClass('active');
-                    }*/
+                    var $styles = $html.find("#snippet_styles");
+                    $styles.find("> [data-snippet-id]").each(function () {
+                        var $style = $(this);
+                        var snipped_id = $style.data('snippet-id');
+                        self.style_templates[snipped_id] = {
+                            'snipped-id' : snipped_id,
+                            'selector': $style.data('selector'),
+                            'class': $style.find(".oe_snippet_class").text(),
+                            'label': $style.find(".oe_snippet_label").text()
+                        };
+                    });
+                    $styles.remove();
+
+                    self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
+                    self.$el.append($html);
+
+                    self.make_snippet_draggable(self.$snippets);
                 });
-            });
-
-            $ul.find("a").click(function (event) {
-                event.preventDefault();
-                $pill.find("> div").hide();
-            	$pill.find( $(event.currentTarget).attr('href')).show();
-            	$ul.find('> li').removeClass('active');
-            	$(event.currentTarget).parent().addClass('active');
-                return false;
-            });
-
-           // $pill.css("padding-right", self.$el.outerWidth() - padding + 10 - $pill.find("> div:last").outerWidth());
-            $pill.find("> div").hide();
-            $pill.find("div:first").show();
-            $ul.find("> li:first").addClass('active');
         },
         cover_target: function ($el, $target){
             var pos = $target.offset();
@@ -260,7 +223,8 @@
         },
         create_overlay: function ($snipped_id) {
             if (typeof $snipped_id.data("snippet-editor") === 'undefined') {
-                this.activate_overlay_zones($snipped_id);
+                var $targets = this.activate_overlay_zones($snipped_id);
+                if (!$targets.length) return;
                 var editor = website.snippet.editorRegistry[$snipped_id.data("snippet-id")] || website.snippet.editorRegistry.resize;
                 $snipped_id.data("snippet-editor", new editor(this, $snipped_id));
             }
@@ -276,35 +240,15 @@
             return obj;
         },
 
-        bind_selected_manipulator: function () {
-            var self = this;
-            var $selected_target = null;
-            $("body").mouseover(function (event){
-                var $target = $(event.srcElement).parents("[data-snippet-id]:first");
-                $target = self.dom_filter($target);
-                if($target.length && !self.editor_busy) {
-                    if($selected_target != $target){
-                        if($selected_target && $selected_target.data('overlay')){
-                            $selected_target.data('overlay').removeClass('oe_hover');
-                        }
-                        $selected_target = $target;
-                        self.create_overlay($target);
-                        $target.data('overlay').addClass('oe_hover');
-                    }
-                } else if($selected_target && $selected_target.data('overlay')) {
-                    $selected_target.data('overlay').removeClass('oe_hover');
-                }
-            });
-        },
-
         // activate drag and drop for the snippets in the snippet toolbar
-        make_snippet_draggable: function($snippet){
+        make_snippet_draggable: function($snippets){
             var self = this;
-            var $toInsert = false;
-            var $tumb = $snippet.find(".oe_snippet_thumbnail");
-            var dropped = false;
+            var $tumb = $snippets.find(".oe_snippet_thumbnail:first");
+            var left = $tumb.outerWidth()/2;
+            var top = $tumb.outerHeight()/2;
+            var $toInsert, dropped, $snippet, action, snipped_id;
 
-            $snippet.draggable({
+            $snippets.draggable({
                 greedy: true,
                 helper: 'clone',
                 zIndex: '1000',
@@ -312,14 +256,15 @@
                 cursor: "move",
                 handle: ".oe_snippet_thumbnail",
                 cursorAt: {
-                    'left': $tumb.outerWidth()/2,
-                    'top': $tumb.outerHeight()/2
+                    'left': left,
+                    'top': top
                 },
                 start: function(){
                     self.hide();
                     dropped = false;
-                    var snipped_id = $snippet.data('snippet-id');
-                    var action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
+                    $snippet = $(this);
+                    snipped_id = $snippet.data('snippet-id');
+                    action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
                     if( action === 'insert'){
                         if (!$snippet.data('selector-siblings') && !$snippet.data('selector-children') && !$snippet.data('selector-vertical-children')) {
                             console.debug($snippet.data("snippet-id") + " have oe_snippet_body class and have not for insert action"+
@@ -365,38 +310,38 @@
                         },
                         drop:   function(){
                             dropped = true;
-
-                            var $target = false;
-                            if(action === 'insert'){
-                                $target = $toInsert;
-
-                                if (website.snippet.animationRegistry[snipped_id]) {
-                                    new website.snippet.animationRegistry[snipped_id]($target);
-                                }
-
-                                self.create_overlay($target);
-                                $target.data("snippet-editor").build_snippet($target);
-
-                            } else {
-                                $target = $(this).data('target');
-
-                                self.create_overlay($target);
-                                if (website.snippet.editorRegistry[snipped_id]) {
-                                    var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
-                                    snippet.build_snippet($target);
-                                }
-                            }
-
-                            $('.oe_drop_zone').remove();
-
-                            setTimeout(function () {self.make_active($target);},0);
                         },
                     });
                 },
                 stop: function(){
                     $('.oe_drop_zone').droppable('destroy').remove();
-                    if (!dropped && self.$modal.find('input:not(:checked)').length) {
-                        self.$modal.modal('toggle');
+                    if (dropped) {
+                        var $target = false;
+                        if(action === 'insert'){
+                            $target = $toInsert;
+
+                            if (website.snippet.animationRegistry[snipped_id]) {
+                                new website.snippet.animationRegistry[snipped_id]($target);
+                            }
+
+                            self.create_overlay($target);
+                            $target.data("snippet-editor").build_snippet($target);
+
+                        } else {
+                            $target = $(this).data('target');
+
+                            self.create_overlay($target);
+                            if (website.snippet.editorRegistry[snipped_id]) {
+                                var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
+                                snippet.build_snippet($target);
+                            }
+                        }
+                        setTimeout(function () {self.make_active($target);},0);
+                    } else {
+                        $toInsert.remove();
+                        if (self.$modal.find('input:not(:checked)').length) {
+                            self.$modal.modal('toggle');
+                        }
                     }
                 },
             });
@@ -462,7 +407,7 @@
             }
 
             if(sibling_selector){
-                self.dom_filter(sibling_selector).each(function (){
+                self.dom_filter(sibling_selector, true).each(function (){
                     var $zone = $(this);
                     if($zone.prev('.oe_drop_zone:visible').length === 0){
                         $zone.before(zone_template);
@@ -513,6 +458,11 @@
         activate_overlay_zones: function(selector){
             var $targets = this.dom_filter(selector || '[data-snippet-id]');
             var self = this;
+
+            if (typeof selector !== 'string' && !$targets.length) {
+                console.debug( "A good node must have a [data-oe-model] attribute or must have at least one parent with [data-oe-model] attribute.");
+                console.debug( "Wrong node(s): ", selector);
+            }
             
             function is_visible($el){
                 return     $el.css('display')    != 'none'
@@ -567,13 +517,13 @@
         start: function () {
         },
         /* onFocusEdit
-        *  if they are an editor for this snippet-id 
+        *  if they are an editor for this data-snippet-id 
         *  Called before onFocus of snippet editor
         */
         onFocusEdit : function () {},
 
         /* onBlurEdit
-        *  if they are an editor for this snippet-id 
+        *  if they are an editor for this data-snippet-id 
         *  Called after onBlur of snippet editor
         */
         onBlurEdit : function () {},
@@ -602,19 +552,10 @@
         *  this.$editor :
         *       content of .oe_snippet_options
         *       Displayed into the overlay options on focus
-        *  this.$thumbnail :
-        *       content of .oe_snippet_thumbnail
-        *       Displayed in bottom editor menu, when the user click on "Building Blocks"
-        *  this.$body :
-        *       content of .oe_snippet_body
-        *       Insert into the view when the thumbnail is drag and droped into a drop zone
         */
         _readXMLData: function() {
-            this.$el = $(openerp.qweb.render("website.snippets." + this.snippet_id, {widget: this}).trim());
+            this.$el = this.parent.$snippets.siblings("[data-snippet-id='"+this.snippet_id+"']").clone();
             this.$editor = this.$el.find(".oe_snippet_options");
-            this.$thumbnail = this.$el.find(".oe_snippet_thumbnail");
-            this.$body = this.$el.find(".oe_snippet_body");
-
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
             if ($options.find(".oe_options ul li").length) {
@@ -802,16 +743,8 @@
 
         change_background: function (bg, ul_options) {
             var self = this;
+            this.set_options_background(bg, ul_options);
             var $ul = this.$editor.find(ul_options);
-            var bg_value = (typeof bg === 'string' ? self.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
-
-            // select in ul options
-            $ul.find("li").removeClass("active");
-            var selected = $ul.find('[data-value="' + bg_value + '"], [data-value="' + bg_value.replace(/.*:\/\/[^\/]+/, '') + '"]');
-            selected.addClass('active');
-            if (!selected.length) {
-                $ul.find('.oe_custom_bg b').html(bg_value);
-            }
 
             // bind envent on options
             var $li = $ul.find("li");
@@ -842,6 +775,19 @@
                     var $bg = typeof bg === 'string' ? self.$target.find(bg) : $(bg);
                     $bg.css("background-image", "url(" + src + ")");
                 });
+        },
+
+        set_options_background: function (bg, ul_options) {
+            var $ul = this.$editor.find(ul_options);
+            var bg_value = (typeof bg === 'string' ? this.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+
+            // select in ul options
+            $ul.find("li").removeClass("active");
+            var selected = $ul.find('[data-value="' + bg_value + '"], [data-value="' + bg_value.replace(/.*:\/\/[^\/]+/, '') + '"]');
+            selected.addClass('active');
+            if (!selected.length) {
+                $ul.find('.oe_custom_bg b').html(bg_value);
+            }
         },
     });
 
@@ -1030,50 +976,95 @@
     });
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
-        build_snippet: function($target) {
-            var id = "myCarousel" + $("body .carousel").length;
-            $target.attr("id", id);
-            $target.find(".carousel-control").attr("href", "#"+id);
+        build_snippet: function() {
+            var id = 0;
+            $("body .carousel").each(function () {
+                var _id = +$(this).attr("id").replace(/^myCarousel/, '');
+                if (id <= _id) {
+                    id = _id + 1;
+                }
+            });
+            this.$target.attr("id", "myCarousel" + id);
+            this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
+            this.$target.find("[data-target='#myCarousel']").attr("data-target", "#myCarousel" + id);
+            this.rebind_event();
+        },
+        onFocus: function () {
+            this._super();
+            this.$target.carousel('pause');
+        },
+        onBlur: function () {
+            this._super();
+            this.$target.carousel('cycle');
         },
         start : function () {
             this._super();
+
+            this.id = this.$target.attr("id");
+
+            this.$inner = this.$target.find('.carousel-inner');
+            this.$indicators = this.$target.find('.carousel-indicators');
 
             this.$editor.find(".js_add").on('click', _.bind(this.on_add, this));
             this.$editor.find(".js_remove").on('click', _.bind(this.on_remove, this));
 
             this.change_background(".item.active", 'ul[name="carousel-background"]');
             this.change_style();
-            this.set_options_style();
             this.change_size();
+            this.set_options_style();
+            this.$target.carousel();
+
+            var self = this;
+            this.$target.on('slide.bs.carousel', function () {
+                self.set_options_style();
+                self.set_options_background(".item.active", 'ul[name="carousel-background"]');
+                self.$target.carousel();
+            });
+
+            this.rebind_event();
+        },
+        // rebind event to active carousel on edit mode
+        rebind_event: function () {
+            var self = this;
+            this.$target.on('click', '.carousel-control', function () {
+                self.$target.carousel($(this).data('slide')); });
+            this.$target.on('click', '.carousel-indicators [data-target]', function () {
+                self.$target.carousel(+$(this).data('slide-to')); });
         },
         on_add: function (e) {
             e.preventDefault();
-            this.$target.find('.carousel-control').removeClass("hidden");
-            var $inner = this.$target.find('.carousel-inner');
-            var cycle = $inner.find('.item').length;
-            $inner.find('.item.active').clone().removeClass('active').appendTo($inner);
-            this.$target.carousel(cycle);
-            this.set_options_background();
-            this.set_options_style();
+            var cycle = this.$inner.find('.item').length;
+            var $active = this.$inner.find('.item.active');
+            var index = $active.index();
+            this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
+            this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
+            $active.clone().removeClass('active').insertAfter($active);
+            this.$target.carousel().carousel(++index);
         },
         on_remove: function (e) {
             e.preventDefault();
-            var $inner = this.$target.find('.carousel-inner');
-            var nb = $inner.find('.item').length;
-            if (nb > 1) {
-                $inner
-                    .find('.item.active').remove().end()
-                    .find('.item:first').addClass('active');
-                this.$target.carousel(0);
-                this.set_options_style();
-            }
-            if (nb <= 1) {
-                this.$target.find('.carousel-control').addClass("hidden");
+            var self = this;
+            var new_index = 0;
+            var cycle = this.$inner.find('.item').length - 1;
+            var index = this.$inner.find('.item.active').index();
+            if (cycle > 0) {
+                this.$inner.find('.item.active').fadeOut(1000, function () {
+                    $(this).remove();
+                    self.$indicators.find('[data-target]:last').remove();
+                    self.$indicators.find("[data-slide-to]").removeClass("active");
+                    self.$indicators.find("[data-slide-to='" + new_index + "']").addClass("active");
+                });
+                setTimeout(function () {
+                    new_index = index % cycle;
+                    self.$target.carousel( new_index + 1 );
+                }, 500);
+            } else {
+                this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
             }
         },
         set_options_style: function () {
             var style = false;
-            var $el = this.$target.find('.carousel-inner .item.active');
+            var $el = this.$inner.find('.item.active');
             var $ul = this.$editor.find('ul[name="carousel-style"]');
             var $li = $ul.find("li");
 
@@ -1096,12 +1087,12 @@
                     $(this).addClass("active");
                 })
                 .on('mouseover', function (event) {
-                    var $el = self.$target.find('.carousel-inner .item.active');
+                    var $el = self.$inner.find('.item.active');
                     $el.removeClass('image_text text_image text_only');
                     $el.addClass($(event.currentTarget).data("value"));
                 })
                 .on('mouseout', function (event) {
-                    var $el = self.$target.find('.carousel-inner .item.active');
+                    var $el = self.$inner.find('.item.active');
                     $el.removeClass('image_text text_image text_only');
                     $el.addClass($ul.find('li.active').data("value"));
                 });

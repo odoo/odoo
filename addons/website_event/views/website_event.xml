@@ -3,12 +3,11 @@
 <data>
 
     <!-- Layout add nav and footer -->
-
-    <template id="header_footer" inherit_id="website_sale.header_footer">
-        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
+    <template id="header_footer_custom" inherit_id="website.layout">
+        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
             <li><a t-href="/event">Events</a></li>
         </xpath>
-        <xpath expr="//footer//ul[@name='products']/li" position="after">
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-href="/event">Events</a></li>
         </xpath>
     </template>
