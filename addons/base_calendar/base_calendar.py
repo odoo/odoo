@@ -113,18 +113,6 @@ def real_id2base_calendar_id(real_id, recurrent_date):
         return '%d-%s' % (real_id, recurrent_date)
     return real_id
 
-def _links_get(self, cr, uid, context=None):
-    """
-    Get request link.
-    @param cr: the current row, from the database cursor
-    @param uid: the current user's ID for security checks
-    @param context: a standard dictionary for contextual values
-    @return: list of dictionary which contain object and name and id
-    """
-    obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
-    return [(r['object'], r['name']) for r in res]
 
 class calendar_attendee(osv.osv):
     """
@@ -216,19 +204,6 @@ class calendar_attendee(osv.osv):
 
         return result
 
-    def _links_get(self, cr, uid, context=None):
-        """
-        Get request link for ref field in calendar attendee.
-        @param cr: the current row, from the database cursor
-        @param uid: the current user's id for security checks
-        @param context: A standard dictionary for contextual values
-        @return: list of dictionary which contain object and name and id
-        """
-        obj = self.pool.get('res.request.link')
-        ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
-        return [(r['object'], r['name']) for r in res]
-
     def _lang_get(self, cr, uid, context=None):
         """
         Get language for language selection field.
@@ -294,7 +269,7 @@ property or property parameter."),
         'event_end_date': fields.function(_compute_data, \
                             string='Event End Date', type="datetime", \
                             multi='event_end_date'),
-        'ref': fields.reference('Event Ref', selection=_links_get, size=128),
+        'ref': fields.reference('Event Ref', selection=openerp.addons.base.res.res_request.referencable_models, size=128),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
         
     }
