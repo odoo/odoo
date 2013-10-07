@@ -482,20 +482,20 @@ class HTMLConverter(osv.AbstractModel):
     def value_to_html(self, cr, uid, value, column, options=None):
         return value
 
-class BinaryConverter(osv.AbstractModel):
-    _name = 'ir.qweb.field.binary'
+class ImageConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.image'
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None):
         try:
             image = Image.open(cStringIO.StringIO(value.decode('base64')))
+            image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
-        try: image.verify()
         except: # no idea what "suitable exceptions" are
             raise ValueError("Invalid image content")
 
-        return ('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
+        return '<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)
 
 def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options

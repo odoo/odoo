@@ -108,28 +108,33 @@ class TestHTMLExport(common.TransactionCase):
         value = converter(Sub.browse(self.cr, self.uid, id1))
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
 
-    def test_binary(self):
-        converter = self.get_converter('binary')
+    def test_image(self):
+        column = self.get_column('binary')
+        converter = self.registry('ir.qweb.field.image')
+
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
-            value = converter(content.encode('base64'))
-            self.assertEqual(
-                value, '<img src="data:image/jpeg;base64,%s">' % (
-                    content.encode('base64')
-                ))
+        value = converter.value_to_html(
+            self.cr, self.uid, content.encode('base64'), column)
+        self.assertEqual(
+            value, '<img src="data:image/jpeg;base64,%s">' % (
+                content.encode('base64')
+            ))
 
         with open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
             content = f.read()
 
-            with self.assertRaises(ValueError):
-                converter(content.encode('base64'))
+        with self.assertRaises(ValueError):
+            converter.value_to_html(
+                self.cr, self.uid, 'binary', content.encode('base64'), column)
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
-            with self.assertRaises(ValueError):
-                converter(content.encode('base64'))
+        with self.assertRaises(ValueError):
+            converter.value_to_html(
+                self.cr, self.uid, 'binary', content.encode('base64'), column)
 
     def test_selection(self):
         [record] = self.Model.browse(self.cr, self.uid, [self.Model.create(self.cr, self.uid, {
