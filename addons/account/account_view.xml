@@ -2275,6 +2275,36 @@
                         </group>
                     </group>
                     <notebook>
+                    	<page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
+                            <field name="line_ids" context="{'date':date}">
+                                <tree editable="bottom" string="Statement lines">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
+                                    <field name="amount"/>
+                                </tree>
+                                <form string="Statement lines" version="7.0">
+                                    <group col="4">
+                                        <field name="date"/>
+                                        <field name="name"/>
+                                        <field name="ref"/>
+                                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                                        <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                        <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                        <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
+                                        <field name="amount"/>
+                                        <field name="sequence"/>
+                                    </group>
+                                    <separator string="Notes"/>
+                                    <field name="note"/>
+                                </form>
+                            </field>
+                        </page>
                         <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                             <group col="2" expand="1">
                                 <group string="Opening Cash Control" attrs="{'invisible' : [('state', '!=', 'draft')]}">
@@ -2308,51 +2338,22 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
-                            <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines">
-                                    <field name="sequence" invisible="1"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
-                                    <field name="amount"/>
-                                </tree>
-                                <form string="Statement lines" version="7.0">
-                                    <group col="4">
-                                        <field name="date"/>
-                                        <field name="name"/>
-                                        <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                        <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                        <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
-                                        <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
-                                        <field name="amount"/>
-                                        <field name="sequence"/>
-                                    </group>
-                                    <separator string="Notes"/>
-                                    <field name="note"/>
-                                </form>
-                            </field>
-                        </page>
                         <page string="Journal Entries" attrs="{'invisible': [('state','!=','confirm')]}">
                             <field name="move_line_ids" string="Journal Entries"/>
                         </page>
                     </notebook>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator oe_open_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of opening cash control lines"/>
-                            <label for="total_entry_encoding" string="+ Transactions" class="oe_force_bold oe_mini_subtotal_footer_separator"/>
+                        	<label for="balance_start"  class="oe_subtotal_footer_separator oe_open_balance"  string="Opening Balance" style="padding-right: 23px !important;"/>
+                            <field name="balance_start" attrs="{'readonly' : [('cash_control', '=', True)]}" string="Opening Balance" class="oe_subtotal_footer_separator oe_open_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of opening cash control lines" nolabel="1"/>
+                            <label for="total_entry_encoding" string="+ Transactions" class="oe_force_bold oe_mini_subtotal_footer_separator" style="padding-right: 20px !important;"/>
                             <field name="total_entry_encoding" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
-                            <label for="balance_end" string="= Theoretical Closing Balance" class="oe_force_bold oe_mini_subtotal_footer_separator" help="Sum of opening balance and transactions."/>
+                            <label for="balance_end" string="= Theoretical Closing Balance" class="oe_force_bold oe_mini_subtotal_footer_separator" help="Sum of opening balance and transactions." style="padding-right: 20px !important;"/>
                             <field name="balance_end" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
                         </group>
                         <div>
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', '=', 'draft')]}">
-                                <field name="balance_end_real" readonly="1" string="Real Closing Balance" class="oe_subtotal_footer_separator oe_real_closing_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of closing cash control lines."/>
+                                <field name="balance_end_real" attrs="{'readonly' : [('cash_control', '=', True)]}" string="Real Closing Balance" class="oe_subtotal_footer_separator oe_real_closing_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of closing cash control lines."/>
                             </group>
                             <group/>
                             <group/>
