@@ -554,9 +554,23 @@ class CurrencyConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, column, options):
-        return u'<span class="oe_currency_value">{0}</span> {1}'.format(
+        symbol_pre = symbol_post = space_pre = space_post = u''
+        currency = record[options['currency']]
+        if currency.position == 'before':
+            space_pre = u' '
+            symbol_pre = currency.symbol
+        else:
+            space_post = u' '
+            symbol_post = currency.symbol
+
+        return u'{symbol_pre}{space_pre}' \
+               u'<span class="oe_currency_value">{0}</span>' \
+               u'{space_post}{symbol_post}'.format(
             record[field_name],
-            record[options['currency']].symbol)
+            space_pre=space_pre,
+            symbol_pre=symbol_pre,
+            space_post=space_post,
+            symbol_post=symbol_post,)
 
 def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options
