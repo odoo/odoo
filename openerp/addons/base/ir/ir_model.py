@@ -219,9 +219,11 @@ class ir_model(osv.osv):
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
+    _rec_name = 'field_description'
 
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
+        'complete_name': fields.char('Complete Name', size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True, select=1,
             help="The technical name of the model this field belongs to"),
         'relation': fields.char('Object Relation', size=64,
@@ -1133,5 +1135,33 @@ class ir_model_data(osv.osv):
                 if model in self.pool:
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool[model].unlink(cr, uid, [res_id])
+
+class wizard_model_menu(osv.osv_memory):
+    _name = 'wizard.ir.model.menu.create'
+    _columns = {
+        'menu_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
+        'name': fields.char('Menu Name', size=64, required=True),
+    }
+
+    def menu_create(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        model_pool = self.pool.get('ir.model')
+        for menu in self.browse(cr, uid, ids, context):
+            model = model_pool.browse(cr, uid, context.get('model_id'), context=context)
+            val = {
+                'name': menu.name,
+                'res_model': model.model,
+                'view_type': 'form',
+                'view_mode': 'tree,form'
+            }
+            action_id = self.pool.get('ir.actions.act_window').create(cr, uid, val)
+            self.pool.get('ir.ui.menu').create(cr, uid, {
+                'name': menu.name,
+                'parent_id': menu.menu_id.id,
+                'action': 'ir.actions.act_window,%d' % (action_id,),
+                'icon': 'STOCK_INDENT'
+            }, context)
+        return {'type':'ir.actions.act_window_close'}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
