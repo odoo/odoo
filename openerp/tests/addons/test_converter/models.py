@@ -36,3 +36,4 @@ class test_model_sub(orm.Model):
     _columns = {
         'name': fields.char()
     }
+

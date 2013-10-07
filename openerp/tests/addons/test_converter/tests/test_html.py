@@ -1,16 +1,17 @@
 # -*- encoding: utf-8 -*-
-import base64
-import functools
 import os
 
 from openerp.tests import common
 
 directory = os.path.dirname(__file__)
 
-class TestHTMLExport(common.TransactionCase):
+
+class TestExport(common.TransactionCase):
+    _model = None
+
     def setUp(self):
-        super(TestHTMLExport, self).setUp()
-        self.Model = self.registry('test_converter.test_model')
+        super(TestExport, self).setUp()
+        self.Model = self.registry(self._model)
         self.columns = self.Model._all_columns
 
     def get_column(self, name):
@@ -26,6 +27,10 @@ class TestHTMLExport(common.TransactionCase):
         return lambda value: model.value_to_html(
             self.cr, self.uid, value, column)
 
+class TestBasicExport(TestExport):
+    _model = 'test_converter.test_model'
+
+class TestCharExport(TestBasicExport):
     def test_char(self):
         converter = self.get_converter('char')
 
@@ -35,12 +40,14 @@ class TestHTMLExport(common.TransactionCase):
         value = converter("foo<bar>")
         self.assertEqual(value, "foo&lt;bar&gt;")
 
+class TestIntegerExport(TestBasicExport):
     def test_integer(self):
         converter = self.get_converter('integer')
 
         value = converter(42)
         self.assertEqual(value, "42")
 
+class TestFloatExport(TestBasicExport):
     def test_float(self):
         converter = self.get_converter('float')
 
@@ -62,6 +69,7 @@ class TestHTMLExport(common.TransactionCase):
         value = converter(42.01234)
         self.assertEqual(value, '42.01')
 
+class TestTextExport(TestBasicExport):
     def test_text(self):
         converter = self.get_converter('text')
 
@@ -96,6 +104,7 @@ class TestHTMLExport(common.TransactionCase):
         fldkjsfhs &lt;i style=&quot;color: red&quot;&gt;&lt;a href=&quot;http://spamspam.com&quot;&gt;fldskjh&lt;/a&gt;&lt;/i&gt;<br>
         """)
 
+class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
         converter = self.get_converter('many2one')
         Sub = self.registry('test_converter.test_model.sub')
@@ -108,6 +117,7 @@ class TestHTMLExport(common.TransactionCase):
         value = converter(Sub.browse(self.cr, self.uid, id1))
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
 
+class TestBinaryExport(TestBasicExport):
     def test_image(self):
         column = self.get_column('binary')
         converter = self.registry('ir.qweb.field.image')
@@ -137,6 +147,7 @@ class TestHTMLExport(common.TransactionCase):
             converter.value_to_html(
                 self.cr, self.uid, 'binary', content.encode('base64'), column)
 
+class TestSelectionExport(TestBasicExport):
     def test_selection(self):
         [record] = self.Model.browse(self.cr, self.uid, [self.Model.create(self.cr, self.uid, {
             'selection': 2,
@@ -157,11 +168,12 @@ class TestHTMLExport(common.TransactionCase):
             self.cr, self.uid, column_name, record, column)
         self.assertEqual(value, "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
 
+class TestHTMLExport(TestBasicExport):
     def test_html(self):
         converter = self.get_converter('html')
 
         input = '<span>span</span>'
         value = converter(input)
         self.assertEqual(value, input)
-    # o2m, m2m?
-    # reference?
+# o2m, m2m?
+# reference?
