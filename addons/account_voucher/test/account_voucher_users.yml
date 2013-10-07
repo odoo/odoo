@@ -1,7 +1,7 @@
 -
    Create a user as 'Accountant for account voucher'
 -
-  !record {model: res.users, id: res_users_account_voucher_user}:
+  !record {model: res.users, id: res_users_account_voucher_user, view: False}:
     company_id: base.main_company
     name: Voucher Accountant  
     login: vacc
@@ -17,7 +17,7 @@
 -
    Create a user as 'Financial Manager for account voucher'
 -
-  !record {model: res.users, id: res_users_account_voucher_manager}:
+  !record {model: res.users, id: res_users_account_voucher_manager, view: False}:
     company_id: base.main_company
     name: Financial Manager for voucher
     login: fmv

@@ -1218,7 +1218,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent, options);
-            this.MailWidget = parent.__proto__ == mail.Widget.prototype ? parent : false;
+            this.MailWidget = parent instanceof mail.Widget ? parent : false;
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
 
