@@ -29,6 +29,7 @@
     'depends': ['website'],
     'data': [
         'views/res_partner_view.xml',
+        'views/website_partner_view.xml',
     ],
     'css': [
     ],

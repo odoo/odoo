@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="partner_detail" name="Partner">
+            <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
+            <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img t-att-src="partner_id.img('image_medium')"/>
+                </div>
+                    <address>
+                    <table style="margin: auto;" class="well">
+                        <colgroup>
+                            <col width="100"/>
+                            <col/>
+                        </colgroup>
+                        <tbody>
+                            <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
+                            <tr t-if="address or editable"><th>Address</th><td class="span2" t-raw="address"/></tr>
+                            <tr t-if="partner_id.website or editable"><th>Website</th><td class="span2"><span t-field="partner_id.website"/></td></tr>
+                            <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="span2"><span t-field="partner_id.phone"/></td></tr>
+                            <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="span2"><span t-field="partner_id.mobile"/></td></tr>
+                            <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="span2"><span t-field="partner_id.fax"/></td></tr>
+                            <tr t-if="partner_id.email or editable"><th>Email</th><td class="span2"><span t-field="partner_id.email"/></td></tr>
+                        </tbody>
+                    </table>
+                </address>
+            </div>
+            <div class="col-md-8 mt32" t-field="partner_id.website_description"/>
+        </template>
+
+</data>
+</openerp>
