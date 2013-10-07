@@ -115,11 +115,12 @@ class TestHTMLExport(common.TransactionCase):
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
+        encoded_content = content.encode('base64')
         value = converter.value_to_html(
-            self.cr, self.uid, content.encode('base64'), column)
+            self.cr, self.uid, encoded_content, column)
         self.assertEqual(
             value, '<img src="data:image/jpeg;base64,%s">' % (
-                content.encode('base64')
+                encoded_content
             ))
 
         with open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:

@@ -374,18 +374,48 @@ class QWeb(orm.AbstractModel):
         options = json.loads(t_att.get('field-options') or '{}')
         field_type = get_field_type(column, options)
 
-        converter = self.pool.get('ir.qweb.field.' + field_type,
-                                  self.pool['ir.qweb.field'])
+        converter = self.get_converter_for(field_type)
 
         return converter.to_html(record._cr, record._uid, field_name, record, options,
                                  e, t_att, g_att, v)
 
+    def get_converter_for(self, field_type):
+        return self.pool.get('ir.qweb.field.' + field_type,
+                             self.pool['ir.qweb.field'])
+
 
 class FieldConverter(osv.AbstractModel):
+    """ Used to convert a t-field specification into an output HTML field.
+
+    :meth:`~.to_html` is the entry point of this conversion from QWeb, it:
+
+    * converts the record value to html using :meth:`~.record_to_html`
+    * generates the metadata attributes (``data-oe-``) to set on the root
+      result node
+    * generates the root result node itself through :meth:`~.render_element`
+    """
     _name = 'ir.qweb.field'
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context):
+        """
+        Generates the metadata attributes (prefixed by ``data-oe-`` for the
+        root node of the field conversion. Attribute values are escaped by the
+        parent using ``werkzeug.utils.escape``.
+
+        The default attributes are:
+
+        * ``model``, the name of the record's model
+        * ``id`` the id of the record to which the field belongs
+        * ``field`` the name of the converted field
+        * ``type`` the logical field type (widget, may not match the column's
+          ``type``, may not be any _column subclass name)
+        * ``translate``, a boolean flag (``0`` or ``1``) denoting whether the
+          column is translatable
+        * ``expression``, the original expression
+
+        :returns: iterable of (attribute name, attribute value) pairs.
+        """
         column = record._model._all_columns[field_name].column
         field_type = get_field_type(column, options)
         return [
@@ -403,14 +433,20 @@ class FieldConverter(osv.AbstractModel):
         return werkzeug.utils.escape(value)
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None):
-        """ Converts the specified field of a ``record`` to HTML
+        """ Converts the specified field of the browse_record ``record`` to
+        HTML
         """
         return self.value_to_html(
             cr, uid, record[field_name], column, options=None)
 
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context):
-        """ Converts a ``t-field[t-field-options]?`` to its HTML output
+        """ Converts a ``t-field`` to its HTML output. A ``t-field`` may be
+        extended by a ``t-field-options``, which is a JSON-serialized mapping
+        of configuration values.
+
+        A default configuration key is ``widget`` which can override the
+        field's own ``_type``.
         """
         content = None
         try:
@@ -431,7 +467,10 @@ class FieldConverter(osv.AbstractModel):
         return self.render_element(cr, uid, source_element, t_att, g_att,
                                    qweb_context, content)
 
-    def render_element(self, cr, uid, source_element, t_att, g_att, qweb_context, content):
+    def render_element(self, cr, uid, source_element, t_att, g_att,
+                       qweb_context, content):
+        """ Final rendering hook, by default just calls ir.qweb's ``render_element``
+        """
         return self.pool['ir.qweb'].render_element(
             source_element, t_att, g_att, qweb_context, content or '')
 
@@ -483,6 +522,14 @@ class HTMLConverter(osv.AbstractModel):
         return value
 
 class ImageConverter(osv.AbstractModel):
+    """ ``image`` widget rendering, inserts a data:uri-using image tag in the
+    document. May be overridden by e.g. the website module to generate links
+    instead.
+
+    .. todo:: what happens if different output need different converters? e.g.
+              reports may need embedded images or FS links whereas website
+              needs website-aware
+    """
     _name = 'ir.qweb.field.image'
     _inherit = 'ir.qweb.field'
 
@@ -492,7 +539,7 @@ class ImageConverter(osv.AbstractModel):
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
-        except: # no idea what "suitable exceptions" are
+        except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
         return '<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)
