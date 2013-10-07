@@ -5721,19 +5721,16 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
             var context = {};
             if (this.field.type === "one2many") {
                 context["default_" + this.field.relation_field] = this.view.datarecord.id;
-            } else if (this.field.type === "many2many") {
-                context["default_" + this.field.relation_field] = [6, 0, [this.view.datarecord.id]];
             }
-            context["search_default_"+ this.field.relation_field] = [this.view.datarecord.id];
+            var domain = [["id", "in", val]];
             return this.do_action({
                 type: 'ir.actions.act_window',
                 name: this.string,
                 res_model: this.field.relation,
-                res_id: val.length >= 1 ? val[0] : false,
-                res_ids: val,
                 views: this.options.views,
                 target: 'current',
                 context: context,
+                domain: domain,
             });
         }, this));
     },
