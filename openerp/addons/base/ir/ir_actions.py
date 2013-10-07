@@ -54,10 +54,9 @@ class actions(osv.osv):
     _defaults = {
         'usage': lambda *a: False,
     }
-actions()
 
 
-class report_xml(osv.osv):
+class ir_actions_report_xml(osv.osv):
 
     def _report_content(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -174,9 +173,8 @@ class report_xml(osv.osv):
         'attachment': False,
     }
 
-report_xml()
 
-class act_window(osv.osv):
+class ir_actions_act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
@@ -291,7 +289,7 @@ class act_window(osv.osv):
         ids_int = isinstance(ids, (int, long))
         if ids_int:
             ids = [ids]
-        results = super(act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        results = super(ir_actions_act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
         if not fields or 'help' in fields:
             context = dict(context or {})
@@ -328,8 +326,6 @@ class act_window(osv.osv):
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, res_id, [], context)
 
-act_window()
-
 VIEW_TYPES = [
     ('tree', 'Tree'),
     ('form', 'Form'),
@@ -337,7 +333,7 @@ VIEW_TYPES = [
     ('calendar', 'Calendar'),
     ('gantt', 'Gantt'),
     ('kanban', 'Kanban')]
-class act_window_view(osv.osv):
+class ir_actions_act_window_view(osv.osv):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
@@ -354,33 +350,22 @@ class act_window_view(osv.osv):
         'multi': False,
     }
     def _auto_init(self, cr, context=None):
-        super(act_window_view, self)._auto_init(cr, context)
+        super(ir_actions_act_window_view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
         if not cr.fetchone():
             cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
-act_window_view()
 
-class act_wizard(osv.osv):
-    _name = 'ir.actions.wizard'
+
+class ir_actions_act_window_close(osv.osv):
+    _name = 'ir.actions.act_window_close'
     _inherit = 'ir.actions.actions'
-    _table = 'ir_act_wizard'
-    _sequence = 'ir_actions_id_seq'
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Wizard Info', size=64, required=True, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
-        'wiz_name': fields.char('Wizard Name', size=64, required=True),
-        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form view."),
-        'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups'),
-        'model': fields.char('Object', size=64),
-    }
+    _table = 'ir_actions'
     _defaults = {
-        'type': 'ir.actions.wizard',
-        'multi': False,
+        'type': 'ir.actions.act_window_close',
     }
-act_wizard()
 
-class act_url(osv.osv):
+
+class ir_actions_act_url(osv.osv):
     _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
@@ -400,55 +385,9 @@ class act_url(osv.osv):
         'type': 'ir.actions.act_url',
         'target': 'new'
     }
-act_url()
-
-def model_get(self, cr, uid, context=None):
-    wkf_pool = self.pool.get('workflow')
-    ids = wkf_pool.search(cr, uid, [])
-    osvs = wkf_pool.read(cr, uid, ids, ['osv'])
-
-    res = []
-    mpool = self.pool.get('ir.model')
-    for osv in osvs:
-        model = osv.get('osv')
-        id = mpool.search(cr, uid, [('model','=',model)])
-        name = mpool.read(cr, uid, id)[0]['name']
-        res.append((model, name))
-
-    return res
-
-class ir_model_fields(osv.osv):
-    _inherit = 'ir.model.fields'
-    _rec_name = 'field_description'
-    _columns = {
-        'complete_name': fields.char('Complete Name', size=64, select=1),
-    }
-ir_model_fields()
-
-class server_object_lines(osv.osv):
-    _name = 'ir.server.object.lines'
-    _sequence = 'ir_actions_id_seq'
-    _columns = {
-        'server_id': fields.many2one('ir.actions.server', 'Related Server Action'),
-        'col1': fields.many2one('ir.model.fields', 'Field', required=True),
-        'value': fields.text('Value', required=True, help="Expression containing a value specification. \n"
-                                                          "When Formula type is selected, this field may be a Python expression "
-                                                          " that can use the same values as for the condition field on the server action.\n"
-                                                          "If Value type is selected, the value will be used directly without evaluation."),
-        'type': fields.selection([
-            ('value', 'Value'),
-            ('equation', 'Python expression')
-        ], 'Evaluation Type', required=True, change_default=True),
-    }
-    _defaults = {
-        'type': 'value',
-    }
 
 
-##
-# Actions that are run on the server side
-#
-class actions_server(osv.osv):
+class ir_actions_server(osv.osv):
     """ Server actions model. Server action work on a base model and offer various
     type of actions that can be executed automatically, for example using base
     action rules, of manually, by adding the action in the 'More' contextual
@@ -1029,16 +968,26 @@ class actions_server(osv.osv):
         return res
 
 
-class act_window_close(osv.osv):
-    _name = 'ir.actions.act_window_close'
-    _inherit = 'ir.actions.actions'
-    _table = 'ir_actions'
-    _defaults = {
-        'type': 'ir.actions.act_window_close',
+class ir_server_object_lines(osv.osv):
+    _name = 'ir.server.object.lines'
+    _sequence = 'ir_actions_id_seq'
+    _columns = {
+        'server_id': fields.many2one('ir.actions.server', 'Related Server Action'),
+        'col1': fields.many2one('ir.model.fields', 'Field', required=True),
+        'value': fields.text('Value', required=True, help="Expression containing a value specification. \n"
+                                                          "When Formula type is selected, this field may be a Python expression "
+                                                          " that can use the same values as for the condition field on the server action.\n"
+                                                          "If Value type is selected, the value will be used directly without evaluation."),
+        'type': fields.selection([
+            ('value', 'Value'),
+            ('equation', 'Python expression')
+        ], 'Evaluation Type', required=True, change_default=True),
     }
-act_window_close()
+    _defaults = {
+        'type': 'value',
+    }
 
-# This model use to register action services.
+
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done')]
 TODO_TYPES = [('manual', 'Launch Manually'),('once', 'Launch Manually Once'),
@@ -1139,9 +1088,8 @@ Launch Manually Once: after having been launched manually, it sets automatically
             'todo': len(total) - len(done)
         }
 
-ir_actions_todo()
 
-class act_client(osv.osv):
+class ir_actions_act_client(osv.osv):
     _name = 'ir.actions.client'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
@@ -1182,6 +1130,8 @@ class act_client(osv.osv):
         'context': '{}',
 
     }
-act_client()
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

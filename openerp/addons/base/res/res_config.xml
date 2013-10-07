@@ -17,23 +17,6 @@
             </field>
         </record>
 
-        <record id="view_config_wizard_form" model="ir.ui.view">
-            <field name="name">Compabitiliby configuration wizard</field>
-            <field name="model">ir.actions.configuration.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Next Configuration Step" version="7.0">
-                    <group>
-                        <field name="note"/>
-                    </group>
-                    <footer>
-                        <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <record id="res_config_installer" model="ir.ui.view">
             <field name="name">Inheritable view for installer objects</field>
             <field name="model">res.config.installer</field>

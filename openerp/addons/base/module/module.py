@@ -716,7 +716,7 @@ class module(osv.osv):
             if already_installed:
                 # in this case, force server restart to reload python code...
                 cr.commit()
-                openerp.service.restart_server()
+                openerp.service.server.restart()
                 return {
                     'type': 'ir.actions.client',
                     'tag': 'home',
