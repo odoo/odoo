@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Partners Geo-Localization',
+    'name': 'Partner Assignation',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
@@ -37,7 +37,7 @@ The most appropriate partner can be assigned.
 You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'account', 'portal'],
+    'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'demo': ['res_partner_demo.xml', 'crm_lead_demo.xml'],
     'data': [
         'security/ir.model.access.csv',

@@ -103,7 +103,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook[last()]" position="inside">
+            <xpath expr="//page[@name='geo_localization']" position="replace">
                 <page string="Geo Localization">
                     <group>
                         <group>
