@@ -9,12 +9,19 @@
     }
 
     website.EditorTour = openerp.Class.extend({
-        editor: undefined,
         tour: undefined,
         steps: [],
         tourStorage: window.localStorage,
-        init: function (editor) {
-            this.editor = editor;
+        init: function () {
+            this.tour = new Tour({
+                name: this.id,
+                storage: this.tourStorage,
+                keyboard: false,
+            });
+            this.tour.addSteps(_.map(this.steps, function (step) {
+               step.title = render('website.tour_title', { title: step.title });
+               return step;
+            }));
         },
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
@@ -22,25 +29,16 @@
             $('.popover.tour').remove();
         },
         start: function () {
-            var self = this;
-            self.tour = new Tour({
-                name: self.id,
-                storage: this.tourStorage,
-                keyboard: false,
-            });
-            self.tour.addSteps(_.map(self.steps, function (step) {
-               step.title = render('website.tour_title', { title: step.title });
-               return step;
-            }));
-            if (self.canResume()) {
-                self.tour.start();
+            if (this.canResume()) {
+                this.tour.start();
             }
         },
         canResume: function () {
             return this.currentStepIndex() === 0 && !this.tour.ended();
         },
         currentStepIndex: function () {
-            return parseInt(this.tourStorage.getItem(this.id+'_current_step'), 10);
+            var index = this.tourStorage.getItem(this.id+'_current_step') || 0;
+            return parseInt(index, 10);
         },
         indexOfStep: function (stepId) {
             var index = -1;
@@ -70,7 +68,7 @@
     website.EditorBasicTour = website.EditorTour.extend({
         id: 'add_banner_tour',
         name: "How to add a banner",
-        start: function () {
+        init: function () {
             var self = this;
             self.steps = [
                 {
@@ -79,7 +77,7 @@
                     backdrop: true,
                     title: "Welcome to your website!",
                     content: "This tutorial will guide you through the firsts steps to build your enterprise class website.",
-                    template: render('website.tour_confirm', { confirm: "Tell me more!" }),
+                    template: render('website.tour_full', { next: "OK", end: "Close" }),
                 },
                 {
                     stepId: 'edit-page',
@@ -96,7 +94,7 @@
                     placement: 'bottom',
                     title: "Editor bar",
                     content: "This is the <b>Editor Bar</b>, use it to modify your website's pages.",
-                    template: render('website.tour_confirm', { confirm: "Got it, now what?" }),
+                    template: render('website.tour_confirm', { next: "OK" }),
                 },
                 {
                     stepId: 'add-block',
@@ -133,8 +131,8 @@
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
                     placement: 'top',
                     title: "Change the title",
-                    content: "Click on the title and modify it to fit your needs.",
-                    template: render('website.tour_confirm', { confirm: "Done!" }),
+                    content: "Click on the title and modify it to fit your needs then click <b>Done</b>.",
+                    template: render('website.tour_confirm', { next: "Done" }),
                     onHide: function () {
                         var $banner = $("#wrap [data-snippet-id=carousel]:first");
                         if ($banner.length) {
@@ -148,7 +146,7 @@
                     placement: 'left',
                     title: "Customize the banner",
                     content: "Click on <b>Customize</b> and change the background of your banner.",
-                    template: render('website.tour_simple'),
+                    template: render('website.tour_confirm', { next: "Not now" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
                             self.movetoStep('save-changes');
@@ -165,14 +163,15 @@
                     template: render('website.tour_simple'),
                     onHide: function () {
                         self.saveStep('part-2');
-                    }
+                    },
+
                 },
                 {
                     stepId: 'part-2',
                     orphan: true,
-                    title: "Welcome to part 2",
+                    title: "Congratutaltions!",
                     content: "Congratulations on your first modifications.",
-                    template: render('website.tour_confirm', { confirm: "Thanks :)" }),
+                    template: render('website.tour_confirm', { next: "OK" }),
                 },
                 {
                     stepId: 'show-tutorials',
@@ -180,22 +179,31 @@
                     placement: 'left',
                     title: "Help is always available",
                     content: "You can find more tutorials in the <b>Help</b> menu.",
-                    template: render('website.tour_end', { confirm: "See you next time..." }),
+                    template: render('website.tour_end', { end: "Close" }),
                 },
             ];
             return this._super();
         },
-        canResume: function () {
+        startOfPart2: function () {
             var currentStepIndex = this.currentStepIndex();
             var secondPartIndex = this.indexOfStep('part-2');
-            return currentStepIndex === 0 || currentStepIndex === secondPartIndex;
-        }
+            return currentStepIndex === secondPartIndex && !this.tour.ended();
+        },
+        canResume: function () {
+            return this.startOfPart2() || this._super();
+        },
     });
+
+    function refererPath () {
+        var anchor = document.createElement('a');
+        anchor.href = document.referrer;
+        return anchor.pathname;
+    }
 
     website.EditorBar.include({
         start: function () {
             website.tutorials = {
-                basic: new website.EditorBasicTour(this),
+                basic: new website.EditorBasicTour(),
             };
             var menu = $('#help-menu');
             _.each(website.tutorials, function (tutorial) {
@@ -206,7 +214,9 @@
                 })
                 menu.append($menuItem);
             });
-            website.tutorials.basic.start();
+            if (refererPath() === '/web' || website.tutorials.basic.startOfPart2()) {
+                website.tutorials.basic.start();
+            }
             return this._super();
         },
     });

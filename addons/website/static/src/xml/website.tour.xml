@@ -13,7 +13,7 @@
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
             <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="confirm"/></button>
+                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
             </nav>
         </div>
     </t>
@@ -23,7 +23,18 @@
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
             <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="confirm"/></button>
+                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
+            </nav>
+        </div>
+    </t>
+    <t t-name="website.tour_full">
+        <div class="popover tour">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <div class="popover-content"></div>
+            <nav class="popover-navigation">
+                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
+                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
             </nav>
         </div>
     </t>
