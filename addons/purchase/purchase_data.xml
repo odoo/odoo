@@ -75,8 +75,9 @@
             <field name="sequence">5</field>
         </record>
 
+        <!-- TODO: use a yaml file with python code to enable purcahse on main warehouse, so that the location_id is correct -->
         <record id="procurement_rule_supply_stock" model="procurement.rule">
-            <field name="name">Buy to stock</field>
+            <field name="name">WH: Buy</field>
             <field name="action">buy</field>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="picking_type_id" ref="stock.picking_type_in"/>

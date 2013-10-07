@@ -33,6 +33,8 @@ class stock_location_route(osv.osv):
         'product_selectable': fields.boolean('Selectable on Product'),
         'product_categ_selectable': fields.boolean('Selectable on Product Category'),
         'warehouse_selectable': fields.boolean('Selectable on Warehouse'),
+        'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
+        'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplier Warehouse'),
     }
     _defaults = {
         'product_selectable': True,
@@ -63,12 +65,25 @@ class stock_warehouse(osv.osv):
         'crossdock_route_id': fields.many2one('stock.location.route', 'Crossdock Route'),
         'reception_route_id': fields.many2one('stock.location.route', 'Reception Route'),
         'delivery_route_id': fields.many2one('stock.location.route', 'Delivery Route'),
+        'resupply_from_wh': fields.boolean('Resupply From Other Warehouses'),
+        'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
+        'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
+        'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse'),
     }
 
     _defaults = {
         'reception_steps': 'one_step',
         'delivery_steps': 'ship_only',
     }
+
+    def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
+        ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
+        data_obj = self.pool.get('ir.model.data')
+        try:
+            inter_wh_loc = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_inter_wh')[1]
+        except:
+            inter_wh_loc = False
+        return inter_wh_loc
 
     def _get_partner_locations(self, cr, uid, ids, context=None):
         ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
@@ -171,6 +186,48 @@ class stock_warehouse(osv.osv):
             'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step',
         }
 
+    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
+        return self.pool.get('product.product').search(cr, uid, [], context=context)
+
+    def _assign_route_on_products(self, cr, uid, warehouse, inter_wh_route_id, context=None):
+        product_ids = self._get_all_products_to_resupply(cr, uid, warehouse, context=context)
+        self.pool.get('product.product').write(cr, uid, product_ids, {'route_ids': [(4, inter_wh_route_id)]}, context=context)
+
+    def _get_inter_wh_route(self, cr, uid, warehouse, wh, context=None):
+        return {
+            'name': _('%s: Supply Product from %s') % (warehouse.name, wh.name),
+            'warehouse_selectable': False,
+            'product_selectable': True,
+            'product_categ_selectable': True,
+            'supplied_wh_id': warehouse.id,
+            'supplier_wh_id': wh.id,
+        }
+
+    def _create_resupply_routes(self, cr, uid, warehouse, supplier_warehouses, default_resupply_wh, context=None):
+        location_obj = self.pool.get('stock.location')
+        route_obj = self.pool.get('stock.location.route')
+        pull_obj = self.pool.get('procurement.rule')
+        #create route selectable on the product to resupply the warehouse from another one
+        inter_wh_location_id = self._get_inter_wh_location(cr, uid, warehouse, context=context)
+        if inter_wh_location_id:
+            input_loc = warehouse.wh_input_stock_loc_id
+            if warehouse.reception_steps == 'one_step':
+                input_loc = warehouse.lot_stock_id
+            inter_wh_location = location_obj.browse(cr, uid, inter_wh_location_id, context=context)
+            for wh in supplier_warehouses:
+                output_loc = wh.wh_output_stock_loc_id
+                if wh.delivery_steps == 'ship_only':
+                    output_loc = wh.lot_stock_id
+                inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
+                inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
+                values = [(output_loc, inter_wh_location, wh.out_type_id.id), (inter_wh_location, input_loc, warehouse.in_type_id.id)]
+                dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, inter_wh_route_id, context=context)
+                for pull_rule in pull_rules_list:
+                    pull_obj.create(cr, uid, vals=pull_rule, context=context)
+                #if the warehouse is also set as default resupply method, assign this route automatically to all product
+                if default_resupply_wh and default_resupply_wh.id == wh.id:
+                    self._assign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
+
     def create_routes(self, cr, uid, ids, warehouse, context=None):
         wh_route_ids = []
         route_obj = self.pool.get('stock.location.route')
@@ -210,6 +267,9 @@ class stock_warehouse(osv.osv):
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', values, crossdock_route_id, context=context)
         for pull_rule in pull_rules_list:
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
+
+        #create route selectable on the product to resupply the warehouse from another one
+        self._create_resupply_routes(cr, uid, warehouse, warehouse.resupply_wh_ids, warehouse.default_resupply_wh_id, context=context)
 
         #set routes and mto pull rule on warehouse
         return self.write(cr, uid, warehouse.id, {
@@ -422,6 +482,7 @@ class stock_warehouse(osv.osv):
             context = {}
         seq_obj = self.pool.get('ir.sequence')
         location_obj = self.pool.get('stock.location')
+        warehouse_obj = self.pool.get('stock.warehouse')
         route_obj = self.pool.get('stock.location.route')
         pull_obj = self.pool.get('procurement.rule')
         push_obj = self.pool.get('stock.location.path')
@@ -457,6 +518,31 @@ class stock_warehouse(osv.osv):
                 seq_obj.write(cr, uid, warehouse.pack_type_id.sequence_id.id, {'name': name + _(' Sequence packing'), 'prefix': vals.get('code', warehouse.code) + '\PACK\\'}, context=context)
                 seq_obj.write(cr, uid, warehouse.pick_type_id.sequence_id.id, {'name': name + _(' Sequence picking'), 'prefix': vals.get('code', warehouse.code) + '\PICK\\'}, context=context)
                 seq_obj.write(cr, uid, warehouse.int_type_id.sequence_id.id, {'name': name + _(' Sequence internal'), 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
+        if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
+            for cmd in vals.get('resupply_wh_ids'):
+                if cmd[0] == 6:
+                    new_ids = set(cmd[2])
+                    old_ids = set([wh.id for wh in warehouse.resupply_wh_ids])
+                    to_add_wh_ids = new_ids - old_ids
+                    supplier_warehouses = warehouse_obj.browse(cr, uid, list(to_add_wh_ids), context=context)
+                    self._create_resupply_routes(cr, uid, warehouse, supplier_warehouses, warehouse.default_resupply_wh_id, context=context)
+                    to_remove_wh_ids = old_ids - new_ids
+                    to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', list(to_remove_wh_ids))], context=context)
+                    route_obj.unlink(cr, uid, to_remove_route_ids, context=context)
+                else:
+                    #not implemented
+                    pass
+        if 'default_resupply_wh_id' in vals:
+            if warehouse.default_resupply_wh_id:
+                to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)
+                route_obj.unlink(cr, uid, to_remove_route_ids, context=context)
+                self._create_resupply_routes(cr, uid, warehouse, [warehouse.default_resupply_wh_id], False, context=context)
+            if vals.get('default_resupply_wh_id'):
+                to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', vals.get('default_resupply_wh_id'))], context=context)
+                route_obj.unlink(cr, uid, to_remove_route_ids, context=context)
+                def_supplier_wh = warehouse_obj.browse(cr, uid, vals['default_resupply_wh_id'], context=context)
+                self._create_resupply_routes(cr, uid, warehouse, [def_supplier_wh], def_supplier_wh, context=context)
+
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):

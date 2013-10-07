@@ -76,7 +76,11 @@
             <field name="name">Stock</field>
             <field name="location_id" ref="stock_location_company"/>
         </record>
-
+        <record id="stock_location_inter_wh" model="stock.location">
+            <field name="name">Inter Warehouse</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="usage">transit</field>
+        </record>
 
         <!-- Sequences for picking types   -->
         <record id="seq_picking_type_in" model="ir.sequence">

@@ -186,6 +186,8 @@
                           <group colspan="4">
                               <field name="reception_steps" widget='radio'/>
                               <field name="delivery_steps" widget='radio'/>
+                              <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                              <field name="default_resupply_wh_id"/> <!-- TODO should be filtered on resupply_wh_ids only... -->
                           </group>
                       </page>
                       <page string="Routes Information" colspan="4">
