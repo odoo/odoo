@@ -1,10 +1,14 @@
 # -*- encoding: utf-8 -*-
+import json
 import os
+import xml.dom.minidom
 
 from openerp.tests import common
 
 directory = os.path.dirname(__file__)
 
+impl = xml.dom.minidom.getDOMImplementation()
+doc = impl.createDocument(None, None, None)
 
 class TestExport(common.TransactionCase):
     _model = None
@@ -68,6 +72,46 @@ class TestFloatExport(TestBasicExport):
 
         value = converter(42.01234)
         self.assertEqual(value, '42.01')
+
+class TestCurrencyExport(TestExport):
+    _model = 'test_converter.currency'
+
+    def setUp(self):
+        super(TestCurrencyExport, self).setUp()
+        self.Currency = self.registry('res.currency')
+
+    def create(self, model, context=None, **values):
+        return model.browse(
+            self.cr, self.uid,
+            model.create(self.cr, self.uid, values, context=context),
+            context=context)
+
+    def convert(self, obj):
+        converter = self.registry('ir.qweb.field.currency')
+        options = {'widget': 'currency', 'currency': 'currency_id'}
+        converted = converter.to_html(
+            self.cr, self.uid, 'value', obj, options,
+            doc.createElement('span'),
+            {'field': 'obj.value', 'field-options': json.dumps(options)},
+            '', {'obj': obj})
+        return converted
+
+    def test_currency_post(self):
+        currency = self.create(self.Currency, name="Test", symbol=u"test")
+        obj = self.create(self.Model, value=0.12, currency_id=currency.id)
+
+        converted = self.convert(obj)
+
+        self.assertEqual(
+            converted,
+            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                  'data-oe-field="value" data-oe-type="currency" '
+                  'data-oe-translate="0" data-oe-expression="obj.value">'
+                      '<span class="oe_currency_value">0.12</span> '
+                      '{symbol}</span>'.format(
+                obj=obj,
+                symbol=currency.symbol.encode('utf-8')
+            ),)
 
 class TestTextExport(TestBasicExport):
     def test_text(self):
@@ -175,5 +219,6 @@ class TestHTMLExport(TestBasicExport):
         input = '<span>span</span>'
         value = converter(input)
         self.assertEqual(value, input)
+
 # o2m, m2m?
 # reference?
