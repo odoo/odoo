@@ -1,12 +1,11 @@
 {
-    'name': 'Public Partners References',
+    'name': 'Publish Partner Assignment',
     'category': 'Website',
-    'summary': 'Publish Customer References',
+    'summary': 'Publish and Assign Partner',
     'version': '1.0',
     'description': """
-OpenERP Public Partners References
-==================================
-
+Publish and Assign Partner
+==========================
         """,
     'author': 'OpenERP SA',
     'depends': ['website_partner', 'website_google_map'],

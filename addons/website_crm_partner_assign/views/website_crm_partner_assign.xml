@@ -4,7 +4,6 @@
 
 
     <!-- Layout add nav and footer -->
-
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-href="/partners/">Partners</a></li>
@@ -12,29 +11,42 @@
     </template>
 
     <!-- Page --> 
-
     <template id="layout" name="Partners Layout">
         <t t-call="website.layout">
-          <t t-set="title">Partners</t>
-          <div id="wrap">
-            <div class="oe_structure"/>
-            <div class="container">
-                <div class="row">
-                    <t t-raw="ref_content" />
+            <t t-set="title">Partners</t>
+            <div id="wrap">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <t t-raw="ref_content" />
+                    </div>
                 </div>
             </div>
-          </div>
         </t>
     </template>
 
-    <template id="index" name="Partners">
+    <template id="index" name="Find Partners">
         <t t-call="website_crm_partner_assign.layout">
             <t t-set="ref_content">
                 <h1 class="col-md-12 text-center">
                     Want services on OpenERP?<br/>
                     <small>Contact a local partner</small>
                 </h1>
-                <div class="col-md-12" id="ref_content">
+                <div class="col-md-4" id="partner_left">
+                    <h2>Partners by Country</h2>
+                    <ul class="nav">
+                        <t t-foreach="countries" t-as="country">
+                            <t t-if="country['country_id']">
+                                <li>
+                                    <a t-href="/partners/country/#{ country['country_id'][0] }">
+                                        <t t-esc="country['country_id'][1]"/> <small>(<t t-esc="country['country_id_count']"/>)</small>
+                                    </a>
+                                </li>
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+                <div class="col-md-8" id="ref_content">
                     <div class='navbar'>
                         <div>
                             <t t-call="website.pager">
@@ -42,18 +54,7 @@
                             </t>
                             <form t-action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
                                 <div class="form-group">
-                                    <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search') or '' or ''"/>
-                                </div>
-                                <div class="form-group">
-                                    <select class="search-query col-md-2 mt4 form-control" name="country" t-if="len(countries) > 1" onchange="submit()">
-                                        <t t-foreach="countries">
-                                            <t t-if="country_id">
-                                            <option t-att-selected="searches.get('country') == str(country_id and country_id[0]) and 'selected'" t-att-value="country_id[0]">
-                                                <t t-esc="country_id[1]"/> (<t t-esc="country_id_count"/>)
-                                            </option>
-                                            </t>
-                                        </t>
-                                    </select>
+                                    <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="name_search"/>
                                 </div>
                                 <div class="form-group">
                                     <select class="search-query col-md-2 mt4 form-control" name="grade" t-if="len(grades) > 1" onchange="submit()">
@@ -70,19 +71,22 @@
                         </div>
                     </div>
                     <div>
-                        <t t-foreach="partner_ids" t-as="partner">
-                            <t t-if="grade_id != partner.grade_id.id">
-                                <t t-set="grade_id" t-value="partner.grade_id.id"/>
-                                <h3 class="text-center well"><span t-field="partner.grade_id"/> Partners</h3>
+                        <t t-foreach="partners" t-as="partner_id">
+                            <t t-if="internal_gid != partner_id.grade_id.id">
+                                <t t-set="internal_gid" t-value="partner_id.grade_id.id"/>
+                                <h3 class="text-center">
+                                    <span t-field="partner_id.grade_id"/> Partners
+                                    <t t-if="country"> in <t t-esc="country.name"/></t>
+                                </h3>
                             </t>
                             <div class="media thumbnail" data-publish="">
-                                <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
-                                <a class="pull-left" t-href="/partners/#{ partner.id }/">
-                                    <img class="media-object" t-att-src="partner.img('image_small')"/>
+                                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
+                                <a class="pull-left" t-href="/partners/#{ partner_id.id }/">
+                                    <img class="media-object" t-att-src="partner_id.img('image_small')"/>
                                 </a>
                                 <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-href="/partners/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a> - <span t-field="partner.grade_id"/>
-                                    <div t-field="partner.website_short_description"/>
+                                    <a class="media-heading" t-href="/partners/#{ partner_id.id }/"><span t-field="partner_id.parent_id"/> <span t-field="partner_id.name"/></a> - <span t-field="partner_id.grade_id"/>
+                                    <div t-field="partner_id.website_short_description"/>
                                 </div>
                             </div>
                         </t>
@@ -93,48 +97,19 @@
     </template>
 
     <template id="ref_country" inherit_id="website_crm_partner_assign.index" inherit_option_id="website_crm_partner_assign.index" name="Left World Map">
-        <xpath expr="//div[@id='ref_content']" position="before">
-            <div class="col-md-4">
-                <ul class="nav">
-                    <li class="navbar-header">World Map</li>
-                    <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                        style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
-                </ul>
-            </div>
-        </xpath>
-        <xpath expr="//div[@id='ref_content']" position="attributes">
-            <attribute name="class">col-md-8</attribute>
+        <xpath expr="//div[@id='partner_left']//h2" position="before">
+            <h2>World Map</h2>
+            <ul class="nav">
+                <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                    style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+            </ul>
         </xpath>
     </template>
 
-    <template id="details" name="Partner Detail">
+    <template id="partner" name="Partner Detail">
         <t t-call="website_crm_partner_assign.layout">
             <t t-set="ref_content">
-                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
-                <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img t-att-src="partner_id.img('image_medium')"/>
-                    </div>
-                        <address>
-                        <table style="margin: auto;" class="well">
-                            <colgroup>
-                                <col width="100"/>
-                                <col/>
-                            </colgroup>
-                            <tbody>
-                                <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
-                                <tr t-if="address or editable"><th>Address</th><td class="span2" t-raw="address"/></tr>
-                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="span2" t-field="partner_id.website"/></tr>
-                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="span2" t-field="partner_id.phone"/></tr>
-                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="span2" t-field="partner_id.mobile"/></tr>
-                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="span2" t-field="partner_id.fax"/></tr>
-                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="span2" t-field="partner_id.email"/></tr>
-                            </tbody>
-                        </table>
-                    </address>
-                </div>
-                <div class="col-md-8 mt32" t-field="partner_id.website_description"/>
+                <t t-call="website_partner.partner_detail"/>
             </t>
         </t>
     </template>
