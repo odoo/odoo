@@ -464,7 +464,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                             THEN (SUM(total_attendance) +
                                 CASE WHEN current_date <> name
                                     THEN 1440
-                                    ELSE (EXTRACT(hour FROM current_time) * 60) + EXTRACT(minute FROM current_time)
+                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC') * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC')
                                 END
                                 )
                             ELSE SUM(total_attendance)

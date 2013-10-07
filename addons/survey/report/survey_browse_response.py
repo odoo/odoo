@@ -26,6 +26,7 @@ from openerp import pooler, tools
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.tools import to_xml
+from openerp.tools.translate import _
 
 class survey_browse_response(report_rml):
     def create(self, cr, uid, ids, datas, context):
@@ -66,7 +67,7 @@ class survey_browse_response(report_rml):
             rml +="""
                     <fill color="gray"/>
                     <setFont name="Helvetica" size="10"/>
-                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
+                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">"""+_('Page : ')+"""<pageNumber/> </drawRightString>"""
         rml +="""</pageGraphics>
                     </pageTemplate>
                 </template>
@@ -206,29 +207,29 @@ class survey_browse_response(report_rml):
                 resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
-                            <td><para style="terp_default_9_Bold">Print Date : </para></td>
+                            <td><para style="terp_default_9_Bold">""" + _('Print Date : ') + """</para></td>
                             <td><para style="terp_default_9">""" + to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True)) + """</para></td>
                             <td><para style="terp_default_9"></para></td>
-                            <td><para style="terp_default_9_Bold">Answered by : </para></td>
+                            <td><para style="terp_default_9_Bold">""" +_('Answered by : ') + """</para></td>
                             <td><para style="terp_default_9">""" + to_xml(response.user_id.login or '') + """</para></td>
                           </tr>
                           <tr>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9"></para></td>
-                            <td><para style="terp_default_9_Bold">Answer Date : </para></td>
+                            <td><para style="terp_default_9_Bold">""" +_('Answer Date : ') + """</para></td>
                             <td><para style="terp_default_9">""" + to_xml(resp_create) +  """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
 
-                status = "Not Finished"
-                if response.state == "done": status = "Finished"
+                status = _("Not Finished")
+                if response.state == "done": status = _("Finished")
                 colwidth =  str(tbl_width - 7) + "cm,"
                 colwidth +=  "7cm"
                 rml += """<blockTable colWidths='""" + str(colwidth) + """' style="title_tbl">
                             <tr>
                             <td><para style="title">""" + to_xml(tools.ustr(survey.title)) + """</para><para style="P2"><font></font></para></td>
-                            <td><para style="descriptive_text_heading">Status :- """ + to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
+                            <td><para style="descriptive_text_heading">"""+_('Status :- ')+ to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
                             </tr>
                         </blockTable>"""
 
@@ -239,7 +240,7 @@ class survey_browse_response(report_rml):
 
                 for page in survey.page_ids:
                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="page_tbl">
-                                  <tr><td><para style="page">Page :- """ + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
+                                  <tr><td><para style="page">"""+_('Page :- ') + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
                               </blockTable>"""
                     if page.note:
                         rml += """<para style="P2"></para>
@@ -299,7 +300,7 @@ class survey_browse_response(report_rml):
 
                             else:
                                 rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                             <tr><td> <para style="response">No Answer</para></td> </tr>
+                                             <tr><td> <para style="response">"""+ _('No Answer') + """</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:

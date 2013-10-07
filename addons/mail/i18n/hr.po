@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-07-25 14:29+0000\n"
-"Last-Translator: Marko Carevic <Unknown>\n"
+"PO-Revision-Date: 2013-10-04 10:42+0000\n"
+"Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-26 05:47+0000\n"
-"X-Generator: Launchpad (build 16700)\n"
+"X-Launchpad-Export-Date: 2013-10-05 06:16+0000\n"
+"X-Generator: Launchpad (build 16791)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -169,6 +169,11 @@ msgid ""
 "discussions\n"
 "- All Messages: for every notification you receive in your Inbox"
 msgstr ""
+"Pravilo za primanje e-mailova za nove poruke u vašem privatnom Inbox-u:\n"
+"- Nikada: e-mailovi neće biti slani\n"
+"- Samo ulazni e-mailovi: za poruke koje šalje sustav putem e-maila\n"
+"- Ulazni e-mailovi i diskusije: za ulazne e-mailove i interne diskusije\n"
+"- Sve poruke: za sve poruek koje dobivate u svoj Inbox"
 
 #. module: mail
 #: field:mail.group,message_unread:0
@@ -190,8 +195,6 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Članovi tih grupa će biti automatski dodani kao sljedbenici. Imajte na umu "
-"da će oni prema potrebi moći ručno upravljati svojom pretplatom."
 
 #. module: mail
 #. openerp-web
@@ -220,6 +223,9 @@ msgid ""
 " %s won't be notified of any email or discussion on this document. Do you "
 "really want to remove him from the followers ?"
 msgstr ""
+"Upozorenje! \n"
+" %s neće dobivati e-mailove niti diskusije vezane za ovaj dokument. Da li "
+"ste sigurni da želite ukloniti ovog sljedbenika?"
 
 #. module: mail
 #: field:mail.compose.message,res_id:0
@@ -499,7 +505,7 @@ msgstr ""
 #. module: mail
 #: view:base.config.settings:0
 msgid "mycompany.my.openerp.com"
-msgstr "mycompany.my.openerp.com"
+msgstr ""
 
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
@@ -562,7 +568,7 @@ msgstr "Podvrsta"
 #: view:mail.mail:0
 #: view:mail.message.subtype:0
 msgid "Email message"
-msgstr "Poruka e-pošte"
+msgstr "E-mail poruka"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
@@ -778,6 +784,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nemate privatnih poruka.</b>\n"
+"                </p><p>\n"
+"                    Ova lista sadrži poruke poslane Vama.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:mail.group,name:mail.group_rd
@@ -821,7 +833,7 @@ msgid ""
 "\"Settings > Users\" menu."
 msgstr ""
 "Ne možete izraditi korisnika. Za stvaranje novih korisnika, trebali biste "
-"koristiti \"Postavke> Korisnici\" izbornika."
+"koristiti izbornik \"Postavke > Korisnici\"."
 
 #. module: mail
 #: help:mail.followers,res_model:0
@@ -915,7 +927,7 @@ msgstr "Podtipovi poruka"
 #: code:addons/mail/static/src/xml/mail.xml:55
 #, python-format
 msgid "Log a note"
-msgstr "Zabilježi bilješku"
+msgstr "Unesi bilješku"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -938,6 +950,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Odlično !</b> Vaš inbox je prazan.\n"
+"                </p><p>\n"
+"                    Vaš inbox sadrži privatne poruke ili e-mailove poslane "
+"Vama\n"
+"                    kao i informacije povezane sa dokumentima ili ljudima "
+"koje\n"
+"                    slijedite.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: field:mail.mail,notification:0
@@ -991,7 +1013,7 @@ msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
 msgstr ""
-"Adresa e-pošte povezana s ovom skupinom. Novoprimljene poruke automatski će "
+"Adresa e-pošte povezana s ovom grupom. Novoprimljene poruke automatski će "
 "stvoriti nove teme."
 
 #. module: mail
@@ -1096,6 +1118,7 @@ msgstr "Molimo popunite informacije o partneru"
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
 msgstr ""
+"<p>Pristupite ovom dokumentu <a href=\"%s\">izravno u OpenERP-u</a></p>"
 
 #. module: mail
 #: view:mail.compose.message:0
@@ -1129,6 +1152,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Poruka nije pronađena niti poslana.\n"
+"                </p><p>\n"
+"                    Pritisnite ikonu u gornjem desnom uglu kako biste "
+"kreirali novu poruku. Ova\n"
+"                    poruka će biti poslana putem e-maila ako se radi o "
+"internom kontaktu.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: view:mail.mail:0
@@ -1505,7 +1537,7 @@ msgstr "Mjesec kreiranja"
 #: help:mail.message,notified_partner_ids:0
 msgid ""
 "Partners that have a notification pushing this message in their mailboxes"
-msgstr ""
+msgstr "Poruka za partnere koji imaju obavjesti."
 
 #. module: mail
 #: view:mail.message:0
@@ -1600,7 +1632,7 @@ msgstr "Izlazni poslužitelj e-pošte"
 #: code:addons/mail/mail_message.py:930
 #, python-format
 msgid "Partners email addresses not found"
-msgstr "Pertnerove e-mail adrese nisu pronađene"
+msgstr "Partnerove e-mail adrese nisu pronađene"
 
 #. module: mail
 #: view:mail.mail:0
@@ -1639,6 +1671,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    U ovoj grupi nema poruka.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #. openerp-web
@@ -1655,6 +1691,10 @@ msgid ""
 "installed\n"
 "                                    the portal module."
 msgstr ""
+"Ova je grupa vidljiva svima,\n"
+"                                    uključujući i Vaše partnere ukoliko ste "
+"instalirali\n"
+"                                    portal modul."
 
 #. module: mail
 #. openerp-web
@@ -1851,6 +1891,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nema zadataka za učiniti.</b>\n"
+"                </p><p>\n"
+"                    Kada obradite poruke u Vašem inbox-u, neke od njih "
+"možete označiti\n"
+"                    <i>Za učiniti</i>. Iz ovog izbornika možete obraditi sve "
+"Vaše poruke <i>Za učiniti</i>.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: selection:mail.mail,state:0

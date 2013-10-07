@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-02-06 01:21+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
+"PO-Revision-Date: 2013-09-26 12:08+0000\n"
+"Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:19+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-09-27 06:16+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -75,7 +75,7 @@ msgstr "Dan"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Otkaži nalog"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -287,7 +287,7 @@ msgstr "Kolovoz"
 #. module: purchase
 #: view:product.product:0
 msgid "to"
-msgstr ""
+msgstr "za"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -788,7 +788,7 @@ msgstr "ZZP (RFQ)"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Pošalji e-mailom"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -839,7 +839,7 @@ msgstr "Zahtjev za ponudom"
 #: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr ""
+msgstr "U dolaznim pošiljkama"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1134,7 +1134,7 @@ msgstr "Nepročitane poruke"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr "kategorije JM"
+msgstr "Kategorije JM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1177,7 +1177,7 @@ msgstr "Proizvodi"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Pravila i uvjeti..."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1376,6 +1376,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za dodavanje verzije cjenika.\n"
+"              </p><p>\n"
+"                Moguće je imati više verzija cjenika, a svaka verzija\n"
+"                mora biti važeća u određenom vremenskom razdoblju. Na\n"
+"                primjer: Osnovne cijene, 2010, 2011, Ljetna rasprodaja,\n"
+"                itd.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -1440,7 +1449,7 @@ msgstr "Na stavkama naloga za nabavu"
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "TVA:"
-msgstr "TVA:"
+msgstr "OIB:"
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -1513,21 +1522,16 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                                                           Click to create a "
-"request for quotation.\n"
-"                                                     </p><p>\n"
-"                                                    Ponuda sadrži povijest "
-"komunikacije/pregovaranja\n"
-"                                                    koju ste vodili sa "
-"dobavljačem. Jednom kad se potvrdi\n"
-"                                                    zahtjev za ponudom "
-"prelazi u nalog za nabavu.\n"
-"                                                    </p><p>\n"
-"                                                   Večina prijedloga za "
-"nalozima za nabavu je automatski \n"
-"                                                   generirana od OpenERPa "
-"bazirano na potrebama skladišta\n"
-"                                                   </p>\n"
+"                Pritisnite za kreiranje zahtjeva za ponudom.\n"
+"              </p><p>\n"
+"                Ponuda sadrži povijest komunikacije/pregovora sa\n"
+"                dobavljačem. Nakon potvrđivanja zahtjev za ponudom\n"
+"                se pretvara u nalog za nabavu.\n"
+"              </p><p>\n"
+"                Većina prijedloga za nalog za nabavu OpenERP kreira "
+"automatski\n"
+"                temeljem pravila vođenja zaliha i potreba za zalihom.\n"
+"              </p>\n"
 "            "
 
 #. module: purchase
@@ -1785,7 +1789,7 @@ msgstr "Greška!"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Total :"
-msgstr "Neto zbroj :"
+msgstr "Neto :"
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1834,7 +1838,7 @@ msgstr "Ponovo šalji nalog"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Price"
-msgstr "Netto cijena"
+msgstr "Iznos"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -2129,7 +2133,7 @@ msgstr "Opis"
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr "Expected Delivery address:"
+msgstr "Očekivana adresa dostave:"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -2221,7 +2225,7 @@ msgstr "Veljača"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr "u nacrtima računa"
+msgstr "U nacrtima računa"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2322,6 +2326,18 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                   Ovaj dobaljač nema niti jedan nalog za nabavu. Pritisnite "
+"za kreiranje.\n"
+"                   novog zahtjeva za ponudom (RfQ).\n"
+"                   </p><p>\n"
+"                   Zahtjev za ponudom predstavlja prvi korak u procesu "
+"nabave. Kada se jednom \n"
+"                   pretvori u nalog za nabavu, moći ćete kontrolirati prijem "
+"proizvoda\n"
+"                   kao i ulazne račune dobavljača.\n"
+"                </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0

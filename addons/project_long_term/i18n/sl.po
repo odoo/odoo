@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-02-03 11:47+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-09-29 11:12+0000\n"
+"Last-Translator: Matmoz <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:18+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-09-30 05:43+0000\n"
+"X-Generator: Launchpad (build 16774)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr ""
+msgstr "Vsili zaključek faze pred tem datumom"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -41,28 +41,28 @@ msgstr "Faze"
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Team Planning"
-msgstr ""
+msgstr "Planiranje ekip"
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
 msgid "Assigned Users"
-msgstr ""
+msgstr "Dodeljeni uporabniki"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr ""
+msgstr "Naslednje faze"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_user_allocation
 msgid "Phase User Allocation"
-msgstr ""
+msgstr "Dodeljevanje uporabnika fazi"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr ""
+msgstr "Projektna opravila"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
@@ -71,18 +71,21 @@ msgid ""
 "view.\n"
 "               "
 msgstr ""
+"Za razporeditev faz vseh ali določenega projekta. Nato se odpre Gantt "
+"pogled.\n"
+"               "
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr "Naloge projekta"
+msgstr "Projektna opravila"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 #: view:project.compute.phases:0
 msgid "Schedule Phases"
-msgstr ""
+msgstr "Razporedi faze"
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
@@ -97,12 +100,12 @@ msgstr "Dejanje"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Phase"
-msgstr ""
+msgstr "Začni fazo"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
-msgstr "Naloga"
+msgstr "Opravilo"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -124,7 +127,7 @@ msgstr "Novo"
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration Unit of Measure"
-msgstr ""
+msgstr "Enota mere trajanja"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
@@ -140,12 +143,12 @@ msgstr "Na čakanju"
 #. module: project_long_term
 #: help:project.phase,progress:0
 msgid "Computed based on related tasks"
-msgstr ""
+msgstr "Izračunano na osnovi povezanih opravil"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "In Progress Phases"
-msgstr ""
+msgstr "Faze v teku"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:140
@@ -157,7 +160,7 @@ msgstr "%s (kopija)"
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
-msgstr ""
+msgstr "Določite prosim projekt za razporeditev."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -173,29 +176,30 @@ msgstr "Preostale ure"
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
-msgstr ""
+msgstr "Minimalen datum pričetka"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "Enota mere (Enota mere) je enota za merjenje trajanja"
 
 #. module: project_long_term
 #: help:project.phase,user_ids:0
 msgid ""
 "The resources on the project can be computed automatically by the scheduler."
-msgstr ""
+msgstr "Vire sredstev projekta samodejno preračuna razporejevalnik."
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Cancel Phase"
-msgstr ""
+msgstr "Odpovej fazo"
 
 #. module: project_long_term
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
 msgstr ""
+"Označite to polje, če nameravate uporabljati razporejanje na osnovi faz"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -206,6 +210,10 @@ msgid ""
 "           \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
+"Ko je faza ustvarjena je v stanju 'Osnutek'.\n"
+" Ko je faza začeta stanje postane 'V teku'.\n"
+" Če je potrebna revizija gre stanje v 'Na čakanju'.          \n"
+" Ko je faza dokončana gre v stanje 'Končano'."
 
 #. module: project_long_term
 #: field:project.phase,progress:0
@@ -232,7 +240,7 @@ msgstr "Faza"
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Privzeto v dnevih"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
@@ -242,7 +250,7 @@ msgstr "Delovni čas"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Pending Phases"
-msgstr ""
+msgstr "Faze \"na čakanju\""
 
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
@@ -252,12 +260,12 @@ msgstr "Začetni datum"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Related Tasks"
-msgstr ""
+msgstr "Povezana opravila"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "Začetni mesec"
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
@@ -268,7 +276,7 @@ msgstr "Končni datum"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Izračun projektnih opravil"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.act_project_phase
@@ -280,43 +288,48 @@ msgid ""
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
 msgstr ""
+"Projekt je lahko razdeljen na faze. Za vsako fazo lahko določimo dodelitev "
+"uporabnikov, opišemo različna opravila in jo povežemo s prejšnjimi ali "
+"naslednjimi fazami. Dodamo lahko datumske omejitve za samodejno "
+"razporejanje. Dolgoročno planiranje uporabljamo za načrtovanje kadrov, ko "
+"začnemo z delom na projektu fazo spremenimo v serijo nalog."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Izračunaj določen projekt"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr ""
+msgstr "Prejšnje faze"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "New Phases"
-msgstr ""
+msgstr "Nove faze"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Podrobnosti opravil"
 
 #. module: project_long_term
 #: field:project.project,phase_count:0
 msgid "Open Phases"
-msgstr ""
+msgstr "Odprte faze"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
-msgstr ""
+msgstr " Izračuna razporejevalnik glede na datum pričetka in trajanje."
 
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Loops in phases not allowed"
-msgstr ""
+msgstr "Povratne zanke pri fazah niso dovoljene"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -345,7 +358,7 @@ msgstr "Prekliči"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project Users"
-msgstr ""
+msgstr "Projektni uporabniki"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -354,7 +367,7 @@ msgstr ""
 #: field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
-msgstr ""
+msgstr "Projektna faza"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
@@ -364,7 +377,7 @@ msgstr "Razporejanje"
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr ""
+msgstr "Začetni datum faze mora biti nižji od končnega."
 
 #. module: project_long_term
 #: selection:project.phase,state:0
@@ -379,7 +392,7 @@ msgstr "Ure skupaj"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr ""
+msgstr "Izračun projektnih faz"
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -401,7 +414,7 @@ msgstr "Status"
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Poda zaporedje ob prikazu seznama faz."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
@@ -425,6 +438,8 @@ msgid ""
 "It's computed by the scheduler according the project date or the end date of "
 "the previous phase."
 msgstr ""
+"Preračuna razporejevalnik glede na datum projekta ali končni datum predhodne "
+"faze."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -434,12 +449,12 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr ""
+msgstr "Projektne faze"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
 msgid "force the phase to start after this date"
-msgstr ""
+msgstr "vsili začetek faze po tem datumu"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -459,14 +474,14 @@ msgstr "Rok"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
-msgstr ""
+msgstr "Dodeljevanje uporabnikov projektu"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 #: view:project.compute.tasks:0
 msgid "Schedule Tasks"
-msgstr ""
+msgstr "Razporedi opravila"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -477,12 +492,12 @@ msgstr "Končano"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All My Projects"
-msgstr ""
+msgstr "Izračun vseh mojih projektov"
 
 #. module: project_long_term
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
-msgstr ""
+msgstr "Vsili dodelitev uporabnikov"
 
 #. module: project_long_term
 #: view:project.phase:0
