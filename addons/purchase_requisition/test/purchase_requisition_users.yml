@@ -1,7 +1,7 @@
 -
   Create a user as 'Purchase Requisition Manager'
 -
-  !record {model: res.users, id: res_users_purchase_requisition_manager}:
+  !record {model: res.users, id: res_users_purchase_requisition_manager, view: False}:
     company_id: base.main_company
     name: Purchase requisition Manager
     login: prm
@@ -16,7 +16,7 @@
 -
   Create a user as 'Purchase Requisition User'
 -
-  !record {model: res.users, id: res_users_purchase_requisition_user}:
+  !record {model: res.users, id: res_users_purchase_requisition_user, view: False}:
     company_id: base.main_company
     name: Purchase requisition User
     login: pru

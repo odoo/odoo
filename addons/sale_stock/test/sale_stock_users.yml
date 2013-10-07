@@ -1,7 +1,7 @@
 -
    Create a user as 'Stock Salesmanager'
 -
-  !record {model: res.users, id: res_sale_stock_salesmanager}:
+  !record {model: res.users, id: res_sale_stock_salesmanager, view: False}:
     company_id: base.main_company
     name: Stock Sales manager
     login: ssm
@@ -16,7 +16,7 @@
 -
    Create a user as 'Stock Salesman'
 -
-  !record {model: res.users, id: res_sale_stock_salesman}:
+  !record {model: res.users, id: res_sale_stock_salesman, view: False}:
     company_id: base.main_company
     name: Stock Salesman
     login: ssu
@@ -31,7 +31,7 @@
 -
    Create a user as 'Stock User'
 -
-  !record {model: res.users, id: res_stock_user}:
+  !record {model: res.users, id: res_stock_user, view: False}:
     company_id: base.main_company
     name: Stock User
     login: sau
@@ -46,7 +46,7 @@
 -
    Create a user as 'Stock Manager'
 -
-  !record {model: res.users, id: res_stock_manager}:
+  !record {model: res.users, id: res_stock_manager, view: False}:
     company_id: base.main_company
     name: Stock Manager
     login: sam
