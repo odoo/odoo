@@ -89,6 +89,11 @@ class sale_order(osv.osv):
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
+        
+        routes = []        
+        routes += order.warehouse_id and [(4, x.id) for x in order.warehouse_id.route_ids] or [] #route_ids        
+        routes += line.route_id and [(4, line.route_id.id)] or [] #route_id
+        vals['route_ids'] = routes                
         return vals
 
     _columns = {
@@ -251,6 +256,7 @@ class sale_order_line(osv.osv):
     _columns = {
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
+        'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
     }
 
     _defaults = {
@@ -402,3 +408,10 @@ class stock_move(osv.osv):
             res['price_unit'] = sale_line.price_unit
             res['discount'] = sale_line.discount
         return res
+
+
+class stock_location_route(osv.osv):
+    _inherit = "stock.location.route"
+    _columns = {
+        'sale_selectable':fields.boolean("Selectable on Sales Order Line")
+        }
