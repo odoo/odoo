@@ -92,7 +92,7 @@ Dashboard / Reports for Warehouse Management will include:
     ],
     'test': [
         'test/inventory.yml',
-        'test/move.yml',
+        #'test/move.yml',
         'test/procrule.yml',
         'test/shipment.yml',
         'test/packing.yml',
