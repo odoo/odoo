@@ -214,9 +214,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // freeing subwidgets
             
-            if(this.scrollbar){
-                this.scrollbar.destroy();
-            }
             for(var i = 0, len = this.orderlinewidgets.length; i < len; i++){
                 this.orderlinewidgets[i].destroy();
             }
@@ -243,30 +240,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }, this));
             this.update_numpad();
             this.update_summary();
-
-            var position = this.scrollbar ? this.scrollbar.get_position() : 0;
-            var at_bottom = this.scrollbar ? this.scrollbar.is_at_bottom() : false;
-            
-            this.scrollbar = new module.ScrollbarWidget(this,{
-                target_widget:   this,
-                target_selector: '.order-scroller',
-                name: 'order',
-                track_bottom: true,
-                on_show: function(){
-                    self.$('.order-scroller').css({'width':'89%'},100);
-                },
-                on_hide: function(){
-                    self.$('.order-scroller').css({'width':'100%'},100);
-                },
-            });
-
-            this.scrollbar.replace(this.$('.placeholder-ScrollbarWidget'));
-            this.scrollbar.set_position(position);
-
-            if( at_bottom ){
-                this.scrollbar.set_position(Number.MAX_VALUE, false);
-            }
-
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
@@ -609,9 +582,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
             
-            if(this.scrollbar){
-                this.scrollbar.destroy();
-            }
             var products = this.pos.get('products').models || [];
             
             _.each(products,function(product,i){
@@ -620,19 +590,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 $product.find('a').click(function(){ self.click_product_action(product); });
                 $product.appendTo(self.$('.product-list'));
             });
-
-            this.scrollbar = new module.ScrollbarWidget(this,{
-                target_widget:   this,
-                target_selector: '.product-list-scroller',
-                on_show: function(){
-                    self.$('.product-list-scroller').css({'padding-right':'62px'},100);
-                },
-                on_hide: function(){
-                    self.$('.product-list-scroller').css({'padding-right':'0px'},100);
-                },
-            });
-
-            this.scrollbar.replace(this.$('.placeholder-ScrollbarWidget'));
 
         },
     });
