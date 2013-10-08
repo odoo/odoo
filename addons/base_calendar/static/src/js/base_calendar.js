@@ -14,7 +14,7 @@ instance.base_calendar = {}
         },
         start: function() {
             var self = this;
-            if(!instance.session.session_is_valid(self.db)) {
+            if(instance.session.session_is_valid(self.db)) {
                 self.redirect_meeting_view(self.db,self.action,self.id,self.view);
             } else {
                 new instance.web.Model("crm.meeting").call('get_attendee',[self.id]).then(function(res){

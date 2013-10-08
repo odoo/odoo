@@ -235,7 +235,6 @@ class calendar_attendee(osv.osv):
                         ('declined', 'Declined'),
                         ('accepted', 'Accepted'),
                         ('delegated', 'Delegated')], 'Status', readonly=True, \
-                        write= ['portal.group_anonymous'] ,
                         help="Status of the attendee's participation"),
         'rsvp':  fields.boolean('Required Reply?',
                     help="Indicats whether the favor of a reply is requested"),
@@ -1008,8 +1007,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
-                local_context = context.copy()
-                local_context.pop('default_state', None)
                 access_token = self.new_invitation_token(cr, uid, event, partner.id)
                 att_id = self.pool.get('calendar.attendee').create(cr, uid, {
                     'partner_id': partner.id,
@@ -1017,7 +1014,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     'ref': self._name+','+str(event.id),
                     'access_token': access_token,
                     'email': partner.email,
-                }, context=local_context)
+                }, context=context)
                 if partner.email:
                     mail_to = mail_to + " " + partner.email
                 self.write(cr, uid, [event.id], {

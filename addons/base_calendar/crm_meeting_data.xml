@@ -119,7 +119,7 @@
                                     <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/decline?db=${ctx['dbname']}&token=${ctx['att_obj'].access_token}&action=${ctx['action_id']}&id=${object.id}">Decline</a>
                             </div>
                             <div>
-                                -- </br>  Sent by ${object.user_id.name} from ${object.user_id.company_id.name}. View this meeting detail <a href="${ctx['base_url']}/meeting_invitation/view?db=${ctx['dbname']}&token=${ctx['att_obj'].access_token}&id=${object.id}">directly in OpenERP.</a>
+                                -- </br>  Sent by ${object.user_id.name} from ${object.user_id.company_id.name}. View this meeting detail <a href="${ctx['base_url']}/meeting_invitation/view?db=${ctx['dbname']}&action=${ctx['action_id']}&id=${object.id}">directly in OpenERP.</a>
                             </div>
                         </div>
                     </body>
