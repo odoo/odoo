@@ -574,6 +574,7 @@
                     <field name="min_date"/>
                     <field name="backorder_id"/>
                     <field name="state"/>
+                    <field name="priority"/>
                     <field name="picking_type_id" invisible="1"/>
                 </tree>
             </field>
@@ -594,6 +595,7 @@
                     <button name="do_prepare_partial" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','!=','assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
+                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|',('quant_reserved_exist', '=', False), ('state','!=','assigned')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
@@ -607,7 +609,7 @@
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}"/>
+                            <field name="min_date" attrs="{'invisible': [('min_date','=',False)]}"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
                         </group>
                     </group>
@@ -637,6 +639,8 @@
                                 <group>
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
+                                    <field name="priority"/>
+                                    <field name="quant_reserved_exist" invisible="1"/>                                    
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -886,7 +890,7 @@
                     <group>
                         <group name="main_grp" string="Details">
                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                            <field name="procure_method"/>
+                            <field name="procure_method" attrs="{'invisible': [('state', '=', 'confirmed')], 'readonly': [('group_id', '=', False)]}"/>
                             <field name="group_id"/>
                             <label for="product_uom_qty"/>
                             <div>
@@ -913,6 +917,7 @@
                             <field name="origin"/>
                             <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
                             <field name="picking_type_id"/>
+                            <field name="picking_priority"/>
                             <field name="location_id" groups="stock.group_locations"/>
                             <field name="create_date" groups="base.group_no_one"/>
                         </group>
@@ -1343,12 +1348,25 @@
               </p>
             </field>
         </record>
+        
+		<record id="action_picking_type_list" model="ir.actions.act_window">
+            <field name="name">All Operations</field>
+            <field name="res_model">stock.picking.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">list,form</field>            
+        </record>
 
         <menuitem
             action="action_picking_type_form"
             id="menu_action_picking_type_form"
             parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
+        <menuitem 
+        	id="menu_pickingtype" 
+        	name="Types of Operation" 
+        	parent="stock.menu_stock_configuration" 
+        	action="action_picking_type_list" />
         
 
         <!-- Order Point -->
@@ -1624,6 +1642,7 @@
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
         <menuitem id="menu_quants" name="Current Inventory" parent="stock.menu_stock_inventory_control" sequence="20" action="quantsact"/>
     <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
+    <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list"/>
 
 
 
@@ -1863,5 +1882,24 @@
                 </form>
             </field>
         </record>
+
+        <record id="do_view_pickings" model="ir.actions.act_window">
+            <field name="name">Pickings for Groups</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="domain">[('group_id','=',active_id)]</field>			
+        </record>
+        <record id="procurement_group_form_view_herited" model="ir.ui.view">
+            <field name="name">procurement.group.form.herited</field>
+            <field name="model">procurement.group</field>
+            <field name="inherit_id" ref="procurement.procurement_group_form_view"/>
+            <field name="arch" type="xml">
+		        <xpath expr="/form/sheet/div/button" position="after">
+		        	<button name="%(do_view_pickings)d" string="View related pickings" type="action" />
+		        </xpath>        
+            </field>
+        </record>
+        
     </data>
 </openerp>

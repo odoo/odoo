@@ -477,7 +477,13 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
     _description = "Picking List"
-    _order = "id desc"
+    _order = "priority desc, date desc, id desc"
+
+    def _set_min_date(self, cr, uid, id, field, value, arg, context=None):
+        move_obj = self.pool.get("stock.move")
+        move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
+        move_obj.write(cr, uid, move_ids, {'date_expected': value}, context=context)
+
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds minimum and maximum dates for picking.
         @return: Dictionary of values
@@ -551,6 +557,15 @@ class stock_picking(osv.osv):
                 res[pick.id] = True
         return res
 
+    def _get_quant_reserved_exist(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for pick in self.browse(cr, uid, ids, context=context):            
+            res[pick.id] = False
+            for move in pick.move_lines:
+                if move.reserved_quant_ids:
+                    res[pick.id] = True
+                    continue      
+        return res
 
     def _get_group_id(self, cr, uid, ids, field_name, args, context=None):
         res = {}
@@ -586,13 +601,15 @@ class stock_picking(osv.osv):
             * Transferred: has been processed, can't be modified or cancelled anymore\n
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
-        'min_date': fields.function(get_min_max_date, multi="min_max_date",
+        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Priority', required=True),
+        'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
                  store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed"),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
                  store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'quant_reserved_exist': fields.function(_get_quant_reserved_exist, type='boolean', string='Quant already reserved ?', help='technical field used to know if there is already at least one quant reserved on moves of a given picking'),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
@@ -610,6 +627,7 @@ class stock_picking(osv.osv):
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'one',
+        'priority' : '1', #normal
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
@@ -813,8 +831,17 @@ class stock_picking(osv.osv):
         '''
         self.rereserve(cr, uid, picking_ids, context=context)
 
-
-
+    def do_unreserve(self,cr,uid,picking_ids, context=None):
+        """
+          Will remove all quants for picking in picking_ids
+        """
+        ids_to_free = []
+        quant_obj = self.pool.get("stock.quant")
+        for picking in self.browse(cr, uid, picking_ids, context=context):
+            for move in picking.move_lines:
+                ids_to_free += [quant.id for quant in move.reserved_quant_ids]
+        if ids_to_free:            
+            quant_obj.write(cr, uid, ids_to_free, {'reservation_id' : False, 'reservation_op_id': False }, context = context)
     
     def _reserve_quants_ops_move(self, cr, uid, ops, move, qty, create=False, context=None):
         """
@@ -1244,6 +1271,7 @@ class stock_move(osv.osv):
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
+        'picking_priority': fields.related('picking_id','priority', type='selection', selection=[('0','Low'),('1','Normal'),('2','High')], string='Picking Priority'),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
@@ -2115,7 +2143,7 @@ class stock_warehouse(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
-        'code': fields.char('Warehouse Unique Identifier', size=5, required=True, help="Short name used to identify your warehouse"),
+        'code': fields.char('Short Name', size=5, required=True, help="Short name used to identify your warehouse"),
     }
 
     def _default_stock_id(self, cr, uid, context=None):

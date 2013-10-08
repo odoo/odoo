@@ -394,6 +394,16 @@ class stock_warehouse(osv.osv):
         output_loc = wh_output_stock_loc
         if warehouse.delivery_steps == 'ship_only':
             output_loc = wh_stock_loc
+        
+        #choose the next available color for the picking types of this warehouse
+        color = 0    
+        all_used_color = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id','!=',False), ('color','!=',False)], ['color'], order='color')
+        for nColor in all_used_color:            
+            if nColor['color'] == color and color < 9:
+                color += 1 
+            elif nColor['color'] > color or color == 9:
+                break;
+
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
             'warehouse_id': new_id,
@@ -401,7 +411,8 @@ class stock_warehouse(osv.osv):
             'auto_force_assign': True,
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
-            'default_location_dest_id': input_loc.id}, context=context)
+            'default_location_dest_id': input_loc.id,
+            'color' : color}, context=context)
         out_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Delivery Orders'),
             'warehouse_id': new_id,
@@ -409,7 +420,8 @@ class stock_warehouse(osv.osv):
             'sequence_id': out_seq_id,
             'delivery': True,
             'default_location_src_id': output_loc.id,
-            'default_location_dest_id': customer_loc.id}, context=context)
+            'default_location_dest_id': customer_loc.id,
+            'color' : color}, context=context)
         int_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Internal Transfers'),
             'warehouse_id': new_id,
@@ -418,7 +430,8 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
             'active': reception_steps != 'one_step',
-            'pack': False}, context=context)
+            'pack': False,
+            'color' : color}, context=context)
         pack_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pack'),
             'warehouse_id': new_id,
@@ -427,7 +440,8 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_pack_stock_loc.id,
             'default_location_dest_id': output_loc.id,
             'active': delivery_steps == 'pick_pack_ship',
-            'pack': True}, context=context)
+            'pack': True,
+            'color' : color}, context=context)
         pick_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pick'),
             'warehouse_id': new_id,
@@ -436,7 +450,8 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_pack_stock_loc.id,
             'active': delivery_steps != 'ship_only',
-            'pack': False}, context=context)
+            'pack': False,
+            'color' : color}, context=context)
 
         #write picking types on WH
         vals = {
