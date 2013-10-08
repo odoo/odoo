@@ -212,6 +212,13 @@ class crm_meeting(osv.Model):
                 attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
         return True
 
+    def get_attendee(self, cr, uid, meeting_id, context=None):
+        att = []
+        attendee_pool = self.pool.get('calendar.attendee')
+        for attendee in self.browse(cr,uid,int(meeting_id),context).attendee_ids:
+            att.append({'name':attendee.cn,'status': attendee.state})
+        return att
+
     def get_day(self, cr, uid, ids, time= None, context=None):
         rec = self.browse(cr, uid, ids,context=context)[0]
         date = datetime.strptime(rec.date,'%Y-%m-%d %H:%M:%S')

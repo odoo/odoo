@@ -3,83 +3,43 @@ var _t = instance.web._t;
 var QWeb = instance.web.qweb;
 instance.base_calendar = {}
 
-    instance.base_calendar.invite = instance.web.Widget.extend({
+    instance.base_calendar.invitation = instance.web.Widget.extend({
 
-        init: function(parent,db,token,action,view_type,id,status) {
+        init: function(parent, db, action, id, view) {
             this._super();
-            this.db = db;
-            this.token = token;
-            this.status = status;
-            this.action = action;
-            this.view_type = view_type;
+            this.db =  db;
+            this.action =  action;
             this.id = id;
+            this.view = view;
         },
         start: function() {
             var self = this;
-            if (instance.session.session_is_valid(self.db) && (this.view_type == 'calendar' || this.view_type == 'form' && this.session.username != 'anonymous')) {
-                self.show_meeting();
-            }else {
-                self.show_login();
+            if(!instance.session.session_is_valid(self.db)) {
+                self.redirect_meeting_view(self.db,self.action,self.id,self.view);
+            } else {
+                new instance.web.Model("crm.meeting").call('get_attendee',[self.id]).then(function(res){
+                    self.open_invitation_form(res);
+                });
             }
         },
-        show_login: function(action) {
-            var self =  this;
-            this.destroy_content();
-            this.login = new instance.web.Login_extended(this,self.action);
-            this.login.appendTo(this.$el);
-            this.login.on('db_loaded',self,function(db,login){
-                if (instance.session.session_is_valid(db)) {
-                    (self.show_meeting()).done(function(){
-                        self.login.off('db_loaded');
-                    });
-                }
-                else{
-                    self.show_login();
-                }
-            })
+        open_invitation_form : function(invitation){
+            this.$el.html(QWeb.render('invitation_view', {'widget': invitation}));
         },
-        destroy_content: function() {
-            _.each(_.clone(this.getChildren()), function(el) {
-                el.destroy();
-            });
-            this.$el.children().remove();
-        },
-        show_meeting : function(){
-            var db = this.db;
-            var att_status = false;
+        redirect_meeting_view : function(db, action, meeting_id, view){
             var self = this;
+            var action_url = '';
+            if(view == "form") {
+                action_url = _.str.sprintf('/?db=%s#id=%s&view_type=%s&model=crm.meeting', db, meeting_id, view, meeting_id);
+            } else {
+                action_url = _.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s',self.db,self.view,self.action);
+            }
             var reload_page = function(){
-                if(self.view_type === 'form'){
-                    return location.replace(_.str.sprintf('/?db=%s#id=%s&view_type=%s&model=crm.meeting',self.db,self.id,self.view_type));
-                }
-                else{
-                    return location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s',self.db,self.view_type,self.action));
-                }
+                return location.replace(action_url);
             }
-            if(self.status === 'accepted'){
-                att_status = "do_accept";
-            }
-            else if(self.status === 'declined'){
-                att_status === "do_decline";
-            }
-            var calender_attendee = new instance.web.Model('calendar.attendee')
-            
-            return calender_attendee.get_func("search_read")([["id", "=", parseInt(this.token)]],['state']).done(function(res){
-                if(res[0] && res[0]['state'] === "needs-action" && att_status){
-                    return calender_attendee.call(att_status,[[parseInt(self.token)]]).done(reload_page);
-                }
-                reload_page();
-            });
+            reload_page();
         },
     });
-    instance.web.Login_extended = instance.web.Login.extend({
-        do_login: function (db, login, password) {
-            var self = this;
-            (this._super.apply(this,arguments)).done(function(){
-               self.trigger('db_loaded',db,login)
-            });
-        }
-    });
+
     instance.web.form.Many2Many_invite = instance.web.form.FieldMany2ManyTags.extend({
         initialize_content: function() {
             var self = this;
@@ -214,9 +174,10 @@ instance.base_calendar = {}
     instance.web.form.widgets = instance.web.form.widgets.extend({
         'Many2Many_invite' : 'instance.web.form.Many2Many_invite',
     });
-    instance.base_calendar.event = function (db, token, action, view_type, id, status) {
+
+    instance.base_calendar.event = function (db, action, id, view) {
         instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.base_calendar.invite(null,db,token,action,view_type,id,status).appendTo($("body").addClass('openerp'));
+            new instance.base_calendar.invitation(null,db,action,id,view).appendTo($("body").addClass('openerp'));
         });
     }
 };

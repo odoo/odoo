@@ -28,7 +28,7 @@ from openerp.tools.translate import _
 import pytz
 import re
 import time
-
+import hashlib
 from openerp import tools, SUPERUSER_ID
 import openerp.service.report
 months = {
@@ -235,6 +235,7 @@ class calendar_attendee(osv.osv):
                         ('declined', 'Declined'),
                         ('accepted', 'Accepted'),
                         ('delegated', 'Delegated')], 'Status', readonly=True, \
+                        write= ['portal.group_anonymous'] ,
                         help="Status of the attendee's participation"),
         'rsvp':  fields.boolean('Required Reply?',
                     help="Indicats whether the favor of a reply is requested"),
@@ -271,6 +272,7 @@ property or property parameter."),
                             multi='event_end_date'),
         'ref': fields.reference('Event Ref', selection=openerp.addons.base.res.res_request.referencable_models, size=128),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
+        'access_token':fields.char('Invitation Token', size=256),
         
     }
     _defaults = {
@@ -926,7 +928,7 @@ class calendar_event(osv.osv):
             ('tentative', 'Uncertain'),
             ('cancelled', 'Cancelled'),
             ('confirmed', 'Confirmed'),
-            ], 'Status', readonly=True),
+            ],'Status', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
@@ -988,6 +990,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
     }
 
+    def new_invitation_token(self, cr, uid, record, partner_id):
+        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+        invitation_token = hashlib.sha256('%s-%s-%s-%s-%s' % (time.time(), db_uuid, record._name, record.id, partner_id)).hexdigest()
+        return invitation_token
+        
     def create_attendees(self, cr, uid, ids, context):
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
@@ -1003,11 +1010,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     continue
                 local_context = context.copy()
                 local_context.pop('default_state', None)
+                access_token = self.new_invitation_token(cr, uid, event, partner.id)
                 att_id = self.pool.get('calendar.attendee').create(cr, uid, {
                     'partner_id': partner.id,
                     'user_id': partner.user_ids and partner.user_ids[0].id or False,
                     'ref': self._name+','+str(event.id),
-                    'email': partner.email
+                    'access_token': access_token,
+                    'email': partner.email,
                 }, context=local_context)
                 if partner.email:
                     mail_to = mail_to + " " + partner.email
