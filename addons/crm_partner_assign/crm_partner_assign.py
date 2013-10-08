@@ -63,6 +63,14 @@ class res_partner(osv.osv):
         'date_partnership' : fields.date('Partnership Date'),
         'date_review' : fields.date('Latest Partner Review'),
         'date_review_next' : fields.date('Next Partner Review'),
+        # customer implementation
+        'assigned_partner_id': fields.many2one(
+            'res.partner', 'Implementedy by',
+        ),
+        'implemented_partner_ids': fields.one2many(
+            'res.partner', 'assigned_partner_id',
+            string='Implementation References',
+        ),
     }
     _defaults = {
         'partner_weight': lambda *args: 0

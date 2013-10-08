@@ -3,21 +3,6 @@
     <data>
 
         <!-- Partner and address -->
-        <record id="res_partner_access" model="ir.model.access">
-            <field name="name">openerp.portal.res.partner</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="group_id" ref="base.group_portal"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="0"/>
-            <field name="perm_write" eval="0"/>
-            <field name="perm_unlink" eval="0"/>
-        </record>
-        <record id="res_partner_rule" model="ir.rule">
-            <field name="name">openerp.portal.res.partner</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="groups" eval="[(6,0,[ref('base.group_portal')])]"/>
-            <field name="domain_force">[('id','child_of',user.commercial_partner_id.id)]</field>
-        </record>
         <record id="res_partner_grade_access" model="ir.model.access">
             <field name="name">openerp.portal.res.partner.grade</field>
             <field name="model_id" ref="crm_partner_assign.model_res_partner_grade"/>

@@ -98,13 +98,14 @@
         </field>
     </record>
 
-    <record id="view_crm_partner_geo_form" model="ir.ui.view">
-        <field name="name">res.partner.geo.inherit</field>
+    <record id="view_crm_partner_assign_form" model="ir.ui.view">
+        <field name="name">res.partner.assign.inherit</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='geo_localization']" position="replace">
-                <page string="Geo Localization">
+            <!-- <xpath expr="//notebook[last()]" position="inside"> -->
+                <page string="Geo Localization" name="geo_localization">
                     <group>
                         <group>
                             <separator string="Partner Activation" colspan="2"/>
