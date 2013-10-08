@@ -5701,6 +5701,17 @@ instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.ext
     },
 });
 
+/**
+    This field can be applied on many2many and one2many. It is a read-only field that will display a single link whose name is
+    "<number of linked records> <label of the field>". When the link is clicked, it will redirect to another act_window
+    action on the model of the relation and show only the linked records.
+
+    Widget options:
+
+    * views: The views to display in the act_window action. Must be a list of tuples whose first element is the id of the view
+      to display (or False to take the default one) and the second element is the type of the view. Defaults to
+      [[false, "tree"], [false, "form"]] .
+*/
 instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     className: "oe_form_x2many_counter",
     init: function() {
