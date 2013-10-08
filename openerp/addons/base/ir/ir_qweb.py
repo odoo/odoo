@@ -73,7 +73,18 @@ class QWeb(orm.AbstractModel):
 
     - loader: function that return a template
 
+    QWeb rendering can be used for many tasks. As a result, customizations
+    made by one task context (to either the main qweb rendering or to specific
+    fields rendering) could break other tasks.
 
+    To avoid that, ``ir.qweb`` was consciously made inheritable and the "root"
+    of an object hierarchy. If you need extensions or alterations which could
+    be incompatible with other subsystems, you should create a local object
+    inheriting from ``ir.qweb`` and customize that.
+
+    If you need to customize t-fields rendering, subclass the ir.qweb.field
+    model (and its sub-models) then override :meth:`~.get_converter_for` to
+    fetch the right field converters for your qweb model.
     """
 
     _name = 'ir.qweb'
