@@ -5702,6 +5702,59 @@ instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.ext
 });
 
 /**
+    This field can be applied on many2many and one2many. It is a read-only field that will display a single link whose name is
+    "<number of linked records> <label of the field>". When the link is clicked, it will redirect to another act_window
+    action on the model of the relation and show only the linked records.
+
+    Widget options:
+
+    * views: The views to display in the act_window action. Must be a list of tuples whose first element is the id of the view
+      to display (or False to take the default one) and the second element is the type of the view. Defaults to
+      [[false, "tree"], [false, "form"]] .
+*/
+instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    className: "oe_form_x2many_counter",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", []);
+        _.defaults(this.options, {
+            "views": [[false, "tree"], [false, "form"]],
+        });
+    },
+    render_value: function() {
+        var text = _.str.sprintf("%d %s", this.val().length, this.string);
+        this.$().html(QWeb.render("X2ManyCounter", {text: text}));
+        this.$("a").click(_.bind(this.go_to, this));
+    },
+    go_to: function() {
+        return this.view.recursive_save().then(_.bind(function() {
+            var val = this.val();
+            var context = {};
+            if (this.field.type === "one2many") {
+                context["default_" + this.field.relation_field] = this.view.datarecord.id;
+            }
+            var domain = [["id", "in", val]];
+            return this.do_action({
+                type: 'ir.actions.act_window',
+                name: this.string,
+                res_model: this.field.relation,
+                views: this.options.views,
+                target: 'current',
+                context: context,
+                domain: domain,
+            });
+        }, this));
+    },
+    val: function() {
+        var value = this.get("value") || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
+        return value;
+    }
+});
+
+/**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
  * All referenced classes must implement FieldInterface. Those represent the classes whose instances
@@ -5737,6 +5790,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
+    'x2many_counter': 'instance.web.form.X2ManyCounter',
 });
 
 /**
