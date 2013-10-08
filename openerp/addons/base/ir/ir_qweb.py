@@ -554,20 +554,20 @@ class ImageConverter(osv.AbstractModel):
 
         return '<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)
 
-class CurrencyConverter(osv.AbstractModel):
-    """ ``currency`` converter, has a mandatory option ``currency``.
+class MonetaryConverter(osv.AbstractModel):
+    """ ``monetary`` converter, has a mandatory option ``currency_field``.
 
-    The currency field is a (float) value, the linked ``currency`` is an m2o
-    to a ``res.currency`` indicating how to format the field.
+    The currency field is a (float) value, the linked ``currency_field`` is an
+    m2o to a ``res.currency`` indicating how to format the field.
     """
-    _name = 'ir.qweb.field.currency'
+    _name = 'ir.qweb.field.monetary'
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, column, options):
         Currency = self.pool['res.currency']
 
         symbol_pre = symbol_post = space_pre = space_post = u''
-        currency = record[options['currency']]
+        currency = record[options['currency_field']]
         if currency.position == 'before':
             space_pre = u' '
             symbol_pre = currency.symbol

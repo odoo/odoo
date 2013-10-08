@@ -74,7 +74,7 @@ class TestFloatExport(TestBasicExport):
         self.assertEqual(value, '42.01')
 
 class TestCurrencyExport(TestExport):
-    _model = 'test_converter.currency'
+    _model = 'test_converter.monetary'
 
     def setUp(self):
         super(TestCurrencyExport, self).setUp()
@@ -87,8 +87,8 @@ class TestCurrencyExport(TestExport):
             context=context)
 
     def convert(self, obj):
-        converter = self.registry('ir.qweb.field.currency')
-        options = {'widget': 'currency', 'currency': 'currency_id'}
+        converter = self.registry('ir.qweb.field.monetary')
+        options = {'widget': 'monetary', 'currency_field': 'currency_id'}
         converted = converter.to_html(
             self.cr, self.uid, 'value', obj, options,
             doc.createElement('span'),
@@ -105,7 +105,7 @@ class TestCurrencyExport(TestExport):
         self.assertEqual(
             converted,
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="currency" '
+                  'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       ' {symbol}</span>'.format(
@@ -123,7 +123,7 @@ class TestCurrencyExport(TestExport):
         self.assertEqual(
             converted,
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="currency" '
+                  'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
                       '{symbol} '
                       '<span class="oe_currency_value">0.12</span>'
@@ -143,7 +143,7 @@ class TestCurrencyExport(TestExport):
         self.assertEqual(
             converted,
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="currency" '
+                  'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       ' {symbol}</span>'.format(
