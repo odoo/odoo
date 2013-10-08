@@ -53,7 +53,7 @@ class test_workflows(common.TransactionCase):
 
         # b -> c is a trigger (which is False),
         # so we remain in the b activity.
-        model.trigger(self.cr, SUPERUSER_ID, [i])
+        model.trigger(self.cr, SUPERUSER_ID)
         self.check_activities(model._name, i, ['b'])
 
         # b -> c is a trigger (which is set to True).
