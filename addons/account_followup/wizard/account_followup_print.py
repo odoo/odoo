@@ -67,11 +67,10 @@ class account_followup_stat_by_partner(osv.osv):
                     a.active AND
                     a.type = 'receivable' AND
                     l.reconcile_id is NULL AND
-                    l.partner_id IS NOT NULL AND
-                    (l.blocked = False)
+                    l.partner_id IS NOT NULL
                     GROUP BY
                     l.partner_id, l.company_id
-            )""") #Blocked is to take into account litigation
+            )""")
 
 
 class account_followup_sending_results(osv.osv_memory):
