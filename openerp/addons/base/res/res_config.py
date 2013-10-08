@@ -131,6 +131,7 @@ class res_config_configurable(osv.osv_memory):
         """
         raise NotImplementedError(
             'Configuration items need to implement execute')
+
     def cancel(self, cr, uid, ids, context=None):
         """ Method called when the user click on the ``Skip`` button.
 
@@ -183,8 +184,6 @@ class res_config_configurable(osv.osv_memory):
         next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
-
-res_config_configurable()
 
 class res_config_installer(osv.osv_memory, res_config_module_installation_mixin):
     """ New-style configuration base specialized for addons selection
@@ -314,7 +313,6 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                            context=context),
             context=context)
 
-
     def modules_to_install(self, cr, uid, ids, context=None):
         """ selects all modules to install:
 
@@ -396,45 +394,6 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
             modules.append((name, record))
 
         return self._install_modules(cr, uid, modules, context=context)
-
-res_config_installer()
-
-DEPRECATION_MESSAGE = 'You are using an addon using old-style configuration '\
-    'wizards (ir.actions.configuration.wizard). Old-style configuration '\
-    'wizards have been deprecated.\n'\
-    'The addon should be migrated to res.config objects.'
-class ir_actions_configuration_wizard(osv.osv_memory):
-    ''' Compatibility configuration wizard
-
-    The old configuration wizard has been replaced by res.config, but in order
-    not to break existing but not-yet-migrated addons, the old wizard was
-    reintegrated and gutted.
-    '''
-    _name='ir.actions.configuration.wizard'
-    _inherit = 'res.config'
-
-    def _next_action_note(self, cr, uid, ids, context=None):
-        next = self._next_action(cr, uid)
-        if next:
-            # if the next one is also an old-style extension, you never know...
-            if next.note:
-                return next.note
-            return _("Click 'Continue' to configure the next addon...")
-        return _("Your database is now fully configured.\n\n"\
-            "Click 'Continue' and enjoy your OpenERP experience...")
-
-    _columns = {
-        'note': fields.text('Next Wizard', readonly=True),
-        }
-    _defaults = {
-        'note': _next_action_note,
-        }
-
-    def execute(self, cr, uid, ids, context=None):
-        _logger.warning(DEPRECATION_MESSAGE)
-
-ir_actions_configuration_wizard()
-
 
 class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
     """ Base configuration wizard for application settings.  It provides support for setting
@@ -694,4 +653,5 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         if (action_id):
             return exceptions.RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
         return exceptions.Warning(msg % values)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
