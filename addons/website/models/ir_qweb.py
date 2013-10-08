@@ -8,6 +8,8 @@ Also, adds methods to convert values back to openerp models.
 
 import itertools
 
+import werkzeug.utils
+
 from openerp.osv import orm, fields
 
 class QWeb(orm.AbstractModel):
@@ -56,8 +58,33 @@ class HTML(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.html']
 
 class Image(orm.AbstractModel):
+    """
+    Widget options:
+
+    ``class``
+        set as attribute on the generated <img> tag
+    """
     _name = 'website.qweb.field.image'
     _inherit = ['website.qweb.field', 'ir.qweb.field.image']
+
+    def to_html(self, cr, uid, field_name, record, options,
+                source_element, t_att, g_att, qweb_context):
+        assert source_element.nodeName != 'img',\
+            "Oddly enough, the root tag of an image field can not be img. " \
+            "That is because the image goes into the tag, or it gets the " \
+            "hose again."
+
+        return super(Image, self).to_html(
+            cr, uid, field_name, record, options,
+            source_element, t_att, g_att, qweb_context)
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+        cls = ''
+        if 'class' in options:
+            cls = ' class="%s"' % werkzeug.utils.escape(options['class'])
+
+        return '<img%s src="/website/image?model=%s&field=%s&id=%s"/>' % (
+            cls, record._model._name, field_name, record.id)
 
 class Currency(orm.AbstractModel):
     _name = 'website.qweb.field.currency'
