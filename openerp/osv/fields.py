@@ -229,8 +229,8 @@ class char(_column):
     def __init__(self, string="unknown", size=None, **args):
         _column.__init__(self, string=string, size=size or None, **args)
         # self._symbol_set_char defined to keep the backward compatibility
-        self._symbol_f = self._symbol_set_char = lambda x: _symbol_set_char(self, x)
         # use lamda function to be able to get the field size
+        self._symbol_f = self._symbol_set_char = lambda x: _symbol_set_char(self, x)
         self._symbol_set = (self._symbol_c, self._symbol_f)
 
 
