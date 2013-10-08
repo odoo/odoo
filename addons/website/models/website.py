@@ -168,8 +168,9 @@ class website(osv.osv):
                 return self.render(cr, uid, ids, 'website.404', qweb_context)
 
         try:
-            return view.render(cr, uid, "%s.%s" % (module, xmlid),
-                               qweb_context, context=context)
+            return view.render(
+                cr, uid, "%s.%s" % (module, xmlid), qweb_context,
+                engine='website.qweb', context=context)
         except (AccessError, AccessDenied), err:
             logger.error(err)
             qweb_context['error'] = err[1]
