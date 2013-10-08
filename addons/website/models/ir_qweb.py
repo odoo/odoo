@@ -86,6 +86,6 @@ class Image(orm.AbstractModel):
         return '<img%s src="/website/image?model=%s&field=%s&id=%s"/>' % (
             cls, record._model._name, field_name, record.id)
 
-class Currency(orm.AbstractModel):
-    _name = 'website.qweb.field.currency'
-    _inherit = ['website.qweb.field', 'ir.qweb.field.currency']
+class Monetary(orm.AbstractModel):
+    _name = 'website.qweb.field.monetary'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
