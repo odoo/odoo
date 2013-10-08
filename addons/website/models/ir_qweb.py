@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+"""
+Website-context rendering needs to add some metadata to rendered fields,
+as well as render a few fields differently.
+
+Also, adds methods to convert values back to openerp models.
+"""
+
 import itertools
 
 from openerp.osv import orm, fields
 
 class QWeb(orm.AbstractModel):
     """ QWeb object for rendering stuff in the website context
-
-    Website-context rendering needs to add some metadata to rendered fields,
-    as well as render a few fields differently.
-
-    Also, add methods to convert values back to openerp models.
     """
     _name = 'website.qweb'
     _inherit = 'ir.qweb'
