@@ -795,6 +795,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.cashier_controls_visible = true;
             this.image_cache = new module.ImageCache(); // for faster products image display
 
+            FastClick.attach(document.body);
+
         },
       
         start: function() {

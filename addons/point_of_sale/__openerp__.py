@@ -90,6 +90,7 @@ Main Features
     'application': True,
     'js': [
         'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
+        'static/lib/fastclick.js',
         'static/src/js/db.js',
         'static/src/js/models.js',
         'static/src/js/widget_base.js',
