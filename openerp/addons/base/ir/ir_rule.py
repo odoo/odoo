@@ -25,6 +25,8 @@ from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.misc import unquote as unquote
+from openerp.addons.web.http import request
+
 
 class ir_rule(osv.osv):
     _name = 'ir.rule'
@@ -37,12 +39,14 @@ class ir_rule(osv.osv):
            that are easier to parse and combine, but not to
            actually execute them."""
         return {'user': unquote('user'),
+                'session': unquote('session'),
                 'time': unquote('time')}
 
     def _eval_context(self, cr, uid):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
         return {'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid),
+                'session': request.httprequest.session,
                 'time':time}
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
