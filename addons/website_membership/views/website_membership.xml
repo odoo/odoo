@@ -33,7 +33,7 @@
                     <small>Find an association member</small>
                 </h1>
                 <div class="col-md-4" id="membership_left">
-                    <h2>Associations</h2>
+                    <h3>Associations</h3>
                     <ul class="nav">
                         <t t-foreach="membership_ids" t-as="membership_id">
                             <li><a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a></li>
@@ -81,9 +81,9 @@
     </template>
 
     <template id="ref_country" inherit_id="website_membership.index" inherit_option_id="website_membership.index" name="Left World Map">
-        <xpath expr="//div[@id='membership_left']" position="inside">
+        <xpath expr="//div[@id='membership_left']/ul" position="after">
             <div>
-                <h2>World Map</h2>
+                <h3>World Map</h3>
                 <ul class="nav">
                     <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
                         style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
