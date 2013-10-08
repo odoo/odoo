@@ -299,6 +299,9 @@ class Images(http.Controller):
                 response.last_modified = datetime.datetime.strptime(
                     record[concurrency], server_format)
         # FIXME: no field in record?
+        if not field in record or not record[field]:
+            return response
+
         response.set_etag(hashlib.sha1(record[field]).hexdigest())
         response.make_conditional(request.httprequest)
 
