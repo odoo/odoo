@@ -554,6 +554,8 @@ class CurrencyConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, column, options):
+        Currency = self.pool['res.currency']
+
         symbol_pre = symbol_post = space_pre = space_post = u''
         currency = record[options['currency']]
         if currency.position == 'before':
@@ -566,7 +568,7 @@ class CurrencyConverter(osv.AbstractModel):
         return u'{symbol_pre}{space_pre}' \
                u'<span class="oe_currency_value">{0}</span>' \
                u'{space_post}{symbol_post}'.format(
-            record[field_name],
+            Currency.round(cr, uid, currency, record[field_name]),
             space_pre=space_pre,
             symbol_pre=symbol_pre,
             space_post=space_post,
