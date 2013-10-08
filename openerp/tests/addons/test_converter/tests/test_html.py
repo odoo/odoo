@@ -106,7 +106,7 @@ class TestCurrencyExport(TestExport):
             converted,
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                   'data-oe-field="value" data-oe-type="currency" '
-                  'data-oe-translate="0" data-oe-expression="obj.value">'
+                  'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       ' {symbol}</span>'.format(
                 obj=obj,
@@ -124,7 +124,7 @@ class TestCurrencyExport(TestExport):
             converted,
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                   'data-oe-field="value" data-oe-type="currency" '
-                  'data-oe-translate="0" data-oe-expression="obj.value">'
+                  'data-oe-expression="obj.value">'
                       '{symbol} '
                       '<span class="oe_currency_value">0.12</span>'
                       '</span>'.format(
@@ -144,7 +144,7 @@ class TestCurrencyExport(TestExport):
             converted,
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                   'data-oe-field="value" data-oe-type="currency" '
-                  'data-oe-translate="0" data-oe-expression="obj.value">'
+                  'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       ' {symbol}</span>'.format(
                 obj=obj,

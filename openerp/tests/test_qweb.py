@@ -31,7 +31,6 @@ class TestQWebTField(common.TransactionCase):
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
                   'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-translate="0" '
                   'data-oe-expression="company.name">%s</span>' % (
                 company_id,
                 "My Test Company",))
@@ -54,7 +53,6 @@ class TestQWebTField(common.TransactionCase):
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
                   'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-translate="0" '
                   'data-oe-expression="company.name">%s</span>' % (
                 company_id,
                 cgi.escape(s.encode('utf-8')),))

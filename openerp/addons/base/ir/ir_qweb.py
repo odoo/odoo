@@ -434,7 +434,6 @@ class FieldConverter(osv.AbstractModel):
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
-            ('data-oe-translate', '1' if column.translate else '0'),
             ('data-oe-expression', t_att['field']),
         ]
 
