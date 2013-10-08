@@ -394,15 +394,11 @@ class stock_warehouse(osv.osv):
         output_loc = wh_output_stock_loc
         if warehouse.delivery_steps == 'ship_only':
             output_loc = wh_stock_loc
-        
+
         #choose the next available color for the picking types of this warehouse
-        color = 0    
-        all_used_color = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id','!=',False), ('color','!=',False)], ['color'], order='color')
-        for nColor in all_used_color:            
-            if nColor['color'] == color and color < 9:
-                color += 1 
-            elif nColor['color'] > color or color == 9:
-                break;
+        all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
+        not_used_colors = list(set(range(1, 10)) - set([x['color'] for x in all_used_colors]))
+        color = not_used_colors and not_used_colors[0] or 1
 
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
@@ -412,7 +408,7 @@ class stock_warehouse(osv.osv):
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
             'default_location_dest_id': input_loc.id,
-            'color' : color}, context=context)
+            'color': color}, context=context)
         out_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Delivery Orders'),
             'warehouse_id': new_id,

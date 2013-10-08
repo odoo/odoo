@@ -605,6 +605,7 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
+                            <field name="group_id"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
@@ -890,7 +891,7 @@
                     <group>
                         <group name="main_grp" string="Details">
                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                            <field name="procure_method" attrs="{'invisible': [('state', '=', 'confirmed')], 'readonly': [('group_id', '=', False)]}"/>
+                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
                             <field name="group_id"/>
                             <label for="product_uom_qty"/>
                             <div>

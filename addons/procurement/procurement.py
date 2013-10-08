@@ -109,7 +109,7 @@ class procurement_order(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True),
         'date_planned': fields.datetime('Scheduled date', required=True, select=True),
 
-        'group_id': fields.many2one('procurement.group', 'Procurement Requisition'),
+        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Rule'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
