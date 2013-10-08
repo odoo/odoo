@@ -765,14 +765,13 @@ class view(osv.osv):
                 self.translate_qweb(cr, uid, id_, node, lang, context)
         return arch
 
-    def render(self, cr, uid, id_or_xml_id, values, context=None):
+    def render(self, cr, uid, id_or_xml_id, values, engine='ir.qweb', context=None):
         if not context:
             context = {}
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        engine = self.pool['ir.qweb']
-        return engine.render(
+        return self.pool[engine].render(
             id_or_xml_id, values,
             loader=loader, undefined_handler=lambda key, v: None)
 
