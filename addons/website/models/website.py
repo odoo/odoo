@@ -147,7 +147,7 @@ class website(osv.osv):
             website=request.website,
             url_for=url_for,
             res_company=request.website.company_id,
-            user_id=user.browse(cr, openerp.SUPERUSER_ID, uid),
+            user_id=user.browse(cr, uid, uid),
         )
 
         context = request.context.copy()
