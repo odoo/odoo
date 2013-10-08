@@ -63,7 +63,11 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_banner.png"/>
             <span class="oe_snippet_thumbnail_title">Banner</span>         
         </div>
-        <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" data-interval="10000" contenteditable="false">
+        <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32" contenteditable="false">
+            <!-- Indicators -->
+            <ol class="carousel-indicators hidden">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            </ol>
             <div class="carousel-inner">
                 <div class="item image_text active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
                     <div class="container" contenteditable="true">
@@ -80,8 +84,8 @@
                     </div>
                 </div>
             </div>
-            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-circle-arrow-left"><span class="hidden">.</span></span></a>
-            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-circle-arrow-right"><span class="hidden">.</span></span></a>
+            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
+            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
         </div>
     </div>
 

@@ -28,6 +28,7 @@
                         <t t-if="editable">
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
                             <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+                            <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
                         </t>
                         <t t-call="website.theme"/>
 
@@ -45,6 +46,7 @@
                         <t t-if="editable">
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
@@ -55,6 +57,7 @@
                             <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
