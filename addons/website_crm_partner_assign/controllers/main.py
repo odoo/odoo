@@ -16,11 +16,11 @@ class WebsiteCrmPartnerAssign(http.Controller):
         '/partners/', '/partners/page/<int:page>/',
         '/partners/country/<int:country_id>', '/partners/country/page/<int:country_id>/',
     ], type='http', auth="public", multilang=True)
-    def partners(self, country_id=None, page=0, **post):
+    def partners(self, country_id=0, page=0, **post):
         country_obj = request.registry['res.country']
         partner_obj = request.registry['res.partner']
         post_name = post.get('search', '')
-        grade_id = post.get('grade_id', '')
+        grade_id = post.get('grade', '')
         country = None
 
         # format displayed membership lines domain
@@ -29,7 +29,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             base_partner_domain += [('website_published', '=', True)]
         partner_domain = list(base_partner_domain)
         if grade_id:
-            partner_domain += [('grade_id', '=', grade_id)]  # try/catch int
+            partner_domain += [('grade_id', '=', int(grade_id))]  # try/catch int
         if country_id:
             country = country_obj.browse(request.cr, request.uid, country_id, request.context)
             partner_domain += [('country_id', '=', country_id)]
@@ -61,7 +61,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             context=request.context, count=True)
         countries.insert(0, {
             'country_id_count': countries_partners,
-            'country_id': ('0', _("All Countries"))
+            'country_id': (0, _("All Countries"))
         })
 
         # group by grade
@@ -78,7 +78,8 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         values = {
             'countries': countries,
-            'country': country,
+            'current_country_id': country_id,
+            'current_country': country,
             'grades': grades,
             'grade_id': grade_id,
             'partners': partners,

@@ -33,13 +33,13 @@
                     <small>Contact a local partner</small>
                 </h1>
                 <div class="col-md-4" id="partner_left">
-                    <h2>Partners by Country</h2>
-                    <ul class="nav">
-                        <t t-foreach="countries" t-as="country">
-                            <t t-if="country['country_id']">
-                                <li>
-                                    <a t-href="/partners/country/#{ country['country_id'][0] }">
-                                        <t t-esc="country['country_id'][1]"/> <small>(<t t-esc="country['country_id_count']"/>)</small>
+                    <h3>Partners by Country</h3>
+                    <ul class="nav nav-pills nav-stacked mt16">
+                        <t t-foreach="countries" t-as="country_dict">
+                            <t t-if="country_dict['country_id']">
+                                <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
+                                    <a t-href="/partners/country/#{ country_dict['country_id'][0] }">
+                                        <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
                                     </a>
                                 </li>
                             </t>
@@ -60,9 +60,9 @@
                                     <select class="search-query col-md-2 mt4 form-control" name="grade" t-if="len(grades) > 1" onchange="submit()">
                                         <t t-foreach="grades">
                                             <t t-if="grade_id">
-                                            <option t-att-selected="searches.get('grade') == str(grade_id and grade_id[0]) and 'selected'" t-att-value="grade_id[0]">
-                                                <t t-esc="grade_id[1]"/> (<t t-esc="grade_id_count"/>)
-                                            </option>
+                                                <option t-att-selected="searches.get('grade') == str(grade_id and grade_id[0]) and 'selected'" t-att-value="grade_id[0]">
+                                                    <t t-esc="grade_id[1]"/> (<t t-esc="grade_id_count"/>)
+                                                </option>
                                             </t>
                                         </t>
                                     </select>
@@ -76,7 +76,7 @@
                                 <t t-set="internal_gid" t-value="partner_id.grade_id.id"/>
                                 <h3 class="text-center">
                                     <span t-field="partner_id.grade_id"/> Partners
-                                    <t t-if="country"> in <t t-esc="country.name"/></t>
+                                    <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
                                 </h3>
                             </t>
                             <div class="media thumbnail" data-publish="">
@@ -97,8 +97,8 @@
     </template>
 
     <template id="ref_country" inherit_id="website_crm_partner_assign.index" inherit_option_id="website_crm_partner_assign.index" name="Left World Map">
-        <xpath expr="//div[@id='partner_left']//h2" position="before">
-            <h2>World Map</h2>
+        <xpath expr="//div[@id='partner_left']//ul" position="after">
+            <h3>World Map</h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
                     style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
