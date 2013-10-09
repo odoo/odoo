@@ -401,7 +401,7 @@
 
     <t t-name="Product">
         <li class='product'>
-            <a href="#">
+            <a href="#" t-att-data-product-id="product.id">
                 <div class="product-img">
                     <img src='' /> <!-- the product thumbnail -->
                     <t t-if="!product.get('to_weight')">

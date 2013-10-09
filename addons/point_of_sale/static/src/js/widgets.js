@@ -581,14 +581,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            
+
             var products = this.pos.get('products').models || [];
-            
+
             _.each(products,function(product,i){
                 var $product = $(QWeb.render('Product',{ widget:self, product: products[i] }));
                 $product.find('img').replaceWith(self.pos_widget.image_cache.get_image(products[i].get_image_url()));
-                $product.find('a').click(function(){ self.click_product_action(product); });
                 $product.appendTo(self.$('.product-list'));
+            });
+            this.$el.delegate('a','click',function(){ 
+                self.click_product_action(new module.Product(self.pos.db.get_product_by_id(+$(this).data('product-id')))); 
             });
 
         },
