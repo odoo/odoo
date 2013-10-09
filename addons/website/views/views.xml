@@ -94,8 +94,8 @@
                                                     <ul class="dropdown-menu" role="menu">
                                                         <li t-foreach="website.language_ids" t-as="lg">
                                                             <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
-                                                                <strong t-att-class="'icon-check' if lg.code == lang
-                                                                    else 'icon-check-empty'"></strong>
+                                                                <strong t-att-class="'icon-circle' if lg.code == lang
+                                                                    else 'icon-circle-blank'"></strong>
                                                                 <t t-esc="lg.name"/>
                                                             </a>
                                                         </li>
