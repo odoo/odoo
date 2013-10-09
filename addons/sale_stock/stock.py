@@ -115,6 +115,7 @@ class stock_picking(osv.osv):
     def _invoice_hook(self, cursor, user, picking, invoice_id):
         sale_obj = self.pool.get('sale.order')
         order_line_obj = self.pool.get('sale.order.line')
+        invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
         if picking.sale_id:
             sale_obj.write(cursor, user, [picking.sale_id.id], {
@@ -128,6 +129,7 @@ class stock_picking(osv.osv):
                     order_line_obj.write(cursor, user, [sale_line.id], {
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                     })
+                    invoice_obj.button_compute(cursor, user, [invoice_id])
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm
