@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -64,14 +64,16 @@ def initialize(cr):
 
         if not info:
             continue
-        categories = info['category'].split('/')
-        category_id = create_categories(cr, categories)
+
+        # NOTE: category will be set later when registry will be available
+        category_id = None
 
         if info['installable']:
             state = 'uninstalled'
         else:
             state = 'uninstallable'
 
+        # TODO insert minimal module (only name, state, auto_install)
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
@@ -115,6 +117,7 @@ def create_categories(cr, categories):
     Return the database id of the (last) category.
 
     """
+    registry = openerp.modules.registry.RegistryManager.registries[cr.dbname]
     p_id = None
     category = []
     while categories:
@@ -134,8 +137,12 @@ def create_categories(cr, categories):
                        VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
         else:
             c_id = c_id[0]
+
+        registry._model_data_reference_ids[('base', xml_id)] = ('ir.module.category', c_id)
+
         p_id = c_id
         categories = categories[1:]
+
     return p_id
 
 def has_unaccent(cr):
