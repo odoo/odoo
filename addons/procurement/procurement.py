@@ -169,13 +169,14 @@ class procurement_order(osv.osv):
         return True
 
     def check(self, cr, uid, ids, context=None):
-        done = []
+        done_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
             result = self._check(cr, uid, procurement, context=context)
             if result:
-                self.write(cr, uid, [procurement.id], {'state': 'done'}, context=context)
-                done.append(procurement.id)
-        return done
+                done_ids.append(procurement.id)
+        if done_ids:
+            self.write(cr, uid, done_ids, {'state': 'done'}, context=context)
+        return done_ids
 
     #
     # Method to overwrite in different procurement modules

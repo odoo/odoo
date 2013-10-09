@@ -1663,12 +1663,12 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
 
         pickings = set()
+        procurement_ids = []
         for move in self.browse(cr, uid, ids, context=context):
 #             if negatives and negatives[move.id]:
 #                 for ops in negatives[move.id].keys():
 #                 quants_to_move = [(None, negatives[move.id, x) for x in negatives]
 #                 quant_obj.quants_move(cr, uid, quants_to_move, move, context=context)
-                
 
             if move.picking_id:
                 pickings.add(move.picking_id.id)
@@ -1701,19 +1701,22 @@ class stock_move(osv.osv):
                     else:
                         pack_obj.write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
             else:
-                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_order = prefered_order, context=context)
+                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_order=prefered_order, context=context)
                 #Will move all quants_get and as such create negative quants
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
             quant_obj.quants_unreserve(cr, uid, move, context=context)
-            #
+
             #Check moves that were pushed
             if move.move_dest_id.state in ('waiting', 'confirmed'):
-                other_upstream_move_ids = self.search(cr, uid, [('id','!=',move.id),('state','not in',['done','cancel']),
-                                            ('move_dest_id','=',move.move_dest_id.id)], context=context)
+                other_upstream_move_ids = self.search(cr, uid, [('id', '!=', move.id), ('state', 'not in', ['done', 'cancel']),
+                                            ('move_dest_id', '=', move.move_dest_id.id)], context=context)
                 #If no other moves for the move that got pushed:
                 if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
+            if move.procurement_id:
+                procurement_ids.append(move.procurement_id.id)
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
