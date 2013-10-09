@@ -28,6 +28,7 @@ from base_calendar import get_real_ids, base_calendar_id2real_id
 from datetime import datetime, timedelta, date
 import pytz
 from openerp import tools
+import openerp
 
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
@@ -192,35 +193,20 @@ class crm_meeting(osv.Model):
             del context['default_date']
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
-    def do_decline(self, cr, uid, ids, context=None):
-        attendee_pool = self.pool.get('calendar.attendee')
-        for meeting_id in ids:
-            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
-            if attendee:
-                if attendee.state != 'declined':
-                    self.message_post(cr, uid, meeting_id, body=_(("%s has declined invitation") % (attendee.cn)), context=context)
-                attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
-        return True
-
-    def do_accept(self, cr, uid, ids, context=None):
-        attendee_pool = self.pool.get('calendar.attendee')
-        for meeting_id in ids:
-            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
-            if attendee:
-                if attendee.state != 'accepted':
-                    self.message_post(cr, uid, meeting_id, body=_(("%s has accepted invitation") % (attendee.cn)), context=context)
-                attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
-        return True
-
     def get_attendee(self, cr, uid, meeting_id, context=None):
         att = []
+        invitation = {'meeting': {}, 'attendee': []}
         attendee_pool = self.pool.get('calendar.attendee')
-        for attendee in self.browse(cr,uid,int(meeting_id),context).attendee_ids:
+        invitation['logo'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.logo.replace('\n','\\n')
+        meeting = self.browse(cr, uid, int(meeting_id), context)
+        invitation['meeting'] = {'event':meeting.name,'organizer': meeting.organizer, 'where': meeting.location,'when':meeting.event_time}
+        for attendee in meeting.attendee_ids:
             att.append({'name':attendee.cn,'status': attendee.state})
-        return att
+        invitation['attendee'] = att
+        return invitation
 
     def get_day(self, cr, uid, ids, time= None, context=None):
-        rec = self.browse(cr, uid, ids,context=context)[0]
+        rec = self.browse(cr, uid, ids, context=context)[0]
         date = datetime.strptime(rec.date,'%Y-%m-%d %H:%M:%S')
         if time == 'day':
             res = str(date.day)

@@ -5,25 +5,24 @@ instance.base_calendar = {}
 
     instance.base_calendar.invitation = instance.web.Widget.extend({
 
-        init: function(parent, db, action, id, view) {
+        init: function(parent, db, action, id, view, attendee_data) {
             this._super();
             this.db =  db;
             this.action =  action;
             this.id = id;
             this.view = view;
+            this.attendee_data = attendee_data;
         },
         start: function() {
             var self = this;
             if(instance.session.session_is_valid(self.db)) {
                 self.redirect_meeting_view(self.db,self.action,self.id,self.view);
             } else {
-                new instance.web.Model("crm.meeting").call('get_attendee',[self.id]).then(function(res){
-                    self.open_invitation_form(res);
-                });
+                self.open_invitation_form(self.attendee_data);
             }
         },
         open_invitation_form : function(invitation){
-            this.$el.html(QWeb.render('invitation_view', {'widget': invitation}));
+            this.$el.html(QWeb.render('invitation_view', {'invitation': JSON.parse(invitation)}));
         },
         redirect_meeting_view : function(db, action, meeting_id, view){
             var self = this;
@@ -175,9 +174,9 @@ instance.base_calendar = {}
         'Many2Many_invite' : 'instance.web.form.Many2Many_invite',
     });
 
-    instance.base_calendar.event = function (db, action, id, view) {
+    instance.base_calendar.event = function (db, action, id, view, attendee_data) {
         instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.base_calendar.invitation(null,db,action,id,view).appendTo($("body").addClass('openerp'));
+            new instance.base_calendar.invitation(null,db,action,id,view,attendee_data).appendTo($("body").addClass('openerp'));
         });
     }
 };
