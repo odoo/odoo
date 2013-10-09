@@ -77,7 +77,7 @@
                     backdrop: true,
                     title: "Welcome to your website!",
                     content: "This tutorial will guide you through the firsts steps to build your enterprise class website.",
-                    template: render('website.tour_full', { next: "OK", end: "Close" }),
+                    template: render('website.tour_full', { next: "Continue", end: "Close Tutorial" }),
                 },
                 {
                     stepId: 'edit-page',
@@ -85,32 +85,31 @@
                     placement: 'right',
                     reflex: true,
                     title: "Edit this page",
-                    content: "Every page of your website can be edited. Click the <b>Edit</b> button to modify your homepage.",
+                    content: "Every page of your website can be edited. Click the <em>Edit</em> button to modify your homepage.",
                     template: render('website.tour_simple'),
                 },
                 {
-                    stepId: 'show-bar',
-                    element: '#website-top-navbar',
-                    placement: 'bottom',
-                    title: "Editor bar",
-                    content: "This is the <b>Editor Bar</b>, use it to modify your website's pages.",
-                    template: render('website.tour_confirm', { next: "OK" }),
+                    stepId: 'add-banner',
+                    orphan: true,
+                    title: "Now, let's add a banner",
+                    content: "Let's add a banner on the top of the page to make your homepage look more attractive.",
+                    template: render('website.tour_confirm', { next: "Continue" }),
                 },
                 {
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'right',
                     reflex: true,
-                    title: "Add a block to your page",
-                    content: "Click on the <b>Insert Blocks</b> button to open the block collection.",
+                    title: "Shows Building Blocks",
+                    content: "Click on the <em>Insert Blocks</em> button to show the available building blocks.",
                     template: render('website.tour_simple'),
                 },
                 {
                     stepId: 'drag-banner',
                     element: '#website-top-navbar [data-snippet-id=carousel]',
                     placement: 'bottom',
-                    title: "Add a banner to your page",
-                    content: "Drag the <b>Banner</b> block to the body of the page and drop it on a purple zone.",
+                    title: "Drag & Drop a Banner",
+                    content: "Drag the <em>Banner</em> block and drop it to the top of your page (purple zone).",
                     template: render('website.tour_simple'),
                     onShown: function () {
                         function beginDrag () {
@@ -130,8 +129,8 @@
                     stepId: 'edit-title',
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
                     placement: 'top',
-                    title: "Change the title",
-                    content: "Click on the title and modify it to fit your needs then click <b>Done</b>.",
+                    title: "Set your Banner text",
+                    content: "Click on the text to start modifying it then click <em>Done</em> to continue the tutorial.<br>You can also use the options of the top menubar to change the look of the banner. ",
                     template: render('website.tour_confirm', { next: "Done" }),
                     onHide: function () {
                         var $banner = $("#wrap [data-snippet-id=carousel]:first");
@@ -144,8 +143,8 @@
                     stepId: 'customize-banner',
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
-                    title: "Customize the banner",
-                    content: "Click on <b>Customize</b> and change the background of your banner.",
+                    title: "Customize your new Banner style",
+                    content: "Click on <em>Customize</em> and change the background of your banner.",
                     template: render('website.tour_confirm', { next: "Not now" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
@@ -159,7 +158,7 @@
                     placement: 'right',
                     reflex: true,
                     title: "Save your modifications",
-                    content: "Click the <b>Save</b> button to apply modifications on your website.",
+                    content: "Click the <em>Save</em> button to apply modifications on your website.",
                     template: render('website.tour_simple'),
                     onHide: function () {
                         self.saveStep('part-2');
@@ -178,7 +177,7 @@
                     element: '#help-menu-button',
                     placement: 'left',
                     title: "Help is always available",
-                    content: "You can find more tutorials in the <b>Help</b> menu.",
+                    content: "You can find more tutorials in the <em>Help</em> menu.",
                     template: render('website.tour_end', { end: "Close" }),
                 },
             ];
