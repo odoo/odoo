@@ -16,52 +16,107 @@ $(document).ready(function () {
     });
 
     function set_my_cart_quantity(qty) {
-        $(".my_cart_quantity").html(qty.toString().indexOf(".") > -1 ? qty : qty + '.0').removeClass("hidden");
+        var $q = $(".my_cart_quantity");
+        $q.parent().parent().toggleClass("hidden", !qty);
+        $q.html(qty)
+            .hide()
+            .fadeIn(600);
     }
 
     $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
         var $input = $(this);
         var value = parseInt($input.val());
         if (isNaN(value)) value = 0;
-        $.get("./set_cart/", {'order_line_id': $input.data('id'), 'set_number': value, 'json': true}, function (data) {
-            var data = JSON.parse(data);
-            set_my_cart_quantity(data[1]);
-            $input.val(data[0]);
-            if (!+data[0]) {
-                $.get('/shop/remove_cart/', {'order_line_id': $input.data('id'), 'json': true,}, function (data) {
+        openerp.jsonRpc("/shop/set_cart_json/", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
+            .then(function (data) {
+                set_my_cart_quantity(data[1]);
+                $input.val(data[0]);
+                if (!data[0]) {
                     location.reload();
-                });
-            }
-        });
+                }
+            });
     });
-
-    $(".oe_website_sale #product_detail select[name='public_categ_id']").change(function () {
-        var $select = $(this);
-        $.get("/shop/change_category/"+$select.data('id')+"/", {'public_categ_id': $select.val()});
-    });
-
     
     // hack to add and rome from cart with json
-    $('.oe_website_sale a[href*="/add_cart/"], a[href*="/remove_cart/"]').on('click', function (ev) {
+    $('.oe_website_sale a.js_add_cart_json').on('click', function (ev) {
         ev.preventDefault();
-        $link = $(ev.currentTarget);
-        $.get($link.attr("href"), {'json': true}, function (data) {
-            var data = JSON.parse(data);
-            if (!+data[0]) {
-                location.reload();
-            }
-            set_my_cart_quantity(data[1]);
-            $link.parent().find(".js_quantity").val(data[0]);
-        });
+        var $link = $(ev.currentTarget);
+        var product = $link.attr("href").match(/product_id=([0-9]+)/);
+        var product_id = product ? +product[1] : 0;
+        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'product_id': product_id, 'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
+            .then(function (data) {
+                if (!data[0]) {
+                    location.reload();
+                }
+                set_my_cart_quantity(data[1]);
+                $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
+            });
         return false;
     });
-    $('.oe_website_sale form[action*="/add_cart/"]').on('submit', function (ev) {
+
+    // change price when they are variants
+    $('form.js_add_cart_json label').on('mouseup', function (ev) {
         ev.preventDefault();
-        $form = $(ev.currentTarget);
-        $.get($form.attr("action"), {'product_id': $form.find('input[name="product_id"]:checked').val(), 'json': true}, function (data) {
-            set_my_cart_quantity(JSON.parse(data)[1]);
-        });
-        return false;
+        var $label = $(ev.currentTarget);
+        var $price = $label.parent("form").find(".oe_price");
+        if (!$price.data("price")) {
+            $price.data("price", parseFloat($price.html()));
+        }
+        $price.html($price.data("price")+parseFloat($label.find(".badge span").html() || 0));
+    });
+
+    $(document).on('click', '.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom', function (event) {
+        var $a = $(event.currentTarget);
+        var $data = $a.parents(".js_publish_management:first");
+        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $a.hasClass('js_go_to_top')});
+    });
+
+    $(document).on('click', '#products_grid .js_options ul[name="style"] a', function (event) {
+        var $a = $(event.currentTarget);
+        var $li = $a.parent();
+        var $data = $a.parents(".js_options:first");
+        var $product = $a.parents(".oe_product:first");
+
+        $li.parent().removeClass("active");
+        openerp.jsonRpc('/shop/change_styles/', 'call', {'id': $data.data('id'), 'style_id': $a.data("id")})
+            .then(function (result) {
+                $product.toggleClass($a.data("class"));
+                $li.toggleClass("active", result);
+            });
+    });
+
+    $(document).on('mouseenter', '#products_grid .js_options ul[name="size"] table', function (event) {
+        $(event.currentTarget).addClass("oe_hover");
+    });
+    $(document).on('mouseleave', '#products_grid .js_options ul[name="size"] table', function (event) {
+        $(event.currentTarget).removeClass("oe_hover");
+    });
+    $(document).on('mouseover', '#products_grid .js_options ul[name="size"] td', function (event) {
+        var $td = $(event.currentTarget);
+        var $table = $td.parents("table:first");
+        var x = $td.index()+1;
+        var y = $td.parent().index()+1;
+
+        var tr = [];
+        for (var yi=0; yi<y; yi++) tr.push("tr:eq("+yi+")");
+        var $select_tr = $table.find(tr.join(","));
+        var td = [];
+        for (var xi=0; xi<x; xi++) td.push("td:eq("+xi+")");
+        var $select_td = $select_tr.find(td.join(","));
+
+        $table.find("td").removeClass("select");
+        $select_td.addClass("select");
+    });
+    $(document).on('click', '#products_grid .js_options ul[name="size"] td', function (event) {
+        var $td = $(event.currentTarget);
+        var $data = $td.parents(".js_options:first");
+        var x = $td.index()+1;
+        var y = $td.parent().index()+1;
+        openerp.jsonRpc('/shop/change_size/', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
+            .then(function () {
+                var search = location.search.replace(/\?|$/, '?unable_editor=1&');
+                location.href = location.href.replace(/(\?|#).*/, search + location.hash);
+            });
     });
 
 });

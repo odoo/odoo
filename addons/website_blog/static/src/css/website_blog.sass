@@ -7,3 +7,24 @@
     display: none
     &:first-of-type
       display: block
+
+.blog_content
+  a.oe_mail_expand:after
+    content: " →"
+  a.oe_mail_expand
+    font-weight: bold
+
+p.post-meta
+  position: relative
+  top: -5px
+
+.js_website_blog
+  div#right_column
+    section
+      opacity: 0.6
+    section:hover
+      opacity: 1
+      -moz-transition: all 0.2s ease-out
+      -webkit-transition: all 0.2s ease-out
+      transition: all 0.2s ease-out
+

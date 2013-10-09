@@ -11,15 +11,15 @@ OpenERP Website CMS
     'author': 'OpenERP SA',
     'depends': ['web', 'share'],
     'installable': True,
-    'css': ['static/lib/bootstrap-tour/css/website-tour.css'],
     'data': [
         'views/views.xml',
+        'views/snippets.xml',
         'views/themes.xml',
-        'views/res_config.xml',
         'website_data.xml',
         'website_view.xml',
         'security/ir.model.access.csv',
     ],
-    'css': ['static/lib/bootstrap-tour/css/website-tour.css'],
-
+    'demo': [
+        'website_demo.xml',
+    ]
 }

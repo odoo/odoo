@@ -51,8 +51,13 @@ Key Features
         'res_partner_view.xml',
         'email_template.xml',
     ],
-    'demo': ['event_demo.xml'],
-    'test': ['test/process/event_draft2done.yml'],
+    'demo': [
+        'event_demo.xml',
+    ],
+    'test': [
+        'test/ui/event_users.yml',
+        'test/process/event_draft2done.yml'
+    ],
     'css': ['static/src/css/event.css'],
     'installable': True,
     'application': True,

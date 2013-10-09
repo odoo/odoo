@@ -21,6 +21,10 @@
             user-select: none;
 }
 
+.point-of-sale .oe_hidden{
+    display: none !important;
+}
+
 .point-of-sale ul, .point-of-sale li  {
     margin: 0;
     padding: 0;
@@ -175,10 +179,9 @@
     background:      linear-gradient(#b2b3d7, #7f82ac);
 }
 
-.point-of-sale #rightheader button.neworder-button {
+.point-of-sale #rightheader button.square{
     width: 32px;
     margin-left:4px;
-    margin-right:4px;
 }
 
 .point-of-sale div#order-selector {
@@ -186,12 +189,20 @@
 }
 .point-of-sale ol#orders {
     display: inline;
+    margin-left: 8px;
 }
 .point-of-sale li.order-selector-button {
     display: inline;
 }
 .point-of-sale li.selected-order button {
     font-weight: 900;
+    background: #7174A8 !important;
+    color: rgb(236, 237, 255) !important;
+    text-shadow: 0px 1px rgba(0, 0, 0, 0.31);
+    -webkit-box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
+       -moz-box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
+        -ms-box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
+            box-shadow: 0px 1px 2px rgb(63, 66, 139) inset;
 }
 
 /*  c) The session buttons */
@@ -215,7 +226,7 @@
 .point-of-sale #rightheader .header-button:last-child{
     border-left:  1px solid #3a3a3a;
 }
-.point-of-sale #rightheader .header-button:hover{
+.point-of-sale #rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
     text-shadow: #000 0px 0px 3px;
     color:#EEE;
@@ -307,18 +318,10 @@
     border-top: 1px solid #efefef;
     font-size: 14px;
 }
-.point-of-sale #paypad button, .point-of-sale #numpad button, .point-of-sale .popup button{
-    position: relative;
-    top: 0;
-    -webkit-transition: top 150ms linear;
-       -moz-transition: top 150ms linear;
-        -ms-transition: top 150ms linear;
-            transition: top 150ms linear;
-}
-.point-of-sale #paypad button:active, .point-of-sale #numpad button:active, .point-of-sale .popup button:active{
-    top:3px;
-}
-.point-of-sale #paypad button:hover, .point-of-sale #numpad button:hover, .point-of-sale #numpad .selected-mode, .point-of-sale .popup button:hover {
+.point-of-sale #paypad button:active, 
+.point-of-sale #numpad button:active, 
+.point-of-sale #numpad .selected-mode, 
+.point-of-sale .popup  button:active{
     border: none;
     color: white;
     background: #7f82ac;
@@ -518,7 +521,7 @@
        -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
             box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
 }
-.point-of-sale .category-simple-button:hover {
+.point-of-sale .category-simple-button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -583,6 +586,7 @@
     background:#fff;
     border: 1px solid #fff;
     border-radius: 3px;
+    overflow: hidden;
     -webkit-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
        -moz-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
             box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
@@ -624,6 +628,8 @@
     top:auto;
     line-height: 14px;
     width:100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
@@ -801,9 +807,11 @@
 .point-of-sale .pos-sale-ticket table {
     width: 100%;
     border: 0;
+    table-layout: fixed;
 }
 .point-of-sale .pos-sale-ticket table td {
     border: 0;
+    word-wrap: break-word;
 }
 
 @media print {
@@ -902,14 +910,16 @@
 
 .point-of-sale .scale-screen .product-name {
     position: absolute;
-    left:0;
+    left:40px;
     top:50px;
     height:50px;
-    font-size:40px;
+    font-size:36px;
     line-height:50px;
     text-align:right;
     right:275px;
     color: #8d8d8d;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .point-of-sale .scale-screen .weight{
     position: absolute;
@@ -1049,13 +1059,13 @@
        -moz-transition: background 250ms ease-in-out;
             transition: background 250ms ease-in-out;
 }
-.point-of-sale .order .orderline:hover{
+.point-of-sale .order .orderline:active{
     background: rgba(140,143,183,0.05);
     -webkit-transition: background 50ms ease-in-out;
        -moz-transition: background 50ms ease-in-out;
             transition: background 50ms ease-in-out;
 }
-.point-of-sale .order .orderline.empty:hover{
+.point-of-sale .order .orderline.empty:active{
     background: transparent;
     cursor: default;
 }
@@ -1073,6 +1083,7 @@
     font-weight: bold;
     width:80%;
     overflow:hidden;
+    text-overflow: ellipsis;
 }
 .point-of-sale .order .orderline .price{
     padding:0;
@@ -1156,7 +1167,7 @@
 .point-of-sale .pos-actionbar .button .icon{
     margin-top: 10px;
 }
-.point-of-sale .pos-actionbar .button:hover {
+.point-of-sale .pos-actionbar .button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -1173,7 +1184,7 @@
 .point-of-sale .pos-actionbar .button.disabled *{
     opacity: 0.5;
 }
-.point-of-sale .pos-actionbar .button.disabled:hover{
+.point-of-sale .pos-actionbar .button.disabled:active{
     border: 1px solid #cacaca;
     border-radius: 4px;
     color: #555;
@@ -1242,7 +1253,7 @@
     display: block;
     cursor:pointer;
 }
-.point-of-sale .debug-widget .button:hover{
+.point-of-sale .debug-widget .button:active{
     background: rgba(96,21,177,0.45);
 }
 .point-of-sale .debug-widget input{
@@ -1330,7 +1341,7 @@
        -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
             box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
-.point-of-sale .popup .button:hover {
+.point-of-sale .popup .button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -1398,7 +1409,7 @@
        -moz-transition: all 250ms ease-in-out;
             transition: all 250ms ease-in-out;
 }
-.point-of-sale .scrollbar .button:hover{
+.point-of-sale .scrollbar .button:active{
     text-shadow: rgba(255,255,255,0.8) 0px 0px 15px;
 }
 .point-of-sale .scrollbar .button.disabled{

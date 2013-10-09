@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 import base64
 import cStringIO
+import contextlib
 import hashlib
 import json
 import logging
 import os
+import datetime
+
+from sys import maxint
 
 import psycopg2
 import werkzeug
@@ -14,7 +18,7 @@ import werkzeug.wrappers
 from PIL import Image
 
 import openerp
-from openerp.addons.website import website
+from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
@@ -35,7 +39,7 @@ PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif'
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
-    @website.route('/', type='http', auth="admin")
+    @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
         return self.page("website.homepage")
 
@@ -107,7 +111,11 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.website.render('website.themes', {'theme_changed': True})
 
-    @website.route('/page/<path:path>', type='http', auth="admin")
+    @website.route(['/website/snippets'], type='json', auth="public")
+    def snippets(self):
+        return request.website.render('website.snippets')
+
+    @website.route('/page/<path:path>', type='http', auth="public", multilang=True)
     def page(self, path, **kwargs):
         values = {
             'path': path,
@@ -160,6 +168,51 @@ class Website(openerp.addons.web.controllers.main.Home):
                 })
         return result
 
+    @website.route('/website/get_view_translations', type='json', auth='admin')
+    def get_view_translations(self, xml_id, lang=None):
+        lang = lang or request.context.get('lang')
+        views = self.customize_template_get(xml_id, optional=False)
+        views_ids = [view.get('id') for view in views if view.get('active')]
+        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        irt = request.registry.get('ir.translation')
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
+
+    @website.route('/website/set_translations', type='json', auth='admin')
+    def set_translations(self, data, lang):
+        irt = request.registry.get('ir.translation')
+        for view_id, trans in data.items():
+            view_id = int(view_id)
+            for t in trans:
+                initial_content = t['initial_content'].strip()
+                new_content = t['new_content'].strip()
+                tid = t['translation_id']
+                if not tid:
+                    old_trans = irt.search_read(
+                        request.cr, request.uid,
+                        [
+                            ('type', '=', 'view'),
+                            ('res_id', '=', view_id),
+                            ('lang', '=', lang),
+                            ('src', '=', initial_content),
+                        ])
+                    if old_trans:
+                        tid = old_trans[0]['id']
+                if tid:
+                    vals = {'value': new_content}
+                    irt.write(request.cr, request.uid, [tid], vals)
+                else:
+                    new_trans = {
+                        'name': 'website',
+                        'res_id': view_id,
+                        'lang': lang,
+                        'type': 'view',
+                        'source': initial_content,
+                        'value': new_content,
+                    }
+                    irt.create(request.cr, request.uid, new_trans)
+        irt._get_source.clear_cache(irt) # FIXME: find why ir.translation does not invalidate
+        return True
+
     #  # FIXME: auth, anybody can upload an attachment if URL known/found
     @website.route('/website/attach', type='http', auth='admin')
     def attach(self, func, upload):
@@ -185,87 +238,17 @@ class Website(openerp.addons.web.controllers.main.Home):
             window.parent['%s'](%s, %s);
         </script>""" % (func, json.dumps(url), json.dumps(message))
 
-    @website.route('/website/attachment/<int:id>', type='http', auth="admin")
-    def attachment(self, id):
-        # TODO: provide actual thumbnails?
-        # FIXME: can't use Binary.image because auth=user and website attachments need to be public
-        attachment = request.registry['ir.attachment'].browse(
-            request.cr, request.uid, id, request.context)
-
-        buf = cStringIO.StringIO(base64.decodestring(attachment.datas))
-
-        image = Image.open(buf)
-        mime = PIL_MIME_MAPPING[image.format]
-
-        w, h = image.size
-        resized = w > MAX_IMAGE_WIDTH or h > MAX_IMAGE_HEIGHT
-
-        # If saving unnecessary, just send the image buffer, don't go through
-        # Image.save() (especially as it breaks animated gifs)
-        if not resized:
-            buf.seek(0)
-            return werkzeug.wrappers.Response(buf, status=200, mimetype=mime)
-
-        image.thumbnail(IMAGE_LIMITS, Image.ANTIALIAS)
-        response = werkzeug.wrappers.Response(status=200, mimetype=mime)
-        image.save(response.stream, image.format)
-        return response
-
-    @website.route('/website/image', type='http', auth="public")
-    def image(self, model, id, field, **kw):
-        last_update = '__last_update'
-        Model = request.registry[model]
-        headers = [('Content-Type', 'image/png')]
-        etag = request.httprequest.headers.get('If-None-Match')
-        hashed_session = hashlib.md5(request.session_id).hexdigest()
-        retag = hashed_session
-        try:
-            if etag:
-                date = Model.read(request.cr, request.uid, [id], [last_update], request.context)[0].get(last_update)
-                if hashlib.md5(date).hexdigest() == etag:
-                    return werkzeug.wrappers.Response(status=304)
-
-            res = Model.read(request.cr, request.uid, [id], [last_update, field], request.context)[0]
-            retag = hashlib.md5(res.get(last_update)).hexdigest()
-            image_base64 = res.get(field)
-
-            if kw.get('resize'):
-                resize = kw.get('resize').split(',')
-                if len(resize) == 2 and int(resize[0]) and int(resize[1]):
-                    width = int(resize[0])
-                    height = int(resize[1])
-                    # resize maximum 500*500
-                    if width > 500:
-                        width = 500
-                    if height > 500:
-                        height = 500
-                    image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
-
-            image_data = base64.b64decode(image_base64)
-        except Exception:
-            image_data = open(os.path.join(http.addons_manifest['web']['addons_path'], 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
-
-        headers.append(('ETag', retag))
-        headers.append(('Content-Length', len(image_data)))
-        try:
-            ncache = int(kw.get('cache'))
-            headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
-        except:
-            pass
-        return request.make_response(image_data, headers)
-
-    @website.route(['/website/publish/'], type='http', auth="public")
-    def publish(self, **post):
-        _id = int(post['id'])
-        _object = request.registry[post['object']]
+    @website.route(['/website/publish'], type='json', auth="public")
+    def publish(self, id, object):
+        _id = int(id)
+        _object = request.registry[object]
 
         obj = _object.browse(request.cr, request.uid, _id)
         _object.write(request.cr, request.uid, [_id],
                       {'website_published': not obj.website_published},
                       context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
-
-        return obj.website_published and "1" or "0"
+        return obj.website_published and True or False
 
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
@@ -278,5 +261,88 @@ class Website(openerp.addons.web.controllers.main.Home):
     @website.route(['/sitemap.xml'], type='http', auth="public")
     def sitemap(self):
         return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
+
+class Images(http.Controller):
+    @website.route('/website/image', auth="public")
+    def image(self, model, id, field):
+        Model = request.registry[model]
+
+        response = werkzeug.wrappers.Response()
+
+        id = int(id)
+
+        ids = Model.search(request.cr, request.uid,
+                           [('id', '=', id)], context=request.context)\
+            or Model.search(request.cr, openerp.SUPERUSER_ID,
+                            [('id', '=', id), ('website_published', '=', True)], context=request.context)
+
+        if not ids:
+            # file_open may return a StringIO. StringIO can be closed but are
+            # not context managers in Python 2 though that is fixed in 3
+            with contextlib.closing(openerp.tools.misc.file_open(
+                    os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
+                    mode='rb')) as f:
+                response.set_data(f.read())
+                return response
+
+        concurrency = '__last_update'
+        [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
+                              [concurrency, field], context=request.context)
+
+        if concurrency in record:
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            try:
+                response.last_modified = datetime.datetime.strptime(
+                    record[concurrency], server_format + '.%f')
+            except ValueError:
+                # just in case we have a timestamp without microseconds
+                response.last_modified = datetime.datetime.strptime(
+                    record[concurrency], server_format)
+        # FIXME: no field in record?
+        response.set_etag(hashlib.sha1(record[field]).hexdigest())
+        response.make_conditional(request.httprequest)
+
+        # conditional request match
+        if response.status_code == 304:
+            return response
+
+        return self.set_image_data(response, record[field].decode('base64'))
+
+    # FIXME: auth
+    # FIXME: delegate to image?
+    @website.route('/website/attachment/<int:id>', auth='admin')
+    def attachment(self, id):
+        attachment = request.registry['ir.attachment'].browse(
+            request.cr, request.uid, id, request.context)
+
+        return self.set_image_data(
+            werkzeug.wrappers.Response(),
+            attachment.datas.decode('base64'),
+            fit=IMAGE_LIMITS,)
+
+    def set_image_data(self, response, data, fit=(maxint, maxint)):
+        """ Sets an inferred mime type on the response object, and puts the
+        provided image's data in it, possibly after resizing if requested
+
+        Returns the response object after setting its mime and content, so
+        the result of ``get_final_image`` can be returned directly.
+        """
+        buf = cStringIO.StringIO(data)
+
+        # FIXME: unknown format or not an image
+        image = Image.open(buf)
+        response.mimetype = PIL_MIME_MAPPING[image.format]
+
+        w, h = image.size
+        max_w, max_h = fit
+
+        if w < max_w and h < max_h:
+            response.set_data(data)
+            return response
+
+        image.thumbnail(fit, Image.ANTIALIAS)
+        image.save(response.stream, image.format)
+        return response
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

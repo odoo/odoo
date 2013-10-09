@@ -3,26 +3,16 @@
 <data>
 
     <!-- Layout add nav and footer -->
-
-    <template id="header_footer" inherit_id="website_sale.header_footer">
-        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-            <li><a href="/event">Events</a></li>
+    <template id="header_footer_custom" inherit_id="website.layout">
+        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
+            <li><a t-href="/event">Events</a></li>
         </xpath>
-        <xpath expr="//footer//ul[@name='products']/li" position="after">
-            <li><a href="/event">Events</a></li>
-        </xpath>
-    </template>
-
-    <template id="event_website_sale_mycart" inherit_id="website_sale.mycart">
-        <xpath expr="//small[@class='text-error']" position="replace">
-            <t t-if="(not line.event_id or line.event_ticket_id and line.event_ticket_id.price == line.product_id.lst_price)">
-                <small class="text-error" style="text-decoration: line-through;"><t t-esc="line.product_id.lst_price" /> €</small>
-            </t>
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
+            <li><a t-href="/event">Events</a></li>
         </xpath>
     </template>
 
     <!-- Page --> 
- 
     <template id="index" name="Events" page="True">
         <t t-call="website.layout">
           <t t-set="head">
@@ -30,46 +20,50 @@
           </t>
           <t t-set="title">Events</t>
           <div id="wrap">
-            <div class="oe_structure">
-                <h1 class="text-center">Our Events</h1>
-            </div>
             <div class="container">
-                <div class="row">
-                    <div class="col-md-4 css_noprint" id="left_column">
+                <div class="oe_structure"/>
+                <h1 class="text-center">
+                    Our Events
+                </h1>
+                <h3 class="text-center text-muted">
+                    <t t-esc="current_date"/><t t-if="current_type">,
+                      <t t-esc="current_type.name"/></t><t t-if="current_country">,
+                      <t t-esc="current_country.name"/>
+                    </t>
+                </h3>
+                <div class="row mt16 mb32">
+                    <div class="col-md-3 col-sm-4 css_noprint" id="left_column">
                         <ul class="nav nav-pills nav-stacked">
                             <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
-                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''">
-                                    <a t-attf-href="/event/#{ search_path }&amp;date=#{ date[0] }"><t t-esc="date[1]"/> <small t-if="date[3]">(<t t-esc="date[3]"/>)</small></a>
+                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3]">
+                                    <a t-href="/event/#{ search_path }&amp;date=#{ date[0] }"><t t-esc="date[1]"/>
+                                        <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
+                                    </a>
                                 </li>
                             </t>
                         </ul>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-sm-8 col-md-9">
                         <t t-call="website.pager" >
                             <t t-set="classname">pull-left</t>
                         </t>
-                    </div>
-                    <div class="col-md-8">
+                        <div class="oe_structure">
+                        </div>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
-                                <t t-call="website.publish"><t t-set="object" t-value="event"/></t>
+                                <t t-call="website.publish_management"><t t-set="object" t-value="event"/></t>
                                 <div class="media-body">
-                                    <span t-if="not event.event_ticket_ids" class="label label-default pull-right">No tickets needed.</span>
+                                    <span t-if="not event.event_ticket_ids" class="label label-danger pull-right">Registration Closed</span>
                                     <t t-if="event.event_ticket_ids">
-                                        <span t-if="event.register_avail == 9999" class="label label-default pull-right label-info">Tickets availables.</span>
-                                        <span t-if="not event.register_avail" class="label label-default pull-right">No ticket available.</span>
+                                        <span t-if="event.register_avail == 9999" class="label label-default pull-right label-info">Tickets Available</span>
+                                        <span t-if="not event.register_avail" class="label label-danger pull-right">Sold Out</span>
                                         <span t-if="event.register_avail and event.register_avail != 9999" t-attf-class="label label-default pull-right label-#{ event.register_avail &lt;= 10 and 'warning' or 'info' }">
-                                            <t t-if="event.register_avail &lt;= 10">Only</t>
-                                            <t t-esc="event.register_avail"/>
-                                            <t t-if="event.register_avail &gt; 1">tickets</t>
-                                            <t t-if="event.register_avail == 1">ticket</t>
-                                            available.
+                                            Tickets Available
                                         </span>
                                     </t>
-                                    <h4 class="media-heading"><a t-attf-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
+                                    <h4 class="media-heading"><a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
                                     <div>
-                                        <span t-field="event.type">: </span>
                                         <t t-if="event.organizer_id">
                                             Organized by: <span t-field="event.organizer_id"> </span>
                                         </t>
@@ -78,7 +72,10 @@
                                         <i class="icon-time"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
                                     </div>
                                     <div t-if="event.country_id">
-                                        <i class="icon-map-marker"></i> <span t-field="event.city"> </span>  <span t-field="event.zip"> </span>, <span t-field="event.country_id"> </span>
+                                        <i class="icon-map-marker"></i> <span t-field="event.city"/>, <span t-field="event.country_id"/>
+                                    </div>
+                                    <div class="text-muted">
+                                        <i class="icon-tag"></i> <span t-field="event.type"/>
                                     </div>
                                 </div>
                             </li>
@@ -100,7 +97,9 @@
                 <li class="nav-header">Category</li>
                 <t t-foreach="types">
                     <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
-                        <a t-attf-href="/event/#{ search_path }&amp;type=#{ type[0] }"><t t-esc="type[1]"/> <small>(<t t-esc="type_count"/>)</small></a>
+                        <a t-href="/event/#{ search_path }&amp;type=#{ type[0] }"><t t-esc="type[1]"/>
+                            <span class="badge pull-right"><t t-esc="type_count"/></span>
+                        </a>
                     </li>
                 </t>
             </ul>
@@ -112,99 +111,80 @@
                 <li class="nav-header">Location</li>
                 <t t-foreach="countries">
                     <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
-                        <a t-attf-href="/event/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/><small>(<t t-esc="country_id_count"/>)</small></a>
+                        <a t-href="/event/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/>
+                            <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+                        </a>
                     </li>
                 </t>
             </ul>
         </xpath>
     </template>
 
-    <template id="detail">
+    <template id="event_description_full">
         <t t-call="website.layout">
           <t t-set="head">
-              <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
               <t t-raw="head or ''"/>
           </t>
           <t t-set="title">Events</t>
           <div id="wrap">
             <div class="container">
-                <t t-call="website.publish"><t t-set="object" t-value="event_id"/></t>
-                <div class="row">
-                    <div class="col-md-4">
-                        <form action="./subscribe" method="POST" class="form-inline" t-if="not subscribe">
-                            <div class="col-lg-7">
-                                <input placeholder="Email Address" type="email" name="email" class="form-control" t-if="is_public_user"/>
-                            </div>
-                            <button type="submit" class="btn btn-primary" name="subscribe">Subscribe</button>
-                        </form>
-                        <form action="./unsubscribe" method="POST" class="form-inline" t-if="subscribe">
-                            <input type="hidden" name="email" t-att-value="subscribe"/>
-                            <button type="submit" class="btn btn-default" name="unsubscribe">Unsubscribe</button>
-                        </form>
-                    </div>
-                        <div class="col-md-8">
-                        <h1 class="text-center" t-field="event_id.name"></h1>
-                        <h4 class="text-center">
-                            <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
-                            <span t-field="event_id.date_end"/>
-                        </h4>
-                        <h5 class="text-center" t-field="event_id.address_id"/>
-                    </div>
 
-                    <div class="col-md-4 css_noprint">
-                        <h4>When &amp; Where</h4>
-                        <a t-att-href="event_id.google_map_link()" target="_BLANK">
-                            <img class="thumbnail" t-att-src="event_id.google_map_img()"/>
-                        </a>
-                        <address>
-                            <pre t-field="event_id.address_id"/>
-                            <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span><br/>
-                            <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
-                            <t t-if="event_id.organizer_id">
-                                <h6>Organized by:</h6>
-                                <pre><t t-field="event_id.organizer_id"/><t t-if="event_id.phone"><br/><span>&amp;#x2706;</span> <span t-field="event_id.phone"></span></t><t t-if="event_id.email"><br/><i class="icon-envelope"></i> <span t-field="event_id.email"></span></t></pre>
-                            </t>
-                        </address>
-                    </div>
+                <h1 class="text-center" t-field="event_id.name"></h1>
+                <h4 class="text-center text-muted">
+                    <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
+                    <span t-field="event_id.date_end"/>
+                </h4>
+                <h4 t-if="event_id.city and event_id.country_id" class="text-center text-muted">
+                    <i class="icon-map-marker"/>
+                    <span t-field="event_id.city"/>,
+                    <span t-field="event_id.country_id"/>
+                </h4>
+
+                <div class="row mt32 mb32">
                     <div class="col-md-8">
-                        <t t-if="event_id.event_ticket_ids">
-                        <hr/>
-                        <form t-attf-action="/event/#{ event_id.id }/add_cart" method="post">
-                            <table class="table">
+                        <form t-action="/event/#{ event_id.id }/add_cart" method="post" t-if="event_id.event_ticket_ids">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Ticket</th>
-                                        <th>Sales End</th>
-                                        <th>Price</th>
-                                        <th>Seats</th>
+                                        <th>Ticket Type</th>
+                                        <th style="min-width: 100px">Sales End</th>
+                                        <th style="min-width: 100px">Price</th>
+                                        <th></th>
                                         <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="event_id.event_ticket_ids" t-as="ticket">
-                                        <td><span t-field="ticket.name"/></td>
+                                        <td>
+                                            <div t-field="ticket.name"/>
+                                            <div><small t-field="ticket.product_id.description_sale"/></div>
+                                        </td>
                                         <td><span t-field="ticket.deadline"/></td>
                                         <td><span t-field="ticket.price"/></td>
-                                        <td><span t-if="ticket.register_max"><t t-esc="ticket.register_current"/>/<t t-field="ticket.register_max"/></span></td>
+                                        <td>
+                                            <span t-if="ticket.register_max and (float(ticket.register_current or 0) / ticket.register_max)&lt;=0.2" class="text-muted">
+                                                <t t-esc="ticket.register_max - ticket.register_current"/> <span>left</span>
+                                            </span>
+                                        </td>
                                         <td>
                                             <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">
                                                 <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
                                             </select>
-                                            <span t-if="not ticket.register_avail">No tickets available</span>
+                                            <span t-if="not ticket.register_avail">Sold Out</span>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="submit" class="btn btn-primary" t-if="event_id.register_avail">Order Now</button>
+                            <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event_id.register_avail">Order Now</button>
+                            <div class="clearfix"/>
+                            <hr/>
                         </form>
-                        </t>
-                        <hr/>
-                        <div t-field="event_id.description_website"></div>
-                        <hr/>
+                        <div t-field="event_id.description"></div>
+                        <div class="clearfix"/>
                         <ul class="media-list" id="comment">
-                            <li t-foreach="message_ids" t-as="comment" class="media">
+                            <li t-foreach="event_id.website_message_ids" t-as="comment" class="media">
                                 <div class="media-body">
-                                    <t t-call="website.publish"><t t-set="object" t-value="comment"/></t>
+                                    <t t-call="website.publish_management"><t t-set="object" t-value="comment"/></t>
                                     <t t-raw="comment.body"/>
                                     <small class="pull-right muted text-right">
                                         <div t-field="comment.author_id"/>
@@ -212,6 +192,89 @@
                                     </small>
                                 </div>
                             </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 css_noprint">
+                        <div class="clearfix"/>
+
+                        <div class="panel panel-default" t-if="event_id.address_id">
+                            <div class="panel-heading">
+                                <t t-call="website.publish_management"><t t-set="object" t-value="event_id"/></t>
+                                <h4>Where</h4>
+                            </div>
+                            <div class="panel-body">
+                                <a t-att-href="event_id.google_map_link()" target="_BLANK">
+                                    <img t-att-src="event_id.google_map_img()" width="100%%"/>
+                                </a>
+                                <address class="mt16 mb8">
+                                    <strong t-field="event_id.address_id.name"/>
+                                    <p t-field="event_id.address_id"/>
+                                    <div t-if="event_id.address_id.phone">
+                                        <span class="icon-phone"/> <span t-field="event_id.address_id.phone"/>
+                                    </div>
+                                    <div t-if="event_id.address_id.email">
+                                        <span class="icon-envelope"/>
+                                        <a t-att-href="'mailto:'+event_id.address_id.email">
+                                          <span t-field="event_id.address_id.email"/>
+                                        </a>
+                                    </div>
+                                </address>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default" t-if="event_id.address_id">
+                            <div class="panel-heading">
+                                <h4>When</h4>
+                            </div>
+                            <div class="panel-body">
+                                <i class="icon-time"></i> <span t-field="event_id.date_begin"> </span><br/>
+                                <i class="icon-time"></i> <span t-field="event_id.date_end"> </span>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default" t-if="event_id.organizer_id">
+                            <div class="panel-heading">
+                                <h4>Organizer</h4>
+                            </div>
+                            <div class="panel-body">
+                                <p><strong t-field="event_id.organizer_id.display_name"/></p>
+                                <div t-if="event_id.phone">
+                                    <span class="icon-phone"/> <span t-field="event_id.phone"/>
+                                </div>
+                                <div t-if="event_id.email">
+                                    <i class="icon-envelope"/> <span t-field="event_id.email"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Social Stream</h4>
+                            </div>
+                            <div class="panel-body">
+                                <t t-call="website_mail.follow"><t t-set="object" t-value="event_id"/></t>
+                                <div t-if="event_id.twitter_hashtag">
+                                    <p><strong>Join the Experience</strong></p>
+                                    <p class="text-muted">
+                                        Find out what others are seeing and
+                                        saying about this event, and join the
+                                        conversation.
+                                    </p>
+                                    <p><strong>Use this tag:
+                                        <a t-att-href="'twitter.com/search?q=#'+event_id.twitter_hashtag" class="label label-primary">#<span t-field="event_id.twitter_hashtag"/></a>
+                                    </strong></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="list-unstyled">
+                            <li t-if="event_id.type">
+                                <a t-att-href="'/event?type='+str(event_id.type.id)"><strong><span class="icon-double-angle-right"/> Other <t t-esc="event_id.type.name"/></strong></a>
+                            </li>
+                            <li t-if="event_id.country_id">
+                                <a t-att-href="'/event?country='+str(event_id.country_id.id)"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
+                            </li>
+                            <li><a href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
                         </ul>
                     </div>
                 </div>

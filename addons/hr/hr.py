@@ -122,6 +122,7 @@ class hr_job(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+        'write_date': fields.datetime('Update Date', readonly=True),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
@@ -346,26 +347,9 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-
-        # add shortcut unless 'noshortcut' is True in context
-        if not(context and context.get('noshortcut', False)):
-            data_obj = self.pool.get('ir.model.data')
-            try:
-                data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
-                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                            'user_id': user_id}, context=context)
-            except:
-                # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
-
-        return user_id
-
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
-        }
+    }
 
 
 

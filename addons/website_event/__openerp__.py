@@ -1,15 +1,17 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Online Events',
     'category': 'Website',
     'summary': 'Schedule, Promote and Sell Events',
     'version': '1.0',
     'description': """
-OpenERP Blog
-============
+Online Events
+=============
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'event_sale', 'website_sale'],
+    'depends': ['website', 'website_mail', 'event_sale', 'website_sale'],
     'data': [
         'event_data.xml',
         'views/website_event.xml',

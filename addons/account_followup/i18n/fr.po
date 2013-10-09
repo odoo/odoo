@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:11+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:20+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -81,7 +81,7 @@ msgstr "Société"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:259
+#: code:addons/account_followup/account_followup.py:258
 #, python-format
 msgid "Invoice Date"
 msgstr "Date de facturation"
@@ -118,7 +118,7 @@ msgstr "Envoyer les relances"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:263
+#: code:addons/account_followup/account_followup.py:262
 #, python-format
 msgid "Amount"
 msgstr "Montant"
@@ -161,6 +161,24 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"Nous constatons avec regret que malgré notre précédent rappel, votre compte "
+"est toujours débiteur.\n"
+"\n"
+" Nous vous mettons donc en demeure de nous régler sous huitaine "
+"l’intégralité de la somme. Passé ce délai, nous bloquerons votre compte ce "
+"qui signifie que vous ne pourrez plus passer de commandes auprès de notre "
+"société (articles/services).\n"
+"\n"
+"Si pour une raison qui nous est inconnue vous ne pouvez régler ces factures, "
+"n'hésitez pas à prendre contact avec notre service comptable afin que nous "
+"trouvions une solution rapide à ce problème.\n"
+"\n"
+"Le détail des factures impayées est listé ci-dessous.\n"
+"\n"
+"Veuillez agréer nos salutations distinguées,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -198,6 +216,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Cher ${object.name},</p>\n"
+"    <p>\n"
+"    A l'examen de votre compte, nous constatons que sauf erreur ou omission "
+"de notre part, nous n'avons toujours pas reçu à ce jour de règlement des "
+"factures reprises sur le relevé ci-dessous. Nous vous remercions de bien "
+"vouloir régulariser cette situation sous huitaine.\n"
+"\n"
+"\n"
+"Au cas où votre règlement se serait croisé avec la présente, nous vous "
+"prions de ne pas en tenir compte. N'hésitez pas à contacter notre service "
+"comptable.\n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"Veuillez agréer nos salutations distinguées,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -293,7 +345,7 @@ msgstr "Échéance la plus en retard"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr "Non contentieux"
+msgstr "Pas de litige"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -350,6 +402,43 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Cher ${object.name},</p>\n"
+"   <p>\n"
+"    Nous constatons avec regret que malgré notre précédent rappel, votre "
+"compte est toujours débiteur.\n"
+"Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité "
+"de la somme. Passé ce délai,\n"
+"nous bloquerons votre compte ce qui signifie que vous ne pourrez plus passer "
+"de commandes\n"
+"auprès de notre société (articles/services).\n"
+"Si pour une raison qui nous est inconnue vous ne pouvez régler ces factures, "
+"n'hésitez pas à prendre contact\n"
+"avec notre service comptable afin que nous trouvions une solution rapide à "
+"ce problème.\n"
+"\n"
+"Le détail des factures impayées est listé ci-dessous.\n"
+" </p>\n"
+"<br/>\n"
+"Veuillez agréer nos salutations distinguées,\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -495,7 +584,7 @@ msgid "Follow Ups"
 msgstr "Relances"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:219
+#: code:addons/account_followup/account_followup.py:218
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
 msgstr "Courriel non envoyé car l'adresse du partenaire n'est pas remplie"
@@ -602,6 +691,7 @@ msgstr ""
 #: view:res.partner:0
 msgid "Print overdue payments report independent of follow-up line"
 msgstr ""
+"Imprimer les relances de paiement indépendamment de la ligne de relance"
 
 #. module: account_followup
 #: help:account_followup.print,date:0
@@ -656,6 +746,38 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Cher ${object.name},</p>\n"
+"    <p>\n"
+"    Malgré plusieurs rappels, votre compte est toujours débiteur.\n"
+"Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité "
+"de la somme. Passé ce délai,\n"
+"nous mettrons en œuvre toutes les démarches légales nécessaires au "
+"recouvrement de notre créance sans nouvelle notification.\n"
+"J'espère que ces actions ne seront pas nécessaires et vous trouverez le "
+"détail des factures impayées ci-dessous.\n"
+"Pour toutes questions concernant ce sujet. n'hésitez pas à prendre contact "
+"avec notre service comptable.\n"
+"</p>\n"
+"<br/>\n"
+"Veuillez agréer nos salutations distinguées,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -688,6 +810,24 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"Malgré plusieurs rappels, votre compte est toujours débiteur.\n"
+"\n"
+"Nous vous mettons donc en demeure de nous régler sous huitaine l’intégralité "
+"de la somme. Passé ce délai,\n"
+"nous mettrons en œuvre toutes les démarches légales nécessaires au "
+"recouvrement de notre créance sans nouvelle notification.\n"
+"\n"
+"J'espère que ces actions ne seront pas nécessaires et vous trouverez le "
+"détail des factures impayées ci-dessous.\n"
+"\n"
+"Pour toutes questions concernant ce sujet. n'hésitez pas à prendre contact "
+"avec notre service comptable.\n"
+"\n"
+"Veuillez agréer nos salutations distinguées,\n"
+"            "
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
@@ -711,7 +851,7 @@ msgid "unknown"
 msgstr "inconnu"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:314
+#: code:addons/account_followup/account_followup.py:313
 #, python-format
 msgid "Printed overdue payments report"
 msgstr "Imprimer le rapport des retards de paiement"
@@ -731,6 +871,10 @@ msgid ""
 "                            order to exclude it from the next follow-up "
 "actions."
 msgstr ""
+"Ci-dessous se trouve l'historique des transactions de ce \n"
+"                            client.  Vous pouvez sélectionner \"Aucun "
+"suivi\" afin \n"
+"                            de le retirer de la prochaine action de relance."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -786,6 +930,7 @@ msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
 msgstr ""
+"Le degré maximal de relance sans prendre en compte les écritures en litige"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -824,6 +969,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"    A l'examen de votre compte, nous constatons que sauf erreur ou omission "
+"de notre part, nous n'avons toujours pas reçu à ce jour de règlement des "
+"factures reprises sur le relevé ci-dessous. Nous vous remercions de bien "
+"vouloir régulariser cette situation sous huitaine.\n"
+"Au cas où votre règlement se serait croisé avec ce courriel, nous vous "
+"prions de ne pas en tenir compte. N'hésitez pas à contacter notre service "
+"comptable. \n"
+"    </p>\n"
+"<br/>\n"
+"Veuillez agréer nos salutations distinguées,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account.move.line,result:0
@@ -864,6 +1037,19 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"A l'examen de votre compte, nous constatons que sauf erreur ou omission de "
+"notre part, nous n'avons toujours pas reçu à ce jour de règlement des "
+"factures reprises sur le relevé ci-dessous. Nous vous remercions de bien "
+"vouloir régulariser cette situation dans les 8 jours.\n"
+"\n"
+"Au cas où votre règlement se serait croisé avec la présente, nous vous "
+"prions de ne pas en tenir compte. N'hésitez pas à contacter notre service "
+"comptable.\n"
+"\n"
+"Veuillez agréer nos salutations distinguées,\n"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -885,7 +1071,7 @@ msgstr "%s partenaire(s) n'a/ont pas de crédit, donc l'action est effacée."
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Follow-up Report"
-msgstr ""
+msgstr "Rapport du suivi des paiements"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -957,7 +1143,7 @@ msgstr "Inclure les écritures marquées comme litigieuses"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
-#: code:addons/account_followup/account_followup.py:260
+#: code:addons/account_followup/account_followup.py:259
 #, python-format
 msgid "Description"
 msgstr "Description"
@@ -985,7 +1171,7 @@ msgstr "Exercice comptable"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr "Dernière relance avant action en justice"
+msgstr "Dernier niveau de suivi sans litige"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
@@ -1144,7 +1330,7 @@ msgstr "Réf. Client"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Maturity Date"
-msgstr "Date de Maturité"
+msgstr "Date d'échéance"
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0

@@ -1,5 +1,23 @@
 -
-  In Order to test process of Recruitment,
+  Create a user as 'HR Recruitment Officer'
+-
+  !record {model: res.users, id: res_users_hr_recruitment_officer, view: False}:
+    company_id: base.main_company
+    name: HR Recruitment Officer
+    login: hrro
+    password: hrro
+    email: hrofcr@yourcompany.com
+-
+  I added groups for HR Recruitment Officer.
+-
+  !record {model: res.users, id: res_users_hr_recruitment_officer}:
+    groups_id:
+      - base.group_hr_user
+-
+  In Order to test process of Recruitment so giving HR officer's rights,
+-
+  !context
+    uid: 'res_users_hr_recruitment_officer'
 -
   An applicant is interested in the job position. So he sends a resume by email.
 -

@@ -43,18 +43,23 @@
                                 <field name="name" class="oe_inline"/>
                             </h1>
                         </div>
-                        <group col="4">
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="default_lang_id"/>
-                        </group>
-                        <group string="Website languages">
-                            <field name="language_ids" nolabel="1" mode="tree,form">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="code"/>
-                                    <field name="translatable"/>
-                                </tree>
-                            </field>
+                        <group>
+                            <group string="Social Icons">
+                                <p class="oe_grey" colspan="2">
+                                    Keep these fields empty to not show the related social icon.
+                                </p>
+                                <field name="social_twitter" placeholder="https://twitter.com/openerp"/>
+                                <field name="social_facebook" placeholder="https://facebook.com/openerp"/>
+                                <field name="social_googleplus" placeholder="https://plus.google.com/+openerp"/>
+                                <field name="social_linkedin" placeholder="http://www.linkedin.com/company/openerp"/>
+                                <field name="social_youtube" placeholder="http://www.youtube.com/channel/HCU842OHPPNrQ"/>
+                                <field name="social_github" placeholder="https://youraccount.github.io"/>
+                            </group>
+                            <group string="Others Info">
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="language_ids" widget="many2many_tags"/>
+                                <field name="default_lang_id" widget="selection"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>

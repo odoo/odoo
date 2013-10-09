@@ -6,14 +6,20 @@
             <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-follow="object.id and object.message_is_follower and 'on' or 'off'" class="pull-right js_follow" t-if="editable" t-ignore="true">
                 <span t-attf-class="label label-success css_follow">Follow</span>
                 <span t-attf-class="label label-danger css_unfollow">Unfollow</span>
-                <span t-attf-class="label label-success css_followed">Followed</span>
-                <span t-attf-class="label label-danger css_unfollowed">Unfollowed</span>
+                <span t-attf-class="label label-success css_followed">Following</span>
+                <span t-attf-class="label label-danger css_unfollowed">Not Following</span>
             </a>
+            <input type="email" name="email" class="js_follow_email css_unfollowed_email"
+                t-att-value="email"
+                t-att-placeholder="email or 'Email Address'"/>
         </template>
 
-        <template id="website.layout" inherit_id="website.layout" inherit_option_id="website.layout">
-            <xpath expr="//head" position="inside">
+        <template id="website.layout" inherit_id="website.layout">
+            <!-- Load stylesheets before scripts to avoid blocking -->
+            <xpath expr="//head/link" position="after">
                 <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.css'/>
+            </xpath>
+            <xpath expr="//head" position="inside">
                 <script type="text/javascript" src="/website_mail/static/src/js/website_mail.js"></script>
             </xpath>
         </template>

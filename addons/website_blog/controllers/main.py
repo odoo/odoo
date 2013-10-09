@@ -21,7 +21,7 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website import website
+from openerp.addons.website.models import website
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 
@@ -29,9 +29,9 @@ import simplejson
 import werkzeug
 
 
-class website_mail(http.Controller):
-    _category_post_per_page = 2
-    _post_comment_per_page = 2
+class WebsiteBlog(http.Controller):
+    _category_post_per_page = 6
+    _post_comment_per_page = 6
 
     @website.route([
         '/blog/',
@@ -102,6 +102,9 @@ class website_mail(http.Controller):
                 blog_posts = category.blog_post_ids
             elif tag:
                 blog_posts = tag.blog_post_ids
+            else:
+                blog_post_ids = blog_post_obj.search(cr, uid, [], context=context)
+                blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         if blog_posts:
             pager = request.website.pager(

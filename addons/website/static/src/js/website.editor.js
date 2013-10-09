@@ -18,7 +18,7 @@
         return new website.editor.LinkDialog(editor).appendTo(document.body);
     }
     function image_dialog(editor) {
-        return new website.editor.ImageDialog(editor).appendTo(document.body);
+        return new website.editor.RTEImageDialog(editor).appendTo(document.body);
     }
 
     if (website.is_editable) {
@@ -282,7 +282,7 @@
                     });
                 }).get();
             return $.when.apply(null, defs).then(function () {
-                window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
+                website.reload();
             });
         },
         /**
@@ -321,16 +321,16 @@
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
-            $(root).attr('data-cke-editable', 'true')
-                    .on('dragstart', 'img', function (e) {
-                        e.preventDefault();
-                    });
-            this.editor = CKEDITOR.inline(root, self._config());
-            this.editor.on('instanceReady', function () {
+            $(root).on('dragstart', 'img', function (e) {
+                e.preventDefault();
+            });
+            var editor = this.editor = CKEDITOR.inline(root, self._config());
+            editor.on('instanceReady', function () {
+                editor.setReadOnly(false);
                 // ckeditor set root to editable, disable it (only inner
                 // sections are editable)
                 // FIXME: are there cases where the whole editor is editable?
-                root.contentEditable = false;
+                editor.editable().setReadOnly(true);
 
                 self.setup_editables(root);
 
@@ -496,11 +496,15 @@
                 this.changed($target.find('.url-source'));
             },
             'click button.remove': 'remove_link',
+            'change input#link-text': function (e) {
+                this.text = $(e.target).val()
+            },
         }),
         init: function (editor) {
             this._super(editor);
             // url -> name mapping for existing pages
             this.pages = Object.create(null);
+            this.text = null;
         },
         start: function () {
             var element;
@@ -554,13 +558,15 @@
             if (this.element) {
                 this.element.setAttributes(attributes);
                 this.element.removeAttributes(to_remove);
+                if (this.text) { this.element.setText(this.text); }
             } else {
                 var selection = this.editor.getSelection();
                 var range = selection.getRanges(true)[0];
 
                 if (range.collapsed) {
                     //noinspection JSPotentiallyInvalidConstructorUsage
-                    var text = new CKEDITOR.dom.text(label || url);
+                    var text = new CKEDITOR.dom.text(
+                        this.text || label || url);
                     range.insertNode(text);
                     range.selectNodeContents(text);
                 }
@@ -628,6 +634,7 @@
 
             this.changed($control);
 
+            this.$('input#link-text').val(this.element.getText());
             this.$('input.window-new').prop(
                 'checked', this.element.getAttribute('target') === '_blank');
         },
@@ -666,6 +673,23 @@
             });
         },
     });
+    /**
+     * ImageDialog widget. Lets users change an image, including uploading a
+     * new image in OpenERP or selecting the image style (if supported by
+     * the caller).
+     *
+     * Initialized as usual, but the caller can hook into two events:
+     *
+     * @event start({url, style}) called during dialog initialization and
+     *                            opening, the handler can *set* the ``url``
+     *                            and ``style`` properties on its parameter
+     *                            to provide these as default values to the
+     *                            dialog
+     * @event save({url, style}) called during dialog finalization, the handler
+     *                           is provided with the image url and style
+     *                           selected by the users (or possibly the ones
+     *                           originally passed in)
+     */
     website.editor.ImageDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
@@ -678,47 +702,30 @@
             'click a[href=#existing]': 'browse_existing',
             'change select.image-style': 'preview_image',
         }),
-        start: function () {
-            var selection = this.editor.getSelection();
-            var el = selection && selection.getSelectedElement();
-            this.element = null;
 
-            var $select = this.$('.image-style');
-            var $options = $select.children();
+        start: function () {
+            var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
-            if (el && el.is('img')) {
-                this.element = el;
-                _(this.image_styles).each(function (style) {
-                    if (el.hasClass(style)) {
-                        $select.val(style);
-                    }
-                });
-                // set_image must follow setup of image style
-                this.set_image(el.getAttribute('src'));
+            var o = { url: null, style: null, };
+            // avoid typos, prevent addition of new properties to the object
+            Object.preventExtensions(o);
+            this.trigger('start', o);
+
+            if (o.url) {
+                if (o.style) {
+                    this.$('.image-style').val(o.style);
+                }
+                this.set_image(o.url);
             }
 
             return this._super();
         },
         save: function () {
-            var url = this.$('input.url').val();
-            var style = this.$('.image-style').val();
-            var element, editor = this.editor;
-            if (!(element = this.element)) {
-                element = editor.document.createElement('img');
-                // focus event handler interactions between bootstrap (modal)
-                // and ckeditor (RTE) lead to blowing the stack in Safari and
-                // Chrome (but not FF) when this is done synchronously =>
-                // defer insertion so modal has been hidden & destroyed before
-                // it happens
-                setTimeout(function () {
-                    editor.insertElement(element);
-                }, 0);
-            }
-            element.setAttribute('src', url);
-            $(element.$).removeClass(this.image_styles.join(' '));
-            if (style) { element.addClass(style); }
-
+            this.trigger('save', {
+                url: this.$('input.url').val(),
+                style: this.$('.image-style').val(),
+            });
             return this._super();
         },
 
@@ -762,10 +769,51 @@
                 .removeClass(this.image_styles.join(' '))
                 .addClass(this.$('select.image-style').val());
         },
-
         browse_existing: function (e) {
             e.preventDefault();
             new website.editor.ExistingImageDialog(this).appendTo(document.body);
+        },
+    });
+    website.editor.RTEImageDialog = website.editor.ImageDialog.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.on('start', this, this.proxy('started'));
+            this.on('save', this, this.proxy('saved'));
+        },
+        started: function (holder) {
+            var selection = this.editor.getSelection();
+            var el = selection && selection.getSelectedElement();
+            this.element = null;
+
+            if (el && el.is('img')) {
+                this.element = el;
+                _(this.image_styles).each(function (style) {
+                    if (el.hasClass(style)) {
+                        holder.style = style;
+                    }
+                });
+                holder.url = el.getAttribute('src');
+            }
+        },
+        saved: function (data) {
+            var element, editor = this.editor;
+            if (!(element = this.element)) {
+                element = editor.document.createElement('img');
+                // focus event handler interactions between bootstrap (modal)
+                // and ckeditor (RTE) lead to blowing the stack in Safari and
+                // Chrome (but not FF) when this is done synchronously =>
+                // defer insertion so modal has been hidden & destroyed before
+                // it happens
+                setTimeout(function () {
+                    editor.insertElement(element);
+                }, 0);
+            }
+
+            var style = data.style;
+            element.setAttribute('src', data.url);
+            $(element.$).removeClass(this.image_styles.join(' '));
+            if (style) { element.addClass(style); }
         },
     });
 
@@ -886,7 +934,7 @@
                     if (m.attributeName !== 'class') { return true; }
 
                     // find out what classes were added or removed
-                    var oldClasses = m.oldValue.split(/\s+/);
+                    var oldClasses = (m.oldValue || '').split(/\s+/);
                     var newClasses = m.target.className.split(/\s+/);
                     var change = _.union(_.difference(oldClasses, newClasses),
                                          _.difference(newClasses, oldClasses));
@@ -904,6 +952,7 @@
                 while (node && !$(node).hasClass('oe_editable')) {
                     node = node.parentNode;
                 }
+                $(m.target).trigger('node_changed');
                 return node;
             })
             .compact()

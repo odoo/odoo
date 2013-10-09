@@ -21,8 +21,8 @@
 
 {
     'name': 'Website Mail',
-    'category': 'Website',
-    'summary': 'Glue Module',
+    'category': 'Hidden',
+    'summary': 'Website Module for Mail',
     'version': '0.1',
     'description': """Glue module holding mail improvements for website.""",
     'author': 'OpenERP SA',

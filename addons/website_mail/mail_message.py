@@ -32,6 +32,10 @@ class MailMessage(osv.Model):
         ),
     }
 
+    _defaults = {
+        'website_published': True,
+    }
+
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to restrict

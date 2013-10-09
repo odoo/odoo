@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -215,28 +216,11 @@ footer {
   padding-bottom: 12px;
 }
 
-.oe_structure.oe_empty_edit:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty_edit > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  background-image: url("/web/static/src/img/view_empty_arrow.png");
-  background-repeat: no-repeat;
-  background-position: left top;
-  height: 200px !important;
+/* ----- BOOTSTRAP FIX ----- */
+.col-md-12 {
+  float: left;
+  width: 100%;
 }
-
-.oe_structure.oe_empty_edit > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  position: static;
-}
-
-.oe_structure.oe_empty_edit:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty_edit > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Click here to build you website and edit the content";
-  text-align: left;
-  display: block;
-  padding-top: 60px;
-  padding-bottom: 50px;
-  padding-left: 90px;
-  color: grey;
-  font-size: 24px;
-}
-
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
@@ -251,13 +235,17 @@ footer {
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here";
+  content: "Click Edit To Create Content";
   text-align: center;
   display: block;
   padding-top: 100px;
   padding-bottom: 50px;
   color: grey;
   font-size: 24px;
+}
+
+.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here";
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -267,6 +255,7 @@ footer {
 
 .carousel-inner .item {
   height: 100%;
+  background-size: 100%;
 }
 
 .carousel.oe_small .carousel-inner {
@@ -355,6 +344,14 @@ footer {
   padding: 0 0 20px 0;
 }
 
+/* Parallax Theme */
+.parallax_full {
+  background: #eeeeee bottom center repeat fixed;
+  min-height: 650px;
+  width: 100%;
+  background-size: 100%;
+}
+
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;
@@ -372,10 +369,6 @@ ul.nav-stacked > li > a {
 /* ---- PUBLISH ---- */
 a[data-publish] {
   text-decoration: none !important;
-  z-index: 2;
-}
-a[data-publish] .label {
-  padding: 5px 8px;
 }
 a[data-publish] .css_unpublish, a[data-publish] .css_publish, a[data-publish] .css_unpublished, a[data-publish] .css_published {
   display: none;
@@ -393,19 +386,35 @@ a[data-publish][data-publish='on']:hover .css_published {
   display: none;
 }
 
-[data-publish='off']:not(a) > :not([data-publish]) {
+.dropdown .css_unpublish, .dropdown .css_publish {
+  display: none;
+}
+
+.dropdown.css_publish .css_unpublish, .dropdown.css_unpublish .css_publish {
+  display: block;
+}
+
+.unpublish {
+  opacity: 0.5;
+}
+
+[data-publish='off']:not(a) > :not(.js_publish) {
   opacity: 0.5;
 }
 
 [data-publish]:not(a) {
   position: relative;
   overflow: visible;
-  /*&:hover > [data-publish] */
+  /*&:hover .js_publish */
   /*     display: block */
 }
-[data-publish]:not(a) > [data-publish] {
+[data-publish]:not(a) .js_publish {
   position: absolute;
   right: -6px;
   top: -10px;
   display: none;
+}
+
+::selection {
+  background: rgba(150, 150, 220, 0.3);
 }

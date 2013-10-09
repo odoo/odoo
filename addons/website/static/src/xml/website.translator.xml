@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.TranslatorDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Translate this page</h2>
+                </div>
+                <div class="modal-body">
+                    <section>
+                        <p>
+                            You are about to enter the translation mode.
+                        </p>
+                        <p>
+                            In this mode you can not change the structure of the document, you can only translate text.
+                        </p>
+                        <p>
+                            Here are the visuals used in order to help you in your translation flow:
+                            <ul class="oe_translate_examples">
+                                <li class="oe_translatable_text">
+                                    Normal translatable content
+                                </li>
+                                <li class="oe_translatable_field">
+                                    ERP translatable object data
+                                </li>
+                                <li class="oe_translatable_todo">
+                                    Translation TODO
+                                </li>
+                            </ul>
+                        </p>
+                    </section>
+                    <hr/>
+                    <section class="row">
+                        <div class="col-md-6">
+                            <button type="button" data-action="activate" class="btn btn-primary">Ok</button>
+                            or
+                            <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
+                        </div>
+                        <div class="col-md-6">
+                            <label>
+                                <input type="checkbox" name="do_not_show"/>
+                                Do not show this dialog later.
+                            </label>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:41+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -36,7 +36,7 @@ msgstr "Контролна табла за продажби"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr ""
+msgstr "Нема дефинирано сметка за приходи како општо својство."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -84,7 +84,7 @@ msgid ""
 "            It installs the account_analytic_analysis module."
 msgstr ""
 "Дозволува да ги дефинирате условите на договорот со вашиот клиент: метод на "
-"фактурирање (фиксна цена, по распоред, авансна фактура), точна цена "
+"фактурирање (фиксна цена, по временска таблица, авансна фактура), точна цена "
 "(650eur/дневно за програмер), времетраење (едногодишен договор за поддршка). "
 "Ќе може да го следите напредокот на договорот и фактурата автоматски. Тоа го "
 "инсталира модулот account_analytic_analysis."
@@ -125,7 +125,7 @@ msgid "March"
 msgstr "Март"
 
 #. module: sale
-#: code:addons/sale/sale.py:567
+#: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Прво откажи ги сите фактури прикачени на овој налог за продажба."
@@ -191,7 +191,7 @@ msgstr "Адреса на испорака"
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Аналитичко конто"
+msgstr "Аналитичка сметка"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -281,7 +281,7 @@ msgstr "Даноци"
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Неоданочен износ"
+msgstr "Даночна основа"
 
 #. module: sale
 #: field:sale.config.settings,module_project:0
@@ -290,9 +290,9 @@ msgstr "Проект"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:368
-#: code:addons/sale/sale.py:509
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:363
+#: code:addons/sale/sale.py:504
+#: code:addons/sale/sale.py:598
 #: code:addons/sale/sale.py:763
 #: code:addons/sale/sale.py:780
 #, python-format
@@ -327,10 +327,10 @@ msgid ""
 "                This installs the module analytic_user_function."
 msgstr ""
 "Дозволува да се дефинира што е стандардна функција на конкретен корисник на "
-"дадено конто. Ова најчесто се користи кога корисникот го кодира својот "
-"распоред. Овие вредности се превземени и полињата се пополнети автоматски. "
-"Но можноста за промена на овие вредности е сеуште достапна. Ова го инсталира "
-"модулот функција на аналитички корисник."
+"дадено конто. Ова најчесто се користи кога корисникот ја кодира својата "
+"временска таблица. Овие вредности се превземени и полињата се пополнети "
+"автоматски. Но можноста за промена на овие вредности е сеуште достапна. Ова "
+"го инсталира модулот функција на аналитички корисник."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -424,7 +424,7 @@ msgid "Tax"
 msgstr "Данок"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #: code:addons/sale/sale.py:820
 #: code:addons/sale/sale.py:983
 #, python-format
@@ -456,7 +456,7 @@ msgstr "Датум на потврдување"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr "# од линии"
+msgstr "# од ставки"
 
 #. module: sale
 #: help:sale.order,message_summary:0
@@ -486,7 +486,7 @@ msgid "Fax :"
 msgstr "Факс :"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -511,8 +511,8 @@ msgid "Contract Features"
 msgstr "Карактеристики на договорот"
 
 #. module: sale
-#: code:addons/sale/sale.py:288
-#: code:addons/sale/sale.py:586
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -550,7 +550,7 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
-"Ви дозволува да ги менаџирате различните цени врз основа на правилата по "
+"Ви дозволува да управувате со различните цени врз основа на правилата по "
 "категорија на клиенти. На пример: 10% за трговци на мало, промоција од 5 EUR "
 "за овој производ и др."
 
@@ -672,8 +672,8 @@ msgid ""
 "                This installs the module sale_journal."
 msgstr ""
 "Ви дозволува да ги категоризирате вашите продажби и испораки (требувања) "
-"помеѓу различни картици, и да изведете групни операции на картиците. Ова го "
-"инсталира модулот картица за продажба."
+"помеѓу различни дневници, и да изведете групни операции врз дневниците. Ова "
+"го инсталира модулот sale_journal."
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
@@ -796,9 +796,10 @@ msgstr ""
 "*Статусот 'Нацрт' е поставен кога поврзаниот налог за продажба е во состојба "
 "нацрт. *Статусот 'Потврдено' е поставен кога поврзаниот налог за продажба е "
 "потврден. *Статусот 'Исклучок' е поставен кога поврзаниот налог за продажба "
-"е поставек како исклучок. *Статусот 'Завршено' е поставен кога ставката од "
-"налогот за продажба е одбрана. *Статусот 'Откажано' е поставен кога "
-"корисникот го откажува поврзаниот налог за продажба."
+"е поставек како исклучок. \n"
+"*Статусот 'Завршено' е поставен кога ставката од налогот за продажба е "
+"одбрана. *Статусот 'Откажано' е поставен кога корисникот го откажува "
+"поврзаниот налог за продажба."
 
 #. module: sale
 #: view:sale.config.settings:0
@@ -868,10 +869,10 @@ msgid "Sales Order done"
 msgstr "Налогот за продажба е завршен"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "Дефинирајте картица за продажби за оваа компанија: \"%s\" (id:%d)."
+msgstr "Дефинирајте дневник за продажба за оваа компанија: \"%s\" (id:%d)."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -923,7 +924,7 @@ msgid "Sales Make Invoice"
 msgstr "Фактура за направена продажба"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:307
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Преупредување за ценовник!"
@@ -934,7 +935,7 @@ msgid "Discount (%)"
 msgstr "Попуст (%)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -972,7 +973,7 @@ msgstr "Декември"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contracts Management"
-msgstr "Менаџирање со договори"
+msgstr "Управување со договори"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1002,7 +1003,7 @@ msgid "Category of Product"
 msgstr "Категорија на производ"
 
 #. module: sale
-#: code:addons/sale/sale.py:566
+#: code:addons/sale/sale.py:564
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Не може да го откажете овој налог за продажба!"
@@ -1059,7 +1060,7 @@ msgid "Open Sale Menu"
 msgstr "Отвори мени Продажба"
 
 #. module: sale
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Не може да потврдите налог за продажба кој нема ставка."
@@ -1301,8 +1302,8 @@ msgid ""
 "                    This installs the module sale_stock."
 msgstr ""
 "Ви дозволува да направите барање за понуда, налог за продажба со користење "
-"на различна политика за нарачки и менаџирање на поврзана залиха. Ова го "
-"инсталира модулот продажба_залиха."
+"на различна политика за нарачки и управување со поврзаната залиха. Ова го "
+"инсталира модулот sale_stock."
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -1491,7 +1492,7 @@ msgid "TVA :"
 msgstr "TVA :"
 
 #. module: sale
-#: code:addons/sale/sale.py:449
+#: code:addons/sale/sale.py:444
 #, python-format
 msgid "Customer Invoices"
 msgstr "Фактури на клиентот"
@@ -1517,7 +1518,7 @@ msgid "Sales"
 msgstr "Продажби"
 
 #. module: sale
-#: code:addons/sale/sale.py:309
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1562,7 +1563,8 @@ msgid "Invoice address :"
 msgstr "Адреса на фактура :"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:124
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
 #, python-format
@@ -1634,7 +1636,7 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                Ова е листа на секоја ставка од налогот за предажба која "
+"                Ова е листа на секоја ставка од налогот за продажба која "
 "треба да биде фактурирана. \n"
 "                Може да ги фактурирате налозите за продажба парцијално, по "
 "ставки од налогот за продажба. \n"
@@ -1649,7 +1651,7 @@ msgid "Shipping address :"
 msgstr "Адреса на испорака :"
 
 #. module: sale
-#: code:addons/sale/sale.py:510
+#: code:addons/sale/sale.py:505
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -2163,8 +2165,9 @@ msgid "Manual In Progress"
 msgstr "Рачно во тек"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
-#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
 msgstr "Предупредување!"

@@ -10,6 +10,9 @@ Our Team Page
         """,
     'author': 'OpenERP SA',
     'depends': ['website', 'hr'],
+    'demo': [
+        'website_hr_demo.xml',
+    ],
     'data': [
         'website_hr_data.xml',
         'views/website_hr.xml',

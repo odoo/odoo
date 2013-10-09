@@ -15,20 +15,28 @@
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
                       t-att-data-editable="'1' if editable else '0'"
+                      t-att-data-translatable="'1' if translatable else '0'"
                       t-att-data-view-xmlid="str(__stack__[0])">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />
                         <meta name="description" value="" />
                         <meta name="keywords" value="" />
+
+                        <!-- Load stylesheets before scripts to avoid blocking -->
+                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+                        <t t-if="editable">
+                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
+                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+                            <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
+                        </t>
+                        <t t-call="website.theme"/>
+
+                        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
                         <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
-                        
-                        <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/css/bootstrap-tour.css'/>
-                        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/js/bootstrap-tour.js"></script>
-
 
                         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
@@ -36,12 +44,10 @@
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
 
                         <t t-if="editable">
-                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
@@ -51,15 +57,13 @@
                             <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+                            <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
                         </t>
 
                         <t t-raw="head or ''"/>
-                        <t t-call="website.theme"/>
-
-                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                     </head>
                     <body>
                         <div id="wrapwrap">
@@ -73,14 +77,14 @@
                                                 <span class="icon-bar"></span>
                                                 <span class="icon-bar"></span>
                                             </button>
-                                            <a class="navbar-brand" href="/page/website.homepage"><em>Your</em><b>Company</b></a>
+                                            <a class="navbar-brand" t-href="/page/website.homepage"><em>Your</em><b>Company</b></a>
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <li name="contactus"><a href="/page/website.contactus">Contact us</a></li>
+                                                <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
-                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><t t-field="user_id.name"/></a></li>
-                                                <li t-if="len(website.language_ids) &gt; 1" class="dropdown">
+                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><span t-field="user_id.name"/></a></li>
+                                                <li t-if="request.multilang and len(website.language_ids) &gt; 1" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
                                                     <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -88,7 +92,7 @@
                                                     </a>
                                                     <ul class="dropdown-menu" role="menu">
                                                         <li t-foreach="website.language_ids" t-as="lg">
-                                                            <a href="#" role="menuitem">
+                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
                                                                 <strong t-att-class="'icon-check' if lg.code == lang
                                                                     else 'icon-check-empty'"></strong>
                                                                 <t t-esc="lg.name"/>
@@ -108,23 +112,26 @@
                                         <div class="col-md-3" name="product">
                                             <h4>Our products &amp; Services</h4>
                                             <ul class="list-unstyled" name="products">
-                                                <li><a href="/">Home</a></li>
+                                                <li><a t-href="/">Home</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-md-3" name="info">
                                             <h4 name="info_title">Connect with us</h4>
                                             <ul class="list-unstyled">
-                                                <li><a href="/page/website.contactus">Contact us</a></li>
+                                                <li><a t-href="/page/website.contactus">Contact us</a></li>
                                             </ul>
                                             <ul class="list-unstyled">
                                                 <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
                                                 <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
                                             </ul>
-                                            <h1>
-                                                <a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i></a>
-                                                <a href="http://facebook.com/OpenERP"><i class="icon-facebook-sign"></i></a>
-                                                <a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i></a>
-                                            </h1>
+                                            <h2>
+                                                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
+                                                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
+                                                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
+                                                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
+                                                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
+                                                <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
+                                            </h2>
                                         </div>
                                         <div class="col-md-5 col-lg-offset-1" name="about_us">
                                             <h4>
@@ -149,7 +156,7 @@
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>
                                     <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a t-href="/sitemap">Sitemap</a>
                                     </div>
                                 </div>
                             </footer>
@@ -166,7 +173,7 @@
                             <div class="col-md-4">
                                 <h4 class="mt16">Subtitle</h4>
                                 <p>
-                                    <a href="/">Homepage</a>
+                                    <a t-href="/">Homepage</a>
                                 </p>
                             </div>
                             <div class="col-md-4">
@@ -192,7 +199,7 @@
 
         <template id="homepage" name="Homepage" page="True">
             <t t-call="website.layout">
-              <div id="wrap" class="oe_structure oe_empty_edit"></div>
+              <div id="wrap" class="oe_structure oe_empty"></div>
             </t>
         </template>
 
@@ -210,7 +217,7 @@
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
                         <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
-                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
+                        <span class="text-muted">or</span> <a t-href="/sitemap">Search a Page</a>
                     </div>
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
@@ -225,8 +232,8 @@
                         </p>
                         <p>Maybe you were looking for one of these popular pages ?</p>
                         <ul>
-                            <li><a href="/">Homepage</a></li>
-                            <li><a href="/">Contact Us</a></li>
+                            <li><a t-href="/">Homepage</a></li>
+                            <li><a t-href="/page/website.contactus/">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -259,14 +266,28 @@
                     </p>
                     <pre t-if="editable" t-esc="error"/>
                     <ul>
-                        <li><a href="/">Homepage</a></li>
-                        <li><a href="/">Contact Us</a></li>
+                        <li><a t-href="/">Homepage</a></li>
+                        <li><a t-href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
               </div>
             </t>
         </template>
 
+        <template id="company_description" name="Company Description">
+            <address>
+                <strong t-field="res_company.name">Name</strong><br />
+                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
+                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
+                <span t-field="res_company.country_id"> </span><br />
+                <br />
+                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
+                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
+            </address>
+             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
+                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
+            </a>
+        </template>
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
@@ -274,6 +295,7 @@
                   <t t-raw="res_company.name"></t>
               </t>
               <div id="wrap">
+                <div class="oe_structure"/>
                 <div class="container">
                     <h1>Contact us</h1>
                     <div class="row">
@@ -283,25 +305,15 @@
                                 <p>We'll do our best to get back to you as soon as possible.</p>
                             </div>
                             <div class="text-center mt64" name="mail_button">
-                                <a t-att-href="'mailto:'+res_company.email" class="btn btn-primary">Send us an email</a>
+                                <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary">Send us an email</a>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <address>
-                                <strong t-field="res_company.name">Name</strong><br />
-                                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
-                                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
-                                <span t-field="res_company.country_id"> </span><br />
-                                <br />
-                                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
-                                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
-                            </address>
-                             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
-                                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
-                            </a>
+                            <t t-call="website.company_description"/>
                         </div>
                     </div>
                 </div>
+                <div class="oe_structure"/>
               </div>
             </t>
         </template>
@@ -310,18 +322,30 @@
             <t t-call="website.layout">
               <t t-set="title">About <t t-raw="res_company.name"></t>
               </t>
-              <div id="wrap" class="oe_structure">
-                <div class="container">
-                    <h2>About us</h2>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h3>Our vision</h3>
-                            <p>Contact us about anything related to our company or services.</p>
-                            <p>We'll do our best to get back to you as soon as possible.</p>
-                        </div>
-                        <div class="col-md-8"></div>
-                    </div>
-                </div>
+              <div id="wrap">
+                  <div class="oe_structure"/>
+                  <div class="container mb32">
+                      <div class="row col-wrap" id="aboutus">
+                          <div class="col-sm-12 text-center">
+                              <h1>About us</h1>
+                              <h3 class="text-muted">A passion for great products</h3>
+                          </div>
+                          <div class="col-sm-8 mt16">
+                              <p>
+                                  We are a team of passionated people whose goal is to improve everyone's
+                                  life through disruptive products. We build great products to solve your
+                                  business problems.
+                              </p>
+                              <p>
+                                  Our products are designed for small to medium companies willing to optimize
+                                  their performance.
+                              </p>
+                          </div><div class="col-sm-3 col-sm-offset-1">
+                              <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Out Team"/>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="oe_structure"/>
               </div>
             </t>
         </template>
@@ -340,13 +364,37 @@
             </ul>
         </template>
 
-        <template id="publish">
-            <a href="#" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-publish="object.id and object.website_published and 'on' or 'off'" class="pull-right js_publish" t-if="editable" t-ignore="true">
-                <span t-attf-class="label label-success css_publish">Publish</span>
-                <span t-attf-class="label label-danger css_unpublish">Unpublish</span>
-                <span t-attf-class="label label-success css_published">Published</span>
-                <span t-attf-class="label label-danger css_unpublished">Unpublished</span>
-            </a>
+        <template id="publish_management">
+            <t t-if="editable" t-ignore="true">
+            <div class="pull-right btn-group">
+              <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
+                <a t-attf-class="btn btn-xs btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+                    <t t-raw="0"/>
+                    <li>
+                        <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
+                        <a href="#" class="js_publish_btn css_publish">Publish</a>
+                    </li>
+                </ul>
+              </div>
+              <t t-if="publish_edit">
+                <a class="btn btn-xs btn-default" title="Edit in backend" t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)"><span t-attf-class="glyphicon glyphicon-wrench"></span></a>
+              </t>
+            </div>
+            </t>
+        </template>
+
+        <template id="publish_short">
+            <t t-if="editable" t-ignore="true">
+                <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
+                        t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
+                        class="pull-right js_publish">
+                    <span t-attf-class="text-success css_publish glyphicon glyphicon-ok"></span>
+                    <span t-attf-class="text-danger css_unpublish glyphicon glyphicon-remove-circle"></span>
+                    <span t-attf-class="text-muted css_published glyphicon glyphicon-ok"></span>
+                    <span t-attf-class="text-muted css_unpublished glyphicon glyphicon-remove-circle"></span>
+                </a>
+            </t>
         </template>
 
         <template id="kanban">

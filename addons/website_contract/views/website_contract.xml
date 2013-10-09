@@ -39,7 +39,7 @@
                     <div class='navbar'>
                         <div>
                             <t t-call="website.pager">
-                               <t t-set="classname">pull-left</t>
+                               <t t-set="classname" t-value="'pull-left'"/>
                             </t>
                             <form action="/references/" method="get" class="navbar-search pull-right pagination form-inline">
                                 <div class="form-group"> 
@@ -62,7 +62,7 @@
 
                     <div>
                         <div t-foreach="partner_ids" t-as="partner" class="media thumbnail" data-publish="">
-                            <t t-call="website.publish"><t t-set="object" t-value="partner"/></t>
+                            <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
                             <a class="pull-left" t-attf-href="/references/#{ partner.id }/">
                                 <img class="media-object" t-att-src="partner.img('image_small')"/>
                             </a>
@@ -95,13 +95,14 @@
     <template id="details" name="Reference Detail">
         <t t-call="website_contract.layout">
             <t t-set="ref_content">
-                <t t-call="website.publish"><t t-set="object" t-value="partner_id"/></t>
+                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
                 <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
                 <div class="col-md-4">
                     <div class="text-center">
                         <img t-att-src="partner_id.img('image_medium')"/>
                     </div>
-                        <address>
+                    <div class="mt32" t-field="partner_id.website_short_description"/>
+                    <address>
                         <table style="margin: auto;" class="well">
                             <colgroup>
                                 <col width="100"/>
@@ -110,11 +111,11 @@
                             <tbody>
                                 <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
                                 <tr t-if="address or editable"><th>Address</th><td class="col-md-2" t-raw="address"/></tr>
-                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="col-md-2" t-field="partner_id.website"/></tr>
-                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="col-md-2" t-field="partner_id.phone"/></tr>
-                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="col-md-2" t-field="partner_id.mobile"/></tr>
-                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="col-md-2" t-field="partner_id.fax"/></tr>
-                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="col-md-2" t-field="partner_id.email"/></tr>
+                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="col-md-2"><span t-field="partner_id.website"/></td></tr>
+                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="col-md-2"><span t-field="partner_id.phone"/></td></tr>
+                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="col-md-2"><span t-field="partner_id.mobile"/></td></tr>
+                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="col-md-2"><span t-field="partner_id.fax"/></td></tr>
+                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="col-md-2"><span t-field="partner_id.email"/></td></tr>
                             </tbody>
                         </table>
                     </address>

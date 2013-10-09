@@ -1,16 +1,44 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="website.tour">
-        <div class='popover tour'>
-            <div class='arrow'></div>
-            <h3 class='popover-title'></h3>
-            <div class='popover-content'></div>
-            <nav class='popover-navigation'>
-                <div class='btn-group'>
-                    <button class='btn btn-default' data-role='next'>Continue »</button>
-                </div>
-                <button class='btn btn-default' data-role='end'>Close Tutorial</button>
+    <t t-name="website.tour_simple">
+        <div class="popover tour">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <div class="popover-content"></div>
+        </div>
+    </t>
+    <t t-name="website.tour_confirm">
+        <div class="popover tour">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <div class="popover-content"></div>
+            <nav class="popover-navigation">
+                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
             </nav>
         </div>
+    </t>
+    <t t-name="website.tour_end">
+        <div class="popover tour">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <div class="popover-content"></div>
+            <nav class="popover-navigation">
+                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
+            </nav>
+        </div>
+    </t>
+    <t t-name="website.tour_full">
+        <div class="popover tour">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <div class="popover-content"></div>
+            <nav class="popover-navigation">
+                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
+                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
+            </nav>
+        </div>
+    </t>
+    <t t-name="website.tour_title">
+        <t t-esc="title"/><button title="Close" type="button" class="close" data-role="end">×</button>
     </t>
 </templates>

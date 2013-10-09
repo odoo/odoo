@@ -64,7 +64,7 @@ class BlogPost(osv.Model):
     _inherit = ['mail.thread']
     _order = 'name'
     # maximum number of characters to display in summary
-    _shorten_max_char = 150
+    _shorten_max_char = 250
 
     def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -76,8 +76,14 @@ class BlogPost(osv.Model):
                     shorten=True,
                     max_length=self._shorten_max_char,
                     expand_options={
-                        'oe_expand_href': '/blog/%d/%d' % (page.category_id.id, page.id),
-                    }
+                        'oe_expand_container_tag': 'div',
+                        'oe_expand_container_class': 'oe_mail_expand text-center',
+                        'oe_expand_container_content': '',
+                        'oe_expand_a_href': '/blog/%d/%d' % (page.category_id.id, page.id),
+                        'oe_expand_a_class': 'oe_mail_expand btn btn-info',
+                        'oe_expand_separator_node': 'br',
+                    },
+                    protect_sections=True,
                 )
             except Exception:
                 body_short = False
@@ -107,6 +113,7 @@ class BlogPost(osv.Model):
         'website_published_datetime': fields.datetime(
             'Publish Date'
         ),
+        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [

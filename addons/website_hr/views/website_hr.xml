@@ -1,50 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-
-    <!-- Mail group for the company's jobs -->
-
-    <record id="website_mail_job" model="mail.group">
-        <field name="name">Job</field>
-        <field name="public">public</field>
-        <field name="description">Job offer displayed on your website</field>
-    </record>
-
-    <!-- Layout add nav and footer -->
-
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/blog/%(website_hr.website_mail_job)d/">Jobs</a></li>
-        </xpath>
-    </template>
-
     <!-- Page --> 
-
  
-    <template id="aboutus" inherit_id="website.aboutus">
-        <xpath expr="//div[@class='col-md-8']" position="inside">
+    <template id="aboutus" inherit_id="website.aboutus" name="Our Team">
+        <xpath expr="//div[@id='aboutus']" position="inside">
             <t t-set="head">
+                <link rel='stylesheet' href='/website_hr/static/src/css/website_hr.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <h3>Our team</h3>
-            <div class="thumbnails">
-                <div t-foreach="employee_ids" t-as="employee" class="col-md-4 mt16">
-                    <div class="media img-thumbnail" data-publish="">
-                        <t t-call="website.publish"><t t-set="object" t-value="employee"/></t>
-                        <a class="pull-left" href="#">
-                            <img class="media-object" t-att-src="employee.img('image_small')"/>
-                        </a>
-                        <div class="media-body" style="min-height: 64px; min-width: 130px;">
-                            <h5 class="media-heading" t-field="employee.name"/>
-                            <div t-field="employee.department_id"/>
-                            <div t-field="employee.job_id"/>
-                            <div t-field="employee.work_location"/>
-                            <div t-field="employee.work_phone"/>
-                            <div t-field="employee.work_email"/>
-                            <div t-field="employee.public_info"/>
-                        </div>
-                    </div>
+            <div class="clearfix"/>
+            <div class="col-sm-12 text-center" t-if="len(employee_ids)">
+                <h2>Our Team</h2>
+            </div>
+            <div t-foreach="employee_ids" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center colsize">
+                <t t-call="website.publish_management"><t t-set="object" t-value="employee"/></t>
+                <div class="clearfix"/>
+                <img t-att-src="employee.img('image_medium')" class="img shadow img-rounded"/>
+                <div class="mt8">
+                    <strong t-field="employee.name"></strong>
                 </div>
+                <div t-field="employee.job_id"/>
+                <div t-field="employee.public_info" class="text-muted mt16"/>
             </div>
         </xpath>
     </template>

@@ -1,5 +1,5 @@
 {
-'name': 'Public Partners Members',
+    'name': 'Public Members',
     'category': 'Website',
     'summary': 'Publish Members',
     'version': '1.0',
@@ -9,7 +9,7 @@ OpenERP Partners Members
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'association'],
+    'depends': ['website_partner', 'association'],
     'data': [
         'views/website_membership.xml',
     ],

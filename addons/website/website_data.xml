@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
         <record id="default_website" model="website">
-            <field name="name">www.dundermufflin.com</field>
+            <field name="name">www.openerp.com</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
             <field name="default_lang_id" ref="base.lang_en"/>
@@ -36,7 +36,7 @@
 
         <record id="action_website" model="ir.actions.act_url">
             <field name="name">Website</field>
-            <field name="url">/</field>
+            <field name="url">/?tutorial=true</field>
             <field name="target">self</field>
         </record>
         <record id="menu_website" model="ir.ui.menu">
