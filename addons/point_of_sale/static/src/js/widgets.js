@@ -200,7 +200,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         bind_orderline_events: function() {
             this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.renderElement, this);
+            this.currentOrderLines.bind('add', function(){ this.renderElement(true);}, this);
             this.currentOrderLines.bind('remove', this.renderElement, this);
         },
         update_numpad: function() {
@@ -208,14 +208,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if (this.numpadState)
                 this.numpadState.reset();
         },
-        renderElement: function() {
+        renderElement: function(goto_bottom) {
             var self = this;
             var scroller = this.$('.order-scroller')[0];
             var scrollbottom = true;
+            var scrollTop = 0;
             if(scroller){
                 var overflow_bottom = scroller.scrollHeight - scroller.clientHeight;
-                var scrollTop = scroller.scrollTop;
-                if( scrollTop < 0.9 * overflow_bottom){
+                scrollTop = scroller.scrollTop;
+                if( !goto_bottom && scrollTop < 0.9 * overflow_bottom){
                     scrollbottom = false;
                 }
             }
@@ -251,8 +252,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.update_summary();
 
             scroller = this.$('.order-scroller')[0];
-            if(scroller && scrollbottom){
-                scroller.scrollTop = scroller.scrollHeight - scroller.clientHeight;
+            if(scroller){
+                if(scrollbottom){
+                    scroller.scrollTop = scroller.scrollHeight - scroller.clientHeight;
+                }else{
+                    scroller.scrollTop = scrollTop;
+                }
             }
         },
         update_summary: function(){

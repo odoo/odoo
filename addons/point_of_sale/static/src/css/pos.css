@@ -25,6 +25,15 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+.point-of-sale button{
+    box-shadow: none;
+    outline: none;
+    border: none;
+}
+.point-of-sale button:hover{
+    background: default;
+}
+
 .point-of-sale .oe_hidden{
     display: none !important;
 }
@@ -293,7 +302,6 @@
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
-    border-top: 1px solid #efefef;
     font-size: 14px;
 }
 .point-of-sale #paypad button:active, 
@@ -319,7 +327,6 @@
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
-    border-top: 1px solid #efefef;
 }
 .point-of-sale .input-button {
     font-size: 24px;
@@ -425,7 +432,7 @@
 .point-of-sale #categories {
     /*background:#f0f0f0;*/
     position: relative;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 1px solid #cecece;
 }
 .point-of-sale #categories .white-gradient{
     position: absolute;
@@ -453,7 +460,9 @@
     width: 120px;
     height:120px;
     background:#fff;
-    border: 1px solid #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    border-bottom-width: 3px;
     cursor: pointer;
 }
 
@@ -525,7 +534,9 @@
     width: 120px;
     height:120px;
     background:#fff;
-    border: 1px solid #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    border-bottom-width: 3px;
     overflow: hidden;
 }
 
@@ -671,6 +682,7 @@
     margin-top: 50px;
     padding: 40px;
     background-color: #f8f8f8;
+    border: solid 1px rgb(220,220,220);
 }
 .point-of-sale .pos-payment-container .left-block{
     display: inline-block;
@@ -787,6 +799,7 @@
     margin-right: auto;
     padding: 40px;
     background: #f1f1f1;
+    border-top: 1px solid #efefef;
 }
 
 .point-of-sale .scale-screen .product-picture {
@@ -910,7 +923,8 @@
     margin-top:16px;
     margin-bottom:16px;
     font-size:16px;
-
+    border-radius: 3px;
+    border: solid 1px rgb(220,220,220);
 }
 
 .point-of-sale .order .empty{
@@ -1238,6 +1252,21 @@
     width: 180px;
     height: 180px;
     line-height:180px;
+}
+
+/*  ********* The Webkit Scrollbar  ********* */
+
+.point-of-sale *::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.point-of-sale *::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: solid 1px rgb(200,200,200);
+}
+.point-of-sale *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
 }
 
 /*  ********* The ScrollBarWidget  ********* */
