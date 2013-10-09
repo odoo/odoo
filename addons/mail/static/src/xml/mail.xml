@@ -295,9 +295,9 @@
                         logged a note
                     </t>
                     <t t-if="(widget.type == 'comment' or widget.type == 'email') and (widget.subtype or widget.partner_ids.length > 0)">
-                        to
-                        <t t-if="widget.partner_ids.length == 0">
-                            nobody
+                        <!-- Remove nobody if user have no rights on partner that will display 'portal to nobody 5 minutes ago' that will confuse to end user, now it display 'portal 5 minutes ago' if no rights.-->
+                        <t t-if="widget.partner_ids.length > 0">
+                            to
                         </t>
                     </t>
                     <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and (widget.subtype or widget.partner_ids.length > 0))"
