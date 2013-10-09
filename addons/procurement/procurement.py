@@ -199,6 +199,8 @@ class procurement_order(osv.osv):
         if procurement.product_id.type != 'service':
             rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
             if rule_id:
+                rule = self.pool.get('procurement.rule').browse(cr, uid, rule_id, context=context)
+                self.message_post(cr, uid, [procurement.id], body=_('Following rule %s for the procurement resolution.') % (rule.name), context=context)
                 self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
                 return True
         return False
