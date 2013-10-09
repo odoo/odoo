@@ -3,13 +3,12 @@
 
     var website = openerp.website;
     // $.fn.data automatically parses value, '0'|'1' -> 0|1
-    website.is_editable = $(document.documentElement).data('editable');
 
     website.templates.push('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
         var is_smartphone = $(document.body)[0].clientWidth < 767;
 
-        if (website.is_editable && !is_smartphone) {
+        if (!is_smartphone) {
             website.ready().then(website.init_editor);
         }
     });
@@ -21,16 +20,15 @@
         return new website.editor.RTEImageDialog(editor).appendTo(document.body);
     }
 
-    if (website.is_editable) {
-        // only enable editors manually
-        CKEDITOR.disableAutoInline = true;
-        // EDIT ALL THE THINGS
-        CKEDITOR.dtd.$editable = $.extend(
-            {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
-        // Disable removal of empty elements on CKEDITOR activation. Empty
-        // elements are used for e.g. support of FontAwesome icons
-        CKEDITOR.dtd.$removeEmpty = {};
-    }
+    // only enable editors manually
+    CKEDITOR.disableAutoInline = true;
+    // EDIT ALL THE THINGS
+    CKEDITOR.dtd.$editable = $.extend(
+        {}, CKEDITOR.dtd.$block, CKEDITOR.dtd.$inline);
+    // Disable removal of empty elements on CKEDITOR activation. Empty
+    // elements are used for e.g. support of FontAwesome icons
+    CKEDITOR.dtd.$removeEmpty = {};
+
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
 //            requires: 'link,image',
