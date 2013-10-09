@@ -68,7 +68,8 @@ def urlplus(url, params):
         return url
     url += "?"
     for k,v in params.items():
-        url += "%s=%s&" % (k, urllib.quote_plus(str(v)))
+        v = (u"%s" % v).encode('utf8')
+        url += "%s=%s&" % (k, urllib.quote_plus(v))
     return url
 
 class website(osv.osv):
