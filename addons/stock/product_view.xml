@@ -74,7 +74,6 @@
                         <div attrs="{'invisible':[('type','=','service')]}">
                             <field name="produce_delay" class="oe_inline"/> days
                         </div>
-                        <field name="active"/>
                     </group>
                 </group>
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
@@ -83,6 +82,9 @@
                             <field name="sale_delay" class="oe_inline"/> days
                         </div>
                 </xpath>
+                <group name="status" position="inside" version="7.0">
+                    <field name="active"/>
+                </group>
                 <group name="status" position="before" version="7.0">
                     <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
                         <label for="qty_available"/>
