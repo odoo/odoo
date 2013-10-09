@@ -359,11 +359,21 @@ class sale_order_line(osv.osv):
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         
         isMto = False
-        wh0_mto_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
-        for one_route in product_obj.route_ids:
-            if one_route.id == wh0_mto_id:
-                isMto = True
-                break;   
+        
+        try:
+            wh0_mto_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+        
+            for one_route in product_obj.route_ids:
+                if one_route.id == wh0_mto_id:
+                    isMto = True
+                    break;
+        except:
+            # if route MTO not found in ir_model_data by searching route_warehouse0_mto from stock_data.xml
+            isMto = False # Force MTS --> maybe a fake warning ! 
+            pass
+         
+            
+           
 
         
         if isMto == False:    
