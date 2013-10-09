@@ -194,11 +194,20 @@
         },
     });
 
-    function refererPath () {
-        var anchor = document.createElement('a');
-        anchor.href = document.referrer;
-        return anchor.pathname;
-    }
+    website.UrlParser = openerp.Class.extend({
+        init: function (url) {
+            var a = document.createElement('a');
+            a.href = url;
+            this.href = a.href;
+            this.host = a.host;
+            this.protocol = a.protocol;
+            this.port = a.port;
+            this.hostname = a.hostname;
+            this.pathname = a.pathname;
+            this.origin = a.origin;
+            this.search = a.search;
+        },
+    });
 
     website.EditorBar.include({
         start: function () {
@@ -214,7 +223,8 @@
                 })
                 menu.append($menuItem);
             });
-            if (refererPath() === '/web' || website.tutorials.basic.startOfPart2()) {
+            var url = new website.UrlParser(window.location.href);
+            if (url.search === '?tutorial=true' || website.tutorials.basic.startOfPart2()) {
                 website.tutorials.basic.start();
             }
             return this._super();
