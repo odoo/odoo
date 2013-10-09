@@ -110,18 +110,17 @@
           <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <b t-field="product.name"/>
           </a>
-          <div class="product_price">
-              <b>
-                  <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                    <span class="text-danger" style="text-decoration: line-through;">
-                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                    </span>&amp;nbsp;
-                  </t>
-                  <t t-esc="product.product_variant_ids[0].price" /> €
-              </b>
-          </div>
       </div>
-
+      <div class="product_price">
+          <b>
+              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                <span class="text-danger" style="text-decoration: line-through;">
+                    <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                </span>&amp;nbsp;
+              </t>
+              <t t-esc="product.product_variant_ids[0].price" /> €
+          </b>
+      </div>
       <div class="oe_product_image text-center">
           <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <img class="img" t-att-src="product.img('image')"/>
@@ -245,7 +244,7 @@
     <!-- Product Description-->
 
     <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
-        <xpath expr="//div[@class='product_price']" position="before">
+        <xpath expr="//div[@class='oe_product_description']" position="inside">
             <p class="text-muted oe_subdescription">
                 <span t-field="product.description_sale"/>
             </p>

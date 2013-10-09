@@ -51,8 +51,16 @@
   left: 15px;
   right: 15px;
   border-top: 1px solid #dddddd;
-  max-height: 140px;
+  max-height: 120px;
   overflow: hidden;
+  padding-bottom: 24px;
+}
+
+.product_price {
+  position: absolute;
+  left: 15px;
+  bottom: 5px;
+  z-index: 6;
 }
 
 .oe_mycart .input-group-addon {
@@ -231,6 +239,10 @@
   right: 0;
   border-top: none;
   top: 15px;
+  max-height: 94px;
+}
+.oe_list_products .product_price {
+  left: 180px;
 }
 
 .oe_website_sale .row .row .col-md-12 {
