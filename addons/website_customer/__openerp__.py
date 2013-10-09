@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    Copyright (C) 2013-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,24 +20,22 @@
 ##############################################################################
 
 {
-    'name': 'Website Partner',
+    'name': 'Public Customer References',
     'category': 'Website',
-    'summary': 'Partner Module for Website',
-    'version': '0.1',
-    'description': """Base module holding website-related stuff for partner model""",
+    'summary': 'Publish Customer References on your Website',
+    'version': '1.0',
+    'description': """
+OpenERP Customer References
+===========================
+""",
     'author': 'OpenERP SA',
-    'depends': ['website'],
+    'depends': [
+        'website_partner',
+        'website_google_map'
+    ],
     'data': [
-        'views/res_partner_view.xml',
-        'views/website_partner_view.xml',
-        'security/website_partner_security.xml',
+        'views/website_customer.xml',
     ],
-    'css': [
-    ],
-    'js': [
-    ],
-    'qweb': [
-    ],
+    'qweb': [],
     'installable': True,
-    'auto_install': False,
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <template id="partner_assign" inherit_id="website_customer.index" name="Partner Assignation">
+        <xpath expr="//div[@t-field='partner.website_short_description']" position="after">
+            <t t-if="partner.assigned_partner_id">
+                <small>Implemented by 
+                    <a t-href="/customers/#{ partner.assigned_partner_id.id }">
+                        <t t-esc="partner.assigned_partner_id.name"/>
+                    </a>
+                </small>
+            </t>
+            <t t-if="partner.implemented_partner_ids">
+                <small>
+                    <a t-href="/customers/#{ partner.id }#references">
+                        <t t-esc="len(partner.implemented_partner_ids)"/> references
+                    </a>
+                </small>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="references" inherit_id="website_customer.details" name="Partner References">
+        <xpath expr="//div[@t-field='partner_id.website_description']" position="after">
+            <h3 id="references">References</h3>
+            <div>
+                <div t-foreach="partner_id.implemented_partner_ids" t-as="partner" class="media thumbnail" data-publish="">
+                    <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
+                    <a class="pull-left" t-attf-href="/customers/#{ partner.id }/">
+                        <img class="media-object" t-att-src="partner.img('image_small')"/>
+                    </a>
+                    <div class="media-body" style="min-height: 64px;">
+                        <a class="media-heading" t-attf-href="/customers/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a>
+                        <div t-field="partner.website_short_description"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+ </data>
+</openerp>
