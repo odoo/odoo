@@ -359,10 +359,11 @@ class sale_order_line(osv.osv):
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         
         isMto = False
+        wh0_mto_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
         for one_route in product_obj.route_ids:
-            if one_route.name == u'MTO':
+            if one_route.id == wh0_mto_id:
                 isMto = True
-                break;        
+                break;   
         
         if isMto == False:    
             compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
