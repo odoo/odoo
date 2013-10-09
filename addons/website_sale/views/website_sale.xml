@@ -219,7 +219,7 @@
                                           <a tabindex="-1" href="#">Styles</a>
                                           <ul class="dropdown-menu" name="style">
                                             <t t-foreach="styles" t-as="style">
-                                              <li t-att-class="style.id in [s.id for s in product.website_style_ids] and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
+                                              <li t-att-class="style_in_product(style, product) and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
                                             </t>
                                           </ul>
                                         </li>
