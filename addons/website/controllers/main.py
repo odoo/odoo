@@ -261,6 +261,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
 
 class Images(http.Controller):
+    def placeholder(self, response):
+        # file_open may return a StringIO. StringIO can be closed but are
+        # not context managers in Python 2 though that is fixed in 3
+        with contextlib.closing(openerp.tools.misc.file_open(
+                os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
+                mode='rb')) as f:
+            response.set_data(f.read())
+            return response.make_conditional(request.httprequest)
+
     @website.route('/website/image', auth="public")
     def image(self, model, id, field):
         Model = request.registry[model]
@@ -275,13 +284,7 @@ class Images(http.Controller):
                             [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
-            # file_open may return a StringIO. StringIO can be closed but are
-            # not context managers in Python 2 though that is fixed in 3
-            with contextlib.closing(openerp.tools.misc.file_open(
-                    os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
-                    mode='rb')) as f:
-                response.set_data(f.read())
-                return response
+            return self.placeholder(response)
 
         concurrency = '__last_update'
         [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
@@ -296,7 +299,12 @@ class Images(http.Controller):
                 # just in case we have a timestamp without microseconds
                 response.last_modified = datetime.datetime.strptime(
                     record[concurrency], server_format)
-        # FIXME: no field in record?
+
+        if not record.get(field):
+            # Field does not exist on model or field set to False
+            # FIXME: maybe a field which does not exist should be a 404?
+            return self.placeholder(response)
+
         response.set_etag(hashlib.sha1(record[field]).hexdigest())
         response.make_conditional(request.httprequest)
 
