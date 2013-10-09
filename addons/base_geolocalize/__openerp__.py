@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    Copyright (C) 2013_Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,25 +19,27 @@
 #
 ##############################################################################
 
+
 {
-    'name': 'Website Partner',
-    'category': 'Website',
-    'summary': 'Partner Module for Website',
-    'version': '0.1',
-    'description': """Base module holding website-related stuff for partner model""",
+    'name': 'Partners Geo-Localization',
+    'version': '1.0',
+    'category': 'Customer Relationship Management',
+    'description': """
+Partners geolocalization
+========================
+    """,
     'author': 'OpenERP SA',
-    'depends': ['website'],
+    'depends': ['crm'],
+    'demo': [
+        # 'res_partner_demo.xml',
+    ],
     'data': [
         'views/res_partner_view.xml',
-        'views/website_partner_view.xml',
-        'security/website_partner_security.xml',
     ],
-    'css': [
-    ],
-    'js': [
-    ],
-    'qweb': [
-    ],
+    'test': [],
     'installable': True,
     'auto_install': False,
+    'images': [],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

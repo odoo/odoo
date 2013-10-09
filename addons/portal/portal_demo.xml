@@ -22,7 +22,7 @@ Mr Demo Portal</field>
         </record>
 
         <!-- Add the demo user to the portal (and therefore to the portal member group) -->
-        <record id="group_portal" model="res.groups">
+        <record id="base.group_portal" model="res.groups">
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>
 

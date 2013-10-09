@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    Copyright (C) 2013-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,25 +19,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'Website Partner',
-    'category': 'Website',
-    'summary': 'Partner Module for Website',
-    'version': '0.1',
-    'description': """Base module holding website-related stuff for partner model""",
-    'author': 'OpenERP SA',
-    'depends': ['website'],
-    'data': [
-        'views/res_partner_view.xml',
-        'views/website_partner_view.xml',
-        'security/website_partner_security.xml',
-    ],
-    'css': [
-    ],
-    'js': [
-    ],
-    'qweb': [
-    ],
-    'installable': True,
-    'auto_install': False,
-}
+import controllers

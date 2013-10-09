@@ -1,15 +1,15 @@
 {
     'name': 'Public Members',
+    'name': 'Website for Associations',
     'category': 'Website',
-    'summary': 'Publish Members',
+    'summary': 'Publish Associations, Groups and Memberships',
     'version': '1.0',
     'description': """
-OpenERP Partners Members
-========================
-
-        """,
+Website for browsing Associations, Groups and Memberships
+=========================================================
+""",
     'author': 'OpenERP SA',
-    'depends': ['website_partner', 'association'],
+    'depends': ['website_partner', 'website_google_map', 'association'],
     'data': [
         'views/website_membership.xml',
     ],
