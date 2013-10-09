@@ -23,7 +23,7 @@
                     <td class="cal_lable">When</td>
                     <td>: <t t-esc="invitation['meeting'].when"/></td>
                 </tr>
-                <tr>
+                <tr t-if="invitation['meeting'].where">
                     <td class="cal_lable">Where</td>
                     <td>: <t t-esc="invitation['meeting'].where or ''"/></td>
                 </tr>

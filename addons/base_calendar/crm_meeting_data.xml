@@ -63,22 +63,22 @@
                                         </td>
                                         <td>
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
-                                                <tr style=" height: 30px;">
-                                                    <td>
-                                                        <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                            Where
-                                                        </div>
-                                                    </td>
-                                                    <td colspan="1">
-                                                        <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
-                                                            : ${object.location or ''}
-                                                            % if object.location :
+                                                % if object.location :
+                                                    <tr style=" height: 30px;">
+                                                        <td>
+                                                            <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
+                                                                Where
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="1">
+                                                            <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
+                                                                : ${object.location or ''}
                                                                 <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.location}">View Map</a>)
-                                                                </span>
-                                                            % endif
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                                    </span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                % endif
                                                 <tr style=" height: 30px;">
                                                     <td>
                                                         <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
