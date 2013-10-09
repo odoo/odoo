@@ -84,7 +84,8 @@
                                                 <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
                                                 <li t-if="user_id.id != website.public_user.id"><a href="/admin"><span t-field="user_id.name"/></a></li>
-                                                <li t-if="request.multilang and len(website.language_ids) &gt; 1" class="dropdown">
+                                                <li t-if="request.multilang and
+                                                            (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
                                                     <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -96,6 +97,15 @@
                                                                 <strong t-att-class="'icon-check' if lg.code == lang
                                                                     else 'icon-check-empty'"></strong>
                                                                 <t t-esc="lg.name"/>
+                                                            </a>
+                                                        </li>
+                                                        <li t-if="editable" class="text-center">
+                                                            <t t-set="url_return" t-value="request.multilang and url_for(request.httprequest.path, '[lang]') or request.httprequest.path"/>
+                                                            <t t-if="request.httprequest.query_string">
+                                                                <t t-set="url_return" t-value="url_return + '?' + request.httprequest.query_string"/>
+                                                            </t>
+                                                            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;url_return=#{url_return}">
+                                                                Add a Language
                                                             </a>
                                                         </li>
                                                     </ul>
