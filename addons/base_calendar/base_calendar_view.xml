@@ -162,7 +162,7 @@
                         <group col="4" colspan="4" name="rrule">
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period"
-                                   attrs="{'readonly':[('recurrent_id','!=',False)]}"/>
+                                   attrs="{'required': [('recurrency','==',True)]}"/>
                                 <field name="interval"/>
                                 <separator string="End of Recurrence" colspan="4"/>
                                 <field name="end_type"/>
