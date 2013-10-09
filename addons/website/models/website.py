@@ -118,6 +118,7 @@ class website(osv.osv):
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
             'lang': lang,
+            'lang_selected': [lg for lg in request.website.language_ids if lg.code == lang],
             'langs': [lg.code for lg in request.website.language_ids],
             'multilang': request.multilang,
             'is_public_user': is_public_user,

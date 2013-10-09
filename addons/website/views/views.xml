@@ -87,7 +87,7 @@
                                                 <li t-if="request.multilang and
                                                             (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
-                                                    <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
+                                                    <t t-set="lang_selected" t-value="website.lang_selected"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                                         <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
                                                     </a>
