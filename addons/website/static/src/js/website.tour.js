@@ -69,7 +69,7 @@
     website.EditorBasicTour = website.EditorTour.extend({
         id: 'add_banner_tour',
         name: "How to add a banner",
-        init: function () {
+        init: function (editor) {
             var self = this;
             self.steps = [
                 {
@@ -176,6 +176,28 @@
                     template: render('website.tour_confirm', { next: "OK" }),
                 },
                 {
+                    stepId: 'show-customize',
+                    element: '#customize-menu-button',
+                    placement: 'left',
+                    title: "Customize your Website",
+                    content: "Go on the <em>Customize</em> menu to get access customization options for the current page.",
+                    template: render('website.tour_simple'),
+                    onShow: function () {
+                        editor.on('rte:customize_menu_ready', self, function () {
+                            self.movetoStep('change-themes');
+                        });
+                    },
+                },
+                {
+                    stepId: 'change-themes',
+                    element: '.js_change_theme',
+                    placement: 'left',
+                    reflex: true,
+                    title: "Click to View Themes",
+                    content: "You can change the theme at any time to customize the look and feel of your website.",
+                    template: render('website.tour_simple'),
+                },
+                {
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
@@ -189,7 +211,8 @@
         startOfPart2: function () {
             var currentStepIndex = this.currentStepIndex();
             var secondPartIndex = this.indexOfStep('part-2');
-            return currentStepIndex === secondPartIndex && !this.tour.ended();
+            var showTutorialsIndex = this.indexOfStep('show-tutorials');
+            return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
         },
         canResume: function () {
             return this.startOfPart2() || this._super();
@@ -214,7 +237,7 @@
     website.EditorBar.include({
         start: function () {
             website.tutorials = {
-                basic: new website.EditorBasicTour(),
+                basic: new website.EditorBasicTour(this),
             };
             var menu = $('#help-menu');
             _.each(website.tutorials, function (tutorial) {
