@@ -1174,8 +1174,8 @@ class mail_thread(osv.AbstractModel):
         if email and not partner:
             # get partner info from email
             partner_info = self.message_partner_info_from_emails(cr, uid, obj.id, [email], context=context)[0]
-            if partner_info.get('partner_id'):
-                partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, [partner_info.get('partner_id')], context=context)[0]
+            if partner_info and partner_info[0].get('partner_id'):
+                partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, [partner_info[0]['partner_id']], context=context)[0]
         if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
             return result
         if partner and partner in obj.message_follower_ids:  # recipient already in the followers -> skip
