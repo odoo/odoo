@@ -160,12 +160,6 @@
                 <div class='style_default row'>
                   <div class="col-md-12" id="products_grid">
                     <table width="100%">
-                      <colgroup>
-                        <col class="col-md-3" />
-                        <col class="col-md-3" />
-                        <col class="col-md-3" />
-                        <col class="col-md-3" />
-                      </colgroup>
                       <tbody>
                         <t t-set="table_products" t-value="get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
                         <tr t-foreach="table_products" t-as="tr_product">

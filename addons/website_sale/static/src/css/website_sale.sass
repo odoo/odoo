@@ -49,6 +49,8 @@
     left: 15px
     right: 15px
     border-top: 1px solid #dddddd
+    max-height: 140px
+    overflow: hidden
 
 .oe_mycart
     .input-group-addon
@@ -113,19 +115,22 @@
     .oe-height-8
         height: 560px
 
-@media (max-width: 728px)
-    .oe_product
-        float: left
-        width: 100%
-        height: 200px
-        display: inline-block
+@media (max-width: 600px)
     #products_grid
         table, tbody,tr, td
             float: left
             width: 100%
             display: inline-block
-        table td.oe-height-2
-            display: none
+        .oe_product
+            float: left
+            width: 100%
+            height: 300px
+            display: inline-block
+
+@media (max-width: 400px)
+    #products_grid
+        .oe_product
+            height: 200px
 
 @media (min-width: 992px)
     .col-md-12
