@@ -3,10 +3,10 @@
     <data>
         <!--Pick / Pack / Input location
             -->
-        
+      <!--  
         <record id="location_pack_zone" model="stock.location">
             <field name="name">Packing zone</field>
-            <field name="location_id" ref="stock.stock_location_company"/>
+            <field name="location_id" ref="company"/>
             <field name="usage">internal</field>
             <field name="active" eval="False"/>
         </record>
@@ -24,9 +24,9 @@
             <field name="usage">internal</field>
             <field name="active" eval="False"/>
         </record>
-        
+        -->
         <!-- Sequences and picking types   -->
-        <record id="seq_picking_type_pack" model="ir.sequence">
+    <!--    <record id="seq_picking_type_pack" model="ir.sequence">
             <field name="name">Main warehouse: Pack</field>
             <field name="prefix">WH\PACK</field>
             <field name="padding">5</field>
@@ -57,10 +57,10 @@
             <field name="code_id">internal</field>
             <field name="active" eval="False"/>
         </record>
-
+-->
         <!--
              Procurement rules
-        -->
+        --><!--
         <record id="route_warehouse0_mts" model='stock.location.route'>
             <field name="name">Your Company: Ship only</field>
             <field name="sequence">20</field>
@@ -108,9 +108,9 @@
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
             <field name="active" eval="False"/>
         </record>
-        
+        -->
         <!-- reception route  -->
-        <record id="route_1_push" model='stock.location.route'>
+  <!--      <record id="route_1_push" model='stock.location.route'>
             <field name="name">1-step Receival</field>
             <field name="sequence">20</field>
             <field name="product_categ_selectable" eval="True"/>
@@ -134,6 +134,6 @@
             <field name="delivery_route_id" ref="route_warehouse0_mts"/>
             <field name="crossdock_route_id" ref="route_warehouse0_crossdock"/>
         </record>
-
+-->
     </data>
 </openerp>

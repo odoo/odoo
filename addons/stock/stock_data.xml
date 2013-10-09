@@ -61,6 +61,9 @@
             <field name="usage">customer</field>
             <field name="company_id"></field>
         </record>
+        
+        <!-- REMOVED FOR AVOID DUPLICATION
+         
         <record id="stock_location_company" model="stock.location">
             <field name="name" model="res.company" search="[]" use="name"/>
             <field name="usage">view</field>
@@ -76,9 +79,11 @@
             <field name="name">Stock</field>
             <field name="location_id" ref="stock_location_company"/>
         </record>
+        
+        -->
 
 
-        <!-- Sequences for picking types   -->
+        <!-- Sequences for picking types  
         <record id="seq_picking_type_in" model="ir.sequence">
             <field name="name">WH Picking in</field>
             <field name="prefix">WH\IN</field>
@@ -99,7 +104,8 @@
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
-        
+         -->
+<!--  
         <record id="picking_type_in" model="stock.picking.type">
             <field name="name">Receptions</field>
             <field name="sequence_id" ref="seq_picking_type_in"/>
@@ -124,7 +130,7 @@
             <field name="default_location_dest_id" ref="stock_location_stock"/>
             <field name="code_id">internal</field>
         </record>
-        
+-->        
         
 
     </data>
@@ -150,13 +156,14 @@ watch your stock valuation, and track production lots upstream and downstream (b
         </record>
 
 
-
-
-
         <!--
              Procurement rules
         -->
+        
+<!--
 
+    DUPLIQ pas vsur - confirmed
+ 
         <record id="procurement_rule_customer0" model="procurement.rule">
             <field name="name">Your Company: Stock → Customer</field>
             <field name="action">move</field>
@@ -165,12 +172,15 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="picking_type_id" ref="picking_type_out"/>
             <field name="procure_method">make_to_stock</field>
         </record>
-
+-->
     
         <record id="route_warehouse0_mto" model='stock.location.route'>
             <field name="name">MTO</field>
             <field name="sequence">10</field>
         </record>
+<!-- 
+
+    DUPLIQ 
 
         <record id="procurement_rule_customer_mto" model="procurement.rule">
             <field name="name">Your Company: Stock → Customer</field>
@@ -181,6 +191,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_mto"/>
         </record>
+--> 
 
         <!--
     Properties
@@ -195,11 +206,13 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
         </record>
+<!--
+        DUPLIQ garder via un yml
 
         <record id="base.main_partner" model="res.partner">
             <field name="property_stock_customer" eval="ref('stock_location_stock')"/>
         </record>
-
+-->
         <record forcecreate="True" id="property_stock_procurement" model="ir.property">
             <field name="name">property_stock_procurement</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
@@ -225,12 +238,14 @@ watch your stock valuation, and track production lots upstream and downstream (b
         <!--
     Resource: stock.warehouse
     -->
+        
+
         <record id="warehouse0" model="stock.warehouse">
             <field model="res.company" name="name" search="[]" use="name"/>
-            <field name="lot_stock_id" ref="stock_location_stock"/>
+            
             <field name="code">WH</field>
         </record>
-
+ 
         <record id="sequence_mrp_op_type" model="ir.sequence.type">
             <field name="name">Stock orderpoint</field>
             <field name="code">stock.orderpoint</field>
@@ -247,7 +262,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
 
         <!--
             Add Warehouse to picking_type
-        -->
+        
         <record id="picking_type_in" model="stock.picking.type">
             <field name="warehouse_id" ref="warehouse0"/>
         </record>
@@ -259,5 +274,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
         <record id="picking_type_internal" model="stock.picking.type">
             <field name="warehouse_id" ref="warehouse0"/>
         </record>
+         
+        -->
     </data>
 </openerp>

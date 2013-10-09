@@ -134,11 +134,10 @@ class product_product(osv.osv):
 #             if field_names in ['incoming_qty', 'outgoing_qty', 'virtual_available']:
             moves_in  = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
             moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
-
+            
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
-
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
-
+            
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
 
@@ -149,7 +148,8 @@ class product_product(osv.osv):
                 'incoming_qty': moves_in.get(id, 0.0),
                 'outgoing_qty': moves_out.get(id, 0.0),
                 'virtual_available': quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0),
-            }
+            }            
+            
         return res
 
     _columns = {
@@ -263,6 +263,20 @@ class product_product(osv.osv):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
+    def action_view_routes(self, cr, uid, ids, context=None):
+        route_obj = self.pool.get("stock.location.route")
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        product_route_ids = set()
+        for product in self.browse(cr, uid, ids, context=context):
+            product_route_ids |= set([r.id for r in product.route_ids])
+            product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
+        route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
+        result = mod_obj.get_object_reference(cr, uid, 'stock_location', 'action_routes_form')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
+        return result
 
 class product_template(osv.osv):
     _name = 'product.template'

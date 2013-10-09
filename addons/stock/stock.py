@@ -1944,6 +1944,7 @@ class stock_inventory(osv.osv):
     def _default_stock_location(self, cr, uid, context=None):
         try:
             stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+            #stock_location = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context).lot_stock_id
             return stock_location.id
         except:
             return False
