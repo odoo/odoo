@@ -26,6 +26,7 @@
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
             this.tourStorage.removeItem(this.id+'_end');
+            this.tour._current = 0;
             $('.popover.tour').remove();
         },
         start: function () {
@@ -34,7 +35,7 @@
             }
         },
         canResume: function () {
-            return this.currentStepIndex() === 0 && !this.tour.ended();
+            return (this.currentStepIndex() === 0) && !this.tour.ended();
         },
         currentStepIndex: function () {
             var index = this.tourStorage.getItem(this.id+'_current_step') || 0;
@@ -91,8 +92,9 @@
                 {
                     stepId: 'add-banner',
                     orphan: true,
+                    backdrop: true,
                     title: "Now, let's add a banner",
-                    content: "Let's add a banner on the top of the page to make your homepage look more attractive.",
+                    content: "Let's add a banner on the top of the page to make your homepage more attractive.",
                     template: render('website.tour_confirm', { next: "Continue" }),
                 },
                 {
@@ -130,8 +132,8 @@
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
                     placement: 'top',
                     title: "Set your Banner text",
-                    content: "Click on the text to start modifying it then click <em>Done</em> to continue the tutorial.<br>You can also use the options of the top menubar to change the look of the banner. ",
-                    template: render('website.tour_confirm', { next: "Done" }),
+                    content: "Click on the text to start modifying it then click <em>Continue</em> to continue the tutorial.<br>You can also use the options of the top menubar to change the look of the banner. ",
+                    template: render('website.tour_confirm', { next: "Continue" }),
                     onHide: function () {
                         var $banner = $("#wrap [data-snippet-id=carousel]:first");
                         if ($banner.length) {
@@ -144,8 +146,8 @@
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
                     title: "Customize your new Banner style",
-                    content: "Click on <em>Customize</em> and change the background of your banner.",
-                    template: render('website.tour_confirm', { next: "Not now" }),
+                    content: "Click on <em>Customize</em> and change the background of your banner.<br>If your are satisfied with the current background, just click <em>Continue</em>.",
+                    template: render('website.tour_confirm', { next: "Continue" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
                             self.movetoStep('save-changes');
@@ -168,6 +170,7 @@
                 {
                     stepId: 'part-2',
                     orphan: true,
+                    backdrop: true,
                     title: "Congratutaltions!",
                     content: "Congratulations on your first modifications.",
                     template: render('website.tour_confirm', { next: "OK" }),
@@ -226,6 +229,10 @@
             if (url.search === '?tutorial=true' || website.tutorials.basic.startOfPart2()) {
                 website.tutorials.basic.start();
             }
+            $('.tour-backdrop').click(function (e) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            });
             return this._super();
         },
     });
