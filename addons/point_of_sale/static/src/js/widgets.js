@@ -210,6 +210,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         renderElement: function() {
             var self = this;
+            var scroller = this.$('.order-scroller')[0];
+            var scrollbottom = true;
+            if(scroller){
+                var overflow_bottom = scroller.scrollHeight - scroller.clientHeight;
+                var scrollTop = scroller.scrollTop;
+                if( scrollTop < 0.9 * overflow_bottom){
+                    scrollbottom = false;
+                }
+            }
             this._super();
 
             // freeing subwidgets
@@ -240,6 +249,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }, this));
             this.update_numpad();
             this.update_summary();
+
+            scroller = this.$('.order-scroller')[0];
+            if(scroller && scrollbottom){
+                scroller.scrollTop = scroller.scrollHeight - scroller.clientHeight;
+            }
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
