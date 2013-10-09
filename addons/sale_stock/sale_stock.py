@@ -364,6 +364,7 @@ class sale_order_line(osv.osv):
             if one_route.id == wh0_mto_id:
                 isMto = True
                 break;   
+
         
         if isMto == False:    
             compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
