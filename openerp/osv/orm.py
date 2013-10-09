@@ -2206,6 +2206,7 @@ class BaseModel(object):
             :rtype: list
             :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
+        args = list(args or [])
         if not (name == '' and operator == 'ilike'):
             args += [('display_name', operator, name)]
         return self.search(args, limit=limit).name_get()
