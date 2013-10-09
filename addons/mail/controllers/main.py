@@ -1,17 +1,16 @@
 import base64
+import psycopg2
 
 import openerp
 from openerp import SUPERUSER_ID
-import openerp.addons.web.http as oeweb
+import openerp.addons.web.http as http
 from openerp.addons.web.controllers.main import content_disposition
 
-#----------------------------------------------------------
-# Controller
-#----------------------------------------------------------
-class MailController(oeweb.Controller):
+
+class MailController(http.Controller):
     _cp_path = '/mail'
 
-    @oeweb.httprequest
+    @http.httprequest
     def download_attachment(self, req, model, id, method, attachment_id, **kw):
         Model = req.session.model(model)
         res = getattr(Model, method)(int(id), int(attachment_id))
@@ -24,7 +23,7 @@ class MailController(oeweb.Controller):
                             ('Content-Disposition', content_disposition(filename, req))])
         return req.not_found()
 
-    @oeweb.jsonrequest
+    @http.jsonrequest
     def receive(self, req):
         """ End-point to receive mail from an external SMTP server. """
         dbs = req.jsonrequest.get('databases')

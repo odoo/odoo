@@ -249,8 +249,8 @@
                     </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_salesteams_opportunities']" position="after">
-                    <div class="oe_salesteams_invoices">
-                        <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice">Invoices</a>
+                    <div class="oe_salesteams_invoices" groups="account.group_account_invoice">
+                        <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
                         <a name="%(account.action_account_invoice_report_all)d" type="action" class="oe_sparkline_bar_link">
                             <field name="monthly_invoiced" widget="sparkline_bar">
                                 Revenue of sent invoices per month.<br/>Click to see a detailed analysis of invoices.

@@ -41,10 +41,10 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
 
         },
         show: function(){
-            this.$el.show();
+            this.$el.removeClass('oe_hidden');
         },
         hide: function(){
-            this.$el.hide();
+            this.$el.addClass('oe_hidden');
         },
     });
 
