@@ -13,7 +13,7 @@
                             <h1>
                                 <field name="modelname" />
                             </h1>
-                            <label for="brand" class="oe_edit_only"/>
+                            <label for="brand_id" class="oe_edit_only"/>
                             <h2>
                                 <field name="brand_id" on_change="on_change_brand(brand_id)"/>
                             </h2>
@@ -242,11 +242,17 @@
                             <group string="Engine Options">
                                 <field name="transmission" />
                                 <field name="fuel_type" />
-                                <field name="co2" />
+                                <label for="co2"/>
+                                <div>
+                                    <field name="co2" class="oe_inline"/> g/km
+                                </div>
                                 <field name="horsepower" />
                                 <field name="horsepower_tax" />
-                                <field name="power" />
-                            </group>  
+                                <label for="power"/>
+                                <div>
+                                    <field name="power" class="oe_inline"/> kW
+                                </div>
+                            </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -287,6 +293,10 @@
                     <field name="location"/>
                     <field name="state_id" />
                     <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
+                    <group expand="1" string="Group By...">
+                        <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
+                        <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
+                    </group>
                </search>
             </field>
         </record>
@@ -400,7 +410,7 @@
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                                <field name="amount" string="Activation Cost"/>
+                                <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                                 <label for="cost_generated"/>
                                 <div>
                                     <field name="cost_generated" class="oe_inline" attrs="{'invisible': [('cost_frequency','=','no')]}" />
@@ -440,7 +450,7 @@
                                 </group>
                                 <div class="oe_right"><group><field name="sum_cost" string="Indicative Costs Total"/></group></div>
                             </page>
-                            <page string="Generated Costs">
+                            <page string="Generated Recurring Costs">
                                 <group>
                                     <field name="generated_cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" sum="amount">
                                         <tree version="7.0" editable="bottom" >
@@ -704,7 +714,7 @@
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_subtype_id" string="Service Type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
-                                <field name="amount" string="Price"/>
+                                <field name="amount"/>
                             </group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
@@ -726,7 +736,7 @@
                             <field name="cost_ids" nolabel="1">
                                 <tree string="Included Services" version="7.0" editable="bottom">
                                     <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
-                                    <field name="amount" sum="Price" string="Cost"/>
+                                    <field name="amount" sum="Price" string="Indicative Cost"/>
                                 </tree>
                             </field>
                         </group>
@@ -767,6 +777,17 @@
             </field>
         </record>
 
+        <record model='ir.ui.view' id='fleet_vehicle_log_services_search'>
+            <field name="name">fleet.vehicle.log.services.search</field>
+            <field name="model">fleet.vehicle.log.services</field>
+            <field name="arch" type="xml">
+                <search string="Services Logs" >
+                    <field name="vehicle_id"/>
+                    <field name="cost_subtype_id"/>
+                </search>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='fleet_vehicle_log_services_act'>
             <field name="name">Vehicles Services Logs</field>
             <field name="res_model">fleet.vehicle.log.services</field>
@@ -789,7 +810,7 @@
             <field name="name">fleet.service.type.tree</field>
             <field name="model">fleet.service.type</field>
             <field name="arch" type="xml">
-                <tree string="Service types" editable="bottom">
+                <tree string="Service types" editable="top">
                     <field name="name" />
                     <field name="category"/>
                 </tree>
@@ -843,7 +864,7 @@
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By...">
                         <filter name="groupby_year" context="{'group_by' : 'year'}" string="Year"/>
-                        <filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
+                        <filter name="groupby_date" context="{'group_by' : 'date'}" string="Vehicle Costs Month" help="Vehicle Costs by Month"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype_id" context="{'group_by' : 'cost_subtype_id'}" string="Cost Subtype"/>
                         <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>

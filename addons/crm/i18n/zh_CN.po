@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-07-23 03:21+0000\n"
+"PO-Revision-Date: 2013-08-06 09:41+0000\n"
 "Last-Translator: fanvil <fanvil@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-24 05:31+0000\n"
-"X-Generator: Launchpad (build 16700)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:18+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -185,7 +185,7 @@ msgstr "预计结束月份"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
+msgstr "显示Chatter中的消息摘要（包括消息个数等）。此摘要格式为html，可直接在看板视图中显示。"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:640
@@ -214,7 +214,7 @@ msgstr "业务伙伴"
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
 msgid "Schedule Other Call"
-msgstr "安排其它电话访问"
+msgstr "安排其它电话拜访"
 
 #. module: crm
 #: code:addons/crm/crm_phonecall.py:209
@@ -226,7 +226,7 @@ msgstr "电话访问"
 #. module: crm
 #: field:crm.lead,opt_out:0
 msgid "Opt-Out"
-msgstr "退订"
+msgstr "不参与（自动订阅邮件）"
 
 #. module: crm
 #: view:crm.lead:0
@@ -352,7 +352,7 @@ msgstr "联系方式"
 #: help:crm.case.section,change_responsible:0
 msgid ""
 "When escalating to this team override the salesman with the team leader."
-msgstr ""
+msgstr "升级时用团队领导覆盖销售人员"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
@@ -583,6 +583,7 @@ msgid ""
 "                       If the call needs to be done then the status is set "
 "to 'Not Held'."
 msgstr ""
+"当一个案子新建时，状态被设为‘待处理’，当案子进行中，状态被设为‘打开’，当电话结束，状态被设为‘挂起’。如果需要电话，状态设为‘未挂起’"
 
 #. module: crm
 #: field:crm.case.section,message_summary:0
@@ -843,7 +844,7 @@ msgstr "参考2"
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr ""
+msgstr "在阶段和销售团队之间建立链接。设置后将限制此阶段只能用于被选中的销售团队。"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -979,7 +980,7 @@ msgstr "下一动作"
 #: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
+msgstr "<b>业务伙伴</b> 设给 <em>%s</em>."
 
 #. module: crm
 #: selection:crm.lead.report,state:0
@@ -1137,7 +1138,7 @@ msgstr "商机已创建"
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
-msgstr ""
+msgstr "í"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -1338,7 +1339,7 @@ msgstr "发送邮件的时候，默认的邮件地址来自销售团队。"
 msgid ""
 "Phone Calls Assigned to the current user or with a team having the current "
 "user as team leader"
-msgstr ""
+msgstr "被分配给当前用户或者当前用户领导的销售团队的电话沟通任务。"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1798,7 +1799,7 @@ msgstr "CRM"
 #: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
 #: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
 msgid "Contacts Segmentation"
-msgstr ""
+msgstr "联系人分类"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_meeting0
@@ -2884,7 +2885,7 @@ msgstr "发现日期"
 #. module: crm
 #: view:crm.lead:0
 msgid "at"
-msgstr ""
+msgstr "在"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1

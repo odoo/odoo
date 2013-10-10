@@ -91,6 +91,8 @@ Dashboard / Reports for Warehouse Management will include:
         'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',
+        'test/stock_users.yml',
+        'stock_demo.yml',
         'test/shipment.yml',
         'test/packing.yml',
         'test/packingneg.yml',

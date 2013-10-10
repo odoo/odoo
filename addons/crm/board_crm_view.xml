@@ -19,7 +19,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_stage_graph"/>
-            <field name="domain">[('state', 'not in', ('done', 'cancel')), ('type', '=', 'opportunity')]</field>
+            <!-- avoid done / cancelled -->
+            <field name="domain">['|',
+                                    '!', '&amp;', ('probability', '=', 100), ('stage_id.on_change', '=', 1),
+                                    '!', '&amp;', ('probability', '=', 0), ('stage_id.sequence', '!=', 1),
+                                ('type', '=', 'opportunity')]</field>
             <field name="context">{'search_default_Stage':1}</field>
         </record>
 
@@ -43,8 +47,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_user_stage_graph"/>
-            <field name="domain">[('state','!=','cancel'),('opening_date','&gt;',context_today().strftime("%Y-%m-%d"))]</field>
-            <field name="context">{'search_default_Stage':1}</field>
+            <!-- avoid cancelled -->
+            <field name="domain">['!', '&amp;', ('probability', '=', 0), ('stage_id.sequence', '!=', 1)]</field>
+            <field name="context">{'search_default_user': 1, 'search_default_Stage': 1}</field>
         </record>
 
         <record model="ir.ui.view" id="board_crm_statistical_form">

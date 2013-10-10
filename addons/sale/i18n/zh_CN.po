@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-12-23 01:34+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:23+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:42+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale
 #: help:sale.order,message_summary:0
@@ -133,7 +133,7 @@ msgid "March"
 msgstr "3月"
 
 #. module: sale
-#: code:addons/sale/sale.py:567
+#: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "首先取消所有关联这个销售订单的发票。"
@@ -298,9 +298,9 @@ msgstr "项目"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:368
-#: code:addons/sale/sale.py:509
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:363
+#: code:addons/sale/sale.py:504
+#: code:addons/sale/sale.py:598
 #: code:addons/sale/sale.py:763
 #: code:addons/sale/sale.py:780
 #, python-format
@@ -409,6 +409,10 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"使用 全部 来创建一个最终的发票。\n"
+"                使用 百分比 按总金额的比例开票。\n"
+"                使用 固定价格 按 预付款金额开票。\n"
+"                使用 部分订单行 为选择的销售订单行开票。"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -422,7 +426,7 @@ msgid "Tax"
 msgstr "税"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #: code:addons/sale/sale.py:820
 #: code:addons/sale/sale.py:983
 #, python-format
@@ -439,6 +443,9 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"产生报价单或者销售订单的状态。\n"
+"当发票核准时（开票异常）或者 拣货单 处理时（运输异常）发生了取消操作，设置了异常状态。\n"
+"当发票被确认，但是等待在 订单日期排期的时候，设置为 “等待排期\" 状态。"
 
 #. module: sale
 #: field:sale.report,date_confirm:0
@@ -468,7 +475,7 @@ msgid "Fax :"
 msgstr "传真:"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -492,8 +499,8 @@ msgid "Contract Features"
 msgstr "合同特性"
 
 #. module: sale
-#: code:addons/sale/sale.py:288
-#: code:addons/sale/sale.py:586
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -838,7 +845,7 @@ msgid "Sales Order done"
 msgstr "销售订单完成"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr "轻微公司 \"%s\" (id:%d) 定义销售分类账"
@@ -868,7 +875,7 @@ msgstr "参考计量单位"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Create and View Invoice"
-msgstr "创建和查看发票"
+msgstr "生成并查看发票"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -891,7 +898,7 @@ msgid "Sales Make Invoice"
 msgstr "销售订单生成发票"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:307
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "价格表警告！"
@@ -902,7 +909,7 @@ msgid "Discount (%)"
 msgstr "折扣(%)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -917,7 +924,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Create & View Invoice"
-msgstr "创建和查看发票"
+msgstr "生成并查看发票"
 
 #. module: sale
 #: view:board.board:0
@@ -968,7 +975,7 @@ msgid "Category of Product"
 msgstr "产品类别"
 
 #. module: sale
-#: code:addons/sale/sale.py:566
+#: code:addons/sale/sale.py:564
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "不能取消这个销售订单！"
@@ -1023,7 +1030,7 @@ msgid "Open Sale Menu"
 msgstr "打开销售订单"
 
 #. module: sale
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "不能确认没有明细行的销售订单"
@@ -1090,7 +1097,7 @@ msgstr "合同/辅助核算"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr "等待调度"
+msgstr "等待排期"
 
 #. module: sale
 #: field:sale.order,note:0
@@ -1152,6 +1159,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击以创建一个新的销售商店。\n"
+"              </p><p>\n"
+"                每个报价单或者销售订单必须管理到一个商店。\n"
+"                每个商店定义了仓库，每一次销售都从这个仓库发货。\n"
+"                \n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1284,7 +1299,7 @@ msgid ""
 "percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
-msgstr ""
+msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预付款）开票。"
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1294,6 +1309,9 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"允许配置产品的通知消息，当要销售给定产品或者给定的客户时 会被触发。\n"
+"例如：产品：该产品被弃用，不要采购多余5个。\n"
+"           供应商：别忘记要求快递。"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1425,7 +1443,7 @@ msgid "TVA :"
 msgstr "增值税:"
 
 #. module: sale
-#: code:addons/sale/sale.py:449
+#: code:addons/sale/sale.py:444
 #, python-format
 msgid "Customer Invoices"
 msgstr "客户发票"
@@ -1451,7 +1469,7 @@ msgid "Sales"
 msgstr "销售"
 
 #. module: sale
-#: code:addons/sale/sale.py:309
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1494,7 +1512,8 @@ msgid "Invoice address :"
 msgstr "发票地址:"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:124
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
 #, python-format
@@ -1565,6 +1584,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                这里是每个已经被开票的订单行的列表。\n"
+"                你能为逐行为部分订单开票。\n"
+"                如果你根据发货清单开票或者全额开票，就不需要这个清单。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: report:sale.order:0
@@ -1572,7 +1597,7 @@ msgid "Shipping address :"
 msgstr "运货地址:"
 
 #. module: sale
-#: code:addons/sale/sale.py:510
+#: code:addons/sale/sale.py:505
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -1589,7 +1614,7 @@ msgid ""
 "The sales order will automatically create the invoice proposition (draft "
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
-msgstr ""
+msgstr "销售订单将自动创建发票（发票草稿）。如果你要你的发票基于已经订购的部分，您必须选择。 "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -1844,6 +1869,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击以创建一个报价单，这是每次销售的第一步。\n"
+"              </p><p>\n"
+"                OpenERP 将帮你完成一个完整的销售流程:\n"
+"                从报价到销售订单，发运，开票和支付信息的归集。\n"
+"              </p><p>\n"
+"                社交特性将帮你组织每个销售订单的讨论，并且允许你的客户跟踪销售订单的进度\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:res.partner:0
@@ -1909,6 +1943,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建 一个 能转换为销售订单的 报价单。\n"
+"              </p><p>\n"
+"                OpenERP 将帮你有效地处理销售流程:\n"
+"                报价单，销售订单，发运，开票和支付。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1966,8 +2007,9 @@ msgid "Manual In Progress"
 msgstr "手动处理"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
-#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -1997,6 +2039,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击为这个客户创建报价单或者销售订单。\n"
+"              </p><p>\n"
+"                OpenERP 将帮你有效地处理完整的销售流程：\n"
+"                报价单, 销售订单, 发运,开发票和收款。\n"
+"              </p><p>\n"
+"                社交特性将帮你组织每个订单的讨论,并且允许你的客户跟踪销售订单的进展。\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -2154,7 +2205,7 @@ msgstr "含税总金额"
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr "新的报价单副本"
+msgstr "复制此报价单"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0

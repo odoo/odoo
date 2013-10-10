@@ -27,9 +27,7 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
             }
 
             this.input_selector = options.input_selector || '.searchbox input';
-
-            //show the keyboard when the input zone is clicked.
-            $(this.input_selector).focus(function(){self.show();});
+            this.$target = null;
 
             //Keyboard state
             this.capslock = false;
@@ -37,17 +35,23 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
             this.numlock  = false;
         },
         
-        connect : function(){
+        connect : function($target){
             var self = this;
-            $(this.input_selector).focus(function(){self.show();});
+            this.$target = $target;
+            $target.focus(function(){self.show();});
         },
 
         // Write a character to the input zone
         writeCharacter: function(character){
-            var $input = $(this.input_selector);
-            $input[0].value += character;
-            $input.keydown();
-            $input.keyup();
+            var $input = this.$target;
+            if(character === '\n'){
+                $input.trigger($.Event('keydown',{which:13}));
+                $input.trigger($.Event('keyup',{which:13}));
+            }else{
+                $input[0].value += character;
+                $input.keydown();
+                $input.keyup();
+            }
         },
         
         // Sends a 'return' character to the input zone. TODO
@@ -56,7 +60,7 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
         
         // Removes the last character from the input zone.
         deleteCharacter: function(){
-            var $input = $(this.input_selector);
+            var $input = this.$target;
             var input_value = $input[0].value;
             $input[0].value = input_value.substr(0, input_value.length - 1);
             $input.keydown();
@@ -65,7 +69,7 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
         
         // Clears the content of the input zone.
         deleteAllCharacters: function(){
-            var $input = $(this.input_selector);
+            var $input = this.$target;
             $input[0].value = "";
             $input.keydown();
             $input.keyup();

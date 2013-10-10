@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 
 
-class test_mail_access_rights(TestMailBase):
+class test_mail_access_rights(TestMail):
 
     def test_00_message_read(self):
         """ Tests for message_read and expandables. """

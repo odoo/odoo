@@ -24,7 +24,7 @@ from dateutil import relativedelta
 
 import time
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import tools
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -1486,7 +1486,8 @@ class stock_move(osv.osv):
         """
         if not prod_id:
             return {}
-        lang = False
+        user = self.pool.get('res.users').browse(cr, uid, uid)
+        lang = user and user.lang or False
         if partner_id:
             addr_rec = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if addr_rec:
@@ -2722,3 +2723,5 @@ class stock_picking_type(osv.osv):
         'active': True,
     }
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
