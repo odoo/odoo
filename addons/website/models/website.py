@@ -69,7 +69,7 @@ def urlplus(url, params):
 
     # can't use urlencode because it encodes to (ascii, replace) in p2
     return "%s?%s" % (url, '&'.join(
-        k + '=' + urllib.quote_plus(v if isinstance(v, str) else v.encode('utf-8'))
+        k + '=' + urllib.quote_plus(v.encode('utf-8') if isinstance(v, unicode) else str(v))
         for k, v in params.iteritems()
     ))
 
