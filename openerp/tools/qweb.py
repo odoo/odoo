@@ -126,6 +126,7 @@ class QWebXml(object):
             v['__caller__'] = stack[-1]
         stack.append(tname)
         v['__stack__'] = stack
+        v['xmlid'] = str(stack[0])
         return self.render_node(self.get_template(tname), v)
 
     def render_node(self, e, v):
