@@ -812,6 +812,7 @@
 
             var style = data.style;
             element.setAttribute('src', data.url);
+            element.removeAttribute('data-cke-saved-src');
             $(element.$).removeClass(this.image_styles.join(' '));
             if (style) { element.addClass(style); }
         },

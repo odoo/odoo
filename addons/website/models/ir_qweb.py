@@ -6,13 +6,20 @@ as well as render a few fields differently.
 Also, adds methods to convert values back to openerp models.
 """
 
+import cStringIO
 import itertools
+import logging
+import re
+import urllib2
 
 import werkzeug.utils
 from lxml import etree, html
+from PIL import Image as I
 
 from openerp.osv import orm, fields
 from openerp.tools import ustr
+
+logger = logging.getLogger(__name__)
 
 class QWeb(orm.AbstractModel):
     """ QWeb object for rendering stuff in the website context
@@ -132,6 +139,36 @@ class Image(orm.AbstractModel):
 
         return '<img%s src="/website/image?model=%s&field=%s&id=%s"/>' % (
             cls, record._model._name, field_name, record.id)
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        url = element.find('img').get('src')
+
+        m = re.match(r'^/website/attachment/(\d+)$', url)
+        if m:
+            attachment = self.pool['ir.attachment'].browse(
+                cr, uid, int(m.group(1)), context=context)
+            return attachment.datas
+
+        # remote URL?
+        try:
+            # FIXME: what are the security issues to blindly opening a URL provided by a user?
+            # * infinite redirect
+            # * infinite (or huge) amount of data
+            # * very... slow... remote...
+            req = urllib2.urlopen(url)
+            # PIL needs a seekable file-like image, urlinfo is not seekable
+            image = I.open(cStringIO.StringIO(req.read()))
+            # force a complete load of the image data to validate it
+            image.load()
+        except Exception:
+            logger.exception("Failed to load remote image %r", url)
+            return False
+
+        # don't use original data in case weird stuff was smuggled in, with
+        # luck PIL will remove some of it?
+        out = cStringIO.StringIO()
+        image.save(out, image.format)
+        return out.getvalue().encode('base64')
 
 class Monetary(orm.AbstractModel):
     _name = 'website.qweb.field.monetary'
