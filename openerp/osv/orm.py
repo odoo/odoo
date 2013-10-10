@@ -2847,8 +2847,12 @@ class BaseModel(object):
         """
         Record the creation of a constraint for this model, to make it possible
         to delete it later when the module is uninstalled. Type can be either
-        'f' or 'u' depending on the constraing being a foreign key or not.
+        'f' or 'u' depending on the constraint being a foreign key or not.
         """
+        if not self._module:
+            # no need to save constraints for custom models as they're not part
+            # of any module
+            return
         assert type in ('f', 'u')
         cr.execute("""
             SELECT 1 FROM ir_model_constraint, ir_module_module
