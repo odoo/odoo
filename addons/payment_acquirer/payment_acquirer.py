@@ -79,3 +79,6 @@ class acquirer(osv.Model):
         retry_time = False
 
         return (payment, retry_time)
+
+    def _validate_payement_virement(self, cr, uid, ids, object, reference, currency, amount, context=None):
+        return ("pending", False)
