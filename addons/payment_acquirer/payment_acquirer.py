@@ -48,7 +48,6 @@ class acquirer(osv.Model):
 
     def render(self, cr, uid, ids, object, reference, currency, amount, context=None):
         """ Renders the form template of the given acquirer as a qWeb template  """
-        view = self.pool.get("ir.ui.view")
         user = self.pool.get("res.users")
         precision = self.pool.get("decimal.precision").precision_get(cr, uid, 'Account')
 
@@ -65,7 +64,7 @@ class acquirer(osv.Model):
 
         res = []
         for pay in self.browse(cr, uid, ids, context=context):
-            res[pay.id] = view.render(cr, uid, pay.form_template_id.id, qweb_context.copy(), context=context)
+            res[pay.id] = pay.form_template_id.render(qweb_context.copy(), context=context)
         return res
 
     def validate_payement(self, cr, uid, ids, object, reference, currency, amount, context=None):
