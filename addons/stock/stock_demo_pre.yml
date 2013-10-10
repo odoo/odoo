@@ -1,0 +1,18 @@
+-
+  !record {model: stock.location, id: stock_location_14}:
+    name: Shelf 2
+    posx: 6512
+
+-
+  !record {model: stock.location, id: stock_location_components}:
+    name: Shelf 1
+    posx: 6512
+
+-
+  !python {model: stock.location}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    main_stock = main_warehouse.lot_stock_id.id
+    stock_loc_to_update = self.search(cr, uid, [('posx','=','6512')], context=context)
+    self.write(cr,uid,stock_loc_to_update,{'location_id':main_stock,'posx':'0'}, context=context)
+
+    

@@ -1943,9 +1943,8 @@ class stock_inventory(osv.osv):
 
     def _default_stock_location(self, cr, uid, context=None):
         try:
-            stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-            #stock_location = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context).lot_stock_id
-            return stock_location.id
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')            
+            return warehouse.lot_stock_id.id
         except:
             return False
 
@@ -2213,8 +2212,12 @@ class stock_warehouse(osv.osv):
     }
 
     def _default_stock_id(self, cr, uid, context=None):
-        lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return lot_input_stock.id
+        #lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+        try:
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')            
+            return warehouse.lot_stock_id.id
+        except:
+            return False
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
