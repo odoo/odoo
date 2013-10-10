@@ -9,7 +9,7 @@
             'click a[data-action=promote-current-page]': 'launchSeo',
         }),
         launchSeo: function () {
-            (new website.seo.Configurator()).appendTo($(document.body));
+            (new website.seo.Configurator(this)).appendTo($(document.body));
         },
     });
 
@@ -320,6 +320,9 @@
         maxTitleSize: 65,
         maxDescriptionSize: 155,
         start: function () {
+            this.loadMetaData().then(function (data) {
+                console.log(data);
+            });
             var self = this;
             var $modal = self.$el;
             var htmlPage = this.htmlPage = new website.seo.HtmlPage();
@@ -399,6 +402,51 @@
             console.log(data);
             // TODO Persist changes
             this.$el.modal('hide');
+        },
+        getMainObject: function () {
+            var repr = $('html').data('main-object');
+            var m = repr.match(/.+\((.+), (\d+)\)/);
+            if (!m) {
+                return null;
+            } else {
+                return {
+                    model: m[1],
+                    id: m[2]|0
+                };
+            }
+        },
+        loadMetaData: function () {
+            var self = this;
+            var obj = this.getMainObject();
+            var def = $.Deferred();
+            if (!obj) {
+                // return $.Deferred().reject(new Error("No main_object was found."));
+                def.resolve(null);
+            } else {
+                var fields = ['name', 'website_description', 'website_keywords'];
+                var model = website.session.model(obj.model);
+                model.call('read', [[obj.id], fields, website.get_context()]).then(function (data) {
+                    if (data.length) {
+                        var meta = data[0];
+                        meta['model'] = obj.model;
+                        def.resolve(meta);
+                    } else {
+                        def.resolve(null);
+                    }
+                }).fail(function () {
+                    def.reject();
+                });
+            }
+            return def;
+        },
+        saveMetaData: function (data) {
+            var obj = this.getMainObject();
+            if (!obj) {
+                return $.Deferred().reject();
+            } else {
+                var model = website.session.model(obj.model);
+                return model.call('write', [[obj.id], data, website.get_context()]);
+            }
         },
         titleChanged: function () {
             var self = this;

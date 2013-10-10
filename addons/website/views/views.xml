@@ -14,10 +14,13 @@
         <template id="layout" name="Main layout">
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
+                      t-att-data-editable="'1' if editable else None"
                       t-att-data-translatable="'1' if translatable else None"
-                      t-att-data-view-xmlid="xmlid if editable else None">
+                      t-att-data-view-xmlid="xmlid if editable else None"
+                      t-att-data-main-object="main_object if editable else None">
                     <head>
-                        <title><t t-esc="title or res_company.name"/></title>
+                        <title t-if="title"><t t-esc="title"/></title>
+                        <title t-if="not title"><t t-esc="res_company.name"/><t t-if="additional_title"> - <t t-esc="additional_title"/></t></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />
                         <meta name="description" value="" />
                         <meta name="keywords" value="" />
@@ -300,9 +303,7 @@
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
-              <t t-set="title">Contact us -
-                  <t t-raw="res_company.name"></t>
-              </t>
+              <t t-set="additional_title">Contact us</t>
               <div id="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -329,8 +330,7 @@
 
         <template id="aboutus" page="True">
             <t t-call="website.layout">
-              <t t-set="title">About <t t-raw="res_company.name"></t>
-              </t>
+              <t t-set="additional_title">About us</t>
               <div id="wrap">
                   <div class="oe_structure"/>
                   <div class="container mb32">

@@ -10,6 +10,8 @@ class view(osv.osv):
         'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
         'page': fields.boolean("Whether this view is a web page template (complete)"),
+        'website_description': fields.char("Website Description", translate=True),
+        'website_keywords': fields.char("Website Keywords", translate=True),
     }
     _defaults = {
         'page': False,

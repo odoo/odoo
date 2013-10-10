@@ -135,7 +135,7 @@
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="title">Our Products</t>
+            <t t-set="additional_title">Our Products</t>
             <div id="wrap">
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
@@ -284,7 +284,7 @@
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
             </t>
-            <t t-set="title" t-raw="product.name"/>
+            <t t-set="additional_title" t-value="product.name"/>
             <div id="wrap">
 
               <section class="container mt8">
@@ -399,7 +399,7 @@
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="title">Your Cart</t>
+            <t t-set="additional_title">Your Cart</t>
             <div id="wrap">
               <div class="container oe_website_sale">
 
@@ -603,7 +603,7 @@
               <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
               <t t-raw="head or ''"/>
           </t>
-          <t t-set="title">Shop - Checkout</t>
+          <t t-set="additional_title">Shop - Checkout</t>
           <div id="wrap">
             <div class="container oe_website_sale">
                 <ul class="wizard pull-right">
@@ -758,7 +758,7 @@
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="title">Select Payment Mode</t>
+            <t t-set="additional_title">Shop - Select Payment Mode</t>
             <div id="wrap">
               <div class="container oe_website_sale">
 
