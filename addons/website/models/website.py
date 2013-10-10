@@ -144,8 +144,7 @@ class website(osv.osv):
             qweb_context.update(values)
 
         qweb_context.update(
-            request=request,
-            registry=request.registry,
+            _request=request, # begin with underscore to mark this attribute as unsafe
             json=simplejson,
             website=request.website,
             url_for=url_for,
