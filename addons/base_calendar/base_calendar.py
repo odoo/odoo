@@ -1588,6 +1588,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
     def _set_recurrency_end_date(self, data, context=None):
         end_date = data.get('end_date')
+        rel_date = False
         if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
             data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
             if data.get('rrule_type') in ('daily', unicode('count')):
@@ -1598,7 +1599,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 rel_date = relativedelta(months=data.get('count')+1)
             elif data.get('rrule_type') in ('yearly', unicode('yearly')):
                 rel_date = relativedelta(years=data.get('count')+1)
-            end_date = data_date_deadline + rel_date
+            end_date = data_date_deadline
+            if rel_date:
+                end_date += rel_date
         return end_date
 
     def create(self, cr, uid, vals, context=None):
