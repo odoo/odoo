@@ -19,6 +19,8 @@ from PIL import Image as I
 from openerp.osv import orm, fields
 from openerp.tools import ustr
 
+REMOTE_CONNECTION_TIMEOUT = 2.5
+
 logger = logging.getLogger(__name__)
 
 class QWeb(orm.AbstractModel):
@@ -151,12 +153,15 @@ class Image(orm.AbstractModel):
 
         # remote URL?
         try:
-            # FIXME: what are the security issues to blindly opening a URL provided by a user?
-            # * infinite redirect
-            # * infinite (or huge) amount of data
-            # * very... slow... remote...
-            req = urllib2.urlopen(url)
-            # PIL needs a seekable file-like image, urlinfo is not seekable
+            # should probably remove remote URLs entirely:
+            # * in fields, downloading them without blowing up the server is a
+            #   challenge
+            # * in views, may trigger mixed content warnings if HTTPS CMS
+            #   linking to HTTP images
+            # implement drag & drop image upload to mitigate?
+
+            req = urllib2.urlopen(url, timeout=REMOTE_CONNECTION_TIMEOUT)
+            # PIL needs a seekable file-like image, urllib result is not seekable
             image = I.open(cStringIO.StringIO(req.read()))
             # force a complete load of the image data to validate it
             image.load()
