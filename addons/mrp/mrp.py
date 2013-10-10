@@ -977,7 +977,7 @@ class mrp_production(osv.osv):
             'auto_picking': self._get_auto_picking(cr, uid, production),
             'company_id': production.company_id.id,
         })
-        production.write({'picking_id': picking_id}, context=context)
+        production.write({'picking_id': picking_id})
         return picking_id
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
@@ -999,7 +999,7 @@ class mrp_production(osv.osv):
             'company_id': production.company_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
-        production.write({'move_created_ids': [(6, 0, [move_id])]}, context=context)
+        production.write({'move_created_ids': [(6, 0, [move_id])]})
         return move_id
 
     def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, context=None):
@@ -1025,7 +1025,7 @@ class mrp_production(osv.osv):
             'state': 'waiting',
             'company_id': production.company_id.id,
         })
-        production.write({'move_lines': [(4, move_id)]}, context=context)
+        production.write({'move_lines': [(4, move_id)]})
         return move_id
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -1053,7 +1053,7 @@ class mrp_production(osv.osv):
 
             if shipment_id:
                 self.pool.get('stock.picking').signal_button_confirm(cr, uid, [shipment_id])
-            production.write({'state':'confirmed'}, context=context)
+            production.write({'state':'confirmed'})
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):

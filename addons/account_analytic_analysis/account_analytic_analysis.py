@@ -595,7 +595,7 @@ class account_analytic_account(osv.osv):
             accounts = self.browse(cr, uid, accounts_ids, context=context)
             for account in accounts:
                 if write_pending:
-                    account.write({'state' : 'pending'}, context=context)
+                    account.write({'state' : 'pending'})
                 remind_user = remind.setdefault(account.manager_id.id, {})
                 remind_type = remind_user.setdefault(key, {})
                 remind_partner = remind_type.setdefault(account.partner_id, []).append(account)

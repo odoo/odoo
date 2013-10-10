@@ -748,7 +748,7 @@ class crm_lead(format_address, osv.osv):
         if partner_id:
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id and lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
-            res = lead.write({'partner_id': partner_id}, context=context)
+            res = lead.write({'partner_id': partner_id})
             message = _("<b>Partner</b> set to <em>%s</em>." % (lead.partner_id.name))
             self.message_post(cr, uid, [lead.id], body=message, context=context)
         return res
