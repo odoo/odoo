@@ -62,8 +62,8 @@ class calendar_attendee(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         user_pool = self.pool.get('res.users')
-        if vals.get('partner_id'):
-            users = user_pool.search_read(cr, uid, [('partner_id','=', vals.get('partner_id'))],['employee_ids'], context=context)
+        partner_id = vals.get('partner_id')
+        users = user_pool.search_read(cr, uid, [('partner_id','=', partner_id)],['employee_ids'], context=context)
         for user in users:
             if user['employee_ids']:
                 vals['state'] = 'accepted'

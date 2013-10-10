@@ -22,7 +22,7 @@
 import time
 
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 from base_calendar import get_real_ids, base_calendar_id2real_id
 from datetime import datetime, timedelta, date
@@ -49,19 +49,20 @@ class crm_meeting(osv.Model):
     _order = "id desc"
     _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
     
-    def _find_user_attendee(self, cr, uid, meeting_id, context=None):
+    def _find_user_attendee(self, cr, uid, meeting_ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        for attendee in self.browse(cr,uid,meeting_id,context).attendee_ids:
-            if user.partner_id.id == attendee.partner_id.id:
-                return attendee
+        for meeting_id in meeting_ids:
+            for attendee in self.browse(cr,uid,meeting_id,context).attendee_ids:
+                if user.partner_id.id == attendee.partner_id.id:
+                    return attendee
         return False
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
         for meeting_id in ids:
             res[meeting_id] = {}
-            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
+            attendee = self._find_user_attendee(cr, uid, [meeting_id], context)
             for field in fields:
                 if field == 'is_attendee':
                     res[meeting_id][field] = True if attendee else False
@@ -195,22 +196,18 @@ class crm_meeting(osv.Model):
 
     def do_decline(self, cr, uid, ids, context=None):
          attendee_pool = self.pool.get('calendar.attendee')
-         for meeting_id in ids:
-             attendee = self._find_user_attendee(cr, uid, meeting_id, context)
-             if attendee:
-                 if attendee.state != 'declined':
-                     self.message_post(cr, uid, meeting_id, body=_(("%s has declined invitation") % (attendee.cn)), context=context)
-                 attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
+         attendee = self._find_user_attendee(cr, uid, ids, context)
+         if attendee:
+             if attendee.state != 'declined':
+                attendee_pool.do_decline(cr, uid, [attendee.id], context=context)
          return True
 
     def do_accept(self, cr, uid, ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
-        for meeting_id in ids:
-            attendee = self._find_user_attendee(cr, uid, meeting_id, context)
-            if attendee:
-                if attendee.state != 'accepted':
-                    self.message_post(cr, uid, meeting_id, body=_(("%s has accepted invitation") % (attendee.cn)), context=context)
-                attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
+        attendee = self._find_user_attendee(cr, uid, ids, context)
+        if attendee:
+            if attendee.state != 'accepted':
+                attendee_pool.do_accept(cr, uid, [attendee.id], context=context)
         return True
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
@@ -225,16 +222,15 @@ class crm_meeting(osv.Model):
         invitation['attendee'] = att
         return invitation
 
-    def get_day(self, cr, uid, ids, time= None, context=None):
-        rec = self.browse(cr, uid, ids, context=context)[0]
-        date = datetime.strptime(rec.date,'%Y-%m-%d %H:%M:%S')
-        if time == 'day':
+    def get_day(self, cr, uid, ids, date, interval, context=None):
+        date = datetime.strptime(date, DEFAULT_SERVER_DATETIME_FORMAT)
+        if interval == 'day':
             res = str(date.day)
-        elif time == 'month':
+        elif interval == 'month':
             res = date.strftime('%B') + " " + str(date.year)
-        elif time == 'dayname':
+        elif interval == 'dayname':
             res = date.strftime('%A')
-        elif time == 'time':
+        elif interval == 'time':
             res = date.strftime('%I:%M %p')
         return res
 

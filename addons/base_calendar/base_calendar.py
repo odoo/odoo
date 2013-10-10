@@ -462,12 +462,13 @@ property or property parameter."),
         if context is None:
             context = {}
         meeting_obj =  self.pool.get('crm.meeting')
-        for vals in self.browse(cr, uid, ids, context=context):
-            meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
-            if meeting_id and vals.state != 'accepted':
-                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has accepted invitation") % (vals.cn)), context=context)
-            self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
-        return True
+        res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
+        for attandee in self.browse(cr, uid, ids, context=context):
+            meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
+            print "come herer ",meeting_ids , ids , attandee.id
+            meeting_obj.message_post(cr, uid, meeting_ids, body=_(("%s has accepted invitation") % (attandee.cn)), context=context)
+        return res
+        
 
     def do_decline(self, cr, uid, ids, context=None, *args):
         """
@@ -482,11 +483,10 @@ property or property parameter."),
         if context is None:
             context = {}
         meeting_obj = self.pool.get('crm.meeting')
-        for vals in self.browse(cr, uid, ids, context=context):
-            meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)], context=context)
-            if meeting_id and vals.state != 'declined':
-                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has declined invitation") % (vals.cn)), context=context)
-            self.write(cr, uid, vals.id, {'state': 'declined'}, context)
+        res = self.write(cr, uid, ids, {'state': 'declined'}, context)
+        for attandee in self.browse(cr, uid, ids, context=context):
+            meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
+            meeting_obj.message_post(cr, uid, meeting_ids, body=_(("%s has declined invitation") % (attandee.cn)), context=context)
         return True
 
     def create(self, cr, uid, vals, context=None):

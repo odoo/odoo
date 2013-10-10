@@ -14,7 +14,7 @@ class meetting_invitation(http.Controller):
         registry = openerp.modules.registry.RegistryManager.get(db)
         attendee_pool = registry.get('calendar.attendee')
         with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token)])
+            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token),('state','!=', 'accepted')])
             if attendee_id:
                 attendee_pool.do_accept(cr, openerp.SUPERUSER_ID, attendee_id)
         return self.view(db, token, action, id, view='form')
@@ -25,7 +25,7 @@ class meetting_invitation(http.Controller):
         registry = openerp.modules.registry.RegistryManager.get(db)
         attendee_pool = registry.get('calendar.attendee')
         with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token)])
+            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token),('state','!=', 'declined')])
             if attendee_id:
                 attendee_pool.do_decline(cr, openerp.SUPERUSER_ID, attendee_id)
         return self.view(db, token, action, id, view='form')
