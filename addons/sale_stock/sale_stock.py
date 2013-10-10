@@ -323,10 +323,9 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         warning = {}
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -336,47 +335,45 @@ class sale_order_line(osv.osv):
         if not product:
             res['value'].update({'product_packaging': False})
             return res
-        
-                       
+
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
-        
-        
-        
-        #check if product is available, and if not: raise an error
-        uom2 = False
-        if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
-        if not uom2:
-            uom2 = product_obj.uom_id
 
         # Calling product_packaging_change function after updating UoM
         res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
         res['value'].update(res_packing.get('value', {}))
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
-        
-        isMto = False
-        
-        try:
-            wh0_mto_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
-        
-            for one_route in product_obj.route_ids:
-                if one_route.id == wh0_mto_id:
-                    isMto = True
-                    break;
-        except:
-            # if route MTO not found in ir_model_data by searching route_warehouse0_mto from stock_data.xml
-            isMto = False # Force MTS --> maybe a fake warning ! 
-            pass
-         
-            
-           
 
-        
-        if isMto == False:    
+        #determine if the product is MTO or not (for a further check)
+        isMto = False
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            for product_route in product_obj.route_ids:
+                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
+                    isMto = True
+                    break
+        else:
+            try:
+                mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+            except:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                mto_route_id = False
+            if mto_route_id:
+                for product_route in product_obj.route_ids:
+                    if product_route.id == mto_route_id:
+                        isMto = True
+                        break
+
+        #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
+        if not isMto:
+            uom2 = False
+            if uom:
+                uom2 = product_uom_obj.browse(cr, uid, uom)
+                if product_obj.uom_id.category_id.id != uom2.category_id.id:
+                    uom = False
+            if not uom2:
+                uom2 = product_obj.uom_id
             compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
             if (product_obj.type=='product') and int(compare_qty) == -1:
               #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
