@@ -197,29 +197,27 @@ class crm_meeting(osv.Model):
     def do_decline(self, cr, uid, ids, context=None):
          attendee_pool = self.pool.get('calendar.attendee')
          attendee = self._find_user_attendee(cr, uid, ids, context)
-         if attendee:
-             if attendee.state != 'declined':
-                attendee_pool.do_decline(cr, uid, [attendee.id], context=context)
-         return True
+         return attendee_pool.do_decline(cr, uid, [attendee.id], context=context)
 
     def do_accept(self, cr, uid, ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
         attendee = self._find_user_attendee(cr, uid, ids, context)
-        if attendee:
-            if attendee.state != 'accepted':
-                attendee_pool.do_accept(cr, uid, [attendee.id], context=context)
-        return True
+        return attendee_pool.do_accept(cr, uid, [attendee.id], context=context)
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
-        att = []
-        invitation = {'meeting': {}, 'attendee': []}
+        invitation = {'meeting':{}, 'attendee': [], 'logo': ''}
         attendee_pool = self.pool.get('calendar.attendee')
-        invitation['logo'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.logo.replace('\n','\\n')
+        company_logo = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.logo
         meeting = self.browse(cr, uid, int(meeting_id), context)
-        invitation['meeting'] = {'event':meeting.name,'organizer': meeting.organizer, 'where': meeting.location,'when':meeting.event_time}
+        invitation['meeting'] = {
+                'event':meeting.name,
+                'organizer': meeting.organizer,
+                'where': meeting.location,
+                'when':meeting.event_time
+        }
+        invitation['logo'] = company_logo.replace('\n','\\n') if company_logo else ''
         for attendee in meeting.attendee_ids:
-            att.append({'name':attendee.cn,'status': attendee.state})
-        invitation['attendee'] = att
+            invitation['attendee'].append({'name':attendee.cn,'status': attendee.state})
         return invitation
 
     def get_day(self, cr, uid, ids, date, interval, context=None):
