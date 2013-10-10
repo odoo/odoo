@@ -66,11 +66,12 @@ def url_for(path, lang=None):
 def urlplus(url, params):
     if not params:
         return url
-    url += "?"
-    for k,v in params.items():
-        v = (u"%s" % v).encode('utf8')
-        url += "%s=%s&" % (k, urllib.quote_plus(v))
-    return url
+
+    # can't use urlencode because it encodes to (ascii, replace) in p2
+    return "%s?%s" % (url, '&'.join(
+        k + '=' + urllib.quote_plus(v if isinstance(v, str) else v.encode('utf-8'))
+        for k, v in params.iteritems()
+    ))
 
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
