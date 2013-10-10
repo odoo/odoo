@@ -7,6 +7,7 @@ from openerp.osv import osv, fields
 class view(osv.osv):
     _inherit = "ir.ui.view"
     _columns = {
+        'name': fields.char('View Name', required=True, translate=True),
         'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
         'page': fields.boolean("Whether this view is a web page template (complete)"),

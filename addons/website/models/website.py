@@ -157,6 +157,14 @@ class website(osv.osv):
             inherit_branding=qweb_context.setdefault('editable', False),
         )
 
+        main_object = qweb_context.get('main_object')
+        if main_object:
+            if 'additional_title' not in qweb_context and 'name' in main_object:
+                qweb_context['additional_title'] = main_object.name
+            for key in ['website_description', 'website_keywords']:
+                if key not in qweb_context and key in main_object:
+                    qweb_context[key] = main_object[key]
+
         # check if xmlid of the template exists
         try:
             module, xmlid = template.split('.', 1)

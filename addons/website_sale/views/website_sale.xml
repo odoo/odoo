@@ -392,14 +392,13 @@
 
     <!-- Page Shop my cart --> 
 
-    <template id="mycart" name="My cart" page="True">
+    <template id="mycart" name="Your Cart" page="True">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="additional_title">Your Cart</t>
             <div id="wrap">
               <div class="container oe_website_sale">
 
