@@ -105,6 +105,10 @@ def safe_eval_qweb(expr, globals_dict=None, locals_dict=None, mode="eval", nocop
     context = dict(locals_dict)
     context.update(BUILTINS)
 
+    for key, val in context.items():
+        if str(key).startswith('_'):
+            context.pop(key)
+
     env = qWebSandboxedEnvironment(variable_start_string="${", variable_end_string="}")
     env.globals.update(context)
 

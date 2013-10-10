@@ -313,7 +313,7 @@ class QWebXml(object):
         column = record._model._all_columns[field].column
         field_type = column._type
 
-        req = v['request']
+        req = v['_request']
         converter = req.registry['ir.fields.converter'].from_field(
             req.cr, req.uid, record._model, column, totype='html')
 
