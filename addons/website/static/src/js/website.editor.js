@@ -602,7 +602,7 @@
             } else if ($e.hasClass('pages')) {
                 // Create the page, get the URL back
                 done = $.get(_.str.sprintf(
-                        '/pagenew/%s?noredirect', encodeURIComponent(val)))
+                        '/pagenew/%s?noredirect', encodeURI(val)))
                     .then(function (response) {
                         self.make_link(response, false, val);
                     });

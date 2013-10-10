@@ -11,6 +11,7 @@ import datetime
 from sys import maxint
 
 import psycopg2
+import slugify
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
@@ -50,12 +51,9 @@ class Website(openerp.addons.web.controllers.main.Home):
      # FIXME: auth, if /pagenew known anybody can create new empty page
     @website.route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path, noredirect=NOPE):
-        if '.' in path:
-            module, idname = path.split('.', 1)
-        else:
-            module = 'website'
-            idname = path
-        xid = "%s.%s" % (module, idname)
+        module = 'website'
+        # completely arbitrary max_length
+        idname = slugify.slugify(path, max_length=50)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -67,8 +65,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         newview = view.browse(
             request.cr, request.uid, newview_id, context=request.context)
         newview.write({
-            'arch': newview.arch.replace("website.default_page", xid),
-            'name': "page/%s" % path,
+            'arch': newview.arch.replace("website.default_page",
+                                         "%s.%s" % (module, idname)),
+            'name': path,
             'page': True,
         })
         # Fuck it, we're doing it live
@@ -81,10 +80,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                 'noupdate': True
             }, context=request.context)
         except psycopg2.IntegrityError:
+            logger.exception('Unable to create ir_model_data for page %s', path)
             request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
+            return werkzeug.exceptions.InternalServerError()
         else:
             request.cr.execute('RELEASE SAVEPOINT pagenew')
-        url = "/page/%s" % path
+
+        url = "/page/%s" % idname
         if noredirect is not NOPE:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
