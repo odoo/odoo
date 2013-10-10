@@ -799,6 +799,7 @@
             var element, editor = this.editor;
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
+                element.addClass('img');
                 // focus event handler interactions between bootstrap (modal)
                 // and ckeditor (RTE) lead to blowing the stack in Safari and
                 // Chrome (but not FF) when this is done synchronously =>
