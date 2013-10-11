@@ -15,7 +15,7 @@ instance.base_calendar = {}
         },
         start: function() {
             var self = this;
-            if(instance.session.session_is_valid(self.db)) {
+            if(instance.session.session_is_valid(self.db) && instance.session.username != "anonymous") {
                 self.redirect_meeting_view(self.db,self.action,self.id,self.view);
             } else {
                 self.open_invitation_form(self.attendee_data);
