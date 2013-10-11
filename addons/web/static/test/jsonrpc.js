@@ -135,7 +135,7 @@ function (test) {
         });
     });
     // desactivated because the phantomjs runner crash
-    test('timeout-jsonprpc2', {asserts: 1}, function () {
+    /*test('timeout-jsonprpc2', {asserts: 1}, function () {
         var session = new openerp.Session();
         session.origin_server = false;
         return session.rpc("/gen_session_id", {}, {force2step: true, timeout: 1}).then(function() {
@@ -146,7 +146,7 @@ function (test) {
             ok(true, "the request correctly failed");
             return $.when();
         });
-    });
+    });*/
 });
 
 var login = "admin";
