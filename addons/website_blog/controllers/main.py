@@ -35,10 +35,10 @@ class WebsiteBlog(http.Controller):
 
     @website.route([
         '/blog/',
-        '/blog/<int:category_id>/',
-        '/blog/<int:category_id>/<int:blog_post_id>/',
-        '/blog/<int:category_id>/page/<int:page>/',
-        '/blog/<int:category_id>/<int:blog_post_id>/page/<int:page>/',
+        '/blog/<int:blog_post_id>/',
+        '/blog/<int:blog_post_id>/page/<int:page>/',
+        '/blog/cat/<int:category_id>/',
+        '/blog/cat/<int:category_id>/page/<int:page>/',
         '/blog/tag/',
         '/blog/tag/<int:tag_id>/',
     ], type='http', auth="public")
@@ -90,11 +90,13 @@ class WebsiteBlog(http.Controller):
             tag = tag_obj.browse(cr, uid, tag_id, context=context)
         if category_id:
             category = category_obj.browse(cr, uid, category_id, context=context)
-
-        if category and blog_post_id:
+        elif blog_post_id:
             blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
             blog_message_ids = blog_post.website_message_ids
-        else:
+            category = blog_post.category_id
+            category_id = category.id
+
+        if not blog_post_id:
             if category and tag:
                 blog_posts = [cat_post for cat_post in category.blog_post_ids
                               if tag_id in [post_tag.id for post_tag in cat_post.tag_ids]]
@@ -108,7 +110,7 @@ class WebsiteBlog(http.Controller):
 
         if blog_posts:
             pager = request.website.pager(
-                url="/blog/%s/" % category_id,
+                url="/blog/cat/%s/" % category_id,
                 total=len(blog_posts),
                 page=page,
                 step=self._category_post_per_page,
@@ -120,7 +122,7 @@ class WebsiteBlog(http.Controller):
 
         if blog_post:
             pager = request.website.pager(
-                url="/blog/%s/%s/" % (category_id, blog_post_id),
+                url="/blog/%s/" % blog_post_id,
                 total=len(blog_message_ids),
                 page=page,
                 step=self._post_comment_per_page,
@@ -138,8 +140,8 @@ class WebsiteBlog(http.Controller):
             nav[year]['months'].append(group)
 
         values = {
-            'categories': categories,
             'category': category,
+            'categories': categories,
             'tag': tag,
             'blog_post': blog_post,
             'blog_posts': blog_posts,
@@ -170,13 +172,13 @@ class WebsiteBlog(http.Controller):
         ]
         return simplejson.dumps(blog_post_data)
 
-    @website.route(['/blog/<int:category_id>/<int:blog_post_id>/post'], type='http', auth="public")
-    def blog_comment(self, category_id=None, blog_post_id=None, **post):
+    @website.route(['/blog/<int:blog_post_id>/post'], type='http', auth="public")
+    def blog_post_comment(self, blog_post_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         url = request.httprequest.host_url
         request.session.body = post.get('body')
         if request.context['is_public_user']:  # purpose of this ?
-            return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, category_id, blog_post_id)
+            return '%s/admin#action=redirect&url=%s/blog/%s/post' % (url, url, blog_post_id)
 
         if request.session.get('body') and blog_post_id:
             request.registry['blog.post'].message_post(
@@ -187,17 +189,24 @@ class WebsiteBlog(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
             request.session.body = False
 
-        return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (category_id, blog_post_id))
+        return werkzeug.utils.redirect("/blog/%s/?unable_editor=1" % (blog_post_id))
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public")
-    def create_blog_post(self, category_id=None, **post):
+    def blog_post_create(self, category_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
-        blog_post_id = request.registry['blog.post'].create(
+        new_blog_post_id = request.registry['blog.post'].create(
             request.cr, request.uid, {
                 'category_id': category_id,
                 'name': _("Blog title"),
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/%s/?unable_editor=1" % (category_id, blog_post_id))
+        return werkzeug.utils.redirect("/blog/%s/?unable_editor=1" % (new_blog_post_id))
+
+    @website.route(['/blog/<int:blog_post_id>/duplicate'], type='http', auth="public")
+    def blog_post_copy(self, blog_post_id=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        create_context = dict(context, mail_create_nosubscribe=True)
+        new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
+        return werkzeug.utils.redirect("/blog/%s/?unable_editor=1" % (new_blog_post_id))

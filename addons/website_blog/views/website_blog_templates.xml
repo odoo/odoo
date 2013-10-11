@@ -5,25 +5,34 @@
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-            <li><a href="/blog/%(website_blog.blog_category_1)d/">News</a></li>
+            <li><a t-attf-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/blog/%(website_blog.blog_category_1)d/">News</a></li>
+            <li><a t-attf-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
     </template>
 
     <!-- Blog Post Summary -->
     <template id="blog_post_short" name="Blog Post Summary">
         <div>
+            <div class="pull-right">
+                <t t-call="website.publish_management">
+                    <t t-set="object" t-value="blog_post"/>
+                    <t t-set="publish_edit" t-value="True"/>
+                    <t t-set="publish_duplicate" t-value="'/blog/%s/duplicate' % (blog_post.id)"/>
+                </t>
+            </div>
             <h2 class="text-center">
-                <a t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}" t-field="blog_post.name"></a>
+                <a t-attf-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
                 <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
                 <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
-                <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
-                    <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> comment</a>
-                    <a t-if="len(blog_post.message_ids) > 1" t-attf-href="/blog/#{blog_post.category_id.id}/#{blog_post.id}#comments"><t t-esc="len(blog_post.message_ids)"/> comments</a>
+                <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment">
+                    <a t-attf-href="/blog/#{blog_post.id}/#comment">
+                        <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
+                        <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
+                    </a>
                 </span>
             </p>
             <div t-field="blog_post.shortened_content" class="blog_content"/>
@@ -67,6 +76,7 @@
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
+                <t t-set="publish_duplicate" t-value="'/blog/%s/duplicate' % (blog_post.id)"/>
             </t>
         </div>
         <div class="clearfix"/>
@@ -76,8 +86,10 @@
             <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
             <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
             <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
-                <a t-if="len(blog_post.message_ids) &lt;= 1" t-attf-href="#comments"><t t-esc="len(blog_post.message_ids)"/> comment</a>
-                <a t-if="len(blog_post.message_ids) > 1" t-attf-href="#comments"><t t-esc="len(blog_post.message_ids)"/> comments</a>
+                <a t-attf-href="#comments">
+                    <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
+                    <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
+                </a>
             </span>
         </p>
 
@@ -117,7 +129,7 @@
         <xpath expr="//ul[last()]" position="after">
             <section groups="group_website_blog_reply" class="mb32">
                 <h4>Leave a Comment</h4>
-                <form id="comment" t-attf-action="/blog/#{blog_post.category_id.id}/#{blog_post.id}/post#post"
+                <form id="comment" t-attf-action="/blog/#{blog_post.id}/post#post"
                         method="POST">
                     <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                     <div class="pull-left mb32" style="width: 75%%">
@@ -170,6 +182,11 @@
                 <div class="container mt16 js_website_blog">
                     <div class="row">
                         <div class="col-lg-12 col-sm-12" t-if="not blog_post" id="blog_post">
+                            <t t-if="category and editable">
+                                <div class="row">
+                                    <a t-attf-href="/blog/#{category.id}/new" class="btn btn-primary pull-right">New Blog Post</a>
+                                </div>
+                            </t>
                             <t t-foreach="blog_posts" t-as="blog_post" data-publish="">
                                 <t t-call="website_blog.blog_post_short"/>
                             </t>
@@ -191,10 +208,6 @@
              inherit_option_id="website_blog.index" inherit_id="website_blog.index">
         <xpath expr="//div[@class='row']" position="inside">
             <div class="col-lg-3 col-sm-3 hidden-xs col-lg-offset-1 mb32" id="right_column">
-                <t t-if="category and editable">
-                    <a t-attf-href="/blog/#{category.id}/new" class="btn btn-primary pull-right">New Blog Post</a>
-                </t>
-                <div class="clearfix mb48"/>
             </div>
         </xpath>
         <xpath expr="//div[@id='blog_post']" position="attributes">
