@@ -35,7 +35,7 @@ import urllib
 import urllib2
 
 import openerp
-import openerp.service.security as security
+from openerp.service import security, model as service_model
 from openerp.tools import config
 
 import inspect
@@ -1040,10 +1040,17 @@ class Root(object):
         func, arguments = urls.match(path)
         arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
 
+        @service_model.check
+        def checked_call(dbname, *a, **kw):
+            return func(*a, **kw)
+
         def nfunc(*args, **kwargs):
             kwargs.update(arguments)
             if getattr(func, '_first_arg_is_req', False):
                 args = (request,) + args
+
+            if request.db:
+                return checked_call(request.db, *args, **kwargs)
             return func(*args, **kwargs)
 
         request.func = nfunc
