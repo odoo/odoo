@@ -371,7 +371,6 @@ class procurement_order(osv.osv):
                     ctx_wkf = dict(context or {})
                     ctx_wkf['workflow.trg_write.%s' % self._name] = False
                     self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
-                    self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
     def step_workflow(self, cr, uid, ids, context=None):
