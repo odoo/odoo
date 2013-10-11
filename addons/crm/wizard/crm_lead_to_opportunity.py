@@ -63,7 +63,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 for id in ids:
                     tomerge.add(id)
             if email:
-                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0]),  ('probability', '<', '100')])
+                ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]),  ('probability', '<', '100')])
                 for id in ids:
                     tomerge.add(id)
 

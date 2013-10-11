@@ -1,7 +1,7 @@
 -
   Create a user as 'HR Manager'
 -
-  !record {model: res.users, id: res_users_hr_manager}:
+  !record {model: res.users, id: res_users_hr_manager, view: False}:
     company_id: base.main_company
     name: HR manager
     login: hrm
@@ -15,7 +15,7 @@
 -
   Create a user as 'HR Officer'
 -
-  !record {model: res.users, id: res_users_hr_officer}:
+  !record {model: res.users, id: res_users_hr_officer, view: False}:
     company_id: base.main_company
     name: HR Officer
     login: hro
@@ -29,7 +29,7 @@
 -
   Create a user as 'Employee'
 -
-  !record {model: res.users, id: res_users_employee}:
+  !record {model: res.users, id: res_users_employee, view: False}:
     company_id: base.main_company
     name: Employee
     login: emp

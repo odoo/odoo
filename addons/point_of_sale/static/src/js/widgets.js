@@ -143,7 +143,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
             this.$el.click(function(){
-                self.order.selectLine(this.model);
+                self.order.selectLine(self.model);
                 self.trigger('order_line_selected');
             });
             if(this.model.is_selected()){

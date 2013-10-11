@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
@@ -83,7 +84,7 @@ class crm_claim(osv.osv):
         'date_deadline': fields.date('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Claim Date', select=True),
-        'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"),
