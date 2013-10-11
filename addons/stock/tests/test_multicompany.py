@@ -33,7 +33,6 @@ class TestStockMulticompany(common.TransactionCase):
         self.res_users = self.registry('res.users')
         self.stock_location = self.registry('stock.location')
         self.stock_move = self.registry('stock.move')
-        self.stock_fill_inventory = self.registry('stock.fill.inventory')
         self.stock_warehouse = self.registry('stock.warehouse')
 
         model, group_user_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
@@ -72,17 +71,6 @@ class TestStockMulticompany(common.TransactionCase):
                         self.stock_location.check_access_rule(cr, uid, [result[field]], 'read', context)
                     except Exception, exc:
                         assert False, "unreadable location %s: %s" % (field, exc)
-
-
-    def test_20_multicompany_default_stock_fill_inventory(self):
-        """check default location readability for stock_fill_inventory in multicompany setting"""
-        cr, uid, context = self.cr, self.multicompany_user_id, {}
-        defaults = self.stock_fill_inventory.default_get(cr, uid, ['location_id'], context)
-        if defaults.get('location_id'):
-            try:
-                self.stock_location.check_access_rule(cr, uid, [defaults['location_id']], 'read', context)
-            except Exception, exc:
-                assert False, "unreadable source location: %s" % exc
 
 
     def test_30_multicompany_default_warehouse_location(self):
