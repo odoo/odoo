@@ -138,6 +138,7 @@ var openerp = {};
                 throw new Error("You can only instanciate objects with the 'new' operator");
             }
             // All construction is actually done in the init method
+            this._super = null;
             if (!initializing && this.init) {
                 var ret = this.init.apply(this, arguments);
                 if (ret) { return ret; }
@@ -385,6 +386,14 @@ var Events = openerp.Class.extend({
     }
 });
 
+/**
+    Mixin containing an event system. Events are also registered by specifying the target object
+    (the object which will receive the event when it is raised). Both the event-emitting object
+    and the target object store or reference to each other. This is used to correctly remove all
+    reference to the event handler when any of the object is destroyed (when the destroy() method
+    from ParentedMixin is called). Removing those references is necessary to avoid memory leak
+    and phantom events (events which are raised and sent to a previously destroyed object).
+*/
 openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     __eventDispatcherMixin: true,
     init: function() {
