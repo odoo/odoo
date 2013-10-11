@@ -14,9 +14,8 @@
         <template id="layout" name="Main layout">
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
-                      t-att-data-editable="'1' if editable else '0'"
-                      t-att-data-translatable="'1' if translatable else '0'"
-                      t-att-data-view-xmlid="str(__stack__[0])">
+                      t-att-data-translatable="'1' if translatable else None"
+                      t-att-data-view-xmlid="xmlid if editable else None">
                     <head>
                         <title><t t-esc="title or res_company.name"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name" />
@@ -84,18 +83,28 @@
                                                 <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
                                                 <li t-if="user_id.id != website.public_user.id"><a href="/admin"><span t-field="user_id.name"/></a></li>
-                                                <li t-if="request.multilang and len(website.language_ids) &gt; 1" class="dropdown">
+                                                <li t-if="request.multilang and
+                                                            (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
-                                                    <t t-set="lang_selected" t-value="[lg for lg in website.language_ids if lg.code == lang]"/>
+                                                    <t t-set="lang_selected" t-value="website.lang_selected"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                                         <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
                                                     </a>
                                                     <ul class="dropdown-menu" role="menu">
                                                         <li t-foreach="website.language_ids" t-as="lg">
                                                             <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
-                                                                <strong t-att-class="'icon-check' if lg.code == lang
-                                                                    else 'icon-check-empty'"></strong>
+                                                                <strong t-att-class="'icon-circle' if lg.code == lang
+                                                                    else 'icon-circle-blank'"></strong>
                                                                 <t t-esc="lg.name"/>
+                                                            </a>
+                                                        </li>
+                                                        <li t-if="editable" class="text-center">
+                                                            <t t-set="url_return" t-value="request.multilang and url_for(request.httprequest.path, '[lang]') or request.httprequest.path"/>
+                                                            <t t-if="request.httprequest.query_string">
+                                                                <t t-set="url_return" t-value="url_return + '?' + request.httprequest.query_string"/>
+                                                            </t>
+                                                            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;url_return=#{url_return}">
+                                                                Add a Language
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -374,6 +383,9 @@
                     <li>
                         <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
                         <a href="#" class="js_publish_btn css_publish">Publish</a>
+                    </li>
+                    <li t-if="publish_duplicate">
+                        <a t-att-href="publish_duplicate">Duplicate</a>
                     </li>
                 </ul>
               </div>

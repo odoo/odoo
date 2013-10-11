@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import datetime
+import re
 
 from sys import maxint
 
@@ -17,7 +18,16 @@ import werkzeug.utils
 import werkzeug.wrappers
 from PIL import Image
 
+try:
+    from slugify import slugify
+except ImportError:
+    def slugify(s, max_length=None):
+        spaceless = re.sub(r'\s+', '-', s)
+        specialless = re.sub(r'[^-_a-z0-9]', '', spaceless)
+        return specialless[:max_length]
+
 import openerp
+from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -50,12 +60,9 @@ class Website(openerp.addons.web.controllers.main.Home):
      # FIXME: auth, if /pagenew known anybody can create new empty page
     @website.route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path, noredirect=NOPE):
-        if '.' in path:
-            module, idname = path.split('.', 1)
-        else:
-            module = 'website'
-            idname = path
-        xid = "%s.%s" % (module, idname)
+        module = 'website'
+        # completely arbitrary max_length
+        idname = slugify(path, max_length=50)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -67,8 +74,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         newview = view.browse(
             request.cr, request.uid, newview_id, context=request.context)
         newview.write({
-            'arch': newview.arch.replace("website.default_page", xid),
-            'name': "page/%s" % path,
+            'arch': newview.arch.replace("website.default_page",
+                                         "%s.%s" % (module, idname)),
+            'name': path,
             'page': True,
         })
         # Fuck it, we're doing it live
@@ -81,10 +89,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                 'noupdate': True
             }, context=request.context)
         except psycopg2.IntegrityError:
+            logger.exception('Unable to create ir_model_data for page %s', path)
             request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
+            return werkzeug.exceptions.InternalServerError()
         else:
             request.cr.execute('RELEASE SAVEPOINT pagenew')
-        url = "/page/%s" % path
+
+        url = "/page/%s" % idname
         if noredirect is not NOPE:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
@@ -242,11 +253,16 @@ class Website(openerp.addons.web.controllers.main.Home):
     def publish(self, id, object):
         _id = int(id)
         _object = request.registry[object]
-
         obj = _object.browse(request.cr, request.uid, _id)
+
+        values = {}
+        if 'website_published' in _object._all_columns:
+            values['website_published'] = not obj.website_published
+        if 'website_published_datetime' in _object._all_columns and values.get('website_published'):
+            values['website_published_datetime'] = fields.datetime.now()
         _object.write(request.cr, request.uid, [_id],
-                      {'website_published': not obj.website_published},
-                      context=request.context)
+                      values, context=request.context)
+
         obj = _object.browse(request.cr, request.uid, _id)
         return obj.website_published and True or False
 

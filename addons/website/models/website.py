@@ -66,10 +66,12 @@ def url_for(path, lang=None):
 def urlplus(url, params):
     if not params:
         return url
-    url += "?"
-    for k,v in params.items():
-        url += "%s=%s&" % (k, urllib.quote_plus(str(v)))
-    return url
+
+    # can't use urlencode because it encodes to (ascii, replace) in p2
+    return "%s?%s" % (url, '&'.join(
+        k + '=' + urllib.quote_plus(v.encode('utf-8') if isinstance(v, unicode) else str(v))
+        for k, v in params.iteritems()
+    ))
 
 class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
@@ -118,6 +120,7 @@ class website(osv.osv):
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
             'lang': lang,
+            'lang_selected': [lg for lg in request.website.language_ids if lg.code == lang],
             'langs': [lg.code for lg in request.website.language_ids],
             'multilang': request.multilang,
             'is_public_user': is_public_user,
@@ -141,8 +144,7 @@ class website(osv.osv):
             qweb_context.update(values)
 
         qweb_context.update(
-            request=request,
-            registry=request.registry,
+            _request=request, # begin with underscore to mark this attribute as unsafe
             json=simplejson,
             website=request.website,
             url_for=url_for,
@@ -346,3 +348,28 @@ class res_partner(osv.osv):
             'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
         }
         return urlplus('https://maps.google.be/maps' , params)
+
+class base_language_install(osv.osv):
+    _inherit = "base.language.install"
+    _columns = {
+        'website_ids': fields.many2many('website', string='Websites to translate'),
+    }
+
+    def lang_install(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        action = super(base_language_install, self).lang_install(cr, uid, ids, context)
+        language_obj = self.browse(cr, uid, ids)[0]
+        website_ids = [website.id for website in language_obj['website_ids']]
+        lang_id = self.pool['res.lang'].search(cr, uid, [('code', '=', language_obj['lang'])])
+        if website_ids and lang_id:
+            data = {'language_ids': [(4, lang_id[0])]}
+            self.pool['website'].write(cr, uid, website_ids, data)
+        params = context.get('params', {})
+        if 'url_return' in params:
+            return {
+                'url': params['url_return'].replace('[lang]', language_obj['lang']),
+                'type': 'ir.actions.act_url',
+                'target': 'self'
+            }
+        return action

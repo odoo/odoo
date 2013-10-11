@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <menuitem name="Knowledge" id="knowledge.menu_document"/>
-        <menuitem name="Pages" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
+        <menuitem name="Blog Posts" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
 
         <!-- Category views -->
         <record model="ir.ui.view" id="view_blog_category_list">
@@ -23,7 +23,6 @@
                         <group>
                             <field name="name"/>
                             <field name="description"/>
-                            <field name="template" widget="html"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -60,14 +59,12 @@
                         <group>
                             <field name="category_id" string="Category"/>
                         </group>
-                        <group>
-                            <field name="write_uid" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
-                            <field name="write_date" groups="base.group_no_one"/>
-                            <field name="menu_id" groups="base.group_no_one"/>
+                        <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
+                        <group string="Technical" groups="base.group_no_one">
+                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                            <field name="write_date"/>
+                            <field name="menu_id"/>
                         </group>
-                        <div class="oe_document_page">
-                            <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
-                        </div>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -107,7 +104,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_blog_post" sequence="10"/>
+        <menuitem id="menu_page" parent="menu_wiki" name="Blog Posts" action="action_blog_post" sequence="10"/>
 
         <record model="ir.actions.act_window" id="action_blog_category">
             <field name="name">Category</field>

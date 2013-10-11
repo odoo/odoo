@@ -259,6 +259,7 @@ class Ecommerce(http.Controller):
             'search': post.get("search"),
             'pager': pager,
             'styles': styles,
+            'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids]
         }
         return request.website.render("website_sale.products", values)
 

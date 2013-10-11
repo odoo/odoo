@@ -110,18 +110,17 @@
           <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <b t-field="product.name"/>
           </a>
-          <div class="product_price">
-              <b>
-                  <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                    <span class="text-danger" style="text-decoration: line-through;">
-                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                    </span>&amp;nbsp;
-                  </t>
-                  <t t-esc="product.product_variant_ids[0].price" /> €
-              </b>
-          </div>
       </div>
-
+      <div class="product_price">
+          <b>
+              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                <span class="text-danger" style="text-decoration: line-through;">
+                    <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                </span>&amp;nbsp;
+              </t>
+              <t t-esc="product.product_variant_ids[0].price" /> €
+          </b>
+      </div>
       <div class="oe_product_image text-center">
           <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
               <img class="img" t-att-src="product.img('image')"/>
@@ -160,12 +159,6 @@
                 <div class='style_default row'>
                   <div class="col-md-12" id="products_grid">
                     <table width="100%">
-                      <colgroup>
-                        <col class="col-md-3" />
-                        <col class="col-md-3" />
-                        <col class="col-md-3" />
-                        <col class="col-md-3" />
-                      </colgroup>
                       <tbody>
                         <t t-set="table_products" t-value="get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
                         <tr t-foreach="table_products" t-as="tr_product">
@@ -219,7 +212,7 @@
                                           <a tabindex="-1" href="#">Styles</a>
                                           <ul class="dropdown-menu" name="style">
                                             <t t-foreach="styles" t-as="style">
-                                              <li t-att-class="style.id in [s.id for s in product.website_style_ids] and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
+                                              <li t-att-class="style_in_product(style, product) and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
                                             </t>
                                           </ul>
                                         </li>
@@ -251,7 +244,7 @@
     <!-- Product Description-->
 
     <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
-        <xpath expr="//div[@class='product_price']" position="before">
+        <xpath expr="//div[@class='oe_product_description']" position="inside">
             <p class="text-muted oe_subdescription">
                 <span t-field="product.description_sale"/>
             </p>
@@ -635,7 +628,7 @@
                                 <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('company') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="company">Your Company</label>
+                                <label class="control-label" for="company" style="font-weight: normal">Your Company</label>
                                 <input type="text" name="company" class="form-control" t-att-value="checkout.get('company')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
@@ -662,7 +655,7 @@
                                 <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="state_id">State / Province</label>
+                                <label class="control-label" for="state_id" style="font-weight: normal">State / Province</label>
                                 <select name="state_id" class="form-control">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
@@ -716,7 +709,7 @@
                                 <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="contact_name">State / Province</label>
+                                <label class="control-label" for="contact_name" style="font-weight: normal">State / Province</label>
                                 <select name="shipping_state_id" class="form-control">
                                     <option value="">State / Province...</option>
                                     <t t-foreach="states or []" t-as="state">

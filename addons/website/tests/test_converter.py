@@ -42,7 +42,7 @@ class TestConvertBack(common.TransactionCase):
         rendered = renderer.render_tag_field(
             e, {'field': field_value}, '', {
                 'record': record,
-                'request': Request(self.cr, self.uid, RegistryProxy( self.registry)),
+                '_request': Request(self.cr, self.uid, RegistryProxy( self.registry)),
             })
         element = html.fromstring(
             rendered, parser=html.HTMLParser(encoding='utf-8'))

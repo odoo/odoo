@@ -37,7 +37,6 @@ class BlogCategory(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
         'description': fields.text('Description'),
-        'template': fields.html('Template'),
         'blog_post_ids': fields.one2many(
             'blog.post', 'category_id',
             'Blogs',
@@ -62,7 +61,7 @@ class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
     _inherit = ['mail.thread']
-    _order = 'name'
+    _order = 'write_date DESC'
     # maximum number of characters to display in summary
     _shorten_max_char = 250
 
@@ -170,6 +169,16 @@ class BlogPost(osv.Model):
         self.create_history(cr, uid, ids, vals, context)
         return result
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({
+            'website_message_ids': [],
+            'website_published': False,
+            'website_published_datetime': False,
+        })
+        return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
+
     def img(self, cr, uid, ids, field='image_small', context=None):
         post = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
         return "/website/image?model=%s&field=%s&id=%s" % ('res.users', field, post.create_uid.id)
@@ -177,7 +186,7 @@ class BlogPost(osv.Model):
 
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"
-    _description = "Document Page History"
+    _description = "Blog Post History"
     _order = 'id DESC'
     _rec_name = "create_date"
 
