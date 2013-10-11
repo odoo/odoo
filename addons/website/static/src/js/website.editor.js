@@ -162,8 +162,16 @@
                     editables: { text: '*' },
 
                     upcast: function (el) {
-                        return el.attributes['data-oe-type'];
+                        return el.attributes['data-oe-type']
+                            && el.attributes['data-oe-type'] !== 'monetary';
                     },
+                });
+                editor.widgets.add('monetary', {
+                    editables: { text: 'span.oe_currency_value' },
+
+                    upcast: function (el) {
+                        return el.attributes['data-oe-type'] === 'monetary';
+                    }
                 });
             }
         });
@@ -346,12 +354,17 @@
             var self = this;
             // setup dirty-marking for each editable element
             this.fetch_editables(root)
-                .prop('contentEditable', true)
                 .addClass('oe_editable')
                 .each(function () {
                     var node = this;
-                    observer.observe(node, OBSERVER_CONFIG);
                     var $node = $(node);
+                    // only explicitly set contenteditable on view sections,
+                    // cke widgets system will do the widgets themselves
+                    if ($node.data('oe-model') === 'ir.ui.view') {
+                        node.contentEditable = true;
+                    }
+
+                    observer.observe(node, OBSERVER_CONFIG);
                     $node.one('content_changed', function () {
                         $node.addClass('oe_dirty');
                         self.trigger('change');
