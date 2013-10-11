@@ -534,7 +534,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        var url = '/?db=' + form_obj['db_name'];
+                        var url = '/web?db=' + form_obj['db_name'];
                         if (self.session.debug) {
                             url += '&debug';
                         }

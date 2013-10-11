@@ -177,6 +177,11 @@ class WebRequest(object):
             self.disable_db = True
             self.uid = None
 
+    @property
+    def debug(self):
+        return 'debug' in self.httprequest.args
+
+
 def auth_method_user():
     request.uid = request.session.uid
 
@@ -382,10 +387,10 @@ def jsonrequest(f):
         Use the ``route()`` decorator instead.
     """
     f.combine = True
-    base = f.__name__
+    base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, os.path.join(base, "<path:_ignored_path>")], type="json", auth="user")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="json", auth="none")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -460,10 +465,10 @@ def httprequest(f):
         Use the ``route()`` decorator instead.
     """
     f.combine = True
-    base = f.__name__
+    base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, os.path.join(base, "<path:_ignored_path>")], type="http", auth="user")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="http", auth="none")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
@@ -496,16 +501,13 @@ class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
 
-        # create wrappers for old-style methods with req as first argument
-        cls._methods_wrapper = {}
+        # flag old-style methods with req as first argument
         for k, v in attrs.items():
             if inspect.isfunction(v):
                 spec = inspect.getargspec(v)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
-                    def build_new(nv):
-                        return lambda self, *args, **kwargs: nv(self, request, *args, **kwargs)
-                    cls._methods_wrapper[k] = build_new(v)
+                    v._first_arg_is_req = True
 
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
@@ -514,7 +516,6 @@ class ControllerType(type):
             return
         # we want to know all modules that have controllers
         module = class_path[2]
-        controllers_per_module.setdefault(module, [])
         # but we only store controllers directly inheriting from Controller
         if not "Controller" in globals() or not Controller in bases:
             return
@@ -522,12 +523,6 @@ class ControllerType(type):
 
 class Controller(object):
     __metaclass__ = ControllerType
-
-    def get_wrapped_method(self, name):
-        if name in self.__class__._methods_wrapper:
-            return functools.partial(self.__class__._methods_wrapper[name], self)
-        else:
-            return getattr(self, name)
 
 #############################
 # OpenERP Sessions          #
@@ -865,8 +860,7 @@ class Root(object):
         self.addons = {}
         self.statics = {}
 
-        self.db_routers = {}
-        self.db_routers_lock = threading.Lock()
+        self.no_db_router = None
 
         self.load_addons()
 
@@ -915,10 +909,7 @@ class Root(object):
             db = request.db
 
             if db:
-                updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                if updated:
-                    with self.db_routers_lock:
-                        del self.db_routers[db]
+                openerp.modules.registry.RegistryManager.check_registry_signaling(db)
 
             with set_request(request):
                 self.find_handler()
@@ -991,8 +982,8 @@ class Root(object):
                     cls = v[1]
 
                     subclasses = cls.__subclasses__()
-                    subclasses = [c for c in subclasses if c.__module__.split(".")[:2] == ["openerp", "addons"] and \
-                        cls.__module__.split(".")[2] in modules]
+                    subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and
+                                  c.__module__.split(".")[2] in modules]
                     if subclasses:
                         name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
                         cls = type(name, tuple(reversed(subclasses)), {})
@@ -1001,17 +992,15 @@ class Root(object):
                     members = inspect.getmembers(o)
                     for mk, mv in members:
                         if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and \
-                                nodb_only == (getattr(mv, "auth", None) == "none"):
-                            function = (o.get_wrapped_method(mk), mv)
+                                nodb_only == (getattr(mv, "auth", "none") == "none"):
                             for url in mv.routes:
                                 if getattr(mv, "combine", False):
-                                    url = os.path.join(o._cp_path, url)
+                                    url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                     if url.endswith("/") and len(url) > 1:
                                         url = url[: -1]
-                                routing_map.add(routing.Rule(url, endpoint=function))
+                                routing_map.add(routing.Rule(url, endpoint=mv))
 
-        modules_set = set(controllers_per_module.keys())
-        modules_set -= set("web")
+        modules_set = set(controllers_per_module.keys()) - set(['web'])
         # building all none methods
         gen(["web"] + sorted(modules_set), True)
         if not db:
@@ -1020,22 +1009,26 @@ class Root(object):
         registry = openerp.modules.registry.RegistryManager.get(db)
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
-            ids = m.search(cr, openerp.SUPERUSER_ID, [('state','=','installed')])
+            ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
             installed = set([x['name'] for x in m.read(cr, 1, ids, ['name'])])
             modules_set = modules_set.intersection(set(installed))
         modules = ["web"] + sorted(modules_set)
         # building all other methods
-        gen(["web"] + sorted(modules_set), False)
+        gen(modules, False)
 
         return routing_map
 
     def get_db_router(self, db):
-        with self.db_routers_lock:
-            router = self.db_routers.get(db)
+        if db is None:
+            router = self.no_db_router
+        else:
+            router = getattr(openerp.modules.registry.RegistryManager.get(db), "werkzeug_http_router", None)
         if not router:
             router = self._build_router(db)
-            with self.db_routers_lock:
-                self.db_routers[db] = router
+            if db is None:
+                self.no_db_router = router
+            else:
+                openerp.modules.registry.RegistryManager.get(db).werkzeug_http_router = router
         return router
 
     def find_handler(self):
@@ -1044,17 +1037,18 @@ class Root(object):
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
-        matched, arguments = urls.match(path)
+        func, arguments = urls.match(path)
         arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
-        func, original = matched
 
         def nfunc(*args, **kwargs):
             kwargs.update(arguments)
+            if getattr(func, '_first_arg_is_req', False):
+                args = (request,) + args
             return func(*args, **kwargs)
 
         request.func = nfunc
-        request.auth_method = getattr(original, "auth", "user")
-        request.func_request_type = original.exposed
+        request.auth_method = getattr(func, "auth", "user")
+        request.func_request_type = func.exposed
 
 root = None
 

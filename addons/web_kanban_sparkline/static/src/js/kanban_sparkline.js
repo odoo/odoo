@@ -21,6 +21,7 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
                     barSpacing: 1,
                     barColor: '#96d854',
                     tooltipFormat: self.set_offset(),
+                    chartRangeMin: 0,
                     tooltipValueLookups: {
                         'offset': tooltips
                     }
