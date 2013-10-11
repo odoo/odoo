@@ -307,8 +307,8 @@ class stock_quant(osv.osv):
             negative_quant_id = self.create(cr, uid, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
 
-        #create the quant
-        quant_id = self.create(cr, uid, vals, context=context)
+        #create the quant as superuser, because we want to restrict the creation of quant manually: they should always use this method to create quants
+        quant_id = self.create(cr, SUPERUSER_ID, vals, context=context)
         return self.browse(cr, uid, quant_id, context=context)
 
     def _quant_split(self, cr, uid, quant, qty, context=None):
