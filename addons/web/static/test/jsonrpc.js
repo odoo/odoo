@@ -113,25 +113,16 @@ function (test) {
     });*/
 });
 
-
-// desactivated because I can't manage to make these work in the runbot
-/*
 var login = "admin";
 var password = "admin";
-var db = null;
 
 ropenerp.testing.section('jsonrpc-auth', {
-    setup: function() {
-        var session = new openerp.Session();
-        return session.session_reload().then(function() {
-            db = session.db;
-            ok(db, "db must be valid");
-        });
-    },
+    rpc: "rpc",
 },
 function (test) {
-    test('basic-auth', {asserts: 4}, function () {
-        var session = new openerp.Session();
+    test('basic-auth', {asserts: 3}, function () {
+        var db = ropenerp.session.db;
+        var session = new openerp.Session(null, null, {override_session: true});
         equal(session.uid, undefined, "uid is expected to be undefined");
         return session.session_authenticate(db, login, password).then(function() {
             equal(session.uid, 1, "Admin's uid must be 1");
@@ -145,14 +136,16 @@ function (test) {
             });
         });
     });
-    test('share-sessions', {asserts: 7}, function () {
-        var session = new openerp.Session();
+    test('share-sessions', {asserts: 6}, function () {
+        var db = ropenerp.session.db;
+        var session = new openerp.Session(null, null, {override_session: true});
         var session2;
         return session.session_authenticate(db, login, password).then(function() {
             equal(session.uid, 1, "Admin's uid must be 1");
             session2 = new openerp.Session(null, null, {session_id: session.session_id});
             equal(session2.uid, undefined, "uid should be undefined");
             equal(session2.override_session, true, "overwrite_session should be true");
+            console.log("session_id", session.session_id);
             return session2.session_reload();
         }).then(function() {
             equal(session2.uid, session.uid);
@@ -167,8 +160,9 @@ function (test) {
             });
         });
     });
-    test('models', {asserts: 3}, function () {
-        var session = new openerp.Session();
+    test('models', {asserts: 2}, function () {
+        var db = ropenerp.session.db;
+        var session = new openerp.Session(null, null, {override_session: true});
         return session.session_authenticate(db, login, password).then(function() {
             return session.model("res.users").call("search_read", {fields: ["login"], domain: [["id", "=", 1]]});
         }).then(function(result) {
@@ -176,6 +170,6 @@ function (test) {
             equal(result[0].login, "admin", "Must have admin's login");
         });
     });
-});*/
+});
 
 })();
