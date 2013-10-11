@@ -32,16 +32,16 @@ OpenERP Blog
     'author': 'OpenERP SA',
     'depends': ['knowledge', 'website_mail'],
     'data': [
-        'website_blog_data.xml',
+        'data/website_blog_data.xml',
         'views/website_blog_classic.xml',
         'views/website_blog_templates.xml',
         # 'wizard/document_page_create_menu_view.xml',
         'wizard/document_page_show_diff_view.xml',
         'security/ir.model.access.csv',
-        'security/website_mail.xml',
+        'security/website_blog.xml',
     ],
     'demo': [
-        'website_blog_demo.xml'
+        'data/website_blog_demo.xml'
     ],
     'test': [
         'test/document_page_test00.yml'
