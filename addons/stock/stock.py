@@ -304,7 +304,7 @@ class stock_quant(osv.osv):
             negative_vals['cost'] = price_unit
             negative_vals['negative_dest_location_id'] = move.location_dest_id.id
             negative_vals['package_id'] = package_id
-            negative_quant_id = self.create(cr, uid, negative_vals, context=context)
+            negative_quant_id = self.create(cr, SUPERUSER_ID, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
 
         #create the quant as superuser, because we want to restrict the creation of quant manually: they should always use this method to create quants
@@ -315,7 +315,7 @@ class stock_quant(osv.osv):
         context = context or {}
         if (quant.qty > 0 and quant.qty <= qty) or (quant.qty <= 0 and quant.qty >= qty):
             return False
-        new_quant = self.copy(cr, uid, quant.id, default={'qty': quant.qty - qty}, context=context)
+        new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': quant.qty - qty}, context=context)
         self.write(cr, uid, quant.id, {'qty': qty}, context=context)
         quant.refresh()
         return self.browse(cr, uid, new_quant, context=context)
