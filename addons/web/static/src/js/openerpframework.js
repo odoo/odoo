@@ -817,7 +817,7 @@ var genericJsonRpc = function(fct_name, params, fct) {
             return result.result;
         }
     }, function() {
-        console.error("JsonRPC communication error", _.toArray(arguments));
+        //console.error("JsonRPC communication error", _.toArray(arguments));
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
@@ -899,9 +899,27 @@ openerp.jsonpRpc = function(url, fct_name, params, settings) {
             });
             // append the iframe to the DOM (will trigger the first load)
             $form.after($iframe);
+            if (settings.timeout) {
+                realSetTimeout(function() {
+                    deferred.reject({});
+                }, settings.timeout);
+            }
             return deferred;
         }
     });
+};
+
+var realSetTimeout = function(fct, millis) {
+    var finished = new Date().getTime() + millis;
+    var wait = function() {
+        var current = new Date().getTime();
+        if (current < finished) {
+            setTimeout(wait, finished - current);
+        } else {
+            fct();
+        }
+    };
+    setTimeout(wait, millis);
 };
 
 openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
