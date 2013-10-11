@@ -40,20 +40,21 @@ class res_currency(osv.osv):
         if context is None:
             context = {}
         res = {}
-        if 'date' in context:
-            date = context['date']
-        else:
-            date = time.strftime('%Y-%m-%d')
-        date = date or time.strftime('%Y-%m-%d')
+
+        date = context.get('date') or time.strftime('%Y-%m-%d')
         # Convert False values to None ...
         currency_rate_type = context.get('currency_rate_type_id') or None
         # ... and use 'is NULL' instead of '= some-id'.
         operator = '=' if currency_rate_type else 'is'
         for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
+            cr.execute('SELECT rate FROM res_currency_rate '
+                       'WHERE currency_id = %s '
+                         'AND name <= %s '
+                         'AND currency_rate_type_id ' + operator + ' %s '
+                       'ORDER BY name desc LIMIT 1',
+                       (id, date, currency_rate_type))
             if cr.rowcount:
-                id, rate = cr.fetchall()[0]
-                res[id] = rate
+                res[id] = cr.fetchone()[0]
             elif not raise_on_no_rate:
                 res[id] = 0
             else:
