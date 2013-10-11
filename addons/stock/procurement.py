@@ -342,8 +342,9 @@ class procurement_order(osv.osv):
                                                          context=context)
                         self.check(cr, uid, [proc_id])
                         self.run(cr, uid, [proc_id])
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id}, context=context)
+                        #TODO: check if we can remove this field because it doesn't seem used at all
+                        #orderpoint_obj.write(cr, uid, [op.id],
+                        #        {'procurement_id': proc_id}, context=context)
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()
