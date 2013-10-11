@@ -82,13 +82,17 @@ BUILTINS = {
     'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
 }
 UNSAFE = [str("browse"), str("search"), str("read"), str("unlink"), str("read_group")]
+SAFE = [str("_name")]
 
 
 class qWebSandboxedEnvironment(SandboxedEnvironment):
     def is_safe_attribute(self, obj, attr, value):
-        res = super(qWebSandboxedEnvironment, self).is_safe_attribute(obj, attr, value)
-        if str(attr) in UNSAFE or not res:
-            raise SecurityError("access to attribute '%s' of '%s' object is unsafe." % (attr,obj))
+        if str(attr) in SAFE:
+            res = True
+        else:
+            res = super(qWebSandboxedEnvironment, self).is_safe_attribute(obj, attr, value)
+            if str(attr) in UNSAFE or not res:
+                raise SecurityError("access to attribute '%s' of '%s' object is unsafe." % (attr,obj))
         return res
 
 def safe_eval_qweb(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False):
