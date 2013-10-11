@@ -290,7 +290,7 @@ class RegistryManager(object):
                 # Check if the model caches must be invalidated (e.g. after a write
                 # occured on another process). Don't clear right after a registry
                 # has been reload.
-                if registry.base_cache_signaling_sequence > 1 and registry.base_cache_signaling_sequence != c:
+                elif registry.base_cache_signaling_sequence > 1 and registry.base_cache_signaling_sequence != c:
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.clear_caches()
                     registry.reset_any_cache_cleared()
