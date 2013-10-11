@@ -8,6 +8,12 @@
             <field name="name">functional</field>
         </record>
         <record id="blog_tag_2" model="blog.tag">
+            <field name="name">technical</field>
+        </record>
+        <record id="blog_tag_3" model="blog.tag">
+            <field name="name">website</field>
+        </record>
+        <record id="blog_tag_4" model="blog.tag">
             <field name="name">pos</field>
         </record>
 
@@ -16,6 +22,7 @@
             <field name="name">OpenERP v8 New Features</field>
             <field name="category_id" ref="blog_category_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="website_published" eval="True"/>
             <field name="content"><![CDATA[
         <section data-snippet-id='image-text'>
             <div class="container">
@@ -264,6 +271,7 @@ Think of it as an out-of-the-box solution to boost your business' productivity.
             <field name="name">Announcig a New Partnership</field>
             <field name="category_id" ref="blog_category_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="website_published" eval="True"/>
             <field name="content"><![CDATA[
         <section data-snippet-id='image-text'>
             <div class="container">
@@ -291,7 +299,7 @@ Think of it as an out-of-the-box solution to boost your business' productivity.
                 <div class="row">
                     <div class="col-md-12 text-center mt16 mb32">
                         <h2>
-                            Linked with Project Management
+                            OpenERP Project Management
                         </h2>
                         <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
                     </div>
@@ -313,33 +321,6 @@ Think of it as an out-of-the-box solution to boost your business' productivity.
                 </div>
             </div>
         </section>
-        <section class="dark mt16 mb16" data-snippet-id='big-picture'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center mt32 mb32">
-                        <h2>Work with the hardware you already have...</h2>
-                    </div>
-                    <div class="col-md-12">
-                        <img class="img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
-                    </div>
-                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
-                        <p class="text-center">
-                            <b>No installation required</b>
-                        </p>
-                        <p class="text-center">
-                            OpenERP's Point of Sale introduces a super clean
-                            interface with no installation required that runs
-                            online and offline on modern hardware. Laptops,
-                            tablets, industrial POS, it runs on everything.
-                        </p>
-                        <p class="text-center">
-                            <a href="/page/website.contactus">Get more information »</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
 ]]>
 </field>
         </record>
