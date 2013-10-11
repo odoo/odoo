@@ -7,7 +7,10 @@
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_8}
 -
-  I do a partial delivery order.
+  I do a partial delivery order as a stock user.
+-
+  !context
+    uid: 'res_stock_user'
 -
   !python {model: stock.picking}: |
     domain = [('origin','=','Test/001')]
