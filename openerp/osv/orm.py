@@ -39,7 +39,6 @@
 
 """
 
-import babel.dates
 import calendar
 import collections
 import copy
@@ -54,6 +53,8 @@ import time
 import traceback
 import types
 
+import babel.dates
+import dateutil.parser
 import psycopg2
 from lxml import etree
 
@@ -2736,7 +2737,8 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    groupby_datetime = datetime.datetime.strptime(alldata[d['id']][groupby], '%Y-%m-%d')
+                    _default = datetime.datetime(1970, 1, 1)    # force starts of month
+                    groupby_datetime = dateutil.parser.parse(alldata[d['id']][groupby], default=_default)
                     d[groupby] = babel.dates.format_date(
                         groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
                     if group_by_params.get('interval') == 'month':
@@ -5117,6 +5119,8 @@ class BaseModel(object):
         """
         if type(ids) in (int, long):
             ids = [ids]
+        if not ids:
+            return []
         query = 'SELECT id FROM "%s"' % self._table
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
         return [x[0] for x in cr.fetchall()]

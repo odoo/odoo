@@ -43,7 +43,7 @@ _logger = logging.getLogger(__name__)
 # Basic fonts familly included in PDF standart, will always be in the font list
 BasePDFFonts = [
     ('Helvetica', 'Helvetica'),
-    ('Times', 'Times-Roman'),
+    ('Times', 'Times'),
     ('Courier', 'Courier'),
 ]
 

@@ -47,21 +47,18 @@ class test_xmlrpc(common.RpcCase):
 
     def test_xmlrpc_ir_model_search(self):
         """ Try a search on the object service. """
-        ids = self.proxy.object_60.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD,
-            'ir.model', 'search', [])
+        o = self.proxy.object_60
+        ids = o.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [])
         assert ids
-        ids = self.proxy.object_60.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD,
-            'ir.model', 'search', [], {})
+        ids = o.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [], {})
         assert ids
 
-    def test_xmlrpc_61_ir_model_search(self):
+    def test_xmlrpc_8_ir_model_search(self):
         """ Try a search on the object service. """
-
-        proxy = xmlrpclib.ServerProxy(self.proxy.url_61 + 'model/' + DB +
-            '/ir.model')
-        ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [])
+        o = self.proxy.object_8
+        ids = o.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [])
         assert ids
-        ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [], {})
+        ids = o.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [], {})
         assert ids
 
     # This test was written to test the creation of a new RPC endpoint, not

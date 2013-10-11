@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Actions -->
+
+        <!-- ir.actions -->
+
         <record id="action_view" model="ir.ui.view">
             <field name="name">ir.actions.actions</field>
             <field name="model">ir.actions.actions</field>
@@ -34,7 +36,6 @@
                 </search>
             </field>
         </record>
-
         <record id="ir_sequence_actions" model="ir.actions.act_window">
             <field name="name">Actions</field>
             <field name="type">ir.actions.act_window</field>
@@ -46,7 +47,7 @@
         <menuitem id="next_id_6" name="Actions" parent="base.menu_custom" sequence="2"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
 
-
+        <!-- ir.actions.report.xml -->
 
         <record id="act_report_xml_view" model="ir.ui.view">
             <field name="name">ir.actions.report.xml</field>
@@ -121,7 +122,6 @@
                 </search>
             </field>
         </record>
-
         <record id="ir_action_report_xml" model="ir.actions.act_window">
             <field name="name">Reports</field>
             <field name="type">ir.actions.act_window</field>
@@ -131,6 +131,8 @@
             <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
         <menuitem action="ir_action_report_xml" id="menu_ir_action_report_xml" parent="base.next_id_6"/>
+
+        <!-- ir.actions.act_window -->
 
         <record id="view_window_action_tree" model="ir.ui.view">
             <field name="name">ir.actions.windows.tree</field>
@@ -145,7 +147,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="view_window_action_form" model="ir.ui.view">
             <field name="name">ir.actions.windows.form</field>
             <field name="model">ir.actions.act_window</field>
@@ -221,7 +222,6 @@
                 </search>
             </field>
         </record>
-
         <record id="ir_action_window" model="ir.actions.act_window">
             <field name="name">Window Actions</field>
             <field name="type">ir.actions.act_window</field>
@@ -243,66 +243,7 @@
         </record>
         <menuitem action="ir_action_window" id="menu_ir_action_window" parent="base.next_id_6"/>
 
-        <record id="act_wizard_view_tree" model="ir.ui.view">
-            <field name="name">ir.actions.wizard.tree</field>
-            <field name="model">ir.actions.wizard</field>
-            <field name="arch" type="xml">
-                <tree string="Wizard">
-                    <field name="name"/>
-                    <field name="wiz_name"/>
-                    <field name="multi"/>
-                </tree>
-            </field>
-        </record>
-
-         <record id="act_wizard_view" model="ir.ui.view">
-            <field name="name">ir.actions.wizard</field>
-            <field name="model">ir.actions.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Wizards" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="type"/>
-                        <field name="wiz_name"/>
-                        <field name="multi"/>
-                    </group>
-                    <label for="groups_id"/>
-                    <field name="groups_id"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="act_wizard_search_view" model="ir.ui.view">
-            <field name="name">ir.actions.wizard.search</field>
-            <field name="model">ir.actions.wizard</field>
-            <field name="arch" type="xml">
-                <search string="Wizards">
-                    <field name="name"
-                        filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]"
-                        string="Wizard"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="ir_action_wizard" model="ir.actions.act_window">
-            <field name="name">Wizards</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.actions.wizard</field>
-            <field name="view_type">form</field>
-            <field name="search_view_id" ref="act_wizard_search_view"/>
-        </record>
-
-        <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
-
-
-        <record id="property_rule" model="ir.rule">
-            <field name="name">Property multi-company</field>
-            <field name="model_id" ref="model_ir_property"/>
-            <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
-        </record>
-
-        <!--server action view-->
+        <!-- ir.actions.server -->
 
         <record id="view_server_action_form" model="ir.ui.view">
             <field name="name">Server Action</field>
@@ -514,7 +455,6 @@
                 </form>
             </field>
         </record>
-
         <record id="view_server_action_tree" model="ir.ui.view">
             <field name="name">Server Actions</field>
             <field name="model">ir.actions.server</field>
@@ -527,7 +467,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="view_server_action_search" model="ir.ui.view">
             <field name="name">ir.actions.server.search</field>
             <field name="model">ir.actions.server</field>
@@ -542,7 +481,6 @@
                 </search>
             </field>
         </record>
-
         <record id="action_server_action" model="ir.actions.act_window">
             <field name="name">Server Actions</field>
             <field name="type">ir.actions.act_window</field>
@@ -573,7 +511,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="config_wizard_step_view_form" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
@@ -602,7 +539,6 @@
                 </form>
             </field>
         </record>
-
         <record id="config_wizard_step_view_search" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
             <field name="name">ir.actions.todo.select</field>
@@ -614,7 +550,6 @@
                 </search>
             </field>
         </record>
-
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
             <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
@@ -622,9 +557,7 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/>
-        <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="menu_ir_actions_todo"/>
-
+        <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>
         <record id="action_run_ir_action_todo" model="ir.actions.server">
             <field name="name">Run Remaining Action Todo</field>
             <field name="condition">True</field>
@@ -637,7 +570,6 @@ if config.get('type') not in ('ir.actions.act_window_close',):
     action = config
 </field>
         </record>
-
 
     </data>
 </openerp>
