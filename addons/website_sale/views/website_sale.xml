@@ -113,12 +113,11 @@
           <div class="product_price">
               <b>
                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                    <span class="text-danger" style="text-decoration: line-through;"
-                          t-field="product.product_variant_ids[0].lst_price" t-field-options='{
-                               "widget": "monetary",
-                               "display_currency": "website.pricelist_id.currency_id"
-                          }'>
-                    </span>&amp;nbsp;
+                    <del class="text-danger"
+                      t-field="product.product_variant_ids[0].lst_price" t-field-options='{
+                           "widget": "monetary",
+                           "display_currency": "website.pricelist_id.currency_id"
+                      }'/>&amp;nbsp;
                   </t>
                   <span t-field="product.product_variant_ids[0].price"  t-field-options='{
                        "widget": "monetary",
@@ -357,13 +356,11 @@
                           <div class="product_price">
                               <b>
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                    <span class="text-danger" style="text-decoration: line-through;">
-                                        <span t-field="product.product_variant_ids[0].lst_price"
-                                           t-field-options='{
-                                               "widget": "monetary",
-                                               "display_currency": "website.pricelist_id.currency_id"
-                                           }'/>
-                                    </span>&amp;nbsp;
+                                    <del class="text-danger" t-field="product.product_variant_ids[0].lst_price"
+                                       t-field-options='{
+                                           "widget": "monetary",
+                                           "display_currency": "website.pricelist_id.currency_id"
+                                       }'/>&amp;nbsp;
                                   </t>
                                   <h4><b><span class="oe_price" t-field="product.product_variant_ids[0].price"
                                                t-field-options='{
@@ -470,12 +467,12 @@
                                     <div class="text-muted" t-field="line.product_id.description_sale"/>
                                 </td>
                                 <td class="text-center">
-                                   <div class="text-danger" style="text-decoration: line-through;" t-if="line.product_id.lst_price &gt; line.price_unit">
+                                   <del class="text-danger" t-if="line.product_id.lst_price &gt; line.price_unit">
                                        <span t-field="line.product_id.lst_price" t-field-options='{
                                            "widget": "monetary",
                                            "display_currency": "website.pricelist_id.currency_id"
                                        }'/>
-                                   </div>
+                                   </del>
                                    <span t-field="line.price_unit" t-field-options='{
                                        "widget": "monetary",
                                        "display_currency": "website.pricelist_id.currency_id"
