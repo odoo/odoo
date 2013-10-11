@@ -612,6 +612,12 @@
                             <field name="date"/>
                             <field name="min_date" attrs="{'invisible': [('min_date','=',False)]}"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
+                            <label for="owner_id" groups="stock.group_tracking_owner"/>
+                            <div groups="stock.group_tracking_owner">
+                                <field name="owner_id"/>
+                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
+                                    class="oe_link oe_edit_only"/>
+                            </div>
                         </group>
                     </group>
                     <notebook>
@@ -621,8 +627,9 @@
                                 groups="stock.group_tracking_lot"/>
                             <button name="do_split" string="Split" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}">
-                                <tree editable="top">
-                                    <field name="product_id"/>
+                                <tree editable="top">   
+                                    <field name="product_id"
+                                        on_change="onchange_product_id_for_owner(parent.owner_id)"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>

@@ -422,6 +422,47 @@ class purchase_order(osv.osv):
         })
         return action
 
+
+    def view_picking_(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing picking orders of given purchase order ids.
+        '''
+        
+        import ipdb; ipdb.set_trace()
+        
+        if context is None:
+            context = {}
+        mod_obj = self.pool.get('ir.model.data')
+        pick_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            pick_ids += [picking.id for picking in po.picking_ids]
+
+        print(pick_ids)
+        
+        action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
+        action = self.pool[action_model].read(cr, uid, action_id, context=context)
+        active_id = context.get('active_id',ids[0])
+        picking_type_id = self.browse(cr, uid, active_id, context=context)['picking_type_id'].id
+
+        ctx = eval(action['context'],{'active_id': picking_type_id}, nocopy=True)
+        ctx.update({
+            'search_default_purchase_id': ids[0]
+        })
+        if pick_ids and len(pick_ids) == 1:
+            form_view_ids = [view_id for view_id, view in action['views'] if view == 'form']
+            view_id = form_view_ids and form_view_ids[0] or False
+            action.update({
+                'views': [],
+                'view_mode': 'form',
+                'view_id': view_id,
+                'res_id': pick_ids[0]
+            })
+
+        action.update({
+            'context': ctx,
+        })
+        return action
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True

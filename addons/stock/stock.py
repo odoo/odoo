@@ -575,8 +575,20 @@ class stock_picking(osv.osv):
             else:
                 res[pick.id] = False
         return res
-
-
+    
+#     def onchange_owner_id(self,cr,uid,ids,new_owner_id,pack_operation_ids, context=None):
+#         packop_ids = self.resolve_2many_commands(cr, uid, 'pack_operation_ids',pack_operation_ids, ['id'])
+#         packop_ids = [p['id'] for p in packop_ids] #NO CORRECT FOR NEW
+#         self.pool.get('stock.pack.operation').write(cr,uid,packop_ids,{'owner_id':new_owner_id},context=context)
+#         result = {
+#             'pack_operation_ids':pack_operation_ids         
+#         }
+#         return { 'value' : result}
+#     
+    def action_assign_owner(self, cr, uid, ids, context=None):
+        pack_op  = self.browse(cr,uid,ids[0],context=context)
+        packop_ids = [p.id for p in pack_op.pack_operation_ids] 
+        self.pool.get('stock.pack.operation').write(cr,uid,packop_ids,{'owner_id':pack_op.owner_id.id},context=context)
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -616,12 +628,13 @@ class stock_picking(osv.osv):
         'pack_operation_exist': fields.function(_get_pack_operation_exist, type='boolean', string='Pack Operation Exists?', help='technical field for attrs in view'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
 
+        'owner_id': fields.many2one('res.partner', 'Owner', help="Default Owner"),
         # Used to search on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),#?
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
-#         'group_id': fields.function(_get_group_id, type='many2one', store={'stock.move': (_get_pickings, ['picking_id', 'group_id'], 10)}), 
+        #         'group_id': fields.function(_get_group_id, type='many2one', store={'stock.move': (_get_pickings, ['picking_id', 'group_id'], 10)}), 
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -2326,6 +2339,11 @@ class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
     
+    
+    def onchange_product_id_for_owner(self,cr,uid,ids,powner_id, context=None):        
+        return { 'value' : {'owner_id' : powner_id} }
+                        
+        
     def _get_remaining_qty(self, cr, uid, ids, context=None):
         res = {}
         for ops in self.browse(cr, uid, ids, context=context):
@@ -2335,7 +2353,6 @@ class stock_pack_operation(osv.osv):
             res[ops.id] = qty
         return res
         
-    
     _columns = {
         'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made', required=True),
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
@@ -2355,7 +2372,7 @@ class stock_pack_operation(osv.osv):
     }
 
     _defaults = {
-        'date': fields.date.context_today,
+        'date': fields.date.context_today,        
     }
 
 

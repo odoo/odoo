@@ -559,6 +559,32 @@ class stock_warehouse(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         #TODO try to delete location and route and if not possible, put them in inactive
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
+    
+    def view_all_routes_for_wh(self, cr, uid, ids, context):
+        wh_obj = self.pool.get("stock.warehouse")
+        
+        wh = wh_obj.browse(cr,uid,ids[0])
+                        
+        all_routes = []        
+        all_routes += [wh.crossdock_route_id.id]
+        all_routes += [wh.reception_route_id.id]
+        all_routes += [wh.delivery_route_id.id]
+        all_routes += [wh.mto_pull_id.route_id.id]
+        all_routes += [route.id for route in wh.resupply_route_ids]
+        all_routes += [route.id for route in wh.route_ids]
+                 
+        res_id = ids and ids[0] or False
+        domain = [('id', 'in', all_routes)]
+        return {
+            'name': _('The routes !'),
+            'domain': domain,
+            'res_model': 'stock.location.route',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 20
+        }
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"

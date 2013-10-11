@@ -174,12 +174,17 @@
                 </xpath>
             </field>
         </record>
-
+                
         <record id="view_warehouse_inherit" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
             <field name="model">stock.warehouse</field>
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
+                <xpath expr="/form/sheet/label" position="before">
+                    <div class="oe_right oe_button_box">                        
+                        <button name="view_all_routes_for_wh" string="View related routes" type="object" /> 
+                    </div>
+                </xpath>
                 <xpath expr="//group[last()]" position="after">
                     <notebook colspan="4">
                         <page string="Warehouse Configuration" colspan="4">
@@ -190,11 +195,13 @@
                               <field name="default_resupply_wh_id"/> <!-- TODO should be filtered on resupply_wh_ids only... -->
                           </group>
                       </page>
+                      <!-- 
                       <page string="Routes Information" colspan="4">
                       <group colspan="4">
                         <field name="route_ids" nolabel="1" readonly="1"/>
                         </group>
-                    </page>
+                      </page> 
+                      -->
                 </notebook>
                 </xpath>
             </field>
