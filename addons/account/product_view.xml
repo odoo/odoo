@@ -31,12 +31,16 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Accounting">
-                        <separator string="Sales Properties" colspan="2"/>
-                        <separator string="Purchase Properties" colspan="2"/>
-                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="taxes_id"/>
-                        <field name="supplier_taxes_id"/>
+                        <group name="properties">
+                            <group>
+                                <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="taxes_id" colspan="2" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="supplier_taxes_id" colspan="2" widget="many2many_tags"/>
+                            </group>
+                        </group>
                     </page>
                 </notebook>
              </field>
