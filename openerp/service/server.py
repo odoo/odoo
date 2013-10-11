@@ -793,11 +793,6 @@ class WorkerCron(Worker):
         Worker.start(self)
         self.multi.socket.close()
 
-        # chorus effect: make cron workers do not all start at first database
-        mct = config['max_cron_threads']
-        p = float(self.pid % mct) / mct
-        self.db_index = int(len(self._db_list()) * p)
-
 #----------------------------------------------------------
 # start/stop public api
 #----------------------------------------------------------
