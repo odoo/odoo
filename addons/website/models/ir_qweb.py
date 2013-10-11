@@ -54,6 +54,9 @@ class Field(orm.AbstractModel):
     def from_html(self, cr, uid, model, column, element, context=None):
         return self.value_from_string(element.text_content().strip())
 
+    def qweb_object(self):
+        return self.pool['website.qweb']
+
 class Integer(orm.AbstractModel):
     _name = 'website.qweb.field.integer'
     _inherit = ['website.qweb.field']
@@ -176,5 +179,26 @@ class Image(orm.AbstractModel):
         return out.getvalue().encode('base64')
 
 class Monetary(orm.AbstractModel):
+    """
+    The website's monetary field/widget can become website-aware, and thus
+    should be able to use a pricelist somehow available through the session?
+    Why not directly the qweb context. There's also a method stored in
+    the ecommerce controller in website_sale, would that one be a good/better
+    idea? => just eval some string and hope that's a pricelist?
+
+    Either way, it also gets the ability to fetch the "company" pricelist
+    via website.get_current().company_id (or 'res_company' in the qweb context)
+
+    The widget then needs to call (ir.currency).compute(from_currency,
+    to_currency, value) to convert the company's to the user's during display
+    and the other way around during parsing
+    """
     _name = 'website.qweb.field.monetary'
     _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
+
+    def source_currency(self, cr, uid, options):
+        assert 'source_currency' not in options,\
+            u"The source currency is automatically defined by the website" \
+            u" and must not be provided"
+
+        return self.pool['website'].get_current().company_id.currency_id

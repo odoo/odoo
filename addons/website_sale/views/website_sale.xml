@@ -113,11 +113,17 @@
           <div class="product_price">
               <b>
                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                    <span class="text-danger" style="text-decoration: line-through;">
-                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                    <span class="text-danger" style="text-decoration: line-through;"
+                          t-field="product.product_variant_ids[0].lst_price" t-field-options='{
+                               "widget": "monetary",
+                               "display_currency": "website.pricelist_id.currency_id"
+                          }'>
                     </span>&amp;nbsp;
                   </t>
-                  <t t-esc="product.product_variant_ids[0].price" /> €
+                  <span t-field="product.product_variant_ids[0].price"  t-field-options='{
+                       "widget": "monetary",
+                       "display_currency": "website.pricelist_id.currency_id"
+                   }'/>
               </b>
           </div>
       </div>
@@ -339,7 +345,10 @@
                                   <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
                                   <t t-esc="product.variants or ''">Standard</t>
                                   <span class="badge" t-if="product.price_extra">
-                                      <t t-esc="product.price_extra > 0 and '+' or ''"/><span t-esc="product.price_extra"/> €
+                                      <t t-esc="product.price_extra > 0 and '+' or ''"/><span t-field="product.price_extra" t-field-options='{
+                                                   "widget": "monetary",
+                                                   "display_currency": "website.pricelist_id.currency_id"
+                                               }'/>
                                   </span>
                               </label>
                               <br/>
@@ -349,10 +358,18 @@
                               <b>
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                                     <span class="text-danger" style="text-decoration: line-through;">
-                                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
+                                        <span t-field="product.product_variant_ids[0].lst_price"
+                                           t-field-options='{
+                                               "widget": "monetary",
+                                               "display_currency": "website.pricelist_id.currency_id"
+                                           }'/>
                                     </span>&amp;nbsp;
                                   </t>
-                                  <h4><b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b></h4>
+                                  <h4><b><span class="oe_price" t-field="product.product_variant_ids[0].price"
+                                               t-field-options='{
+                                                   "widget": "monetary",
+                                                   "display_currency": "website.pricelist_id.currency_id"
+                                               }'/></b></h4>
                               </b>
                           </div>
                           <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
@@ -454,9 +471,15 @@
                                 </td>
                                 <td class="text-center">
                                    <div class="text-danger" style="text-decoration: line-through;" t-if="line.product_id.lst_price &gt; line.price_unit">
-                                       <t t-esc="line.product_id.lst_price" /> €
+                                       <span t-field="line.product_id.lst_price" t-field-options='{
+                                           "widget": "monetary",
+                                           "display_currency": "website.pricelist_id.currency_id"
+                                       }'/>
                                    </div>
-                                   <span t-field="line.price_unit"></span> €
+                                   <span t-field="line.price_unit" t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/>
                                 </td>
                                 <td>
                                     <div class="input-group">
@@ -486,11 +509,21 @@
                         <thead>
                             <tr style="border-top: 1px solid #000">
                                 <th><h3>Total:</h3></th>
-                                <th class="text-right"><h3><t t-esc="website_sale_order and website_sale_order.amount_total or 0"/> €</h3></th>
+                                <th class="text-right"><h3>
+                                    <span t-field="website_sale_order.amount_total" t-field-options='{
+                                        "widget": "monetary",
+                                        "display_currency": "website.pricelist_id.currency_id"
+                                    }'/></h3>
+                                </th>
                             </tr>
                             <tr class="text-muted">
                                 <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
-                                <td class="text-right"><t t-esc="website_sale_order and website_sale_order.amount_tax or 0"/> €</td>
+                                <td class="text-right">
+                                    <span t-field="website_sale_order.amount_tax" t-field-options='{
+                                        "widget": "monetary",
+                                        "display_currency": "website.pricelist_id.currency_id"
+                                    }'/>
+                                </td>
                             </tr>
                         </thead>
                     </table>
@@ -574,7 +607,10 @@
                             <div class="text-muted" t-field="product.description_sale"/>
                         </td>
                         <td>
-                            <span t-field="product.lst_price"></span> €
+                            <span t-field="product.lst_price" t-field-options='{
+                                "widget": "monetary",
+                                "display_currency": "website.pricelist_id.currency_id"
+                            }'/>
                         </td>
                         <td class="text-center">
                             <a t-href="./add_cart/?product_id=#{ product.id }"><strong>Add to Cart</strong></a>
@@ -742,11 +778,20 @@
                     <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="icon-arrow-right"/> change</a></small></h3>
                     <div class="row">
                         <div class="col-sm-6 text-right">Subtotal:</div>
-                        <div class="col-sm-6"><t t-esc="website_sale_order.amount_untaxed or 0"/> €</div>
+                        <div class="col-sm-6"><span t-esc="website_sale_order.amount_untaxed" t-field-options='{
+                            "widget": "monetary",
+                            "display_currency": "website.pricelist_id.currency_id"
+                        }'/></div>
                         <div class="col-sm-6 text-right">Taxes:</div>
-                        <div class="col-sm-6"><t t-esc="website_sale_order.amount_tax or 0"/> €</div>
+                        <div class="col-sm-6"><span t-field="website_sale_order.amount_tax" t-field-options='{
+                            "widget": "monetary",
+                            "display_currency": "website.pricelist_id.currency_id"
+                        }'/></div>
                         <div class="col-sm-6 text-right"><h4>Total To Pay:</h4></div>
-                        <div class="col-sm-6"><h4><t t-esc="website_sale_order.amount_total or 0"/> €</h4></div>
+                        <div class="col-sm-6"><h4><span t-field="website_sale_order.amount_total" t-field-options='{
+                            "widget": "monetary",
+                            "display_currency": "website.pricelist_id.currency_id"
+                        }'/></h4></div>
                     </div>
                     <button type="submit" class="btn btn-default btn-primary pull-right mt16" t-if="user_id.id != website.public_user.id">
                         Confirm <span class="icon-long-arrow-right"/>
@@ -807,7 +852,10 @@
                                    <strong t-field="line.product_id.name"/>
                                 </td>
                                 <td class="text-center">
-                                   <span t-field="line.price_unit"></span> €
+                                   <span t-field="line.price_unit" t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/>
                                 </td>
                                 <td>
                                    <div t-esc="line.product_uom_qty"/>
@@ -823,11 +871,17 @@
                         <thead>
                             <tr style="border-top: 1px solid #000">
                                 <th><h3>Total:</h3></th>
-                                <th class="text-right"><h3><t t-esc="website_sale_order and website_sale_order.amount_total or 0"/> €</h3></th>
+                                <th class="text-right"><h3><span t-field="website_sale_order.amount_total" t-field-options='{
+                                    "widget": "monetary",
+                                    "display_currency": "website.pricelist_id.currency_id"
+                                }'/></h3></th>
                             </tr>
                             <tr class="text-muted">
                                 <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
-                                <td class="text-right"><t t-esc="website_sale_order and website_sale_order.amount_tax or 0"/> €</td>
+                                <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
+                                    "widget": "monetary",
+                                    "display_currency": "website.pricelist_id.currency_id"
+                                }'/></td>
                             </tr>
                         </thead>
                     </table>
