@@ -464,8 +464,9 @@ class FieldConverter(osv.AbstractModel):
                 cr, uid, field_name, record,
                 record._model._all_columns[field_name].column,
                 options)
-        except KeyError:
-            _logger.warning("t-field no field %s for model %s", field_name, record._model._name)
+        except Exception:
+            _logger.warning("Could not get field %s for model %s",
+                            field_name, record._model._name, exc_info=True)
 
         g_att += ''.join(
             ' %s="%s"' % (name, werkzeug.utils.escape(value))
@@ -477,11 +478,14 @@ class FieldConverter(osv.AbstractModel):
         return self.render_element(cr, uid, source_element, t_att, g_att,
                                    qweb_context, content)
 
+    def qweb_object(self):
+        return self.pool['ir.qweb']
+
     def render_element(self, cr, uid, source_element, t_att, g_att,
                        qweb_context, content):
         """ Final rendering hook, by default just calls ir.qweb's ``render_element``
         """
-        return self.pool['ir.qweb'].render_element(
+        return self.qweb_object().render_element(
             source_element, t_att, g_att, qweb_context, content or '')
 
 class FloatConverter(osv.AbstractModel):
@@ -555,34 +559,59 @@ class ImageConverter(osv.AbstractModel):
         return '<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)
 
 class MonetaryConverter(osv.AbstractModel):
-    """ ``monetary`` converter, has a mandatory option ``currency_field``.
+    """ ``monetary`` converter, has two mandatory options ``source_currency``
+    and ``display_currency``. Both are evaluated in the qweb context, must
+    yield a res.currency browse_record and are used to convert currency field
+    value into a display value, and (using the display currency) format the
+    currency symbol.
 
-    The currency field is a (float) value, the linked ``currency_field`` is an
-    m2o to a ``res.currency`` indicating how to format the field.
+    The currency field is a (float) value.
+
+    .. note:: the monetary converter internally adds the qweb context to its
+              options mapping, so that the context is available to callees.
+              It's set under the ``_qweb_context`` key.
     """
     _name = 'ir.qweb.field.monetary'
     _inherit = 'ir.qweb.field'
 
+    def to_html(self, cr, uid, field_name, record, options,
+                source_element, t_att, g_att, qweb_context):
+        options['_qweb_context'] = qweb_context
+        return super(MonetaryConverter, self).to_html(
+            cr, uid, field_name, record, options,
+            source_element, t_att, g_att, qweb_context)
+
     def record_to_html(self, cr, uid, field_name, record, column, options):
-        Currency = self.pool['res.currency']
+        source = self.source_currency(cr, uid, options)
+        display = self.display_currency(cr, uid, options)
+
+        value = self.pool['res.currency'].compute(
+            cr, uid, source.id, display.id, record[field_name])
 
         symbol_pre = symbol_post = space_pre = space_post = u''
-        currency = record[options['currency_field']]
-        if currency.position == 'before':
+        if display.position == 'before':
             space_pre = u' '
-            symbol_pre = currency.symbol
+            symbol_pre = display.symbol
         else:
             space_post = u' '
-            symbol_post = currency.symbol
+            symbol_post = display.symbol
 
         return u'{symbol_pre}{space_pre}' \
                u'<span class="oe_currency_value">{0}</span>' \
                u'{space_post}{symbol_post}'.format(
-            Currency.round(cr, uid, currency, record[field_name]),
+            value,
             space_pre=space_pre,
             symbol_pre=symbol_pre,
             space_post=space_post,
             symbol_post=symbol_post,)
+
+    def source_currency(self, cr, uid, options):
+        return self.qweb_object().eval_object(
+            options['source_currency'], options['_qweb_context'])
+
+    def display_currency(self, cr, uid, options):
+        return self.qweb_object().eval_object(
+            options['display_currency'], options['_qweb_context'])
 
 def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options
