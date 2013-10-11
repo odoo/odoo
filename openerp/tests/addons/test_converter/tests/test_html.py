@@ -92,23 +92,17 @@ class TestCurrencyExport(TestExport):
         converter = self.registry('ir.qweb.field.monetary')
         options = {
             'widget': 'monetary',
-            'source_currency': 'c1',
             'display_currency': 'c2'
         }
         converted = converter.to_html(
             self.cr, self.uid, 'value', obj, options,
             doc.createElement('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', {'obj': obj, 'c1': self.base, 'c2': dest, })
+            '', {'obj': obj, 'c2': dest, })
         return converted
-
-    def create_rate(self, currency, rate=1.0):
-        Rate = self.registry('res.currency.rate')
-        self.create(Rate, name='1970-01-01', rate=rate, currency_id=currency.id)
 
     def test_currency_post(self):
         currency = self.create(self.Currency, name="Test", symbol=u"test")
-        self.create_rate(currency)
         obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
@@ -127,7 +121,6 @@ class TestCurrencyExport(TestExport):
     def test_currency_pre(self):
         currency = self.create(
             self.Currency, name="Test", symbol=u"test", position='before')
-        self.create_rate(currency)
         obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
@@ -144,30 +137,10 @@ class TestCurrencyExport(TestExport):
                 symbol=currency.symbol.encode('utf-8')
             ),)
 
-    def test_currency_rate_conversion(self):
-        currency = self.create(
-            self.Currency, name="Test", symbol=u"dest")
-        self.create_rate(currency, rate=2.0)
-        obj = self.create(self.Model, value=0.12)
-
-        converted = self.convert(obj, dest=currency)
-
-        self.assertEqual(
-            converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
-                      '<span class="oe_currency_value">0.24</span>'
-                      ' {symbol}</span>'.format(
-                obj=obj,
-                symbol=currency.symbol.encode('utf-8')
-            ),)
-
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
         currency = self.create(self.Currency, name="Test", symbol=u"test",)
-        self.create_rate(currency)
         obj = self.create(self.Model, value=0.1234567)
 
         converted = self.convert(obj, dest=currency)

@@ -559,13 +559,8 @@ class ImageConverter(osv.AbstractModel):
         return '<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)
 
 class MonetaryConverter(osv.AbstractModel):
-    """ ``monetary`` converter, has two mandatory options ``source_currency``
-    and ``display_currency``. Both are evaluated in the qweb context, must
-    yield a res.currency browse_record and are used to convert currency field
-    value into a display value, and (using the display currency) format the
-    currency symbol.
-
-    The currency field is a (float) value.
+    """ ``monetary`` converter, has a mandatory option
+    ``display_currency``.
 
     .. note:: the monetary converter internally adds the qweb context to its
               options mapping, so that the context is available to callees.
@@ -582,11 +577,7 @@ class MonetaryConverter(osv.AbstractModel):
             source_element, t_att, g_att, qweb_context)
 
     def record_to_html(self, cr, uid, field_name, record, column, options):
-        source = self.source_currency(cr, uid, options)
         display = self.display_currency(cr, uid, options)
-
-        value = self.pool['res.currency'].compute(
-            cr, uid, source.id, display.id, record[field_name])
 
         symbol_pre = symbol_post = space_pre = space_post = u''
         if display.position == 'before':
@@ -599,15 +590,11 @@ class MonetaryConverter(osv.AbstractModel):
         return u'{symbol_pre}{space_pre}' \
                u'<span class="oe_currency_value">{0}</span>' \
                u'{space_post}{symbol_post}'.format(
-            value,
+            record[field_name],
             space_pre=space_pre,
             symbol_pre=symbol_pre,
             space_post=space_post,
             symbol_post=symbol_post,)
-
-    def source_currency(self, cr, uid, options):
-        return self.qweb_object().eval_object(
-            options['source_currency'], options['_qweb_context'])
 
     def display_currency(self, cr, uid, options):
         return self.qweb_object().eval_object(
