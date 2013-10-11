@@ -85,6 +85,7 @@ class procurement_rule(osv.osv):
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
             string='Action', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
 

@@ -3,12 +3,6 @@
 <data noupdate="1">
 
 <!-- multi -->
-     <record model="ir.rule" id="product_pulled_flow_comp_rule">
-        <field name="name">product_pulled_flow multi-company</field>
-        <field name="model_id" ref="model_procurement_rule"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
 
       <record model="ir.rule" id="stock_location_path_comp_rule">
         <field name="name">stock_location_path multi-company</field>
