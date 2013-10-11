@@ -220,7 +220,7 @@ class crm_meeting(osv.Model):
             invitation['attendee'].append({'name':attendee.cn,'status': attendee.state})
         return invitation
 
-    def get_day(self, cr, uid, ids, date, interval, context=None):
+    def get_interval(self, cr, uid, ids, date, interval, context=None):
         date = datetime.strptime(date, DEFAULT_SERVER_DATETIME_FORMAT)
         if interval == 'day':
             res = str(date.day)
