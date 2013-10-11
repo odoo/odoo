@@ -1,44 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="website.tour_simple">
+    <t t-name="website.tour_popover">
         <div class="popover tour">
             <div class="arrow"></div>
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
+            <t t-if="next or end">
+                <nav class="popover-navigation">
+                    <t t-if="next">
+                        <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
+                    </t>
+                    <t t-if="end">
+                        <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
+                    </t>
+                </nav>
+            </t>
         </div>
     </t>
-    <t t-name="website.tour_confirm">
-        <div class="popover tour">
-            <div class="arrow"></div>
-            <h3 class="popover-title"></h3>
-            <div class="popover-content"></div>
-            <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
-            </nav>
-        </div>
-    </t>
-    <t t-name="website.tour_end">
-        <div class="popover tour">
-            <div class="arrow"></div>
-            <h3 class="popover-title"></h3>
-            <div class="popover-content"></div>
-            <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
-            </nav>
-        </div>
-    </t>
-    <t t-name="website.tour_full">
-        <div class="popover tour">
-            <div class="arrow"></div>
-            <h3 class="popover-title"></h3>
-            <div class="popover-content"></div>
-            <nav class="popover-navigation">
-                <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
-                <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
-            </nav>
-        </div>
-    </t>
-    <t t-name="website.tour_title">
+    <t t-name="website.tour_popover_title">
         <t t-esc="title"/><button title="Close Tutorial" type="button" class="close" data-role="end">×</button>
     </t>
 </templates>
