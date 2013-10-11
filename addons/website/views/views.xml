@@ -384,6 +384,9 @@
                         <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
                         <a href="#" class="js_publish_btn css_publish">Publish</a>
                     </li>
+                    <li t-if="publish_duplicate">
+                        <a t-att-href="publish_duplicate">Duplicate</a>
+                    </li>
                 </ul>
               </div>
               <t t-if="publish_edit">
