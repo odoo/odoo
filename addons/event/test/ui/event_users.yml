@@ -1,7 +1,7 @@
 -
   Create a user as 'Event manager'
 -
-  !record {model: res.users, id: res_users_eventmanager}:
+  !record {model: res.users, id: res_users_eventmanager, view: False}:
     company_id: base.main_company
     name: Event manager
     login: em
@@ -16,7 +16,7 @@
 -
   Create a user as 'Event user'
 -
-  !record {model: res.users, id: res_users_eventuser}:
+  !record {model: res.users, id: res_users_eventuser, view: False}:
     company_id: base.main_company
     name: User
     login: eu
