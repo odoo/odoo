@@ -109,7 +109,7 @@ class TestCurrencyExport(TestExport):
     def test_currency_post(self):
         currency = self.create(self.Currency, name="Test", symbol=u"test")
         self.create_rate(currency)
-        obj = self.create(self.Model, value=0.12, currency_id=currency.id)
+        obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
 
@@ -128,7 +128,7 @@ class TestCurrencyExport(TestExport):
         currency = self.create(
             self.Currency, name="Test", symbol=u"test", position='before')
         self.create_rate(currency)
-        obj = self.create(self.Model, value=0.12, currency_id=currency.id)
+        obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
 
@@ -144,12 +144,31 @@ class TestCurrencyExport(TestExport):
                 symbol=currency.symbol.encode('utf-8')
             ),)
 
+    def test_currency_rate_conversion(self):
+        currency = self.create(
+            self.Currency, name="Test", symbol=u"dest")
+        self.create_rate(currency, rate=2.0)
+        obj = self.create(self.Model, value=0.12)
+
+        converted = self.convert(obj, dest=currency)
+
+        self.assertEqual(
+            converted,
+            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                  'data-oe-field="value" data-oe-type="monetary" '
+                  'data-oe-expression="obj.value">'
+                      '<span class="oe_currency_value">0.24</span>'
+                      ' {symbol}</span>'.format(
+                obj=obj,
+                symbol=currency.symbol.encode('utf-8')
+            ),)
+
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
         currency = self.create(self.Currency, name="Test", symbol=u"test",)
         self.create_rate(currency)
-        obj = self.create(self.Model, value=0.1234567, currency_id=currency.id)
+        obj = self.create(self.Model, value=0.1234567)
 
         converted = self.convert(obj, dest=currency)
 

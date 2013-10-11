@@ -43,5 +43,4 @@ class test_model_monetary(orm.Model):
 
     _columns = {
         'value': fields.float(digits=(16, 55)),
-        'currency_id': fields.many2one('res.currency'),
     }
