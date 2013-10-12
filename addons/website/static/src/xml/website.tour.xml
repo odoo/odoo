@@ -10,7 +10,11 @@
                     <t t-if="next">
                         <button class="btn btn-sm btn-default" data-role="next"><t t-esc="next"/></button>
                     </t>
-                    <t t-if="end">
+                    <small t-if="next &amp;&amp; end">
+                        <span class="text-muted"> or </span>
+                        <button class="btn-link" data-role="end" style="float: none; padding: 0"><t t-esc="end"/></button>
+                    </small>
+                    <t t-if="end &amp;&amp; ! next">
                         <button class="btn btn-sm btn-default" data-role="end"><t t-esc="end"/></button>
                     </t>
                 </nav>

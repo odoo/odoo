@@ -83,7 +83,7 @@
 
     website.EditorBasicTour = website.EditorTour.extend({
         id: 'add_banner_tour',
-        name: "How to add a banner",
+        name: "Insert a banner",
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -92,8 +92,8 @@
                     orphan: true,
                     backdrop: true,
                     title: "Welcome to your website!",
-                    content: "This tutorial will guide you to build your website.<br>Let's start by the banner!",
-                    template: render('website.tour_popover', { next: "Start", end: "Close" }),
+                    content: "This tutorial will guide you to build your first page. We will start by adding a banner.",
+                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
                     stepId: 'edit-page',
@@ -101,15 +101,15 @@
                     placement: 'bottom',
                     reflex: true,
                     title: "Edit this page",
-                    content: "You are in your website homepage.<br>Click here to edit it.",
+                    content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     template: render('website.tour_popover'),
                 },
                 {
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    title: "Shows Building Blocks",
-                    content: "Make the home page more attractive with a banner.<br>Click here to see available building blocks.",
+                    title: "Insert building blocks",
+                    content: "To add content in a page, you can insert building blocks.",
                     template: render('website.tour_popover'),
                     onShow: function () {
                         function refreshAddBlockStep () {
@@ -127,7 +127,7 @@
                     element: '#website-top-navbar [data-snippet-id=carousel]',
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
-                    content: "Drag the <em>Banner</em> block and drop it to the top of your page.",
+                    content: "Drag the <em>Banner</em> block and drop it in your page. <p class='text-muted'>Tip: release the mouse button when you are in a valid zone, with a preview of the banner.</p>",
                     template: render('website.tour_popover'),
                     onShow: function () {
                         function beginDrag () {
@@ -147,8 +147,8 @@
                     stepId: 'edit-title',
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
                     placement: 'left',
-                    title: "Set your Banner text",
-                    content: "Click in the text to edit it.<br>Select the text to change the look thanks to the top menu bar.",
+                    title: "Customize banner's text",
+                    content: "Click in the text and start editing it. Click continue once it's done.",
                     template: render('website.tour_popover', { next: "Continue" }),
                     onHide: function () {
                         var $banner = $("#wrap [data-snippet-id=carousel]:first");
@@ -161,8 +161,8 @@
                     stepId: 'customize-banner',
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
-                    title: "Customize your new Banner style",
-                    content: "Click on <em>Customize</em> and change the background of your banner.<br>If your are satisfied with the current background, just click <em>Continue</em>.",
+                    title: "Customize the banner",
+                    content: "You can customize components of your page through the <em>Customize</em> menu. Try to change the background of your banner.",
                     template: render('website.tour_popover', { next: "Continue" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
@@ -176,7 +176,7 @@
                     placement: 'right',
                     reflex: true,
                     title: "Save your modifications",
-                    content: "Click here to save the content of your website.",
+                    content: "Once you click on save, your website page is updated.",
                     template: render('website.tour_popover'),
                     onHide: function () {
                         self.saveStep('part-2');
@@ -186,17 +186,16 @@
                 {
                     stepId: 'part-2',
                     orphan: true,
-                    backdrop: true,
-                    title: "Congratutaltions!",
-                    content: "Congratulations on your first modifications.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    title: "Congratulation!",
+                    content: "Your homepage have been updated. Now, we suggest you to insert others building blocks like texts and images to structure your page.",
+                    template: render('website.tour_popover', { next: "Continue" }),
                 },
                 {
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
                     title: "Help is always available",
-                    content: "You can find more tutorials in the <em>Help</em> menu.",
+                    content: "But you can always click here if you want more tutorials.",
                     template: render('website.tour_popover', { end: "Close" }),
                 },
             ];
