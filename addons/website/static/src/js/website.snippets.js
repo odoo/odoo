@@ -313,7 +313,15 @@
                         },
                     });
                 },
-                stop: function(){
+                stop: function(ev, ui){
+		    if (action === 'insert' && ! dropped) {
+		        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first()
+			if (el) {
+			    el.after($toInsert)
+			    dropped = true;
+			}
+		    }
+
                     $('.oe_drop_zone').droppable('destroy').remove();
                     if (dropped) {
                         var $target = false;
