@@ -151,11 +151,14 @@ footer
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
-.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+.oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
     background-image: url('/website/static/src/img/drag_here.png')
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: url('/website/static/src/img/edit_here.png')
     background-repeat: no-repeat
-    background-position: center top
-    height: 200px !important
+    background-position: center
+    height: 220px !important
 
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
     position: static
@@ -164,8 +167,8 @@ footer
     content: 'Click Edit To Create Content'
     text-align: center
     display: block
-    padding-top: 100px
-    padding-bottom: 50px
+    padding-top: 160px
+    padding-bottom: 30px
     color: grey
     font-size: 24px
 
