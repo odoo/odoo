@@ -828,7 +828,6 @@ def start():
     global server
     load_server_wide_modules()
     if config['workers']:
-        openerp.multi_process = True
         server = PreforkServer(openerp.service.wsgi_server.application)
     elif openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
