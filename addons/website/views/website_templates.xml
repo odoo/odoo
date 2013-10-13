@@ -97,13 +97,14 @@
                                                                 <t t-esc="lg.name"/>
                                                             </a>
                                                         </li>
-                                                        <li t-if="editable" class="text-center">
+                                                        <li t-if="editable" class="divider"/>
+                                                        <li t-if="editable">
                                                             <t t-set="url_return" t-value="request.multilang and url_for(request.httprequest.path, '[lang]') or request.httprequest.path"/>
                                                             <t t-if="request.httprequest.query_string">
                                                                 <t t-set="url_return" t-value="url_return + '?' + request.httprequest.query_string"/>
                                                             </t>
                                                             <a t-attf-href="/web#action=base.action_view_base_language_install&amp;url_return=#{url_return}">
-                                                                Add a Language
+                                                                Add a language...
                                                             </a>
                                                         </li>
                                                     </ul>
