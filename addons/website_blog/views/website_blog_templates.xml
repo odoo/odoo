@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
@@ -9,6 +8,12 @@
         </xpath>
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-attf-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
+        </xpath>
+    </template>
+
+    <template id="footer_custom" inherit_option_id="website.layout" name="Job Announces">
+        <xpath expr="//footer//div[@name='info']/ul" position="inside">
+            <li><a t-href="/blog/%(website_blog.blog_category_2)d/">Jobs</a></li>
         </xpath>
     </template>
 

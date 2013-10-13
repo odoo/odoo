@@ -3,9 +3,8 @@
 -->
 <openerp>
     <data>
-        <!--
-            Files used in the generic theme, mostly bootstrap and a few OpenERP tags
-        -->
+        <!-- Layout and generic templates -->
+
         <template id="website.theme" name="Theme">
             <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
@@ -87,7 +86,6 @@
                                                 <li t-if="request.multilang and
                                                             (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
-                                                    <t t-set="lang_selected" t-value="website.lang_selected"/>
                                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                                         <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
                                                     </a>
@@ -207,18 +205,106 @@
             </xpath>
         </template>
 
-        <template id="homepage" name="Homepage" page="True">
-            <t t-call="website.layout">
-              <div id="wrap" class="oe_structure oe_empty"></div>
+        <template id="publish_management">
+            <t t-if="editable" t-ignore="true">
+            <div class="pull-right btn-group">
+              <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
+                <a t-attf-class="btn btn-xs btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+                    <t t-raw="0"/>
+                    <li>
+                        <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
+                        <a href="#" class="js_publish_btn css_publish">Publish</a>
+                    </li>
+                    <li t-if="publish_duplicate">
+                        <a t-att-href="publish_duplicate">Duplicate</a>
+                    </li>
+                </ul>
+              </div>
+              <t t-if="publish_edit">
+                <a class="btn btn-xs btn-default" title="Edit in backend" t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)"><span t-attf-class="glyphicon glyphicon-wrench"></span></a>
+              </t>
+            </div>
             </t>
         </template>
+
+        <template id="publish_short">
+            <t t-if="editable" t-ignore="true">
+                <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
+                        t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
+                        class="pull-right js_publish">
+                    <span t-attf-class="text-success css_publish glyphicon glyphicon-ok"></span>
+                    <span t-attf-class="text-danger css_unpublish glyphicon glyphicon-remove-circle"></span>
+                    <span t-attf-class="text-muted css_published glyphicon glyphicon-ok"></span>
+                    <span t-attf-class="text-muted css_unpublished glyphicon glyphicon-remove-circle"></span>
+                </a>
+            </t>
+        </template>
+
+        <template id="pager">
+            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
+                <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
+                     <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
+                </li>
+                <t t-foreach="pager['pages']" t-as="page">
+                    <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+                </t>
+                <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
+                    <a t-att-href=" pager['page_end']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+                </li>
+            </ul>
+        </template>
+
+        <template id="kanban">
+            <t t-set="step"><t t-esc="step or 0"/></t>
+            <t t-set="scope"><t t-esc="scope or 0"/></t>
+            <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
+            <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
+        </template>
+
+        <template id="kanban_contain">
+            <table class="table js_kanban">
+                <thead>
+                    <tr>
+                        <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
+                        <t t-foreach="objects">
+                            <th t-att-width="width">
+                                <div t-field="column_id.name" class="text-center"></div>
+                            </th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <t t-foreach="objects">
+                            <td class="js_kanban_col" t-att-data-template="template" t-att-data-domain="domain" t-att-data-page_count="page_count" t-att-data-model="model" t-att-data-step="step" t-att-data-orderby="orderby">
+                                <t t-foreach="object_ids" t-as="object_id">
+                                    <t t-call="#{ template }"></t>
+                                </t>
+                                <!-- pager -->
+                                <div t-if="1 != page_end" class="pagination pagination-centered">
+                                    <ul>
+                                        <li t-attf-class="prev #{'active' if page == 1 else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a></li>
+                                        <t t-foreach="range(page_start, page_end+1)" t-as="p">
+                                            <li t-att-class=" 'active' if page == p else '' "> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"></a></li>
+                                        </t>
+                                        <li t-attf-class="next #{'active' if page == page_end else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+
+        <!-- Error and special pages -->
 
         <template id="default_page">
             <t t-call="website.layout">
               <div id="wrap" class="oe_structure oe_empty"></div>
             </t>
         </template>
-
 
         <template id="404">
             <t t-call="website.layout">
@@ -281,6 +367,28 @@
                     </ul>
                 </div>
               </div>
+            </t>
+        </template>
+
+        <template id="robots">
+# robotstxt.org/
+User-agent: *
+Sitemap: <t t-esc="url_root"/>sitemap.xml
+        </template>
+
+        <template id="sitemap">
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                <t t-foreach="pages" t-as="page">
+                    <url t-esc="page['url']"/>
+                </t>
+            </urlset>
+        </template>
+
+        <!-- Actual pages -->
+
+        <template id="homepage" name="Homepage" page="True">
+            <t t-call="website.layout">
+              <div id="wrap" class="oe_structure oe_empty"></div>
             </t>
         </template>
 
@@ -360,109 +468,5 @@
             </t>
         </template>
 
-        <template id="pager">
-            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
-                <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
-                     <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
-                </li>
-                <t t-foreach="pager['pages']" t-as="page">
-                    <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
-                </t>
-                <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
-                    <a t-att-href=" pager['page_end']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
-                </li>
-            </ul>
-        </template>
-
-        <template id="publish_management">
-            <t t-if="editable" t-ignore="true">
-            <div class="pull-right btn-group">
-              <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
-                <a t-attf-class="btn btn-xs btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
-                    <t t-raw="0"/>
-                    <li>
-                        <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
-                        <a href="#" class="js_publish_btn css_publish">Publish</a>
-                    </li>
-                    <li t-if="publish_duplicate">
-                        <a t-att-href="publish_duplicate">Duplicate</a>
-                    </li>
-                </ul>
-              </div>
-              <t t-if="publish_edit">
-                <a class="btn btn-xs btn-default" title="Edit in backend" t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)"><span t-attf-class="glyphicon glyphicon-wrench"></span></a>
-              </t>
-            </div>
-            </t>
-        </template>
-
-        <template id="publish_short">
-            <t t-if="editable" t-ignore="true">
-                <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
-                        t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
-                        class="pull-right js_publish">
-                    <span t-attf-class="text-success css_publish glyphicon glyphicon-ok"></span>
-                    <span t-attf-class="text-danger css_unpublish glyphicon glyphicon-remove-circle"></span>
-                    <span t-attf-class="text-muted css_published glyphicon glyphicon-ok"></span>
-                    <span t-attf-class="text-muted css_unpublished glyphicon glyphicon-remove-circle"></span>
-                </a>
-            </t>
-        </template>
-
-        <template id="kanban">
-            <t t-set="step"><t t-esc="step or 0"/></t>
-            <t t-set="scope"><t t-esc="scope or 0"/></t>
-            <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
-            <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
-        </template>
-
-        <template id="kanban_contain">
-            <table class="table js_kanban">
-                <thead>
-                    <tr>
-                        <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
-                        <t t-foreach="objects">
-                            <th t-att-width="width">
-                                <div t-field="column_id.name" class="text-center"></div>
-                            </th>
-                        </t>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <t t-foreach="objects">
-                            <td class="js_kanban_col" t-att-data-template="template" t-att-data-domain="domain" t-att-data-page_count="page_count" t-att-data-model="model" t-att-data-step="step" t-att-data-orderby="orderby">
-                                <t t-foreach="object_ids" t-as="object_id">
-                                    <t t-call="#{ template }"></t>
-                                </t>
-                                <!-- pager -->
-                                <div t-if="1 != page_end" class="pagination pagination-centered">
-                                    <ul>
-                                        <li t-attf-class="prev #{'active' if page == 1 else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a></li>
-                                        <t t-foreach="range(page_start, page_end+1)" t-as="p">
-                                            <li t-att-class=" 'active' if page == p else '' "> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"></a></li>
-                                        </t>
-                                        <li t-attf-class="next #{'active' if page == page_end else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
-        </template>
-        <template id="robots">
-# robotstxt.org/
-User-agent: *
-Sitemap: <t t-esc="url_root"/>sitemap.xml
-        </template>
-        <template id="sitemap">
-            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-                <t t-foreach="pages" t-as="page">
-                    <url t-esc="page['url']"/>
-                </t>
-            </urlset>
-        </template>
      </data>
 </openerp>
