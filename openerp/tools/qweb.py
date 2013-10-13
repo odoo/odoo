@@ -1,15 +1,88 @@
+import datetime
+import dateutil
 import logging
 import re
+import traceback
+import urllib
+import xml # FIXME use lxml and etree
 
 import werkzeug.utils
-from openerp.tools.safe_eval_qweb import safe_eval_qweb as eval, UndefinedError, SecurityError
 
-import xml   # FIXME use lxml
-import traceback
 from openerp.osv import osv, orm
 
 _logger = logging.getLogger(__name__)
 
+BUILTINS = {
+    'False': False,
+    'None': None,
+    'True': True,
+    'abs': abs,
+    'bool': bool,
+    'dict': dict,
+    'filter': filter,
+    'len': len,
+    'list': list,
+    'map': map,
+    'max': max,
+    'min': min,
+    'reduce': reduce,
+    'repr': repr,
+    'round': round,
+    'set': set,
+    'str': str,
+    'tuple': tuple,
+    'quote':  urllib.quote,
+    'urlencode': urllib.urlencode,
+    'datetime': datetime,
+    # dateutil.relativedelta is an old-style class and cannot be directly
+    # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
+    # is needed, apparently.
+    'relativedelta': lambda *a, **kw : dateutil.relativedelta.relativedelta(*a, **kw),
+}
+
+## We use a jinja2 sandboxed environment to render qWeb templates.
+#from openerp.tools.safe_eval import safe_eval as eval
+#from jinja2.sandbox import SandboxedEnvironment
+#from jinja2.exceptions import SecurityError, UndefinedError
+#UNSAFE = ["browse", "search", "read", "unlink", "read_group"]
+#SAFE = ["_name"]
+
+class QWebContext(dict):
+    def __init__(self, data, undefined_handler=None):
+        self.undefined_handler = undefined_handler
+        dic = BUILTINS.copy()
+        dic.update(data)
+        super(QWebContext, self).__init__(dic)
+        self['defined'] = lambda key: key in self
+
+    def __getitem__(self, key):
+        if key in self:
+            return self.get(key)
+        elif not self.undefined_handler:
+            raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
+        else:
+            return self.get(key, self.undefined_handler(key, self))
+
+    def safe_eval(self, expr):
+        # This is too slow, we should cached compiled expressions attribute of
+        # qweb to will be changed into a model object ir.qweb.
+        #
+        # The cache should be on qweb, and qweb context contructor take qweb as
+        # argument to store the cache.
+        #
+        #class QWebSandboxedEnvironment(SandboxedEnvironment):
+        #    def is_safe_attribute(self, obj, attr, value):
+        #        if str(attr) in SAFE:
+        #            res = True
+        #        else:
+        #            res = super(QWebSandboxedEnvironment, self).is_safe_attribute(obj, attr, value)
+        #            if str(attr) in UNSAFE or not res:
+        #                raise SecurityError("access to attribute '%s' of '%s' object is unsafe." % (attr,obj))
+        #        return res
+        #env = qWebSandboxedEnvironment(variable_start_string="${", variable_end_string="}")
+        #env.globals.update(context)
+        #env.compile_expression(expr)()
+        return eval(expr, None, self)
 
 class QWebXml(object):
     """QWeb Xml templating engine
@@ -73,14 +146,9 @@ class QWebXml(object):
 
     def eval(self, expr, v):
         try:
-            return eval(expr, None, v)
+            return v.safe_eval(expr)
         except (osv.except_osv, orm.except_orm), err:
             raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
-        except (UndefinedError, SecurityError), err:
-            if self.undefined_handler:
-                return self.undefined_handler(expr, v)
-            else:
-                raise SyntaxError(err.message)
         except Exception:
             raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), traceback.format_exc()))
 
@@ -91,7 +159,6 @@ class QWebXml(object):
         if expr == "0":
             return v.get(0, '')
         val = self.eval(expr, v)
-
         if isinstance(val, unicode):
             return val.encode("utf8")
         return str(val)
@@ -126,7 +193,7 @@ class QWebXml(object):
             v['__caller__'] = stack[-1]
         stack.append(tname)
         v['__stack__'] = stack
-        v['xmlid'] = str(stack[0])
+        v = QWebContext(v, self.undefined_handler)
         return self.render_node(self.get_template(tname), v)
 
     def render_node(self, e, v):
@@ -245,7 +312,7 @@ class QWebXml(object):
         enum = self.eval_object(expr, v)
         if enum is not None:
             var = t_att.get('as', expr).replace('.', '_')
-            d = v.copy()
+            d = QWebContext(v.copy(), self.undefined_handler)
             size = -1
             if isinstance(enum, (list, tuple)):
                 size = len(enum)
@@ -286,7 +353,7 @@ class QWebXml(object):
         if "import" in t_att:
             d = v
         else:
-            d = v.copy()
+            d = QWebContext(v.copy(), self.undefined_handler)
         d[0] = self.render_element(e, t_att, g_att, d)
         return self.render(self.eval_format(t_att["call"], d), d)
 
@@ -314,7 +381,7 @@ class QWebXml(object):
         column = record._model._all_columns[field].column
         field_type = column._type
 
-        req = v['_request']
+        req = v['request']
         converter = req.registry['ir.fields.converter'].from_field(
             req.cr, req.uid, record._model, column, totype='html')
 
@@ -341,4 +408,4 @@ class QWebXml(object):
 
         return self.render_element(e, t_att, g_att, v, content or "")
 
-# leave this, al.
+# vim:et:
