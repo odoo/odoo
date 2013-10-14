@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-08-22 11:00+0000\n"
-"Last-Translator: Herczeg Péter <hp@erp-cloud.hu>\n"
+"PO-Revision-Date: 2013-10-12 11:42+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-23 05:52+0000\n"
-"X-Generator: Launchpad (build 16737)\n"
+"X-Launchpad-Export-Date: 2013-10-13 05:38+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -30,6 +30,8 @@ msgid ""
 "No purchase account found for the product %s (or for his category), please "
 "configure one."
 msgstr ""
+"Nem található beszerzési számla a következő termékre %s (vagy a "
+"kategóriájára), kérem hozzon létre egyet."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -44,7 +46,7 @@ msgstr "A könyvelő megtéríti a költségeket"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr "Kiadások alfogadva"
+msgstr "Költség elfogadva"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -79,7 +81,7 @@ msgstr "Osztály, részleg"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "New Expense"
-msgstr "Új kiadás"
+msgstr "Új költség"
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
@@ -100,7 +102,7 @@ msgstr "Olvasatlan üzenetek"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
+msgstr "Kifizetésre vár"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -200,7 +202,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Open Accounting Entries"
-msgstr ""
+msgstr "Nyitott számla tételek"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
@@ -287,6 +289,12 @@ msgid ""
 " If the accounting entries are made for the expense request, the status is "
 "'Waiting Payment'."
 msgstr ""
+"Ha a létrehozott költség igény beállított állapota 'Tervezet'.\n"
+" A felhasználó által megerősített és az igény elküldve az adminisztrátornak, "
+"akkor az állapota 'Megerősítésre vár'.            \n"
+"Ha az adminisztrátor elfogadta, akkor az állapota 'Elfogadva'.\n"
+" Ha a könyvelési tétel mint költség igény, akkor annak állapota 'Kifizetésre "
+"vár'."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -446,13 +454,15 @@ msgstr "Jóváhagyás dátuma"
 #: code:addons/hr_expense/hr_expense.py:378
 #, python-format
 msgid "Expense Account Move"
-msgstr ""
+msgstr "Költség számla mozgás"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:240
 #, python-format
 msgid "The employee must have a payable account set on his home address."
 msgstr ""
+"A felhasználónak a lakáscímére vonatkozó kifizetési számlával kell "
+"rendelkeznie."
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -557,7 +567,7 @@ msgstr "Tervezet"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Fizetve"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:353
@@ -690,7 +700,7 @@ msgstr "Összegzés"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Könyvelési napló tételsorok"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -812,6 +822,10 @@ msgid ""
 "             </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új költség kategória létrehozásához. \n"
+"             </p>\n"
+"            "
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
