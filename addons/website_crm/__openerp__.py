@@ -11,7 +11,7 @@ OpenERP Contact Form
     'author': 'OpenERP SA',
     'depends': ['website_partner', 'crm'],
     'data': [
-        'website_crm_data.xml',
+        'data/website_crm_data.xml',
         'views/website_crm.xml',
     ],
     'installable': True,
