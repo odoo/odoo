@@ -60,11 +60,9 @@ class view(osv.osv):
         field = el.get('data-oe-field')
 
         column = Model._all_columns[field].column
-        convert = self.pool['ir.fields.converter'].to_field(
-            cr, uid, Model, column, fromtype="html", context=context)
-        value, warnings = convert(el)
-        # FIXME: report error
-        if warnings: return
+        converter = self.pool['website.qweb'].get_converter_for(
+            el.get('data-oe-type'))
+        value = converter.from_html(cr, uid, Model, column, el)
 
         Model.write(cr, uid, [int(el.get('data-oe-id'))], {
             field: value

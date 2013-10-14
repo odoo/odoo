@@ -138,6 +138,10 @@ table.editorbar-panel
 .modal .image-preview
     margin-bottom: 0.5em
 
+// wrapper positioned relatively for drag&drop widget which is disabled below.
+// Breaks completely horribly crazy products listing page, so take it out.
+.cke_widget_wrapper
+    position: static !important
 // "remove" drag & drop of CKE widgets
 .cke_widget_drag_handler_container
     display: none !important

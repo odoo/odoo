@@ -31,8 +31,8 @@ class TestViewSaving(common.TransactionCase):
                 h.H3("Column 2"),
                 h.UL(
                     h.LI("Item 1"),
-                    h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))),
-                    h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone')))
+                    h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char'))),
+                    h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')))
                 ))
         )
         self.view_id = self.registry('ir.ui.view').create(self.cr, self.uid, {
@@ -46,14 +46,15 @@ class TestViewSaving(common.TransactionCase):
             self.cr, self.uid, self.arch, context=None)
 
         expect = [
-            h.SPAN("My Company", attrs(model='res.company', id=1, field='name')),
-            h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone')),
+            h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char')),
+            h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')),
         ]
         for actual, expected in itertools.izip_longest(fields, expect):
             self.eq(actual, expected)
 
     def test_embedded_save(self):
-        embedded = h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone'))
+        embedded = h.SPAN("+00 00 000 00 0 000", attrs(
+            model='res.company', id=1, field='phone', type='char'))
 
         self.registry('ir.ui.view').save_embedded_field(self.cr, self.uid, embedded)
 
@@ -118,8 +119,8 @@ class TestViewSaving(common.TransactionCase):
                 h.H3("Column 2"),
                 h.UL(
                     h.LI("Item 1"),
-                    h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))),
-                    h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone')))
+                    h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char'))),
+                    h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')))
                 ))
         ))
 
@@ -137,8 +138,8 @@ class TestViewSaving(common.TransactionCase):
             h.H3("Column 2"),
             h.UL(
                 h.LI("wob wob wob"),
-                h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=1, field='name', expression="bob"))),
-                h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund"))),
+                h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=1, field='name', expression="bob", type='char'))),
+                h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund", type='char'))),
             )
         ), encoding='utf-8')
         View.save(self.cr, self.uid, res_id=self.view_id, value=replacement,
@@ -173,7 +174,7 @@ class TestViewSaving(common.TransactionCase):
 
         node = html.tostring(h.SPAN(
             "Acme Corporation",
-            attrs(model='res.company', id=company_id, field="name", expression='bob')))
+            attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
 
         self.registry('ir.ui.view').save(self.cr, self.uid, res_id=company_id,value=node)
 
@@ -184,7 +185,9 @@ class TestViewSaving(common.TransactionCase):
     def test_field_tail(self):
         View = self.registry('ir.ui.view')
         replacement = ET.tostring(
-            h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund")),
+            h.LI(h.SPAN("+12 3456789", attrs(
+                        model='res.company', id=1, type='char',
+                        field='phone', expression="edmund")),
                  "whop whop"
         ), encoding="utf-8")
         View.save(self.cr, self.uid, res_id = self.view_id, value=replacement,
@@ -203,7 +206,7 @@ class TestViewSaving(common.TransactionCase):
                     h.H3("Column 2"),
                     h.UL(
                         h.LI("Item 1"),
-                        h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))),
+                        h.LI(h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char'))),
                         h.LI(h.SPAN({'t-field': "edmund"}), "whop whop"),
                     ))
             )
