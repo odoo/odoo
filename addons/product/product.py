@@ -486,7 +486,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+            res[product.id] =  (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + product.price_extra
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
@@ -558,7 +558,7 @@ class product_product(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
-        'price_margin': lambda *a: 1.0,
+        'price_margin': lambda *a: 0.0,
         'color': 0,
     }
 
@@ -686,7 +686,7 @@ class product_product(osv.osv):
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
                 ids = set()
-                ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
+                ids.update(self.search(cr, user, args + ['|',('default_code',operator,name),('variants',operator,name)], limit=limit, context=context))
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
@@ -718,7 +718,7 @@ class product_product(osv.osv):
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
-                res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
+                res[product.id] = (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + \
                         product.price_extra
             if 'uom' in context:
                 uom = product.uom_id or product.uos_id
