@@ -20,7 +20,7 @@
   I make the production order using BoM having one service type product and one consumable product.
 -
   !record {model: mrp.production, id: mrp_production_servicetype_mo1}:
-    product_id: product.product_product_5
+    product_id: product.product_product_3
     product_qty: 1.0
     bom_id: mrp_bom_test1
     date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -36,21 +36,13 @@
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_servicetype_mo1}
 -
-  I confirm the Consume Products.
+  I reserved the product.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
     assert order.state == 'confirmed', "Production order should be confirmed."
-    for move_line in order.move_lines:
-        move_line.action_consume(move_line.product_qty)
--
-  I processed the Product Entirely.
--
-  !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
-    assert order.state == 'in_production', 'Production order should be in production State.'
-    for move_created in order.move_created_ids:
-        move_created.action_done()
+    self.force_production(cr, uid, [order.id])
+
 -
   I produce product.
 -
@@ -90,7 +82,7 @@
   I make the production order using BoM having two service type products.
 -
   !record {model: mrp.production, id: mrp_production_servicetype_2}:
-    product_id: product.product_product_5
+    product_id: product.product_product_3
     product_qty: 1.0
     bom_id: mrp_bom_test_2
     date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
