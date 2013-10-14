@@ -36,17 +36,22 @@
 
         <record id="action_website" model="ir.actions.act_url">
             <field name="name">Website</field>
+            <field name="url">/</field>
+            <field name="target">self</field>
+        </record>
+        <record id="action_website_tutorial" model="ir.actions.act_url">
+            <field name="name">Website With Tutorial</field>
             <field name="url">/?tutorial=true</field>
             <field name="target">self</field>
         </record>
+
         <record id="menu_website" model="ir.ui.menu">
             <field name="name">Website</field>
             <field name="sequence" eval="510"/>
             <field name="action" ref="action_website"/>
         </record>
-
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_website"/>
+            <field name="action_id" ref="action_website_tutorial"/>
             <field name="state">open</field>
         </record>
 

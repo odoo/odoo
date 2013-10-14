@@ -7,18 +7,27 @@ import json
 import logging
 import os
 import datetime
+import re
 
 from sys import maxint
 
 import psycopg2
-import slugify
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 from PIL import Image
 
+try:
+    from slugify import slugify
+except ImportError:
+    def slugify(s, max_length=None):
+        spaceless = re.sub(r'\s+', '-', s)
+        specialless = re.sub(r'[^-_a-z0-9]', '', spaceless)
+        return specialless[:max_length]
+
 import openerp
+from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -53,7 +62,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=NOPE):
         module = 'website'
         # completely arbitrary max_length
-        idname = slugify.slugify(path, max_length=50)
+        idname = slugify(path, max_length=50)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -251,11 +260,16 @@ class Website(openerp.addons.web.controllers.main.Home):
     def publish(self, id, object):
         _id = int(id)
         _object = request.registry[object]
-
         obj = _object.browse(request.cr, request.uid, _id)
+
+        values = {}
+        if 'website_published' in _object._all_columns:
+            values['website_published'] = not obj.website_published
+        if 'website_published_datetime' in _object._all_columns and values.get('website_published'):
+            values['website_published_datetime'] = fields.datetime.now()
         _object.write(request.cr, request.uid, [_id],
-                      {'website_published': not obj.website_published},
-                      context=request.context)
+                      values, context=request.context)
+
         obj = _object.browse(request.cr, request.uid, _id)
         return obj.website_published and True or False
 

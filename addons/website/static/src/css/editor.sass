@@ -148,7 +148,7 @@ table.editorbar-panel
     position: fixed
     left: 0px
     right: 0px
-    top: 50px
+    top: 51px
     background: rgb(40,40,40)
     +box-shadow(0px 10px 10px -10px black inset)
     z-index: 1010
@@ -162,9 +162,7 @@ table.editorbar-panel
         display: inline-block
         border-bottom: none !important
         vertical-align: middle
-        margin-top: 5px
         min-width: 120px
-        margin-left: 6px
         > li
             display: block
             float: none
@@ -182,10 +180,8 @@ table.editorbar-panel
         display: inline-block
         white-space: nowrap
         background: black
-        margin-top: 5px
         > div   
             background: rgb(0,0,0)
-            padding: 5px
             label
                 width: 44px
                 color: #fff
@@ -200,8 +196,8 @@ table.editorbar-panel
 .oe_snippet
     float: left
     vertical-align: top
-    width: 100px
-    margin: 1px
+    width: 93px
+    margin-left: 1px
     margin-top: 0px
     position: relative
     overflow: hidden
@@ -223,6 +219,7 @@ table.editorbar-panel
             display: block
             +text-shadow(0 0 2px rgb(0,0,0))
         .oe_snippet_thumbnail_img
+            height: 74px
             @include transition(all 150ms linear)
             +box-shadow(inset 0px 0px 0px 3px #333333)
             @include transform( scale(1,1))

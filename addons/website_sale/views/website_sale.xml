@@ -338,15 +338,16 @@
                               <br/>
                           </t>
 
-                          <div class="product_price">
-                              <b>
+                          <div class="product_price mt16">
+                              <h4>
+                                  <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
+                              
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                    <span class="text-danger" style="text-decoration: line-through;">
+                                    &amp;nbsp;&amp;nbsp;<small class="text-danger" style="text-decoration: line-through;">
                                         <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                                    </span>&amp;nbsp;
+                                    </small>
                                   </t>
-                                  <h4><b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b></h4>
-                              </b>
+                              </h4>
                           </div>
                           <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
                           <hr t-if="product.description_sale"/>

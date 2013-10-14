@@ -3,6 +3,7 @@
     <!-- <data noupdate="1"> -->
     <data>
 
+        <!-- jump to blog at install -->
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Blogs</field>
             <field name="target">self</field>
@@ -17,15 +18,6 @@
         <record id="blog_category_1" model="blog.category">
             <field name="name">News</field>
             <field name="description">Presentation of new OpenERP features</field>
-            <field name="template">
-Summary of the feature
-
-Long explanation
-
-Conclusion
-
-Additional ressources
-            </field>
         </record>
 
         <!-- Post-related subtypes for messaging / Chatter -->
@@ -41,6 +33,7 @@ Additional ressources
             <field name="default" eval="False"/>
             <field name="description">Post Published</field>
         </record>
+
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_blog_category_post_new" model="mail.message.subtype">
             <field name="name">New Post</field>
@@ -51,20 +44,11 @@ Additional ressources
         </record>
 
 
-    <!-- Mail group for the company's jobs -->
-
-    <record id="blog_category_2" model="blog.category">
-        <field name="name">Jobs</field>
-        <field name="description">Job Announces</field>
-    </record>
-
-    <!-- Layout add nav and footer -->
-
-    <template id="footer_custom" inherit_option_id="website.layout" name="Job Announces">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/blog/%(website_blog.blog_category_2)d/">Jobs</a></li>
-        </xpath>
-    </template>
+        <!-- Mail group for the company's jobs -->
+        <record id="blog_category_2" model="blog.category">
+            <field name="name">Jobs</field>
+            <field name="description">Job Announces</field>
+        </record>
 
 
     </data>
