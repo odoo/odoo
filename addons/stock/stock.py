@@ -840,8 +840,8 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, picking_ids, context=context):
             for move in picking.move_lines:
                 ids_to_free += [quant.id for quant in move.reserved_quant_ids]
-        if ids_to_free:            
-            quant_obj.write(cr, uid, ids_to_free, {'reservation_id' : False, 'reservation_op_id': False }, context = context)
+        if ids_to_free:
+            quant_obj.write(cr, SUPERUSER_ID, ids_to_free, {'reservation_id' : False, 'reservation_op_id': False }, context = context)
     
     def _reserve_quants_ops_move(self, cr, uid, ops, move, qty, create=False, context=None):
         """
@@ -867,7 +867,7 @@ class stock_picking(osv.osv):
                 if quant[0]: #If quant can be reserved
                     res_qty -= quant[1]
             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
-            quant_obj.write(cr, uid, [x[0].id for x in quants if x[0]], {'reservation_op_id': ops.id}, context=context)
+            quant_obj.write(cr, SUPERUSER_ID, [x[0].id for x in quants if x[0]], {'reservation_op_id': ops.id}, context=context)
             return res_qty
         
         
