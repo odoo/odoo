@@ -75,6 +75,9 @@ class base_config_settings(osv.osv_memory):
             user.company_id.write({'font': wizard.font.id,'rml_header': self._change_header(user.company_id.rml_header,font_name), 'rml_header2': self._change_header(user.company_id.rml_header2, font_name), 'rml_header3': self._change_header(user.company_id.rml_header3, font_name)})
         return {}
 
+    def act_discover_fonts(self, cr, uid, ids, context=None):
+        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
+
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
 # plugin_outlook and plugin_thunderbird.
