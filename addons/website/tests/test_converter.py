@@ -5,6 +5,7 @@ from xml.dom.minidom import getDOMImplementation
 from lxml import html
 
 from openerp.tests import common
+from openerp.addons.base.ir import ir_qweb
 
 impl = getDOMImplementation()
 document = impl.createDocument(None, None, None)
@@ -27,9 +28,9 @@ class TestConvertBack(common.TransactionCase):
         e.setAttribute('t-field', field_value)
 
         rendered = self.registry('website.qweb').render_tag_field(
-            e, {'field': field_value}, '', {
+            e, {'field': field_value}, '', ir_qweb.QWebContext({
                 'record': record,
-            })
+            }))
         element = html.fromstring(
             rendered, parser=html.HTMLParser(encoding='utf-8'))
 
