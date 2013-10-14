@@ -145,6 +145,11 @@ table.editorbar-panel
 // "remove" drag & drop of CKE widgets
 .cke_widget_drag_handler_container
     display: none !important
+// prevent inline widgets from entirely disappearing when their (textual)
+// content is removed
+.cke_widget_editable:empty:after
+    content: " "
+    white-space: pre-wrap
 
 /* ---- SNIPPET EDITOR ---- */
 

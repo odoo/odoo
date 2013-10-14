@@ -163,6 +163,11 @@ table.editorbar-panel td.selected {
   display: none !important;
 }
 
+.cke_widget_editable:empty:after {
+  content: " ";
+  white-space: pre-wrap;
+}
+
 /* ---- SNIPPET EDITOR ---- */
 #oe_snippets {
   position: fixed;
