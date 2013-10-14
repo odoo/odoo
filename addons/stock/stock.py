@@ -397,7 +397,7 @@ class stock_quant(osv.osv):
             #solving_quant, dummy = self._reconcile_single_negative_quant(cr, uid, to_solve_quant, solving_quant, quant_neg, qty, context=context)
 
     def _price_update(self, cr, uid, ids, newprice, context=None):
-        self.write(cr, SUPERSER_ID, ids, {'cost': newprice}, context=context)
+        self.write(cr, SUPERUSER_ID, ids, {'cost': newprice}, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         #We want to trigger the move with nothing on reserved_quant_ids for the store of the remaining quantity
