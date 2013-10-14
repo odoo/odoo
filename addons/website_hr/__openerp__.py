@@ -1,5 +1,5 @@
 {
-'name': 'Team Page',
+    'name': 'Team Page',
     'category': 'Website',
     'summary': 'Present Your Team',
     'version': '1.0',
@@ -11,10 +11,10 @@ Our Team Page
     'author': 'OpenERP SA',
     'depends': ['website', 'hr'],
     'demo': [
-        'website_hr_demo.xml',
+        'data/website_hr_demo.xml',
     ],
     'data': [
-        'website_hr_data.xml',
+        'data/website_hr_data.xml',
         'views/website_hr.xml',
         'security/ir.model.access.csv',
         'security/website_hr.xml',
