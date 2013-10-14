@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 import cStringIO
 import json
+import datetime
+import dateutil
 import logging
 import re
+import traceback
+import urllib
+import xml # FIXME use lxml and etree
 
 import Image
 import werkzeug.utils
 
-import xml   # FIXME use lxml
-import traceback
 from openerp.osv import osv, orm, fields
 
 _logger = logging.getLogger(__name__)
@@ -32,7 +35,21 @@ BUILTINS = {
     'set': set,
     'str': str,
     'tuple': tuple,
+    'quote':  urllib.quote,
+    'urlencode': urllib.urlencode,
+    'datetime': datetime,
+    # dateutil.relativedelta is an old-style class and cannot be directly
+    # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
+    # is needed, apparently.
+    'relativedelta': lambda *a, **kw : dateutil.relativedelta.relativedelta(*a, **kw),
 }
+
+## We use a jinja2 sandboxed environment to render qWeb templates.
+#from openerp.tools.safe_eval import safe_eval as eval
+#from jinja2.sandbox import SandboxedEnvironment
+#from jinja2.exceptions import SecurityError, UndefinedError
+#UNSAFE = ["browse", "search", "read", "unlink", "read_group"]
+#SAFE = ["_name"]
 
 class QWebContext(dict):
     def __init__(self, data, undefined_handler=None, loader=None):
@@ -50,6 +67,27 @@ class QWebContext(dict):
             raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
         else:
             return self.get(key, self.undefined_handler(key, self))
+
+    def safe_eval(self, expr):
+        # This is too slow, we should cached compiled expressions attribute of
+        # qweb to will be changed into a model object ir.qweb.
+        #
+        # The cache should be on qweb, and qweb context contructor take qweb as
+        # argument to store the cache.
+        #
+        #class QWebSandboxedEnvironment(SandboxedEnvironment):
+        #    def is_safe_attribute(self, obj, attr, value):
+        #        if str(attr) in SAFE:
+        #            res = True
+        #        else:
+        #            res = super(QWebSandboxedEnvironment, self).is_safe_attribute(obj, attr, value)
+        #            if str(attr) in UNSAFE or not res:
+        #                raise SecurityError("access to attribute '%s' of '%s' object is unsafe." % (attr,obj))
+        #        return res
+        #env = qWebSandboxedEnvironment(variable_start_string="${", variable_end_string="}")
+        #env.globals.update(context)
+        #env.compile_expression(expr)()
+        return eval(expr, None, self)
 
     def copy(self):
         return QWebContext(dict.copy(self),
@@ -152,7 +190,7 @@ class QWeb(orm.AbstractModel):
 
     def eval(self, expr, v):
         try:
-            return eval(expr, None, v)
+            return v.safe_eval(expr)
         except (osv.except_osv, orm.except_orm), err:
             raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
         except Exception:
@@ -605,4 +643,4 @@ def get_field_type(column, options):
     """
     return options.get('widget', column._type)
 
-# leave this, al.
+# vim:et:

@@ -793,11 +793,6 @@ class WorkerCron(Worker):
         Worker.start(self)
         self.multi.socket.close()
 
-        # chorus effect: make cron workers do not all start at first database
-        mct = config['max_cron_threads']
-        p = float(self.pid % mct) / mct
-        self.db_index = int(len(self._db_list()) * p)
-
 #----------------------------------------------------------
 # start/stop public api
 #----------------------------------------------------------
@@ -833,7 +828,6 @@ def start():
     global server
     load_server_wide_modules()
     if config['workers']:
-        openerp.multi_process = True
         server = PreforkServer(openerp.service.wsgi_server.application)
     elif openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)

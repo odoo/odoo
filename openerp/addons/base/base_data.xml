@@ -92,6 +92,16 @@ Administrator</field>
         </record>
 
         <!--
+            A group dedicated to the portal users, making groups
+            restrictions more convenient.
+        -->
+        <record id="group_portal" model="res.groups">
+            <field name="name">Portal</field>
+            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual OpenERP groups.</field>
+        </record>
+
+        <!--
             A group dedicated to the public user only, making groups
             restrictions more convenient.
         -->

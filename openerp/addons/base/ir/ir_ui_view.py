@@ -29,12 +29,14 @@ import time
 import HTMLParser
 from lxml import etree
 
+import openerp
 from openerp import tools
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
+from openerp.osv.orm import browse_record, browse_record_list
 
 _logger = logging.getLogger(__name__)
 
@@ -768,6 +770,18 @@ class view(osv.osv):
     def render(self, cr, uid, id_or_xml_id, values, engine='ir.qweb', context=None):
         if not context:
             context = {}
+
+        def check_user_access(values):
+            for key in values:
+                value =  isinstance(values, (dict,)) and values[key] or key
+                if isinstance(value, (browse_record,)):
+                    if value.__dict__.get('_uid') == openerp.SUPERUSER_ID and uid != openerp.SUPERUSER_ID:
+                        message = 'SUPERUSER_ID Access used for rendering "%s" in a xml view: %s' % (key, id_or_xml_id,)
+                        _logger.warn(message)
+                elif isinstance(value, (dict, list, browse_record_list,)):
+                    check_user_access(value)
+        check_user_access(values)
+
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
