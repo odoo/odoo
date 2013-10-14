@@ -423,7 +423,7 @@
                 // return $.Deferred().reject(new Error("No main_object was found."));
                 def.resolve(null);
             } else {
-                var fields = ['name', 'website_description', 'website_keywords'];
+                var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
                 var model = website.session.model(obj.model);
                 model.call('read', [[obj.id], fields, website.get_context()]).then(function (data) {
                     if (data.length) {

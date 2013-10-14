@@ -7,12 +7,12 @@ from openerp.osv import osv, fields
 class view(osv.osv):
     _inherit = "ir.ui.view"
     _columns = {
-        'name': fields.char('View Name', required=True, translate=True),
         'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
         'page': fields.boolean("Whether this view is a web page template (complete)"),
-        'website_description': fields.char("Website Description", translate=True),
-        'website_keywords': fields.char("Website Keywords", translate=True),
+        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", size=70, translate=True),
     }
     _defaults = {
         'page': False,
