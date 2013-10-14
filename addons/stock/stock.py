@@ -514,6 +514,7 @@ class stock_picking(osv.osv):
             ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
             vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
+                
         return super(stock_picking, self).create(cr, user, vals, context)
 
     # The state of a picking depends on the state of its related stock.move

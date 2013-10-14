@@ -131,6 +131,7 @@ class sale_order(osv.osv):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
+        
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
@@ -142,6 +143,7 @@ class sale_order(osv.osv):
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
+            
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
