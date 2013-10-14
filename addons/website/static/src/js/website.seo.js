@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.seo.xml');
 
@@ -9,7 +9,7 @@
             'click a[data-action=promote-current-page]': 'launchSeo',
         }),
         launchSeo: function () {
-            (new website.seo.Configurator()).appendTo($(document.body));
+            (new website.seo.Configurator(this)).appendTo($(document.body));
         },
     });
 
@@ -241,24 +241,29 @@
             return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
         },
         title: function () {
-            return $('title').text().trim();
+            return ($('title').length > 0) && $('title').text() && $('title').text().trim();
         },
         changeTitle: function (title) {
+            // TODO create tag if missing
             $('title').text(title);
             this.trigger('title-changed', title);
         },
         description: function () {
-            return $('meta[name=description]').attr('value').trim();
+            var $description = $('meta[name=description]');
+            return ($description.length > 0) && $description.attr('value') && $description.attr('value').trim();
         },
         changeDescription: function (description) {
+            // TODO create tag if missing
             $('meta[name=description]').attr('value', description);
             this.trigger('description-changed', description);
         },
         keywords: function () {
-            var parsed = $('meta[name=keywords]').attr('value').split(",");
-            return parsed[0] ? parsed: [];
+            var $keywords = $('meta[name=keywords]');
+            var parsed = ($keywords.length > 0) && $keywords.attr('value') && $keywords.attr('value').split(",");
+            return (parsed && parsed[0]) ? parsed: [];
         },
         changeKeywords: function (keywords) {
+            // TODO create tag if missing
             $('meta[name=keywords]').attr('value', keywords.join(","));
             this.trigger('keywords-changed', keywords);
         },
@@ -364,7 +369,8 @@
             }
             var htmlPage = this.htmlPage;
 
-            // desactivated as too complex for end-users
+            // Add message suggestions at the top of the dialog
+            // if necessary....
             // if (htmlPage.headers('h1').length === 0) {
             //     tips.push({
             //         type: 'warning',
@@ -390,15 +396,60 @@
             $input.val("");
         },
         update: function () {
+            var self = this;
             var data = {
-                title: this.htmlPage.title(),
-                description: this.htmlPage.description(),
-                keywords: this.keywordList.keywords(),
-                images: this.imageList.images(),
+                website_meta_title: self.htmlPage.title(),
+                website_meta_description: self.htmlPage.description(),
+                website_meta_keywords: self.keywordList.keywords().join(", "),
             };
-            console.log(data);
-            // TODO Persist changes
-            this.$el.modal('hide');
+            self.saveMetaData(data).then(function () {
+               self.$el.modal('hide');
+            });
+        },
+        getMainObject: function () {
+            var repr = $('html').data('main-object');
+            var m = repr.match(/.+\((.+), (\d+)\)/);
+            if (!m) {
+                return null;
+            } else {
+                return {
+                    model: m[1],
+                    id: m[2]|0
+                };
+            }
+        },
+        loadMetaData: function () {
+            var self = this;
+            var obj = this.getMainObject();
+            var def = $.Deferred();
+            if (!obj) {
+                // return $.Deferred().reject(new Error("No main_object was found."));
+                def.resolve(null);
+            } else {
+                var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
+                var model = website.session.model(obj.model);
+                model.call('read', [[obj.id], fields, website.get_context()]).then(function (data) {
+                    if (data.length) {
+                        var meta = data[0];
+                        meta['model'] = obj.model;
+                        def.resolve(meta);
+                    } else {
+                        def.resolve(null);
+                    }
+                }).fail(function () {
+                    def.reject();
+                });
+            }
+            return def;
+        },
+        saveMetaData: function (data) {
+            var obj = this.getMainObject();
+            if (!obj) {
+                return $.Deferred().reject();
+            } else {
+                var model = website.session.model(obj.model);
+                return model.call('write', [[obj.id], data, website.get_context()]);
+            }
         },
         titleChanged: function () {
             var self = this;

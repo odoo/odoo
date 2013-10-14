@@ -13,13 +13,24 @@
         <template id="layout" name="Main layout">
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
+                      t-att-data-editable="'1' if editable else None"
                       t-att-data-translatable="'1' if translatable else None"
-                      t-att-data-view-xmlid="xmlid if editable else None">
+                      t-att-data-view-xmlid="xmlid if editable else None"
+                      t-att-data-main-object="main_object if editable else None">
                     <head>
-                        <title><t t-esc="title or res_company.name"/></title>
-                        <meta name="openerp.company" t-att-value="res_company.name" />
-                        <meta name="description" value="" />
-                        <meta name="keywords" value="" />
+                        <t t-if="main_object and 'website_meta_title' in main_object">
+                            <t t-set="title" t-value="main_object.website_meta_title"/>
+                        </t>
+                        <t t-if="not title and main_object and 'name' in main_object">
+                            <t t-set="additional_title" t-value="main_object.name"/>
+                        </t>
+                        <t t-if="not title">
+                            <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+                        </t>
+                        <title><t t-esc="title"/></title>
+                        <meta name="openerp.company" t-att-value="res_company.name"/>
+                        <meta name="description" t-att-value="main_object.website_meta_description or website_meta_description"/>
+                        <meta name="keywords" t-att-value="main_object.website_meta_keywords or website_meta_keywords"/>
 
                         <!-- Load stylesheets before scripts to avoid blocking -->
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
@@ -410,9 +421,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
         <template id="contactus" name="Contact us" page="True">
             <t t-call="website.layout">
-              <t t-set="title">Contact us -
-                  <t t-raw="res_company.name"></t>
-              </t>
               <div id="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -437,10 +445,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </t>
         </template>
 
-        <template id="aboutus" page="True">
+        <template id="aboutus" name="About us" page="True">
             <t t-call="website.layout">
-              <t t-set="title">About <t t-raw="res_company.name"></t>
-              </t>
               <div id="wrap">
                   <div class="oe_structure"/>
                   <div class="container mb32">

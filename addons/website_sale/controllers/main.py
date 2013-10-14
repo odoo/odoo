@@ -289,6 +289,7 @@ class Ecommerce(http.Controller):
             'search': post.get("search"),
             'get_categories': self.get_categories,
             'category_list': category_list,
+            'main_object': product,
             'product': product,
         }
         return request.website.render("website_sale.product", values)

@@ -130,6 +130,13 @@ class Website(openerp.addons.web.controllers.main.Home):
             'path': path,
         }
         try:
+            module, xmlid = path.split('.', 1)
+            IMD = request.registry.get("ir.model.data")
+            obj = IMD.get_object_reference(request.cr, request.uid, module, xmlid)
+            values['main_object'] = request.registry[obj[0]].browse(request.cr, request.uid, obj[1])
+        except Exception:
+            pass
+        try:
             html = request.website.render(path, values)
         except ValueError:
             html = request.website.render('website.404', values)

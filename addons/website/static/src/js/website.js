@@ -109,9 +109,13 @@
     website.ready = function() {
         if (!all_ready) {
             var tpl = website.load_templates(templates);
-            // var session;
-            // var trads = openerp._t.database.load_translations(session, ['website'], website.get_context().lang);
-            all_ready = $.when(dom_ready, tpl);
+            all_ready = dom_ready.then(function () {
+                if ($('html').data('editable')) {
+                    website.session = new openerp.Session();
+                    var modules = ['website'];
+                    return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
+                }
+            }).then(tpl).promise();
         }
         return all_ready;
     };

@@ -15,10 +15,6 @@
     <!-- Page --> 
     <template id="index" name="Events" page="True">
         <t t-call="website.layout">
-          <t t-set="head">
-              <t t-raw="head or ''"/>
-          </t>
-          <t t-set="title">Events</t>
           <div id="wrap">
             <div class="container">
                 <div class="oe_structure"/>
@@ -122,10 +118,7 @@
 
     <template id="event_description_full">
         <t t-call="website.layout">
-          <t t-set="head">
-              <t t-raw="head or ''"/>
-          </t>
-          <t t-set="title">Events</t>
+          <t t-set="additional_title">Events</t>
           <div id="wrap">
             <div class="container">
 

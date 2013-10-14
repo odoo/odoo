@@ -12,7 +12,7 @@
         <!-- Task --> 
         <template id="task" name="Task">
             <t t-call="website.layout">
-                <t t-set="title">Task</t>
+                <t t-set="additional_title">Task</t>
                 <div id="wrap">
                     <div class="container">
                         <h4 t-field="task.name"/>
@@ -41,7 +41,7 @@
         </template>
         <template id="index" name="Project">
             <t t-call="website.layout">
-                <t t-set="title">Project</t>
+                <t t-set="additional_title">Project</t>
                 <div id="wrap">
                     <div class="container">
                         <h4 t-field="project.name"/>
