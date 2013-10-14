@@ -29,8 +29,8 @@
                         </t>
                         <title><t t-esc="title"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name"/>
-                        <meta name="description" t-att-value="main_object.website_meta_description or website_meta_description"/>
-                        <meta name="keywords" t-att-value="main_object.website_meta_keywords or website_meta_keywords"/>
+                        <meta name="description" t-att-value="main_object and main_object.website_meta_description or website_meta_description"/>
+                        <meta name="keywords" t-att-value="main_object and main_object.website_meta_keywords or website_meta_keywords"/>
 
                         <!-- Load stylesheets before scripts to avoid blocking -->
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
