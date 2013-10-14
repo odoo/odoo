@@ -26,9 +26,6 @@ from openerp.report.render.rml2pdf import customfonts
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-    
-    def _get_font(self, cr, uid, context=None):
-        return sorted(customfonts.RegisterCustomFonts())
         
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
@@ -44,11 +41,11 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
-        'font': fields.selection(_get_font, "Select Font", help="Set your favorite font into company header"),
+        'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used for every RML report of the user company"),
     }
     
     _defaults= {
-        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font or 'Helvetica',
+        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font.id,
     }
     
     def open_company(self, cr, uid, ids, context=None):
