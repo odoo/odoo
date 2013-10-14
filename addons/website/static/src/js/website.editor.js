@@ -483,7 +483,7 @@
         },
         start: function () {
             var sup = this._super();
-            this.$el.modal();
+            this.$el.modal({backdrop: 'static'});
             return sup;
         },
         save: function () {
