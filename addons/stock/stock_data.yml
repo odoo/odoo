@@ -2,5 +2,15 @@
   !python {model: res.partner}: |
     main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
     self.write(cr, uid, ref('base.main_partner'), {'property_stock_customer':main_warehouse.lot_stock_id.id})
+-
+  !python {model: ir.model.data, noupdate: True}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    self.create(cr,uid,{'name':'stock_location_stock','module':'stock', 'model':'stock.location','res_id':main_warehouse.lot_stock_id.id}, context=context)
+    self.create(cr,uid,{'name':'stock_location_company','module':'stock', 'model':'stock.location','res_id':main_warehouse.wh_input_stock_loc_id.id}, context=context)
+    self.create(cr,uid,{'name':'stock_location_output','module':'stock', 'model':'stock.location','res_id':main_warehouse.wh_output_stock_loc_id.id}, context=context)
+    self.create(cr,uid,{'name':'location_pack_zone','module':'stock', 'model':'stock.location','res_id':main_warehouse.wh_pack_stock_loc_id.id}, context=context)
 
+    self.create(cr,uid,{'name':'picking_type_internal','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.int_type_id.id}, context=context)
+    self.create(cr,uid,{'name':'picking_type_in','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.in_type_id.id}, context=context)
+    self.create(cr,uid,{'name':'picking_type_out','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.out_type_id.id}, context=context)	
 

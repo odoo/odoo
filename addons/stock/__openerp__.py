@@ -72,7 +72,6 @@ Dashboard / Reports for Warehouse Management will include:
         'security/ir.model.access.csv',
         'stock_data.xml',
         'stock_data.yml',
-        'stock_set_ir_model_data.yml',
         'wizard/stock_move_view.xml',
         'wizard/stock_change_product_qty_view.xml',
         'wizard/stock_inventory_merge_view.xml',
