@@ -358,6 +358,7 @@
 
 .point-of-sale .product-list {
     padding:10px !important;
+    -webkit-transform: translate3d(0,0,0);
 }
 
 .point-of-sale .product-list-scroller{
@@ -368,7 +369,9 @@
     width:100%;
     height:100%;
     overflow: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
 }
 .point-of-sale .product-list-container {
     position:absolute;
@@ -911,7 +914,8 @@
     width:100%;
     height:100%;
     overflow:hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 .point-of-sale .order{
@@ -925,6 +929,7 @@
     font-size:16px;
     border-radius: 3px;
     border: solid 1px rgb(220,220,220);
+    -webkit-transform: translate3d(0,0,0);
 }
 
 .point-of-sale .order .empty{
