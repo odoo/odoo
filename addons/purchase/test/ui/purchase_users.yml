@@ -1,7 +1,7 @@
 -
   Create a user as 'Purchase manager'
 -
-  !record {model: res.users, id: res_users_purchase_manager}:
+  !record {model: res.users, id: res_users_purchase_manager, view: False}:
     company_id: base.main_company
     name: Purchase Manager
     login: pm
@@ -16,7 +16,7 @@
 -
   Create a user as 'Purchase user'
 -
-  !record {model: res.users, id: res_users_purchase_user}:
+  !record {model: res.users, id: res_users_purchase_user, view: False}:
     company_id: base.main_company
     name: Purchase User
     login: pu

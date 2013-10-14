@@ -1,7 +1,7 @@
 -
    Create a user as 'MRP User'
 -
-  !record {model: res.users, id: res_mrp_operation_user}:
+  !record {model: res.users, id: res_mrp_operation_user, view: False}:
     company_id: base.main_company
     name: MRP User
     login: maou

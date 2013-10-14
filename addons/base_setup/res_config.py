@@ -73,6 +73,7 @@ class base_config_settings(osv.osv_memory):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'font':wizard.font,'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
         return {}
+
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
 # plugin_outlook and plugin_thunderbird.

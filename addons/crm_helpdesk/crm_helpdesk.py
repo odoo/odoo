@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
@@ -53,8 +54,8 @@ class crm_helpdesk(osv.osv):
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
             'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
-            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+            'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
+            'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
             'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
