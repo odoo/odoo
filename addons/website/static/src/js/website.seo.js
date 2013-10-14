@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     var website = openerp.website;
     website.templates.push('/website/static/src/xml/website.seo.xml');
 
@@ -241,24 +241,29 @@
             return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
         },
         title: function () {
-            return $('title').text().trim();
+            return ($('title').length > 0) && $('title').text() && $('title').text().trim();
         },
         changeTitle: function (title) {
+            // TODO create tag if missing
             $('title').text(title);
             this.trigger('title-changed', title);
         },
         description: function () {
-            return $('meta[name=description]').attr('value').trim();
+            var $description = $('meta[name=description]');
+            return ($description.length > 0) && $description.attr('value') && $description.attr('value').trim();
         },
         changeDescription: function (description) {
+            // TODO create tag if missing
             $('meta[name=description]').attr('value', description);
             this.trigger('description-changed', description);
         },
         keywords: function () {
-            var parsed = $('meta[name=keywords]').attr('value').split(",");
-            return parsed[0] ? parsed: [];
+            var $keywords = $('meta[name=keywords]');
+            var parsed = ($keywords.length > 0) && $keywords.attr('value') && $keywords.attr('value').split(",");
+            return (parsed && parsed[0]) ? parsed: [];
         },
         changeKeywords: function (keywords) {
+            // TODO create tag if missing
             $('meta[name=keywords]').attr('value', keywords.join(","));
             this.trigger('keywords-changed', keywords);
         },
@@ -367,7 +372,8 @@
             }
             var htmlPage = this.htmlPage;
 
-            // desactivated as too complex for end-users
+            // Add message suggestions at the top of the dialog
+            // if necessary....
             // if (htmlPage.headers('h1').length === 0) {
             //     tips.push({
             //         type: 'warning',
@@ -393,15 +399,15 @@
             $input.val("");
         },
         update: function () {
+            var self = this;
             var data = {
-                title: this.htmlPage.title(),
-                description: this.htmlPage.description(),
-                keywords: this.keywordList.keywords(),
-                images: this.imageList.images(),
+                website_meta_title: self.htmlPage.title(),
+                website_meta_description: self.htmlPage.description(),
+                website_meta_keywords: self.keywordList.keywords().join(", "),
             };
-            console.log(data);
-            // TODO Persist changes
-            this.$el.modal('hide');
+            self.saveMetaData(data).then(function () {
+               self.$el.modal('hide');
+            });
         },
         getMainObject: function () {
             var repr = $('html').data('main-object');
