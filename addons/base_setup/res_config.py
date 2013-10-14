@@ -41,7 +41,7 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
-        'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used for every RML report of the user company"),
+        'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
     }
     
     _defaults= {
