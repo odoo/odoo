@@ -325,9 +325,6 @@
         maxTitleSize: 65,
         maxDescriptionSize: 155,
         start: function () {
-            this.loadMetaData().then(function (data) {
-                console.log(data);
-            });
             var self = this;
             var $modal = self.$el;
             var htmlPage = this.htmlPage = new website.seo.HtmlPage();
