@@ -615,6 +615,7 @@ class MonetaryConverter(osv.AbstractModel):
             source_element, t_att, g_att, qweb_context)
 
     def record_to_html(self, cr, uid, field_name, record, column, options):
+        Currency = self.pool['res.currency']
         display = self.display_currency(cr, uid, options)
 
         symbol_pre = symbol_post = space_pre = space_post = u''
@@ -628,7 +629,7 @@ class MonetaryConverter(osv.AbstractModel):
         return u'{symbol_pre}{space_pre}' \
                u'<span class="oe_currency_value">{0}</span>' \
                u'{space_post}{symbol_post}'.format(
-            record[field_name],
+            Currency.round(cr, uid, display, record[field_name]),
             space_pre=space_pre,
             symbol_pre=symbol_pre,
             space_post=space_post,

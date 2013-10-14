@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import cgi
-from collections import namedtuple
 from xml.dom import minidom as dom
 
 import common
+from openerp.addons.base.ir import ir_qweb
+import openerp.addons.base.ir.ir_qweb
 
 impl = dom.getDOMImplementation()
 document = impl.createDocument(None, None, None)
@@ -23,9 +24,9 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, {
+        result = self.engine.render_node(field, ir_qweb.QWebContext({
             'company': root_company,
-        })
+        }))
 
         self.assertEqual(
             result,
@@ -46,9 +47,9 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, {
+        result = self.engine.render_node(field, ir_qweb.QWebContext({
             'company': root_company,
-        })
+        }))
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -64,7 +65,7 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^RTE widgets do not work correctly'):
-            self.engine.render_node(field, {'company': None})
+            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))
 
     def test_reject_t_tag(self):
         field = document.createElement('t')
@@ -73,4 +74,4 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^t-field can not be used on a t element'):
-            self.engine.render_node(field, {'company': None})
+            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))

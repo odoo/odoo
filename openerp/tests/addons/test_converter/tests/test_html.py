@@ -4,6 +4,7 @@ import os
 import xml.dom.minidom
 
 from openerp.tests import common
+from openerp.addons.base.ir import ir_qweb
 
 directory = os.path.dirname(__file__)
 
@@ -80,7 +81,6 @@ class TestCurrencyExport(TestExport):
         super(TestCurrencyExport, self).setUp()
         self.Currency = self.registry('res.currency')
         self.base = self.create(self.Currency, name="Source", symbol=u'source')
-        self.create_rate(self.base)
 
     def create(self, model, context=None, **values):
         return model.browse(
@@ -98,7 +98,7 @@ class TestCurrencyExport(TestExport):
             self.cr, self.uid, 'value', obj, options,
             doc.createElement('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', {'obj': obj, 'c2': dest, })
+            '', ir_qweb.QWebContext({'obj': obj, 'c2': dest, }))
         return converted
 
     def test_currency_post(self):
