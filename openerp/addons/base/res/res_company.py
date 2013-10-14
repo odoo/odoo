@@ -396,7 +396,7 @@ class res_company(osv.osv):
         return {'value': {'rml_header': self._header_a4}}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
-        return self.pool.get("res.font").act_discover_fonts(cr, uid, ids, context)
+        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
 
     _defaults = {
         'currency_id': _get_euro,

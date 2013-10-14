@@ -74,11 +74,17 @@ class res_font(osv.Model):
             if not found_fonts.get(family):
                 found_fonts[family] = {'name': family}
 
+        # remove deleted fonts
+        existing_font_ids = self.search(cr, uid, [], context=context)
+        existing_font_names = []
+        for font in self.browse(cr, uid, existing_font_ids):
+            existing_font_names.append(font.name)
+            if font.name not in found_fonts.keys():
+                self.unlink(cr, uid, font.id, context=context)
 
-        # to make sure we always have updated list, delete all and recreate
-        self.unlink(cr, uid, self.search(cr, uid, [], context=context), context=context)
+        # add unknown fonts
         for family, vals in found_fonts.items():
-            if not self.search(cr, uid, [('name', '=', family)], context=context):
+            if family not in existing_font_names:
                 self.create(cr, uid, vals, context=context)
         return True
 
