@@ -11,11 +11,13 @@ OpenERP Contact Form
     'author': 'OpenERP SA',
     'depends': ['hr_recruitment', 'website_mail'],
     'data': [
-    'website_hr_recruitment_demo.xml',
-    'website_hr_recruitment_data.xml',
+        'data/website_hr_recruitment_data.xml',
         'views/website_hr_recruitment.xml',
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
+    ],
+    'demo': [
+        'data/website_hr_recruitment_demo.xml',
     ],
     'css': [
         'static/src/css/*.css'
