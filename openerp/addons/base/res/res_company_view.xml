@@ -81,6 +81,7 @@
                                 <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>
                                 <field name="rml_footer_readonly" attrs="{'invisible': [('custom_footer','=',True)]}"/>
                                 <field name="font" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)"/>
+                                <button string="Reload fonts" name="act_discover_fonts" type="object" class="oe_link"/>
                             </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_no_one">
