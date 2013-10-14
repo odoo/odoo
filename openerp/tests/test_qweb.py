@@ -1,26 +1,18 @@
 # -*- coding: utf-8 -*-
 import cgi
-from collections import namedtuple
 from xml.dom import minidom as dom
 
 import common
-
-from ..tools import qweb
+from openerp.addons.base.ir import ir_qweb
+import openerp.addons.base.ir.ir_qweb
 
 impl = dom.getDOMImplementation()
 document = impl.createDocument(None, None, None)
 
-Request = namedtuple('Request', 'cr uid registry')
-class RegistryProxy(object):
-    def __init__(self, func):
-        self.func = func
-    def __getitem__(self, name):
-        return self.func(name)
-
 class TestQWebTField(common.TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
-        self.engine = qweb.QWebXml()
+        self.engine = self.registry('ir.qweb')
 
     def test_trivial(self):
         field = document.createElement('span')
@@ -32,16 +24,14 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, {
+        result = self.engine.render_node(field, ir_qweb.QWebContext({
             'company': root_company,
-            'request': Request(self.cr, self.uid, RegistryProxy(self.registry))
-        })
+        }))
 
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
                   'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-translate="0" '
                   'data-oe-expression="company.name">%s</span>' % (
                 company_id,
                 "My Test Company",))
@@ -57,15 +47,13 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, {
+        result = self.engine.render_node(field, ir_qweb.QWebContext({
             'company': root_company,
-            'request': Request(self.cr, self.uid, RegistryProxy(self.registry))
-        })
+        }))
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
                   'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-translate="0" '
                   'data-oe-expression="company.name">%s</span>' % (
                 company_id,
                 cgi.escape(s.encode('utf-8')),))
@@ -77,7 +65,7 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^RTE widgets do not work correctly'):
-            self.engine.render_node(field, {'company': None})
+            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))
 
     def test_reject_t_tag(self):
         field = document.createElement('t')
@@ -86,4 +74,4 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^t-field can not be used on a t element'):
-            self.engine.render_node(field, {'company': None})
+            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))

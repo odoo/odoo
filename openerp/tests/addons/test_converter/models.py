@@ -36,3 +36,11 @@ class test_model_sub(orm.Model):
     _columns = {
         'name': fields.char()
     }
+
+
+class test_model_monetary(orm.Model):
+    _name = 'test_converter.monetary'
+
+    _columns = {
+        'value': fields.float(digits=(16, 55)),
+    }
