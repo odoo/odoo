@@ -87,12 +87,14 @@ class sale_order_line(osv.osv):
             pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
 
             new_list_price = get_real_price(list_price, product.id, qty, uom, pricelist)
-            if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
-                discount = (new_list_price - price) / new_list_price * 100
-                result['price_unit'] = new_list_price
-                result['discount'] = discount
-            else:
+            if (price/new_list_price > 0):
                 result['discount'] = 0.0
+                result['price_unit'] = price
+            else:
+                if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
+                    discount= (price/new_list_price)
+                    result['price_unit'] = new_list_price
+                    result['discount'] = discount
         return res
 
 sale_order_line()
@@ -153,12 +155,14 @@ class account_invoice_line(osv.osv):
                     real_price = get_real_price(price_unit_res, product.id, qty, uom_id, pricelist)
             if pricelist:
                 pricelists=pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
-                if(len(pricelists)>0 and pricelists[0]['visible_discount'] and real_price != 0):
-                    discount=(real_price-price_unit) / real_price * 100
-                    result['price_unit'] = real_price
-                    result['discount'] = discount
+                if (price_unit/real_price > 0):
+                    result['discount'] = 0.0
+                    result['price_unit'] = price_unit
                 else:
-                    result['discount']=0.0
+                    if(len(pricelists)>0 and pricelists[0]['visible_discount'] and real_price != 0):
+                        discount= (price_unit/real_price)
+                        result['price_unit'] = real_price
+                        result['discount'] = discount
         return res
 
 account_invoice_line()
