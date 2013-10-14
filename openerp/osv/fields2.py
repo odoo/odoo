@@ -255,7 +255,7 @@ class Field(object):
     # Management of the computation of field values.
     #
 
-    def compute_value(self, records, check=False):
+    def compute_value(self, records, check_exists=False):
         """ Invoke the compute method on `records`. If `check` is ``True``, the
             method filters out non-existing records before computing them.
         """
@@ -265,8 +265,9 @@ class Field(object):
             cache.set_busy(self.name, batch=batch, recompute=recompute)
 
         # if required, keep new and existing records only
-        if check:
-            records = sum((rec for rec in records if not rec.id), records.exists())
+        if check_exists:
+            new_records = [rec for rec in records if not rec.id]
+            records = sum(new_records, records.exists())
 
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
@@ -317,14 +318,14 @@ class Field(object):
             # recompute field on record if required
             recs_todo = scope.recomputation.todo(self)
             if record in recs_todo:
-                self.compute_value(recs_todo.exists())
+                self.compute_value(recs_todo, check_exists=True)
                 scope.recomputation.done(self, recs_todo)
             else:
                 self.read_value(record)
         else:
             # compute self for the records without value for self in their cache
             recs = record.browse(record._model_cache.without_field(self.name))
-            self.compute_value(recs, check=True)
+            self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
