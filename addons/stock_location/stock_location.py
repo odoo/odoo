@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import SUPERUSER_ID
 from datetime import *
 from dateutil.relativedelta import relativedelta
 from openerp.tools.translate import _
