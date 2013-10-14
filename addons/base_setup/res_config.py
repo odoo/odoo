@@ -71,7 +71,8 @@ class base_config_settings(osv.osv_memory):
         wizard = self.browse(cr, uid, ids)[0]
         if wizard.font:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            user.company_id.write({'font':wizard.font,'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
+            font_name = wizard.font.name
+            user.company_id.write({'font': wizard.font.id,'rml_header': self._change_header(user.company_id.rml_header,font_name), 'rml_header2': self._change_header(user.company_id.rml_header2, font_name), 'rml_header3': self._change_header(user.company_id.rml_header3, font_name)})
         return {}
 
 # Preferences wizard for Sales & CRM.
