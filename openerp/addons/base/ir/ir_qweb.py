@@ -238,6 +238,7 @@ class QWeb(orm.AbstractModel):
             v['__caller__'] = stack[-1]
         stack.append(tname)
         v['__stack__'] = stack
+        v['xmlid'] = str(stack[0]) # Temporary fix
         return self.render_node(self.get_template(tname, v), v)
 
     def render_node(self, e, v):
