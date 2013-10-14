@@ -47,7 +47,7 @@
 """
 
 
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 from pprint import pformat
 
 #

@@ -21,7 +21,6 @@
 
 """ High-level objects for fields. """
 
-import base64
 from copy import copy
 from datetime import date, datetime
 import logging
