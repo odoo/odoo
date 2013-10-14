@@ -238,7 +238,7 @@
                 $menuItem.click(function () {
                     tutorial.reset();
                     tutorial.start();
-                })
+                });
                 menu.append($menuItem);
             });
             var url = new website.UrlParser(window.location.href);

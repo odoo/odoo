@@ -431,7 +431,7 @@
                 model.call('read', [[obj.id], fields, website.get_context()]).then(function (data) {
                     if (data.length) {
                         var meta = data[0];
-                        meta['model'] = obj.model;
+                        meta.model = obj.model;
                         def.resolve(meta);
                     } else {
                         def.resolve(null);
