@@ -124,7 +124,7 @@
                 },
                 {
                     stepId: 'drag-banner',
-                    element: '#website-top-navbar [data-snippet-id=carousel]',
+                    element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
                     content: "Drag the <em>Banner</em> block and drop it in your page. <p class='text-muted'>Tip: release the mouse button when you are in a valid zone, with a preview of the banner.</p>",
