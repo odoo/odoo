@@ -364,6 +364,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * @return {*}
      */
     ir_actions_common: function(executor, options) {
+        var self = this;
         if (this.inner_widget && executor.action.target !== 'new') {
             if (this.getParent().has_uncommitted_changes()) {
                 return $.Deferred().reject();
@@ -373,14 +374,23 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
-            if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
+            if(this.dialog == null) {
+                if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
+                    this.dialog_widget.destroy();
+                }
+                this.dialog_stop();
+                this.dialog = new instance.web.Dialog(this, {
+                    dialogClass: executor.klass,
+                });
+                if (options.on_close) {
+                    this.dialog.on("closing", null, function() {
+                        self.dialog = null;
+                        options.on_close.apply(null, arguments)
+                    });
+                }
+            } else {
                 this.dialog_widget.destroy();
             }
-            this.dialog_stop();
-            this.dialog = new instance.web.Dialog(this, {
-                dialogClass: executor.klass,
-            });
-            this.dialog.on("closing", null, options.on_close);
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
