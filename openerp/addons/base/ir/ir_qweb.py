@@ -331,7 +331,12 @@ class QWeb(orm.AbstractModel):
     def url_for(self, e, an, av, v):
         if 'url_for' not in v:
             raise KeyError("qweb: no 'url_for' found in context")
-        path = str(v['url_for'](self.eval_format(av, v)))
+        # Temporary implementation of t-keep-query until qweb py v2
+        keep_query = e.attributes.get('t-keep-query')
+        if keep_query:
+            params = self.eval_format(keep_query.value, v)
+            keep_query = [q.strip() for q in params.split(',')]
+        path = str(v['url_for'](self.eval_format(av, v), keep_query=keep_query))
         return ' %s="%s"' % (an[2:], werkzeug.utils.escape(path))
 
     # Tags
