@@ -20,11 +20,14 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
-from openerp.osv import osv
-
+from openerp.osv import osv, fields
 
 class sale_order(osv.Model):
     _inherit = "sale.order"
+
+    _columns = {
+        'website_session_id': fields.char('Session UUID4'),
+    }
 
     def get_total_quantity(self, cr, uid, ids, context=None):
         order = self.browse(cr, uid, ids[0], context=context)

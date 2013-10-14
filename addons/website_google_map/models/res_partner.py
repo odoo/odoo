@@ -13,16 +13,15 @@ class res_partner(osv.Model):
         data = {
             "counter": len(ids),
             "partners": []
-            }
+        }
         for partner in self.pool.get('res.partner').browse(cr, uid, ids, context={'show_address': True}):
             data["partners"].append({
                 'id': partner.id,
                 'name': partner.name,
                 'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
-                'type': partner.grade_id.name,
                 'latitude': partner.partner_latitude,
                 'longitude': partner.partner_longitude,
-                })
+            })
 
         mime = 'application/json'
         body = "var data = " + "}, \n{".join(simplejson.dumps(data).split("}, {"))

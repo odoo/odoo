@@ -31,7 +31,7 @@ class test_portal(TestMail):
         cr, uid = self.cr, self.uid
 
         # Find Portal group
-        group_portal = self.registry('ir.model.data').get_object(cr, uid, 'portal', 'group_portal')
+        group_portal = self.registry('ir.model.data').get_object(cr, uid, 'base', 'group_portal')
         self.group_portal_id = group_portal.id
 
         # Create Chell (portal user)

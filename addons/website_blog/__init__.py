@@ -20,5 +20,5 @@
 ##############################################################################
 
 import controllers
-import website_blog
+import models
 import wizard

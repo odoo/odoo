@@ -31,7 +31,7 @@ class TestPortalProjectBase(TestProjectBase):
         cr, uid = self.cr, self.uid
 
         # Find Portal group
-        group_portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
+        group_portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_portal')
         self.group_portal_id = group_portal_ref and group_portal_ref[1] or False
 
         # Find Public group

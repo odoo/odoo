@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-
+    <data>
 
     <!-- Layout add nav and footer -->
-
     <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/members/">Members</a></li>
+            <li><a t-href="/members/">Associations</a></li>
         </xpath>
     </template>
 
     <!-- Page --> 
-
     <template id="layout" name="Members Layout">
         <t t-call="website.layout">
-            <t t-set="title">Partners</t>
+            <t t-set="title">Associations</t>
             <div id="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -32,47 +29,50 @@
         <t t-call="website_membership.layout">
             <t t-set="ref_content">
                 <h1 class="col-md-12 text-center">
-                    Members<br/>
-                    <small>members sub title</small>
+                    Looking for a partner ?<br/>
+                    <small>Find an association member</small>
                 </h1>
-                <div class="col-md-12" id="ref_content">
+                <div class="col-md-4" id="left_column">
+                    <ul class="nav nav-pills nav-stacked mt16">
+                        <li class="nav-header"><h3>Associations</h3></li>
+                        <li t-att-class="membership and '' or 'active'"><a t-href="/members/">All</a></li>
+                        <t t-foreach="memberships" t-as="membership_id">
+                            <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
+                                <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+                <div class="col-md-8" id="ref_content">
                     <div class='navbar'>
-                        <div>
-                            <t t-call="website.pager">
-                               <t t-set="classname">pull-left</t>
-                            </t>
-                            <form t-action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
-                                <div class="form-group">
-                                    <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search') or '' or ''"/>
-                                </div>
-                                <div class="form-group">
-                                    <select class="search-query col-md-2 mt4 form-control" name="membership" t-if="len(memberships) > 1" onchange="submit()">
-                                        <t t-foreach="memberships">
-                                            <t t-if="membership_id">
-                                            <option t-att-selected="searches.get('membership') == str(membership_id and membership_id[0]) and 'selected'" t-att-value="membership_id[0]">
-                                                <t t-esc="membership_id[1]"/> (<t t-esc="membership_id_count"/>)
-                                            </option>
-                                            </t>
-                                        </t>
-                                    </select>
-                                </div>
-                            </form>
-                        </div>
+                        <t t-call="website.pager">
+                           <t t-set="classname">pull-left</t>
+                        </t>
+                        <form t-action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
+                            <div class="form-group">
+                                <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
+                            </div>
+                        </form>
                     </div>
                     <div>
-                        <t t-foreach="membership_line_ids" t-as="membership_line_id">
-                            <t t-if="membership != membership_line_id.membership_id.id">
-                                <t t-set="membership" t-value="membership_line_id.membership_id.id"/>
-                                <h3 class="text-center well"><span t-field="membership_line_id.membership_id"/></h3>
+                        <t t-if="not membership_lines">
+                            <p>No result found.</p>
+                        </t>
+                        <t t-foreach="membership_lines" t-as="membership_line_id">
+                            <t t-if="current_membership_id != membership_line_id.membership_id.id">
+                                <t t-set="current_membership_id" t-value="membership_line_id.membership_id.id"/>
+                                <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
                             </t>
                             <t t-set="partner" t-value="membership_line_id.partner"/>
-                            <div class="media thumbnail" data-publish="">
-                                <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
+                            <div class="media" data-publish="">
+                                <t t-call="website.publish_management">
+                                    <t t-set="object" t-value="partner"/>
+                                </t>
                                 <a class="pull-left" t-href="/members/#{ partner.id }/">
                                     <img class="media-object" t-att-src="partner.img('image_small')"/>
                                 </a>
                                 <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-href="/members/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a> - <span t-field="membership_line_id.membership_id"/>
+                                    <a class="media-heading" t-href="/members/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a>
                                     <div t-field="partner.website_short_description"/>
                                 </div>
                             </div>
@@ -83,49 +83,41 @@
         </t>
     </template>
 
-    <template id="ref_country" inherit_id="website_membership.index" inherit_option_id="website_membership.index" name="Left World Map">
-        <xpath expr="//div[@id='ref_content']" position="before">
-            <div class="col-md-4">
-                <ul class="nav">
-                    <li class="navbar-header">World Map</li>
-                    <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
-                        style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
-                </ul>
-            </div>
-        </xpath>
-        <xpath expr="//div[@id='ref_content']" position="attributes">
-            <attribute name="class">col-md-8</attribute>
+    <!-- Option: index: Left Google Map -->
+    <template id="opt_index_country" name="Location"
+            inherit_option_id="website_membership.index" inherit_id="website_membership.index">
+        <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+            <ul class="nav nav-pills nav-stacked mt16">
+                <li class="nav-header"><h3>Location</h3></li>
+                <t t-foreach="countries">
+                    <li t-if="country_id" t-att-class="post.get('country_id', '0') == str(country_id and country_id[0]) and 'active' or ''">
+                        <a t-href="/members/#{ search }&amp;country_id=#{ country_id[0] }"><t t-esc="country_id[1]"/>
+                            <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+                        </a>
+                    </li>
+                </t>
+            </ul>
         </xpath>
     </template>
 
-    <template id="details" name="Member Detail">
+    <!-- Option: index: Left Google Map -->
+    <template id="opt_index_google_map" name="Left World Map"
+            inherit_option_id="website_membership.index" inherit_id="website_membership.index">
+        <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+            <ul class="nav nav-pills nav-stacked mt16">
+                <li class="nav-header"><h3>World Map</h3></li>
+                <ul class="nav">
+                    <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                        style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+                </ul>
+            </ul>
+        </xpath>
+    </template>
+
+    <template id="partner" name="Partner Detail">
         <t t-call="website_membership.layout">
             <t t-set="ref_content">
-                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
-                <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img t-att-src="partner_id.img('image_medium')"/>
-                    </div>
-                        <address>
-                        <table style="margin: auto;" class="well">
-                            <colgroup>
-                                <col width="100"/>
-                                <col/>
-                            </colgroup>
-                            <tbody>
-                                <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
-                                <tr t-if="address or editable"><th>Address</th><td class="span2" t-raw="address"/></tr>
-                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="span2" t-field="partner_id.website"/></tr>
-                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="span2" t-field="partner_id.phone"/></tr>
-                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="span2" t-field="partner_id.mobile"/></tr>
-                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="span2" t-field="partner_id.fax"/></tr>
-                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="span2" t-field="partner_id.email"/></tr>
-                            </tbody>
-                        </table>
-                    </address>
-                </div>
-                <div class="col-md-8 mt32" t-field="partner_id.website_description"/>
+                <t t-call="website_partner.partner_detail"/>
             </t>
         </t>
     </template>

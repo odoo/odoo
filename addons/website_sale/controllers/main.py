@@ -6,33 +6,45 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 import random
+import uuid
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
-    # check if order allready exists
+    # check if order allready exists and have access
     if order_id:
         try:
-            order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=request.context)
+            order = order_obj.browse(request.cr, request.uid, order_id, context=request.context)
             order.pricelist_id
+            if order:
+                return order
         except:
-            order_id = None
-    if not order_id:
-        fields = [k for k, v in order_obj._columns.items()]
-        order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
-        if request.httprequest.session.get('ecommerce_pricelist'):
-            order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
-        order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, context=request.context).partner_id.id
-        order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context=request.context)['value'])
-        order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value, context=request.context)
-        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=request.context)
-        request.httprequest.session['ecommerce_order_id'] = order.id
+            return False
 
-    return order_obj.browse(request.cr, SUPERUSER_ID, order_id,
+    fields = [k for k, v in order_obj._columns.items()]
+    order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
+    if request.httprequest.session.get('ecommerce_pricelist'):
+        order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
+    order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, context=request.context).partner_id.id
+    order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context=request.context)['value'])
+    
+    # add website_session_id key for access rules
+    if not request.httprequest.session.get('website_session_id'):
+        request.httprequest.session['website_session_id'] = str(uuid.uuid4())
+
+    order_value["website_session_id"] = request.httprequest.session['website_session_id']
+    order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value, context=request.context)
+    order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=request.context)
+    request.httprequest.session['ecommerce_order_id'] = order.id
+
+    return order_obj.browse(request.cr, request.uid, order_id,
                             context=dict(request.context, pricelist=order.pricelist_id.id))
 
 def get_current_order():
     if request.httprequest.session.get('ecommerce_order_id'):
-        return get_order(request.httprequest.session.get('ecommerce_order_id'))
+        order = get_order(request.httprequest.session.get('ecommerce_order_id'))
+        if not order:
+            request.httprequest.session['ecommerce_order_id'] = False
+        return order
     else:
         return False
 
@@ -247,6 +259,7 @@ class Ecommerce(http.Controller):
             'search': post.get("search"),
             'pager': pager,
             'styles': styles,
+            'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids]
         }
         return request.website.render("website_sale.products", values)
 
@@ -317,6 +330,7 @@ class Ecommerce(http.Controller):
 
     def add_product_to_cart(self, product_id=0, order_line_id=0, number=1, set_number=-1):
         order_line_obj = request.registry.get('sale.order.line')
+        order_obj = request.registry.get('sale.order')
 
         order = get_current_order()
         if not order:
@@ -364,9 +378,8 @@ class Ecommerce(http.Controller):
             if not quantity:
                 order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=request.context)
         else:
-            #values['name'] = "website order"
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
-            order.write({'order_line': [(4, order_line_id)]}, context=request.context)
+            order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
 
         return [quantity, order.get_total_quantity()]
 
@@ -500,10 +513,11 @@ class Ecommerce(http.Controller):
             'state_id': post['state_id'],
         }
         if not request.context['is_public_user']:
-            partner_id = user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id
-            partner_obj.write(request.cr, request.uid, [partner_id], partner_value, request.context)
+            partner_id = user_obj.browse(request.cr, request.uid, request.uid, context=request.context).partner_id.id
+            partner_obj.write(request.cr, request.uid, [partner_id], partner_value, context=request.context)
         else:
-            partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value, request.context)
+            partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value, context=request.context)
+
 
         shipping_id = None
         if post.get('shipping_different'):
@@ -530,6 +544,7 @@ class Ecommerce(http.Controller):
 
         order_value = {
             'partner_id': partner_id,
+            'message_follower_ids': [(4, partner_id)],
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
