@@ -373,9 +373,10 @@ class BaseModel(object):
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s, %s)", (model_id, self._name, self._description, self.__doc__, 'base'))
+            cr.execute("INSERT INTO ir_model (id, model, table_name, name, info, state) VALUES (%s, %s, %s, %s, %s, %s)", (model_id, self._name, self._table, self._description, self.__doc__, 'base'))
         else:
             model_id = cr.fetchone()[0]
+            cr.execute("UPDATE ir_model SET table_name=%s, name=%s, info=%s, state=%s WHERE id=%s", (self._table, self._description, self.__doc__, 'base', model_id))
 
         if module:
             name_id = 'model_'+self._name.replace('.', '_')

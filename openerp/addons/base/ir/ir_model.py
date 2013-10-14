@@ -115,6 +115,7 @@ class ir_model(osv.osv):
     _columns = {
         'name': fields.char('Model Description', translate=True, required=True),
         'model': fields.char('Model', required=True, select=1),
+        'table_name': fields.char('Table', required=True, readonly=True),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True, copy=True),
         'inherited_model_ids': fields.function(_inherited_models, type="many2many", obj="ir.model", string="Inherited models",
@@ -164,13 +165,12 @@ class ir_model(osv.osv):
 
     def _drop_table(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context):
-            model_pool = self.pool[model.model]
-            cr.execute('select relkind from pg_class where relname=%s', (model_pool._table,))
+            cr.execute('select relkind from pg_class where relname=%s', (model.table_name,))
             result = cr.fetchone()
             if result and result[0] == 'v':
-                cr.execute('DROP view %s' % (model_pool._table,))
+                cr.execute('DROP view %s' % (model.table_name,))
             elif result and result[0] == 'r':
-                cr.execute('DROP TABLE %s CASCADE' % (model_pool._table,))
+                cr.execute('DROP TABLE %s CASCADE' % (model.table_name,))
         return True
 
     def unlink(self, cr, user, ids, context=None):
@@ -206,10 +206,13 @@ class ir_model(osv.osv):
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
-        if  context is None:
+        if context is None:
             context = {}
         if context and context.get('manual'):
-            vals['state']='manual'
+            vals['state'] = 'manual'
+            table = vals.get('model', '').replace('.', '_')
+            vals['table_name'] = table
+
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             # add model in registry
@@ -324,21 +327,23 @@ class ir_model_fields(osv.osv):
         for field in self.browse(cr, uid, ids, context):
             if field.name in MAGIC_COLUMNS:
                 continue
-            model = self.pool[field.model]
-            cr.execute('select relkind from pg_class where relname=%s', (model._table,))
+            table_name = field.model_id.table_name
+            cr.execute('select relkind from pg_class where relname=%s', (table_name,))
             result = cr.fetchone()
-            cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s' and column_name='%s'" %(model._table, field.name))
+            cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name=%s and column_name=%s", (table_name, field.name))
             column_name = cr.fetchone()
             if column_name and (result and result[0] == 'r'):
-                cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
-            # remove m2m relation table for custom fields
-            # we consider the m2m relation is only one way as it's not possible
-            # to specify the relation table in the interface for custom fields
-            # TODO master: maybe use ir.model.relations for custom fields
-            if field.state == 'manual' and field.ttype == 'many2many':
-                rel_name = model._fields[field.name].relation
-                cr.execute('DROP table "%s"' % (rel_name))
-            model._pop_field(field.name)
+                cr.execute('ALTER table "%s" DROP column "%s" cascade' % (table_name, field.name))
+            model = self.pool.get(field.model)
+            if model:
+                # remove m2m relation table for custom fields
+                # we consider the m2m relation is only one way as it's not possible
+                # to specify the relation table in the interface for custom fields
+                # TODO master: maybe use ir.model.relations for custom fields
+                if field.state == 'manual' and field.ttype == 'many2many':
+                    rel_name = model._fields[field.name].relation
+                    cr.execute('DROP table "%s"' % (rel_name))
+                model._pop_field(field.name)
 
         return True
 
@@ -540,7 +545,7 @@ class ir_model_constraint(Model):
             help="PostgreSQL constraint or foreign key name."),
         'definition': fields.char('Definition', help="PostgreSQL constraint definition"),
         'model': fields.many2one('ir.model', string='Model',
-            required=True, select=1),
+            required=True, select=1, ondelete='cascade'),
         'module': fields.many2one('ir.module.module', string='Module',
             required=True, select=1),
         'type': fields.char('Constraint Type', required=True, size=1, select=1,
@@ -570,7 +575,7 @@ class ir_model_constraint(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model.model
-            model_obj = self.pool[model]
+            model_table = data.model.table_name
             name = openerp.tools.ustr(data.name)
             typ = data.type
 
@@ -584,17 +589,17 @@ class ir_model_constraint(Model):
             if typ == 'f':
                 # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
                 cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_obj._table))
+                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_table))
                 if cr.fetchone():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_table, name),)
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, model)
 
             if typ == 'u':
                 # test if constraint exists
                 cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_obj._table))
+                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_table))
                 if cr.fetchone():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_table, name),)
                     _logger.info('Dropped CONSTRAINT %s@%s', name, model)
 
         self.unlink(cr, uid, ids, context)
@@ -609,7 +614,7 @@ class ir_model_relation(Model):
         'name': fields.char('Relation Name', required=True, select=1,
             help="PostgreSQL table name implementing a many2many relation."),
         'model': fields.many2one('ir.model', string='Model',
-            required=True, select=1),
+            required=True, select=1, ondelete='cascade'),
         'module': fields.many2one('ir.module.module', string='Module',
             required=True, select=1),
         'date_update': fields.datetime('Update Date'),
@@ -629,7 +634,6 @@ class ir_model_relation(Model):
         ids.sort()
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
-            model = data.model
             name = openerp.tools.ustr(data.name)
 
             # double-check we are really going to delete all the owners of this schema element
