@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import fnmatch
 import functools
 import simplejson
 
@@ -49,7 +50,7 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
-def url_for(path, lang=None):
+def url_for(path, lang=None, keep_query=None):
     if request:
         path = urljoin(request.httprequest.path, path)
         langs = request.context.get('langs')
@@ -61,6 +62,16 @@ def url_for(path, lang=None):
             else:
                 ps.insert(1, lang)
             path = '/'.join(ps)
+        if keep_query:
+            keep = []
+            params = werkzeug.url_decode(request.httprequest.query_string)
+            params_keys = tuple(params.keys())
+            for kq in keep_query:
+                keep += fnmatch.filter(params_keys, kq)
+            if keep:
+                params = dict([(k, params[k]) for k in keep])
+                path += u'?%s' % werkzeug.urls.url_encode(params)
+
     return path
 
 def urlplus(url, params):
