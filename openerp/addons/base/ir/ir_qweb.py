@@ -565,6 +565,8 @@ class ManyToOneConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None):
+        # value may be a browse_null
+        if not value: return ''
         return werkzeug.utils.escape(value.name_get()[0][1]).replace('\n', '<br>\n')
 
 class HTMLConverter(osv.AbstractModel):
