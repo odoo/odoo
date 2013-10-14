@@ -823,7 +823,7 @@ class stock_move(osv.osv):
                 # Should call different methods here in later versions
                 # TODO: take care of lots
                 if putaway.method == 'fixed' and putaway.location_spec_id:
-                    moveputaway_obj.create(cr, uid, {'move_id': move.id,
+                    moveputaway_obj.create(cr, SUPERUSER_ID, {'move_id': move.id,
                                                      'location_id': putaway.location_spec_id.id,
                                                      'quantity': move.product_uom_qty}, context=context)
         return True
