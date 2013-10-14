@@ -37,18 +37,30 @@ should have the same filenames, only need the code below).
 Due to an awful configuration that ships with reportlab at many Linux
 and Ubuntu distros, we have to override the search path, too.
 """
-_fonts_cache = {'registered_fonts': [], 'total_system_fonts': 0}
 _logger = logging.getLogger(__name__)
 
-# Basic fonts familly included in PDF standart, will always be in the font list
+# Basic fonts family included in PDF standart, will always be in the font list
 BasePDFFonts = [
-    ('Helvetica', 'Helvetica'),
-    ('Times', 'Times'),
-    ('Courier', 'Courier'),
+    'Helvetica',
+    'Times',
+    'Courier'
 ]
 
 # List of fonts found on the disk
-CustomTTFonts = []
+CustomTTFonts = BaseCustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
+        ('Helvetica', "DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
+        ('Helvetica', "DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
+        ('Helvetica', "DejaVu Sans BoldOblique", "DejaVuSans-BoldOblique.ttf", 'bolditalic'),
+        ('Times', "Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
+        ('Times', "Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
+        ('Times', "Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
+        ('Times', "Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
+        ('Courier', "FreeMono", "FreeMono.ttf", 'normal'),
+        ('Courier', "FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
+        ('Courier', "FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
+        ('Courier', "FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
+]
+
 
 # Search path for TTF files, in addition of rl_config.TTFSearchPath
 TTFSearchPath = [
@@ -73,7 +85,7 @@ TTFSearchPath = [
             'c:/windows/fonts'
 ]
 
-def all_sysfonts_list():
+def list_all_sysfonts():
     """
         This function returns list of font directories of system.
     """
@@ -89,76 +101,6 @@ def all_sysfonts_list():
                 filepath.append(os.path.join(dirname, filename))
     return filepath
 
-def init_new_font(familyName, name, font_dir):
-    return {
-        'regular':(familyName, name, font_dir, 'regular'),
-        'italic':(),
-        'bold':(familyName, name, font_dir, 'bold'),
-        'bolditalic':(),
-    }
-    
-def RegisterCustomFonts():
-    """
-    This function prepares a list for all system fonts to be registered
-    in reportlab and returns the updated list with new fonts.
-    """
-    global CustomTTFonts
-    all_system_fonts = all_sysfonts_list()
-    if len(all_system_fonts) != _fonts_cache['total_system_fonts']:
-        font_modes, last_family, registered_font_list, _fonts_cache['registered_fonts'] = {}, "", [], list(BasePDFFonts)
-
-        #Prepares a list of registered fonts. Remove such fonts those don't have cmap for Unicode.
-        for dirname in all_system_fonts:
-            try:
-                font_info = ttfonts.TTFontFile(dirname)
-                if font_info.styleName in ('Regular','Normal','Book','Medium', 'Roman'):
-                    _fonts_cache['registered_fonts'].append((font_info.name, font_info.fullName))
-                registered_font_list.append((font_info.familyName, font_info.name, dirname, font_info.styleName.lower().replace(" ", "")))
-                _logger.debug("Found font %s at %s", font_info.name, dirname)
-            except:
-                _logger.warning("Could not register Font %s", dirname)
-        
-        #Prepare font list for mapping.Each font family requires four type of modes(regular,bold,italic,bolditalic).
-        #If all modes are not found, dummy entries are made for remaining modes.
-        for familyName, name, font_dir, mode in sorted(registered_font_list):
-            if not last_family or not font_modes:
-                last_family = familyName
-                font_modes = init_new_font(familyName, name, font_dir)
-
-            if last_family != familyName:
-                # new font familly, adding previous to the list of fonts
-                if not font_modes['italic']:
-                    font_modes['italic'] = font_modes['regular'][:3]+('italic',)
-                if not font_modes['bolditalic']:
-                    font_modes['bolditalic'] = font_modes['bold'][:3]+('bolditalic',)
-                CustomTTFonts.extend(font_modes.values())
-                font_modes = init_new_font(familyName, name, font_dir)
-
-            if (mode== 'normal') or (mode == 'regular') or (mode == 'medium') or (mode == 'book') or (mode == 'roman'):
-                font_modes['regular'] = (familyName, name, font_dir, 'regular')
-            elif (mode == 'italic') or (mode == 'oblique'):
-                font_modes['italic'] = (familyName, name, font_dir, 'italic')
-            elif mode == 'bold':
-                font_modes['bold'] = (familyName, name, font_dir, 'bold')
-            elif (mode == 'bolditalic') or (mode == 'boldoblique'):
-                font_modes['bolditalic'] = (familyName, name, font_dir, 'bolditalic')
-            last_family = familyName
-
-        # add the last one
-        if font_modes:
-            if not font_modes['italic']:
-                font_modes['italic'] = font_modes['regular'][:3]+('italic',)
-            if not font_modes['bolditalic']:
-                font_modes['bolditalic'] = font_modes['bold'][:3]+('bolditalic',)
-            CustomTTFonts.extend(font_modes.values())
-
-        _fonts_cache['total_system_fonts'] = len(all_system_fonts)
-
-    # remove duplicates
-    CustomTTFonts = sorted(list(set(CustomTTFonts)))
-    _fonts_cache['registered_fonts'] = sorted(list(set(_fonts_cache['registered_fonts'])))
-    return _fonts_cache['registered_fonts']
-
 def SetCustomFonts(rmldoc):
     """ Map some font names to the corresponding TTF fonts
 
@@ -167,8 +109,6 @@ def SetCustomFonts(rmldoc):
         This function is called once per report, so it should
         avoid system-wide processing (cache it, instead).
     """
-    if not _fonts_cache['registered_fonts']:
-        RegisterCustomFonts()
     for name, font, filename, mode in CustomTTFonts:
         if os.path.isabs(filename) and os.path.exists(filename):
             rmldoc.setTTFontMapping(name, font, filename, mode)

@@ -292,6 +292,15 @@ class res_company(osv.osv):
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
+    def _get_font(self, cr, uid, ids):
+        font_obj = self.pool.get('res.font')
+        res = font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)
+        if res:
+            return res[0]
+        
+        font_obj.init_no_scan(cr, uid)
+        return font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)[0]
+
     _header = """
 <header>
 <pageTemplate>
@@ -396,6 +405,7 @@ class res_company(osv.osv):
         'rml_header2': _header2,
         'rml_header3': _header3,
         'logo':_get_logo,
+        'font':_get_font,
     }
 
     _constraints = [
