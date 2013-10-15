@@ -1029,6 +1029,10 @@
                 self.$target.carousel();
             });
 
+            this.$target.on('dblclick', '.item.active .carousel-image img', function (event) {
+                $('#oe_rte_toolbar .cke_button__image .cke_button__image_icon').click();
+            });
+
             this.rebind_event();
         },
         // rebind event to active carousel on edit mode
