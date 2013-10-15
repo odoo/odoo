@@ -168,17 +168,24 @@ class website(osv.osv):
             inherit_branding=qweb_context.setdefault('editable', False),
         )
 
+        view_ref = None
         # check if xmlid of the template exists
         try:
             module, xmlid = template.split('.', 1)
-            IMD.get_object_reference(cr, uid, module, xmlid)
+            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
         except ValueError: # catches both unpack errors and gor errors
             module, xmlid = 'website', template
             try:
-                IMD.get_object_reference(cr, uid, module, xmlid)
+                view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
             except ValueError:
                 logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
                 return self.render(cr, uid, ids, 'website.404', qweb_context)
+
+        try:
+            main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
+            qweb_context['main_object'] = main_object
+        except Exception:
+            pass
 
         try:
             return view.render(
