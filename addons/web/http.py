@@ -409,12 +409,6 @@ class HttpRequest(WebRequest):
         self.params = params
 
     def dispatch(self):
-        akw = {}
-        for key, value in self.httprequest.args.iteritems():
-            if isinstance(value, basestring) and len(value) < 1024:
-                akw[key] = value
-            else:
-                akw[key] = type(value)
         try:
             r = self._call_function(**self.params)
         except werkzeug.exceptions.HTTPException, e:
