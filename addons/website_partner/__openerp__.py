@@ -32,6 +32,7 @@
         'views/website_partner_view.xml',
         'security/website_partner_security.xml',
     ],
+    'demo': ['website_partner_demo.xml'],
     'css': [
     ],
     'js': [
