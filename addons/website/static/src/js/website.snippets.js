@@ -791,7 +791,7 @@
 
             // select in ul options
             $ul.find("li").removeClass("active");
-            var selected = $ul.find('[data-value="' + bg_value + '"], [data-value="' + bg_value.replace(/.*:\/\/[^\/]+/, '') + '"]');
+            var selected = $ul.find('[data-value="' + bg_value + '"], [data-value="' + bg_value.replace(/.*:\/\/[^\/]+|\)$/g, '') + '"]');
             selected.addClass('active');
             if (!selected.length) {
                 $ul.find('.oe_custom_bg b').html(bg_value);
@@ -1050,7 +1050,11 @@
             var index = $active.index();
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-            $active.clone().removeClass('active').insertAfter($active);
+            
+            var $clone = this.$el.find(".item.active").clone();
+            var bg = this.$editor.find('ul[name="carousel-background"] li:not([data-value="'+ $active.css("background-image").replace(/.*:\/\/[^\/]+|\)$/g, '') +'"]):first').data("value");
+            $clone.css("background-image", "url('"+ bg +"')");
+            $clone.removeClass('active').insertAfter($active);
             this.$target.carousel().carousel(++index);
         },
         on_remove: function (e) {
