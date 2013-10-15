@@ -400,12 +400,10 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
-        ex = set(["session_id"])
-        for k in params.keys():
-            if k in ex:
-                del params[k]
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
+
+        params.pop('session_id', None)
         self.params = params
 
     def dispatch(self):
