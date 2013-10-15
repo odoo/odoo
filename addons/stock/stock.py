@@ -481,8 +481,9 @@ class stock_picking(osv.osv):
 
     def _set_min_date(self, cr, uid, id, field, value, arg, context=None):
         move_obj = self.pool.get("stock.move")
-        move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
-        move_obj.write(cr, uid, move_ids, {'date_expected': value}, context=context)
+        if value:
+            move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
+            move_obj.write(cr, uid, move_ids, {'date_expected': value}, context=context)
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds minimum and maximum dates for picking.
