@@ -1934,4 +1934,20 @@
         </t>
     </t>
 </t>
+<t t-name="FieldMany2ManyCheckBoxes">
+    <t t-foreach="widget.get('records')" t-as="record">
+        <div>
+            <t t-if="selected[record[0]]">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="true"/>
+            </t>
+            <t t-if="! selected[record[0]]">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
+            </t>
+            <t t-esc="record[1]"/>
+        </div>
+    </t>
+</t>
+<t t-name="X2ManyCounter">
+    <a href="javascript:void(0)"><t t-esc="text"/></a>
+</t>
 </templates>
