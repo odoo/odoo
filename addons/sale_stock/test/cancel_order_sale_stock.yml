@@ -40,13 +40,6 @@
     picks = self.search(cr, uid, [('origin','=','Test/001'),('backorder_id','<>',False)])
     self.action_cancel(cr, uid, picks)
 -
-  I invoice from order.
--
-  Only Stock User can change data related warehouse therefore test with that user which have stcok user rights,
--
-  !context
-    uid: 'res_stock_user'
--
   I run the scheduler.
 -
   !python {model: procurement.order}: |
