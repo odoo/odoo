@@ -24,6 +24,7 @@
         },
         save: function () {
             this.snippets.make_active(false);
+            this.snippets.clean_for_save();
             remove_added_snippet_id();
             this._super();
         },
@@ -78,6 +79,7 @@
             }
             this.$active_snipped_id = false;
             hack_to_add_snippet_id();
+            this.snippets = [];
             $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
         },
         dom_filter: function (dom, sibling) {
@@ -206,6 +208,11 @@
                 }
             }
         },
+        clean_for_save: function () {
+            for (var k in this.snippets) {
+                $(this.snippets[k]).data("snippet-editor").clean_for_save();
+            }
+        },
         make_active: function ($snipped_id) {
             if ($snipped_id && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snipped_id.get(0)) {
                 return;
@@ -214,6 +221,9 @@
                 this.snippet_blur(this.$active_snipped_id);
             }
             if ($snipped_id) {
+                if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
+                    this.snippets.push($snipped_id.get(0));
+                }
                 this.$active_snipped_id = $snipped_id;
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snipped_id);
@@ -749,6 +759,13 @@
             this.$overlay.removeClass('oe_active');
         },
 
+        /* clean_for_save
+        *  function called just before save vue
+        */
+        clean_for_save: function () {
+
+        },
+
         change_background: function (bg, ul_options) {
             var self = this;
             this.set_options_background(bg, ul_options);
@@ -791,7 +808,7 @@
 
             // select in ul options
             $ul.find("li").removeClass("active");
-            var selected = $ul.find('[data-value="' + bg_value + '"], [data-value="' + bg_value.replace(/.*:\/\/[^\/]+|\)$/g, '') + '"]');
+            var selected = $ul.find('[data-value="' + bg_value + '"], [data-value="' + bg_value.replace(/.*:\/\/[^\/]+/, '') + '"]');
             selected.addClass('active');
             if (!selected.length) {
                 $ul.find('.oe_custom_bg b').html(bg_value);
@@ -983,6 +1000,11 @@
         },
     });
 
+    website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
+        start: function () {
+            this.$target.carousel();
+        },
+    });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         build_snippet: function() {
             var id = 0;
@@ -1004,6 +1026,13 @@
         onBlur: function () {
             this._super();
             this.$target.carousel('cycle');
+        },
+        clean_for_save: function () {
+            this._super();
+            this.$target.find(".item.left, .item.next").removeClass("next left");
+            if(!this.$target.find(".item.active").length) {
+                this.$target.find(".item:first").addClass("active");
+            }
         },
         start : function () {
             this._super();
@@ -1038,9 +1067,9 @@
         // rebind event to active carousel on edit mode
         rebind_event: function () {
             var self = this;
-            this.$target.on('click', '.carousel-control', function () {
+            this.$target.off('click').on('click', '.carousel-control', function () {
                 self.$target.carousel($(this).data('slide')); });
-            this.$target.on('click', '.carousel-indicators [data-target]', function () {
+            this.$target.off('click').on('click', '.carousel-indicators [data-target]', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
         },
         on_add: function (e) {
@@ -1056,6 +1085,7 @@
             $clone.css("background-image", "url('"+ bg +"')");
             $clone.removeClass('active').insertAfter($active);
             this.$target.carousel().carousel(++index);
+            this.rebind_event();
         },
         on_remove: function (e) {
             e.preventDefault();
@@ -1072,7 +1102,8 @@
                 });
                 setTimeout(function () {
                     new_index = index % cycle;
-                    self.$target.carousel( new_index + 1 );
+                    self.$target.carousel().carousel( new_index + 1 );
+                    self.rebind_event();
                 }, 500);
             } else {
                 this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
