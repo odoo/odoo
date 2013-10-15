@@ -258,24 +258,17 @@ class Ecommerce(http.Controller):
         return request.redirect("/shop/?attributes=%s&%s" % (simplejson.dumps(attributes).replace(" ", ""), urllib.urlencode(post)))
 
     def attributes_to_ids(self, attributes):
-        req = "SELECT product_id FROM product_attribute_product WHERE (1 = 1) "
+        obj = request.registry.get('product.attribute.product')
+        domain = [(1, '=', 1)]
         for key_val in attributes:
-
-            req += "AND (attribute_id = %s AND (" % int(key_val[0])
+            domain += [("attribute_id", "=", key_val[0])]
             if isinstance(key_val[1], list):
-                req += "value >= %s AND value <= %s" % (int(key_val[1][0]), int(key_val[1][1]))
+                domain += [("value", ">=", key_val[1][0]), ("value", "<=", key_val[1][1])]
             else:
-                nb = 0
-                for val in key_val[1:]:
-                    if nb:
-                        req += " OR "
-                    req += "value_id = %s" % int(val)
-                    nb += 1
-            req += ")) "
-        req += "GROUP BY product_id"
-
-        request.cr.execute(req)
-        return [r[0] for r in request.cr.fetchall()]
+                domain += [("value_id", "in", key_val[1:])]
+        att_ids = obj.search(request.cr, request.uid, domain, context=request.context)
+        att = obj.read(request.cr, request.uid, att_ids, ["product_id"], context=request.context)
+        return [r["product_id"][0] for r in att]
 
     @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
     def category(self, category=0, attributes="", page=0, **post):
