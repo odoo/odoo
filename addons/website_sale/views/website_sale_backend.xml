@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.normal.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <p attrs="{'invisible': [('website_published', '=', True)]}">
+                        This product is <b>not available</b> for public user in your ecommerce.
+                    </p>
+                    <p attrs="{'invisible': [('website_published', '=', False)]}">
+                        This product is <b>available</b> for public user in your ecommerce.
+                    </p>
+                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
+                </div>
+            </xpath>
+
+            <group name="sale" position="inside">
+                <group name="website" string="Website">
+                    <field name="website_published"/>
+                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="website_style_ids" widget="many2many_tags"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_pricelist_view">
+        <field name="name">product.pricelist.website.form</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="code"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_form_view">
+        <field name="name">product.template.product.website.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <p attrs="{'invisible': [('website_published', '=', True)]}">
+                        This product is <b>not available</b> for public user in your ecommerce.
+                    </p>
+                    <p attrs="{'invisible': [('website_published', '=', False)]}">
+                        This product is <b>available</b> for public user in your ecommerce.
+                    </p>
+                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
+                </div>
+            </xpath>
+
+            <xpath expr="//group[@string='Product Type']" position="inside">
+                    <field name="website_published"/>
+            </xpath>
+            <xpath expr="//page[@string='Information']" position="inside">
+                <group colspan="4" string="Products On Ecommerce">
+                    <field name="suggested_product_ids" widget="many2many_tags"/>
+                    <field name="website_style_ids" widget="many2many_tags"/>
+                    <field colspan="4" name="website_attribute_ids" nolabel="1">
+                        <tree string="Product Attributes" editable="bottom">
+                            <field name="attribute_id" on_change="onchange_attribute_id(attribute_id)"/>
+                            <field name="type" invisible="1"/>
+                            <field name="value" attrs="{'required': [('type','=','float')]}"/>
+                            <field name="value_id"
+                                attrs="{'required': [('type','=','distinct')]}"
+                                context="{'default_attribute_id': attribute_id}"
+                                domain="[('attribute_id', '=', attribute_id)]"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+
+
+        </field>
+    </record>
+
+ </data>
+</openerp>
