@@ -16,7 +16,7 @@
                       t-att-data-editable="'1' if editable else None"
                       t-att-data-translatable="'1' if translatable else None"
                       t-att-data-view-xmlid="xmlid if editable else None"
-                      t-att-data-main-object="main_object if editable else None">
+                      t-att-data-main-object="repr(main_object) if editable else None">
                     <head>
                         <t t-if="main_object and 'website_meta_title' in main_object">
                             <t t-set="title" t-value="main_object.website_meta_title"/>
