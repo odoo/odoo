@@ -21,7 +21,7 @@ class MailController(http.Controller):
             if filecontent and filename:
                 return req.make_response(filecontent,
                     headers=[('Content-Type', 'application/octet-stream'),
-                            ('Content-Disposition', content_disposition(filename, req))])
+                            ('Content-Disposition', content_disposition(filename))])
         return req.not_found()
 
     @http.route('/mail/receive', type='json', auth='none')
