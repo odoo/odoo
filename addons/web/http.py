@@ -21,6 +21,7 @@ import urlparse
 import uuid
 import errno
 import re
+import warnings
 
 import babel.core
 import simplejson
@@ -181,6 +182,10 @@ class WebRequest(object):
     def debug(self):
         return 'debug' in self.httprequest.args
 
+    @contextlib.contextmanager
+    def registry_cr(self):
+        warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
+        yield (self.registry, self.cr)
 
 def auth_method_user():
     request.uid = request.session.uid
