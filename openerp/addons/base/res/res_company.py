@@ -112,9 +112,6 @@ class res_company(osv.osv):
         
     def _get_companies_from_partner(self, cr, uid, ids, context=None):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
-    
-    def _get_font(self, cr, uid, context=None):
-        return sorted(customfonts.RegisterCustomFonts())
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
@@ -128,7 +125,7 @@ class res_company(osv.osv):
         'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
-        'font': fields.selection(_get_font, "Font",help="Set the font into the report header, will be used for every RML report of the company"),
+        'font': fields.many2one('res.font', string="Font",help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
             'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
@@ -192,10 +189,11 @@ class res_company(osv.osv):
             
             default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
             return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+        fontname = self.pool.get('res.font').browse(cr, uid, font, context=context).name
         return {'value':{
-                        'rml_header': _change_header(rml_header,font),
-                        'rml_header2':_change_header(rml_header2,font),
-                        'rml_header3':_change_header(rml_header3,font)
+                        'rml_header': _change_header(rml_header,fontname),
+                        'rml_header2':_change_header(rml_header2,fontname),
+                        'rml_header3':_change_header(rml_header3,fontname)
                         }}
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
@@ -294,6 +292,15 @@ class res_company(osv.osv):
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
+    def _get_font(self, cr, uid, ids):
+        font_obj = self.pool.get('res.font')
+        res = font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)
+        if res:
+            return res[0]
+        
+        font_obj.init_no_scan(cr, uid)
+        return font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)[0]
+
     _header = """
 <header>
 <pageTemplate>
@@ -388,6 +395,9 @@ class res_company(osv.osv):
             return {'value': {'rml_header': self._header_letter}}
         return {'value': {'rml_header': self._header_a4}}
 
+    def act_discover_fonts(self, cr, uid, ids, context=None):
+        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
+
     _defaults = {
         'currency_id': _get_euro,
         'paper_format': 'a4',
@@ -395,12 +405,11 @@ class res_company(osv.osv):
         'rml_header2': _header2,
         'rml_header3': _header3,
         'logo':_get_logo,
-        'font':'Helvetica',
+        'font':_get_font,
     }
 
     _constraints = [
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

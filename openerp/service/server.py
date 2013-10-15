@@ -3,7 +3,6 @@
 #-----------------------------------------------------------
 import datetime
 import errno
-import fcntl
 import logging
 import os
 import os.path
@@ -21,6 +20,11 @@ import time
 import traceback
 
 import werkzeug.serving
+
+try:
+    import fcntl
+except ImportError:
+    pass
 try:
     from setproctitle import setproctitle
 except ImportError:

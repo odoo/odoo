@@ -25,6 +25,7 @@ import res_partner
 import res_bank
 import res_config
 import res_currency
+import res_font
 import res_company
 import res_users
 import res_request

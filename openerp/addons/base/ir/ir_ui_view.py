@@ -27,6 +27,7 @@ import os
 import time
 
 import HTMLParser
+from lxml import etree
 
 import openerp
 from openerp import tools
@@ -34,7 +35,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
-from openerp.tools import misc, qweb
+from openerp.tools import misc
 from openerp.osv.orm import browse_record, browse_record_list
 
 _logger = logging.getLogger(__name__)
@@ -766,7 +767,7 @@ class view(osv.osv):
                 self.translate_qweb(cr, uid, id_, node, lang, context)
         return arch
 
-    def render(self, cr, uid, id_or_xml_id, values, context=None):
+    def render(self, cr, uid, id_or_xml_id, values, engine='ir.qweb', context=None):
         if not context:
             context = {}
 
@@ -783,8 +784,10 @@ class view(osv.osv):
 
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
-        engine = qweb.QWebXml(loader=loader, undefined_handler=lambda key, v: None)
-        return engine.render(id_or_xml_id, values)
+
+        return self.pool[engine].render(
+            id_or_xml_id, values,
+            loader=loader, undefined_handler=lambda key, v: None)
 
     # maybe used to print the workflow ?
 
