@@ -2,75 +2,6 @@
 <openerp>
 <data>
 
-    <record id="product_normal_form_view" model="ir.ui.view">
-        <field name="name">product.normal.form.inherit</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="arch" type="xml">
-            <!-- add state field in header -->
-            <xpath expr="//sheet" position="before">
-                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
-                    <p attrs="{'invisible': [('website_published', '=', True)]}">
-                        This product is <b>not available</b> for public user in your ecommerce.
-                    </p>
-                    <p attrs="{'invisible': [('website_published', '=', False)]}">
-                        This product is <b>available</b> for public user in your ecommerce.
-                    </p>
-                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
-                </div>
-            </xpath>
-
-            <group name="sale" position="inside">
-                <group name="website" string="Website">
-                    <field name="website_published"/>
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
-                    <field name="website_style_ids" widget="many2many_tags"/>
-                </group>
-            </group>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="product_pricelist_view">
-        <field name="name">product.pricelist.website.form</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="arch" type="xml">
-            <field name="active" position="after">
-                <field name="code"/>
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="product_template_form_view">
-        <field name="name">product.template.product.website.form</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_form_view"/>
-        <field name="arch" type="xml">
-            <!-- add state field in header -->
-            <xpath expr="//sheet" position="before">
-                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
-                    <p attrs="{'invisible': [('website_published', '=', True)]}">
-                        This product is <b>not available</b> for public user in your ecommerce.
-                    </p>
-                    <p attrs="{'invisible': [('website_published', '=', False)]}">
-                        This product is <b>available</b> for public user in your ecommerce.
-                    </p>
-                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
-                </div>
-            </xpath>
-
-            <xpath expr="//group[@string='Product Type']" position="inside">
-                    <field name="website_published"/>
-            </xpath>
-            <xpath expr="//page[@string='Information']" position="inside">
-                <group colspan="4" string="Products On Ecommerce">
-                    <field name="suggested_product_ids" widget="many2many_tags"/>
-                    <field name="website_style_ids" widget="many2many_tags"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
-    
     <!-- Layout add nav and footer -->
 
     <template id="header" inherit_id="website.layout" name="Custom Header">
@@ -85,11 +16,12 @@
             </li>
         </xpath>
     </template>
+
     <!-- List of categories -->
 
     <template id="categories_recursive">
-        <li t-att-class="category.id == category_id and 'active' or ''">
-            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
+        <li t-att-class="category.id == search.get('category') and 'active' or ''">
+            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/?category=#{ category.id }" t-field="category.name" t-keep-query="search,facettes"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-if="category.id in categ[1] or editable">
@@ -107,7 +39,7 @@
         <div class="ribbon">Promo</div>
       </div>
       <div class="oe_product_description">
-          <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
               <b t-field="product.name"/>
           </a>
       </div>
@@ -127,7 +59,7 @@
           </b>
       </div>
       <div class="oe_product_image text-center">
-          <a t-href="/shop/product/#{ product.id }/?#{ search and ('search=%s' % search) or ''}#{ category_id and ('&amp;category_id=%s' % category_id) or ''}">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
               <img class="img" t-att-src="product.img('image')"/>
           </a>
       </div>
@@ -148,14 +80,14 @@
                     <div class="col-sm-4">
                         <h1>Our Products</h1>
                     </div><div class="col-sm-2 pagination text-center">
-                        <a t-if="editable" t-href="/shop/#{ category_id and ('category/%s/' % category_id) or ''}add_product/" class="btn btn-primary btn-default">New Product</a>
+                        <a t-if="editable" t-href="/shop/add_product/" class="btn btn-primary btn-default" t-keep-query="category,search,facettes">New Product</a>
                     </div><div class="col-sm-6">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
                         </t>
-                        <form t-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;">
+                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;" t-keep-query="category,search,facettes">
                             <div class="form-group">
-                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
+                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
                             </div>
                         </form>
                     </div>
@@ -165,12 +97,13 @@
                   <div class="col-md-12" id="products_grid">
                     <table width="100%">
                       <tbody>
-                        <t t-set="table_products" t-value="get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
+                        <t t-set="table_products" t-value="Ecommerce.get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
                         <tr t-foreach="table_products" t-as="tr_product">
                           <t t-foreach="tr_product" t-as="td_product">
                             <t t-if="td_product">
                             <t t-set="product" t-value="td_product['product']"/>
                             <td t-att-colspan="td_product['x']"
+                                t-attf-width="#{td_product['x']*25}%"
                                 t-att-rowspan="td_product['y']"
                                 t-attf-class="oe_product oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
@@ -271,7 +204,7 @@
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
         <xpath expr="//div[@id='products_grid']/table" position="replace">
           <div class="row">
-            <t t-set="products" t-value="get_products(product_ids)"/>
+            <t t-set="products" t-value="Ecommerce.get_products(product_ids)"/>
             <t t-foreach="products" t-as="product">
               <div class="col-md-12 oe_list_products oe-height-1">
                 <t t-call="website_sale.products_cart"/>
@@ -297,7 +230,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a t-href="/shop">Products</a></li>
-                          <li t-if="category"><a t-att-href="'/shop/category/%s' % (category_id,)"><span t-field="category.name"/></a></li>
+                          <li t-if="search.get('category')"><a t-att-href="'/shop/" t-keep-query="category,search,facettes"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"></span></li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -313,8 +246,13 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                      <form t-action="/shop/#{ category_id and ('category/%s/' % category_id) or ''}" method="get" class="pull-right">
+                      <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,search,facettes">
                           <div class="input-group">
+                              <t t-if="search">
+                              <t foreach="search.items()" t-as="key">
+                                  <input t-att-name="key[0]" t-att-value="key[1]"/>
+                              </t>
+                              </t>
                               <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
                               <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
                           </div>
@@ -544,10 +482,10 @@
 
     <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
         <xpath expr="//div[@id='products_grid']" position="before">
-            <div class="col-md-3">
+            <div id="categories" class="col-md-3">
                 <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if category_id else 'active' "><a t-href="/shop/">All Products</a></li>
-                    <t t-set="categ" t-value="get_categories()"/>
+                    <li t-att-class=" '' if search.get('category') else 'active' "><a t-href="/shop/">All Products</a></li>
+                    <t t-set="categ" t-value="Ecommerce.get_categories()"/>
                     <t t-foreach="categ[0]" t-as="category">
                         <t t-call="website_sale.categories_recursive"/>
                     </t>
@@ -559,6 +497,42 @@
         </xpath>
     </template>
 
+    <template id="products_attributes" inherit_option_id="website_sale.products_categories" name="Product Attributes">
+        <xpath expr="//div[@id='categories']" position="inside">
+            <form t-action="/shop/attributes/" method="post" t-keep-query="category,search,attributes">
+                <ul class="nav nav-pills nav-stacked mt16">
+                    <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
+                    <t t-foreach="attribute_ids" t-as="attribute_id">
+                        <li t-if="attribute_id.value_ids and attribute_id.type == 'distinct'">
+                            <div t-field="attribute_id.name"/>
+                            <ul class="nav nav-pills nav-stacked">
+                                <t t-foreach="attribute_id.value_ids" t-as="value_id">
+                                    <li t-att-class="Ecommerce.has_search_attributes(attribute_id.id, value_id.id) and 'active' or ''">
+                                        <label style="margin: 0 20px;">
+                                            <input type="checkbox" t-att-name="'att-%s-%s' % (attribute_id.id, value_id.id)"
+                                                t-att-checked="Ecommerce.has_search_attributes(attribute_id.id, value_id.id) and 'checked' or ''"/>
+                                            <span style="font-weight: normal" t-field="value_id.name"/>
+                                        </label>
+                                    </li>
+                                </t>
+                            </ul>
+                        </li>
+                        <li t-if="attribute_id.type == 'float' and attribute_id.float_min != attribute_id.float_max">
+                            <div t-field="attribute_id.name"/>
+                            <t t-set="attribute" t-value="Ecommerce.has_search_attributes(attribute_id.id)"/>
+                            <div style="margin: 0 20px;" class="js_slider"
+                              t-att-data-id="attribute_id.id"
+                              t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min"
+                              t-att-data-value-max="attribute and attribute[1][1] or attribute_id.float_max"
+                              t-att-data-min="attribute_id.float_min"
+                              t-att-data-max="attribute_id.float_max"></div>
+                        </li>
+                    </t>
+                </ul>
+                <button class="btn btn-xs btn-primary mt16">Apply filter</button>
+            </form>
+        </xpath>
+    </template>
 
     <template id="suggested_products_list" inherit_id="website_sale.mycart" inherit_option_id="website_sale.mycart" name="Suggested Products in list view">
         <xpath expr="//table[@id='mycart_products']" position="after">

@@ -13,6 +13,7 @@ OpenERP E-Commerce
     'data': [
         'website_sale_data.xml',
         'views/website_sale.xml',
+        'views/website_sale_backend.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
     ],

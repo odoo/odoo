@@ -7,6 +7,8 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 import random
 import uuid
+import urllib
+import simplejson
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
@@ -59,6 +61,11 @@ class Website(osv.osv):
 class Ecommerce(http.Controller):
 
     _order = 'website_sequence desc, website_published desc'
+
+    def get_attribute_ids(self):
+        attributes_obj = request.registry.get('product.attribute')
+        attributes_ids = attributes_obj.search(request.cr, request.uid, [(1, "=", 1)], context=request.context)
+        return attributes_obj.browse(request.cr, request.uid, attributes_ids, context=request.context)
 
     def get_categories(self):
         domain = [('parent_id', '=', False)]
@@ -214,15 +221,70 @@ class Ecommerce(http.Controller):
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
         return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
-    @website.route(['/shop/', '/shop/category/<cat_id>/', '/shop/category/<cat_id>/page/<int:page>/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
-    def category(self, cat_id=0, page=0, **post):
+    def has_search_attributes(self, attribute_id, value_id=None):
+        if request.httprequest.args.get('attributes'):
+            attributes = simplejson.loads(request.httprequest.args['attributes'])
+        else:
+            attributes = []
+        for key_val in attributes:
+            if key_val[0] == attribute_id and (not value_id or value_id in key_val[1:]):
+                return key_val
+        return False
+
+    @website.route(['/shop/attributes/'], type='http', auth="public", multilang=True)
+    def attributes(self, **post):
+        attributes = []
+        index = []
+        for key, val in post.items():
+            cat = key.split("-")
+            if len(cat) < 3 or cat[2] in ('max','minmem','maxmem'):
+                continue
+            cat_id = int(cat[1])
+            if cat[2] == 'min':
+                minmem = float(post.pop("att-%s-minmem" % cat[1]))
+                maxmem = float(post.pop("att-%s-maxmem" % cat[1]))
+                _max = int(post.pop("att-%s-max" % cat[1]))
+                _min = int(val)
+                if (minmem != _min or maxmem != _max) and cat_id not in index:
+                    attributes.append([cat_id , [_min, _max] ])
+                    index.append(cat_id)
+            elif cat_id not in index:
+                attributes.append([ cat_id, int(cat[2]) ])
+                index.append(cat_id)
+            else:
+                attributes[index.index(cat_id)].append( int(cat[2]) )
+            post.pop(key)
+
+        return request.redirect("/shop/?attributes=%s&%s" % (simplejson.dumps(attributes).replace(" ", ""), urllib.urlencode(post)))
+
+    def attributes_to_ids(self, attributes):
+        req = "SELECT product_id FROM product_attribute_product WHERE (1 = 1) "
+        for key_val in attributes:
+
+            req += "AND (attribute_id = %s AND (" % int(key_val[0])
+            if isinstance(key_val[1], list):
+                req += "value >= %s AND value <= %s" % (int(key_val[1][0]), int(key_val[1][1]))
+            else:
+                nb = 0
+                for val in key_val[1:]:
+                    if nb:
+                        req += " OR "
+                    req += "value_id = %s" % int(val)
+                    nb += 1
+            req += ")) "
+        req += "GROUP BY product_id"
+
+        request.cr.execute(req)
+        return [r[0] for r in request.cr.fetchall()]
+
+    @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
+    def category(self, category=0, page=0, **post):
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
         product_obj = request.registry.get('product.template')
 
         domain = [("sale_ok", "=", True)]
-        #domain += [('website_published', '=', True)]
 
         if post.get("search"):
             domain += ['|', '|', '|',
@@ -230,13 +292,19 @@ class Ecommerce(http.Controller):
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search")),
                 ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
-        if cat_id:
-            cat_id = int(cat_id)
+        if post.get('category'):
+            cat_id = int(post.get('category'))
             domain += [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
+
+        if post.get('attributes'):
+            attributes = simplejson.loads(post['attributes'])
+            if attributes:
+                ids = self.attributes_to_ids(attributes)
+                domain += [('id', 'in', ids or [0] )]
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
-        pager = request.website.pager(url="/shop/category/%s/" % cat_id, total=product_count, page=page, step=step, scope=7, url_args=post)
+        pager = request.website.pager(url="/shop/%s" % post, total=product_count, page=page, step=step, scope=7, url_args=post)
 
         request.context['pricelist'] = self.get_pricelist()
 
@@ -250,21 +318,18 @@ class Ecommerce(http.Controller):
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
 
         values = {
-            'get_categories': self.get_categories,
-            'category_id': cat_id,
+            'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
-            'get_bin_packing_products': self.get_bin_packing_products,
-            'get_products': self.get_products,
-            'search': post.get("search"),
+            'search': post or dict(),
             'pager': pager,
             'styles': styles,
-            'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids]
+            'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
         }
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<int:product_id>/'], type='http', auth="public", multilang=True)
-    def product(self, cat_id=0, product_id=0, **post):
+    def product(self, product_id=0, **post):
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
@@ -284,13 +349,12 @@ class Ecommerce(http.Controller):
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
 
         values = {
-            'category_id': post.get('category_id') and int(post.get('category_id')) or None,
+            'Ecommerce': self,
             'category': category,
-            'search': post.get("search"),
-            'get_categories': self.get_categories,
             'category_list': category_list,
             'main_object': product,
             'product': product,
+            'search': post or dict(),
         }
         return request.website.render("website_sale.product", values)
 
