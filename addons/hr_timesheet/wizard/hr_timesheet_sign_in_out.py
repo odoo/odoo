@@ -32,8 +32,8 @@ class hr_so_project(osv.osv_memory):
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),
         'analytic_amount': fields.float('Minimum Analytic Amount'),
-        'name': fields.char('Employees name', size=32, required=True, readonly=True),
-        'state': fields.related('emp_id', 'state', string='Current Status', type='char', required=True, readonly=True),
+        'name': fields.char('Employee\'s Name', size=32, required=True, readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current Status', type='selection', selection=[('present', 'Present'), ('absent', 'Absent')], required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
                 }
@@ -109,8 +109,8 @@ class hr_si_project(osv.osv_memory):
     _name = 'hr.sign.in.project'
     _description = 'Sign In By Project'
     _columns = {
-        'name': fields.char('Employees name', size=32,  readonly=True),
-        'state': fields.related('emp_id', 'state', string='Current Status', type='char', required=True, readonly=True),
+        'name': fields.char('Employee\'s Name', size=32,  readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current Status', type='selection', selection=[('present', 'Present'), ('absent', 'Absent')], required=True, readonly=True),
         'date': fields.datetime('Starting Date'),
         'server_date': fields.datetime('Current Date',  readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
@@ -133,7 +133,7 @@ class hr_si_project(osv.osv_memory):
 
     def check_state(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
-        emp_id = self.default_get(cr, uid, context)['emp_id']
+        emp_id = self.default_get(cr, uid, ['emp_id'], context)['emp_id']
         # get the latest action (sign_in or out) for this employee
         cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
         res = (cr.fetchone() or ('sign_out',))[0]

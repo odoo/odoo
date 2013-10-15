@@ -7,8 +7,6 @@
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     street: Kailash Vaibhav, Parksite
     name: Micro Link Technologies
-    property_account_payable: account.a_pay
-    property_account_receivable: account.a_recv
     supplier: true
     is_company: true
 
@@ -28,6 +26,20 @@
   I set the chain location Supplier to stock Input
   Stock Input to Quality test and Quality test -Stock  .
 -
+  !record {model: stock.location.route, id: stock_location_route_push}:
+    name: 'Push'
+    push_ids:
+        - name: 'stock -> quality test'
+          invoice_state: none
+          location_dest_id: stock_location.stock_location_quality
+          location_from_id: stock.stock_location_stock
+          picking_type_id: stock.picking_type_internal
+        - name: 'quality test -> components'
+          invoice_state: none
+          location_dest_id: stock.stock_location_components
+          location_from_id: stock_location.stock_location_quality
+          picking_type_id: stock.picking_type_internal
+-
   !record {model: product.product, id: product_product_hpcdwriters01}:
     list_price: 1000.0
     mes_type: fixed
@@ -36,15 +48,7 @@
       - delay: 1
         name: res_partner_microlinktechnologies0
         min_qty: 5.0
-    route_ids:
-      - push_ids:
-        - invoice_state: none
-          location_dest_id: stock_location.stock_location_qualitytest0
-          location_from_id: stock.stock_location_stock
-        - invoice_state: none
-          location_dest_id: stock.stock_location_components
-          location_from_id: stock_location.stock_location_qualitytest0
-    supply_method: buy
+    route_ids: [stock_location_route_push]
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
@@ -57,7 +61,6 @@
    !record {model: stock.picking , id: stock_picking_in0}:
     partner_id: res_partner_address_0
     company_id: base.main_company
-    invoice_state: none
     move_lines:
       - date_expected: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         location_dest_id: stock.stock_location_stock
@@ -68,15 +71,12 @@
         product_uom: product.product_uom_unit
         product_uos_qty: 6.0
     name: Pushed Flow Test
-    type: in
+    picking_type_id: stock.picking_type_in
 -
   I confirm picking.
 -
   !python {model: stock.picking }: |
-    self.draft_force_assign(cr, uid, [ref("stock_picking_in0")], {"lang": "en_US",
-      "search_default_available": 1, "tz": False, "active_model": "ir.ui.menu",
-      "contact_display": "partner_address", "active_ids": [ref("stock.menu_action_picking_tree")],
-      "active_id": ref("stock.menu_action_picking_tree"), })
+    self.force_assign(cr, uid, [ref("stock_picking_in0")], {})
 -
   I check that the outgoing order of the supplier  is create with two move line.
   Stock/Input To Quality test and Quality test  To Stock.
@@ -84,7 +84,7 @@
   I check the move is in waiting state.
 -
   !python {model: stock.picking }: |
-   picking_id = self.search(cr, uid, [('origin','=','Pushed Flow Test'),('type','=','out')])
+   picking_id = self.search(cr, uid, [('origin','=','Pushed Flow Test'),('picking_type_id','=',ref('stock.picking_type_out'))])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       for move in pick.move_lines:
@@ -94,7 +94,7 @@
 -
   !python {model: stock.picking }: |
    import time
-   picking_id = self.search(cr, uid, [('partner_id','=',ref('res_partner_microlinktechnologies0')),('type','=','in')])
+   picking_id = self.search(cr, uid, [('partner_id','=',ref('res_partner_microlinktechnologies0')),('picking_type_id','=',ref('stock.picking_type_in'))])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       move =pick.move_lines[0]
@@ -112,7 +112,7 @@
   I check the Outgoing Orders is automatically  done.
 -
   !python {model: stock.picking }: |
-   picking_id = self.search(cr, uid, [('origin','=','Pushed Flow Test'),('type','=','out')])
+   picking_id = self.search(cr, uid, [('origin','=','Pushed Flow Test'),('picking_type_id','=',ref('stock.picking_type_out'))])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       assert(pick.state == 'done'), 'Picking  is  not in done state'

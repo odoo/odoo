@@ -6,7 +6,6 @@
 -
   !record {model: sale.order, id: sale_order_so11}:
     date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_quantity: order
     name: Test_SO011
     order_line:
       - name: '[CARD] Graphics Card'
@@ -17,7 +16,6 @@
         product_id: product.product_product_24
         product_uos_qty: 100.0
         th_weight: 0.0
-        type: make_to_stock
     order_policy: manual
     partner_id: base.res_partner_4
     partner_invoice_id: base.res_partner_address_7

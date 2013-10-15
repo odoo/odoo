@@ -23,105 +23,75 @@ from datetime import datetime, timedelta
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default.update({
             'shipped': False,
+            'picking_ids': []
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
-
-    #Might have been deleted before for a reason     
-    def shipping_policy_change(self, cr, uid, ids, policy, context=None):
-        if not policy:
-            return {}
-        inv_qty = 'order'
-        if policy == 'prepaid':
-            inv_qty = 'order'
-        elif policy == 'picking':
-            inv_qty = 'procurement'
-        return {'value': {'invoice_quantity': inv_qty}}
-
 
     def _get_default_warehouse(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
         if not warehouse_ids:
-            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
+            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for selected company.'))
         return warehouse_ids[0]
 
     def _get_shipped(self, cr, uid, ids, name, args, context=None):
         res = {}
         for sale in self.browse(cr, uid, ids, context=context):
-            res[sale.id]= True
-            #TODO: not better to use picking
-            pickingstates = []
-            for pick in sale.picking_ids:
-                pickingstates += [x.state not in ['cancel', 'done'] for x in pick.move_lines if x]
-            if any(pickingstates):
+            group = sale.procurement_group_id
+            if group:
+                res[sale.id] = all([proc.state in ['cancel', 'done'] for proc in group.procurement_ids])
+            else:
                 res[sale.id] = False
         return res
 
     def _get_orders(self, cr, uid, ids, context=None):
         res = set()
-        proc_obj = self.pool.get("procurement.order")
-        procs = proc_obj.search(cr, uid, [('move_id', 'in', ids)], context=context)
-        for proc in proc_obj.browse(cr, uid, procs, context=context):
-            if proc.group_id and proc.group_id.sale_id:
-                res.add(proc.group_id.sale_id.id)
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id:
+                res.add(move.procurement_id.sale_line_id.order_id.id)
         return list(res)
-
-
+    
+    def _get_orders_procurements(self, cr, uid, ids, context=None):
+        res = set()
+        for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
+            if proc.sale_line_id:
+                res.add(proc.sale_line_id.order_id.id)
+        return list(res)
+    
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if not ids: return res
-        for id in ids:
-            res.setdefault(id, [])
-        '''SQL request that does exactly the same as the code below'''
-        cr.execute('''SELECT sol.order_id, sm.picking_id from sale_order_line as sol \
-                   LEFT JOIN procurement_order as po on (po.id = sol.procurement_id) \
-                   LEFT JOIN stock_move as sm on (sm.id = po.move_id) \
-                   LEFT JOIN stock_picking as sp on (sp.id = sm.picking_id) \
-                   WHERE sol.order_id in %s \
-                   GROUP BY sol.order_id, sm.picking_id ORDER BY sol.order_id''',(tuple(ids),))
-        result = cr.fetchall() #and sp.type = 'out'\
-        for r in result:
-            res[r[0]].append(r[1])
+        for sale in self.browse(cr, uid, ids, context=context):
+            if not sale.procurement_group_id:
+                res[sale.id] = []
+                continue
+            picking_ids = set()
+            for procurement in sale.procurement_group_id.procurement_ids:
+                for move in procurement.move_ids:
+                    if move.picking_id:
+                        picking_ids.add(move.picking_id.id)
+            res[sale.id] = list(picking_ids)
         return res
 
-        '''for element in self.browse(cr, uid, ids, context=context):
-            procu_ids = []
-            for line in element.order_line:
-                if line.procurement_id:
-                    procu_ids.append(line.procurement_id.id)
-            picking_ids = []
-            for procurement in self.pool.get('procurement.order').browse(cr, uid, list(set(procu_ids)), context=context):
-                if procurement.move_id and procurement.move_id.picking_id and procurement.move_id.picking_id.type == 'out':
-                    picking_ids.append(procurement.move_id.picking_id.id)
-            res[element.id] = list(set(picking_ids))
-        return res'''
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
+        vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+        location_id = order.partner_shipping_id.property_stock_customer.id
+        vals['location_id'] = location_id
+        return vals
 
     _columns = {
-          'state': fields.selection([
-            ('draft', 'Draft Quotation'),
-            ('sent', 'Quotation Sent'),
-            ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('shipping_except', 'Shipping Exception'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done'),
-            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
-              \nThe exception status is automatically set when a cancel operation occurs \
-              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
-               but waiting for the scheduler to run on the order date.", select=True),
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
@@ -132,8 +102,10 @@ class sale_order(osv.osv):
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.function(_get_shipped, type='boolean', store = {'stock.move': (_get_orders, ['state'], 10)}), 
-    #fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
+        'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
+                'stock.move': (_get_orders, ['state'], 10),
+                'procurement.order': (_get_orders_procurements, ['state'], 10)
+            }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
@@ -162,7 +134,7 @@ class sale_order(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree')
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree_all')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
 
@@ -170,22 +142,26 @@ class sale_order(osv.osv):
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
-
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
-            result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
+            result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
         else:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
             result['views'] = [(res and res[1] or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
+
+    # TODO: FP Note: I guess it's better to do:
+    # if order_policy<>picking: super()
+    # else: call invoice_on_picking_method()
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
-        picking_obj = self.pool.get('stock.picking')
-        res = super(sale_order,self).action_invoice_create( cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
+        move_obj = self.pool.get("stock.move")
+        res = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             if order.order_policy == 'picking':
-                picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
+                for picking in order.picking_ids:
+                    move_obj.write(cr, uid, [x.id for x in picking.move_lines], {'invoice_state': 'invoiced'}, context=context)
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -200,13 +176,13 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-                if pick.state == 'cancel':
-                    for mov in pick.move_lines:
-                        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
-                        if proc_ids:
-                            proc_obj.signal_button_check(cr, uid, proc_ids)
-            for r in self.read(cr, uid, ids, ['picking_ids']):
-                stock_obj.signal_button_cancel(cr, uid, r['picking_ids'])
+                 # FP Note: not sure we need this
+                 #if pick.state == 'cancel':
+                 #    for mov in pick.move_lines:
+                 #        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
+                 #        if proc_ids:
+                 #            proc_obj.signal_button_check(cr, uid, proc_ids)
+            stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
@@ -217,64 +193,18 @@ class sale_order(osv.osv):
                 self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
         return res
 
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        date_planned = super(sale_order, self)._get_date_planned(cr, uid, order, line, start_date, context=context)
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
 
-    def date_to_datetime(self, cr, uid, userdate, context=None):
-        """ Convert date values expressed in user's timezone to
-        server-side UTC timestamp, assuming a default arbitrary
-        time of 12:00 AM - because a time is needed.
-    
-        :param str userdate: date string in in user time zone
-        :return: UTC datetime string for server-side use
-        """
-        # TODO: move to fields.datetime in server after 7.0
-        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
-        if context and context.get('tz'):
-            tz_name = context['tz']
-        else:
-            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
-        if tz_name:
-            utc = pytz.timezone('UTC')
-            context_tz = pytz.timezone(tz_name)
-            user_datetime = user_date + relativedelta(hours=12.0)
-            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
-            user_datetime = local_timestamp.astimezone(utc)
-            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-    # if mode == 'finished':
-    #   returns True if all lines are done, False otherwise
-    # if mode == 'canceled':
-    #   returns True if there is at least one canceled line, False otherwise
-    def test_state(self, cr, uid, ids, mode, *args):
-        assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
-        finished = True
-        canceled = False
-        write_done_ids = []
-        write_cancel_ids = []
-        for order in self.browse(cr, uid, ids, context={}):
-            for line in order.order_line:
-                if (not line.procurement_id) or (line.procurement_id.state=='done'):
-                    if line.state != 'done':
-                        write_done_ids.append(line.id)
-                else:
-                    finished = False
-                if line.procurement_id:
-                    if (line.procurement_id.state == 'cancel'):
-                        canceled = True
-                        if line.state != 'exception':
-                            write_cancel_ids.append(line.id)
-        if write_done_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
-        if write_cancel_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
-
-        if mode == 'finished':
-            return finished
-        elif mode == 'canceled':
-            return canceled
-
+    def _prepare_procurement_group(self, cr, uid, order, context=None):
+        res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
+        res.update({'move_type': order.picking_policy})
+        return res
 
     def action_ship_end(self, cr, uid, ids, context=None):
+        super(sale_order, self).action_ship_end(cr, uid, ids, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             val = {'shipped': True}
             if order.state == 'shipping_except':
@@ -284,14 +214,11 @@ class sale_order(osv.osv):
                         if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
                             val['state'] = 'manual'
                             break
-            for line in order.order_line:
-                towrite = []
-                if line.state == 'exception':
-                    towrite.append(line.id)
-                if towrite:
-                    self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'done'}, context=context)
             res = self.write(cr, uid, [order.id], val)
         return True
+
+
+
 
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
@@ -299,26 +226,19 @@ class sale_order(osv.osv):
                 if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
-    
-    def procurement_lines_get(self, cr, uid, ids, *args):
-        res = []
-        for order in self.browse(cr, uid, ids, context={}):
-            for line in order.order_line:
-                if line.procurement_id:
-                    res.append(line.procurement_id.id)
-        return res
-
-class stock_move(osv.osv):
-    _inherit = 'stock.move'
-    _columns = {
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale Line'),
-    }
 
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
-    
-    
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale is installed alone, there is no need to create procurements, but with sale_stock
+        #we must create a procurement for each product that is not a service.
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.product_id and line.product_id.type != 'service':
+                return True
+        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
+
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -328,9 +248,7 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
-    
-    _columns = { 
-        'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
+    _columns = {
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
     }
@@ -339,7 +257,6 @@ class sale_order_line(osv.osv):
         'product_packaging': False,
     }
 
-
     def button_cancel(self, cr, uid, ids, context=None):
         res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
         for line in self.browse(cr, uid, ids, context=context):
@@ -347,7 +264,7 @@ class sale_order_line(osv.osv):
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
                             _('Cannot cancel sales order line!'),
-                            _('You must first cancel stock moves attached to this sales order line.'))   
+                            _('You must first cancel stock moves attached to this sales order line.'))
         return res
 
     def copy_data(self, cr, uid, id, default=None, context=None):
@@ -355,8 +272,7 @@ class sale_order_line(osv.osv):
             default = {}
         default.update({'move_ids': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
-    
-    
+
     def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
                                    partner_id=False, packaging=False, flag=False, context=None):
         if not product:
@@ -407,10 +323,9 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         warning = {}
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -424,29 +339,49 @@ class sale_order_line(osv.osv):
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
-        #res['value']['type'] = product_obj.procure_method
-
-        #check if product is available, and if not: raise an error
-        uom2 = False
-        if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
-        if not uom2:
-            uom2 = product_obj.uom_id
 
         # Calling product_packaging_change function after updating UoM
         res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
         res['value'].update(res_packing.get('value', {}))
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
-        compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
-        if (product_obj.type=='product') and int(compare_qty) == -1:
-          #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
-            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
-                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
-                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
-                     max(0,product_obj.qty_available), product_obj.uom_id.name)
-            warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
+
+        #determine if the product is MTO or not (for a further check)
+        isMto = False
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            for product_route in product_obj.route_ids:
+                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
+                    isMto = True
+                    break
+        else:
+            try:
+                mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+            except:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                mto_route_id = False
+            if mto_route_id:
+                for product_route in product_obj.route_ids:
+                    if product_route.id == mto_route_id:
+                        isMto = True
+                        break
+
+        #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
+        if not isMto:
+            uom2 = False
+            if uom:
+                uom2 = product_uom_obj.browse(cr, uid, uom)
+                if product_obj.uom_id.category_id.id != uom2.category_id.id:
+                    uom = False
+            if not uom2:
+                uom2 = product_obj.uom_id
+            compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
+            if (product_obj.type=='product') and int(compare_qty) == -1:
+              #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
+                warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                        (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                         max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                         max(0,product_obj.qty_available), product_obj.uom_id.name)
+                warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
 
         #update of warning messages
         if warning_msgs:
@@ -457,35 +392,33 @@ class sale_order_line(osv.osv):
         res.update({'warning': warning})
         return res
 
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
 
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+        if move.procurement_id and move.procurement_id.sale_line_id:
+            sale_line = move.procurement_id.sale_line_id
+            self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
+                'invoice_lines': [(4, invoice_line_id)]
+            }, context=context)
+            self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
+                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
+            })
+        return invoice_line_id
 
-class sale_advance_payment_inv(osv.osv_memory):
-    _inherit = "sale.advance.payment.inv"
+    def _get_master_data(self, cr, uid, move, company, context=None):
+        if move.procurement_id and move.procurement_id.sale_line_id:
+            sale_order = move.procurement_id.sale_line_id.order_id
+            return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
+        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
 
-    def _create_invoices(self, cr, uid, inv_values, sale_id, context=None):
-        result = super(sale_advance_payment_inv, self)._create_invoices(cr, uid, inv_values, sale_id, context=context)
-        sale_obj = self.pool.get('sale.order')
-        sale_line_obj = self.pool.get('sale.order.line')
-        wizard = self.browse(cr, uid, [result], context)
-        sale = sale_obj.browse(cr, uid, sale_id, context=context)
-
-        # If invoice on picking: add the cost on the SO
-        # If not, the advance will be deduced when generating the final invoice
-        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('name') or ''
-        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('invoice_line_tax_id') or False
-        if sale.order_policy == 'picking':
-            vals = {
-                'order_id': sale.id,
-                'name': line_name,
-                'price_unit': -inv_amount,
-                'product_uom_qty': wizard.qtty or 1.0,
-                'product_uos_qty': wizard.qtty or 1.0,
-                'product_uos': res.get('uos_id', False),
-                'product_uom': res.get('uom_id', False),
-                'product_id': wizard.product_id.id or False,
-                'discount': False,
-                'tax_id': line_tax,
-            }
-            sale_line_obj.create(cr, uid, vals, context=context)
-        return result
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        if move.procurement_id and move.procurement_id.sale_line_id:
+            sale_line = move.procurement_id.sale_line_id
+            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
+            res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
+            res['price_unit'] = sale_line.price_unit
+            res['discount'] = sale_line.discount
+        return res

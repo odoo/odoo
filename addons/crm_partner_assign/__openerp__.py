@@ -38,7 +38,7 @@ You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm', 'account', 'portal'],
-    'demo': ['res_partner_demo.xml'],
+    'demo': ['res_partner_demo.xml', 'crm_lead_demo.xml'],
     'data': [
         'security/ir.model.access.csv',
         'res_partner_view.xml',

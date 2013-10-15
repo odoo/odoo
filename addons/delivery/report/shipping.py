@@ -28,7 +28,18 @@ class shipping(report_sxw.rml_parse):
         super(shipping, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
+            'get_partner_invoice_info': self.get_partner_invoice_info,
         })
+
+    def get_partner_invoice_info(self, origin):
+        """This method is used to get information of invoiced partner.
+        :param: origin: origin of picking
+        :return: tuple contaning partner name and address of invoiced partner
+        """
+        sale_obj = self.pool.get('sale.order')
+        sale_id = sale_obj.search(self.cr, self.uid, [('name', '=', origin)])[0]
+        partner_invoice_id = sale_obj.browse(self.cr, self.uid, sale_id).partner_invoice_id
+        return partner_invoice_id.name, self.pool.get('res.partner')._display_address(self.cr, self.uid, partner_invoice_id)
 
 report_sxw.report_sxw('report.sale.shipping','stock.picking','addons/delivery/report/shipping.rml',parser=shipping)
 

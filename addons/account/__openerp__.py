@@ -146,6 +146,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'account_unit_test.xml',
     ],
     'test': [
+        'test/account_test_users.yml',
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',
         'test/account_change_currency.yml',

@@ -18,7 +18,6 @@
             <field name="price_unit">450</field>
             <field name="product_uom_qty">2</field>
             <field name="product_uos_qty">2</field>
-            <field name="type">make_to_stock</field>
         </record>
         <record id="test_order_1_line_3" model="sale.order.line">
             <field name="order_id" ref="test_order_1"/>
@@ -28,7 +27,6 @@
             <field name="price_unit">90</field>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
-            <field name="type">make_to_stock</field>
         </record>
 
         <assert id="test_order_1" model="sale.order" severity="error" string="The amount of the sales order is correctly computed">

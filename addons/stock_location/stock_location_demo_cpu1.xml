@@ -4,12 +4,8 @@
             <field name="description">This product is configured with example of push/pull flows</field>
         </record>
 
-        <record id="stock_location_qualitytest0" model="stock.location">
-                <field name="location_id" ref="stock.stock_location_company"/>
-                <field eval="0" name="scrap_location"/>
-                <field name="company_id" ref="base.main_company"/>
-                <field name="usage">internal</field>
-                <field name="name">Quality Control</field>
+        <record id="stock_location_quality" model="stock.location">
+                <field name="active">True</field>
         </record>
         <record id="stock_location_path_4" model="stock.location.path">
             <field model="stock.location" name="location_from_id" search="[('name', '=', u'Input')]"/>
@@ -18,12 +14,12 @@
             <field name="invoice_state">none</field>
             <field eval="1" name="delay"/>
             <field name="name">Receptions to Quality Control</field>
-            <field name="location_dest_id" ref="stock_location_qualitytest0"/>
+            <field name="location_dest_id" ref="stock_location_quality"/>
             <field name="location_from_id" ref="stock.stock_location_stock"/>
             <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
         <record id="stock_location_path_5" model="stock.location.path">
-            <field name="location_from_id" ref="stock_location_qualitytest0"/>
+            <field name="location_from_id" ref="stock_location_quality"/>
             <field name="product_id" ref="product.product_product_10"/>
             <field name="auto">manual</field>
             <field name="invoice_state">none</field>
@@ -38,7 +34,6 @@
             <field name="location_src_id" ref="stock.stock_location_intermediatelocation0"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="partner_address_id" ref="base.main_partner"/>
-            <field name="invoice_state">none</field>
             <field name="company_id" ref="stock.res_company_1"/>
             <field name="type_proc">move</field>
             <field eval="0" name="propagate"/>
@@ -53,7 +48,6 @@
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="partner_address_id" ref="stock.res_partner_address_41"/>
             <field name="type_proc">move</field>
-            <field name="invoice_state">none</field>
             <field name="company_id" ref="base.main_company"/>
             <field eval="0" name="propagate"/>
             <field name="procure_method">make_to_stock</field>

@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Sales and Warehouse Management',
+    'name': 'Sales and Warehouse and Route Management',
     'version': '1.0',
     'category': 'Hidden',
     'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
@@ -36,7 +36,9 @@ This adds a route on the sales order and sales order line (mini module)
     'images': [],
     'depends': ['sale', 'stock_location'],
     'init_xml': [],
-    'update_xml': ['sale_stock_location_view.xml'],
+    'update_xml': ['sale_stock_location_view.xml', 
+                   'security/sale_stock_location_security.xml',
+                   'res_config_view.xml'],
     'demo_xml': [],
     'test': [],
     'installable': True,

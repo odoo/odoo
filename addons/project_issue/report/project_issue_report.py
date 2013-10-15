@@ -20,17 +20,10 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 from openerp.addons.crm import crm
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
 class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
@@ -38,18 +31,13 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'month':fields.selection(fields.date.MONTHS, 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'opening_date': fields.date('Date of Opening', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
+        'date_last_stage_update': fields.date('Last Stage Update', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True, group_operator="avg"),
@@ -80,7 +68,7 @@ class project_issue_report(osv.osv):
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
-                    c.state,
+                    date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
                     c.user_id,
                     c.working_hours_open,
                     c.working_hours_close,

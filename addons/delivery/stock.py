@@ -30,7 +30,6 @@ class stock_picking(osv.osv):
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
-        uom_obj = self.pool.get('product.uom')
         for picking in self.browse(cr, uid, ids, context=context):
             total_weight = total_weight_net = 0.00
 
@@ -119,26 +118,22 @@ class stock_picking(osv.osv):
             'invoice_line_tax_id': [(6, 0, taxes_ids)],
         }
 
-    def action_invoice_create(self, cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None):
-        invoice_obj = self.pool.get('account.invoice')
-        picking_obj = self.pool.get('stock.picking')
+    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
+        ''' This function simply creates the invoice from the given values. It is overriden in delivery module to add the delivery costs. picking is a browse_record
+        '''
         invoice_line_obj = self.pool.get('account.invoice.line')
-        result = super(stock_picking, self).action_invoice_create(cr, uid,
-                ids, journal_id=journal_id, group=group, type=type,
-                context=context)
-        for picking in picking_obj.browse(cr, uid, result.keys(), context=context):
-            invoice = invoice_obj.browse(cr, uid, result[picking.id], context=context)
-            invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
-            if invoice_line:
-                invoice_line_obj.create(cr, uid, invoice_line)
-                invoice_obj.button_compute(cr, uid, [invoice.id], context=context)
-        return result
-    def _get_default_uom(self,cr,uid,c):
+        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
+        invoice = self.browse(cr, uid, invoice_id, context=context)
+        invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
+        if invoice_line:
+            invoice_line_obj.create(cr, uid, invoice_line)
+        return invoice_id
+
+    def _get_default_uom(self, cr, uid, c):
         uom_categ, uom_categ_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_categ_kgm')
-        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id),('factor','=',1)])[0]
+        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id), ('factor', '=', 1)])[0]
     _defaults = {
-        'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
+        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c)
     }
 
 

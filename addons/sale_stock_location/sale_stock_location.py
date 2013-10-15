@@ -36,10 +36,11 @@ class sale_order(osv.osv):
         '''
         res = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         routes = []
-        route_id = order.warehouse_id and order.warehouse_id.route_id and order.warehouse_id.route_id.id or False
-        routes += route_id and [(4, route_id)] or []
-        route_id = line.route_id and line.route_id.id or False
-        routes += route_id and [(4, route_id)] or []
+        route_ids = order.warehouse_id and [(4, x.id) for x in order.warehouse_id.route_ids] or []
+        routes += route_ids
+        route_id = line.route_id and [(4, line.route_id.id)] or []
+        routes += route_id
+        print 'toutes les routes sur le procurement', routes
         res.update({
                 'route_ids': routes
                 })
@@ -48,14 +49,14 @@ class sale_order(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = { 
-        'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale', '=', True)]),
+        'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
     }
 
 
 class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
     _columns = {
-        'sale':fields.boolean("Can be set on sale order line")
+        'sale_selectable':fields.boolean("Selectable on Sales Order Line")
         }
 
 

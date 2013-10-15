@@ -19,6 +19,7 @@
 
         <record model="account.tax.code.template" id="vat_code_payable">
             <field name="name">Tax Paid</field>
+            <field name="sign">-1</field>
             <field name="parent_id" ref="vat_code_balance_net"/>
         </record>
 
@@ -27,15 +28,539 @@
             <field name="parent_id" ref="vat_code_tax"/>
         </record>
 
-
         <record model="account.tax.code.template" id="vat_code_base_tax_sale">
-            <field name="name">Base of Taxed Sales</field>
+            <field name="name">Taxable Sale Bases</field>
             <field name="parent_id" ref="vat_code_base_net"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_base_tax_purchase">
-            <field name="name">Base of Taxed Purchases</field>
+            <field name="name">Taxable Purchase Bases</field>
             <field name="parent_id" ref="vat_code_base_net"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_CSTP5">
+            <field name="name">Input CST 5%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_PCST5">
+            <field name="name">Purchase CST 5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_ser12">
+            <field name="name">Purchase Service Tax 12%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sale_ser12">
+            <field name="name">Sales Service Tax 12%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_exice_salebase">
+            <field name="name">Excise Duty 12.36% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_exice12">
+            <field name="name">Excise Duty 12% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec_exice_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_exice2">
+            <field name="name">Excise Duty 2% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_exice1">
+            <field name="name">Excise Duty 1% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_ic_st_purbase">
+            <field name="name">Excise Duty 12.36% - Purchase</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_exice12">
+            <field name="name">Excise Duty 12% - Purchase</field>
+            <field name="parent_id" ref="vat_code_tax_pay_ic_st_purbase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_cess2">
+            <field name="name">Education Cess 2% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec_exice_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_cess2">
+            <field name="name">Education Cess 2% - Purchase</field>
+            <field name="parent_id" ref="vat_code_tax_pay_ic_st_purbase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_import_duty">
+            <field name="name">Input Credit - Import Duty</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_edu_cess">
+            <field name="name">Input Credit On Capital Goods - Edu. Cess</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_cap_goods">
+            <field name="name">Input Excise Duty 12% - Capital Goods</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_seco_hec">
+            <field name="name">Input Credit on Capital Goods - Seco. &amp; HEC</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_ic_st_base">
+            <field name="name">Input Service Tax 12.36%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_ic_st">
+            <field name="name">Input Service Tax 12%</field>
+            <field name="parent_id" ref="vat_code_tax_pay_ic_st_base"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_ic_edu_cess">
+            <field name="name">Input Service Tax Edu. Cess. 2%</field>
+            <field name="parent_id" ref="vat_code_tax_pay_ic_st_base"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_ic_seco_hec">
+            <field name="name">Input Service Tax Seco. &amp; HEC 1%</field>
+            <field name="parent_id" ref="vat_code_tax_pay_ic_st_base"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_sec_hig_edu">
+            <field name="name">Seco. &amp; Higher Edu. Cess 1% - Purchase</field>
+            <field name="parent_id" ref="vat_code_tax_pay_ic_st_purbase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_sec_hig_cess">
+            <field name="name">Seco. &amp; Higher Edu. Cess 1% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec_exice_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_cst2">
+            <field name="name">CST 2% on Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_cst5">
+            <field name="name">CST 5% on Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_add_vat1">
+            <field name="name">Input Additional VAT 1%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_add_vat2">
+            <field name="name">Input Additional Vat 2.5%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_vat12">
+            <field name="name">Input VAT 12.5%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_vat15">
+            <field name="name">Input VAT 15%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_vat10">
+            <field name="name">Input VAT 10%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_vat8">
+            <field name="name">Input VAT 8%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_vat5">
+            <field name="name">Input VAT 5%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_vat4">
+            <field name="name">Input VAT 4%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_vat15">
+            <field name="name">Output VAT 15%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_vat12">
+            <field name="name">Output VAT 12.5%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_vat10">
+            <field name="name">Output VAT 10%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_vat8">
+            <field name="name">Output VAT 8%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_vat5">
+            <field name="name">Output VAT 5%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_vat4">
+            <field name="name">Output VAT 4%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_add_vat1">
+            <field name="name">Output Adi. VAT 1%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_cst2">
+            <field name="name">CST 2% on Purchase</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_exice5">
+            <field name="name">Input Excise Duty 5%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_exice6">
+            <field name="name">Input Excise Duty 6%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_urd">
+            <field name="name">Input Credit - URD</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_audit_fee">
+            <field name="name">TDS on Audit Fees - 94J</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_brokerage">
+            <field name="name">TDS on Commission Or Brokerage- 94H</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_contractor">
+            <field name="name">TDS on Contractor-94C</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_dir_intrest">
+            <field name="name">TDS on Director's Interest</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_dir_ren">
+            <field name="name">TDS on Director's Remuneration - 92B</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_intrest">
+            <field name="name">TDS on Interest</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_prof_fee">
+            <field name="name">TDS on Professional Fees - 94J</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_rent">
+            <field name="name">TDS on Rent - 94I</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_tds_sal">
+            <field name="name">TDS on Salary - 92B</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_tds_pur_import">
+            <field name="name">Import Purchase</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat">
+            <field name="name">Purchase VAT 4% / VAT 12.5% / VAT 15% / CST 2% / CST 5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_plant_machinery">
+            <field name="name">Plant &amp; Machinery</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_exp_act">
+            <field name="name">Expense Accounts</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sales_excise">
+            <field name="name">Sales Excise</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sale_cst2">
+            <field name="name">Sales CST 2%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sale_cst15">
+            <field name="name">Sales CST 5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat15">
+            <field name="name">Purchase VAT 15%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat12">
+            <field name="name">Purchase VAT 12.5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat10">
+            <field name="name">Purchase VAT 10%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat8">
+            <field name="name">Purchase VAT 8%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat5">
+            <field name="name">Purchase VAT 5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat4">
+            <field name="name">Purchase VAT 4%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_vat25">
+            <field name="name">Purchase VAT 2.5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_vat15">
+            <field name="name">Sales VAT 15%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_vat12">
+            <field name="name">Sales VAT 12.5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_vat10">
+            <field name="name">Sales VAT 10%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_vat8">
+            <field name="name">Sales VAT 8%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_vat5">
+            <field name="name">Sales VAT 5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_vat4">
+            <field name="name">Sales VAT 4%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_cst2">
+            <field name="name">Input CST 2%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_urd">
+            <field name="name">Purchase URD</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pur_base_tds">
+            <field name="name">Base Expenses for TDS</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_pay_add_imp_duty">
+            <field name="name">Additional Duty (Imports) 4%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_formh_tax">
+            <field name="name">Sales Export - Form H - With Tax</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_cst2_on_sal_cst3">
+            <field name="name">CST 2% on Sales CT3</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_cst3">
+            <field name="name">Sales CT3 VAT</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_out4_sal_cst3">
+            <field name="name">Output VAT 4% on Sales CT3</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_out_add1_sale_cst3">
+            <field name="name">Output Adi. VAT 1% on Sales CT3</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_ct3_cst">
+            <field name="name">Sales CT3 CST</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_exp_ct1">
+            <field name="name">Sales Export - Form H - With CT1</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_sez_out_guj">
+            <field name="name">Sales Export - SEZ - Out of Gujarat</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_sez_in_guj">
+            <field name="name">Sales Export - SEZ - In Gujarat</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_no_saz_ogs">
+            <field name="name">No Tax SEZ OGS</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_no_sez_guj">
+            <field name="name">No Tax SEZ Gujarat</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_out_country">
+            <field name="name">Sales Export - Out of Country</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sal_proj">
+            <field name="name">Sales Others (Projects)</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_formh_bed">
+            <field name="name">No Tax Form H with BED</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_fomh">
+            <field name="name">No Tax Form H</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_no_out_country">
+            <field name="name">No Tax Export Out of Country</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_no_proj">
+            <field name="name">No Tax Projects</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_st_salebase">
+            <field name="name">Service Tax 12.36% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_st12">
+            <field name="name">Service Tax 12% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec_st_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_st2">
+            <field name="name">Service Tax 2% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec_st_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_st1">
+            <field name="name">Service Tax 1% - Sales</field>
+            <field name="parent_id" ref="vat_code_tax_rec_st_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_base_tax_sale15">
+            <field name="name">Sales Tax 15%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_rec_sale15">
+            <field name="name">Sales Tax - 15%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_base_tax_sale12">
+            <field name="name">Sales Tax 12%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_rec_sale12">
+            <field name="name">Sales Tax - 12%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_base_tax_sale4">
+            <field name="name">Sales Tax 4%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_rec_sale4">
+            <field name="name">Sales Tax - 4%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_base_tax_pur15">
+            <field name="name">Purchase Tax 15%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_pay_pur4">
+            <field name="name">Purchase Tax - 15%</field>
+            <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
     </data>

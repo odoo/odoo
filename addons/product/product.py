@@ -246,7 +246,7 @@ class product_category(osv.osv):
     _name = "product.category"
     _description = "Product Category"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, select=True),
+        'name': fields.char('Product Category Name', size=64, required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
@@ -421,6 +421,11 @@ class product_product(osv.osv):
         pricelist = context.get('pricelist', False)
         partner = context.get('partner', False)
         if pricelist:
+            # Support context pricelists specified as display_name or ID for compatibility
+            if isinstance(pricelist, basestring):
+                pricelist_ids = self.pool.get('product.pricelist').name_search(
+                    cr, uid, pricelist, operator='=', context=context, limit=1)
+                pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
             for id in ids:
                 try:
                     price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
@@ -763,7 +768,7 @@ class product_product(osv.osv):
             context = {}
         if context and context.get('search_default_categ_id', False):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
-        return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+        return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
 
 class product_packaging(osv.osv):

@@ -151,9 +151,9 @@ class share_wizard(osv.TransientModel):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
             if this.result_line_ids:
-                ctx = dict(context, share_url_template_hash_arguments=['action_id'])
+                ctx = dict(context, share_url_template_hash_arguments=['action'])
                 user = this.result_line_ids[0]
-                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action_id=this.action_id.id)
+                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action=this.action_id.id)
                 result[this.id] = this.share_url_template(context=ctx) % data
         return result
 
@@ -289,32 +289,14 @@ class share_wizard(osv.TransientModel):
 
         return created_ids, existing_ids
 
-    def _create_shortcut(self, cr, uid, values, context=None):
+    def _create_action(self, cr, uid, values, context=None):
         if context is None:
             context = {}
         new_context = context.copy()
         for key in context:
             if key.startswith('default_'):
                 del new_context[key]
-
-        dataobj = self.pool.get('ir.model.data')
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut')
-        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
         action_id = self.pool.get('ir.actions.act_window').create(cr, UID_ROOT, values, new_context)
-        menu_data = {'name': values['name'],
-                     'sequence': 10,
-                     'action': 'ir.actions.act_window,'+str(action_id),
-                     'parent_id': shortcut_menu_id,
-                     'icon': 'STOCK_JUSTIFY_FILL'}
-        menu_obj = self.pool.get('ir.ui.menu')
-        menu_id =  menu_obj.create(cr, UID_ROOT, menu_data)
-        sc_data = {'name': values['name'], 'sequence': UID_ROOT,'res_id': menu_id }
-        self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
-
-        # update menu cache
-        user_groups = set(self.pool.get('res.users').read(cr, UID_ROOT, uid, ['groups_id'])['groups_id'])
-        key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
-        menu_obj._cache[key] = True
         return action_id
 
     def _cleanup_action_context(self, context_str, user_id):
@@ -383,7 +365,7 @@ class share_wizard(osv.TransientModel):
         values = self._shared_action_def(cr, uid, wizard_data, context=None)
         user_obj = self.pool.get('res.users')
         for user_id in user_ids:
-            action_id = self._create_shortcut(cr, user_id, values)
+            action_id = self._create_action(cr, user_id, values)
             if make_home:
                 # We do this only for new share users, as existing ones already have their initial home
                 # action. Resetting to the default menu does not work well as the menu is rather empty

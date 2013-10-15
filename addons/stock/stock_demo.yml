@@ -22,9 +22,9 @@
 -
  !record {model: stock.warehouse, id: warehouse_icecream}:
     name: Ice Cream Shop
-    lot_input_id: location_refrigerator
+    code: ICE
     lot_stock_id: location_refrigerator
-    lot_output_id: location_delivery_counter
+    code: Cream
 -
  !record {model: product.product, id: product_icecream}:
     default_code: 001
@@ -48,10 +48,11 @@
 -
  !record {model: stock.inventory, id: stock_inventory_icecream}:
     name: Inventory for icecream
+    product_id: product_icecream
 -
  !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot0}:
     product_id: product_icecream
-    product_uom: product.product_uom_kgm
+    product_uom_id: product.product_uom_kgm
     inventory_id: stock_inventory_icecream
     product_qty: 50.0
     prod_lot_id: lot_icecream_0
@@ -59,7 +60,7 @@
 -
  !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot1}:
     product_id: product_icecream
-    product_uom: product.product_uom_kgm
+    product_uom_id: product.product_uom_kgm
     inventory_id: stock_inventory_icecream
     product_qty: 40.0
     prod_lot_id: lot_icecream_1

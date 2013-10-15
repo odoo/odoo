@@ -246,6 +246,7 @@ class mrp_production(osv.osv):
         """ Cancels work order if production order is canceled.
         @return: Super method
         """
+        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         obj = self.browse(cr, uid, ids,context=context)[0]
         for workcenter_line in obj.workcenter_lines:
             workcenter_pool.signal_button_cancel(cr, uid, [workcenter_line.id])

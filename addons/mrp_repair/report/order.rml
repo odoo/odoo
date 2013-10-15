@@ -256,7 +256,7 @@
           <para style="P16">[[ o.product_id.name or '' ]]</para>
         </td>
         <td>
-          <para style="P16">[[ o.prodlot_id.name or ' ' ]]</para>
+          <para style="P16">[[ ','.join([x.name for x in o.move_id.lot_ids]) ]]</para>
         </td>
         <td>
           <para style="P16">[[ formatLang(o.guarantee_limit,date = True) ]]</para>

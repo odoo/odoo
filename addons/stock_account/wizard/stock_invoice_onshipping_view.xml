@@ -6,7 +6,10 @@
             <field name="model">stock.invoice.onshipping</field>
             <field name="arch" type="xml">
               <form string="Create invoice" version="7.0">
-                  <group string="Create Invoice">
+                  <h1>
+                      <field name="inv_type" readonly="1"/>
+                  </h1>
+                  <group>
                       <field name="journal_id"/>
                       <field name="group"/>
                       <field name="invoice_date" />

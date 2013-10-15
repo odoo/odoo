@@ -92,21 +92,18 @@ class mrp_production(osv.osv):
                 continue
             for sub_product in production.bom_id.sub_products:
                 product_uom_factor = product_uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.bom_id.product_uom.id)
-                qty1 = sub_product.product_qty
                 qty2 = production.product_uos and production.product_uos_qty or False
                 product_uos_factor = 0.0
                 if qty2 and production.bom_id.product_uos.id:
                     product_uos_factor = product_uom_obj._compute_qty(cr, uid, production.product_uos.id, production.product_uos_qty, production.bom_id.product_uos.id)
                 if sub_product.subproduct_type == 'variable':
-                    if production.product_qty:
-                        qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
                     if production.product_uos_qty:
                         qty2 *= product_uos_factor / (production.bom_id.product_uos_qty or 1.0)
                 data = {
                     'name': 'PROD:'+production.name,
                     'date': production.date_planned,
                     'product_id': sub_product.product_id.id,
-                    'product_qty': qty1,
+                    'product_uom_qty': production.product_qty,
                     'product_uom': sub_product.product_uom.id,
                     'product_uos_qty': qty2,
                     'product_uos': production.product_uos and production.product_uos.id or False,
@@ -151,12 +148,12 @@ class change_production_qty(osv.osv_memory):
         prod_obj = self.pool.get('mrp.production')
         for m in prod.move_created_ids:
             if m.product_id.id == prod.product_id.id:
-                move_lines_obj.write(cr, uid, [m.id], {'product_qty': qty})
+                move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': qty})
             else:
                 for sub_product_line in prod.bom_id.sub_products:
                     if sub_product_line.product_id.id == m.product_id.id:
                         factor = prod_obj._get_subproduct_factor(cr, uid, prod.id, m.id, context=context)
                         subproduct_qty = sub_product_line.subproduct_type == 'variable' and qty * factor or sub_product_line.product_qty
-                        move_lines_obj.write(cr, uid, [m.id], {'product_qty': subproduct_qty})
+                        move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': subproduct_qty})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

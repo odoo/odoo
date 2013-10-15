@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="Purchase for Requisitions.pdf">
-  <template title="Purchase for Requisitions" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+<document filename="Call for Bids.pdf">
+  <template title="Call for Bids" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="34.0" y1="28.0" width="530" height="786"/>
     </pageTemplate>
@@ -50,6 +50,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
@@ -57,6 +58,7 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
@@ -132,20 +134,20 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header">Purchase for Requisitions [[ requisition.name ]]</para>
+    <para style="terp_header">Call for Bid [[ requisition.name ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="159.0,159.0,106.0,106.0" style="Table2">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Requisition Reference</para>
+          <para style="terp_tblheader_General_Centre">Call for Bid Reference</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Requisition Date</para>
+          <para style="terp_tblheader_General_Centre">Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Type</para>
+          <para style="terp_tblheader_General_Centre">Selection Type</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Source</para>
@@ -158,7 +160,7 @@
           <para style="terp_default_Centre_8">[[ requisition.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(requisition.date_start,date_time='True') ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(requisition.ordering_date,date_time='True') ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ requisition.exclusive=='multiple' and 'Multiple Requisitions' or requisition.exclusive=='exclusive' and 'Purchase Requisitions (exclusive)' ]]</para>
@@ -171,8 +173,8 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_tblheader_Details">Product Detail [[ requisition.line_ids==[] and removeParentNode('para') ]]</para>
-    <blockTable colWidths="375.0,71.0,84.0" style="Table4">
+    <para style="terp_tblheader_Details">Products [[ requisition.line_ids==[] and removeParentNode('para') ]]</para>
+    <blockTable colWidths="275.0,71.0,84.0,100.0" style="Table4">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description [[ requisition.line_ids==[] and removeParentNode('blockTable') ]]</para>
@@ -183,11 +185,14 @@
         <td>
           <para style="terp_tblheader_Details_Centre">Product UoM</para>
         </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Scheduled Date</para>
+        </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_2">[[ requisition.line_ids==[] and removeParentNode('section') ]] [[ repeatIn(requisition.line_ids,'line_ids') ]]</para>
-      <blockTable colWidths="375.0,71.0,84.0" style="Table5">
+      <blockTable colWidths="275.0,71.0,84.0,100.0" style="Table5">
         <tr>
           <td>
             <para style="terp_default_9">[ [[ (line_ids.product_id and line_ids.product_id.code) or '' ]] ] [[ (line_ids.product_id and line_ids.product_id.name) or '' ]]</para>
@@ -198,23 +203,26 @@
           <td>
             <para style="terp_default_Centre_9">[[ (line_ids.product_uom_id and line_ids.product_uom_id.category_id and line_ids.product_uom_id.category_id.name) or '' ]]</para>
           </td>
+          <td>
+            <para style="terp_default_Centre_9">[[ formatLang(line_ids.schedule_date,date='True') ]]</para>
+          </td>
         </tr>
       </blockTable>
     </section>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_tblheader_Details">Quotation Detail [[ requisition.purchase_ids ==[] and removeParentNode('para') ]]</para>
+    <para style="terp_tblheader_Details">Requests for Quotation [[ requisition.purchase_ids ==[] and removeParentNode('para') ]]</para>
     <blockTable colWidths="337.0,96.0,97.0" style="Table6">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Supplier [[ requisition.purchase_ids ==[] and removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Date Ordered</para>
+          <para style="terp_tblheader_Details_Centre">Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Order Reference</para>
+          <para style="terp_tblheader_Details_Centre">Reference</para>
         </td>
       </tr>
     </blockTable>

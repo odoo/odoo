@@ -51,9 +51,9 @@ class hr_employee_category(osv.osv):
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
-        'name': fields.char("Category", size=64, required=True),
+        'name': fields.char("Employee Tag", size=64, required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
+        'parent_id': fields.many2one('hr.employee.category', 'Parent Employee Tag', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
@@ -129,7 +129,7 @@ class hr_job(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
+        ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
     ]
 
 
@@ -155,6 +155,8 @@ class hr_employee(osv.osv):
     _order = 'name_related'
     _inherits = {'resource.resource': "resource_id"}
     _inherit = ['mail.thread']
+
+    _mail_post_access = 'read'
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -190,7 +192,7 @@ class hr_employee(osv.osv):
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
-        'job_id': fields.many2one('hr.job', 'Job'),
+        'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
@@ -324,22 +326,6 @@ class hr_employee(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
-    # ---------------------------------------------------
-    # Mail gateway
-    # ---------------------------------------------------
-
-    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
-        """ mail.message document permission rule: can post a new message if can read
-            because of portal document. """
-        if not model_obj:
-            model_obj = self
-        employee_ids = model_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if employee_ids and operation == 'create':
-            model_obj.check_access_rights(cr, uid, 'read')
-            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
-        else:
-            return super(hr_employee, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
-
 
 class hr_department(osv.osv):
     _description = "Department"
@@ -360,26 +346,9 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-
-        # add shortcut unless 'noshortcut' is True in context
-        if not(context and context.get('noshortcut', False)):
-            data_obj = self.pool.get('ir.model.data')
-            try:
-                data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
-                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                            'user_id': user_id}, context=context)
-            except:
-                # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
-
-        return user_id
-
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
-        }
+    }
 
 
 

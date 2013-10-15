@@ -45,10 +45,9 @@
 -
   Reception is ready for process so now done the reception.
 -
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids
-    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+  !python {model: stock.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids[0]
+    pick_ids.do_partial(context=context)
 -
   I check that purchase order is shipped.
 -

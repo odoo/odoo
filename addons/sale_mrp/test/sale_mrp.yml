@@ -19,7 +19,6 @@
     mes_type: fixed
     name: Slider Mobile
     standard_price: 189.0
-    supply_method: produce
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
@@ -38,10 +37,14 @@
         min_qty: 2.0
         qty: 5.0
     standard_price: 189.0
-    supply_method: produce
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
+- 
+  I add the routes manufacture and mto to the product
+- 
+  !python {model: product.product, id: scheduler_product}: |
+    self.write(cr, uid, [ref("product_product_slidermobile0")], {"route_ids": [(4, ref("mrp.route_warehouse0_manufacture")), (4, ref("stock.route_warehouse0_mto"))]})
 -
   I create a Bill of Material record for Slider Mobile
 -
@@ -61,7 +64,6 @@
   !record {model: sale.order, id: sale_order_so0}:
     client_order_ref: ref1
     date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_quantity: order
     name: Test_SO001
     order_line:
       - name: Slider Mobile
@@ -72,7 +74,6 @@
         delay: 7.0
         product_id: product_product_slidermobile0
         product_uos_qty: 500.0
-        type: make_to_order
     order_policy: manual
     partner_id: base.res_partner_4
     partner_invoice_id: base.res_partner_address_7
@@ -98,22 +99,22 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
-    self.signal_button_check(cr, uid, proc_ids)
+    self.run(cr, uid, proc_ids)
 -
   I verify that a procurement state is "running"
 -
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
-    assert proc_ids, 'Procurement is not in the running state!'
+    proc_ids = self.search(cr, uid, [('origin','like',so.name), ('state','=','running')])
+    assert len(proc_ids) == 2, 'Not both procurements are in the running state!'
 -
   I verify that a manufacturing order has been generated, and that its name and reference are correct
 -
   !python {model: sale.order}: |
     mnf_obj = self.pool.get('mrp.production')
     so = self.browse(cr, uid, ref("sale_order_so0"))
-    mnf_id = mnf_obj.search(cr, uid, [('origin','=',so.name)])
+    mnf_id = mnf_obj.search(cr, uid, [('origin','like',so.name)])
     assert mnf_id, 'Manufacturing order has not been generated'
     mo = mnf_obj.browse(cr, uid, mnf_id)[0]
     assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.name)

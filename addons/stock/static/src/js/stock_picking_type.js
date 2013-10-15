@@ -12,12 +12,12 @@ openerp.stock = function(openerp) {
                 self.$el.sparkline(value, {
                     type: type,
                     barWidth: 5,
-                    tooltipFormat: '{{offset:offset}} {{value}}',
+                    tooltipFormat: '{{offset:offset}}: {{value}} Move(s)',
                     tooltipValueLookups: {
                         'offset': tooltips
                     },
                 });
-                self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
+                self.$el.tipsy({'delayIn': 3000, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
             }, 0);
         },
     });
@@ -52,9 +52,9 @@ openerp.stock = function(openerp) {
                 labelFontColor: '#000',
                 label: label,
                 levelColors: [
-                    "#ff0000",
+                    "#a9d70b",
                     "#f9c802",
-                    "#a9d70b"
+                    "#ff0000"
                 ],
             });
         },
@@ -65,6 +65,5 @@ openerp.stock = function(openerp) {
 
     openerp.stock = openerp.stock || {};
     openerp_picking_widgets(openerp);
-    openerp.web.client_actions.add('stock.ui', 'instance.stock.PickingMainWidget');
 
 };

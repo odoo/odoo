@@ -154,7 +154,7 @@
         </div>
     </t>
 
-    <t t-name="PickingMainWidget">
+    <t t-name="PickingMenuWidget">
         <div class='oe_pick_widget'>
             <table class='oe_pick_layout'>
                 <tr class='oe_pick_header_row'>
@@ -163,13 +163,50 @@
                         <div class='oe_pick_right_toolbar'>
                             <div class='oe_pick_button js_pick_quit'> Quit </div>
                         </div>
+
+                    </td>
+                </tr>
+                <tr class='oe_pick_body_row'>
+                    <td class='oe_pick_body_cont'> 
+                        <div class='oe_pick_body'>
+                            <div class='oe_pick_app'>
+                                <h3 class='oe_pick_app_title'>Pickings</h3>
+
+                                <t t-foreach="widget.picking_types" t-as="type">
+                                    <h4 class='oe_pick_app_subtitle'> <t t-esc="type.name" /> </h4>
+                                    <t t-if="widget.pickings_by_type[type.id].length > 0">
+                                        <span class='oe_pick_button oe_medium js_pick_last' t-att-data-id="type.id">Last Picking</span>
+                                        <span class='oe_pick_button oe_medium js_pick_scan' t-att-data-id="type.id">Scan</span>
+                                    </t>
+                                    <t t-if="widget.pickings_by_type[type.id].length === 0">
+                                        <p class='oe_pick_app_info'>Nothing to process.</p>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="PickingMainWidget">
+        <div class='oe_pick_widget'>
+            <table class='oe_pick_layout'>
+                <tr class='oe_pick_header_row'>
+                    <td class='oe_pick_header'>
+
+                        <div class='oe_pick_right_toolbar'>
+                            <div class='oe_pick_button js_pick_menu'> Menu </div>
+                            <div class='oe_pick_button js_pick_quit'> Quit </div>
+                        </div>
                         
                         <div class='oe_pick_toolbar'>
+                            <div class='oe_pick_button oe_small oe_disabled oe_left js_pick_prev'>&lt;</div>
                             <div class='oe_pick_button js_pick_pack'> Pack </div>
-                            <!-- <div class='oe_pick_button js_pick_reset'> Reset </div> -->
                             <div class='oe_pick_button js_pick_done'> Done </div>
+                            <div class='oe_pick_button oe_small oe_disabled oe_right js_pick_next'>&gt;</div>
                         </div>
-
 
                     </td>
                 </tr>
@@ -181,6 +218,7 @@
                                 <div class='oe_placeholder_picking_editor'></div>
                                 <div class='oe_placeholder_package_editor'></div>
                                 <div class='oe_placeholder_package_selector'></div>
+                                <div class='oe_placeholder_menu'></div>
 
                             </div>
                         </div>

@@ -31,10 +31,10 @@ from openerp.report import report_sxw
 class res_currency(osv.osv):
     _inherit = "res.currency"
 
-    def _get_current_rate(self, cr, uid, ids, name, arg, context=None):
+    def _get_current_rate(self, cr, uid, ids, raise_on_no_rate=True, context=None):
         if context is None:
             context = {}
-        res = super(res_currency, self)._get_current_rate(cr, uid, ids, name, arg, context=context)
+        res = super(res_currency, self)._get_current_rate(cr, uid, ids, raise_on_no_rate, context=context)
         if context.get('voucher_special_currency') in ids and context.get('voucher_special_currency_rate'):
             res[context.get('voucher_special_currency')] = context.get('voucher_special_currency_rate')
         return res
@@ -884,6 +884,8 @@ class account_voucher(osv.osv):
         return res
 
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, date, amount, ttype, company_id, context=None):
+        if context is None:
+            context = {}
         if not journal_id:
             return False
         journal_pool = self.pool.get('account.journal')
@@ -932,6 +934,8 @@ class account_voucher(osv.osv):
         move_pool = self.pool.get('account.move')
 
         for voucher in self.browse(cr, uid, ids, context=context):
+            # refresh to make sure you don't unlink an already removed move
+            voucher.refresh()
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
@@ -1182,7 +1186,7 @@ class account_voucher(osv.osv):
         for line in voucher.line_ids:
             #create one move line per voucher line where amount is not 0.0
             # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
-            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
+            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_digits=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_digits=prec)):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
@@ -1282,10 +1286,8 @@ class account_voucher(osv.osv):
                 }
                 new_id = move_line_obj.create(cr, uid, move_line_foreign_currency, context=context)
                 rec_ids.append(new_id)
-
             if line.move_line_id.id:
                 rec_lst_ids.append(rec_ids)
-
         return (tot_line, rec_lst_ids)
 
     def writeoff_move_line_get(self, cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=None):

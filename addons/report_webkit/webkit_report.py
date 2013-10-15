@@ -173,7 +173,7 @@ class WebKitParser(report_sxw):
                                  ),
                                 'w'
                             )
-            head_file.write(header)
+            head_file.write(header.encode('utf-8'))
             head_file.close()
             file_to_del.append(head_file.name)
             command.extend(['--header-html', head_file.name])
@@ -184,7 +184,7 @@ class WebKitParser(report_sxw):
                                  ),
                                 'w'
                             )
-            foot_file.write(footer)
+            foot_file.write(footer.encode('utf-8'))
             foot_file.close()
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
@@ -205,7 +205,7 @@ class WebKitParser(report_sxw):
         for html in html_list :
             html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
             count += 1
-            html_file.write(html)
+            html_file.write(html.encode('utf-8'))
             html_file.close()
             file_to_del.append(html_file.name)
             command.append(html_file.name)
@@ -335,7 +335,7 @@ class WebKitParser(report_sxw):
             try :
                 html = body_mako_tpl.render(dict(self.parser_instance.localcontext))
                 htmls.append(html)
-            except Exception:
+            except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)

@@ -34,5 +34,3 @@ class company(osv.osv):
     _defaults = {
         'security_lead': 0.0,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

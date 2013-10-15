@@ -13,15 +13,12 @@
         </record>
 
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
-            <field name="name">Incoming Picking Inherited</field>
+            <field name="name">Picking Inherited</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='date']" position="before">
-                    <field name="purchase_id" domain="[('invoice_method','=','picking')]"  context="{'search_default_partner_id':partner_id,'default_partner_id':partner_id, 'default_invoice_method':'picking'}"/>
-                </xpath>
-                <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="warehouse_id" groups="stock.group_locations"/>
+                <xpath expr="//field[@name='move_type']" position="before">
+                    <field name="purchase_id" domain="[('invoice_method','=','picking')]" groups="base.group_no_one" context="{'search_default_partner_id':partner_id,'default_partner_id':partner_id, 'default_invoice_method':'picking'}"/>
                 </xpath>
             </field>
         </record>

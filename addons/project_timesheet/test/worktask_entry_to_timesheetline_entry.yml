@@ -1,7 +1,7 @@
 -
   Create a user 'HR Manager'
 -
-  !record {model: res.users, id: res_users_hrmanager0}:
+  !record {model: res.users, id: res_users_hrmanager0, view: False}:
     company_id: base.main_company
     name: HR Manager
     login: hr
@@ -14,10 +14,8 @@
   !record {model: product.product, id: product_product_hrmanger0}:
     categ_id: product.product_category_6
     mes_type: fixed
-    name: HR Manger
-    procure_method: make_to_stock
+    name: HR Manager
     standard_price: 1.0
-    supply_method: buy
     type: service
     uom_id: product.product_uom_hour
     uom_po_id: product.product_uom_hour
@@ -65,16 +63,7 @@
     planned_hours: 20.0
     project_id: project_project_timesheetmanagement0
     remaining_hours: 20.0
-    state: draft
     user_id: res_users_hrmanager0
--
-  Open the task
--
-  !python {model: project.task}: |
-    self.do_open(cr, uid, [ref("project_task_getalltimesheetrecords0")], {"lang":
-      "en_US", "active_ids": [ref("project_project_timesheetmanagement0")], "tz":
-      False, "active_model": "project.project", "department_id": False, "project_id":
-      False, "active_id": ref("project_project_timesheetmanagement0"), })
 -
   Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
 -

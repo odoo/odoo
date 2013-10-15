@@ -35,23 +35,17 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="default" eval="False"/>
             <field name="description">Issue created</field>
         </record>
-        <record id="mt_issue_started" model="mail.message.subtype">
-            <field name="name">Issue Started</field>
+        <record id="mt_issue_assigned" model="mail.message.subtype">
+            <field name="name">Issue Assigned</field>
             <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
-            <field name="description">Issue started</field>
+            <field name="description">Issue assigned</field>
         </record>
         <record id="mt_issue_blocked" model="mail.message.subtype">
             <field name="name">Issue Blocked</field>
             <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
             <field name="description">Issue blocked</field>
-        </record>
-        <record id="mt_issue_closed" model="mail.message.subtype">
-            <field name="name">Issue Closed</field>
-            <field name="res_model">project.issue</field>
-            <field name="default" eval="False"/>
-            <field name="description">Issue closed</field>
         </record>
         <record id="mt_issue_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
@@ -67,23 +61,17 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="parent_id" eval="ref('mt_issue_new')"/>
             <field name="relation_field">project_id</field>
         </record>
-        <record id="mt_project_issue_started" model="mail.message.subtype">
-            <field name="name">Issue Started</field>
+        <record id="mt_project_issue_assigned" model="mail.message.subtype">
+            <field name="name">Issue Assigned</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_issue_started')"/>
+            <field name="parent_id" eval="ref('mt_issue_assigned')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_issue_blocked" model="mail.message.subtype">
             <field name="name">Issue Blocked</field>
             <field name="res_model">project.project</field>
             <field name="parent_id" eval="ref('mt_issue_blocked')"/>
-            <field name="relation_field">project_id</field>
-        </record>
-        <record id="mt_project_issue_closed" model="mail.message.subtype">
-            <field name="name">Issue Closed</field>
-            <field name="res_model">project.project</field>
-            <field name="parent_id" eval="ref('mt_issue_closed')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_issue_stage" model="mail.message.subtype">

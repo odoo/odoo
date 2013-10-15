@@ -42,7 +42,7 @@ class Controller(http.Controller):
             }
         return config
 
-    @http.route('/auth_signup/retrieve', type='json', auth="user")
+    @http.route('/auth_signup/retrieve', type='json', auth="none")
     def retrieve(self, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)
@@ -51,7 +51,7 @@ class Controller(http.Controller):
             user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
         return user_info
 
-    @http.route('/auth_signup/signup', type='json', auth="user")
+    @http.route('/auth_signup/signup', type='json', auth="none")
     def signup(self, dbname, token, **values):
         """ sign up a user (new or existing)"""
         try:
@@ -66,7 +66,7 @@ class Controller(http.Controller):
             res_users = registry.get('res.users')
             res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
 
-    @http.route('/auth_signup/reset_password', type='json', auth="user")
+    @http.route('/auth_signup/reset_password', type='json', auth="none")
     def reset_password(self, dbname, login):
         """ retrieve user, and perform reset password """
         registry = RegistryManager.get(dbname)

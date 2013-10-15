@@ -800,7 +800,7 @@ class account_move_line(osv.osv):
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        })
+        }, context=context)
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
         return True
 
@@ -1283,7 +1283,7 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and ((not context.get('no_store_function')) or journal.entry_posted):
+        if check and not context.get('novalidate') and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)

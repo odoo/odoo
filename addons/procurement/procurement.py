@@ -61,7 +61,7 @@ class procurement_group(osv.osv):
             ('direct', 'Partial'), ('one', 'All at once')],
             'Delivery Method', required=True),
         'partner_id': fields.many2one('res.partner', string = 'Partner'), #Sale should pass it here 
-        'procurement_ids': fields.many2one('procurement.order', 'group_id', 'Procurements'), 
+        'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'), 
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
@@ -74,6 +74,7 @@ class procurement_rule(osv.osv):
     '''
     _name = 'procurement.rule'
     _description = "Procurement Rule"
+    _order = "name"
 
     def _get_action(self, cr, uid, context=None):
         return []
@@ -84,6 +85,7 @@ class procurement_rule(osv.osv):
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
             string='Action', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
 
@@ -108,7 +110,7 @@ class procurement_order(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True),
         'date_planned': fields.datetime('Scheduled date', required=True, select=True),
 
-        'group_id': fields.many2one('procurement.group', 'Procurement Requisition'),
+        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Rule'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
@@ -125,10 +127,9 @@ class procurement_order(osv.osv):
             ('running', 'Running'),
             ('done', 'Done')
         ], 'Status', required=True, track_visibility='onchange'),
-        'message': fields.text('Latest error', help="Exception occurred while computing procurement orders."),
-
-
+        'message': fields.text('Latest error', help="Exception occurred while computing procurement orders.", track_visibility='onchange'),
     }
+
     _defaults = {
         'state': 'confirmed',
         'priority': '1',
@@ -149,30 +150,38 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
+    def cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        return True
+
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            if self._assign(cr, uid, procurement, context=context):
-                procurement.refresh()
-                self._run(cr, uid, procurement, context=context or {})
-                self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
-            else:
-                self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
-                self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+            if procurement.state not in ("running", "done"):
+                if self._assign(cr, uid, procurement, context=context):
+                    procurement.refresh()
+                    res = self._run(cr, uid, procurement, context=context or {})
+                    if res:
+                        self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                    else:
+                        self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                else:
+                    self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
+                    self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
         return True
 
     def check(self, cr, uid, ids, context=None):
-        done = []
+        done_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
             result = self._check(cr, uid, procurement, context=context)
             if result:
-                self.write(cr, uid, [procurement.id], {'state': 'done'}, context=context)
-                done.append(procurement.id)
-        return done
+                done_ids.append(procurement.id)
+        if done_ids:
+            self.write(cr, uid, done_ids, {'state': 'done'}, context=context)
+        return done_ids
 
     #
     # Method to overwrite in different procurement modules
     #
-    
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         '''This method returns a procurement.rule that depicts what to do with the given procurement
         in order to complete its needs. It returns False if no suiting rule is found.
@@ -188,10 +197,13 @@ class procurement_order(osv.osv):
             :param procurement: browse record
             :rtype: boolean
         '''
-        rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
-        if rule_id:
-            self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
-            return True
+        if procurement.product_id.type != 'service':
+            rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
+            if rule_id:
+                rule = self.pool.get('procurement.rule').browse(cr, uid, rule_id, context=context)
+                self.message_post(cr, uid, [procurement.id], body=_('Following rule %s for the procurement resolution.') % (rule.name), context=context)
+                self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
+                return True
         return False
 
     def _run(self, cr, uid, procurement, context=None):

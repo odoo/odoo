@@ -58,6 +58,9 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
+    #
+    # TODO: Needs to be rechecked 
+    #
     def _get_domain_locations(self, cr, uid, ids, context=None):
         '''
         Parses the context and returns a list of location_ids based on it.
@@ -118,9 +121,13 @@ class product_product(osv.osv):
         domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
         domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
         domain_quant += domain_products
-
-        if context.get('lot_id', False):
-            domain_quant.append(('lot_id','=',context['lot_id']))
+        if context.get('lot_id') or context.get('owner_id') or context.get('package_id'):
+            if context.get('lot_id'):
+                domain_quant.append(('lot_id','=',context['lot_id']))
+            if context.get('owner_id'):
+                domain_quant.append(('owner_id','=',context['owner_id']))
+            if context.get('package_id'):
+                domain_quant.append(('package_id','=',context['package_id']))
             moves_in  = []
             moves_out = []
         else:
@@ -208,6 +215,9 @@ class product_product(osv.osv):
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
+        'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', 
+                                    help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -258,6 +268,7 @@ class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
     _columns = {
+        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',

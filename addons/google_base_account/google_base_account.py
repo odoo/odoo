@@ -28,7 +28,7 @@ import urllib2
 import simplejson
 
 
-class google_service(osv.osv):
+class google_service(osv.osv_memory):
     _name = 'google.service'
 
     def generate_refresh_token(self, cr, uid, service, authorization_code, context=None):
@@ -51,10 +51,10 @@ class google_service(osv.osv):
             content = simplejson.loads(content)
         return content.get('refresh_token')
 
-    def _get_google_token_uri(self, cr, uid, service, context=None):
+    def _get_google_token_uri(self, cr, uid, service, scope, context=None):
         ir_config = self.pool['ir.config_parameter']
         params = {
-            'scope': 'https://www.googleapis.com/auth/drive',
+            'scope': scope,
             'redirect_uri': ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri'),
             'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
             'response_type': 'code',

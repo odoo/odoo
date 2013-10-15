@@ -24,7 +24,7 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Valuation, Accounting',
-    'description' : """
+    'description': """
 TODO
 ======================
 TODO
@@ -47,13 +47,14 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_account_demo.xml'
     ],
     'data': [
-        'stock_account_data.xml', 
-        'wizard/stock_invoice_onshipping_view.xml',
+        'security/stock_account_security.xml',
+        'security/ir.model.access.csv',
+        'stock_account_data.xml',
         'wizard/stock_change_standard_price_view.xml',
+        'wizard/stock_invoice_onshipping_view.xml',
         'product_data.xml',
         'product_view.xml',
-
-        'stock_account_view.xml', 
+        'stock_account_view.xml',
         'valuationandcostmethod.yml',
     ],
     'test': [
@@ -63,5 +64,3 @@ Dashboard / Reports for Warehouse Management will include:
     'application': True,
     'auto_install': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

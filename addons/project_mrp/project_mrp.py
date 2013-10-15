@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 class procurement_order(osv.osv):
@@ -32,7 +31,7 @@ class procurement_order(osv.osv):
     }
 
     def _is_procurement_task(self, cr, uid, procurement, context=None):
-        return procurement.product_id.type == 'service' and procurement.product_it.auto_create_task or False
+        return procurement.product_id.type == 'service' and procurement.product_id.auto_create_task or False
 
     def _assign(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
@@ -49,8 +48,8 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context) and procurement.task_id and procurement.task_id.state == 'done':
-            return True
+        if self._is_procurement_task(cr, uid, procurement, context=context):
+            return procurement.task_id and procurement.task_id.stage_id.closed or False
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
@@ -70,6 +69,52 @@ class procurement_order(osv.osv):
             account = procurement.sale_line_id.order_id.project_id
             project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
             projects = project_project.browse(cr, uid, project_ids, context=context)
+            project = projects and projects[0] or False
+        return project
+
+    def _create_service_task(self, cr, uid, procurement, context=None):
+        project_task = self.pool.get('project.task')
+        project = self._get_project(cr, uid, procurement, context=context)
+        planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+        task_id = project_task.create(cr, uid, {
+            'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
+            'date_deadline': procurement.date_planned,
+            'planned_hours': planned_hours,
+            'remaining_hours': planned_hours,
+            'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
+            'user_id': procurement.product_id.product_manager.id,
+            'procurement_id': procurement.id,
+            'description': procurement.name + '\n',
+            'project_id': project and project.id or False,
+            'company_id': procurement.company_id.id,
+        },context=context)
+        self.write(cr, uid, [procurement.id], {'task_id': task_id, 'message':_('Task created.')}, context=context)
+        self.project_task_create_note(cr, uid, [procurement.id], context=context)
+        return task_id
+
+    def project_task_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = _("Task created")
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
+            if procurement.sale_line_id and procurement.sale_line_id.order_id:
+                procurement.sale_line_id.order_id.message_post(body=body)
+
+
+
+class ProjectTaskStageMrp(osv.Model):
+    """ Override project.task.type model to add a 'closed' boolean field allowing
+        to know that tasks in this stage are considered as closed. Indeed since
+        OpenERP 8.0 status is not present on tasks anymore, only stage_id. """
+    _name = 'project.task.type'
+    _inherit = 'project.task.type'
+
+    _columns = {
+        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
+    }
+
+    _defaults = {
+        'closed': False,
+    }
 
 
 class project_task(osv.osv):
@@ -80,11 +125,20 @@ class project_task(osv.osv):
         'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
 
-    #TODO handle the task cancellation
-    #def do_cancel(self, cr, uid, ids, *args, **kwargs):
-    #    res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
-    #    self._validate_subflows(cr, uid, ids)
-    #    return res
+    def _validate_subflows(self, cr, uid, ids, context=None):
+        proc_obj = self.pool.get("procurement.order")
+        for task in self.browse(cr, uid, ids, context=context):
+            if task.procurement_id:
+                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        """ When closing tasks, validate subflows. """
+        res = super(project_task, self).write(cr, uid, ids, values, context=context)
+        if values.get('stage_id'):
+            stage = self.pool.get('project.task.type').browse(cr, uid, values.get('stage_id'), context=context)
+            if stage.closed:
+                self._validate_subflows(cr, uid, ids, context=context)
+        return res
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -93,25 +147,32 @@ class product_product(osv.osv):
         'auto_create_task': fields.boolean('Create Task Automatically', help="Thick this option if you want to create a task automatically each time this product is sold"),
     }
 
+
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale is installed alone, there is no need to create procurements, but with project_mrp
+        #we must create a procurement for each service that has the auto_create_task boolean set to True.
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.product_id and line.product_id.type == 'service' and line.product_id.auto_create_task:
+                return True
+        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
+
 class sale_order(osv.osv):
     _inherit = 'sale.order'
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
-        proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
-                uid, order, line, move_id, date_planned, context=context)
-        proc_data['sale_line_id'] = line.id
-        return proc_data
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids:
             return {}
         res_sale = {}
         res = super(sale_order, self)._picked_rate(cr, uid, ids, name, arg, context=context)
-        cr.execute('''select sol.order_id as sale_id, t.state as task_state ,
+        cr.execute('''select sol.order_id as sale_id, stage.closed as task_closed ,
                     t.id as task_id, sum(sol.product_uom_qty) as total
                     from project_task as t
                     left join sale_order_line as sol on sol.id = t.sale_line_id
-                    where sol.order_id in %s group by sol.order_id,t.state,t.id ''',(tuple(ids),))
+                    left join project_task_type as stage on stage.id = t.stage_id
+                    where sol.order_id in %s group by sol.order_id,stage.closed,t.id ''',(tuple(ids),))
         sale_task_data = cr.dictfetchall()
 
         if not sale_task_data:
@@ -131,7 +192,7 @@ class sale_order(osv.osv):
 
         for item in sale_task_data:
             res_sale[item['sale_id']]['total_no_task'] += item['total']
-            if item['task_state'] == 'done':
+            if item['task_closed']:
                 res_sale[item['sale_id']]['number_of_done'] += item['total']
 
         for sale in self.browse(cr, uid, ids, context=context):
@@ -147,4 +208,3 @@ class sale_order(osv.osv):
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
