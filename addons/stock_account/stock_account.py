@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -242,7 +243,8 @@ class stock_move(osv.osv):
         for q in move.quant_ids:
             average_valuation_price += q.qty * q.cost
         average_valuation_price = average_valuation_price / move.product_qty
-        product_obj.write(cr, uid, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
+        # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+        product_obj.write(cr, SUPERUSER_ID, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
         self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
@@ -260,8 +262,8 @@ class stock_move(osv.osv):
                     # Get the standard price
                     amount_unit = product.price_get('standard_price', context=ctx)[product.id]
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
-                # Write the field according to price type field
-                product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=context)
+                # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
 
     def product_price_update_after_done(self, cr, uid, ids, context=None):
         '''
