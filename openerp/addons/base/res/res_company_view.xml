@@ -80,7 +80,15 @@
                                 <field name="custom_footer" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
                                 <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>
                                 <field name="rml_footer_readonly" attrs="{'invisible': [('custom_footer','=',True)]}"/>
-                                <field name="font" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)"/>
+                            </group>
+                            <group>
+                                <label for="font" />
+                                <div>
+                                    <div>
+                                        <field name="font" class="oe_inline" colspan="2"/>
+                                        <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link" colspan="1"/>
+                                    </div>
+                                </div>
                             </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_no_one">
