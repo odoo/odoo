@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-10-14 18:54+0000\n"
+"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:51+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-10-15 05:18+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "I gang"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -29,6 +29,8 @@ msgid ""
 "enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
 "all users\""
 msgstr ""
+"- I dette \"Søge\" vindue, vælg menuen \"Gem aktive filter\", indtast navnet "
+"(Eks.: Opret 01/01/2012) og tilføj optionen \"Del med alle brugere\""
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
@@ -36,36 +38,38 @@ msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Hvornår skal regel aktiveres, Hvis den eksisterer, bliver den aktiveret af "
+"timer. Hvis den er tom, bliver den aktiveret ved oprettelse og opdatering."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr ""
+msgstr "Aktion regel"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Select a filter or a timer as condition."
-msgstr ""
+msgstr "Vælg et filter eller en timer"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Ansvarlig"
 
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Eksempel: email påmindelse, kald af objekt service, o.s.v."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
 msgid "Add Followers"
-msgstr ""
+msgstr "Tilføj tilhænger"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible"
-msgstr ""
+msgstr "Sæt ansvarlig"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -74,72 +78,75 @@ msgid ""
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Forsinkelse efter trigger tid. Du kan indsætte negativ antal hvis trigger "
+"skal udløses før tidspunkt, f.eks send en påmindelse 15 min. før et møde."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "base.action.rule.lead.test"
-msgstr ""
+msgstr "base.action.rule.lead.test"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Lukket"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
-msgstr ""
+msgstr "Opret"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Forsinkelse efter trigger tid"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions"
-msgstr ""
+msgstr "Betingelser"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Afventer"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Før opdatering filter"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Action Rule"
-msgstr ""
+msgstr "Aktion regel"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_id:0
 msgid ""
 "If present, this condition must be satisfied after the update of the record."
 msgstr ""
+"Hvis eksisterer, skal denne regel være sand efter opdatering af post."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr ""
+msgstr "Felter der ændres"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "Filter skal derfor være tilgængelige på denne side."
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
 msgid "After Update Filter"
-msgstr ""
+msgstr "Efter opdatering filter"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -149,7 +156,7 @@ msgstr "Timer"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "To create a new filter:"
-msgstr ""
+msgstr "For at oprette nyt filter"
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
@@ -160,7 +167,7 @@ msgstr "Aktiv"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Forsinkelse efter trigger tid"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -170,11 +177,15 @@ msgid ""
 "while the postcondition filter is checked after the modification. A "
 "precondition filter will therefore not work during a creation."
 msgstr ""
+"En aktion regel er markeret når du opretter eller ændrer den \"Tilhørende "
+"dokument model\". Før betingelses filter er markeret lige før ændringen mens "
+"efter betingelses filter er markeret efter ændringen. Et før betingelses "
+"filter virker derfor ikke ved en oprettelse."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Filter Condition"
-msgstr ""
+msgstr "Filter betingelse"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -183,6 +194,9 @@ msgid ""
 "in the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"- Gå til din \"Tilhørende dokument model\" side og sæt filter parameter i "
+"\"søge\" vindue (Eksempel på filter baseret på Emner/forventninger: "
+"Oprettelses dato \"er lig med\" 01/01/2012)"
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
@@ -193,12 +207,12 @@ msgstr "Regel Navn"
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
 #: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
 msgid "Automated Actions"
-msgstr ""
+msgstr "Automatiske aktioner"
 
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Angiver rækkefølge når listen af regler vises"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -213,37 +227,37 @@ msgstr "Dage"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Timer"
-msgstr ""
+msgstr "Nedtællingsur"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr ""
+msgstr "Forsinkelses type"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "Server aktion der afvikles"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Sat til falsk, reglen vil blive skjult og bliver ikke udført."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulleret"
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
 msgid "Last Run"
-msgstr ""
+msgstr "Seneste afvikling"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -253,23 +267,24 @@ msgstr "Minutter"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Relateret dokument model"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the record."
 msgstr ""
+"Hvis eksisterer, skal denne betingelse være opfyldt før opdatering af post."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Rækkefølge"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Actions"
-msgstr ""
+msgstr "Aktioner"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -287,34 +302,46 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik for at oprette ny automatisk regel. \n"
+"              </p><p>\n"
+"                Brug automatiske aktioner for automatisk at udføre aktioner "
+"på\n"
+"                diverse skærmbilleder. F.eks.: Et emne oprettet at en "
+"bestemt bruger skal\n"
+"                automatisk oprettes med  en bestemt salgs gruppe, eller et\n"
+"                tilbud der stadigt har status afventende efter 14 dage kan\n"
+"                udløse en automatisk påmindelses email.\n"
+"              </p>\n"
+"            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Oprettelses dato"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Sidste aktion"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Trigger dato"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 #: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
-msgstr ""
+msgstr "Server aktion"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Emne"
