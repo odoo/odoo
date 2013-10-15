@@ -905,7 +905,7 @@
                             </group>
                             <newline/>
                             <group string="Opening Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
-                                <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
+                                <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '!=', 'opening_control')]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
                                         <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
@@ -914,7 +914,7 @@
                                 </field>
                             </group>
                             <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="details_ids" nolabel="1" colspan="2">
+                                <field name="details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '=', 'closed')]}">
                                     <tree string="Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
                                         <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
