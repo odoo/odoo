@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-11 23:11+0000\n"
+"PO-Revision-Date: 2013-10-12 12:14+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:52+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-10-13 05:38+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 
 #. module: base_import
 #. openerp-web
@@ -701,7 +701,7 @@ msgstr "Adatok újratöltése a változások ellenőrzéséhez."
 #: code:addons/base_import/static/src/xml/import.xml:233
 #, python-format
 msgid "Customers and their respective contacts"
-msgstr ""
+msgstr "Ügyfelek és a kapcsolat tartóik"
 
 #. module: base_import
 #. openerp-web
@@ -1064,6 +1064,8 @@ msgid ""
 "The following CSV file shows how to import \n"
 "                        customers and their respective contacts"
 msgstr ""
+"A következő CSV fájl megmutatja hogyan importálhat \n"
+"                        ügyfeleket és a kapocslat tartóikat"
 
 #. module: base_import
 #. openerp-web
@@ -1225,6 +1227,18 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Ha egy fájlt importál ami tartalmaz egyet a következő \n"
+"                        oszlopból \"Külső ID\" vagy \"Adatbázis ID\", akkor "
+"a már \n"
+"                        importált rekord módosítva lesz annak újra "
+"létrehozása\n"
+"                        helyett. Ez nagyon hasznos mivel többszöri "
+"importálást \n"
+"                        is lehetővé tesz ugyanarra a CSV fájlra két "
+"importálás\n"
+"                        közti egy kis módosítás után. OpenERP gondoskodik \n"
+"                        a rekordok módosításról vagy létrehozásról attól\n"
+"                        függően, hogy az új vagy nem."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
@@ -1286,6 +1300,13 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Ha be akar importálni megrendelést, mely több sort \n"
+"                        tartalmaz; akkor mindegyik megrendelési sornak, \n"
+"                        egy oszlopot kell hagyni a CSV fájlban. Az első\n"
+"                        megrendelés sorba az első oszlop adatai \n"
+"                        lesznek importálva. Minden további sor további \n"
+"                        oszlopot igényel, ahol a megrendelés információi \n"
+"                        függnek a hozzárendelt oszlopoktól."
 
 #. module: base_import
 #. openerp-web
@@ -1346,6 +1367,12 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"A két létrehozott fájl az OpenERP-be való importálásra \n"
+"                        kész módosítás nélkül. Miután importálta ezeket \n"
+"                        a CSV fájlokat, 4 kapcsolata és \n"
+"                        3 vállalata lesz. (az első két kapcsolat az első \n"
+"                        vállalathoz kapcsolódik). Először a vállalatot \n"
+"                        kell importálni aztán a személyeket."
 
 #. module: base_import
 #. openerp-web
