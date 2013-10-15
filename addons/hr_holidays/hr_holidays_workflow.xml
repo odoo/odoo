@@ -23,6 +23,7 @@
     <record model="workflow.activity" id="act_draft"> <!-- draft -->
         <field name="wkf_id" ref="wkf_holidays" />
         <field name="name">draft</field>
+        <field name="flow_start">False</field>
         <field name="kind">function</field>
         <field name="action">holidays_reset()</field>
     </record>
