@@ -52,9 +52,10 @@ BUILTINS = {
 #SAFE = ["_name"]
 
 class QWebContext(dict):
-    def __init__(self, data, undefined_handler=None, loader=None):
+    def __init__(self, data, undefined_handler=None, loader=None, templates=None):
         self.loader = loader
         self.undefined_handler = undefined_handler
+        self.templates = templates or {}
         dic = BUILTINS.copy()
         dic.update(data)
         super(QWebContext, self).__init__(dic)
@@ -92,7 +93,8 @@ class QWebContext(dict):
     def copy(self):
         return QWebContext(dict.copy(self),
                            undefined_handler=self.undefined_handler,
-                           loader=self.loader)
+                           loader=self.loader,
+                           templates=self.templates)
 
     def __copy__(self):
         return self.copy()
@@ -142,7 +144,6 @@ class QWeb(orm.AbstractModel):
 
     def __init__(self, pool, cr):
         super(QWeb, self).__init__(pool, cr)
-        self._t = {}
 
         self._render_tag = self.prefixed_methods('render_tag_')
         self._render_att = self.prefixed_methods('render_att_')
@@ -163,7 +164,7 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def load_document(self, x):
+    def load_document(self, x, into):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -176,15 +177,15 @@ class QWeb(orm.AbstractModel):
 
         for n in dom.documentElement.childNodes:
             if n.nodeType == self.node.ELEMENT_NODE and n.getAttribute('t-name'):
-                self._t[str(n.getAttribute("t-name"))] = n
+                into[str(n.getAttribute("t-name"))] = n
 
     def get_template(self, name, context):
-        if context.loader and name not in self._t:
+        if context.loader and name not in context.templates:
             xml_doc = context.loader(name)
-            self.load_document(xml_doc)
+            self.load_document(xml_doc, into=context.templates)
 
-        if name in self._t:
-            return self._t[name]
+        if name in context.templates:
+            return context.templates[name]
 
         raise KeyError('qweb: template "%s" not found' % name)
 
