@@ -16,12 +16,8 @@
             </xpath>
         </template>
 
-        <template id="index" name="Departments" page="True">
+        <template id="index" name="Jobs" page="True">
             <t t-call="website.layout">
-                <t t-set="head">
-                    <t t-raw="head or ''"/>
-                </t>
-                <t t-set="title">Jobs</t>
                 <div id="wrap">
                     <div class="oe_structure"/>
                     <div class="container oe_website_jobs">
@@ -64,7 +60,7 @@
                 <script type="text/javascript" src="/website_hr_recruitment/static/src/js/recruitment.js"></script>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="title">Job Detail</t>
+            <t t-set="additional_title">Job Detail</t>
             <div id="wrap">
                 <div class="container oe_website_hr_recruitment">
                     <div class="row">
@@ -110,7 +106,7 @@
 
         <template id="applyjobpost">
             <t t-call="website.layout">
-                <t t-set="title">Apply Job</t>
+                <t t-set="additional_title">Apply Job</t>
                 <div id="wrap">
                     <div class="container">
                         <h1 class="text-center">Apply for <span t-field="job.name"></span></h1>
@@ -158,7 +154,7 @@
         </template>
         <template id="thankyou">
             <t t-call="website.layout">
-                <t t-set="title">Thank You!</t>
+                <t t-set="additional_title">Thank You!</t>
         <div id="wrap">
                     <div class="container">
             <h1>You have successfully applied for job.</h1>

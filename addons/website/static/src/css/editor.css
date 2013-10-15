@@ -155,8 +155,17 @@ table.editorbar-panel td.selected {
   margin-bottom: 0.5em;
 }
 
+.cke_widget_wrapper {
+  position: static !important;
+}
+
 .cke_widget_drag_handler_container {
   display: none !important;
+}
+
+.cke_widget_editable:empty:after {
+  content: " ";
+  white-space: pre-wrap;
 }
 
 /* ---- SNIPPET EDITOR ---- */

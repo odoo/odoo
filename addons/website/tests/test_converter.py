@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
 from functools import partial
 from xml.dom.minidom import getDOMImplementation
 
-from lxml import etree, html
+from lxml import html
 
 from openerp.tests import common
-from openerp.tools import qweb
-import unittest2
+from openerp.addons.base.ir import ir_qweb
 
-renderer = qweb.QWebXml()
 impl = getDOMImplementation()
 document = impl.createDocument(None, None, None)
-
-Request = namedtuple('Request', 'cr uid registry')
-class RegistryProxy(object):
-    def __init__(self, func):
-        self.func = func
-    def __getitem__(self, name):
-        return self.func(name)
 
 class TestConvertBack(common.TransactionCase):
     def setUp(self):
         super(TestConvertBack, self).setUp()
-
-        self.Converter = self.registry('ir.fields.converter')
 
     def field_rountrip_result(self, field, value, expected):
         model = 'website.converter.test'
@@ -39,21 +27,19 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.setAttribute('t-field', field_value)
 
-        rendered = renderer.render_tag_field(
-            e, {'field': field_value}, '', {
+        rendered = self.registry('website.qweb').render_tag_field(
+            e, {'field': field_value}, '', ir_qweb.QWebContext({
                 'record': record,
-                '_request': Request(self.cr, self.uid, RegistryProxy( self.registry)),
-            })
+            }))
         element = html.fromstring(
             rendered, parser=html.HTMLParser(encoding='utf-8'))
 
         column = Model._all_columns[field].column
+        converter = self.registry('website.qweb').get_converter_for(
+            element.get('data-oe-type'))
 
-        from_html = self.Converter.to_field(
-            self.cr, self.uid, model, column, 'html')
-
-        value_back, warnings = from_html(element)
-        self.assertEqual(warnings, [])
+        value_back = converter.from_html(
+            self.cr, self.uid, model, column, element)
 
         if isinstance(expected, str):
             expected = expected.decode('utf-8')

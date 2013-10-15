@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import fnmatch
 import functools
 import simplejson
 
@@ -49,7 +50,7 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
-def url_for(path, lang=None):
+def url_for(path, lang=None, keep_query=None):
     if request:
         path = urljoin(request.httprequest.path, path)
         langs = request.context.get('langs')
@@ -61,6 +62,16 @@ def url_for(path, lang=None):
             else:
                 ps.insert(1, lang)
             path = '/'.join(ps)
+        if keep_query:
+            keep = []
+            params = werkzeug.url_decode(request.httprequest.query_string)
+            params_keys = tuple(params.keys())
+            for kq in keep_query:
+                keep += fnmatch.filter(params_keys, kq)
+            if keep:
+                params = dict([(k, params[k]) for k in keep])
+                path += u'?%s' % werkzeug.urls.url_encode(params)
+
     return path
 
 def urlplus(url, params):
@@ -157,21 +168,29 @@ class website(osv.osv):
             inherit_branding=qweb_context.setdefault('editable', False),
         )
 
+        view_ref = None
         # check if xmlid of the template exists
         try:
             module, xmlid = template.split('.', 1)
-            IMD.get_object_reference(cr, uid, module, xmlid)
+            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
         except ValueError: # catches both unpack errors and gor errors
             module, xmlid = 'website', template
             try:
-                IMD.get_object_reference(cr, uid, module, xmlid)
+                view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
             except ValueError:
                 logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
                 return self.render(cr, uid, ids, 'website.404', qweb_context)
 
         try:
-            return view.render(cr, uid, "%s.%s" % (module, xmlid),
-                               qweb_context, context=context)
+            main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
+            qweb_context['main_object'] = main_object
+        except Exception:
+            pass
+
+        try:
+            return view.render(
+                cr, uid, "%s.%s" % (module, xmlid), qweb_context,
+                engine='website.qweb', context=context)
         except (AccessError, AccessDenied), err:
             logger.error(err)
             qweb_context['error'] = err[1]
