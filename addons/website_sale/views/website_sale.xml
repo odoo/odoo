@@ -246,7 +246,7 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                      <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,search,facettes">
+                      <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,facettes">
                           <div class="input-group">
                               <t t-if="search">
                               <t foreach="search.items()" t-as="key">
@@ -499,7 +499,7 @@
 
     <template id="products_attributes" inherit_option_id="website_sale.products_categories" name="Product Attributes">
         <xpath expr="//div[@id='categories']" position="inside">
-            <form t-action="/shop/attributes/" method="post" t-keep-query="category,search,attributes">
+            <form t-action="/shop/attributes/" method="post" t-keep-query="category,search">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
                     <t t-foreach="attribute_ids" t-as="attribute_id">
