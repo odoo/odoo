@@ -397,7 +397,7 @@ class stock_quant(osv.osv):
             #solving_quant, dummy = self._reconcile_single_negative_quant(cr, uid, to_solve_quant, solving_quant, quant_neg, qty, context=context)
 
     def _price_update(self, cr, uid, ids, newprice, context=None):
-        self.write(cr, SUPERSER_ID, ids, {'cost': newprice}, context=context)
+        self.write(cr, SUPERUSER_ID, ids, {'cost': newprice}, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         #We want to trigger the move with nothing on reserved_quant_ids for the store of the remaining quantity
@@ -1327,7 +1327,7 @@ class stock_move(osv.osv):
         default['origin_returned_move_id'] = False
         default['state'] = 'draft'
         return super(stock_move, self).copy(cr, uid, id, default, context)
-
+    
     def _default_location_destination(self, cr, uid, context=None):
         context = context or {}
         if context.get('default_picking_type_id', False):
@@ -1335,7 +1335,7 @@ class stock_move(osv.osv):
             return pick_type.default_location_dest_id and pick_type.default_location_dest_id.id or False
         return False
 
-    def _default_location_source(self, cr, uid, context=None):
+    def _default_location_source(self, cr, uid, context=None):        
         context = context or {}
         if context.get('default_picking_type_id', False):
             pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['default_picking_type_id'], context=context)

@@ -104,7 +104,8 @@ class stock_change_product_qty(osv.osv_memory):
             }
             inventry_line_obj.create(cr , uid, line_data, context=context)
 
-            inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
+            #doesn't exist
+            #inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
 

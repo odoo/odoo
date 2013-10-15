@@ -370,11 +370,11 @@ class stock_warehouse(osv.osv):
             vals[values['field']] = location_id
 
         #create new sequences
-        in_seq_id = seq_obj.create(cr, uid, values={'name': vals.get('name', '') + _(' Sequence in'), 'prefix': vals.get('code', '') + '\IN\\', 'padding': 5}, context=context)
-        out_seq_id = seq_obj.create(cr, uid, values={'name': vals.get('name', '') + _(' Sequence out'), 'prefix': vals.get('code', '') + '\OUT\\', 'padding': 5}, context=context)
-        pack_seq_id = seq_obj.create(cr, uid, values={'name': vals.get('name', '') + _(' Sequence packing'), 'prefix': vals.get('code', '') + '\PACK\\', 'padding': 5}, context=context)
-        pick_seq_id = seq_obj.create(cr, uid, values={'name': vals.get('name', '') + _(' Sequence picking'), 'prefix': vals.get('code', '') + '\PICK\\', 'padding': 5}, context=context)
-        int_seq_id = seq_obj.create(cr, uid, values={'name': vals.get('name', '') + _(' Sequence internal'), 'prefix': vals.get('code', '') + '\INT\\', 'padding': 5}, context=context)
+        in_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence in'), 'prefix': vals.get('code', '') + '\IN\\', 'padding': 5}, context=context)
+        out_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence out'), 'prefix': vals.get('code', '') + '\OUT\\', 'padding': 5}, context=context)
+        pack_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence packing'), 'prefix': vals.get('code', '') + '\PACK\\', 'padding': 5}, context=context)
+        pick_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence picking'), 'prefix': vals.get('code', '') + '\PICK\\', 'padding': 5}, context=context)
+        int_seq_id = seq_obj.create(cr, SUPERUSER_ID, values={'name': vals.get('name', '') + _(' Sequence internal'), 'prefix': vals.get('code', '') + '\INT\\', 'padding': 5}, context=context)
 
         #create WH
         new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
