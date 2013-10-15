@@ -6,7 +6,7 @@ import openerp
 class ImportController(openerp.addons.web.http.Controller):
     _cp_path = '/base_import'
 
-    @openerp.addons.web.http.httprequest
+    @openerp.addons.web.http.route('/base_import/set_file', type='http', auth='user')
     def set_file(self, req, file, import_id, jsonp='callback'):
         import_id = int(import_id)
 
