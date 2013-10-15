@@ -884,8 +884,6 @@ class stock_picking(osv.osv):
             
         """
         quant_obj = self.pool.get("stock.quant")
-        move_obj = self.pool.get("stock.move")
-        op_obj = self.pool.get("stock.pack.operation")
         pack_obj = self.pool.get("stock.quant.package")
         res = {} # Qty still to do from ops
         res2 = {} #what is left from moves
@@ -1689,12 +1687,13 @@ class stock_move(osv.osv):
             if move.picking_id and move.picking_id.pack_operation_ids:
                 quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty - move.remaining_qty, domain=dom, prefered_order = prefered_order, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
-                for negative_op in negatives[move.id].keys():
-                    ops = ops_obj.browse(cr, uid, negative_op, context=context)
-                    negatives[move.id][negative_op] = quant_obj.quants_move(cr, uid, [(None, negatives[move.id][negative_op])], move, 
-                                                                            lot_id = ops.lot_id and ops.lot_id.id or False, 
-                                                                            owner_id = ops.owner_id and ops.owner_id.id or False, 
-                                                                            package_id = ops.package_id and ops.package_id.id or False, context=context)
+                if negatives and move.id in negatives:
+                    for negative_op in negatives[move.id].keys():
+                        ops = ops_obj.browse(cr, uid, negative_op, context=context)
+                        negatives[move.id][negative_op] = quant_obj.quants_move(cr, uid, [(None, negatives[move.id][negative_op])], move, 
+                                                                                lot_id = ops.lot_id and ops.lot_id.id or False, 
+                                                                                owner_id = ops.owner_id and ops.owner_id.id or False, 
+                                                                                package_id = ops.package_id and ops.package_id.id or False, context=context)
                 #Packing:
                 reserved_ops = list(set([x.reservation_op_id.id for x in move.reserved_quant_ids]))
                 for ops in ops_obj.browse(cr, uid, reserved_ops, context=context):
