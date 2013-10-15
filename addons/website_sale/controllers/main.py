@@ -278,7 +278,7 @@ class Ecommerce(http.Controller):
         return [r[0] for r in request.cr.fetchall()]
 
     @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
-    def category(self, category=0, page=0, **post):
+    def category(self, category=0, attributes="", page=0, **post):
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
@@ -292,15 +292,16 @@ class Ecommerce(http.Controller):
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search")),
                 ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
-        if post.get('category'):
-            cat_id = int(post.get('category'))
-            domain += [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
 
-        if post.get('attributes'):
-            attributes = simplejson.loads(post['attributes'])
+        if category:
+            cat_id = int(category)
+            domain = [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
+
+        if attributes:
+            attributes = simplejson.loads(attributes)
             if attributes:
                 ids = self.attributes_to_ids(attributes)
-                domain += [('id', 'in', ids or [0] )]
+                domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
