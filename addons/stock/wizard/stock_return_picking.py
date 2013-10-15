@@ -162,13 +162,15 @@ class stock_return_picking(osv.osv_memory):
         returned_lines = 0
         
 #        Create new picking for returned products
+
+        seq_obj_name = 'stock.picking'
+        new_type = 'internal'
         if pick.type =='out':
             new_type = 'in'
+            seq_obj_name = 'stock.picking.in'
         elif pick.type =='in':
             new_type = 'out'
-        else:
-            new_type = 'internal'
-        seq_obj_name = 'stock.picking.' + new_type
+            seq_obj_name = 'stock.picking.out'
         new_pick_name = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
         new_picking = pick_obj.copy(cr, uid, pick.id, {
                                         'name': _('%s-%s-return') % (new_pick_name, pick.name),
@@ -183,6 +185,8 @@ class stock_return_picking(osv.osv_memory):
         for v in val_id:
             data_get = data_obj.browse(cr, uid, v, context=context)
             mov_id = data_get.move_id.id
+            if not mov_id:
+                raise osv.except_osv(_('Warning !'), _("You have manually created product lines, please delete them to proceed"))
             new_qty = data_get.quantity
             move = move_obj.browse(cr, uid, mov_id, context=context)
             new_location = move.location_dest_id.id

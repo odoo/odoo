@@ -83,6 +83,8 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        if not ustr(country_code).encode('utf-8').isalpha():
+            return False
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or \
                         getattr(vatnumber, check_func_name, None)

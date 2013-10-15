@@ -157,7 +157,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
-                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."))
         if value:
             return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
@@ -295,10 +295,6 @@ class account_analytic_account(osv.osv):
             args=[]
         if context is None:
             context={}
-        if context.get('current_model') == 'project.project':
-            project_obj = self.pool.get("account.analytic.account")
-            project_ids = project_obj.search(cr, uid, args)
-            return self.name_get(cr, uid, project_ids, context=context)
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:

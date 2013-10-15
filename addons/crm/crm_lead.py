@@ -77,26 +77,26 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _track = {
         'state': {
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
             'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
         },
         'stage_id': {
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'cancel', 'done'],
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'cancel', 'done'],
         },
     }
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('section_id'):
-                ctx['default_section_id'] = vals['section_id']
-            if vals.get('type'):
-                ctx['default_type'] = vals['type']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
-        return super(crm_lead, self).create(cr, uid, vals, context=context)
+        if vals.get('type') and not context.get('default_type'):
+            context['default_type'] = vals.get('type')
+        if vals.get('section_id') and not context.get('default_section_id'):
+            context['default_section_id'] = vals.get('section_id')
+
+        # context: no_log, because subtype already handle this
+        create_context = dict(context, mail_create_nolog=True)
+        return super(crm_lead, self).create(cr, uid, vals, context=create_context)
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -360,12 +360,11 @@ class crm_lead(base_stage, format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = False
         if user_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
-                section_id = section_ids[0]
-        return {'value': {'section_id': section_id}}
+                return {'value': {'section_id': section_ids[0]}}
+        return {'value': {}}
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
@@ -663,7 +662,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         # Merge notifications about loss of information
         opportunities = [highest]
         opportunities.extend(opportunities_rest)
-        self._merge_notify(cr, uid, highest, opportunities, context=context)
+        self._merge_notify(cr, uid, highest.id, opportunities, context=context)
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('section_id'):
             section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)
@@ -671,8 +670,9 @@ class crm_lead(base_stage, format_address, osv.osv):
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities
-        self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
+        # Delete tail opportunities 
+        # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
+        self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
         return highest.id
 

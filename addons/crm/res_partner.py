@@ -56,7 +56,7 @@ class res_partner(osv.osv):
 
         default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
 
-        super(res_partner, self).copy(cr, uid, record_id, default, context)
+        return super(res_partner, self).copy(cr, uid, record_id, default, context)
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')

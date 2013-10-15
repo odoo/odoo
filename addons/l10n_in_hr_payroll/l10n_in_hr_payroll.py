@@ -105,7 +105,7 @@ class payroll_advice(osv.osv):
             slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
                 line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
@@ -131,7 +131,7 @@ class payroll_advice(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
-                raise osv.except_osv(_('Error !'), _('You can not confirm Payment advice without advice lines.'))
+                raise osv.except_osv(_('Error!'), _('You can not confirm Payment advice without advice lines.'))
             advice_date = datetime.strptime(advice.date, DATETIME_FORMAT)
             advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
             number = seq_obj.get(cr, uid, 'payment.advice')
@@ -187,7 +187,7 @@ class hr_payslip_run(osv.osv):
         users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
         for run in self.browse(cr, uid, ids, context=context):
             if run.available_advice:
-                raise osv.except_osv(_('Error !'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
+                raise osv.except_osv(_('Error!'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
             advice_data = {
                         'batch_id': run.id,
                         'company_id': users[0].company_id.id,
@@ -204,7 +204,7 @@ class hr_payslip_run(osv.osv):
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id or not slip.employee_id.bank_account_id.acc_number:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
                 line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]

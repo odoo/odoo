@@ -40,7 +40,9 @@ class test_portal(TestMailBase):
         self.partner_chell_id = self.user_chell.partner_id.id
 
         # Create a PigsPortal group
-        self.group_port_id = self.mail_group.create(cr, uid, {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id})
+        self.group_port_id = self.mail_group.create(cr, uid,
+                        {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id},
+                        {'mail_create_nolog': True})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
@@ -130,3 +132,28 @@ class test_portal(TestMailBase):
                             'body of invitation email is incorrect')
             self.assertTrue(partner_carine.signup_url in sent_email.get('body'),
                             'body of invitation email does not contain signup url')
+
+    def test_20_message_read(self):
+        cr, uid, group_port_id = self.cr, self.uid, self.group_port_id
+
+        # Data: custom subtypes
+        mt_group_public_id = self.mail_message_subtype.create(cr, uid, {'name': 'group_public', 'description': 'Group changed'})
+        self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
+        # Data: post messages with various subtypes
+        msg1_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body1', type='comment', subtype='mail.mt_comment')
+        msg2_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body2', type='comment', subtype='mail.mt_group_public')
+        msg3_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body3', type='comment', subtype='mail.mt_comment')
+        msg4_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body4', type='comment')
+        msg5_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body5', type='notification')
+
+        # Do: Chell search messages: should not see internal notes (comment without subtype)
+        msg_ids = self.mail_message.search(cr, self.user_chell_id, [('model', '=', 'mail.group'), ('res_id', '=', group_port_id)])
+        self.assertEqual(set(msg_ids), set([msg1_id, msg2_id, msg3_id, msg5_id]),
+                        'mail_message: portal user has access to messages he should not read')
+
+        # Do: Chell read messages she can read
+        self.mail_message.read(cr, self.user_chell_id, msg_ids, ['body', 'type', 'subtype_id'])
+
+        # Do: Chell read a message she should not be able to read
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, self.user_chell_id, [msg4_id], ['body', 'type', 'subtype_id'])

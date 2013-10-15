@@ -90,7 +90,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_resource_calendar_search"/>
-            <field name="help">Define working hours and time table that could be scheduled to your project members</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Define working hours and time table that could be scheduled to your project members
+              </p>
+            </field>
         </record>
 
         <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">

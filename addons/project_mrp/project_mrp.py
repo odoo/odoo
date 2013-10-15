@@ -108,5 +108,3 @@ class sale_order(osv.osv):
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
     }
 
-sale_order()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

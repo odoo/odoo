@@ -104,7 +104,7 @@ class base_state(object):
                 if parent_id.change_responsible and parent_id.user_id:
                     data['user_id'] = parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+                raise osv.except_osv(_('Error!'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(parent_id, context=context)
         return True

@@ -62,6 +62,7 @@ class base_action_rule(osv.osv):
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
+            help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
             help="Delay after the trigger date." \

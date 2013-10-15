@@ -34,7 +34,10 @@ class account_common_report(osv.osv_memory):
         res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-            res['value'] = {'company_id': company_id}
+            now = time.strftime('%Y-%m-%d')
+            domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
+            fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, domain, limit=1)
+            res['value'] = {'company_id': company_id, 'fiscalyear_id': fiscalyears and fiscalyears[0] or False}
         return res
 
     _columns = {
@@ -124,10 +127,11 @@ class account_common_report(osv.osv_memory):
         now = time.strftime('%Y-%m-%d')
         company_id = False
         ids = context.get('active_ids', [])
-        domain = [('date_start', '<', now), ('date_stop', '>', now)]
         if ids and context.get('active_model') == 'account.account':
             company_id = self.pool.get('account.account').browse(cr, uid, ids[0], context=context).company_id.id
-            domain += [('company_id', '=', company_id)]
+        else:  # use current company id
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
         fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, domain, limit=1)
         return fiscalyears and fiscalyears[0] or False
 
@@ -150,6 +154,7 @@ class account_common_report(osv.osv_memory):
         result['fiscalyear'] = 'fiscalyear_id' in data['form'] and data['form']['fiscalyear_id'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
+        result['state'] = 'target_move' in data['form'] and data['form']['target_move'] or ''
         if data['form']['filter'] == 'filter_date':
             result['date_from'] = data['form']['date_from']
             result['date_to'] = data['form']['date_to']
@@ -175,7 +180,7 @@ class account_common_report(osv.osv_memory):
                 data['form'][field] = data['form'][field][0]
         used_context = self._build_contexts(cr, uid, ids, data, context=context)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
-        data['form']['used_context'] = used_context
+        data['form']['used_context'] = dict(used_context, lang=context.get('lang', 'en_US'))
         return self._print_report(cr, uid, ids, data, context=context)
 
 account_common_report()

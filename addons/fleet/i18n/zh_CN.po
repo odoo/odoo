@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:39+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-07-13 06:55+0000\n"
+"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:39+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-07-14 05:59+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -122,7 +122,7 @@ msgstr "供应商"
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:0
 msgid "Write here any other information"
-msgstr ""
+msgstr "任意其它信息写于此处"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
@@ -147,7 +147,7 @@ msgstr "升"
 #. module: fleet
 #: model:ir.actions.client,name:fleet.action_fleet_menu
 msgid "Open Fleet Menu"
-msgstr ""
+msgstr "打开 车队菜单"
 
 #. module: fleet
 #: view:board.board:0
@@ -301,7 +301,7 @@ msgstr "消息"
 #. module: fleet
 #: model:res.groups,name:fleet.group_fleet_user
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,vehicle_id:0
@@ -482,7 +482,7 @@ msgstr "车辆服务日志"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
-msgstr "车辆的加油日志"
+msgstr "车辆加油记录"
 
 #. module: fleet
 #: view:fleet.vehicle.model.brand:0
@@ -615,6 +615,11 @@ msgid "Refueling"
 msgstr "加油"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_45
+msgid "Tire Replacement"
+msgstr "轮胎更换"
+
+#. module: fleet
 #: help:fleet.vehicle,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -634,7 +639,7 @@ msgstr "车辆加油日志"
 #. module: fleet
 #: view:fleet.vehicle.log.services:0
 msgid "Write here any other information related to the service completed."
-msgstr ""
+msgstr "与该服务完成相关联的任意信息写于此处。"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -808,9 +813,9 @@ msgid "Services for vehicles"
 msgstr "车辆服务"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-msgid "Indicative Cost"
-msgstr "指标性成本"
+#: model:fleet.service.type,name:fleet.type_service_service_16
+msgid "Options"
+msgstr "选项"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_26
@@ -969,7 +974,7 @@ msgstr "服务日志"
 #. module: fleet
 #: view:fleet.vehicle.model:0
 msgid "Brand"
-msgstr ""
+msgstr "品牌"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1053,7 +1058,7 @@ msgstr "更换化油器"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
-msgstr ""
+msgstr "车辆状态"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
@@ -1181,9 +1186,27 @@ msgid "Cost Type"
 msgstr "费用类型"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_4
-msgid "A/C Evaporator Replacement"
-msgstr "A/C蒸发仪更换"
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new odometer log. \n"
+"              </p>\n"
+"              <p>\n"
+"                Here you can add various odometer entries for all vehicles.\n"
+"                You can also show odometer value for a particular vehicle "
+"using\n"
+"                the search field.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个新的里程记录 \n"
+"              </p>\n"
+"              <p>\n"
+"                这里可以为所有车辆添加不同的里程记录.\n"
+"                你也能使用 搜索字段为部分车辆展示里程记录值 。\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1400,9 +1423,9 @@ msgid "Odometer"
 msgstr "里程表"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_45
-msgid "Tire Replacement"
-msgstr "轮胎更换"
+#: model:fleet.service.type,name:fleet.type_service_4
+msgid "A/C Evaporator Replacement"
+msgstr "A/C蒸发仪更换"
 
 #. module: fleet
 #: view:fleet.service.type:0
@@ -1504,21 +1527,12 @@ msgstr "已采购"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
 msgid "Write here all other information relative to this contract"
-msgstr ""
+msgstr "与该合约相关的所有其它信息写于此处。"
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
-msgid ""
-"<p>\n"
-"                Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle "
-"using\n"
-"                the search field.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"在这里，您可以为添加各种车辆一天的里程项目。您也可以使用搜索字段显示为一个特定的车辆的里程计值\n"
-"            "
+#: view:fleet.vehicle.log.contract:0
+msgid "Indicative Cost"
+msgstr "指标性成本"
 
 #. module: fleet
 #: field:fleet.vehicle.model,brand_id:0
@@ -1771,11 +1785,6 @@ msgid "Ignition Coil Replacement"
 msgstr "点火线圈更换"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_16
-msgid "Options"
-msgstr "选项"
-
-#. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_repairing
 msgid "Repairing"
 msgstr "正在修复"
@@ -1908,7 +1917,7 @@ msgstr "已产生的费用"
 #. module: fleet
 #: field:fleet.vehicle.state,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序号"
 
 #. module: fleet
 #: field:fleet.vehicle,color:0
@@ -1951,7 +1960,7 @@ msgstr "车辆座位数"
 #. module: fleet
 #: model:res.groups,name:fleet.group_fleet_manager
 msgid "Manager"
-msgstr ""
+msgstr "管理员"
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:0
@@ -2009,3 +2018,15 @@ msgstr "仅限内部用途"
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
 msgstr "用通知阶段来排序"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                Here you can add various odometer entries for all vehicles.\n"
+#~ "                You can also show odometer value for a particular vehicle "
+#~ "using\n"
+#~ "                the search field.\n"
+#~ "              </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "在这里，您可以为添加各种车辆一天的里程项目。您也可以使用搜索字段显示为一个特定的车辆的里程计值\n"
+#~ "            "

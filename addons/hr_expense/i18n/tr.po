@@ -7,21 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-14 07:08+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-08-04 16:32+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-15 06:07+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-08-05 06:30+0000\n"
+"X-Generator: Launchpad (build 16718)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
 msgstr "Onaylı Giderler"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:349
+#, python-format
+msgid ""
+"No purchase account found for the product %s (or for his category), please "
+"configure one."
+msgstr ""
+"%s Ürünün bulunamadı satınalma hesabı (ya da kategori için), lütfenönce "
+"yapılandırın."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -36,7 +46,7 @@ msgstr "Muhasebeci masrafları geri ödeme"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr "Gider onaylanmış"
+msgstr "Gider onaylandı"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -87,7 +97,12 @@ msgstr "Mart"
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr "Okunmamış mesajlar"
+msgstr "Okunmamış Mesajlar"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Payment"
+msgstr "Ödeme Bekleyen"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -113,18 +128,13 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
-"Gider günlüğü bulunamadı. Lütfen \"satınalma\" türü olarak yapılandırılmış "
-"bir günlüğünüzün olduğundan emin olun."
+"Gider yevmiyesi bulunamadı. Lütfen \"satınalma\" türü olarak yapılandırılmış "
+"bir yevmiyesi olduğundan emin olun."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
 msgid "Expenses Statistics"
 msgstr "Gider İstatistikleri"
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Open Receipt"
-msgstr "Makbuz Aç"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -152,8 +162,10 @@ msgstr "Mesajlar"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
-#: code:addons/hr_expense/hr_expense.py:181
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
+#: code:addons/hr_expense/hr_expense.py:240
+#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -185,6 +197,11 @@ msgid "The direct manager refuses the sheet.Reset as draft."
 msgstr "Yönetici tabloyu geri çevirir. Taslağa geri ayarla."
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Open Accounting Entries"
+msgstr "Açık Muhasebe Girişleri"
+
+#. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Eğer seçilirse yeni mesajlar dikkat gerektirir."
@@ -210,21 +227,6 @@ msgid "Certified honest and conform,"
 msgstr "Sertifikalı dürüst ve uygun"
 
 #. module: hr_expense
-#: help:hr.expense.expense,state:0
-msgid ""
-"When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
-"If the admin accepts it, the status is 'Accepted'.\n"
-" If a receipt is made for the expense request, the status is 'Done'."
-msgstr ""
-"Gider isteği oluşturulduğunda durumu 'Taslak' olur.\n"
-" Kullanıcı tarafından onaylanıp yöneticiye gönderildiğinde durumu 'Onay "
-"Bekliyor' olur.            \n"
-"Yönetici kabul ettiğinde durumu 'Kabul Edildi' olur.\n"
-" Gider isteği için bir makbuz kesildiğinde durumu 'Yapıldı' olur."
-
-#. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
@@ -248,7 +250,7 @@ msgstr ""
 "görünümlerine eklenmek üzere doğrudan html biçimindedir."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:301
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -266,12 +268,23 @@ msgstr "Toplam:"
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
-msgstr "Red Gider"
+msgstr "Rededilen Gider"
 
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
 msgstr "Ortalam Fiyat"
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the status is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the status is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the status is 'Accepted'.\n"
+" If the accounting entries are made for the expense request, the status is "
+"'Waiting Payment'."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -347,7 +360,7 @@ msgstr "Mik."
 #: view:hr.expense.report:0
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
-msgstr "Toplam fiyat"
+msgstr "Toplam Fiyat"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
@@ -355,7 +368,7 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Bazı maliyetler müşteriye geri fatura edilebilir."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
 #, python-format
 msgid "The employee must have a home address."
 msgstr "Çalışanın bir ev adresi olmalıdır."
@@ -370,12 +383,12 @@ msgstr "Benim Giderlerim"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Creation Date"
-msgstr "Oluşturma tarihi"
+msgstr "Oluşturma Tarihi"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.hr_expenses
 msgid "HR expenses"
-msgstr "İK gigerleri"
+msgstr "İK Giderleri"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
@@ -391,7 +404,7 @@ msgstr "Gider ödeme"
 #: field:hr.expense.expense,journal_id:0
 #: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
-msgstr "Günlüğe Zorla"
+msgstr "Yevmiye Zorla"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -410,7 +423,7 @@ msgid "After creating invoice, reimburse expenses"
 msgstr "Fatura oluşturulduktan sonra, giderleri geri ödeme"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -427,10 +440,16 @@ msgid "Validation Date"
 msgstr "Geçerlilik Tarihi"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:226
+#: code:addons/hr_expense/hr_expense.py:378
 #, python-format
-msgid "Expense Receipt"
-msgstr "Gider Makbuzu"
+msgid "Expense Account Move"
+msgstr "Gider Hesap Hareketi"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:240
+#, python-format
+msgid "The employee must have a payable account set on his home address."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -490,7 +509,7 @@ msgstr "Personel Makbuzu"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Approval"
-msgstr "Onay bekleyen"
+msgstr "Onay Bekleyen"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
@@ -503,7 +522,7 @@ msgid "Free Notes"
 msgstr "Serbest Notlar"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:301
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -531,7 +550,12 @@ msgid "Draft"
 msgstr "Taslak"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:181
+#: selection:hr.expense.expense,state:0
+msgid "Paid"
+msgstr "Ödeme"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
@@ -556,6 +580,7 @@ msgid "The direct manager approves the sheet"
 msgstr "Doğrudan Yöneticisi sayfasını onayla"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Toplam Tutar"
@@ -634,14 +659,14 @@ msgstr ""
 "tablosu\n"
 "                yönetici(ler) tarafından doğrulanır, çalışanın giderleri "
 "ödenir\n"
-"                fbazı giderler müşteriye geri fatura edilebilir.\n"
+"                bazı giderler müşteriye geri fatura edilebilir.\n"
 "              </p>\n"
 "            "
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Generate Accounting Entries"
-msgstr "Muhasebe Girişler Üretme"
+msgstr "Muhasebe Girişler Oluştur"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -657,6 +682,11 @@ msgstr "İK Giderleri"
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
 msgstr "Özet"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move_line
+msgid "Journal Items"
+msgstr "Yevmiye Kalemleri"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -692,7 +722,7 @@ msgstr "Tedarikçi Fatura"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses Sheet"
-msgstr "Giderler Formu"
+msgstr "Gider Formları"
 
 #. module: hr_expense
 #: field:hr.expense.report,voucher_id:0
@@ -711,7 +741,6 @@ msgid "Unit Price"
 msgstr "Birim Fiyat"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
@@ -770,6 +799,19 @@ msgid "This document must be dated and signed for reimbursement"
 msgstr "Ödeme için belgeye tarih konulup imzalanmalıdır"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new expense category. \n"
+"             </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir gider kategorisi oluşturmak için tıklayın. \n"
+"             </p>\n"
+"            "
+
+#. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
 msgid "Expense is refused."
 msgstr "Gideri reddedildi."
@@ -795,7 +837,7 @@ msgstr ""
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
-msgstr "Onaylandı"
+msgstr "Onaylanan"
 
 #. module: hr_expense
 #: field:hr.expense.line,product_id:0
@@ -882,7 +924,7 @@ msgid "Name"
 msgstr "Adı"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "You can only delete draft expenses!"
 msgstr "Sadece taslak giderleri silebilirsiniz!"
@@ -890,7 +932,7 @@ msgstr "Sadece taslak giderleri silebilirsiniz!"
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Ledger Posting"
-msgstr "Defteri Kebir İşleme"
+msgstr "Defteri Kebire İşleme"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -930,7 +972,7 @@ msgstr "Sıralama"
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
 msgid "Expense is confirmed."
-msgstr "Gideri onaylandı."
+msgstr "Gider onaylandı."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -968,3 +1010,23 @@ msgstr "Toplam"
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "YenidenFaturalama"
+
+#~ msgid "Open Receipt"
+#~ msgstr "Makbuz Aç"
+
+#, python-format
+#~ msgid "Expense Receipt"
+#~ msgstr "Gider Makbuzu"
+
+#~ msgid ""
+#~ "When the expense request is created the status is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the status is "
+#~ "'Waiting Confirmation'.            \n"
+#~ "If the admin accepts it, the status is 'Accepted'.\n"
+#~ " If a receipt is made for the expense request, the status is 'Done'."
+#~ msgstr ""
+#~ "Gider isteği oluşturulduğunda durumu 'Taslak' olur.\n"
+#~ " Kullanıcı tarafından onaylanıp yöneticiye gönderildiğinde durumu 'Onay "
+#~ "Bekliyor' olur.            \n"
+#~ "Yönetici kabul ettiğinde durumu 'Kabul Edildi' olur.\n"
+#~ " Gider isteği için bir makbuz kesildiğinde durumu 'Yapıldı' olur."

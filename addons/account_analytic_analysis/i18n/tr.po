@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-13 17:22+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-20 18:13+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: OpenERP Türkiye Yerelleştirmesi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:49+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-07-11 05:46+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 "Language: tr\n"
 
 #. module: account_analytic_analysis
@@ -24,9 +24,15 @@ msgid "No order to invoice, create"
 msgstr "Faturalacak sipariş yok, oluştur"
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:547
+#, python-format
+msgid "Timesheets to Invoice of %s"
+msgstr "%s için Faturalanacak Zamançizelgeleri"
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr "Grupla..."
+msgstr "Grupla İle..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -65,22 +71,6 @@ msgstr "Faturalanmamış Tutar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
-msgstr ""
-"Zaman çizelgesine göre faturalarken, OpenERP, \n"
-"                            müşteri faturası fiyat değerini tanımlamak için "
-"\n"
-"                            her personelle ilişkilendirilmiş üründe tanımlı "
-"fiyatı kullanan \n"
-"                            sözleşmeye ait fiyat listesini kullanır."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "⇒ Invoice"
 msgstr "⇒ Fatura"
 
@@ -98,6 +88,30 @@ msgstr "Son Faturalanmış Maliyet Tarihi"
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
 msgstr "Bu sözleşme için tekliflerin toplamı."
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Satış siparişine dönüştürülebilecek bir teklif oluşturmak "
+"için\n"
+"                tıklayın.\n"
+"              </p><p>\n"
+"                Satıl siparişlerini, bir sözleşmede sabit fiyatla "
+"faturalanacak\n"
+"                herşeyi izlemek için kullanın.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -121,7 +135,7 @@ msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr "Sözleşme sonu anımsatıcı ${user.company_id.name}"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Satış Siparişi Kalemlerinin %s"
@@ -146,7 +160,7 @@ msgstr "Analitik Hesap"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr "Cari"
+msgstr "İş Ortağı"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -218,7 +232,7 @@ msgstr "Şu formül kullanılarak hesaplandı: Teorik Gelir - Toplam Maliyet."
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr "Faturalandırılmış Zaman"
+msgstr "Faturalanmış Zaman"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -255,7 +269,7 @@ msgid ""
 "computes quantities on all journal of type 'general'."
 msgstr ""
 "Analitik hesap için harcadığınız saat sayısı (zaman çizelgesinden). 'genel' "
-"tipindeki bütün günlüklerdeki miktarlar hesaplanır."
+"tipindeki bütün yevmiyelerdeki miktarlar hesaplanır."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -288,6 +302,15 @@ msgstr "Gerçek Kar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
+msgstr ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
 msgstr "Bir müşteriye atanmış sözleşmeler."
 
@@ -314,18 +337,13 @@ msgstr "ya da göster"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr "Müşteri Şözleşmeleri"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "Parent"
-msgstr "Ana"
+msgstr "Üst"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Consumed"
-msgstr "Tüektilen Birimler"
+msgstr "Tüketilen Birimler"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -498,7 +516,7 @@ msgstr "Zaman Çizelgeleri"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed"
-msgstr "Kapalı"
+msgstr "Kapandı"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -507,7 +525,7 @@ msgid ""
 "invoiced if you invoice based on analytic account."
 msgstr ""
 "Analiz hesabına göre faturalandırıyorsanız faturalandırılacak zaman sayısı "
-"(saat/gün)(günlük tipi 'genel'den) ."
+"(saat/gün)(yevmiye tipi 'genel'den) ."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -517,7 +535,7 @@ msgstr "Gecikmiş Miktarlar"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -537,6 +555,7 @@ msgid "Contracts"
 msgstr "Sözleşmeler"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
 msgstr "Satış Siparişleri"
@@ -665,12 +684,12 @@ msgstr "Faturalanacak Toplam"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts not assigned"
-msgstr "atanmamış sözleşmeler"
+msgstr "Atanmamış sözleşmeler"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr "Satış Siparişleri"
+msgid "Customer Contracts"
+msgstr "Müşteri Şözleşmeleri"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -728,7 +747,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr "Faturalandırılmamış Zaman"
+msgstr "Faturalanmamış Zaman"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -792,6 +811,20 @@ msgstr "Sabit Fiyat"
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
 msgstr "Bu hesapta yapılan son işlem tarihi"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"When reinvoicing costs, OpenERP uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
+msgstr ""
+"Maliyetler yeniden faturalanırken OpenERP, ilgili\n"
+"                            üründe tanımlı fiyatı kullanan sözleşmeye\n"
+"                            ait fiyat listesini kullanır (örn. her "
+"çalışanda\n"
+"                            tanımlanan zaman çizelgesi ürünleri)."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
@@ -878,8 +911,25 @@ msgstr "Toplam"
 #~ msgid "Contracts in progress"
 #~ msgstr "Süren sözleşmeler"
 
+#~ msgid "Sale Orders"
+#~ msgstr "Satış Siparişleri"
+
 #~ msgid "Units Done"
 #~ msgstr "Yapılan Birimler"
+
+#~ msgid ""
+#~ "When invoicing on timesheet, OpenERP uses the\n"
+#~ "                            pricelist of the contract which uses the price\n"
+#~ "                            defined on the product related to each employee "
+#~ "to\n"
+#~ "                            define the customer invoice price rate."
+#~ msgstr ""
+#~ "Zaman çizelgesine göre faturalarken, OpenERP, \n"
+#~ "                            müşteri faturası fiyat değerini tanımlamak için "
+#~ "\n"
+#~ "                            her personelle ilişkilendirilmiş üründe tanımlı "
+#~ "fiyatı kullanan \n"
+#~ "                            sözleşmeye ait fiyat listesini kullanır."
 
 #~ msgid ""
 #~ "A contract in OpenERP is an analytic account having a partner set on it."

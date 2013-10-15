@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 from openerp import netsvc
 from openerp.osv import osv, fields
@@ -88,6 +87,7 @@ class pos_session_opening(osv.osv_memory):
         session_ids = proxy.search(cr, uid, [
             ('state', '!=', 'closed'),
             ('config_id', '=', config_id),
+            ('user_id', '=', uid),
         ], context=context)
         if session_ids:
             session = proxy.browse(cr, uid, session_ids[0], context=context)

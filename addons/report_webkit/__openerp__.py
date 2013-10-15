@@ -25,7 +25,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
@@ -62,8 +62,9 @@ This module requires the ``wkthtmltopdf`` library to render HTML documents as
 PDF. Version 0.9.9 or later is necessary, and can be found at
 http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows (32bits).
 
-After installing the library on the OpenERP Server machine, you need to set the
-path to the ``wkthtmltopdf`` executable file on each Company.
+After installing the library on the OpenERP Server machine, you may need to set
+the path to the ``wkthtmltopdf`` executable file in a system parameter named
+``webkit_path`` in Settings -> Customization -> Parameters -> System Parameters
 
 If you are experiencing missing header/footer problems on Linux, be sure to
 install a 'static' version of the library. The default ``wkhtmltopdf`` on

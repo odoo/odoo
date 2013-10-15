@@ -26,7 +26,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
@@ -191,8 +191,13 @@ class WebKitParser(report_sxw):
     def translate_call(self, src):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
+        name = self.tmpl and 'addons/' + self.tmpl or None
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+                                         name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+        if res == src:
+            # no translation defined, fallback on None (backward compatibility)
+            res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
+                                             None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res
@@ -219,7 +224,9 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = addons.get_module_resource(*report_xml.report_file.split(os.path.sep))
+            # backward-compatible if path in Windows format
+            report_path = report_xml.report_file.replace("\\", "/")
+            path = addons.get_module_resource(*report_path.split('/'))
             if path and os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :

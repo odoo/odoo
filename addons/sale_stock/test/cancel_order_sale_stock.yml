@@ -8,7 +8,7 @@
 -
   !python {model: stock.picking}: |
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
-    first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
+    first_picking = self.browse(cr, uid, delivery_orders[-1], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
       first_move = first_picking.move_lines[0]
       values = {'move%s'%(first_move.id): {'product_qty': 2, 'product_uom':ref('product.product_uom_unit')}}
@@ -19,7 +19,7 @@
   !python {model: stock.picking}: |
     import netsvc
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
-    last_delivery_order_id = delivery_orders[0]
+    last_delivery_order_id = delivery_orders[-1]
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
 -

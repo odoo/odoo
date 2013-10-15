@@ -78,16 +78,18 @@ class crm_make_sale(osv.osv_memory):
                     ['default', 'invoice', 'delivery', 'contact'])
             pricelist = partner.property_product_pricelist.id
             fpos = partner.property_account_position and partner.property_account_position.id or False
+            payment_term = partner.property_payment_term and partner.property_payment_term.id or False
             new_ids = []
             for case in case_obj.browse(cr, uid, data, context=context):
                 if not partner and case.partner_id:
                     partner = case.partner_id
                     fpos = partner.property_account_position and partner.property_account_position.id or False
+                    payment_term = partner.property_payment_term and partner.property_payment_term.id or False
                     partner_addr = partner_obj.address_get(cr, uid, [partner.id],
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Insufficient Data!'), _('No addresse(s) defined for this customer.'))
+                    raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
@@ -100,6 +102,7 @@ class crm_make_sale(osv.osv_memory):
                     'partner_shipping_id': partner_addr['delivery'],
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
+                    'payment_term':payment_term,
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid

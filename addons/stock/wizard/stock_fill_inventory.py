@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
 class stock_fill_inventory(osv.osv_memory):
@@ -28,8 +28,10 @@ class stock_fill_inventory(osv.osv_memory):
 
     def _default_location(self, cr, uid, ids, context=None):
         try:
-            loc_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-        except ValueError, e:
+            location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+            location.check_access_rule('read', context=context)
+            location_id = location.id
+        except (ValueError, orm.except_orm), e:
             return False
         return location_id or False
 

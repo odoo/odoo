@@ -190,7 +190,7 @@ class wizard_user(osv.osv_memory):
         this_context = context
         this_user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context)
         if not this_user.email:
-            raise osv.except_osv(_('Email required'),
+            raise osv.except_osv(_('Email Required'),
                 _('You must have an email address in your User Preferences to send emails.'))
 
         # determine subject and body in the portal user's language

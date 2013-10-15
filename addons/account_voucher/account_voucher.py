@@ -27,6 +27,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp.tools import float_compare
+from openerp.report import report_sxw
 
 class res_currency(osv.osv):
     _inherit = "res.currency"
@@ -247,13 +248,12 @@ class account_voucher(osv.osv):
         line_osv = self.pool.get("account.voucher.line")
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
-
         #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
         #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to see the options
         for voucher_line in line_dr_ids+line_cr_ids:
-            line_currency = voucher_line.get('move_line_id', False) and self.pool.get('account.move.line').browse(cr, uid, voucher_line.get('move_line_id'), context=context).currency_id
-            if line_currency:
+            line_id = voucher_line.get('id') and self.pool.get('account.voucher.line').browse(cr, uid, voucher_line['id'], context=context).move_line_id.id or voucher_line.get('move_line_id')
+            if line_id and self.pool.get('account.move.line').browse(cr, uid, line_id, context=context).currency_id:
                 is_multi_currency = True
                 break
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, type), 'is_multi_currency': is_multi_currency}}
@@ -292,6 +292,36 @@ class account_voucher(osv.osv):
               'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False,
               'voucher_special_currency_rate': voucher.currency_id.rate * voucher.payment_rate,})
             res[voucher.id] =  self.pool.get('res.currency').compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, voucher.amount, context=ctx)
+        return res
+
+    def _get_currency_help_label(self, cr, uid, currency_id, payment_rate, payment_rate_currency_id, context=None):
+        """
+        This function builds a string to help the users to understand the behavior of the payment rate fields they can specify on the voucher. 
+        This string is only used to improve the usability in the voucher form view and has no other effect.
+
+        :param currency_id: the voucher currency
+        :type currency_id: integer
+        :param payment_rate: the value of the payment_rate field of the voucher
+        :type payment_rate: float
+        :param payment_rate_currency_id: the value of the payment_rate_currency_id field of the voucher
+        :type payment_rate_currency_id: integer
+        :return: translated string giving a tip on what's the effect of the current payment rate specified
+        :rtype: str
+        """
+        rml_parser = report_sxw.rml_parse(cr, uid, 'currency_help_label', context=context)
+        currency_pool = self.pool.get('res.currency')
+        currency_str = payment_rate_str = ''
+        if currency_id:
+            currency_str = rml_parser.formatLang(1, currency_obj=currency_pool.browse(cr, uid, currency_id, context=context))
+        if payment_rate_currency_id:
+            payment_rate_str  = rml_parser.formatLang(payment_rate, currency_obj=currency_pool.browse(cr, uid, payment_rate_currency_id, context=context))
+        currency_help_label = _('At the operation date, the exchange rate was\n%s = %s') % (currency_str, payment_rate_str)
+        return currency_help_label
+
+    def _fnct_currency_help_label(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            res[voucher.id] = self._get_currency_help_label(cr, uid, voucher.currency_id.id, voucher.payment_rate, voucher.payment_rate_currency_id.id, context=context)
         return res
 
     _name = 'account.voucher'
@@ -365,6 +395,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'currency_help_label': fields.function(_fnct_currency_help_label, type='text', string="Helping Sentence", help="This sentence helps you to know how to specify the payment rate by giving you the direct effect it has"), 
     }
     _defaults = {
         'active': True,
@@ -537,7 +568,7 @@ class account_voucher(osv.osv):
         return default
 
     def onchange_rate(self, cr, uid, ids, rate, amount, currency_id, payment_rate_currency_id, company_id, context=None):
-        res =  {'value': {'paid_amount_in_company_currency': amount}}
+        res =  {'value': {'paid_amount_in_company_currency': amount, 'currency_help_label': self._get_currency_help_label(cr, uid, currency_id, rate, payment_rate_currency_id, context=context)}}
         if rate and amount and currency_id:
             company_currency = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id
             #context should contain the date, the payment currency and the payment rate specified on the voucher
@@ -816,7 +847,7 @@ class account_voucher(osv.osv):
         if context is None:
             context = {}
         res = {'value': {}}
-        if currency_id and currency_id == payment_rate_currency_id:
+        if currency_id:
             #set the default payment rate of the voucher and compute the paid amount in company currency
             ctx = context.copy()
             ctx.update({'date': date})
@@ -862,6 +893,8 @@ class account_voucher(osv.osv):
         return res
 
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, date, amount, ttype, company_id, context=None):
+        if context is None:
+            context = {}
         if not journal_id:
             return False
         journal_pool = self.pool.get('account.journal')
@@ -881,6 +914,12 @@ class account_voucher(osv.osv):
         else:
             currency_id = journal.company_id.currency_id.id
         vals['value'].update({'currency_id': currency_id})
+        #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
+        #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
+        #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
+        if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
+            vals['value']['amount'] = 0
+            amount = 0
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
         for key in res.keys():
             vals[key].update(res[key])
@@ -909,6 +948,8 @@ class account_voucher(osv.osv):
         move_pool = self.pool.get('account.move')
 
         for voucher in self.browse(cr, uid, ids, context=context):
+            # refresh to make sure you don't unlink an already removed move
+            voucher.refresh()
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
@@ -1159,7 +1200,7 @@ class account_voucher(osv.osv):
         for line in voucher.line_ids:
             #create one move line per voucher line where amount is not 0.0
             # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
-            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
+            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_digits=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_digits=prec)):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
@@ -1259,10 +1300,8 @@ class account_voucher(osv.osv):
                 }
                 new_id = move_line_obj.create(cr, uid, move_line_foreign_currency, context=context)
                 rec_ids.append(new_id)
-
             if line.move_line_id.id:
                 rec_lst_ids.append(rec_ids)
-
         return (tot_line, rec_lst_ids)
 
     def writeoff_move_line_get(self, cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=None):
@@ -1601,7 +1640,7 @@ class account_bank_statement(osv.osv):
         for bk_st in self.browse(cr, uid, ids, context=context):
             if vals.get('journal_id') and bk_st.line_ids:
                 if any([x.voucher_id and True or False for x in bk_st.line_ids]):
-                    raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
+                    raise osv.except_osv(_('Unable to Change Journal!'), _('You can not change the journal as you already reconciled some statement lines!'))
         return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
 account_bank_statement()

@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-04-21 20:05+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-07-04 09:02+0000\n"
+"Last-Translator: Andreas Brueckl <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-23 06:09+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-07-11 06:14+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -134,6 +133,20 @@ msgid "Reason"
 msgstr "Grund"
 
 #. module: procurement
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"              You can define your minimum stock rules, so that OpenERP will "
+"automatically create draft manufacturing orders or purchase quotations "
+"according to the stock level.Once the virtual stock of a product (= stock on "
+"hand minus all confirmed orders and reservations) is below the minimum "
+"quantity, OpenERP will generate a procurement request to increase the stock "
+"up to the maximum quantity.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
 msgstr "Starte Beschaffungsvorschlag"
@@ -157,24 +170,6 @@ msgstr "Nicht genutzt für die Berechnung, nur zu Informationszwecken"
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "Letzter Beschaffungsvorschlag"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
-msgid ""
-"You can define your minimum stock rules, so that OpenERP will automatically "
-"create draft manufacturing orders or purchase quotations according to the "
-"stock level. Once the virtual stock of a product (= stock on hand minus all "
-"confirmed orders and reservations) is below the minimum quantity, OpenERP "
-"will generate a procurement request to increase the stock up to the maximum "
-"quantity."
-msgstr ""
-"Sie können Meldebestandregeln definieren, damit OpenERP in Abhängigkeit von "
-"der Bestandssituation automatisch Fertigungsaufträge oder "
-"Beschaffungsaufträge vorschlägt. Sobald der fiktive Bestand (=verfügbarer "
-"Bestand abzüglich bestätigte Verkaufsaufträge und Bestandsreservierungen) "
-"geringer als der Minimalbestand ist, erzeugt OpenERP einen "
-"Beschaffungsauftrag, um den Bestand wieder bis zum angegebenen "
-"Auffüllbestand aufzustocken."
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
@@ -674,7 +669,7 @@ msgstr "Status"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "Einkauf"
 
 #. module: procurement
 #: view:product.product:0
@@ -943,7 +938,7 @@ msgstr "Meldebestand Regeln"
 #. module: procurement
 #: view:make.procurement:0
 msgid ""
-"Fill is this for to launch a procurement request for this\n"
+"Use this assistant to generate a procurement request for this\n"
 "                        product. According to the product configuration, "
 "this may\n"
 "                        trigger a draft purchase order, a manufacturing "
@@ -1139,3 +1134,31 @@ msgstr "PROC %d: für Aufrag - %3.2f %-5s - %s"
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
+
+#~ msgid ""
+#~ "You can define your minimum stock rules, so that OpenERP will automatically "
+#~ "create draft manufacturing orders or purchase quotations according to the "
+#~ "stock level. Once the virtual stock of a product (= stock on hand minus all "
+#~ "confirmed orders and reservations) is below the minimum quantity, OpenERP "
+#~ "will generate a procurement request to increase the stock up to the maximum "
+#~ "quantity."
+#~ msgstr ""
+#~ "Sie können Meldebestandregeln definieren, damit OpenERP in Abhängigkeit von "
+#~ "der Bestandssituation automatisch Fertigungsaufträge oder "
+#~ "Beschaffungsaufträge vorschlägt. Sobald der fiktive Bestand (=verfügbarer "
+#~ "Bestand abzüglich bestätigte Verkaufsaufträge und Bestandsreservierungen) "
+#~ "geringer als der Minimalbestand ist, erzeugt OpenERP einen "
+#~ "Beschaffungsauftrag, um den Bestand wieder bis zum angegebenen "
+#~ "Auffüllbestand aufzustocken."
+
+#~ msgid ""
+#~ "Fill is this for to launch a procurement request for this\n"
+#~ "                        product. According to the product configuration, "
+#~ "this may\n"
+#~ "                        trigger a draft purchase order, a manufacturing "
+#~ "order or\n"
+#~ "                        a new task."
+#~ msgstr ""
+#~ "Wieder auffüllen ist für die Erstellung eine Beschaffungsvorschlags "
+#~ "vorgesehen.In Abhängigkeit von der Produktkonfiguration kann dieses entweder "
+#~ "eine Bestellung, einen Fertigungsauftrag oder eine neue Aufgabe erstellen."

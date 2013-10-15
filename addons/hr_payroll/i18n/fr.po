@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-07-13 22:15+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:41+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-07-14 05:59+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
@@ -203,14 +204,14 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:866
 #: code:addons/hr_payroll/hr_payroll.py:871
-#: code:addons/hr_payroll/hr_payroll.py:877
-#: code:addons/hr_payroll/hr_payroll.py:894
-#: code:addons/hr_payroll/hr_payroll.py:900
+#: code:addons/hr_payroll/hr_payroll.py:876
+#: code:addons/hr_payroll/hr_payroll.py:882
+#: code:addons/hr_payroll/hr_payroll.py:899
+#: code:addons/hr_payroll/hr_payroll.py:905
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur!"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -236,7 +237,7 @@ msgstr "Autres informations"
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "Liez votre paie au système comptable"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_select:0
@@ -280,7 +281,7 @@ msgid "Draft Slip"
 msgstr "Bulletin de paie brouillon"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:427
+#: code:addons/hr_payroll/hr_payroll.py:432
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Jours travaillés à 100%"
@@ -305,12 +306,17 @@ msgstr "Structure"
 #. module: hr_payroll
 #: field:hr.contribution.register,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partenaire"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Total Working Days"
 msgstr "Nb. jours travaillés"
+
+#. module: hr_payroll
+#: constraint:hr.payroll.structure:0
+msgid "Error ! You cannot create a recursive Salary Structure."
+msgstr ""
 
 #. module: hr_payroll
 #: help:hr.payslip.line,code:0
@@ -436,15 +442,15 @@ msgid "Percentage based on"
 msgstr "Pourcentage basé sur"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:85
+#: code:addons/hr_payroll/hr_payroll.py:90
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copie)"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "Créer des mouvements d'écritures à partir des fiches de paie"
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
@@ -467,7 +473,7 @@ msgstr "Lignes du bulletin de paie"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Divers"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -484,7 +490,7 @@ msgid "Salary Rules"
 msgstr "Règles salariales"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:336
+#: code:addons/hr_payroll/hr_payroll.py:341
 #, python-format
 msgid "Refund: "
 msgstr "Remboursement : "
@@ -516,10 +522,10 @@ msgid "Fixed Amount"
 msgstr "Montant fixe"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:365
+#: code:addons/hr_payroll/hr_payroll.py:370
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Attention !"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0
@@ -630,7 +636,7 @@ msgstr "Détails pour le calcul du bulletin"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "Utilisé pour montrer la règle de salaire sur la fiche de paie."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -647,7 +653,7 @@ msgstr "Catégories de règles pour le salaire"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Cancel Payslip"
-msgstr ""
+msgstr "Annuler la fiche de paie"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,contract_id:0
@@ -661,10 +667,11 @@ msgid "Computation"
 msgstr "Calcul"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:894
+#: code:addons/hr_payroll/hr_payroll.py:899
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
+"Mauvaise condition de l'intervalle défini pour la règle de salaire %s (%s)."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -707,10 +714,12 @@ msgstr ""
 "des bulletins de paie de remboursement."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:871
+#: code:addons/hr_payroll/hr_payroll.py:876
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
+"Mauvaise base de pourcentage ou quantité définie pour la règle de salaire %s "
+"(%s)"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
@@ -765,10 +774,10 @@ msgid "Percentage (%)"
 msgstr "Pourcentage (%)"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:866
+#: code:addons/hr_payroll/hr_payroll.py:871
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Mauvaise quantité définie pour la règle de salaire %s (%s)"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -854,6 +863,8 @@ msgstr "Contrat"
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
+"Vous devez sélectionnner un (des) employé(s) pour générer une (des) fiche(s) "
+"de paie."
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -878,7 +889,7 @@ msgid "Contribution"
 msgstr "Contribution"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:346
+#: code:addons/hr_payroll/hr_payroll.py:351
 #, python-format
 msgid "Refund Payslip"
 msgstr "Bulletin de remboursement"
@@ -945,7 +956,7 @@ msgid "General"
 msgstr "Général"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:669
+#: code:addons/hr_payroll/hr_payroll.py:674
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Bulletin de paie de %s pour %s"
@@ -1097,10 +1108,12 @@ msgid "PaySlip Lines By Conribution Register"
 msgstr "Lignes du bulletin de salaire par registre de contribution"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:365
+#: code:addons/hr_payroll/hr_payroll.py:370
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
+"Vous ne pouvez supprimer une fiche de paie qui ne soit ni brouillon ni "
+"annulée!"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -1172,6 +1185,10 @@ msgid ""
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Quand la fiche de paie est créée, le statut est 'Brouillon'.\n"
+"* Si la fiche de paie est en revue, le statut est 'En Attente'.\n"
+"* Si la fiche de paie est confirmée, le statut est 'Terminée'.\n"
+"* Quand l'utilisateur annule la fiche de paie, le statut est 'Rejetée'."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range:0
@@ -1199,7 +1216,7 @@ msgstr "Entrées du bulletin de salaire"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Inputs"
-msgstr ""
+msgstr "Autres entrées"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
@@ -1208,10 +1225,10 @@ msgid "Salary Rule Categories Hierarchy"
 msgstr "Hiérarchie des catégories de règles salariales"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:877
+#: code:addons/hr_payroll/hr_payroll.py:882
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Mauvais code python défini pour la règle de salaire %s (%s)."
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -1239,10 +1256,10 @@ msgid "The code that can be used in the salary rules"
 msgstr "Code qui peut être utilisé dans les règles salariales"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:900
+#: code:addons/hr_payroll/hr_payroll.py:905
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Mauvaise condition python définie pour la règle de salaire %s (%s)."
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0

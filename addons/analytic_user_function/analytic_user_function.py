@@ -42,6 +42,7 @@ class analytic_user_funct_grid(osv.osv):
             return {}
 
         value = {}
+        prod = False
         if product_id:
            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
@@ -104,7 +105,7 @@ class hr_analytic_timesheet(osv.osv):
                 a = r.product_id.categ_id.property_account_expense_categ.id
             if not a:
                 raise osv.except_osv(_('Error!'),
-                        _('There is no expense account define ' \
+                        _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
             # Compute based on pricetype
@@ -133,7 +134,7 @@ class hr_analytic_timesheet(osv.osv):
                     a = r.product_id.categ_id.property_account_expense_categ.id
                 if not a:
                     raise osv.except_osv(_('Error!'),
-                            _('There is no expense account define ' \
+                            _('There is no expense account defined ' \
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))
                 # Compute based on pricetype

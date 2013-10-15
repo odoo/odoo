@@ -13,6 +13,14 @@
 		<field name="property_account_income_categ" ref="chart411_fr"/>
 		<field name="property_account_expense_categ" ref="chart5111_fr"/>
 	</record>
+	
+    <record id="ca_fr_chart_template_fr_value" model="ir.values">
+        <field name="name">Canada - Plan comptable pour les provinces francophones</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="ca_fr_chart_template_fr"/>
+        <field name="value" ref="base.CAD"/>
+    </record>
 
         <record id="stock.property_stock_account_input_categ" model="ir.property">
                 <field eval="'account.account,'+str(ref('chart2171_fr'))" model="account.account" name="value"/>

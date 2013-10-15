@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-01-10 08:05+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-10-03 12:52+0000\n"
+"Last-Translator: Florian Hatat <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-10-04 05:45+0000\n"
+"X-Generator: Launchpad (build 16791)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Mako"
-msgstr ""
+msgstr "Mako"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:50
@@ -49,9 +49,9 @@ msgid "Company Jobs"
 msgstr "Offres d'emploi"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "amount : montant total à payer, en flottant"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr "Facturation"
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -62,6 +62,8 @@ msgstr "Contacts"
 #: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Ce texte est inclus dans le courriel envoyé aux nouveaux utilisateurs du "
+"portail."
 
 #. module: portal
 #: view:share.wizard:0
@@ -79,6 +81,7 @@ msgstr "Groupes du portail"
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
 msgstr ""
+"<p>Accéder à ce document <a href=\"%s\">directement dans OpenERP</a></p>"
 
 #. module: portal
 #: field:portal.wizard,welcome_message:0
@@ -95,7 +98,7 @@ msgstr "Gestion de l'accès au portail"
 #. module: portal
 #: view:res.groups:0
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Groupes non-portail"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:54
@@ -107,12 +110,7 @@ msgstr "Veuillez sélectionner au moins un groupe avec lequel partager"
 #: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
-msgstr ""
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Devis et bons de commande"
+msgstr "Archives"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -138,6 +136,8 @@ msgid ""
 ", so it may use Mako expressions.\n"
 "                                The Mako evaluation context provides:"
 msgstr ""
+", donc il peut utiliser des expressions Mako.\n"
+"                                Le contexte d'évaluation Mako fournit :"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -164,7 +164,7 @@ msgstr "ou"
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "À faire"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -199,16 +199,19 @@ msgid "No online payment acquirers configured"
 msgstr "Aucun intermédiaire de paiement en ligne paramétré"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Le portail auquel les utilisateurs peuvent être ajoutés ou enlevés."
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:38
@@ -239,6 +242,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Pas de messages trouvés et pas encore de messages "
+"envoyés.\n"
+"                </p><p>\n"
+"                    Cliquez sur l'icône en haut à droite pour écrire un "
+"message.\n"
+"                    Ce message sera envoyé par courriel si c'est un contact "
+"interne.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -257,7 +270,7 @@ msgstr "Votre compte OpenERP chez %(company)s"
 #. module: portal
 #: model:res.groups,name:portal.group_anonymous
 msgid "Anonymous"
-msgstr ""
+msgstr "Anonyme"
 
 #. module: portal
 #: field:portal.wizard.user,in_portal:0
@@ -282,6 +295,8 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
+"Les membres du portail ont des droits d'accès spécifiques (tels que des "
+"règles d'enregistrement et des menus limités)."
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.action_acquirer_list
@@ -329,11 +344,25 @@ msgstr "uid : identifiant de l'utilisateur actuel"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+"type: le type de document sur lequel le formulaire de paiement est affiché "
+"(traduit dans la langue de l'utilisateur, par ex. \"Facture\")"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
 "quote() : méthode d'échappement des caractères spéciaux, pour permettre leur "
 "inclusion dans une URL"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "amount : montant total à payer, en flottant"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:44
@@ -342,6 +371,8 @@ msgid ""
 "<p>Access your messages and personal documents through <a href=\"%s\">our "
 "Customer Portal</a></p>"
 msgstr ""
+"<p>Accédez à vos messages et documents personnels au moyen de <a "
+"href=\"%s\">notre portail client</a></p>"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -376,11 +407,21 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
+"Les utilisateurs anonymes ont des droits d'accès spécifiques (tels que des "
+"règles d'enregistrement et des menus limités).\n"
+"                                    Ils n'appartiennent généralement pas aux "
+"groupes OpenERP habituels."
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
 msgstr "Intermédiaires de paiement en ligne"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr "Accès refusé"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -393,6 +434,8 @@ msgstr "Actualités de l'entreprise"
 msgid ""
 "You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
 msgstr ""
+"Vous pouvez terminer la configuration dans les <a href=\"%s\">paramètres "
+"Banque et liquidités</a>"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -576,6 +619,11 @@ msgid "Apply"
 msgstr "Appliquer"
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "Message"
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr "ctx : dictionnaire contenant le contexte actuel"
@@ -600,6 +648,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Rien à faire.</b>\n"
+"                </p><p>\n"
+"                    Quand vous traitez des messages dans votre boîte de "
+"réception, vous pouvez en marquer certains\n"
+"                    comme <i>À faire</i>. Depuis ce menu, vous pouvez "
+"traitez tous vos messages \"À faire\".\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -610,6 +667,9 @@ msgstr "Modèle de formulaire"
 #: view:share.wizard:0
 msgid "Details"
 msgstr "Détails"
+
+#~ msgid "Quotations and Sales Orders"
+#~ msgstr "Devis et bons de commande"
 
 #, python-format
 #~ msgid ""

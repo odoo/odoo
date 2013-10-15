@@ -26,8 +26,14 @@ class sale_order(osv.osv):
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Categories', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
+            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]", context="{'object_name': 'crm.lead'}")
     }
+
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        invoice_vals = super(sale_order, self)._prepare_invoice(cr, uid, order, lines, context=context)
+        if order.section_id and order.section_id.id:
+            invoice_vals['section_id'] = order.section_id.id
+        return invoice_vals
 
 
 class res_users(osv.Model):
@@ -35,6 +41,13 @@ class res_users(osv.Model):
     _columns = {
         'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
     }
+
+    def __init__(self, pool, cr):
+        init_res = super(res_users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
+        return init_res
 
 
 class sale_crm_lead(osv.Model):

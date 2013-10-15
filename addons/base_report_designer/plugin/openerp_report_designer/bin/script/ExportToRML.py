@@ -1,7 +1,7 @@
 #########################################################################
 #
 #  Copyright (c) 2003-2004 Danny Brewer d29583@groovegarden.com
-#  Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
+#  Copyright (C) 2004-2013 OpenERP SA (<http://openerp.com>).
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -15,7 +15,7 @@
 #
 #  You should have received a copy of the GNU Lesser General Public
 #  License along with this library; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 #  See:  http://www.gnu.org/licenses/lgpl.html
 #
@@ -78,7 +78,7 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
 
             res = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'sxwtorml',base64.encodestring(data),file_type)
             if res['report_rml_content']:
-                write_data_to_file( get_absolute_file_path( filename[7:] ), res['report_rml_content'] )
+                write_data_to_file(get_absolute_file_path(filename), res['report_rml_content'])
         except Exception,e:
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -99,8 +99,12 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
 
         oFileDialog.setDefaultName(f_path )
 
-        sPath = oFileDialog.execute() == 1 and oFileDialog.Files[0] or None
+        sPath = oFileDialog.execute() == 1 and oFileDialog.Files[0] or ''
         oFileDialog.dispose()
+        sPath = sPath[7:]
+        if sPath.startswith('localhost/'):
+            slash = int(os.name == 'nt')
+            sPath = sPath[9 + slash:]
         return sPath
 
 if __name__<>"package" and __name__=="__main__":

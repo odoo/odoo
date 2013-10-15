@@ -1,5 +1,6 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
-    var QWeb = instance.web.qweb;
+    var QWeb = instance.web.qweb,
+	_t = instance.web._t;
 
     // The ImageCache is used to hide the latency of the application cache on-disk access in chrome 
     // that causes annoying flickering on product pictures. Why the hell a simple access to
@@ -529,7 +530,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     var cat = self.pos.db.get_category_by_id(id);
                     self.set_category(cat);
                     self.renderElement();
-                    self.search_and_categories(cat);
                 });
             });
             // breadcrumb click actions
@@ -538,9 +538,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 var category = self.pos.db.get_category_by_id(id);
                 self.set_category(category);
                 self.renderElement();
-                self.search_and_categories(category);
             });
+
             this.search_and_categories();
+
+            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+                this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
+            }
         },
         
         set_product_type: function(type){       // 'all' | 'weightable'
@@ -552,7 +556,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         reset_category: function(){
             this.set_category();
             this.renderElement();
-            this.search_and_categories();
+        },
+
+        // empties the content of the search box
+        clear_search: function(){
+            var products = this.pos.db.get_product_by_category(this.category.id);
+            this.pos.get('products').reset(products);
+            this.$('.searchbox input').val('').focus();
+            this.$('.search-clear').fadeOut();
         },
 
         // filters the products, and sets up the search callbacks
@@ -564,12 +575,20 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             self.pos.get('products').reset(products);
 
             // filter the products according to the search string
-            this.$('.searchbox input').keyup(function(){
+            this.$('.searchbox input').keyup(function(event){
+                console.log('event',event);
                 query = $(this).val().toLowerCase();
                 if(query){
-                    var products = self.pos.db.search_product_in_category(self.category.id, query);
-                    self.pos.get('products').reset(products);
-                    self.$('.search-clear').fadeIn();
+                    if(event.which === 13){
+                        if( self.pos.get('products').size() === 1 ){
+                            self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0));
+                            self.clear_search();
+                        }
+                    }else{
+                        var products = self.pos.db.search_product_in_category(self.category.id, query);
+                        self.pos.get('products').reset(products);
+                        self.$('.search-clear').fadeIn();
+                    }
                 }else{
                     var products = self.pos.db.get_product_by_category(self.category.id);
                     self.pos.get('products').reset(products);
@@ -577,14 +596,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             });
 
-            this.$('.searchbox input').click(function(){}); //Why ???
-
             //reset the search when clicking on reset
             this.$('.search-clear').click(function(){
-                var products = self.pos.db.get_product_by_category(self.category.id);
-                self.pos.get('products').reset(products);
-                self.$('.searchbox input').val('').focus();
-                self.$('.search-clear').fadeOut();
+                self.clear_search();
             });
         },
     });
@@ -742,6 +756,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             });
             this.$('.button.reset_weight').click(function(){
+                self.$('input.weight').val('');
                 self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
@@ -971,13 +986,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
 
             this.close_button = new module.HeaderButtonWidget(this,{
-                label:'Close',
+                label: _t('Close'),
                 action: function(){ self.try_close(); },
             });
             this.close_button.appendTo(this.$('#rightheader'));
 
             this.client_button = new module.HeaderButtonWidget(this,{
-                label:'Self-Checkout',
+                label: _t('Self-Checkout'),
                 action: function(){ self.screen_selector.set_user_mode('client'); },
             });
             this.client_button.appendTo(this.$('#rightheader'));

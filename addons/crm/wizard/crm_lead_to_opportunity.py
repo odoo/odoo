@@ -62,7 +62,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 for id in ids:
                     tomerge.add(id)
             if email:
-                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0]), ('state', '!=', 'done')])
+                ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), ('state', '!=', 'done')])
                 for id in ids:
                     tomerge.add(id)
 
@@ -86,7 +86,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled leads cannot be converted into opportunities."))
+                raise osv.except_osv(_("Warning!"), _("Closed/Cancelled leads cannot be converted into opportunities."))
         return False
 
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):

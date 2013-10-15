@@ -157,8 +157,10 @@ class mail_mail(osv.Model):
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
-        if force or (not mail.subject and mail.model and mail.res_id):
+        if (force or not mail.subject) and mail.record_name:
             return 'Re: %s' % (mail.record_name)
+        elif (force or not mail.subject) and mail.parent_id and mail.parent_id.subject:
+            return 'Re: %s' % (mail.parent_id.subject)
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
@@ -286,6 +288,7 @@ class mail_mail(osv.Model):
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
+                res = None
                 for email in email_list:
                     msg = ir_mail_server.build_email(
                         email_from = mail.email_from,

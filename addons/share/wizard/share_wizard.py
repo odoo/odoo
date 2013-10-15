@@ -151,9 +151,9 @@ class share_wizard(osv.TransientModel):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
             if this.result_line_ids:
-                ctx = dict(context, share_url_template_hash_arguments=['action_id'])
+                ctx = dict(context, share_url_template_hash_arguments=['action'])
                 user = this.result_line_ids[0]
-                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action_id=this.action_id.id)
+                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action=this.action_id.id)
                 result[this.id] = this.share_url_template(context=ctx) % data
         return result
 
@@ -413,7 +413,8 @@ class share_wizard(osv.TransientModel):
                 relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
                 relation_osv = self.pool.get(coldef._obj)
-                if coltype == 'one2many':
+                #skip virtual one2many fields (related, ...) as there is no reverse relationship
+                if coltype == 'one2many' and hasattr(coldef, '_fields_id'):
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
                     dest_model_ci = relation_osv._all_columns
                     reverse_rel = coldef._fields_id
@@ -831,7 +832,7 @@ class share_wizard(osv.TransientModel):
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
@@ -862,7 +863,7 @@ class share_wizard(osv.TransientModel):
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         mail_ids = []

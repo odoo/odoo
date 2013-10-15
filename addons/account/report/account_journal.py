@@ -189,11 +189,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return data['form']['amount_currency']
 
     def _get_sortby(self, data):
+        # TODO: deprecated, to remove in trunk
         if self.sort_selection == 'date':
-            return 'Date'
+            return self._translate('Date')
         elif self.sort_selection == 'ref':
-            return 'Reference Number'
-        return 'Date'
+            return self._translate('Reference Number')
+        return self._translate('Date')
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='external')
 report_sxw.report_sxw('report.account.journal.period.print.sale.purchase', 'account.journal.period', 'addons/account/report/account_journal_sale_purchase.rml', parser=journal_print, header='external')
