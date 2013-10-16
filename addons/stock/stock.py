@@ -210,7 +210,7 @@ class stock_quant(osv.osv):
             if not quant: continue
             self._quant_split(cr, uid, quant, qty, context=context)
             toreserve.append(quant.id)
-        return self.write(cr, uid, toreserve, {'reservation_id': move.id}, context=context)
+        return self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id}, context=context)
 
     # add location_dest_id in parameters (False=use the destination of the move)
     def quants_move(self, cr, uid, quants, move, lot_id = False, owner_id = False, package_id = False, context=None):
@@ -231,7 +231,7 @@ class stock_quant(osv.osv):
             self._quant_split(cr, uid, quant, qty, context=context)
         # FP Note: improve this using preferred locations
         location_to = self.check_preferred_location(cr, uid, move, context=context)
-        self.write(cr, uid, [quant.id], {
+        self.write(cr, SUPERUSER_ID, [quant.id], {
             'location_id': location_to.id,
             #'reservation_id': move.move_dest_id and move.move_dest_id.id or False,
             'history_ids': [(4, move.id)]
@@ -327,7 +327,7 @@ class stock_quant(osv.osv):
         if (quant.qty > 0 and quant.qty <= qty) or (quant.qty <= 0 and quant.qty >= qty):
             return False
         new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': quant.qty - qty}, context=context)
-        self.write(cr, uid, quant.id, {'qty': qty}, context=context)
+        self.write(cr, SUPERUSER_ID, quant.id, {'qty': qty}, context=context)
         quant.refresh()
         return self.browse(cr, uid, new_quant, context=context)
 
@@ -359,7 +359,7 @@ class stock_quant(osv.osv):
         path = []
         for move in solving_quant.history_ids:
             path.append((4, move.id))
-        self.write(cr, uid, solved_quant_ids, {'history_ids': path}, context=context)
+        self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
     def _quant_reconcile_negative(self, cr, uid, quant, context=None):
         """
@@ -395,7 +395,7 @@ class stock_quant(osv.osv):
             if remaining_neg_quant:
                 remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
                 if remaining_to_solve_quant_ids:
-                    self.write(cr, uid, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+                    self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
             #delete the reconciled quants, as it is replaced by the solved quants
             self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
             #price update + accounting entries adjustments
@@ -408,7 +408,7 @@ class stock_quant(osv.osv):
             #solving_quant, dummy = self._reconcile_single_negative_quant(cr, uid, to_solve_quant, solving_quant, quant_neg, qty, context=context)
 
     def _price_update(self, cr, uid, ids, newprice, context=None):
-        self.write(cr, uid, ids, {'cost': newprice}, context=context)
+        self.write(cr, SUPERUSER_ID, ids, {'cost': newprice}, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         #We want to trigger the move with nothing on reserved_quant_ids for the store of the remaining quantity
@@ -419,13 +419,13 @@ class stock_quant(osv.osv):
                 if reser.reservation_id:
                     moves_to_warn.add(reser.reservation_id.id)
             self.pool.get('stock.move').write(cr, uid, list(moves_to_warn), {'reserved_quant_ids': []}, context=context)
-        return super(stock_quant, self).write(cr, uid, ids, vals, context=context)
+        return super(stock_quant, self).write(cr, SUPERUSER_ID, ids, vals, context=context)
 
     def quants_unreserve(self, cr, uid, move, context=None):
         #cr.execute('update stock_quant set reservation_id=NULL where reservation_id=%s', (move.id,))
         #need write for related store of remaining qty
         related_quants = [x.id for x in move.reserved_quant_ids]
-        self.write(cr, uid, related_quants, {'reservation_id': False, 'reservation_op_id': False}, context=context)
+        self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False, 'reservation_op_id': False}, context=context)
         return True
 
     #
@@ -488,8 +488,9 @@ class stock_picking(osv.osv):
 
     def _set_min_date(self, cr, uid, id, field, value, arg, context=None):
         move_obj = self.pool.get("stock.move")
-        move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
-        move_obj.write(cr, uid, move_ids, {'date_expected': value}, context=context)
+        if value:
+            move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
+            move_obj.write(cr, uid, move_ids, {'date_expected': value}, context=context)
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds minimum and maximum dates for picking.
@@ -848,7 +849,7 @@ class stock_picking(osv.osv):
             for move in picking.move_lines:
                 ids_to_free += [quant.id for quant in move.reserved_quant_ids]
         if ids_to_free:
-            quant_obj.write(cr, uid, ids_to_free, {'reservation_id': False, 'reservation_op_id': False}, context=context)
+            quant_obj.write(cr, SUPERUSER_ID, ids_to_free, {'reservation_id' : False, 'reservation_op_id': False }, context = context)
 
     def _reserve_quants_ops_move(self, cr, uid, ops, move, qty, create=False, context=None):
         """
@@ -874,7 +875,7 @@ class stock_picking(osv.osv):
                 if quant[0]:  # If quant can be reserved
                     res_qty -= quant[1]
             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
-            quant_obj.write(cr, uid, [x[0].id for x in quants if x[0]], {'reservation_op_id': ops.id}, context=context)
+            quant_obj.write(cr, SUPERUSER_ID, [x[0].id for x in quants if x[0]], {'reservation_op_id': ops.id}, context=context)
             return res_qty
 
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
@@ -1690,12 +1691,13 @@ class stock_move(osv.osv):
             if move.picking_id and move.picking_id.pack_operation_ids:
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty - move.remaining_qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
-                for negative_op in negatives[move.id].keys():
-                    ops = ops_obj.browse(cr, uid, negative_op, context=context)
-                    negatives[move.id][negative_op] = quant_obj.quants_move(cr, uid, [(None, negatives[move.id][negative_op])], move, 
-                                                                            lot_id = ops.lot_id and ops.lot_id.id or False, 
-                                                                            owner_id = ops.owner_id and ops.owner_id.id or False, 
-                                                                            package_id = ops.package_id and ops.package_id.id or False, context=context)
+                if negatives and move.id in negatives:
+                    for negative_op in negatives[move.id].keys():
+                        ops = ops_obj.browse(cr, uid, negative_op, context=context)
+                        negatives[move.id][negative_op] = quant_obj.quants_move(cr, uid, [(None, negatives[move.id][negative_op])], move, 
+                                                                                lot_id = ops.lot_id and ops.lot_id.id or False, 
+                                                                                owner_id = ops.owner_id and ops.owner_id.id or False, 
+                                                                                package_id = ops.package_id and ops.package_id.id or False, context=context)
                 #Packing:
                 reserved_ops = list(set([x.reservation_op_id.id for x in move.reserved_quant_ids]))
                 for ops in ops_obj.browse(cr, uid, reserved_ops, context=context):

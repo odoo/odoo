@@ -591,7 +591,6 @@
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_partial" states="assigned" string="Transfer Done" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_rereserve" string="ReReserve from Operations" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
                     <button name="do_prepare_partial" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','!=','assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
@@ -610,16 +609,18 @@
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="min_date" attrs="{'invisible': [('min_date','=',False)]}"/>
+                            <field name="min_date"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Products">
+                            <separator string="Expected Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id}"/>
+                            <separator string="In Process Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
                             <field name="pack_operation_exist" invisible="1"/>
-                            <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
-                                groups="stock.group_tracking_lot"/>
-                            <button name="do_split" string="Split" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
+                            <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"/>
+                            <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}">
                                 <tree editable="top">
                                     <field name="product_id"/>
@@ -631,8 +632,6 @@
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
-                            <separator string="Expected Quantities"/>
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id}"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
@@ -869,7 +868,6 @@
                     <field name="scrapped" invisible="1"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="state"/>
-                    <field name="remaining_qty" attrs="{'invisible': [('state', '=', 'done')]}"/>
                 </tree>
             </field>
         </record>
@@ -889,38 +887,42 @@
                 </header>
                 <sheet>
                     <group>
-                        <group name="main_grp" string="Details">
-                            <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
-                            <field name="group_id"/>
-                            <label for="product_uom_qty"/>
-                            <div>
-                                <field name="product_uom_qty"
-                                    on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"
-                                    class="oe_inline"/>
-                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
-                                <button name="%(stock.move_scrap)d"
-                                        string="Scrap" type="action"
-                                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" colspan="1"/>
-                            </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos">
-                                <field name="product_uos_qty"
-                                    on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"
-                                    class="oe_inline"/>
-                                <field name="product_uos" class="oe_inline"/>
-                            </div>
-                            <field name="name"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <group name="main_grp" string="Details" colspan="4">
+                            <group name="main_grp_col1">
+                                <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
+                                <label for="product_uom_qty"/>
+                                <div>
+                                    <field name="product_uom_qty"
+                                        on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"
+                                        class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                    <button name="%(stock.move_scrap)d"
+                                            string="Scrap" type="action"
+                                            icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                            states="draft,waiting,confirmed,assigned" colspan="1"/>
+                                </div>
+                                <field name="name"/>
+                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                <div groups="product.group_uos">
+                                    <field name="product_uos_qty"
+                                        on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"
+                                        class="oe_inline"/>
+                                    <field name="product_uos" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group name="main_grp_col1">
+                                <field name="picking_type_id"/>
+                                <field name="picking_priority"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
                         </group>
                         <group name="origin_grp" string="Origin">
                             <field name="origin"/>
-                            <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
-                            <field name="picking_type_id"/>
-                            <field name="picking_priority"/>
                             <field name="location_id" groups="stock.group_locations"/>
+                            <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
                             <field name="create_date" groups="base.group_no_one"/>
+                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
+                            <field name="group_id"/>
                         </group>
                         <group name="destination_grp" string="Destination">
                             <field name="location_dest_id" groups="stock.group_locations"/>
@@ -928,6 +930,9 @@
                                 groups="stock.group_locations"/>
                             <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
                             <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                        </group>
+                        <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
+                            <field name="reserved_quant_ids"/>
                         </group>
                     </group>
                 </sheet>
@@ -981,6 +986,7 @@
                                 <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
                                 <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
                             </group>
+                            <field name="reserved_quant_ids"/>
 
                     </group>
                 </form>
