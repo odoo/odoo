@@ -38,6 +38,7 @@ class TestStockMulticompany(common.TransactionCase):
         model, group_user_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         model, group_stock_manager_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'stock', 'group_stock_manager')
         model, company_2_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'stock', 'res_company_2')
+        self.company_2_id = company_2_id
         self.multicompany_user_id = self.res_users.create(cr, uid,
             {'name': 'multicomp', 'login': 'multicomp',
              'groups_id': [(6, 0, [group_user_id, group_stock_manager_id])],
@@ -47,40 +48,25 @@ class TestStockMulticompany(common.TransactionCase):
         """check no error on getting default stock.move values in multicompany setting"""
         cr, uid, context = self.cr, self.multicompany_user_id, {}
         fields = ['location_id', 'location_dest_id']
-        for type in ('in', 'internal', 'out'):
-            context['picking_type'] = type
-            defaults = self.stock_move.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
+        
+        new_warehouse_id = self.registry('stock.warehouse').create(cr, uid, {'name':'DemoWH_MultiComp','reception_steps':'three_steps', 'delivery_steps' : 'pick_pack_ship', 'company_id':self.company_2_id,'code':'dmwh'}, context=context)
+        warehouse = self.registry('stock.warehouse').browse(cr, uid, new_warehouse_id, context=context)
+        
+        for type in ('in', 'int', 'out'):
+            
+            type_id = warehouse[type + '_type_id'].id
+            context['default_picking_type_id'] = type_id            
+            defaults = self.stock_move.default_get(cr, uid, ['location_id', 'location_dest_id','picking_type_id'], context=context)
+            if defaults and defaults['picking_type_id']:
+                def_type = self.registry('stock.picking.type').browse(cr,uid,defaults['picking_type_id'],context).code_id
+            else:
+                assert False, "Picking type undefined "
+           
             for field in fields:
                 if defaults.get(field):
                     try:
                         self.stock_location.check_access_rule(cr, uid, [defaults[field]], 'read', context)
                     except Exception, exc:
                         assert False, "unreadable location %s: %s" % (field, exc)
-            self.assertEqual(defaults['type'], type, "wrong move type")
-
-
-    def test_10_multicompany_onchange_move_type(self):
-        """check onchange_move_type does not return unreadable in multicompany setting"""
-        cr, uid, context = self.cr, self.multicompany_user_id, {}
-        fields = ['location_id', 'location_dest_id']
-        for type in ('in', 'internal', 'out'):
-            result = self.stock_move.onchange_move_type(cr, uid, [], type, context)['value']
-            for field in fields:
-                if result.get(field):
-                    try:
-                        self.stock_location.check_access_rule(cr, uid, [result[field]], 'read', context)
-                    except Exception, exc:
-                        assert False, "unreadable location %s: %s" % (field, exc)
-
-
-    def test_30_multicompany_default_warehouse_location(self):
-        """check default locations for warehouse in multicompany setting"""
-        cr, uid, context = self.cr, self.multicompany_user_id, {}
-        fields = ['lot_input_id', 'lot_stock_id', 'lot_output_id']
-        defaults = self.stock_warehouse.default_get(cr, uid, fields, context)
-        for field in fields:
-            if defaults.get(field):
-                try:
-                    self.stock_location.check_access_rule(cr, uid, [defaults[field]], 'read', context)
-                except Exception, exc:
-                    assert False, "unreadable default %s: %s" % (field, exc)
+                    
+            self.assertEqual(def_type.lower(), type, "wrong move type")

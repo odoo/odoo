@@ -511,8 +511,6 @@ class mrp_production(osv.osv):
             help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]},
             help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-        'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
-            help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
         'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
             domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
@@ -717,10 +715,6 @@ class mrp_production(osv.osv):
             context = {}
         move_obj = self.pool.get('stock.move')
         for production in self.browse(cr, uid, ids, context=context):
-            if production.state == 'confirmed' and production.picking_id.state not in ('draft', 'cancel'):
-                raise osv.except_osv(
-                    _('Cannot cancel manufacturing order!'),
-                    _('You must first cancel related internal picking attached to this manufacturing order.'))
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
