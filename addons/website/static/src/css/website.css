@@ -235,7 +235,10 @@ footer {
 }
 
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  position: static;
+  position: relative;
+}
+.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child div, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child div {
+  display: none;
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {

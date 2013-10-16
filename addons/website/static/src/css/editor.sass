@@ -242,16 +242,45 @@ table.editorbar-panel
 
 /* ---- SNIPPETS DROP ZONES ---- */
 
-.oe_drop_zone.oe_insert
+#dark_for_dropzone
+    width: 100%
+    position: absolute
+    top: 0
+    left: 0
+    opacity: 0.4
+    z-index: 1000
+    pointer-events: none
+    td
+        background: #000
+        &.center.active
+            background: transparent
+
+.oe_drop_zone, .oe_drop_zone_style
+    border: none
+    background: rgba(100, 255, 255, .9)
+    +border-radius(4px)
+    div
+        margin: 0
+        line-height: 48px
+        text-align: center
+        color: #FF00FF
+        font-weight: bold
+        font-size: 24px
+    .oe_active
+        display: none
+
+.oe_drop_zone_style div
+    line-height: 24px
+
+.oe_drop_zone
     display: block
     height: 48px
     margin: 0px
     margin-top: -4px
     margin-bottom: -44px
-    @include transition(margin 250ms linear)
+    z-index: 1002
     width: 100%
     position: absolute
-    z-index: 1000
     &:not(.oe_vertical):before
         content: ""
         display: block
@@ -264,22 +293,17 @@ table.editorbar-panel
         width: 48px
         float: left
         position: relative
-        margin: 0px -24px !important
+        margin: 4px -24px !important
+        div
+            display: none
     &.oe_overlay
         border-radius: 3px
-        //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px)) 
-        //background-size: 100px 100px
-        background: rgba(153, 0, 255,.5)
-        
-.oe_drop_zone, .oe_drop_zone_style
-    border: none
-    //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px)) 
-    //background-size: 100px 100px
-    background: rgba(153, 0, 255, .3)
-    +border-radius(4px)
-    &.oe_hover
-        background: rgba(0, 255, 133, .3)
-        z-index: 1001
+    &.oe_drop_active
+        background: rgba(100, 255, 255, .3)
+        div
+            display: none
+        .oe_active
+            display: block
 
 .oe_drop_zone_style
     color: white
