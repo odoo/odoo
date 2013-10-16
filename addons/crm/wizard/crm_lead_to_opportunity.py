@@ -21,7 +21,6 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import tools
 import re
 
 class crm_lead2opportunity_partner(osv.osv_memory):
@@ -60,11 +59,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
             if partner_id:
                 # Search for opportunities that have the same partner and that arent done or cancelled
-                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('state', '!=', 'done')])
+                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id),  ('probability', '<', '100')])
                 for id in ids:
                     tomerge.add(id)
             if email:
-                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0]), ('state', '!=', 'done')])
+                ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]),  ('probability', '<', '100')])
                 for id in ids:
                     tomerge.add(id)
 
@@ -105,8 +104,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         lead_obj = self.pool.get('crm.lead')
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning!"), _("Closed/Cancelled leads cannot be converted into opportunities."))
+            if lead.probability == 100:
+                raise osv.except_osv(_("Warning!"), _("Closed/Dead leads cannot be converted into opportunities."))
         return False
 
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):

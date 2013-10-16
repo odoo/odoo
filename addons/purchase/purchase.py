@@ -203,9 +203,9 @@ class purchase_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,
             readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
-            help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
+            help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
-                "Bases on incoming shipments: let you create an invoice when receptions are validated."
+                "Based on incoming shipments: let you create an invoice when receptions are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -832,6 +832,7 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
+
         #TOFIX: merged order line should be unlink
         def make_key(br, fields):
             list_key = []
@@ -854,14 +855,15 @@ class purchase_order(osv.osv):
             context = {}
 
         # Compute what the new orders should contain
-
         new_orders = {}
 
+        order_lines_to_move = []
         for porder in [order for order in self.browse(cr, uid, ids, context=context) if order.state == 'draft']:
             order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
             new_order = new_orders.setdefault(order_key, ({}, []))
             new_order[1].append(porder.id)
             order_infos = new_order[0]
+
             if not order_infos:
                 order_infos.update({
                     'origin': porder.origin,
@@ -885,21 +887,7 @@ class purchase_order(osv.osv):
                     order_infos['origin'] = (order_infos['origin'] or '') + ' ' + porder.origin
 
             for order_line in porder.order_line:
-                line_key = make_key(order_line, ('name', 'date_planned', 'taxes_id', 'price_unit', 'product_id', 'move_dest_id', 'account_analytic_id'))
-                o_line = order_infos['order_line'].setdefault(line_key, {})
-                if o_line:
-                    # merge the line with an existing line
-                    o_line['product_qty'] += order_line.product_qty * order_line.product_uom.factor / o_line['uom_factor']
-                else:
-                    # append a new "standalone" line
-                    for field in ('product_qty', 'product_uom'):
-                        field_val = getattr(order_line, field)
-                        if isinstance(field_val, browse_record):
-                            field_val = field_val.id
-                        o_line[field] = field_val
-                    o_line['uom_factor'] = order_line.product_uom and order_line.product_uom.factor or 1.0
-
-
+                order_lines_to_move += [order_line.id]
 
         allorders = []
         orders_info = {}
@@ -913,7 +901,7 @@ class purchase_order(osv.osv):
             for key, value in order_data['order_line'].iteritems():
                 del value['uom_factor']
                 value.update(dict(key))
-            order_data['order_line'] = [(0, 0, value) for value in order_data['order_line'].itervalues()]
+            order_data['order_line'] = [(6, 0, order_lines_to_move)]
 
             # create the new order
             context.update({'mail_create_nolog': True})
@@ -925,7 +913,8 @@ class purchase_order(osv.osv):
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
                 self.redirect_workflow(cr, uid, [(old_id, neworder_id)])
-                self.signal_purchase_cancel(cr, uid, [old_id]) # TODO Is it necessary to interleave the calls?
+                self.signal_purchase_cancel(cr, uid, [old_id])
+
         return orders_info
 
 
@@ -1364,8 +1353,8 @@ class account_invoice(osv.Model):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
         po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        if po_ids:
-            purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, uid, po_id, body=_("Invoice received"), context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

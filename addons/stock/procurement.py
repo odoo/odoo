@@ -96,7 +96,7 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
-        'location_id': fields.many2one('stock.location', 'Procurement Location'),
+        'location_id': fields.many2one('stock.location', 'Procurement Location'),  # not required because task may create procurements that aren't linked to a location with project_mrp
         'move_ids': fields.one2many('stock.move', 'procurement_id', 'Moves', help="Moves created by the procurement"),
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Followed Route', help="Preferred route to be followed by the procurement order"),
@@ -370,8 +370,9 @@ class procurement_order(osv.osv):
                                                          context=context)
                         self.check(cr, uid, [proc_id])
                         self.run(cr, uid, [proc_id])
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id}, context=context)
+                        #TODO: check if we can remove this field because it doesn't seem used at all
+                        #orderpoint_obj.write(cr, uid, [op.id],
+                        #        {'procurement_id': proc_id}, context=context)
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()

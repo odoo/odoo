@@ -14,7 +14,6 @@ class stock_picking_wave(osv.osv):
         'capacity_uom': fields.many2one('product.uom', 'Unit of Measure', help='The Unity Of Measure of the transport capacity'),
         'wave_type_id': fields.many2one('stock.picking.wave.type', 'Picking Wave Type'),
         'state': fields.selection([('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], required=True),
-
     }
 
     _defaults = {

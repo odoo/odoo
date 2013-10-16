@@ -263,7 +263,7 @@
         <record id="trans_ship_ship_except" model="workflow.transition">
             <field name="act_from" ref="act_ship"/>
             <field name="act_to" ref="act_ship_except"/>
-            <field name="condition">test_state('canceled')</field>
+            <field name="signal">ship_except</field>
         </record>
         
         <record id="trans_ship_except_ship" model="workflow.transition">

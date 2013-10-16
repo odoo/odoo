@@ -77,6 +77,34 @@
                 </form>
             </field>
         </record>
+
+        <record id="do_view_procurements" model="ir.actions.act_window">
+            <field name="name">Procurement for Groups  </field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="domain">[('group_id','=',active_id)]</field>			
+        </record>
+        
+        <record id="procurement_group_form_view" model="ir.ui.view">
+            <field name="name">procurement.group.form</field>
+            <field name="model">procurement.group</field>
+            <field name="arch" type="xml">
+                <form string="Procurement group" version="7.0">
+                    <sheet>
+						<div class="oe_right oe_button_box">
+							<button name="%(do_view_procurements)d" string="View related procurements" type="action" />
+            			</div>
+                        <group>
+                            <field name="name"/>
+                            <field name="move_type"/>
+                            <field name="partner_id"/>                                                        
+                        </group>                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
         <record id="view_procurement_filter" model="ir.ui.view">
             <field name="name">procurement.order.select</field>
             <field name="model">procurement.order</field>
@@ -91,13 +119,13 @@
                     <field name="state" />
                     <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Scheduled Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
         </record>
-
+        
         <record id="procurement_action" model="ir.actions.act_window">
             <field name="name">Procurement Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -121,7 +149,7 @@
               </p>
             </field>
         </record>
-
+        
         <record id="procurement_exceptions" model="ir.actions.act_window">
             <field name="name">Procurements</field>
             <field name="type">ir.actions.act_window</field>

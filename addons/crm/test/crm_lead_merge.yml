@@ -1,30 +1,32 @@
-
 -
-  During a mixed merge (involving leads and opps), data should be handled a certain way following their type (m2o, m2m, text, ...)  Start by creating two leads and an opp.
+  During a mixed merge (involving leads and opps), data should be handled a certain way following their type (m2o, m2m, text, ...)  Start by creating two leads and an opp and giving the rights of Sales manager.
 -
-  !record {model: crm.lead, id: test_crm_lead_01}:
-    type: 'lead'
-    name: 'Test lead 1'
-    partner_id: base.res_partner_1
-    stage_id: stage_lead1
-    description: This is the description of the test lead 1.
+  !context
+    uid: 'crm_res_users_salesmanager'
 -
-  !record {model: crm.lead, id: test_crm_lead_02}:
-    type: 'lead'
-    name: 'Test lead 2'
-    partner_id: base.res_partner_3
-    stage_id: stage_lead1
-    description: This is the description of the test lead 2.
--
-  !record {model: crm.lead, id: test_crm_opp_01}:
+  !record {model: crm.lead, id: test_crm_opp_1}:
     type: 'opportunity'
     name: 'Test opportunity 1'
     partner_id: base.res_partner_5
     stage_id: stage_lead1
     description: This is the description of the test opp 1.
 -
+  !record {model: crm.lead, id: test_crm_lead_first}:
+    type: 'lead'
+    name: 'Test lead first'
+    partner_id: base.res_partner_1
+    stage_id: stage_lead1
+    description: This is the description of the test lead first.
+-
+  !record {model: crm.lead, id: test_crm_lead_second}:
+    type: 'lead'
+    name: 'Test lead second'
+    partner_id: base.res_partner_1
+    stage_id: stage_lead1
+    description: This is the description of the test lead second.
+-
   !python {model: crm.lead}: |
-    lead_ids = [ref('test_crm_lead_01'), ref('test_crm_lead_02'), ref('test_crm_opp_01')]
+    lead_ids = [ref('test_crm_opp_1'), ref('test_crm_lead_first'), ref('test_crm_lead_second')]
     context.update({'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': lead_ids[0]})
 -
   I create a merge wizard and merge the leads and opp together in the first item of the list.
@@ -38,18 +40,19 @@
 -
   !python {model: crm.lead}: |
     merge_id = self.search(cr, uid, [('name', '=', 'Test opportunity 1'), ('partner_id','=', ref("base.res_partner_5"))])
+    
     assert merge_id, 'Fail to create merge opportunity wizard'
     merge_result = self.browse(cr, uid, merge_id)[0]
-    assert merge_result.description == 'This is the description of the test opp 1.\n\nThis is the description of the test lead 1.\n\nThis is the description of the test lead 2.', 'Description mismatch: when merging leads/opps with different text values, these values should get concatenated and separated with line returns'
+    assert merge_result.description == 'This is the description of the test opp 1.\n\nThis is the description of the test lead first.\n\nThis is the description of the test lead second.', 'Description mismatch: when merging leads/opps with different text values, these values should get concatenated and separated with line returns'
     assert merge_result.type == 'opportunity', 'Type mismatch: when at least one opp in involved in the merge, the result should be a new opp (instead of %s)' % merge_result.type
 -
   The other (tailing) leads/opps shouldn't exist anymore.
 -
   !python {model: crm.lead}: |
-    tailing_lead = self.search(cr, uid, [('id', '=', ref('test_crm_lead_01'))])
-    assert not tailing_lead, 'This tailing lead (id %s) should not exist anymore' % ref('test_crm_lead_02')
+    tailing_lead = self.search(cr, uid, [('id', '=', ref('test_crm_lead_first'))])
+    assert not tailing_lead, 'This tailing lead (id %s) should not exist anymore' % ref('test_crm_lead_second')
 
-    tailing_opp = self.search(cr, uid, [('id', '=', ref('test_crm_lead_02'))])
+    tailing_opp = self.search(cr, uid, [('id', '=', ref('test_crm_lead_second'))])
     assert not tailing_opp, 'This tailing opp (id %s) should not exist anymore' % ref('test_crm_opp_01')
 -
   I want to test leads merge.  Start by creating two leads (with the same partner).

@@ -16,7 +16,6 @@
                         <group attrs="{'invisible': [('model_id', '=', False)]}">
                             <field name="template_id"
                                     on_change='on_change_template_id(template_id)'
-                                    domain="[('model_id', '=', model_id)]"
                                     attrs="{'required': [('state', '=', 'email')]}"/>
                             <p colspan="2" attrs="{'invisible': [('template_id', '!=', False)]}">
                                 Choose a template to display its values.

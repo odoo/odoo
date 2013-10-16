@@ -46,8 +46,7 @@ You can choose flexible invoicing methods:
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg'],
     'depends': ['sale', 'stock_account'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/sale_stock_security.xml',
         'security/ir.model.access.csv',
         'company_view.xml',
@@ -57,8 +56,9 @@ You can choose flexible invoicing methods:
         'res_config_view.xml',
         'report/sale_report_view.xml',
     ],
-    'demo_xml': ['sale_stock_demo.xml'],
+    'demo': ['sale_stock_demo.xml'],
     'test': [
+        'test/sale_stock_users.yml',
         'test/cancel_order_sale_stock.yml',
         'test/picking_order_policy.yml',
         'test/prepaid_order_policy.yml',

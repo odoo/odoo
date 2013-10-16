@@ -51,14 +51,14 @@ Dashboard for CRM will include:
     'depends': [
         'base_action_rule',
         'base_setup',
-        'base_status',
         'process',
         'mail',
         'email_template',
         'base_calendar',
         'resource',
         'board',
-        'fetchmail'
+        'fetchmail',
+        'web_kanban_sparkline',
     ],
     'data': [
         'crm_data.xml',
@@ -106,6 +106,7 @@ Dashboard for CRM will include:
         'crm_action_rule_demo.xml',
     ],
     'test': [
+        'test/crm_access_group_users.yml',
         'test/crm_lead_message.yml',
         'test/lead2opportunity2win.yml',
         'test/lead2opportunity_assign_salesmen.yml',
@@ -116,12 +117,12 @@ Dashboard for CRM will include:
         'test/crm_lead_onchange.yml',
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
+        'test/crm_lead_find_stage.yml',
     ],
     'css': [
         'static/src/css/crm.css'
     ],
     'js': [
-        'static/lib/sparkline/jquery.sparkline.js',
         'static/src/js/crm_case_section.js',
     ],
     'installable': True,

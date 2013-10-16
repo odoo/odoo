@@ -33,18 +33,18 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean("Prepare invoices based on task's activities",
-            help="""Lets you transfer the entries under tasks defined for Project Management to
-                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
-                and to automatically creates project tasks from procurement lines.
-                This installs the modules project_timesheet and project_mrp."""),
+            help='Lets you transfer the entries under tasks defined for Project Management to '
+                 'the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways '
+                 'and to automatically creates project tasks from procurement lines.\n'
+                 '-This installs the modules project_timesheet and project_mrp.'),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice based on sales orders'), ('picking', 'Invoice based on deliveries')],
             'The default invoicing method is', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Allow adding shipping costs',
-            help ="""Allows you to add delivery methods in sales orders and delivery orders.
-                You can define your own carrier and delivery grids for prices.
-                This installs the module delivery."""),
+            help='Allows you to add delivery methods in sales orders and delivery orders.\n'
+                 'You can define your own carrier and delivery grids for prices.\n'
+                 '-This installs the module delivery.'),
         'default_picking_policy' : fields.boolean("Deliver all at once when all products are available.",
             help = "Sales order by default will be configured to deliver all products at once instead of delivering each product when it is available. This may have an impact on the shipping price."),
         'group_mrp_properties': fields.boolean('Product properties on order lines',

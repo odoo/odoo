@@ -329,10 +329,9 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         warning = {}
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -347,27 +346,48 @@ class sale_order_line(osv.osv):
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
 
-        #check if product is available, and if not: raise an error
-        uom2 = False
-        if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
-        if not uom2:
-            uom2 = product_obj.uom_id
-
         # Calling product_packaging_change function after updating UoM
         res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
         res['value'].update(res_packing.get('value', {}))
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
-        compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
-        if (product_obj.type=='product') and int(compare_qty) == -1:
-          #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
-            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
-                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
-                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
-                     max(0,product_obj.qty_available), product_obj.uom_id.name)
-            warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
+
+        #determine if the product is MTO or not (for a further check)
+        isMto = False
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            for product_route in product_obj.route_ids:
+                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
+                    isMto = True
+                    break
+        else:
+            try:
+                mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+            except:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                mto_route_id = False
+            if mto_route_id:
+                for product_route in product_obj.route_ids:
+                    if product_route.id == mto_route_id:
+                        isMto = True
+                        break
+
+        #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
+        if not isMto:
+            uom2 = False
+            if uom:
+                uom2 = product_uom_obj.browse(cr, uid, uom)
+                if product_obj.uom_id.category_id.id != uom2.category_id.id:
+                    uom = False
+            if not uom2:
+                uom2 = product_obj.uom_id
+            compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
+            if (product_obj.type=='product') and int(compare_qty) == -1:
+              #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
+                warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                        (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                         max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                         max(0,product_obj.qty_available), product_obj.uom_id.name)
+                warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
 
         #update of warning messages
         if warning_msgs:
@@ -380,6 +400,15 @@ class sale_order_line(osv.osv):
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        sale_ids = []
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id:
+                sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
+        if sale_ids:
+            self.pool.get('sale.order').signal_ship_except(cr, uid, sale_ids)
+        return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)

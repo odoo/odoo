@@ -1,10 +1,16 @@
 -
-  In order to test the cancel sale order.
+  In order to test the cancel sale order with that user which have salesman rights.
   First I confirm order.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_8}
 -
-  I do a partial delivery order.
+  I do a partial delivery order as a stock user.
+-
+  !context
+    uid: 'res_stock_user'
 -
   !python {model: stock.picking}: |
     domain = [('origin','=','Test/001')]
@@ -34,6 +40,53 @@
     picks = self.search(cr, uid, [('origin','=','Test/001'),('backorder_id','<>',False)])
     self.action_cancel(cr, uid, picks)
 -
-  I invoice from order.
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+
+     self.run_scheduler(cr, uid)
+-
+  Salesman can also check order therefore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
+-
+  I check order status in "Ship Exception".
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be in shipping exception}:
+    - state == "shipping_except"
+-
+  Now I regenerate shipment.
+-
+  !workflow {model: sale.order, action: ship_recreate, ref: sale.sale_order_8}
+-
+  I check state of order in 'To Invoice'.
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be In Progress state}:
+    - state == 'manual'
+-
+  I make invoice for order.
 -
   !workflow {model: sale.order, action: manual_invoice, ref: sale.sale_order_8}
+-
+  To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
+-
+  !python {model: sale.order}: |
+    invoice_ids = self.browse(cr, uid, ref("sale.sale_order_8")).invoice_ids
+    first_invoice_id = invoice_ids[0]
+    self.pool.get('account.invoice').signal_invoice_cancel(cr, uid, [first_invoice_id.id])
+-
+  I check order status in "Invoice Exception" and related invoice is in cancel state.
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be in Invoice Exception state}:
+    - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
+-
+  Then I click on the Ignore Exception button.
+-
+  !workflow {model: sale.order, action: invoice_corrected, ref: sale.sale_order_8}
+
+-
+  I check state of order in 'In Progress'.
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be In progress state}:
+    - state == 'progress'

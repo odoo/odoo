@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:52+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:37+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: base_import
 #. openerp-web
@@ -113,12 +113,12 @@ msgstr "对于国 家"
 #: code:addons/base_import/static/src/xml/import.xml:303
 #, python-format
 msgid "company_1,Bigees,True"
-msgstr ""
+msgstr "company_1,Bigees,True"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "base_import.tests.models.m2o"
-msgstr ""
+msgstr "base_import.tests.models.m2o"
 
 #. module: base_import
 #. openerp-web
@@ -160,14 +160,14 @@ msgstr "使用"
 #: code:addons/base_import/static/src/xml/import.xml:316
 #, python-format
 msgid "person_1,Fabien,False,company_1"
-msgstr ""
+msgstr "person_1,Fabien,False,company_1"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/External ID"
-msgstr ""
+msgstr "XXX/External ID"
 
 #. module: base_import
 #. openerp-web
@@ -212,7 +212,7 @@ msgstr "国家：国家的名称或代码"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "base_import.tests.models.o2m.child"
-msgstr ""
+msgstr "base_import.tests.models.o2m.child"
 
 #. module: base_import
 #. openerp-web
@@ -283,7 +283,7 @@ msgstr "如果我有多对一的字段怎么做？"
 #: code:addons/base_import/static/src/xml/import.xml:302
 #, python-format
 msgid "External ID,Name,Is a Company"
-msgstr ""
+msgstr "External ID,Name,Is a Company"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,somevalue:0
@@ -329,6 +329,13 @@ msgid ""
 "orignial \n"
 "                        database)."
 msgstr ""
+"在这个文件中你会发现, Fabien 和 Laurence \n"
+"                        目前就职于 Bigees 公司 (company_1) 而 \n"
+"                        Eric 就职于Organi 公司。个人和公司之间的关联 \n"
+"                        通过公司的 External ID 完成。\n"
+"                        我们需要使用 表名来为 \"External ID \"加前缀，\n"
+"                        从而避免个人和公司之间的ID冲突。(person_1 \n"
+"                        和 company_1 在原始数据库中共享相同的 ID 1 )."
 
 #. module: base_import
 #. openerp-web
@@ -349,12 +356,12 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:148
 #, python-format
 msgid "Country: Belgium"
-msgstr ""
+msgstr "国家: 比利时"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "base_import.tests.models.char.stillreadonly"
-msgstr ""
+msgstr "base_import.tests.models.char.stillreadonly"
 
 #. module: base_import
 #. openerp-web
@@ -363,7 +370,7 @@ msgstr ""
 msgid ""
 "External ID,Name,Is a \n"
 "                        Company,Related Company/External ID"
-msgstr ""
+msgstr "External ID,Name, 是一个公司，关联公司/External ID"
 
 #. module: base_import
 #. openerp-web
@@ -392,6 +399,15 @@ msgid ""
 "category \n"
 "                        hierarchy."
 msgstr ""
+"比方说你有两个产品目录 \n"
+"                        下级名称是 \"可销售的\" (如. \"杂项. \n"
+"                        产品/可销售\" & \"其他产品/可销售\"),\n"
+"                        你的验证机制已经停止但仍可以导入你的数据. \n"
+"                        然而我们不建议你此时导入数据 \n"
+"                        因为他们全部会被连接到第一个\n"
+"                        位于产品目录列表的'可销售的' 目录 \n"
+"                        (\"杂项. 产品/可销售\"). 我们建议你修改 \n"
+"                        其中的一个重复值或者修改你的产品目录层级关系."
 
 #. module: base_import
 #. openerp-web
@@ -403,6 +419,9 @@ msgid ""
 "\n"
 "                        PSQL:"
 msgstr ""
+"为了创建对于连接到公司的人员 \n"
+"                        CVS文件，我们将在PSQL中使用以下的 \n"
+"                        SQL命令："
 
 #. module: base_import
 #. openerp-web
@@ -414,6 +433,10 @@ msgid ""
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
 msgstr ""
+"当需要保存时，Microsoft Excel \n"
+"                        将仅允许您修改编码\n"
+"                        (在 '另存' 对话框中 > 点击 '工具' 下拉\n"
+"                        清单 > 编码选项)。"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,othervalue:0
@@ -430,6 +453,10 @@ msgid ""
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
 msgstr ""
+"亦将被用于升级原始的\n"
+"                        导入（如果以后您需要再次导入修改的数据）\n"
+"                        ，因而这也是非常好的做法来指定它\n"
+"                        无论何时可以的话"
 
 #. module: base_import
 #. openerp-web
@@ -439,6 +466,8 @@ msgid ""
 "file to import. If you need a sample importable file, you\n"
 "            can use the export tool to generate one."
 msgstr ""
+"要导入的文件。如果你需要一个可导的样本文件，您\n"
+"            您可以先使用导出工具来生成一个。"
 
 #. module: base_import
 #. openerp-web
@@ -454,7 +483,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "base_import.tests.models.char"
-msgstr ""
+msgstr "base_import.tests.models.char"
 
 #. module: base_import
 #: help:base_import.import,file:0
@@ -502,12 +531,12 @@ msgstr "发生这个问题通常是文件编码错误"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "base_import.tests.models.m2o.required"
-msgstr ""
+msgstr "base_import.tests.models.m2o.required"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "base_import.tests.models.char.noreadonly"
-msgstr ""
+msgstr "base_import.tests.models.char.noreadonly"
 
 #. module: base_import
 #. openerp-web
@@ -524,29 +553,35 @@ msgid ""
 "filter \n"
 "                        settings' > Save)."
 msgstr ""
+"如果您在电子表格应用中编辑并保存 CSV 文件， \n"
+"                        你的电脑中的地域设置将会 \n"
+"                        影响分隔符和定界符的使用。 \n"
+"                        我们建议您使用 OpenOffice 或 LibreOffice Calc， \n"
+"                        因为它们允许您修改全部这三个选项 \n"
+"                        （在'另存为'对话框中 > 点选 ' 编辑过滤设置' > 保存）。"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:30
 #, python-format
 msgid "CSV File:"
-msgstr ""
+msgstr "CSV 文件："
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "base_import.tests.models.preview"
-msgstr ""
+msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "base_import.tests.models.char.required"
-msgstr ""
+msgstr "base_import.tests.models.char.required"
 
 #. module: base_import
 #: code:addons/base_import/models.py:112
 #, python-format
 msgid "Database ID"
-msgstr ""
+msgstr "Database ID"
 
 #. module: base_import
 #. openerp-web
@@ -565,24 +600,24 @@ msgstr "下面是我们无法导入的起始文件："
 #. module: base_import
 #: field:base_import.import,file_type:0
 msgid "File Type"
-msgstr ""
+msgstr "文件类型"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "base_import.import"
-msgstr ""
+msgstr "base_import.import"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "base_import.tests.models.o2m"
-msgstr ""
+msgstr "base_import.tests.models.o2m"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:360
 #, python-format
 msgid "Import preview failed due to:"
-msgstr ""
+msgstr "导入预览文件失败"
 
 #. module: base_import
 #. openerp-web
@@ -605,7 +640,7 @@ msgstr "刷新数据，以检查变化。"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "base_import.tests.models.char.readonly"
-msgstr ""
+msgstr "base_import.tests.models.char.readonly"
 
 #. module: base_import
 #. openerp-web
@@ -652,7 +687,7 @@ msgstr "You must configure at least one field to import"
 #: code:addons/base_import/static/src/xml/import.xml:304
 #, python-format
 msgid "company_2,Organi,True"
-msgstr ""
+msgstr "company_2,Organi,True"
 
 #. module: base_import
 #. openerp-web
@@ -662,37 +697,39 @@ msgid ""
 "The first row of the\n"
 "                file contains the label of the column"
 msgstr ""
+"文件的第一行\n"
+"                包括栏目标签"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "base_import.tests.models.char.states"
-msgstr ""
+msgstr "base_import.tests.models.char.states"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:7
 #, python-format
 msgid "Import a CSV File"
-msgstr ""
+msgstr "导入一个CSV文件"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:74
 #, python-format
 msgid "Quoting:"
-msgstr ""
+msgstr "引用："
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "base_import.tests.models.m2o.required.related"
-msgstr ""
+msgstr "base_import.tests.models.m2o.required.related"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid ")."
-msgstr ""
+msgstr ")."
 
 #. module: base_import
 #. openerp-web
@@ -700,21 +737,21 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:396
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "导入"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:438
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "这里是可能的值："
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "The"
-msgstr ""
+msgstr "这"
 
 #. module: base_import
 #. openerp-web
@@ -723,21 +760,21 @@ msgstr ""
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr ""
+msgstr "文件中仅有一栏，这经常意味着文件分隔符不正确"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "转储一个 PostgreSQL 数据库"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:301
 #, python-format
 msgid "This SQL command will create the following CSV file:"
-msgstr ""
+msgstr "这个 SQL 命令将创建以下 的CSV文件:"
 
 #. module: base_import
 #. openerp-web
@@ -746,7 +783,7 @@ msgstr ""
 msgid ""
 "The following CSV file shows how to import purchase \n"
 "                        orders with their respective purchase order lines:"
-msgstr ""
+msgstr "下列CSV文件显示如何导入采购订单以及它们各自的采购订单明细："
 
 #. module: base_import
 #. openerp-web
@@ -755,7 +792,7 @@ msgstr ""
 msgid ""
 "What can I do when the Import preview table isn't \n"
 "                        displayed correctly?"
-msgstr ""
+msgstr "当导入预览表显示不正确时，我该怎么办？"
 
 #. module: base_import
 #: field:base_import.tests.models.char,value:0
@@ -772,21 +809,21 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,parent_id:0
 #: field:base_import.tests.models.o2m.child,value:0
 msgid "unknown"
-msgstr ""
+msgstr "未知"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:317
 #, python-format
 msgid "person_2,Laurence,False,company_1"
-msgstr ""
+msgstr "person_2,Laurence,False,company_1"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:149
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr ""
+msgstr "Country/External ID: base.be"
 
 #. module: base_import
 #. openerp-web
@@ -801,27 +838,30 @@ msgid ""
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
 msgstr ""
+"例如，假设您有一个包含两个表的SQL数据库要导入：companies  和 persons。 \n"
+"                        每个人员属于一个公司，因此您必须创建  人和其就职公司之间的\n"
+"                        连接。（如果您要测试这个例子，这就有一个"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:427
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "( %d  更多)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:227
 #, python-format
 msgid "File for some Quotations"
-msgstr ""
+msgstr "引用的文件"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:72
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "编码："
 
 #. module: base_import
 #. openerp-web
@@ -841,6 +881,14 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"为了管理多表之间的关联， \n"
+"                        您可以使用 OpenERP 的 \"External ID\" 便利。 \n"
+"                        一个记录的\"External ID\" 是此记录在另一个\n"
+"                        应用中的唯一标识符。此 \"External \n"
+"                        ID\" 必须是在所有对象的所有记录中 \n"
+"                        独一无二，所以，用这个应用或表的名字 \n"
+"                        向 \"External ID\" 加前缀，是一个很好的 \n"
+"                        做法。（例如：用 'company_1‘ 或 'person_1' 代替 '1'）"
 
 #. module: base_import
 #. openerp-web
@@ -851,6 +899,8 @@ msgid ""
 "                        \"External ID\". In PSQL, write the following "
 "command:"
 msgstr ""
+"我们将首先导出所有的公司和它们的\"External ID\"。\n"
+"               在 PSQL 中，写入以下的命令："
 
 #. module: base_import
 #. openerp-web
@@ -860,13 +910,15 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"如何导入一个 one2many  的关系（例如： 一个销售 \n"
+"                        订单的多个订单行）？"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:404
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "看上去一切正常。"
 
 #. module: base_import
 #. openerp-web
@@ -879,13 +931,17 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"但是，如果您不希望改变您的 \n"
+"                        产品分类配置，我们建议你 \n"
+"                        对此 'Category' 字段，使用 \n"
+"                        external ID。"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:421
 #, python-format
 msgid "at row %d"
-msgstr ""
+msgstr "在 %d 行"
 
 #. module: base_import
 #. openerp-web
@@ -895,13 +951,15 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"如何导入一个多对多（ many2many  ）的关系 \n"
+"                        （例如：一个顾客有多个标签）？"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/ID"
-msgstr ""
+msgstr "XXX/ID"
 
 #. module: base_import
 #. openerp-web
@@ -917,6 +975,8 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"如果您需要从不同的表导入数据，您必须创建属于不同表之间记录的关系。\n"
+"         （例如：如果您导入公司和人员，您将必须创建每一个人和其就职公司间的连接 ）。"
 
 #. module: base_import
 #. openerp-web
@@ -929,13 +989,17 @@ msgid ""
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
 msgstr ""
+"按照您的需要， 您应该使用 \n"
+"                        这三种方式之一在关联中引用记录。 \n"
+"                        这里是介绍您何时使用何种方式， \n"
+"                        根据您所需要："
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:319
 #, python-format
 msgid "person_4,Ramsy,False,company_3"
-msgstr ""
+msgstr "person_4,Ramsy,False,company_3"
 
 #. module: base_import
 #. openerp-web
@@ -957,7 +1021,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:20
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: base_import
 #. openerp-web
@@ -967,20 +1031,22 @@ msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
 msgstr ""
+"对于一个特定的字段，如果我不提供一个值，将 \n"
+"                        会发生什么？"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:68
 #, python-format
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "常见问题"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:305
 #, python-format
 msgid "company_3,Boum,True"
-msgstr ""
+msgstr "company_3,Boum,True"
 
 #. module: base_import
 #. openerp-web
@@ -994,6 +1060,10 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"此特性 \n"
+"                        允许您使用OpenERP的导入/导出工具来 \n"
+"                        修改一批记录---用您喜爱的电子表格 \n"
+"                        应用！"
 
 #. module: base_import
 #. openerp-web
@@ -1024,20 +1094,27 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"如果您导入一个包括以下栏目之一的文件， \n"
+"                        \"External ID\" 或者 \"Database ID\"，已 \n"
+"                        经导入的记录将会被修改而不是被创建。 \n"
+"                        允许您多次导入同一CSV文件，在两次导 \n"
+"                        入之间只做些变更，这非常有用。 \n"
+"                        OpenERP 将根据记录是否为新的来决定\n"
+"                        创建或修改每一个记录，"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
 msgid "CSV file for categories"
-msgstr ""
+msgstr "类别的CSV文件"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:330
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "正常字段"
 
 #. module: base_import
 #. openerp-web
@@ -1055,7 +1132,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:170
 #, python-format
 msgid "CSV file for Products"
-msgstr ""
+msgstr "产品的CSV文件"
 
 #. module: base_import
 #. openerp-web
@@ -1079,31 +1156,31 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "base_import.tests.models.m2o.related"
-msgstr ""
+msgstr "base_import.tests.models.m2o.related"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "to the original unique identifier."
-msgstr ""
+msgstr "原始的唯一标识"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:318
 #, python-format
 msgid "person_3,Eric,False,company_2"
-msgstr ""
+msgstr "person_3,Eric,False,company_2"
 
 #. module: base_import
 #: field:base_import.import,res_model:0
 msgid "Model"
-msgstr ""
+msgstr "型号"
 
 #. module: base_import
 #. openerp-web
@@ -1111,7 +1188,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_import
 #. openerp-web
@@ -1146,12 +1223,12 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:73
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "分隔符："
 
 #. module: base_import
 #: field:base_import.import,file_name:0
 msgid "File Name"
-msgstr ""
+msgstr "文件名"
 
 #. module: base_import
 #. openerp-web
@@ -1161,28 +1238,28 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "外部标识"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:39
 #, python-format
 msgid "File Format Options…"
-msgstr ""
+msgstr "文件格式选项"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:423
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "在第 %d 行和第 %d 行之间"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:19
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: base_import
 #. openerp-web
@@ -1196,8 +1273,10 @@ msgid ""
 "demo \n"
 "                        data."
 msgstr ""
+"作为一个例子，这里包含了部分报价单的文件 purchase.order_functional_error_line_cant_adpat.CSV "
+"可以被导入，它基于 演示数据。"
 
 #. module: base_import
 #: field:base_import.import,file:0
 msgid "File"
-msgstr ""
+msgstr "文件"

@@ -85,6 +85,7 @@ class procurement_rule(osv.osv):
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
             string='Action', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
 
@@ -109,7 +110,7 @@ class procurement_order(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True),
         'date_planned': fields.datetime('Scheduled date', required=True, select=True),
 
-        'group_id': fields.many2one('procurement.group', 'Procurement Requisition'),
+        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Rule'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
@@ -169,13 +170,14 @@ class procurement_order(osv.osv):
         return True
 
     def check(self, cr, uid, ids, context=None):
-        done = []
+        done_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
             result = self._check(cr, uid, procurement, context=context)
             if result:
-                self.write(cr, uid, [procurement.id], {'state': 'done'}, context=context)
-                done.append(procurement.id)
-        return done
+                done_ids.append(procurement.id)
+        if done_ids:
+            self.write(cr, uid, done_ids, {'state': 'done'}, context=context)
+        return done_ids
 
     #
     # Method to overwrite in different procurement modules
@@ -198,6 +200,8 @@ class procurement_order(osv.osv):
         if procurement.product_id.type != 'service':
             rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
             if rule_id:
+                rule = self.pool.get('procurement.rule').browse(cr, uid, rule_id, context=context)
+                self.message_post(cr, uid, [procurement.id], body=_('Following rule %s for the procurement resolution.') % (rule.name), context=context)
                 self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
                 return True
         return False

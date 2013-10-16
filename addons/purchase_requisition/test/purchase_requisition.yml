@@ -40,6 +40,11 @@
         po.write(cr, uid, purchase.id, {'state': 'sent'}, context=context)
 
 -
+  Give access rights of Purchase Requisition User to open requisition
+-
+  !context
+    uid: 'res_users_purchase_requisition_user'
+-
   I open another requisition and set tender state to choose bidding line.
 -
   !python {model: purchase.requisition}: |

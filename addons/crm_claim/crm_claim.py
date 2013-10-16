@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
@@ -42,7 +43,6 @@ class crm_claim_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
         'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'Status', required=True, help="The related status for the stage. The status of your document will automatically change regarding the selected stage. For example, if a stage is related to the status 'Close', when your document reaches this stage, it will be automatically have the 'closed' status."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty',
@@ -51,7 +51,6 @@ class crm_claim_stage(osv.osv):
 
     _defaults = {
         'sequence': lambda *args: 1,
-        'state': 'draft',
         'fold': False,
     }
 
@@ -70,7 +69,7 @@ class crm_claim(osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('sequence', '=', '1')], context=context)
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -85,7 +84,7 @@ class crm_claim(osv.osv):
         'date_deadline': fields.date('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Claim Date', select=True),
-        'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"),
@@ -105,19 +104,12 @@ class crm_claim(osv.osv):
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
                 domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
     }
 
     _defaults = {
         'user_id': lambda s, cr, uid, c: uid,
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
-        'date': fields.datetime.now(),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'active': lambda *a: 1,
