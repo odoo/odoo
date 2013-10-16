@@ -90,7 +90,7 @@ class Field(object):
     """ Base class of all fields. """
     __metaclass__ = MetaField
 
-    interface = False           # whether the field interfaces another column or field
+    interface_for = None        # the column or field interfaced by self, if any
 
     name = None                 # name of the field
     model_name = None           # name of the model of this field
@@ -168,7 +168,7 @@ class Field(object):
         # for unknown column types
         field_class = cls._class_by_type.get(column._type, Field)
         field = field_class._from_column(column)
-        field.interface = True
+        field.interface_for = column
         return field
 
     @classmethod
@@ -182,6 +182,10 @@ class Field(object):
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
+        if self.interface_for:
+            assert isinstance(self.interface_for, fields._column)
+            return self.interface_for
+        _logger.debug("Create column for field %s", self)
         kwargs = self._to_column()
         return getattr(fields, self.type)(**kwargs)
 

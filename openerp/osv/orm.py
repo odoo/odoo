@@ -587,9 +587,7 @@ class BaseModel(object):
             _logger.warning("In model %r, member %r is not a field", cls._name, name)
 
         if field.store:
-            if not field.interface:
-                _logger.debug("Create column for field %s.%s", cls._name, name)
-                cls._columns[name] = field.to_column()
+            cls._columns[name] = field.to_column()
         else:
             # remove potential column that may be overridden by field
             cls._columns.pop(name, None)
@@ -759,12 +757,13 @@ class BaseModel(object):
         }
         cls = type(str(cls._name), (cls,), attrs)
 
-        # duplicate all new-style fields to avoid clashes with inheritance
+        # retrieve new-style fields and duplicate them (to avoid clashes with
+        # inheritance between different models)
         cls._fields = {}
         for attr in dir(cls):
-            value = getattr(cls, attr)
-            if isinstance(value, Field):
-                cls._set_field_descriptor(attr, value.copy())
+            field = getattr(cls, attr)
+            if isinstance(field, Field) and not field.interface_for:
+                cls._set_field_descriptor(attr, field.copy())
 
         # introduce magic fields
         cls._set_magic_fields()
@@ -3272,21 +3271,19 @@ class BaseModel(object):
         cls._inherit_fields = res
         cls._all_columns = cls._get_column_infos()
 
-        # interface columns and inherited fields with new-style fields
-        new_fields = {}
-        for parent_model, parent_field in cls._inherits.iteritems():
-            for attr, field in cls.pool[parent_model]._fields.iteritems():
-                new_fields[attr] = field.copy(
-                    related=(parent_field, attr), store=False, interface=True)
+        # interface columns with new-style fields
         for attr, column in cls._columns.iteritems():
-            new_fields[attr] = Field.from_column(column)
+            if attr not in cls._fields:
+                cls._set_field_descriptor(attr, Field.from_column(column))
 
-        # update the model with the new fields
-        for attr, field in new_fields.iteritems():
-            old_field = cls._fields.get(attr)
-            if not old_field or old_field.interface:
-                # replace old_field if it interfaces another column or field
-                cls._set_field_descriptor(attr, field)
+        # interface inherited fields with new-style fields (note that the
+        # reverse order is for being consistent with _all_columns above)
+        for parent_model, parent_field in reversed(cls._inherits.items()):
+            for attr, field in cls.pool[parent_model]._fields.iteritems():
+                if attr not in cls._fields:
+                    new_field = field.copy(related=(parent_field, attr),
+                                           store=False, interface_for=field)
+                    cls._set_field_descriptor(attr, new_field)
 
         cls._inherits_reload_src()
 
