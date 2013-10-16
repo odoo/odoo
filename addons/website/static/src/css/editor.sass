@@ -467,7 +467,7 @@ $highlighted_text_color: #ffffff
 /* ---- ACE EDITOR ---- */
 
 $ace_width: 720px
-$editorbar_height: 40px
+$editorbar_height: 30px
 // TODO Fix => might break with themes
 $navbar_height: 51px
 
@@ -484,16 +484,16 @@ $navbar_height: 51px
     width: $ace_width
     .oe_ace_view_editor_title
         width: 100%
-        padding-top: 4px
-        padding-left: 4px
+        padding-top: 0
+        padding-left: 0
         height: $editorbar_height
         background: #2F3129
         .oe_view_list
             width: 50%
-            height: $editorbar_height - 8px
+            height: $editorbar_height
             @include editor-font
         .btn
-            height: $editorbar_height - 8px
+            height: $editorbar_height
             padding: 0 4px 0 4px
             @include editor-font
     .ace_editor
@@ -506,6 +506,7 @@ $navbar_height: 51px
     &.oe_ace_open
         +opacity(1)
     &.oe_ace_closed
+        z-index: -1000
         +opacity(0)
 
 /* ---- EDITOR TOUR ---- */

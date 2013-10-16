@@ -93,7 +93,7 @@
                 self.open.call(self);
             });
 
-            var $editor = $('.ace_editor');
+            var $editor = self.$('.ace_editor');
             function resizeEditor (target) {
                 var width = Math.min(document.body.clientWidth, Math.max(parseInt(target, 10), self.minWidth));
                 $editor.width(width);
@@ -108,7 +108,7 @@
                 self.resizing = false;
             }
             function updateWidth (e) {
-                 if (self.resizing) {
+                if (self.resizing) {
                     var offset = e.pageX - self.refX;
                     var width = self.$el.width() - offset;
                     self.refX = e.pageX;

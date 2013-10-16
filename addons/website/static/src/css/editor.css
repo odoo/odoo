@@ -612,20 +612,20 @@ table.editorbar-panel td.selected {
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
-  padding-top: 4px;
-  padding-left: 4px;
-  height: 40px;
+  padding-top: 0;
+  padding-left: 0;
+  height: 30px;
   background: #2f3129;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
-  height: 32px;
+  height: 30px;
   font-size: 14px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
   line-height: normal;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .btn {
-  height: 32px;
+  height: 30px;
   padding: 0 4px 0 4px;
   font-size: 14px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
@@ -633,7 +633,7 @@ table.editorbar-panel td.selected {
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 40px;
+  top: 30px;
   right: 0;
   bottom: 51px;
   left: 0;
@@ -644,6 +644,7 @@ table.editorbar-panel td.selected {
   opacity: 1;
 }
 .oe_ace_view_editor.oe_ace_closed {
+  z-index: -1000;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
