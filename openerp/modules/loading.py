@@ -166,11 +166,15 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 # upgrading the module information
                 modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
             _load_data(cr, module_name, idref, mode, kind='data')
-            if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
+            has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
+            if has_demo:
                 status['progress'] = (index + 0.75) / len(graph)
                 _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
+            migrations.migrate_module(package, 'post')
+
+            if has_demo:
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
@@ -185,8 +189,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     report.record_result(openerp.modules.module.run_unit_tests(module_name))
 
             processed_modules.append(package.name)
-
-            migrations.migrate_module(package, 'post')
 
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
