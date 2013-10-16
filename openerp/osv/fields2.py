@@ -515,21 +515,22 @@ class Integer(Field):
 class Float(Field):
     """ Float field. """
     type = 'float'
-    digits = None                       # None, (precision, scale), or callable
-
     _attrs = Field._attrs + ('digits',)
     _desc1 = Field._desc1 + ('digits',)
+
+    def __init__(self, string=None, digits=None, **kwargs):
+        self._digits = digits
+        super(Float, self).__init__(string=string, **kwargs)
+
+    @lazy_property
+    def digits(self):
+        return self._digits(scope.cr) if callable(self._digits) else self._digits
 
     @classmethod
     def _from_column(cls, column):
         column.digits_change(scope.cr)      # determine column.digits
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         return cls(**kwargs)
-
-    def to_column(self):
-        if callable(self.digits):
-            self.digits = self.digits(scope.cr)
-        return super(Float, self).to_column()
 
     def convert_to_cache(self, value):
         # apply rounding here, otherwise value in cache may be wrong!
