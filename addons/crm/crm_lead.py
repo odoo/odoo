@@ -298,7 +298,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
     }
 
     _sql_constraints = [
@@ -351,10 +351,14 @@ class crm_lead(format_address, osv.osv):
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
+        if context is None:
+            context = {}
+        # check whether we should try to add a condition on type
+        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
         # collect all section_ids
         section_ids = set()
         types = ['both']
-        if not cases:
+        if not cases and context.get('default_type'):
             ctx_type = context.get('default_type')
             types += [ctx_type]
         if section_id:
@@ -372,7 +376,8 @@ class crm_lead(format_address, osv.osv):
                 search_domain.append(('section_ids', '=', section_id))
         search_domain.append(('case_default', '=', True))
         # AND with cases types
-        search_domain.append(('type', 'in', types))
+        if not avoid_add_type_term:
+            search_domain.append(('type', 'in', types))
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
