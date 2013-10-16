@@ -3542,7 +3542,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 _.extend(view.options, {
                     addable: null,
                     selectable: self.multi_selection,
-                    sortable: false,
+                    sortable: true,
                     import_enabled: false,
                     deletable: true
                 });
