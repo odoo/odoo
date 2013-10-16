@@ -323,6 +323,9 @@
             'click button[data-action=update]': 'update',
             'hidden.bs.modal': 'destroy',
         },
+        canEditTitle: false,
+        canEditDescription: false,
+        canEditKeywords: false,
         maxTitleSize: 65,
         maxDescriptionSize: 155,
         start: function () {
@@ -361,18 +364,19 @@
             $modal.modal();
         },
         disableUnsavableFields: function () {
-            var $modal = this.$el;
-            this.loadMetaData().then(function (data) {
-                var canEditTitle = data && ('website_meta_title' in data);
-                var canEditDescription = data && ('website_meta_description' in data);
-                var canEditKeywords = data && ('website_meta_keywords' in data);
-                if (!canEditTitle) {
+            var self = this;
+            var $modal = self.$el;
+            self.loadMetaData().then(function (data) {
+                self.canEditTitle = data && ('website_meta_title' in data);
+                self.canEditDescription = data && ('website_meta_description' in data);
+                self.canEditKeywords = data && ('website_meta_keywords' in data);
+                if (!self.canEditTitle) {
                     $modal.find('input[name=seo_page_title]').attr('disabled', true);
                 }
-                if (!canEditDescription) {
+                if (!self.canEditDescription) {
                     $modal.find('textarea[name=seo_page_description]').attr('disabled', true);
                 }
-                if (!canEditTitle && !canEditDescription && !canEditKeywords) {
+                if (!self.canEditTitle && !canEditDescription && !canEditKeywords) {
                     $modal.find('button[data-action=update]').attr('disabled', true);
                 }
             });
@@ -417,13 +421,13 @@
         update: function () {
             var self = this;
             var data = {};
-            if (!this.htmlPage.isTitleEditable()) {
+            if (self.canEditTitle) {
                 data.website_meta_title = self.htmlPage.title();
             }
-            if (!this.htmlPage.isDescriptionEditable()) {
+            if (self.canEditDescription) {
                 data.website_meta_description = self.htmlPage.description();
             }
-            if (!this.htmlPage.isKeywordsEditable()) {
+            if (self.canEditKeywords) {
                 data.website_meta_keywords = self.keywordList.keywords().join(", ");
             }
             self.saveMetaData(data).then(function () {
