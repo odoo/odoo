@@ -24,21 +24,21 @@ from openerp.osv import osv, fields
 from openerp.tools import float_repr
 
 
-class type(osv.Model):
+class type(osv.osv):
     _name = 'payment.acquirer.type'
     _columns = {
         'name': fields.char('Name', required=True),
     }
 
 
-class acquirer(osv.Model):
+class acquirer(osv.osv):
     _name = 'payment.acquirer'
     _description = 'Online Payment Acquirer'
     
     _columns = {
         'name': fields.char('Name', required=True),
         'type_id': fields.many2one('payment.acquirer.type', required=True),
-        'form_template_id': fields.many2one('ir.ui.view', translate=True, required=True), 
+        'form_template_id': fields.many2one('ir.ui.view', required=True), 
         'visible': fields.boolean('Visible', help="Make this payment acquirer available (Customer invoices, etc.)"),
     }
 
@@ -51,6 +51,9 @@ class acquirer(osv.Model):
         user = self.pool.get("res.users")
         precision = self.pool.get("decimal.precision").precision_get(cr, uid, 'Account')
 
+        if not context:
+            context = {}
+
         qweb_context = {}
         qweb_context.update(
             object=object,
@@ -62,10 +65,15 @@ class acquirer(osv.Model):
             context=context
         )
 
-        res = []
-        for pay in self.browse(cr, uid, ids, context=context):
-            res[pay.id] = pay.form_template_id.render(qweb_context.copy(), context=context)
-        return res
+        pays = self.browse(cr, uid, ids, context=context)
+
+        if isinstance(ids, list):
+            res = []
+            for pay in pays:
+                res[pay.id] = pay.form_template_id.render(qweb_context.copy(), engine='ir.qweb', context=context)
+            return res
+        else:
+            return pays.form_template_id.render(qweb_context, engine='ir.qweb', context=context)
 
     def validate_payement(self, cr, uid, ids, object, reference, currency, amount, context=None):
         res = []

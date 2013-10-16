@@ -286,14 +286,20 @@
 
                           <div class="product_price mt16">
                               <h4>
-                                  <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
-                              
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                    <span class="text-danger" style="text-decoration: line-through;">
-                                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                                    </span>&amp;nbsp;
+                                  <span class="text-danger" style="text-decoration: line-through;"
+                                    t-field="product.product_variant_ids[0].lst_price"
+                                    t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/><br/>
                                   </t>
-                                  <h4><b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b></h4>
+                                  <b class="oe_price"
+                                    t-field="product.product_variant_ids[0].price"
+                                    t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/>
                               </h4>
                           </div>
                           <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
@@ -866,13 +872,13 @@
                 <div class="js_payment mb64">
                     <p>Select your payment method:</p>
                     <div>
-                        <t t-foreach="payments or []" t-as="payment">
-                            <label>
+                        <t t-foreach="payments" t-as="payment">
+                            <label t-if="payment._content">
                                 <input t-att-value="payment.id" type="radio" name="payment_type"/> <t t-esc="payment.name"/>
                             </label>
                         </t>
                     </div>
-                    <t t-foreach="payments or []" t-as="payment">
+                    <t t-foreach="payments" t-as="payment">
                         <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden"/>
                     </t>
                     <a t-href="/shop/payment_validate/" class="btn btn-primary mt16">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>

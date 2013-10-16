@@ -624,12 +624,12 @@ class Ecommerce(http.Controller):
             'order': order
         }
 
-        payment_obj = request.registry.get('portal.payment.acquirer')
+        payment_obj = request.registry.get('payment.acquirer')
         payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)], context=request.context)
         values['payments'] = payment_obj.browse(request.cr, SUPERUSER_ID, payment_ids, request.context)
         for payment in values['payments']:
             content = payment_obj.render(request.cr, SUPERUSER_ID, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
-            payment._content = content
+            payment._content = content.strip()
 
         return request.website.render("website_sale.payment", values)
 

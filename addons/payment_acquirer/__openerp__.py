@@ -26,6 +26,7 @@
     'version': '0.1',
     'description': """Payment acquirer module, use to display payment method and validate the payments.""",
     'author': 'OpenERP SA',
+    'depends': ['website', 'decimal_precision'],
     'data': [
         'views/acquirer_view.xml',
         'payment_acquirer_data.xml',
