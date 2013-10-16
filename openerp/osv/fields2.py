@@ -90,7 +90,7 @@ class Field(object):
     """ Base class of all fields. """
     __metaclass__ = MetaField
 
-    interface = False           # whether the field is created by the ORM
+    interface = False           # whether the field interfaces another column or field
 
     name = None                 # name of the field
     model_name = None           # name of the model of this field
@@ -954,7 +954,6 @@ class Many2many(_RelationalMulti):
 
 class Id(Field):
     """ Special case for field 'id'. """
-    interface = True            # that field is always created by the ORM
     store = False
     readonly = True
 

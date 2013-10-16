@@ -586,9 +586,13 @@ class BaseModel(object):
         else:
             _logger.warning("In model %r, member %r is not a field", cls._name, name)
 
-        if field.store and not field.interface:
-            _logger.debug("Create column for field %s.%s", cls._name, name)
-            cls._columns[name] = field.to_column()
+        if field.store:
+            if not field.interface:
+                _logger.debug("Create column for field %s.%s", cls._name, name)
+                cls._columns[name] = field.to_column()
+        else:
+            # remove potential column that may be overridden by field
+            cls._columns.pop(name, None)
 
     @classmethod
     def _set_magic_fields(cls):
@@ -610,10 +614,11 @@ class BaseModel(object):
               >>> str(datetime.datetime.utcnow())
               '2013-06-18 08:31:32.821177'
         """
-        if 'id' not in cls._columns and not hasattr(cls, 'id'):
-            cls._set_field_descriptor('id', fields2.Id())
+        # this field 'id' must override any other column or field
+        cls._set_field_descriptor('id', fields2.Id())
 
-        if 'display_name' not in cls._columns and not hasattr(cls, 'display_name'):
+        # create display_name if not present yet
+        if 'display_name' not in cls._columns and 'display_name' not in cls._fields:
             cls._set_field_descriptor('display_name',
                 fields2.Char(string='Name', store=False,
                     compute='_compute_display_name',
@@ -3280,7 +3285,7 @@ class BaseModel(object):
         for attr, field in new_fields.iteritems():
             old_field = cls._fields.get(attr)
             if not old_field or old_field.interface:
-                # replace old_field if it is an interface
+                # replace old_field if it interfaces another column or field
                 cls._set_field_descriptor(attr, field)
 
         cls._inherits_reload_src()
