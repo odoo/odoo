@@ -1,3 +1,4 @@
+@charset "utf-8";
 /* ---- CKEditor Minimal Reset ---- */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
@@ -602,17 +603,12 @@ table.editorbar-panel td.selected {
 
 /* ---- ACE EDITOR ---- */
 .oe_ace_view_editor {
-  -webkit-transition: all 0.2s ease-in;
-  -moz-transition: all 0.2s ease-in;
-  -o-transition: all 0.2s ease-in;
-  transition: all 0.2s ease-in;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
-  opacity: 0.3;
   position: fixed;
   top: 51px;
   right: 0;
   z-index: 1000;
   height: 100%;
+  width: 720px;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
@@ -643,15 +639,11 @@ table.editorbar-panel td.selected {
   left: 0;
   width: 720px;
 }
-.oe_ace_view_editor:hover {
+.oe_ace_view_editor.oe_ace_open {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-.oe_ace_view_editor.oe_ace_open {
-  width: 720px;
-}
 .oe_ace_view_editor.oe_ace_closed {
-  width: 0;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
