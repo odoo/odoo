@@ -24,7 +24,7 @@ from dateutil import relativedelta
 
 import time
 
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import tools
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -32,7 +32,6 @@ from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
-
 
 
 #----------------------------------------------------------
@@ -205,12 +204,6 @@ class stock_quant(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.quant', context=c),
     }
 
-    def _check_qorder(self, word):
-        """
-        Needs to pass True to allow "expression order" in search
-        """
-        return True
-
     def quants_reserve(self, cr, uid, quants, move, context=None):
         toreserve = []
         for quant,qty in quants:
@@ -246,7 +239,25 @@ class stock_quant(osv.osv):
         quant.refresh()
         return quant
 
-    def quants_get(self, cr, uid, location, product, qty, domain=None, prefered_order=False, reservedcontext=None, restrict_lot_id=False, restrict_partner_id=False, context=None):
+    def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain=False, fallback_domain=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
+        if prefered_domain and fallback_domain:
+            if domain is None:
+                domain = []
+            quants = self.quants_get(cr, uid, location, product, qty, domain=domain + prefered_domain, context=context)
+            res_qty = qty
+            for quant in quants:
+                if quant[0]:
+                    res_qty -= quant[1]
+            if res_qty > 0:
+                #try to replace the last tuple (None, res_qty) with something that wasn't chosen at first because of the prefered order
+                quants.pop()
+                unprefered_quants = self.quants_get(cr, uid, location, product, res_qty, domain=domain + fallback_domain, context=context)
+                for quant in unprefered_quants:
+                    quants.append(quant)
+            return quants
+        return self.quants_get(cr, uid, location, product, qty, domain=domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
+
+    def quants_get(self, cr, uid, location, product, qty, domain=None, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """
         Use the removal strategies of product to search for the correct quants
         If you inherit, put the super at the end of your method.
@@ -265,9 +276,9 @@ class stock_quant(osv.osv):
         if location:
             removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
             if removal_strategy == 'fifo':
-                result += self._quants_get_fifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
+                result += self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
             elif removal_strategy == 'lifo':
-                result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
+                result += self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
             else:
                 raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
         return result
@@ -423,7 +434,7 @@ class stock_quant(osv.osv):
     #
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
         domain += location and [('location_id', 'child_of', location.id)] or []
-        domain += [('product_id','=',product.id)] + domain
+        domain += [('product_id', '=', product.id)] + domain
         res = []
         offset = 0
         while quantity > 0:
@@ -442,16 +453,12 @@ class stock_quant(osv.osv):
             offset += 10
         return res
 
-    def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], prefered_order=False,context=None):
+    def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], context=None):
         order = 'in_date'
-        if prefered_order:
-            order = prefered_order + ', in_date'
         return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
-    def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], prefered_order=False, context=None):
+    def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], context=None):
         order = 'in_date desc'
-        if prefered_order:
-            order = prefered_order + ', in_date desc'
         return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
     # Return the company owning the location if any
@@ -843,7 +850,7 @@ class stock_picking(osv.osv):
                 ids_to_free += [quant.id for quant in move.reserved_quant_ids]
         if ids_to_free:
             quant_obj.write(cr, SUPERUSER_ID, ids_to_free, {'reservation_id' : False, 'reservation_op_id': False }, context = context)
-    
+
     def _reserve_quants_ops_move(self, cr, uid, ops, move, qty, create=False, context=None):
         """
           Will return the quantity that could not be reserved
@@ -852,26 +859,25 @@ class stock_picking(osv.osv):
         op_obj = self.pool.get("stock.pack.operation")
         if create and move.location_id.usage != 'internal':
             # Create quants
-            quant = quant_obj._quant_create(cr, uid, qty, move, lot_id = ops.lot_id and ops.lot_id.id or False, owner_id = ops.owner_id and ops.owner_id.id or False, context=context)
+            quant = quant_obj._quant_create(cr, uid, qty, move, lot_id=ops.lot_id and ops.lot_id.id or False, owner_id=ops.owner_id and ops.owner_id.id or False, context=context)
             #TODO: location_id -> force location?
             quant.write({'reservation_op_id': ops.id, 'location_id': move.location_id.id})
             quant_obj.quants_reserve(cr, uid, [(quant, qty)], move, context=context)
             return 0
         else:
             #Quants get
-            prefered_order = "reservation_id IS NOT NULL" #TODO: reservation_id as such might work
+            #prefered_order = "reservation_id IS NOT NULL" #TODO: reservation_id as such might work
             dom = op_obj._get_domain(cr, uid, ops, context=context)
             dom = dom + [('reservation_id', 'not in', [x.id for x in move.picking_id.move_lines])]
-            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_order=prefered_order, context=context)
+            quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_domain=[('reservation_id', '=', False)], fallback_domain=[('reservation_id', '!=', False)], context=context)
             res_qty = qty
             for quant in quants:
-                if quant[0]: #If quant can be reserved
+                if quant[0]:  # If quant can be reserved
                     res_qty -= quant[1]
             quant_obj.quants_reserve(cr, uid, quants, move, context=context)
             quant_obj.write(cr, SUPERUSER_ID, [x[0].id for x in quants if x[0]], {'reservation_op_id': ops.id}, context=context)
             return res_qty
-        
-        
+
     def rereserve(self, cr, uid, picking_ids, create=False, context=None):
         """
             This will unreserve all products and reserve the quants from the operations again
@@ -881,7 +887,6 @@ class stock_picking(osv.osv):
                 resneg: the negative quants to be created: resneg[move][ops] gives negative quant to be created
             tuple of dictionary with quantities of quant operation and product that can not be matched between ops and moves
             and dictionary with remaining values on moves
-            
         """
         quant_obj = self.pool.get("stock.quant")
         pack_obj = self.pool.get("stock.quant.package")
@@ -1607,7 +1612,9 @@ class stock_move(osv.osv):
                         dp.append(str(q.id))
                         qty -= q.qty
                 domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id), ('qty', '>', 0)]
-                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = dp and ('id not in ('+','.join(dp)+')') or False, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                prefered_domain = dp and [('id', 'not in', dp)] or []
+                fallback_domain = dp and [('id', 'in', dp)] or []
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 #Will only reserve physical quants, no negative
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
                 # the total quantity is provided by existing quants
@@ -1678,14 +1685,11 @@ class stock_move(osv.osv):
             #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
             #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
             # should replace the above 2 lines
-            dom = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id), ('qty', '>', 0)]
-            prefered_order = 'reservation_id'
-#             if lot_id: 
-#                 prefered_order = 'lot_id<>' + lot_id + ", " + prefered_order
-#             if pack_id: 
-#                 prefered_order = 'pack_id<>' + pack_id + ", " + prefered_order
+            dom = [('qty', '>', 0)]
+            prefered_domain = [('reservation_id', '=', move.id)]
+            fallback_domain = [('reservation_id', '=', False)]
             if move.picking_id and move.picking_id.pack_operation_ids:
-                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty - move.remaining_qty, domain=dom, prefered_order = prefered_order, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty - move.remaining_qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
                 if negatives and move.id in negatives:
                     for negative_op in negatives[move.id].keys():
@@ -1702,7 +1706,7 @@ class stock_move(osv.osv):
                     else:
                         pack_obj.write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
             else:
-                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_order=prefered_order, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, context=context)
                 #Will move all quants_get and as such create negative quants
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
             quant_obj.quants_unreserve(cr, uid, move, context=context)
