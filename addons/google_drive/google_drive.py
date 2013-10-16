@@ -31,7 +31,7 @@ import re
 _logger = logging.getLogger(__name__)
 
 
-class config(osv.osv):
+class config(osv.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
@@ -207,10 +207,8 @@ class config(osv.osv):
     def get_google_scope(self):
         return 'https://www.googleapis.com/auth/drive'
 
-config()
 
-
-class base_config_settings(osv.osv):
+class base_config_settings(osv.TransientModel):
     _inherit = "base.config.settings"
 
     _columns = {
