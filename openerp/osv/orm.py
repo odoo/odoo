@@ -5229,7 +5229,7 @@ class BaseModel(object):
         record_ids = []         # ids of records to read
         updates = {}            # {id: dict} of updates on particular records
 
-        for command in commands:
+        for command in commands or []:
             if not isinstance(command, (list, tuple)):
                 record_ids.append(command)
             elif command[0] == 0:
