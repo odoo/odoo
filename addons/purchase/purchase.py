@@ -1044,10 +1044,9 @@ class procurement_order(osv.osv):
                 message = _('No default supplier defined for this product')
             elif not partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']:
                 message = _('No address defined for the supplier')
-
             if message:
                 if procurement.message != message:
-                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                    cr.execute("update procurement_order set message=%s, state='exception' where id=%s", (message, procurement.id))
                 return False
 
             if user.company_id and user.company_id.partner_id:

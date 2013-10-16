@@ -371,7 +371,7 @@ class procurement_order(osv.osv):
                     #temporary context passed in write to prevent an infinite loop
                     ctx_wkf = dict(context or {})
                     ctx_wkf['workflow.trg_write.%s' % self._name] = False
-                    self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
+                    self.write(cr, uid, [procurement.id], {'message': message, 'state': 'exception'},context=ctx_wkf)
         return ok
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):

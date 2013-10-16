@@ -72,10 +72,6 @@ class procurement_order(osv.osv):
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             start_date = fields.datetime.now()
             offset = 0
-            report = []
-            report_total = 0
-            report_except = 0
-            report_later = 0
             while True:
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
@@ -83,14 +79,7 @@ class procurement_order(osv.osv):
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
                     else:
                         offset += 1
-                        report_later += 1
 
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name))
-                        report_except += 1
-                    report_total += 1
                 if use_new_cursor:
                     cr.commit()
                 if not ids:
@@ -98,22 +87,10 @@ class procurement_order(osv.osv):
             offset = 0
             ids = []
             while True:
-                report_ids = []
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
                 for proc in procurement_obj.browse(cr, uid, ids):
                     if maxdate >= proc.date_planned:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-                        report_ids.append(proc.id)
-                    else:
-                        report_later += 1
-                    report_total += 1
-
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name,))
-                        report_except += 1
-
 
                 if use_new_cursor:
                     cr.commit()

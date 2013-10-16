@@ -29,8 +29,6 @@
         <record id="act_confirm_wait" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">confirm_wait</field>
-            <field name="kind">function</field>
-            <field name="action">write({'state':'exception'})</field>
         </record>
         <record id="act_confirm_mts" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
