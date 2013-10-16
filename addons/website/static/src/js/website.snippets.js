@@ -45,7 +45,14 @@
     /* ----- SNIPPET SELECTOR ---- */
     
     website.snippet = {};
-
+    var observer = new website.Observer(function (mutations) {
+        if (!_(mutations).find(function (m) {
+                    return m.type === 'childList' && m.addedNodes.length > 0;
+                })) {
+            return;
+        }
+        hack_to_add_snippet_id()
+    });
 
     // puts $el at the same absolute position as $target
     function hack_to_add_snippet_id () {
@@ -80,7 +87,11 @@
             this.$active_snipped_id = false;
             hack_to_add_snippet_id();
             this.snippets = [];
-            $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
         },
         dom_filter: function (dom, sibling) {
             if (typeof dom === "string") {
