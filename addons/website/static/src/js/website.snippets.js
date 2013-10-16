@@ -210,7 +210,10 @@
         },
         clean_for_save: function () {
             for (var k in this.snippets) {
-                $(this.snippets[k]).data("snippet-editor").clean_for_save();
+                var editor = $(this.snippets[k]).data("snippet-editor");
+                if (editor) {
+                    editor.clean_for_save();
+                }
             }
         },
         make_active: function ($snipped_id) {
@@ -728,8 +731,9 @@
         start: function () {
             var self = this;
             this.$overlay.on('click', '.oe_snippet_remove', function () {
-                self.$target.detach();
                 self.onBlur();
+                var index = _.indexOf(self.parent.snippets, self.$target.get(0));
+                delete self.parent.snippets[index];
                 self.$target.remove();
                 return false;
             });
