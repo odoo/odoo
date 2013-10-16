@@ -770,6 +770,7 @@
             var self = this;
             this.set_options_background(bg, ul_options);
             var $ul = this.$editor.find(ul_options);
+            var bg_value = (typeof bg === 'string' ? this.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
 
             // bind envent on options
             var $li = $ul.find("li");
@@ -1059,7 +1060,11 @@
             });
 
             this.$target.on('dblclick', '.item.active .carousel-image img', function (event) {
-                $('#oe_rte_toolbar .cke_button__image .cke_button__image_icon').click();
+                var $img = $(event.currentTarget);
+                var editor = new website.editor.ImageDialog();
+                editor.on('start', self, function (o) {o.url = $img.attr("src");});
+                editor.on('save', self, function (o) {$img.attr("src", o.url);});
+                editor.appendTo($('body'));
             });
 
             this.rebind_event();
