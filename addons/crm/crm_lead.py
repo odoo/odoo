@@ -616,7 +616,7 @@ class crm_lead(format_address, osv.osv):
         # An Opportunity always has higher confidence level than a lead, unless its stage probability is 0.0
         for opportunity in opportunities:
             sequence = -1
-            if opportunity.stage_id and opportunity.stage_id.probability != 0 and opportunity.stage_id.sequence != 1:
+            if opportunity.stage_id and (opportunity.stage_id.probability != 0 or opportunity.stage_id.sequence == 1):
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
