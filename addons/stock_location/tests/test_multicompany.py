@@ -42,31 +42,28 @@ class TestStockMulticompany(common.TransactionCase):
         self.multicompany_user_id = self.res_users.create(cr, uid,
             {'name': 'multicomp', 'login': 'multicomp',
              'groups_id': [(6, 0, [group_user_id, group_stock_manager_id])],
-             'company_id': company_2_id, 'company_ids': [(6,0,[company_2_id])]})
+             'company_id': company_2_id, 'company_ids': [(6, 0, [company_2_id])]})
 
     def test_00_multicompany_default_stock_move(self):
         """check no error on getting default stock.move values in multicompany setting"""
         cr, uid, context = self.cr, self.multicompany_user_id, {}
         fields = ['location_id', 'location_dest_id']
-        
-        new_warehouse_id = self.registry('stock.warehouse').create(cr, uid, {'name':'DemoWH_MultiComp','reception_steps':'three_steps', 'delivery_steps' : 'pick_pack_ship', 'company_id':self.company_2_id,'code':'dmwh'}, context=context)
+
+        new_warehouse_id = self.registry('stock.warehouse').create(cr, uid, {'name': 'DemoWH_MultiComp', 'reception_steps': 'three_steps', 'delivery_steps': 'pick_pack_ship', 'company_id': self.company_2_id, 'code': 'dmwh'}, context=context)
         warehouse = self.registry('stock.warehouse').browse(cr, uid, new_warehouse_id, context=context)
-        
+
         for type in ('in', 'int', 'out'):
-            
             type_id = warehouse[type + '_type_id'].id
-            context['default_picking_type_id'] = type_id            
-            defaults = self.stock_move.default_get(cr, uid, ['location_id', 'location_dest_id','picking_type_id'], context=context)
-            if defaults and defaults['picking_type_id']:
-                def_type = self.registry('stock.picking.type').browse(cr,uid,defaults['picking_type_id'],context).code_id
-            else:
-                assert False, "Picking type undefined "
-           
+            context['default_picking_type_id'] = type_id
+            defaults = self.stock_move.default_get(cr, uid, ['location_id', 'location_dest_id', 'picking_type_id'], context=context)
             for field in fields:
                 if defaults.get(field):
                     try:
                         self.stock_location.check_access_rule(cr, uid, [defaults[field]], 'read', context)
                     except Exception, exc:
                         assert False, "unreadable location %s: %s" % (field, exc)
-                    
-            self.assertEqual(def_type.lower(), type, "wrong move type")
+            if defaults and defaults['picking_type_id']:
+                def_type = self.registry('stock.picking.type').browse(cr, uid, defaults['picking_type_id'], context).code_id
+            else:
+                assert False, "Picking type undefined "
+            assert def_type.startswith(type), "wrong move type"
