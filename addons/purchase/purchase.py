@@ -1047,10 +1047,7 @@ class procurement_order(osv.osv):
 
             if message:
                 if procurement.message != message:
-                    #temporary context passed in write to prevent an infinite loop
-                    ctx_wkf = dict(context or {})
-                    ctx_wkf['workflow.trg_write.%s' % self._name] = False
-                    self.write(cr, uid, [procurement.id], {'message':message}, context=ctx_wkf)
+                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
 
             if user.company_id and user.company_id.partner_id:
