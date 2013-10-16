@@ -181,11 +181,12 @@ class website(osv.osv):
                 logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
                 return self.render(cr, uid, ids, 'website.404', qweb_context)
 
-        try:
-            main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
-            qweb_context['main_object'] = main_object
-        except Exception:
-            pass
+        if 'main_object' not in qweb_context:
+            try:
+                main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
+                qweb_context['main_object'] = main_object
+            except Exception:
+                pass
 
         try:
             return view.render(
