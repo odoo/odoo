@@ -1,3 +1,4 @@
+@charset "utf-8";
 /* ---- CKEditor Minimal Reset ---- */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
@@ -155,8 +156,17 @@ table.editorbar-panel td.selected {
   margin-bottom: 0.5em;
 }
 
+.cke_widget_wrapper {
+  position: static !important;
+}
+
 .cke_widget_drag_handler_container {
   display: none !important;
+}
+
+.cke_widget_editable:empty:after {
+  content: " ";
+  white-space: pre-wrap;
 }
 
 /* ---- SNIPPET EDITOR ---- */
@@ -164,7 +174,7 @@ table.editorbar-panel td.selected {
   position: fixed;
   left: 0px;
   right: 0px;
-  top: 50px;
+  top: 51px;
   background: #282828;
   -webkit-box-shadow: 0px 10px 10px -10px black inset;
   -moz-box-shadow: 0px 10px 10px -10px black inset;
@@ -183,9 +193,7 @@ table.editorbar-panel td.selected {
   display: inline-block;
   border-bottom: none !important;
   vertical-align: middle;
-  margin-top: 5px;
   min-width: 120px;
-  margin-left: 6px;
   z-index: 1;
 }
 #oe_snippets .nav > li {
@@ -208,11 +216,9 @@ table.editorbar-panel td.selected {
   display: inline-block;
   white-space: nowrap;
   background: black;
-  margin-top: 5px;
 }
 #oe_snippets .tab-content > div {
   background: black;
-  padding: 5px;
 }
 #oe_snippets .tab-content > div label {
   width: 44px;
@@ -237,8 +243,8 @@ table.editorbar-panel td.selected {
 .oe_snippet {
   float: left;
   vertical-align: top;
-  width: 100px;
-  margin: 1px;
+  width: 93px;
+  margin-left: 1px;
   margin-top: 0px;
   position: relative;
   overflow: hidden;
@@ -269,6 +275,7 @@ table.editorbar-panel td.selected {
   text-shadow: 0 0 2px black;
 }
 .oe_snippet .oe_snippet_thumbnail .oe_snippet_thumbnail_img {
+  height: 74px;
   -webkit-transition: all 150ms linear;
   -moz-transition: all 150ms linear;
   -o-transition: all 150ms linear;
@@ -298,53 +305,87 @@ table.editorbar-panel td.selected {
 }
 
 /* ---- SNIPPETS DROP ZONES ---- */
-.oe_drop_zone.oe_insert {
-  display: block;
-  height: 48px;
-  margin: 0px;
-  margin-top: -4px;
-  margin-bottom: -44px;
-  -webkit-transition: margin 250ms linear;
-  -moz-transition: margin 250ms linear;
-  -o-transition: margin 250ms linear;
-  transition: margin 250ms linear;
+#dark_for_dropzone {
   width: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.4;
   z-index: 1000;
+  pointer-events: none;
 }
-.oe_drop_zone.oe_insert:not(.oe_vertical):before {
-  content: "";
-  display: block;
-  border-top: dashed 2px rgba(209, 178, 255, 0.72);
-  position: relative;
-  top: 0px;
+#dark_for_dropzone td {
+  background: black;
 }
-.oe_drop_zone.oe_insert.oe_hover:before {
-  border-top: dashed 2px rgba(116, 255, 161, 0.72);
-}
-.oe_drop_zone.oe_insert.oe_vertical {
-  width: 48px;
-  float: left;
-  position: relative;
-  margin: 0px -24px !important;
-}
-.oe_drop_zone.oe_insert.oe_overlay {
-  border-radius: 3px;
-  background: rgba(153, 0, 255, 0.5);
+#dark_for_dropzone td.center.active {
+  background: transparent;
 }
 
 .oe_drop_zone, .oe_drop_zone_style {
   border: none;
-  background: rgba(153, 0, 255, 0.3);
+  background: rgba(100, 255, 255, 0.9);
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-.oe_drop_zone.oe_hover, .oe_drop_zone_style.oe_hover {
-  background: rgba(0, 255, 133, 0.3);
-  z-index: 1001;
+.oe_drop_zone div, .oe_drop_zone_style div {
+  margin: 0;
+  line-height: 48px;
+  text-align: center;
+  color: magenta;
+  font-weight: bold;
+  font-size: 24px;
+}
+.oe_drop_zone .oe_active, .oe_drop_zone_style .oe_active {
+  display: none;
+}
+
+.oe_drop_zone_style div {
+  line-height: 24px;
+}
+
+.oe_drop_zone {
+  display: block;
+  height: 48px;
+  margin: 0px;
+  margin-top: -4px;
+  margin-bottom: -44px;
+  z-index: 1002;
+  width: 100%;
+  position: absolute;
+}
+.oe_drop_zone:not(.oe_vertical):before {
+  content: "";
+  display: block;
+  border-top: dashed 2px rgba(209, 178, 255, 0.72);
+  position: relative;
+  top: 0px;
+}
+.oe_drop_zone.oe_hover:before {
+  border-top: dashed 2px rgba(116, 255, 161, 0.72);
+}
+.oe_drop_zone.oe_vertical {
+  width: 48px;
+  float: left;
+  position: relative;
+  margin: 4px -24px !important;
+}
+.oe_drop_zone.oe_vertical div {
+  display: none;
+}
+.oe_drop_zone.oe_overlay {
+  border-radius: 3px;
+}
+.oe_drop_zone.oe_drop_active {
+  background: rgba(100, 255, 255, 0.3);
+}
+.oe_drop_zone.oe_drop_active div {
+  display: none;
+}
+.oe_drop_zone.oe_drop_active .oe_active {
+  display: block;
 }
 
 .oe_drop_zone_style {
@@ -596,34 +637,29 @@ table.editorbar-panel td.selected {
 
 /* ---- ACE EDITOR ---- */
 .oe_ace_view_editor {
-  -webkit-transition: all 0.2s ease-in;
-  -moz-transition: all 0.2s ease-in;
-  -o-transition: all 0.2s ease-in;
-  transition: all 0.2s ease-in;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
-  opacity: 0.3;
   position: fixed;
   top: 51px;
   right: 0;
   z-index: 1000;
   height: 100%;
+  width: 720px;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title {
   width: 100%;
-  padding-top: 4px;
-  padding-left: 4px;
-  height: 40px;
+  padding-top: 0;
+  padding-left: 0;
+  height: 30px;
   background: #2f3129;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .oe_view_list {
   width: 50%;
-  height: 32px;
+  height: 30px;
   font-size: 14px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
   line-height: normal;
 }
 .oe_ace_view_editor .oe_ace_view_editor_title .btn {
-  height: 32px;
+  height: 30px;
   padding: 0 4px 0 4px;
   font-size: 14px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
@@ -631,21 +667,18 @@ table.editorbar-panel td.selected {
 }
 .oe_ace_view_editor .ace_editor {
   position: absolute;
-  top: 40px;
+  top: 30px;
   right: 0;
   bottom: 51px;
   left: 0;
   width: 720px;
 }
-.oe_ace_view_editor:hover {
+.oe_ace_view_editor.oe_ace_open {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-.oe_ace_view_editor.oe_ace_open {
-  width: 720px;
-}
 .oe_ace_view_editor.oe_ace_closed {
-  width: 0;
+  z-index: -1000;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }

@@ -7,18 +7,27 @@ import json
 import logging
 import os
 import datetime
+import re
 
 from sys import maxint
 
 import psycopg2
-import slugify
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 from PIL import Image
 
+try:
+    from slugify import slugify
+except ImportError:
+    def slugify(s, max_length=None):
+        spaceless = re.sub(r'\s+', '-', s)
+        specialless = re.sub(r'[^-_a-z0-9]', '', spaceless)
+        return specialless[:max_length]
+
 import openerp
+from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
@@ -35,8 +44,6 @@ def auth_method_public():
 http.auth_methods['public'] = auth_method_public
 
 NOPE = object()
-# PIL images have a type flag, but no MIME. Reverse type flag to MIME.
-PIL_MIME_MAPPING = {'PNG': 'image/png', 'JPEG': 'image/jpeg', 'GIF': 'image/gif', }
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
@@ -44,16 +51,12 @@ class Website(openerp.addons.web.controllers.main.Home):
     def index(self, **kw):
         return self.page("website.homepage")
 
-    @http.route('/admin', type='http', auth="none")
-    def admin(self, *args, **kw):
-        return super(Website, self).index(*args, **kw)
-
-     # FIXME: auth, if /pagenew known anybody can create new empty page
+    # FIXME: auth, if /pagenew known anybody can create new empty page
     @website.route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path, noredirect=NOPE):
         module = 'website'
         # completely arbitrary max_length
-        idname = slugify.slugify(path, max_length=50)
+        idname = slugify(path, max_length=50)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
@@ -244,11 +247,16 @@ class Website(openerp.addons.web.controllers.main.Home):
     def publish(self, id, object):
         _id = int(id)
         _object = request.registry[object]
-
         obj = _object.browse(request.cr, request.uid, _id)
+
+        values = {}
+        if 'website_published' in _object._all_columns:
+            values['website_published'] = not obj.website_published
+        if 'website_published_datetime' in _object._all_columns and values.get('website_published'):
+            values['website_published_datetime'] = fields.datetime.now()
         _object.write(request.cr, request.uid, [_id],
-                      {'website_published': not obj.website_published},
-                      context=request.context)
+                      values, context=request.context)
+
         obj = _object.browse(request.cr, request.uid, _id)
         return obj.website_published and True or False
 
@@ -265,6 +273,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
 
 class Images(http.Controller):
+    def placeholder(self, response):
+        # file_open may return a StringIO. StringIO can be closed but are
+        # not context managers in Python 2 though that is fixed in 3
+        with contextlib.closing(openerp.tools.misc.file_open(
+                os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
+                mode='rb')) as f:
+            response.set_data(f.read())
+            return response.make_conditional(request.httprequest)
+
     @website.route('/website/image', auth="public")
     def image(self, model, id, field):
         Model = request.registry[model]
@@ -279,13 +296,7 @@ class Images(http.Controller):
                             [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
-            # file_open may return a StringIO. StringIO can be closed but are
-            # not context managers in Python 2 though that is fixed in 3
-            with contextlib.closing(openerp.tools.misc.file_open(
-                    os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
-                    mode='rb')) as f:
-                response.set_data(f.read())
-                return response
+            return self.placeholder(response)
 
         concurrency = '__last_update'
         [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
@@ -300,9 +311,11 @@ class Images(http.Controller):
                 # just in case we have a timestamp without microseconds
                 response.last_modified = datetime.datetime.strptime(
                     record[concurrency], server_format)
-        # FIXME: no field in record?
-        if not field in record or not record[field]:
-            return response
+
+        if not record.get(field):
+            # Field does not exist on model or field set to False
+            # FIXME: maybe a field which does not exist should be a 404?
+            return self.placeholder(response)
 
         response.set_etag(hashlib.sha1(record[field]).hexdigest())
         response.make_conditional(request.httprequest)
@@ -336,7 +349,7 @@ class Images(http.Controller):
 
         # FIXME: unknown format or not an image
         image = Image.open(buf)
-        response.mimetype = PIL_MIME_MAPPING[image.format]
+        response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
         max_w, max_h = fit

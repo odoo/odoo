@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.addons.website_mail.controllers.main import WebsiteMail
 from openerp.tools import mute_logger, email_split
 
 
-class TestControllers(TestMailBase):
+class TestControllers(TestMail):
 
     def test_00_subscribe(self):
         # from openerp.addons.web.http import request

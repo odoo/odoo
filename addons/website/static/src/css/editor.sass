@@ -4,15 +4,15 @@
 @import "compass/css3/user-interface"
 @import "compass/css3/transition"
 
-//smartphones, iPhone, portrait 480x320 phones 
+//smartphones, iPhone, portrait 480x320 phones
 $smart_phone: 320px
 //portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide.*/
-$small-tablet: 481px 
+$small-tablet: 481px
 //portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones
-$portrait-tablet: 641px 
-//tablet, landscape iPad, lo-res laptops ands desktops 
+$portrait-tablet: 641px
+//tablet, landscape iPad, lo-res laptops ands desktops
 $tablet: 961px
-//big landscape tablets, laptops, and desktops  
+//big landscape tablets, laptops, and desktops
 $desktop: 1025px
 
 /* ---- CKEditor Minimal Reset ---- */
@@ -138,9 +138,18 @@ table.editorbar-panel
 .modal .image-preview
     margin-bottom: 0.5em
 
+// wrapper positioned relatively for drag&drop widget which is disabled below.
+// Breaks completely horribly crazy products listing page, so take it out.
+.cke_widget_wrapper
+    position: static !important
 // "remove" drag & drop of CKE widgets
 .cke_widget_drag_handler_container
     display: none !important
+// prevent inline widgets from entirely disappearing when their (textual)
+// content is removed
+.cke_widget_editable:empty:after
+    content: " "
+    white-space: pre-wrap
 
 /* ---- SNIPPET EDITOR ---- */
 
@@ -148,7 +157,7 @@ table.editorbar-panel
     position: fixed
     left: 0px
     right: 0px
-    top: 50px
+    top: 51px
     background: rgb(40,40,40)
     +box-shadow(0px 10px 10px -10px black inset)
     z-index: 1010
@@ -162,9 +171,7 @@ table.editorbar-panel
         display: inline-block
         border-bottom: none !important
         vertical-align: middle
-        margin-top: 5px
         min-width: 120px
-        margin-left: 6px
         > li
             display: block
             float: none
@@ -172,7 +179,7 @@ table.editorbar-panel
                 background: black !important
             > a
                 padding: 2px 10px !important
-                width: 100% 
+                width: 100%
                 display: block
                 border: 0
         z-index: 1
@@ -182,15 +189,13 @@ table.editorbar-panel
         display: inline-block
         white-space: nowrap
         background: black
-        margin-top: 5px
-        > div   
+        > div
             background: rgb(0,0,0)
-            padding: 5px
             label
                 width: 44px
                 color: #fff
                 padding-left: 10px
-                
+
                 div
                     width: 100px
                     text-align: center
@@ -200,8 +205,8 @@ table.editorbar-panel
 .oe_snippet
     float: left
     vertical-align: top
-    width: 100px
-    margin: 1px
+    width: 93px
+    margin-left: 1px
     margin-top: 0px
     position: relative
     overflow: hidden
@@ -223,6 +228,7 @@ table.editorbar-panel
             display: block
             +text-shadow(0 0 2px rgb(0,0,0))
         .oe_snippet_thumbnail_img
+            height: 74px
             @include transition(all 150ms linear)
             +box-shadow(inset 0px 0px 0px 3px #333333)
             @include transform( scale(1,1))
@@ -236,16 +242,45 @@ table.editorbar-panel
 
 /* ---- SNIPPETS DROP ZONES ---- */
 
-.oe_drop_zone.oe_insert
+#dark_for_dropzone
+    width: 100%
+    position: absolute
+    top: 0
+    left: 0
+    opacity: 0.4
+    z-index: 1000
+    pointer-events: none
+    td
+        background: #000
+        &.center.active
+            background: transparent
+
+.oe_drop_zone, .oe_drop_zone_style
+    border: none
+    background: rgba(100, 255, 255, .9)
+    +border-radius(4px)
+    div
+        margin: 0
+        line-height: 48px
+        text-align: center
+        color: #FF00FF
+        font-weight: bold
+        font-size: 24px
+    .oe_active
+        display: none
+
+.oe_drop_zone_style div
+    line-height: 24px
+
+.oe_drop_zone
     display: block
     height: 48px
     margin: 0px
     margin-top: -4px
     margin-bottom: -44px
-    @include transition(margin 250ms linear)
+    z-index: 1002
     width: 100%
     position: absolute
-    z-index: 1000
     &:not(.oe_vertical):before
         content: ""
         display: block
@@ -258,22 +293,17 @@ table.editorbar-panel
         width: 48px
         float: left
         position: relative
-        margin: 0px -24px !important
+        margin: 4px -24px !important
+        div
+            display: none
     &.oe_overlay
         border-radius: 3px
-        //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px)) 
-        //background-size: 100px 100px
-        background: rgba(153, 0, 255,.5)
-        
-.oe_drop_zone, .oe_drop_zone_style
-    border: none
-    //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px)) 
-    //background-size: 100px 100px
-    background: rgba(153, 0, 255, .3)
-    +border-radius(4px)
-    &.oe_hover
-        background: rgba(0, 255, 133, .3)
-        z-index: 1001
+    &.oe_drop_active
+        background: rgba(100, 255, 255, .3)
+        div
+            display: none
+        .oe_active
+            display: block
 
 .oe_drop_zone_style
     color: white
@@ -287,7 +317,7 @@ table.editorbar-panel
     display: none
     position: absolute
     background: transparent
-    //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.02) ,rgba(255,255,255,.02) 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 75px)) 
+    //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.02) ,rgba(255,255,255,.02) 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 75px))
     +border-radius(3px)
     @include transition(opacity 100ms linear)
     +box-sizing(border-box)
@@ -461,7 +491,7 @@ $highlighted_text_color: #ffffff
 /* ---- ACE EDITOR ---- */
 
 $ace_width: 720px
-$editorbar_height: 40px
+$editorbar_height: 30px
 // TODO Fix => might break with themes
 $navbar_height: 51px
 
@@ -470,25 +500,24 @@ $navbar_height: 51px
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
     line-height: normal
 .oe_ace_view_editor
-    @include transition(all 0.2s ease-in)
-    +opacity(0.3)
     position: fixed
     top: $navbar_height
     right: 0
     z-index: 1000
     height: 100%
+    width: $ace_width
     .oe_ace_view_editor_title
         width: 100%
-        padding-top: 4px
-        padding-left: 4px
+        padding-top: 0
+        padding-left: 0
         height: $editorbar_height
         background: #2F3129
         .oe_view_list
             width: 50%
-            height: $editorbar_height - 8px
+            height: $editorbar_height
             @include editor-font
         .btn
-            height: $editorbar_height - 8px
+            height: $editorbar_height
             padding: 0 4px 0 4px
             @include editor-font
     .ace_editor
@@ -498,12 +527,10 @@ $navbar_height: 51px
         bottom: $navbar_height
         left: 0
         width: $ace_width
-    &:hover
-        +opacity(1)
     &.oe_ace_open
-        width: $ace_width
+        +opacity(1)
     &.oe_ace_closed
-        width: 0
+        z-index: -1000
         +opacity(0)
 
 /* ---- EDITOR TOUR ---- */

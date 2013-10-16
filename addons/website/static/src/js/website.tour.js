@@ -19,9 +19,24 @@
                 keyboard: false,
             });
             this.tour.addSteps(_.map(this.steps, function (step) {
-               step.title = render('website.tour_title', { title: step.title });
+               step.title = render('website.tour_popover_title', { title: step.title });
                return step;
             }));
+            this.monkeyPatchTour();
+        },
+        monkeyPatchTour: function () {
+            var self = this;
+            // showStep should wait for 'element' to appear instead of moving to the next step
+            self.tour.showStep = function (i) {
+              var step = self.tour.getStep(i);
+              return (function proceed () {
+                  if (step.orphan || $(step.element).length > 0) {
+                      return Tour.prototype.showStep.call(self.tour, i);
+                  } else {
+                      setTimeout(proceed, 50);
+                  }
+              }());
+            };
         },
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
@@ -68,7 +83,7 @@
 
     website.EditorBasicTour = website.EditorTour.extend({
         id: 'add_banner_tour',
-        name: "How to add a banner",
+        name: "Insert a banner",
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -77,43 +92,44 @@
                     orphan: true,
                     backdrop: true,
                     title: "Welcome to your website!",
-                    content: "This tutorial will guide you through the firsts steps to build your enterprise class website.",
-                    template: render('website.tour_full', { next: "Continue", end: "Close Tutorial" }),
+                    content: "This tutorial will guide you to build your first page. We will start by adding a banner.",
+                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
                     stepId: 'edit-page',
                     element: 'button[data-action=edit]',
-                    placement: 'right',
+                    placement: 'bottom',
                     reflex: true,
                     title: "Edit this page",
-                    content: "Every page of your website can be edited. Click the <em>Edit</em> button to modify your homepage.",
-                    template: render('website.tour_simple'),
-                },
-                {
-                    stepId: 'add-banner',
-                    orphan: true,
-                    backdrop: true,
-                    title: "Now, let's add a banner",
-                    content: "Let's add a banner on the top of the page to make your homepage more attractive.",
-                    template: render('website.tour_confirm', { next: "Continue" }),
+                    content: "Every page of your website can be modified through the <i>Edit</i> button.",
+                    template: render('website.tour_popover'),
                 },
                 {
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
-                    placement: 'right',
-                    reflex: true,
-                    title: "Shows Building Blocks",
-                    content: "Click on the <em>Insert Blocks</em> button to show the available building blocks.",
-                    template: render('website.tour_simple'),
+                    placement: 'bottom',
+                    title: "Insert building blocks",
+                    content: "To add content in a page, you can insert building blocks.",
+                    template: render('website.tour_popover'),
+                    onShow: function () {
+                        function refreshAddBlockStep () {
+                            self.tour.showStep(self.indexOfStep('add-block'));
+                            editor.off('rte:ready', editor, refreshAddBlockStep);
+                        }
+                        editor.on('rte:ready', editor, refreshAddBlockStep);
+                        $('button[data-action=snippet]').click(function () {
+                            self.movetoStep('drag-banner');
+                        });
+                    }
                 },
                 {
                     stepId: 'drag-banner',
-                    element: '#website-top-navbar [data-snippet-id=carousel]',
+                    element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
-                    content: "Drag the <em>Banner</em> block and drop it to the top of your page (purple zone).",
-                    template: render('website.tour_simple'),
-                    onShown: function () {
+                    content: "Drag the <em>Banner</em> block and drop it in your page. <p class='text-muted'>Tip: release the mouse button when you are in a valid zone, with a preview of the banner.</p>",
+                    template: render('website.tour_popover'),
+                    onShow: function () {
                         function beginDrag () {
                             $('.popover.tour').remove();
                             $('body').off('mousedown', beginDrag);
@@ -130,10 +146,10 @@
                 {
                     stepId: 'edit-title',
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
-                    placement: 'top',
-                    title: "Set your Banner text",
-                    content: "Click on the text to start modifying it then click <em>Continue</em> to continue the tutorial.<br>You can also use the options of the top menubar to change the look of the banner. ",
-                    template: render('website.tour_confirm', { next: "Continue" }),
+                    placement: 'left',
+                    title: "Customize banner's text",
+                    content: "Click in the text and start editing it. Click continue once it's done.",
+                    template: render('website.tour_popover', { next: "Continue" }),
                     onHide: function () {
                         var $banner = $("#wrap [data-snippet-id=carousel]:first");
                         if ($banner.length) {
@@ -145,9 +161,9 @@
                     stepId: 'customize-banner',
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
-                    title: "Customize your new Banner style",
-                    content: "Click on <em>Customize</em> and change the background of your banner.<br>If your are satisfied with the current background, just click <em>Continue</em>.",
-                    template: render('website.tour_confirm', { next: "Continue" }),
+                    title: "Customize the banner",
+                    content: "You can customize components of your page through the <em>Customize</em> menu. Try to change the background of your banner.",
+                    template: render('website.tour_popover', { next: "Continue" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
                             self.movetoStep('save-changes');
@@ -160,8 +176,8 @@
                     placement: 'right',
                     reflex: true,
                     title: "Save your modifications",
-                    content: "Click the <em>Save</em> button to apply modifications on your website.",
-                    template: render('website.tour_simple'),
+                    content: "Once you click on save, your website page is updated.",
+                    template: render('website.tour_popover'),
                     onHide: function () {
                         self.saveStep('part-2');
                     },
@@ -170,40 +186,17 @@
                 {
                     stepId: 'part-2',
                     orphan: true,
-                    backdrop: true,
-                    title: "Congratutaltions!",
-                    content: "Congratulations on your first modifications.",
-                    template: render('website.tour_confirm', { next: "OK" }),
-                },
-                {
-                    stepId: 'show-customize',
-                    element: '#customize-menu-button',
-                    placement: 'left',
-                    title: "Customize your Website",
-                    content: "Go on the <em>Customize</em> menu to get access customization options for the current page.",
-                    template: render('website.tour_simple'),
-                    onShow: function () {
-                        editor.on('rte:customize_menu_ready', self, function () {
-                            self.movetoStep('change-themes');
-                        });
-                    },
-                },
-                {
-                    stepId: 'change-themes',
-                    element: '.js_change_theme',
-                    placement: 'left',
-                    reflex: true,
-                    title: "Click to View Themes",
-                    content: "You can change the theme at any time to customize the look and feel of your website.",
-                    template: render('website.tour_simple'),
+                    title: "Congratulation!",
+                    content: "Your homepage have been updated. Now, we suggest you to insert others building blocks like texts and images to structure your page.",
+                    template: render('website.tour_popover', { next: "Continue" }),
                 },
                 {
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
                     title: "Help is always available",
-                    content: "You can find more tutorials in the <em>Help</em> menu.",
-                    template: render('website.tour_end', { end: "Close" }),
+                    content: "But you can always click here if you want more tutorials.",
+                    template: render('website.tour_popover', { end: "Close" }),
                 },
             ];
             return this._super();
@@ -245,11 +238,11 @@
                 $menuItem.click(function () {
                     tutorial.reset();
                     tutorial.start();
-                })
+                });
                 menu.append($menuItem);
             });
             var url = new website.UrlParser(window.location.href);
-            if (url.search === '?tutorial=true' || website.tutorials.basic.startOfPart2()) {
+            if (url.search.indexOf('?tutorial=true') === 0 || website.tutorials.basic.startOfPart2()) {
                 website.tutorials.basic.start();
             }
             $('.tour-backdrop').click(function (e) {

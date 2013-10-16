@@ -580,8 +580,10 @@
 				// Prevent the browser opening read-only links. (#6032)
 				this.attachListener( this, 'click', function( ev ) {
 					ev = ev.data;
-					var target = ev.getTarget();
-					if ( target.is( 'a' ) && ev.$.button != 2 && target.isReadOnly() )
+					var target = ev.getTarget(),
+						link = new CKEDITOR.dom.elementPath( target ).contains( 'a' );
+
+					if ( link && ev.$.button != 2 && link.isReadOnly() )
 						ev.preventDefault();
 				} );
 

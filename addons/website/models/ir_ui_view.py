@@ -10,6 +10,9 @@ class view(osv.osv):
         'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
         'page': fields.boolean("Whether this view is a web page template (complete)"),
+        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", size=70, translate=True),
     }
     _defaults = {
         'page': False,
@@ -60,11 +63,9 @@ class view(osv.osv):
         field = el.get('data-oe-field')
 
         column = Model._all_columns[field].column
-        convert = self.pool['ir.fields.converter'].to_field(
-            cr, uid, Model, column, fromtype="html", context=context)
-        value, warnings = convert(el)
-        # FIXME: report error
-        if warnings: return
+        converter = self.pool['website.qweb'].get_converter_for(
+            el.get('data-oe-type'))
+        value = converter.from_html(cr, uid, Model, column, el)
 
         Model.write(cr, uid, [int(el.get('data-oe-id'))], {
             field: value
