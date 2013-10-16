@@ -223,6 +223,13 @@ class TestCleaner(unittest2.TestCase):
         for ext in test_mail_examples.THUNDERBIRD_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
+    def test_70_read_more(self):
+        new_html = html_email_clean(test_mail_examples.BUG1, remove=True, shorten=True, max_length=100)
+        for ext in test_mail_examples.BUG_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
+        for ext in test_mail_examples.BUG_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
+
     def test_90_misc(self):
         # False boolean for text must return empty string
         new_html = html_email_clean(False)

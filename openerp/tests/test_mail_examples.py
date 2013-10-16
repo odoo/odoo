@@ -637,3 +637,59 @@ MSOFFICE_3 = """<div>
 
 MSOFFICE_3_IN = ['I saw your boss yesterday']
 MSOFFICE_3_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated that you wish', 'Belgium: +32.81.81.37.00']
+
+
+# ------------------------------------------------------------
+# Test cases coming from bugs
+# ------------------------------------------------------------
+
+# bug: read more not apparent, strange message in read more span
+BUG1 = """<pre>Hi Migration Team,
+
+Paragraph 1, blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah.
+
+Paragraph 2, blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah.
+
+Paragraph 3, blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah.
+
+Thanks.
+
+Regards,
+
+-- 
+Olivier Laurent
+Migration Manager
+OpenERP SA
+Chaussée de Namur, 40
+B-1367 Gérompont
+Tel: +32.81.81.37.00
+Web: http://www.openerp.com</pre>"""
+
+BUG_1_IN = [
+    'Hi Migration Team',
+    'Paragraph 1'
+]
+BUG_1_OUT = [
+    'Olivier Laurent',
+    'Chaussée de Namur',
+    '81.81.37.00',
+    'openerp.com',
+]

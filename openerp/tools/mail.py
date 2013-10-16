@@ -206,7 +206,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
 
     # form node and tag text-based quotes and signature
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[^.]+)')
+    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
     for node in root.getiterator():
         _tag_matching_regex_in_text(quote_tags, node, 'span', {'text_quote': '1'})
         _tag_matching_regex_in_text(signature, node, 'span', {'text_signature': '1'})
@@ -263,8 +263,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
             # create outertext node
             new_node = _create_node('span', outertext[stop_idx:])
             # add newly created nodes in dom
-            node.addnext(new_node)
-            node.addnext(read_more_node)
+            node.append(read_more_node)
             # tag node
             new_node.set('in_overlength', '1')
 
