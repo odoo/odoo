@@ -78,12 +78,12 @@ def _invoke_model(func, model):
 
 class MetaField(type):
     """ Metaclass for field classes. """
-    _class_by_type = {}
+    by_type = {}
 
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
         if cls.type:
-            cls._class_by_type[cls.type] = cls
+            cls.by_type[cls.type] = cls
 
 
 class Field(object):
@@ -161,37 +161,24 @@ class Field(object):
                 desc[arg] = getattr(self, arg)
         return desc
 
-    @classmethod
-    def from_column(cls, column):
-        """ return a field for interfacing the low-level field `column` """
-        # delegate to the subclass corresponding to the column type, or Field
-        # for unknown column types
-        field_class = cls._class_by_type.get(column._type, Field)
-        field = field_class._from_column(column)
-        field.interface_for = column
-        return field
-
-    @classmethod
-    def _from_column(cls, column):
-        # generic implementation
-        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        if cls is Field:
-            kwargs['type'] = column._type
-        return cls(**kwargs)
-
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
         if self.interface_for:
             assert isinstance(self.interface_for, fields._column)
             return self.interface_for
-        _logger.debug("Create column for field %s", self)
-        kwargs = self._to_column()
-        return getattr(fields, self.type)(**kwargs)
+        _logger.debug("Create fields._column for Field %s", self)
+        return getattr(fields, self.type)(**self.to_column_args())
 
-    def _to_column(self):
-        """ return a kwargs dictionary to pass to the column class """
-        return dict((attr, getattr(self, attr)) for attr in self._attrs)
+    def to_column_args(self):
+        return {
+            'string': self.string,
+            'help': self.help,
+            'readonly': self.readonly,
+            'required': self.required,
+            'states': self.states,
+            'groups': self.groups,
+        }
 
     #
     # Conversion of values
@@ -526,11 +513,11 @@ class Float(Field):
     def digits(self):
         return self._digits(scope.cr) if callable(self._digits) else self._digits
 
-    @classmethod
-    def _from_column(cls, column):
-        column.digits_change(scope.cr)      # determine column.digits
-        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        return cls(**kwargs)
+    def to_column_args(self):
+        args = super(Float, self).to_column_args()
+        attr = 'digits_compute' if callable(self._digits) else 'digits'
+        args[attr] = self._digits
+        return args
 
     def convert_to_cache(self, value):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -547,6 +534,11 @@ class _String(Field):
     _attrs = Field._attrs + ('translate',)
     _desc1 = Field._desc1 + ('translate',)
 
+    def to_column_args(self):
+        args = super(_String, self).to_column_args()
+        args['translate'] = self.translate
+        return args
+
 
 class Char(_String):
     """ Char field. """
@@ -555,6 +547,11 @@ class Char(_String):
 
     _attrs = _String._attrs + ('size',)
     _desc1 = _String._desc1 + ('size',)
+
+    def to_column_args(self):
+        args = super(Char, self).to_column_args()
+        args['size'] = self.size
+        return args
 
     def convert_to_cache(self, value):
         return bool(value) and ustr(value)[:self.size]
@@ -625,6 +622,15 @@ class Selection(Field):
         """
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
+    def to_column_args(self):
+        args = super(Selection, self).to_column_args()
+        selection = self.selection
+        if isinstance(selection, basestring):
+            method = selection
+            selection = lambda self, *a, **kw: getattr(self, method)(*a, **kw)
+        args['selection'] = selection
+        return args
+
     def setup_related(self):
         super(Selection, self).setup_related()
         # selection must be computed on related field
@@ -634,13 +640,6 @@ class Selection(Field):
         desc = super(Selection, self).get_description()
         desc['selection'] = self.get_selection()
         return desc
-
-    def _to_column(self):
-        kwargs = super(Selection, self)._to_column()
-        if isinstance(self.selection, basestring):
-            method = self.selection
-            kwargs['selection'] = lambda self, *args, **kwargs: getattr(self, method)(*args, **kwargs)
-        return kwargs
 
     def get_selection(self):
         """ return the selection list (pairs (value, string)) """
@@ -688,6 +687,11 @@ class Reference(Selection):
         """
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
+    def to_column_args(self):
+        args = super(Reference, self).to_column_args()
+        args['size'] = self.size
+        return args
+
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
             if value._name in self.get_values() and len(value) <= 1:
@@ -715,6 +719,13 @@ class _Relational(Field):
     comodel_name = None                 # name of model of values
     domain = None                       # domain for searching values
     context = None                      # context for searching values
+
+    def to_column_args(self):
+        args = super(_Relational, self).to_column_args()
+        args['obj'] = self.comodel_name
+        args['domain'] = self.domain
+        args['context'] = self.context
+        return args
 
     @lazy_property
     def comodel(self):
@@ -757,12 +768,19 @@ class Many2one(_Relational):
     """ Many2one field. """
     type = 'many2one'
     ondelete = 'set null'               # what to do when value is deleted
+    auto_join = False                   # whether joins are generated upon search
     delegate = False                    # whether self implements delegation
 
     _attrs = Field._attrs + ('ondelete',)
 
     def __init__(self, comodel_name, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
+
+    def to_column_args(self):
+        args = super(Many2one, self).to_column_args()
+        args['ondelete'] = self.ondelete
+        args['auto_join'] = self.auto_join
+        return args
 
     @lazy_property
     def inverse_field(self):
@@ -775,18 +793,6 @@ class Many2one(_Relational):
     def inherits(self):
         """ Whether `self` implements inheritance between model and comodel. """
         return self.name in self.model._inherits.itervalues()
-
-    @classmethod
-    def _from_column(cls, column):
-        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        kwargs['comodel_name'] = column._obj
-        return cls(**kwargs)
-
-    def _to_column(self):
-        kwargs = super(Many2one, self)._to_column()
-        kwargs['obj'] = self.comodel_name
-        kwargs['domain'] = self.domain or []
-        return kwargs
 
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
@@ -885,10 +891,19 @@ class One2many(_RelationalMulti):
     """ One2many field. """
     type = 'one2many'
     inverse_name = None                 # name of the inverse field
+    auto_join = False                   # whether joins are generated upon search
+    limit = None                        # optional limit to use upon read
 
     def __init__(self, comodel_name, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
             comodel_name=comodel_name, inverse_name=inverse_name, string=string, **kwargs)
+
+    def to_column_args(self):
+        args = super(One2many, self).to_column_args()
+        args['fields_id'] = self.inverse_name
+        args['auto_join'] = self.auto_join
+        args['limit'] = self.limit
+        return args
 
     @lazy_property
     def inverse_field(self):
@@ -899,21 +914,6 @@ class One2many(_RelationalMulti):
         desc['relation_field'] = self.inverse_name
         return desc
 
-    @classmethod
-    def _from_column(cls, column):
-        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        # beware when getting parameters: column may be a function field
-        kwargs['comodel_name'] = column._obj
-        kwargs['inverse_name'] = getattr(column, '_fields_id', None)
-        return cls(**kwargs)
-
-    def _to_column(self):
-        kwargs = super(One2many, self)._to_column()
-        kwargs['obj'] = self.comodel_name
-        kwargs['fields_id'] = self.inverse_name
-        kwargs['domain'] = self.domain or []
-        return kwargs
-
 
 class Many2many(_RelationalMulti):
     """ Many2many field. """
@@ -921,11 +921,20 @@ class Many2many(_RelationalMulti):
     relation = None                     # name of table
     column1 = None                      # column of table referring to model
     column2 = None                      # column of table referring to comodel
+    limit = None                        # optional limit to use upon read
 
     def __init__(self, comodel_name, relation=None, column1=None, column2=None,
                 string=None, **kwargs):
         super(Many2many, self).__init__(comodel_name=comodel_name, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
+
+    def to_column_args(self):
+        args = super(Many2many, self).to_column_args()
+        args['rel'] = self.relation
+        args['id1'] = self.column1
+        args['id2'] = self.column2
+        args['limit'] = self.limit
+        return args
 
     @lazy_property
     def inverse_field(self):
@@ -937,33 +946,13 @@ class Many2many(_RelationalMulti):
                     return field
         return None
 
-    @classmethod
-    def _from_column(cls, column):
-        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        # beware when getting parameters: column may be a function field
-        kwargs['comodel_name'] = column._obj
-        kwargs['relation'] = getattr(column, '_rel', None)
-        kwargs['column1'] = getattr(column, '_id1', None)
-        kwargs['column2'] = getattr(column, '_id2', None)
-        return cls(**kwargs)
-
-    def _to_column(self):
-        kwargs = super(Many2many, self)._to_column()
-        kwargs['obj'] = self.comodel_name
-        kwargs['rel'] = self.relation
-        kwargs['id1'] = self.column1
-        kwargs['id2'] = self.column2
-        kwargs['domain'] = self.domain or []
-        return kwargs
-
 
 class Id(Field):
     """ Special case for field 'id'. """
     store = False
     readonly = True
 
-    @classmethod
-    def _from_column(cls, column):
+    def to_column(self):
         raise NotImplementedError()
 
     def __get__(self, instance, owner):

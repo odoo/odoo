@@ -122,7 +122,30 @@ class _column(object):
         # self._prefetch must imply self._classic_write and not self.groups
         if not self._classic_write or self.groups:
             self._prefetch = False
- 
+
+    def to_field(self):
+        """ convert column `self` to a new-style field """
+        from openerp.osv.fields2 import Field
+        return Field.by_type[self._type](**self.to_field_args())
+
+    def to_field_args(self):
+        """ return a dictionary with all the arguments to pass to the field """
+        items = [
+            ('interface_for', self),            # field interfaces self
+            ('string', self.string),
+            ('help', self.help),
+            ('readonly', self.readonly),
+            ('required', self.required),
+            ('states', self.states),
+            ('groups', self.groups),
+            ('size', self.size),
+            ('ondelete', self.ondelete),
+            ('translate', self.translate),
+            ('domain', self._domain),
+            ('context', self._context),
+        ]
+        return dict(item for item in items if items[1])
+
     def restart(self):
         pass
 
@@ -188,6 +211,11 @@ class reference(_column):
 
     def __init__(self, string, selection, size=None, **args):
         _column.__init__(self, string=string, size=size, selection=selection, **args)
+
+    def to_field_args(self):
+        args = super(reference, self).to_field_args()
+        args['selection'] = self.selection
+        return args
 
     def get(self, cr, obj, ids, name, uid=None, context=None, values=None):
         result = {}
@@ -270,6 +298,11 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
+
+    def to_field_args(self):
+        args = super(float, self).to_field_args()
+        args['digits'] = self.digits_compute or self.digits
+        return args
 
     def digits_change(self, cr):
         if self.digits_compute:
@@ -462,6 +495,11 @@ class selection(_column):
         _column.__init__(self, string=string, **args)
         self.selection = selection
 
+    def to_field_args(self):
+        args = super(selection, self).to_field_args()
+        args['selection'] = self.selection
+        return args
+
 # ---------------------------------------------------------
 # Relationals fields
 # ---------------------------------------------------------
@@ -487,6 +525,12 @@ class many2one(_column):
         _column.__init__(self, string=string, **args)
         self._obj = obj
         self._auto_join = auto_join
+
+    def to_field_args(self):
+        args = super(many2one, self).to_field_args()
+        args['comodel_name'] = self._obj
+        args['auto_join'] = self._auto_join
+        return args
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if context is None:
@@ -560,6 +604,14 @@ class one2many(_column):
         self._auto_join = auto_join
         #one2many can't be used as condition for defaults
         assert(self.change_default != True)
+
+    def to_field_args(self):
+        args = super(one2many, self).to_field_args()
+        args['comodel_name'] = self._obj
+        args['inverse_name'] = self._fields_id
+        args['auto_join'] = self._auto_join
+        args['limit'] = self._limit
+        return args
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if context is None:
@@ -697,6 +749,15 @@ class many2many(_column):
         self._id1 = id1
         self._id2 = id2
         self._limit = limit
+
+    def to_field_args(self):
+        args = super(many2many, self).to_field_args()
+        args['comodel_name'] = self._obj
+        args['relation'] = self._rel
+        args['column1'] = self._id1
+        args['column2'] = self._id2
+        args['limit'] = self._limit
+        return args
 
     def _sql_names(self, source_model):
         """Return the SQL names defining the structure of the m2m relationship table
@@ -1117,6 +1178,16 @@ class function(_column):
             self._symbol_c = type_class._symbol_c
             self._symbol_f = type_class._symbol_f
             self._symbol_set = type_class._symbol_set
+
+    def to_field_args(self):
+        args = super(function, self).to_field_args()
+        if self._type in ('float'):
+            args['digits'] = self.digits_compute or self.digits
+        elif self._type in ('selection', 'reference'):
+            args['selection'] = self.selection
+        elif self._type in ('many2one', 'one2many', 'many2many'):
+            args['comodel_name'] = self._obj
+        return args
 
     def digits_change(self, cr):
         if self._type == 'float':

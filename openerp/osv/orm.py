@@ -3274,7 +3274,7 @@ class BaseModel(object):
         # interface columns with new-style fields
         for attr, column in cls._columns.iteritems():
             if attr not in cls._fields:
-                cls._set_field_descriptor(attr, Field.from_column(column))
+                cls._set_field_descriptor(attr, column.to_field())
 
         # interface inherited fields with new-style fields (note that the
         # reverse order is for being consistent with _all_columns above)
