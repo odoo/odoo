@@ -395,7 +395,7 @@ def jsonrequest(f):
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="json", auth="none")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -473,7 +473,7 @@ def httprequest(f):
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="http", auth="none")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
