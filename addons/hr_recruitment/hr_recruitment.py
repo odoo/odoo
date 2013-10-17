@@ -182,6 +182,8 @@ class hr_applicant(osv.Model):
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                         domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+        'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage',
+                                         help='Stage of the applicant before being in the current stage. Used for lost cases analysis.'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
@@ -223,7 +225,7 @@ class hr_applicant(osv.Model):
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
     }
 
     _group_by_full = {
@@ -331,10 +333,8 @@ class hr_applicant(osv.Model):
         """
         if custom_values is None: custom_values = {}
         val = msg.get('from').split('<')[0]
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'partner_name':val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
@@ -392,13 +392,16 @@ class hr_applicant(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        # stage change: update date_last_stage_update
-        if 'stage_id' in vals:
-            vals['date_last_stage_update'] = fields.datetime.now()
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
-
+        # stage_id: track last stage before update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.datetime.now()
+            for applicant in self.browse(cr, uid, ids, context=None):
+                vals['last_stage_id'] = applicant.stage_id.id
+                res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
+            return res
         return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
@@ -460,7 +463,7 @@ class hr_job(osv.osv):
     _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }

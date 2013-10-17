@@ -61,75 +61,12 @@
             <field name="usage">customer</field>
             <field name="company_id"></field>
         </record>
-        <record id="stock_location_company" model="stock.location">
-            <field name="name" model="res.company" search="[]" use="name"/>
-            <field name="usage">view</field>
-            <field name="location_id" ref="stock_location_locations"/>
-        </record>
-
-        <record id="stock_location_output" model="stock.location">
-            <field name="name">Output</field>
-            <field name="location_id" ref="stock_location_company"/>
-            <field name="usage">internal</field>
-        </record>
-        <record id="stock_location_stock" model="stock.location">
-            <field name="name">Stock</field>
-            <field name="location_id" ref="stock_location_company"/>
-        </record>
+        
         <record id="stock_location_inter_wh" model="stock.location">
             <field name="name">Inter Warehouse</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">transit</field>
         </record>
-
-        <!-- Sequences for picking types   -->
-        <record id="seq_picking_type_in" model="ir.sequence">
-            <field name="name">WH Picking in</field>
-            <field name="prefix">WH\IN</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-        
-        <record id="seq_picking_type_out" model="ir.sequence">
-            <field name="name">WH Picking out</field>
-            <field name="prefix">WH\OUT</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-        
-        <record id="seq_picking_type_internal" model="ir.sequence">
-            <field name="name">WH Picking internal</field>
-            <field name="prefix">WH\INT</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-        
-        <record id="picking_type_in" model="stock.picking.type">
-            <field name="name">Receptions</field>
-            <field name="sequence_id" ref="seq_picking_type_in"/>
-            <field name="default_location_src_id" ref="stock_location_suppliers"/>
-            <field name="default_location_dest_id" ref="stock_location_stock"/>
-            <field name="code_id">incoming</field>
-            <field name="auto_force_assign">True</field>
-        </record>
-        
-        <record id="picking_type_out" model="stock.picking.type">
-            <field name="name">Delivery Orders</field>
-            <field name="sequence_id" ref="seq_picking_type_out"/>
-            <field name="default_location_src_id" ref="stock_location_stock"/>
-            <field name="default_location_dest_id" ref="stock_location_customers"/>
-            <field name="code_id">outgoing</field>
-        </record>
-        
-        <record id="picking_type_internal" model="stock.picking.type">
-            <field name="name">Internal Transfers</field>
-            <field name="sequence_id" ref="seq_picking_type_internal"/>
-            <field name="default_location_src_id" ref="stock_location_stock"/>
-            <field name="default_location_dest_id" ref="stock_location_stock"/>
-            <field name="code_id">internal</field>
-        </record>
-        
-        
 
     </data>
     <data noupdate="1">
@@ -157,30 +94,10 @@ watch your stock valuation, and track production lots upstream and downstream (b
         <!--
              Procurement rules
         -->
-
-        <record id="procurement_rule_customer0" model="procurement.rule">
-            <field name="name">Your Company: Stock → Customer</field>
-            <field name="action">move</field>
-            <field name="location_src_id" ref="stock_location_stock"/>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="picking_type_id" ref="picking_type_out"/>
-            <field name="procure_method">make_to_stock</field>
-        </record>
-
-    
+        
         <record id="route_warehouse0_mto" model='stock.location.route'>
             <field name="name">MTO</field>
             <field name="sequence">10</field>
-        </record>
-
-        <record id="procurement_rule_customer_mto" model="procurement.rule">
-            <field name="name">Your Company: Stock → Customer</field>
-            <field name="action">move</field>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="location_src_id" ref="stock_location_stock"/>
-            <field name="picking_type_id" ref="picking_type_out"/>
-            <field name="procure_method">make_to_order</field>
-            <field name="route_id" ref="route_warehouse0_mto"/>
         </record>
 
         <!--
@@ -196,11 +113,6 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
         </record>
-
-        <record id="base.main_partner" model="res.partner">
-            <field name="property_stock_customer" eval="ref('stock_location_stock')"/>
-        </record>
-
         <record forcecreate="True" id="property_stock_procurement" model="ir.property">
             <field name="name">property_stock_procurement</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
@@ -226,12 +138,14 @@ watch your stock valuation, and track production lots upstream and downstream (b
         <!--
     Resource: stock.warehouse
     -->
+        
+
         <record id="warehouse0" model="stock.warehouse">
             <field model="res.company" name="name" search="[]" use="name"/>
-            <field name="lot_stock_id" ref="stock_location_stock"/>
+            
             <field name="code">WH</field>
         </record>
-
+ 
         <record id="sequence_mrp_op_type" model="ir.sequence.type">
             <field name="name">Stock orderpoint</field>
             <field name="code">stock.orderpoint</field>
@@ -246,19 +160,5 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="number_increment">1</field>
         </record>
 
-        <!--
-            Add Warehouse to picking_type
-        -->
-        <record id="picking_type_in" model="stock.picking.type">
-            <field name="warehouse_id" ref="warehouse0"/>
-        </record>
-        
-        <record id="picking_type_out" model="stock.picking.type">
-            <field name="warehouse_id" ref="warehouse0"/>
-        </record>
-        
-        <record id="picking_type_internal" model="stock.picking.type">
-            <field name="warehouse_id" ref="warehouse0"/>
-        </record>
     </data>
 </openerp>

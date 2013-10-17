@@ -111,7 +111,8 @@ class pos_config(osv.osv):
         return result
 
     def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
     def _default_warehouse(self, cr, uid, context=None):
@@ -477,6 +478,11 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
+        for session in self.browse(cr, uid, ids, context=context):
+            if session.user_id.id != uid:
+                raise osv.except_osv(
+                        _('Error!'),
+                        _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
@@ -506,7 +512,6 @@ class pos_order(osv.osv):
                 'pos_reference':order['name'],
                 'partner_id': order['partner_id'] or False
             }, context)
-
             for payments in order['statement_ids']:
                 payment = payments[2]
                 self.add_payment(cr, uid, order_id, {
@@ -818,9 +823,18 @@ class pos_order(osv.osv):
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
+        
         for order in self.browse(cr, uid, ids, context=context):
+            current_session_ids = self.pool.get('pos.session').search(cr, uid, [
+                ('state', '!=', 'closed'),
+                ('user_id', '=', uid)], context=context)
+            if not current_session_ids:
+                raise osv.except_osv(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+
             clone_id = self.copy(cr, uid, order.id, {
-                'name': order.name + ' REFUND',
+                'name': order.name + ' REFUND', # not used, name forced by create
+                'session_id': current_session_ids[0],
+                'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context=context)
             clone_list.append(clone_id)
 
@@ -968,11 +982,12 @@ class pos_order(osv.osv):
             user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
 
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
 
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
-                            order.partner_id.property_account_receivable.id or account_def or current_company.account_receivable.id
+                            order.partner_id.property_account_receivable.id or \
+                            account_def and account_def.id or current_company.account_receivable.id
 
             if move_id is None:
                 # Create an entry for the sale
@@ -1361,34 +1376,14 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
-            help="The Point of Sale Category this products belongs to. Those categories are used to group similar products and are specific to the Point of Sale."),
+            help="These products belong to those categories that are used to group similar products and are specific to the Point of Sale."),
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
-    def _default_pos_categ_id(self, cr, uid, context=None):
-        proxy = self.pool.get('ir.model.data')
-
-        try:
-            category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
-        except ValueError:
-            values = {
-                'name' : 'Others',
-            }
-            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
-            values = {
-                'name' : 'categ_others',
-                'model' : 'pos.category',
-                'module' : 'point_of_sale',
-                'res_id' : category_id,
-            }
-            proxy.create(cr, uid, values, context=context)
-
-        return category_id
 
     _defaults = {
         'to_weight' : False,
         'available_in_pos': True,
-        'pos_categ_id' : _default_pos_categ_id,
     }
 
     def edit_ean(self, cr, uid, ids, context):

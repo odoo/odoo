@@ -1,4 +1,9 @@
 -
+  Salesman check the phone calls data so test with the access rights of salesman.
+-
+  !context
+    uid: 'crm_res_users_salesman'
+-
   I schedule a phone call with a customer.
 -
   !python {model: crm.phonecall2phonecall}: |
@@ -10,43 +15,3 @@
 -
   !python {model: crm.phonecall}: |
     self.action_make_meeting(cr, uid, [ref("crm.crm_phonecall_6")])
--
-  I set the phone call to not held.
--
-  !python {model: crm.phonecall}: |
-    self.case_pending(cr, uid, [ref("crm.crm_phonecall_6")])
--
-  I check that the phone call is in 'Not Held' state.
--
-  !assert {model: crm.phonecall, id: crm.crm_phonecall_6, string: Phone call held.}:
-    - state == "pending"
--
-  I cancel the phone call.
--
-  !python {model: crm.phonecall}: |
-    self.case_cancel(cr, uid, [ref("crm.crm_phonecall_6")])
--
-  I check that the phone call is in 'Cancelled' state.
--
-  !assert {model: crm.phonecall, id: crm.crm_phonecall_6, string: Phone call is not cancelled.}:
-    - state == "cancel"
--
-  I reset the phone call.
--
-  !python {model: crm.phonecall}: |
-    self.case_reset(cr, uid, [ref("crm.crm_phonecall_6")])
--
-  I check that the phone call is reset.
--
-  !assert {model: crm.phonecall, id: crm.crm_phonecall_6, string: Phone call is not reset.}:
-    - state == "open"
--
-  I set phone call to held (done).
--
-  !python {model: crm.phonecall}: |
-    self.case_close(cr, uid, [ref("crm.crm_phonecall_6")])
--
-  I check that the phone call is in 'Held' state.
--
-  !assert {model: crm.phonecall, id: crm.crm_phonecall_6, string: Phone call is not held.}:
-    - state == "done"

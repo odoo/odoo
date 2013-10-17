@@ -21,12 +21,12 @@
 
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger, email_split
 from openerp.tools.mail import html_sanitize
 
 
-class test_mail(TestMailBase):
+class test_mail(TestMail):
 
     def test_000_alias_setup(self):
         """ Test basic mail.alias setup works, before trying to use them for routing """
@@ -294,7 +294,7 @@ class test_mail(TestMailBase):
         # Data creation
         # --------------------------------------------------
         # 0 - Update existing users-partners
-        self.res_users.write(cr, uid, [uid], {'email': 'a@a'})
+        self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notification_email_send': 'comment'})
         self.res_users.write(cr, uid, [self.user_raoul_id], {'email': 'r@r'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
@@ -631,6 +631,7 @@ class test_mail(TestMailBase):
             {
                 'subject': _subject,
                 'body': '${object.description}',
+                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',
@@ -684,6 +685,7 @@ class test_mail(TestMailBase):
             {
                 'subject': _subject,
                 'body': '${object.description}',
+                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',

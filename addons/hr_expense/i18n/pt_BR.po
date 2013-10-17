@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:29+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:53+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -153,8 +153,10 @@ msgstr "Mensagens"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
-#: code:addons/hr_expense/hr_expense.py:181
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
+#: code:addons/hr_expense/hr_expense.py:240
+#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid "Error!"
 msgstr "Erro!"
@@ -251,7 +253,7 @@ msgstr ""
 "kanban."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:301
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid "Warning"
 msgstr "Atenção"
@@ -359,7 +361,7 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Alguns custos podem ser refaturados para o cliente"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
 #, python-format
 msgid "The employee must have a home address."
 msgstr "O funcionário precisa ter um endereço residencial."
@@ -414,7 +416,7 @@ msgid "After creating invoice, reimburse expenses"
 msgstr "Depois de criar a fatura, reembolsar despesas"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "Warning!"
 msgstr "Aviso!"
@@ -502,7 +504,7 @@ msgid "Employee encode all his expenses"
 msgstr "Funcionário codifica todas suas despesas"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:301
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -532,7 +534,7 @@ msgid "Draft"
 msgstr "Provisório"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:181
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
@@ -557,6 +559,7 @@ msgid "The direct manager approves the sheet"
 msgstr "O Gerente aprova a Planilha"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Valor Total"
@@ -712,7 +715,6 @@ msgid "Unit Price"
 msgstr "Preço Unitário"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
@@ -883,7 +885,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "You can only delete draft expenses!"
 msgstr "Você só pode excluir despesas provisórias!"
@@ -980,6 +982,12 @@ msgstr "Refaturar"
 #~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
 #~ "especial!"
 
+#~ msgid "Date Confirmed"
+#~ msgstr "Data confirmada"
+
+#~ msgid "All expenses"
+#~ msgstr "Todas as despesas"
+
 #~ msgid "Validation"
 #~ msgstr "Validação"
 
@@ -990,9 +998,15 @@ msgstr "Refaturar"
 #~ "Determinar se o produto pode ser visível na lista de produtos dentro de uma "
 #~ "seleção de uma despesas de RH."
 
+#~ msgid "Print HR expenses"
+#~ msgstr "Imprimir despesas de RH"
+
 #, python-format
 #~ msgid "Error !"
 #~ msgstr "Erro !"
+
+#~ msgid "New Expenses Sheet"
+#~ msgstr "Nova lista de despesas"
 
 #~ msgid "Invoiced"
 #~ msgstr "Faturado"
@@ -1005,6 +1019,18 @@ msgstr "Refaturar"
 
 #~ msgid "Date Validated"
 #~ msgstr "Data de validação"
+
+#~ msgid "My Draft expenses"
+#~ msgstr "Minhas despesas previstas"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "Expense Process"
+#~ msgstr "Processo de despesa"
+
+#~ msgid "Draft expenses"
+#~ msgstr "Despesas previstas"
 
 #~ msgid "Employee's Invoice"
 #~ msgstr "Fatura do Funcionário"
@@ -1172,3 +1198,36 @@ msgstr "Refaturar"
 #, python-format
 #~ msgid "Supplier Invoices"
 #~ msgstr "Faturas de Fornecedor"
+
+#, python-format
+#~ msgid ""
+#~ "Please configure Default Expanse account for Product purchase, "
+#~ "`property_account_expense_categ`"
+#~ msgstr ""
+#~ "Por favor configurar a conta de Extensão padrão para compra do produto, "
+#~ "`property_account_expense_categ`"
+
+#~ msgid "Expenses waiting payment"
+#~ msgstr "Despesas à espera de pagamento"
+
+#~ msgid "Expenses waiting validation"
+#~ msgstr "Despesas à Espera de Validação"
+
+#~ msgid "My expenses waiting validation"
+#~ msgstr "Minhas despesas Esperando Validação"
+
+#, python-format
+#~ msgid "The employee must have a contact address"
+#~ msgstr "O Empregado DEVE ter UM ENDEREÇO ​​de Contato"
+
+#~ msgid "Account Move"
+#~ msgstr "Conta Movimento"
+
+#~ msgid "Expense Sheet"
+#~ msgstr "Folha de Despesa"
+
+#~ msgid "Short Description"
+#~ msgstr "Curta Descrição"
+
+#~ msgid "Expenses waiting invoice"
+#~ msgstr "Despesas espera fatura"

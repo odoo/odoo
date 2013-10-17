@@ -92,11 +92,6 @@ allows pre-setting the default groups and menus of the first-time users.
          user with the same login (and a blank password), then rename this new
          user to a username that does not exist in LDAP, and setup its groups
          the way you want.
-
-Interaction with base_crypt:
-----------------------------
-The base_crypt module is not compatible with this module, and will disable LDAP
-authentication if installed at the same time.
     """,
     'website' : 'http://www.openerp.com',
     'category' : 'Authentication',

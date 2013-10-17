@@ -71,6 +71,12 @@
                             <field name="order_policy"/>
                         </group>
                    </xpath>
+                   <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                        <field name="route_id" groups="sale_stock.group_route_so_lines"/>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+                       <field name="route_id" groups="sale_stock.group_route_so_lines"/>
+                   </xpath>
                 </data>
            </field>
         </record>
@@ -115,5 +121,28 @@
         </record>
 
 
+        <record id="view_order_form_inherit2" model="ir.ui.view">
+            <field name="name">sale.order.line.form.sale.stock.location</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_form2"/>
+            <field name="arch" type="xml">
+                <data>
+                   <xpath expr="//field[@name='price_unit']" position="before">
+                       <field name="route_id" groups="sale_stock.group_route_so_lines" />
+                   </xpath>
+                </data>
+           </field>
+        </record>
+        
+        <record id="view_order_line_tree_inherit" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.location</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position="before">
+                    <field name="route_id" groups="sale_stock.group_route_so_lines"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

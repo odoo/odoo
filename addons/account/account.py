@@ -137,16 +137,27 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
 
-    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
+    def _get_financial_report_ref(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
+        financial_report_ref = {}
+        for key, financial_report in [
+                    ('asset','account_financial_report_assets0'),
+                    ('liability','account_financial_report_liability0'),
+                    ('income','account_financial_report_income0'),
+                    ('expense','account_financial_report_expense0'),
+                ]:
+            try:
+                financial_report_ref[key] = obj_financial_report.browse(cr, uid,
+                    obj_data.get_object_reference(cr, uid, 'account', financial_report)[1],
+                    context=context)
+            except ValueError:
+                pass
+        return financial_report_ref
+
+    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        financial_report_ref = {
-            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
-            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
-            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
-            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
-        }
+        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = 'none'
             for key, financial_report in financial_report_ref.items():
@@ -157,15 +168,9 @@ class account_account_type(osv.osv):
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
         field_value = field_value or 'none'
-        obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
         #unlink if it exists somewhere in the financial reports related to BS or PL
-        financial_report_ref = {
-            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
-            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
-            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
-            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
-        }
+        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
         for key, financial_report in financial_report_ref.items():
             list_ids = [x.id for x in financial_report.account_type_ids]
             if account_type_id in list_ids:
@@ -1258,6 +1263,10 @@ class account_move(osv.osv):
             return [('id', 'in', tuple(ids))]
         return [('id', '=', '0')]
 
+    def _get_move_from_lines(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('account.move.line')
+        return [line.move_id.id for line in line_obj.browse(cr, uid, ids, context=context)]
+
     _columns = {
         'name': fields.char('Number', size=64, required=True),
         'ref': fields.char('Reference', size=64),
@@ -1267,7 +1276,10 @@ class account_move(osv.osv):
             help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
-        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
+        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store={
+            _name: (lambda self, cr,uid,ids,c: ids, ['line_id'], 10),
+            'account.move.line': (_get_move_from_lines, ['partner_id'],10)
+            }),
         'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Internal Note'),
@@ -1404,14 +1416,17 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        if 'line_id' in vals:
+        if vals.get('line_id', False):
             c = context.copy()
             c['novalidate'] = True
             c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
-            self.validate(cr, uid, [result], context)
+            tmp = self.validate(cr, uid, [result], context)
+            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
+            if journal.entry_posted and tmp:
+                self.button_validate(cr,uid, [result], context)
         else:
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
@@ -1633,9 +1648,11 @@ class account_move(osv.osv):
             else:
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
-                obj_move_line.write(cr, uid, line_ids, {
-                    'state': 'draft'
-                }, context, check=False)
+                not_draft_line_ids = list(set(line_ids) - set(line_draft_ids))
+                if not_draft_line_ids:
+                    obj_move_line.write(cr, uid, not_draft_line_ids, {
+                        'state': 'draft'
+                    }, context, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
             obj_move_line.create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
@@ -2774,6 +2791,7 @@ class account_chart_template(osv.osv):
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete'),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
@@ -3029,12 +3047,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
 
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        currency_id = False
-        if company_id:
-            currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
-        return {'value': {'currency_id': currency_id}}
-
     def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
@@ -3044,7 +3056,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}
         if chart_template_id:
             data = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-            res['value'].update({'complete_tax_set': data.complete_tax_set})
+            currency_id = data.currency_id and data.currency_id.id or self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+            res['value'].update({'complete_tax_set': data.complete_tax_set, 'currency_id': currency_id})
             if data.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
@@ -3076,7 +3089,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
             if 'chart_template_id' in fields:
-                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': ids[0]})
+                #in order to get set default chart which was last created set max of ids.
+                chart_id = max(ids)
+                if context.get("default_charts"):
+                    model_data = self.pool.get('ir.model.data').search_read(cr, uid, [('model','=','account.chart.template'),('module','=',context.get("default_charts"))], ['res_id'], context=context)
+                    if model_data:
+                        chart_id = model_data[0]['res_id']
+                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': chart_id})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")

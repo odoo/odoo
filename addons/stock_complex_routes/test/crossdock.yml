@@ -24,7 +24,12 @@
     order_line:
       - product_id: cross_shop_product
         product_uom_qty: 100.00
-        route_id: stock_location.route_warehouse0_crossdock
+-
+    !python {model: sale.order.line}: |
+        route_warehouse0_crossdock = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).crossdock_route_id.id 
+        order = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_crossdock_shpng'))
+        line_ids = [x.id for x in order.order_line]
+        self.write(cr, uid, line_ids, {'route_id': route_warehouse0_crossdock})
 - 
   Confirm sales order
 - 

@@ -48,7 +48,8 @@ openerp.mail.suggestions = function(session, mail) {
 
         join_group: function (event) {
             var self = this;
-            return this.mail_group.call('message_subscribe_users', [[$(event.currentTarget).attr('id')],[this.session.uid]]).then(function(res) {
+            var group_id = parseInt($(event.currentTarget).attr('id'), 10);
+            return this.mail_group.call('message_subscribe_users', [[group_id], [this.session.uid]]).then(function(res) {
                 self.fetch_suggested_groups();
             });
         },

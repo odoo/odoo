@@ -67,6 +67,7 @@ Dashboard / Reports for Purchase Management will include:
         'res_config_view.xml',
     ],
     'test': [
+        'test/ui/purchase_users.yml',
         'test/process/run_scheduler.yml',
         'test/fifo_price.yml',
         'test/fifo_returns.yml',
