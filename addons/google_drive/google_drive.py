@@ -116,17 +116,26 @@ class config(osv.Model):
             attach_pool = self.pool.get("ir.attachment")
             attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
             res['id'] = attach_pool.create(cr, uid, attach_vals)
+            # Commit in order to attach the document to the current object instance, even if the permissions has not been written.
+            cr.commit()
             res['url'] = content['alternateLink']
             key = self._get_key_from_url(res['url'])
             request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
-            data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
+            data = {'role': 'reader', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)
-                content = urllib2.urlopen(req).read()
-                content = json.loads(content)
+                urllib2.urlopen(req)
             except urllib2.HTTPError:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission could not be written on the file"), context=context)
-        return res
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'reader' for 'anyone with the link' has not been written on the document"), context=context)
+            user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+            if user.email:
+                data = {'role': 'writer', 'type': 'user', 'value': user.email}
+                try:
+                    req = urllib2.Request(request_url, json.dumps(data), headers)
+                    urllib2.urlopen(req)
+                except urllib2.HTTPError:
+                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'writer' for your email '%s' has not been written on the document. Is this email a valid Google Account ?" % user.email), context=context)
+        return res 
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
         '''
