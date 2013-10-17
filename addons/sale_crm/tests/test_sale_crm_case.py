@@ -87,7 +87,7 @@ class TestSaleCrmCase(TestSaleCrm):
         opportunities_after = crm_case_section_obj._get_opportunities_data(cr, uid, [direct_sales_ref[1]], field_name=False, arg=False, context=False)
 
         #Assertion Error
-        self.assertTrue(int(opportunities_after[1]['monthly_planned_revenue'][4]['value']) == int(opportunities_before[1]['monthly_planned_revenue'][4]['value'] + (10000 / user_rate)), "Not Proper Currency Conversion for Opportunities")
+        self.assertTrue(round(opportunities_after[1]['monthly_planned_revenue'][4]['value']) == round(opportunities_before[1]['monthly_planned_revenue'][4]['value'] + (10000 / user_rate)), "Not Proper Currency Conversion for Opportunities")
 
         # Before Sale or Quotations
         sale_order_before = crm_case_section_obj._get_sale_orders_data(cr, uid, [direct_sales_ref[1]], field_name=False, arg=False, context=False)
@@ -113,8 +113,9 @@ class TestSaleCrmCase(TestSaleCrm):
         #Assertion Error
         for i in range(0,5):
             # for Quotations
-            self.assertTrue(sale_order_before[1]['monthly_quoted'][i]['value'] * new_rate == sale_order_after[1]['monthly_quoted'][i]['value'], "Not Proper Currency Conversion for Quotations ")
-            # for sale odrer
-            self.assertTrue(sale_order_before[1]['monthly_confirmed'][i]['value'] * new_rate == sale_order_after[1]['monthly_confirmed'][i]['value'], "Not Proper Currency Conversion for Sale Order")
+            self.assertTrue(round(sale_order_before[1]['monthly_quoted'][i]['value'] * new_rate) == round(sale_order_after[1]['monthly_quoted'][i]['value']), "Currency Conversion For Quotations Is Wrong")
+            # for sale order
+            self.assertTrue(round(sale_order_before[1]['monthly_confirmed'][i]['value'] * new_rate) == round(sale_order_after[1]['monthly_confirmed'][i]['value']), "Currency Conversion For Sale Order Is Wrong")
             # for Invoice
-            self.assertTrue(invoice_before[1][i]['value'] * new_rate == invoice_after[1][i]['value'], "Not Proper Currency Conversion for Invoice")
+            self.assertTrue(round(invoice_before[1][i]['value'] * new_rate) == round(invoice_after[1][i]['value']), "Currency Conversion For Invoice Is Wrong")
+
