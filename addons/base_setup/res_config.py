@@ -26,9 +26,6 @@ from openerp.report.render.rml2pdf import customfonts
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-    
-    def _get_font(self, cr, uid, context=None):
-        return sorted(customfonts.RegisterCustomFonts())
         
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
@@ -44,11 +41,11 @@ class base_config_settings(osv.osv_memory):
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
-        'font': fields.selection(_get_font, "Select Font", help="Set the font into the report header, will be used for every RML report of the user company"),
+        'font': fields.many2one('res.font', string="Report Font", help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
     }
     
     _defaults= {
-        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font or 'Helvetica',
+        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font.id,
     }
     
     def open_company(self, cr, uid, ids, context=None):
@@ -74,8 +71,12 @@ class base_config_settings(osv.osv_memory):
         wizard = self.browse(cr, uid, ids)[0]
         if wizard.font:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            user.company_id.write({'font':wizard.font,'rml_header': self._change_header(user.company_id.rml_header,wizard.font), 'rml_header2': self._change_header(user.company_id.rml_header2,wizard.font), 'rml_header3': self._change_header(user.company_id.rml_header3,wizard.font)})
+            font_name = wizard.font.name
+            user.company_id.write({'font': wizard.font.id,'rml_header': self._change_header(user.company_id.rml_header,font_name), 'rml_header2': self._change_header(user.company_id.rml_header2, font_name), 'rml_header3': self._change_header(user.company_id.rml_header3, font_name)})
         return {}
+
+    def act_discover_fonts(self, cr, uid, ids, context=None):
+        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
