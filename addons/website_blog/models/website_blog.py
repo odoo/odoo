@@ -41,6 +41,9 @@ class BlogCategory(osv.Model):
             'blog.post', 'category_id',
             'Blogs',
         ),
+        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
 
@@ -54,6 +57,9 @@ class BlogTag(osv.Model):
         'blog_post_ids': fields.many2many(
             'blog.post', string='Posts',
         ),
+        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
 
@@ -144,6 +150,9 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
+        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):

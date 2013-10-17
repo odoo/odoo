@@ -150,6 +150,13 @@ class WebsiteBlog(http.Controller):
             'unable_editor': post.get('unable_editor')
         }
 
+        if blog_post:
+            values['main_object'] = blog_post
+        elif tag:
+            values['main_object'] = tag
+        elif category:
+            values['main_object'] = category
+
         return request.website.render("website_blog.index", values)
 
     @website.route(['/blog/nav'], type='http', auth="public")
@@ -178,7 +185,7 @@ class WebsiteBlog(http.Controller):
         url = request.httprequest.host_url
         request.session.body = post.get('body')
         if request.context['is_public_user']:  # purpose of this ?
-            return '%s/admin#action=redirect&url=%s/blog/%s/post' % (url, url, blog_post_id)
+            return '%s/web#action=redirect&url=%s/blog/%s/post' % (url, url, blog_post_id)
 
         if request.session.get('body') and blog_post_id:
             request.registry['blog.post'].message_post(
