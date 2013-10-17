@@ -1775,6 +1775,14 @@
         </td>
     </tr>
 </table>
+<t t-name="ExportTreeView-Domain">
+    <t t-if="! record.ids_to_export">
+        <p><strong>Please pay attention that all records matching your search filter will be exported. Not only the selected ids.</strong></p>
+    </t>
+    <t t-if="record.ids_to_export">
+        <p><strong>Please note that only the selected ids will be exported.</strong></p>
+    </t>
+</t>
 <table t-name="ExportTreeView-Secondary"
        id="field-tree-structure" class="oe_export_fields_selector_export"
        cellspacing="0" cellpadding="0">
