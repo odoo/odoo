@@ -34,7 +34,7 @@ This adds a route on the sales order and sales order line (mini module)
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': [],
-    'depends': ['purchase', 'sale_stock_location'],
+    'depends': ['purchase', 'sale_stock'],
     'init_xml': [],
     'update_xml': ['stock_complex_routes.xml'],
     'demo_xml': [],
