@@ -152,6 +152,10 @@ class WebsiteBlog(http.Controller):
 
         if blog_post:
             values['main_object'] = blog_post
+        elif tag:
+            values['main_object'] = tag
+        elif category:
+            values['main_object'] = category
 
         return request.website.render("website_blog.index", values)
 
