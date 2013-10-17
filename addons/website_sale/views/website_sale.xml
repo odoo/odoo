@@ -2,6 +2,40 @@
 <openerp>
 <data>
 
+    <!-- Shopping Banner for Homepage -->
+
+    <template id="homepage_shopping_banner" inherit_id="website.homepage" name="Homepage Shopping Banner">
+        <xpath expr="//section" position="before">
+            <div id="myCarousel1" contenteditable="false" class="carousel slide oe_medium mb32" data-snippet-id="carousel">
+            <ol class="carousel-indicators hidden">
+                <li data-slide-to="0" class="active" data-target="#myCarousel1"></li>
+            </ol>
+
+                <div class="carousel-inner">
+                    <div style="background-image: url(http://trunk-website-demodata-prod-desc-psa-22850.runbot.openerp.com/website/static/src/img/banner/color_splash.jpg);" class="item active text_only">
+                        <div class="container">
+                            <div contenteditable="false" class="carousel-caption content">
+                                <h2>OpenERP e-Commerce</h2>
+
+                                <h3>An Awesome Shopping Experience</h3>
+
+                                <p>
+                                    <a href="/shop" class="btn btn-success btn-large">Visit Shop</a>
+                                </p>
+                            </div>
+
+                            <div class="carousel-image hidden-xs">
+                                <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image" contenteditable="true"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a data-slide="prev" href="#myCarousel1" style="width: 10%" class="carousel-control left hidden"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
+                <a data-slide="next" href="#myCarousel1" style="width: 10%" class="carousel-control right hidden"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
+            </div>
+        </xpath>
+    </template>
+
     <!-- Layout add nav and footer -->
 
     <template id="header" inherit_id="website.layout" name="Custom Header">
