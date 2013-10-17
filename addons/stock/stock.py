@@ -2362,6 +2362,7 @@ class stock_warehouse(osv.osv):
             'name': self._format_routename(cr, uid, warehouse, route_name, context=context),
             'product_categ_selectable': True,
             'product_selectable': False,
+            'sequence': 10,
         }
 
     def _get_push_pull_rules(self, cr, uid, warehouse, active, values, new_route_id, context=None):
