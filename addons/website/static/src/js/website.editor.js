@@ -311,6 +311,7 @@
         },
     });
 
+    var blocks_selector = _.keys(CKEDITOR.dtd.$block).join(',');
     /* ----- RICH TEXT EDITOR ---- */
     website.RTE = openerp.Widget.extend({
         tagName: 'li',
@@ -324,6 +325,42 @@
             this._super.apply(this, arguments);
         },
 
+        /**
+         * In Webkit-based browsers, triple-click will select a paragraph up to
+         * the start of the next "paragraph" including any empty space
+         * inbetween. When said paragraph is removed or altered, it nukes
+         * the empty space and brings part of the content of the next
+         * "paragraph" (which may well be e.g. an image) into the current one,
+         * completely fucking up layouts and breaking snippets.
+         *
+         * Try to fuck around with selections on triple-click to attempt to
+         * fix this garbage behavior.
+         *
+         * Note: for consistent behavior we may actually want to take over
+         * triple-clicks, in all browsers in order to ensure consistent cross-
+         * platform behavior instead of being at the mercy of rendering engines
+         * & platform selection quirks?
+         */
+        webkitSelectionFixer: function (root) {
+            root.addEventListener('click', function (e) {
+                // only webkit seems to have a fucked up behavior, ignore others
+                // FIXME: $.browser goes away in jquery 1.9...
+                if (!$.browser.webkit) { return; }
+                // http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mouseevents
+                // The detail attribute indicates the number of times a mouse button has been pressed
+                // we just want the triple click
+                if (e.detail !== 3) { return; }
+
+                // Get closest block-level element to the triple-clicked
+                // element (using ckeditor's block list because why not)
+                var $closest_block = $(e.target).closest(blocks_selector);
+
+                // manually set selection range to the content of the
+                // triple-clicked block-level element, to avoid crossing over
+                // between block-level elements
+                document.getSelection().selectAllChildren($closest_block[0]);
+            });
+        },
         start_edition: function ($elements) {
             var self = this;
             // create a single editor for the whole page
@@ -331,6 +368,7 @@
             $(root).on('dragstart', 'img', function (e) {
                 e.preventDefault();
             });
+            this.webkitSelectionFixer(root);
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
                 editor.setReadOnly(false);
