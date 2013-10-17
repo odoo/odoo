@@ -23,6 +23,7 @@
 
 from copy import copy
 from datetime import date, datetime
+from operator import attrgetter
 import logging
 
 from openerp.tools import float_round, ustr, html_sanitize, lazy_property
@@ -112,12 +113,31 @@ class Field(object):
     states = None
     groups = False              # csv list of group xml ids
 
-    # attributes passed when converting from/to a column
-    _attrs = ('string', 'help', 'readonly', 'required', 'states', 'groups')
+    # arguments passed to column class by to_column()
+    _column_string = attrgetter('string')
+    _column_help = attrgetter('help')
+    _column_readonly = attrgetter('readonly')
+    _column_required = attrgetter('required')
+    _column_states = attrgetter('states')
+    _column_groups = attrgetter('groups')
+
+    # attributes copied from related field by setup_related()
+    _related_string = attrgetter('string')
+    _related_help = attrgetter('help')
+    _related_readonly = attrgetter('readonly')
+    _related_required = attrgetter('required')
+    _related_states = attrgetter('states')
+    _related_groups = attrgetter('groups')
 
     # attributes exported by get_description()
-    _desc0 = ('type', 'store')
-    _desc1 = ('depends', 'related', 'string', 'help', 'readonly', 'required', 'states', 'groups')
+    _description_depends = attrgetter('depends')
+    _description_related = attrgetter('related')
+    _description_string = attrgetter('string')
+    _description_help = attrgetter('help')
+    _description_readonly = attrgetter('readonly')
+    _description_required = attrgetter('required')
+    _description_states = attrgetter('states')
+    _description_groups = attrgetter('groups')
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
@@ -153,12 +173,12 @@ class Field(object):
 
     def get_description(self):
         """ Return a dictionary that describes the field `self`. """
-        desc = {}
-        for arg in self._desc0:
-            desc[arg] = getattr(self, arg)
-        for arg in self._desc1:
-            if getattr(self, arg, None):
-                desc[arg] = getattr(self, arg)
+        desc = {'type': self.type, 'store': self.store}
+        for attr in dir(self):
+            if attr.startswith('_description_'):
+                value = getattr(self, attr)(self)
+                if value:
+                    desc[attr[13:]] = value
         return desc
 
     def to_column(self):
@@ -167,18 +187,13 @@ class Field(object):
         if self.interface_for:
             assert isinstance(self.interface_for, fields._column)
             return self.interface_for
-        _logger.debug("Create fields._column for Field %s", self)
-        return getattr(fields, self.type)(**self.to_column_args())
 
-    def to_column_args(self):
-        return {
-            'string': self.string,
-            'help': self.help,
-            'readonly': self.readonly,
-            'required': self.required,
-            'states': self.states,
-            'groups': self.groups,
-        }
+        _logger.debug("Create fields._column for Field %s", self)
+        args = {}
+        for attr in dir(self):
+            if attr.startswith('_column_'):
+                args[attr[8:]] = getattr(self, attr)(self)
+        return getattr(fields, self.type)(**args)
 
     #
     # Conversion of values
@@ -373,9 +388,10 @@ class Field(object):
 
         # copy attributes from field to self (readonly, required, etc.)
         field.setup()
-        for attr in self._attrs:
-            if not getattr(self, attr) and getattr(field, attr):
-                setattr(self, attr, getattr(field, attr))
+        for attr in dir(self):
+            if attr.startswith('_related_'):
+                if not getattr(self, attr[9:]):
+                    setattr(self, attr[9:], getattr(self, attr)(field))
 
     #
     # Field setup.
@@ -502,8 +518,13 @@ class Integer(Field):
 class Float(Field):
     """ Float field. """
     type = 'float'
-    _attrs = Field._attrs + ('digits',)
-    _desc1 = Field._desc1 + ('digits',)
+    _digits = None
+
+    _column_digits = staticmethod(lambda self: not callable(self._digits) and self._digits)
+    _column_digits_compute = staticmethod(lambda self: callable(self._digits) and self._digits)
+
+    _related_digits = attrgetter('digits')
+    _description_digits = attrgetter('digits')
 
     def __init__(self, string=None, digits=None, **kwargs):
         self._digits = digits
@@ -512,12 +533,6 @@ class Float(Field):
     @lazy_property
     def digits(self):
         return self._digits(scope.cr) if callable(self._digits) else self._digits
-
-    def to_column_args(self):
-        args = super(Float, self).to_column_args()
-        attr = 'digits_compute' if callable(self._digits) else 'digits'
-        args[attr] = self._digits
-        return args
 
     def convert_to_cache(self, value):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -531,13 +546,9 @@ class _String(Field):
     """ Abstract class for string fields. """
     translate = False
 
-    _attrs = Field._attrs + ('translate',)
-    _desc1 = Field._desc1 + ('translate',)
-
-    def to_column_args(self):
-        args = super(_String, self).to_column_args()
-        args['translate'] = self.translate
-        return args
+    _column_translate = attrgetter('translate')
+    _related_translate = attrgetter('translate')
+    _description_translate = attrgetter('translate')
 
 
 class Char(_String):
@@ -545,13 +556,9 @@ class Char(_String):
     type = 'char'
     size = None
 
-    _attrs = _String._attrs + ('size',)
-    _desc1 = _String._desc1 + ('size',)
-
-    def to_column_args(self):
-        args = super(Char, self).to_column_args()
-        args['size'] = self.size
-        return args
+    _column_size = attrgetter('size')
+    _related_size = attrgetter('size')
+    _description_size = attrgetter('size')
 
     def convert_to_cache(self, value):
         return bool(value) and ustr(value)[:self.size]
@@ -611,7 +618,7 @@ class Selection(Field):
     type = 'selection'
     selection = None        # [(value, string), ...], model method or method name
 
-    _attrs = Field._attrs + ('selection',)
+    _description_selection = staticmethod(lambda self: self.get_selection())
 
     def __init__(self, selection, string=None, **kwargs):
         """ Selection field.
@@ -622,24 +629,18 @@ class Selection(Field):
         """
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def to_column_args(self):
-        args = super(Selection, self).to_column_args()
-        selection = self.selection
-        if isinstance(selection, basestring):
-            method = selection
-            selection = lambda self, *a, **kw: getattr(self, method)(*a, **kw)
-        args['selection'] = selection
-        return args
+    @staticmethod
+    def _column_selection(self):
+        if isinstance(self.selection, basestring):
+            method = self.selection
+            return lambda self, *a, **kw: getattr(self, method)(*a, **kw)
+        else:
+            return self.selection
 
     def setup_related(self):
         super(Selection, self).setup_related()
         # selection must be computed on related field
         self.selection = lambda model: self.related_field.get_selection()
-
-    def get_description(self):
-        desc = super(Selection, self).get_description()
-        desc['selection'] = self.get_selection()
-        return desc
 
     def get_selection(self):
         """ return the selection list (pairs (value, string)) """
@@ -676,7 +677,8 @@ class Reference(Selection):
     type = 'reference'
     size = 128
 
-    _attrs = Selection._attrs + ('size',)
+    _column_size = attrgetter('size')
+    _related_size = attrgetter('size')
 
     def __init__(self, selection, string=None, **kwargs):
         """ Reference field.
@@ -686,11 +688,6 @@ class Reference(Selection):
                 model method, or a method name.
         """
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
-
-    def to_column_args(self):
-        args = super(Reference, self).to_column_args()
-        args['size'] = self.size
-        return args
 
     def convert_to_cache(self, value):
         if isinstance(value, BaseModel):
@@ -720,24 +717,19 @@ class _Relational(Field):
     domain = None                       # domain for searching values
     context = None                      # context for searching values
 
-    def to_column_args(self):
-        args = super(_Relational, self).to_column_args()
-        args['obj'] = self.comodel_name
-        args['domain'] = self.domain
-        args['context'] = self.context
-        return args
+    _column_obj = attrgetter('comodel_name')
+    _column_domain = attrgetter('domain')
+    _column_context = attrgetter('context')
+
+    _description_relation = attrgetter('comodel_name')
+    _description_domain = staticmethod(lambda self: \
+        self.domain(self.model) if callable(self.domain) else self.domain)
+    _description_context = attrgetter('context')
 
     @lazy_property
     def comodel(self):
         """ return the comodel instance of `self` """
         return scope[self.comodel_name]
-
-    def get_description(self):
-        desc = super(_Relational, self).get_description()
-        desc['relation'] = self.comodel_name
-        desc['domain'] = self.domain(self.model) if callable(self.domain) else self.domain
-        desc['context'] = self.context
-        return desc
 
     def null(self):
         return self.comodel.browse()
@@ -771,16 +763,11 @@ class Many2one(_Relational):
     auto_join = False                   # whether joins are generated upon search
     delegate = False                    # whether self implements delegation
 
-    _attrs = Field._attrs + ('ondelete',)
+    _column_ondelete = attrgetter('ondelete')
+    _column_auto_join = attrgetter('auto_join')
 
     def __init__(self, comodel_name, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
-
-    def to_column_args(self):
-        args = super(Many2one, self).to_column_args()
-        args['ondelete'] = self.ondelete
-        args['auto_join'] = self.auto_join
-        return args
 
     @lazy_property
     def inverse_field(self):
@@ -894,25 +881,19 @@ class One2many(_RelationalMulti):
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
 
+    _column_fields_id = attrgetter('inverse_name')
+    _column_auto_join = attrgetter('auto_join')
+    _column_limit = attrgetter('limit')
+
+    _description_relation_field = attrgetter('inverse_name')
+
     def __init__(self, comodel_name, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
             comodel_name=comodel_name, inverse_name=inverse_name, string=string, **kwargs)
 
-    def to_column_args(self):
-        args = super(One2many, self).to_column_args()
-        args['fields_id'] = self.inverse_name
-        args['auto_join'] = self.auto_join
-        args['limit'] = self.limit
-        return args
-
     @lazy_property
     def inverse_field(self):
         return self.inverse_name and self.comodel._fields[self.inverse_name]
-
-    def get_description(self):
-        desc = super(One2many, self).get_description()
-        desc['relation_field'] = self.inverse_name
-        return desc
 
 
 class Many2many(_RelationalMulti):
@@ -923,18 +904,15 @@ class Many2many(_RelationalMulti):
     column2 = None                      # column of table referring to comodel
     limit = None                        # optional limit to use upon read
 
+    _column_rel = attrgetter('relation')
+    _column_id1 = attrgetter('column1')
+    _column_id2 = attrgetter('column2')
+    _column_limit = attrgetter('limit')
+
     def __init__(self, comodel_name, relation=None, column1=None, column2=None,
                 string=None, **kwargs):
         super(Many2many, self).__init__(comodel_name=comodel_name, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
-
-    def to_column_args(self):
-        args = super(Many2many, self).to_column_args()
-        args['rel'] = self.relation
-        args['id1'] = self.column1
-        args['id2'] = self.column2
-        args['limit'] = self.limit
-        return args
 
     @lazy_property
     def inverse_field(self):
