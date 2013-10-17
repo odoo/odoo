@@ -150,6 +150,9 @@ class WebsiteBlog(http.Controller):
             'unable_editor': post.get('unable_editor')
         }
 
+        if blog_post:
+            values['main_object'] = blog_post
+
         return request.website.render("website_blog.index", values)
 
     @website.route(['/blog/nav'], type='http', auth="public")
