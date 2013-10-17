@@ -2268,21 +2268,26 @@ class BaseModel(object):
         return True
 
     def _add_missing_default_values(self, cr, uid, values, context=None):
-        missing_defaults = []
-        avoid_tables = [] # avoid overriding inherited values when parent is set
+        # avoid overriding inherited values when parent is set
+        avoid_tables = []
         for tables, parent_field in self._inherits.items():
             if parent_field in values:
                 avoid_tables.append(tables)
+
+        # compute missing fields
+        missing_defaults = set()
         for field in self._columns.keys():
             if not field in values:
-                missing_defaults.append(field)
+                missing_defaults.add(field)
         for field in self._inherit_fields.keys():
             if (field not in values) and (self._inherit_fields[field][0] not in avoid_tables):
-                missing_defaults.append(field)
+                missing_defaults.add(field)
+        # discard magic fields
+        missing_defaults -= set(MAGIC_COLUMNS)
 
-        if len(missing_defaults):
+        if missing_defaults:
             # override defaults with the provided values, never allow the other way around
-            defaults = self.default_get(cr, uid, missing_defaults, context)
+            defaults = self.default_get(cr, uid, list(missing_defaults), context)
             for dv in defaults:
                 if ((dv in self._columns and self._columns[dv]._type == 'many2many') \
                      or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'many2many')) \
