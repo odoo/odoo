@@ -282,7 +282,7 @@ class project(osv.osv):
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
-        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='integer')
      }
 
     def _get_type_common(self, cr, uid, context):

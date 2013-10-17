@@ -171,10 +171,10 @@ class crm_case_section(osv.osv):
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
 
         'monthly_open_leads': fields.function(_get_opportunities_data,
-            type="string", readonly=True, multi='_get_opportunities_data',
+            type="char", readonly=True, multi='_get_opportunities_data',
             string='Open Leads per Month'),
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
-            type="string", readonly=True, multi='_get_opportunities_data',
+            type="char", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month')
     }
 
