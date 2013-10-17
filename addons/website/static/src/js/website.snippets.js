@@ -24,6 +24,7 @@
         },
         save: function () {
             this.snippets.make_active(false);
+            this.snippets.clean_for_save();
             remove_added_snippet_id();
             this._super();
         },
@@ -44,7 +45,14 @@
     /* ----- SNIPPET SELECTOR ---- */
     
     website.snippet = {};
-
+    var observer = new website.Observer(function (mutations) {
+        if (!_(mutations).find(function (m) {
+                    return m.type === 'childList' && m.addedNodes.length > 0;
+                })) {
+            return;
+        }
+        hack_to_add_snippet_id()
+    });
 
     // puts $el at the same absolute position as $target
     function hack_to_add_snippet_id () {
@@ -78,7 +86,12 @@
             }
             this.$active_snipped_id = false;
             hack_to_add_snippet_id();
-            $("body").on('DOMNodeInserted', hack_to_add_snippet_id);
+            this.snippets = [];
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
         },
         dom_filter: function (dom, sibling) {
             if (typeof dom === "string") {
@@ -206,6 +219,14 @@
                 }
             }
         },
+        clean_for_save: function () {
+            for (var k in this.snippets) {
+                var editor = $(this.snippets[k]).data("snippet-editor");
+                if (editor) {
+                    editor.clean_for_save();
+                }
+            }
+        },
         make_active: function ($snipped_id) {
             if ($snipped_id && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snipped_id.get(0)) {
                 return;
@@ -214,6 +235,9 @@
                 this.snippet_blur(this.$active_snipped_id);
             }
             if ($snipped_id) {
+                if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
+                    this.snippets.push($snipped_id.get(0));
+                }
                 this.$active_snipped_id = $snipped_id;
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snipped_id);
@@ -295,17 +319,32 @@
 
                     }
 
+                    var $dark = $(openerp.qweb.render('website.snippet_dark_for_dropzone'))
+                        .css('height', $("body")[0].scrollHeight + 'px');
+                    $("body").append($dark);
+
                     $('.oe_drop_zone').droppable({
                         over:   function(){
                             if( action === 'insert'){
                                 dropped = true;
-                                $(this).first().after($toInsert);
+                                $(this).first().addClass("oe_drop_active").after($toInsert);
+                                $dark.find("td:first")
+                                    .css('height', $toInsert.offset().top+'px');
+                                $dark.find("tr:eq(1) td:first")
+                                    .css('width', $toInsert.offset().left+'px');
+                                $dark.find("td.center")
+                                    .addClass("active")
+                                    .css('height', $toInsert.outerHeight()+'px')
+                                    .css('width', $toInsert.outerWidth()+'px');
                             }
                         },
                         out:    function(){
                             if( action === 'insert'){
+                                $(this).removeClass("oe_drop_active");
                                 dropped = false;
                                 $toInsert.detach();
+                                $dark.find("td.center").removeClass("active");
+                                $("body").scroll(); // trigger a scroll to reset position for jquery api
                             }
                         },
                         drop:   function(){
@@ -314,15 +353,8 @@
                     });
                 },
                 stop: function(ev, ui){
-		    if (action === 'insert' && ! dropped) {
-		        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first()
-			if (el) {
-			    el.after($toInsert)
-			    dropped = true;
-			}
-		    }
-
                     $('.oe_drop_zone').droppable('destroy').remove();
+                    $("#dark_for_dropzone").remove();
                     if (dropped) {
                         var $target = false;
                         if(action === 'insert'){
@@ -373,7 +405,7 @@
             var sibling_selector = selector.siblings;
             var vertical_child_selector   =  selector.vertical_children;
 
-            var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
+            var zone_template = openerp.qweb.render('website.snippet_drop_zone');
 
             if(child_selector){
                 self.dom_filter(child_selector).each(function (){
@@ -393,7 +425,7 @@
                     var temp_left = 0;
                     $zone.find('> *:not(.oe_drop_zone):visible').each(function () {
                         var $col = $(this);
-                        $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")))+'px');
+                        $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")) - 8)+'px');
                         $lastinsert = $template.clone();
                         $(this).after($lastinsert);
 
@@ -562,7 +594,8 @@
         *       Displayed into the overlay options on focus
         */
         _readXMLData: function() {
-            this.$el = this.parent.$snippets.siblings("[data-snippet-id='"+this.snippet_id+"']").clone();
+            var self = this;
+            this.$el = this.parent.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
             this.$editor = this.$el.find(".oe_snippet_options");
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
@@ -597,18 +630,28 @@
             });
         },
         _drag_and_drop_after_insert_dropzone: function (){},
-        _drag_and_drop_active_drop_zone: function ($zones){
+        _drag_and_drop_active_drop_zone: function (){
             var self = this;
-            $zones.droppable({
+            var $dark = $("#dark_for_dropzone");
+            $('.oe_drop_zone').droppable({
                 over:   function(){
-                    $(".oe_drop_zone.hide").removeClass("hide");
-                    $(this).addClass("hide").first().after(self.$target);
+                    $(this).first().addClass("oe_drop_active").after(self.$target);
+                    $dark.find("td:first")
+                        .css('height', self.$target.offset().top+'px');
+                    $dark.find("tr:eq(1) td:first")
+                        .css('width', self.$target.offset().left+'px');
+                    $dark.find("td.center")
+                        .addClass("active")
+                        .css('height', self.$target.outerHeight()+'px')
+                        .css('width', self.$target.outerWidth()+'px');
                     self.dropped = true;
                 },
                 out:    function(){
-                    $(this).removeClass("hide");
+                    $(this).removeClass("oe_drop_active");
+                    $dark.find("td.center").removeClass("active");
                     self.$target.detach();
                     self.dropped = false;
+                    $("body").scroll(); // trigger a scroll to reset position for jquery api
                 },
             });
         },
@@ -632,8 +675,12 @@
 
             $("body").addClass('move-important');
             
+            var $dark = $(openerp.qweb.render('website.snippet_dark_for_dropzone'))
+                .css('height', $("body")[0].scrollHeight + 'px');
+            $("body").append($dark);
+
             self._drag_and_drop_after_insert_dropzone();
-            self._drag_and_drop_active_drop_zone($('.oe_drop_zone'));
+            self._drag_and_drop_active_drop_zone();
         },
         _drag_and_drop_stop: function (){
             var self = this;
@@ -643,6 +690,7 @@
             self.$overlay.removeClass("hidden");
             $("body").removeClass('move-important');
             $('.oe_drop_zone').droppable('destroy').remove();
+            $('#dark_for_dropzone').remove();
             $(".oe_drop_clone, .oe_drop_to_remove").remove();
             self.parent.editor_busy = false;
             self.get_parent_block();
@@ -718,8 +766,9 @@
         start: function () {
             var self = this;
             this.$overlay.on('click', '.oe_snippet_remove', function () {
-                self.$target.detach();
                 self.onBlur();
+                var index = _.indexOf(self.parent.snippets, self.$target.get(0));
+                delete self.parent.snippets[index];
                 self.$target.remove();
                 return false;
             });
@@ -749,10 +798,18 @@
             this.$overlay.removeClass('oe_active');
         },
 
+        /* clean_for_save
+        *  function called just before save vue
+        */
+        clean_for_save: function () {
+
+        },
+
         change_background: function (bg, ul_options) {
             var self = this;
             this.set_options_background(bg, ul_options);
             var $ul = this.$editor.find(ul_options);
+            var bg_value = (typeof bg === 'string' ? this.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
 
             // bind envent on options
             var $li = $ul.find("li");
@@ -931,23 +988,25 @@
 
         _drag_and_drop_after_insert_dropzone: function(){
             var self = this;
-            var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
-                var $row = $(this);
-                var width = $row.innerWidth();
-                var pos = 0;
-                while (width > pos + self.size.width) {
-                    var $last = $row.find("> .oe_drop_zone:last");
-                    $last.each(function () {
-                        pos = $(this).position().left;
-                    });
-                    if (width > pos + self.size.width) {
-                        $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-                        var $add_drop = $last.clone();
-                        $row.append($add_drop);
-                        self._drag_and_drop_active_drop_zone($add_drop);
-                    }
-                }
-            });
+            // commented for perf
+
+            // var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
+            //     var $row = $(this);
+            //     var width = $row.innerWidth();
+            //     var pos = 0;
+            //     while (width > pos + self.size.width) {
+            //         var $last = $row.find("> .oe_drop_zone:last");
+            //         $last.each(function () {
+            //             pos = $(this).position().left;
+            //         });
+            //         if (width > pos + self.size.width) {
+            //             $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
+            //             var $add_drop = $last.clone();
+            //             $row.append($add_drop);
+            //             self._drag_and_drop_active_drop_zone($add_drop);
+            //         }
+            //     }
+            // });
         },
         _drag_and_drop_start: function () {
             this._super();
@@ -983,6 +1042,11 @@
         },
     });
 
+    website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
+        start: function () {
+            this.$target.carousel();
+        },
+    });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         build_snippet: function() {
             var id = 0;
@@ -1004,6 +1068,13 @@
         onBlur: function () {
             this._super();
             this.$target.carousel('cycle');
+        },
+        clean_for_save: function () {
+            this._super();
+            this.$target.find(".item").removeClass("next prev left right");
+            if(!this.$target.find(".item.active").length) {
+                this.$target.find(".item:first").addClass("active");
+            }
         },
         start : function () {
             this._super();
@@ -1029,18 +1100,14 @@
                 self.$target.carousel();
             });
 
-            this.$target.on('dblclick', '.item.active .carousel-image img', function (event) {
-                $('#oe_rte_toolbar .cke_button__image .cke_button__image_icon').click();
-            });
-
             this.rebind_event();
         },
         // rebind event to active carousel on edit mode
         rebind_event: function () {
             var self = this;
-            this.$target.on('click', '.carousel-control', function () {
+            this.$target.off('click').on('click', '.carousel-control', function () {
                 self.$target.carousel($(this).data('slide')); });
-            this.$target.on('click', '.carousel-indicators [data-target]', function () {
+            this.$target.off('click').on('click', '.carousel-indicators [data-target]', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
         },
         on_add: function (e) {
@@ -1050,8 +1117,13 @@
             var index = $active.index();
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-            $active.clone().removeClass('active').insertAfter($active);
+            
+            var $clone = this.$el.find(".item.active").clone();
+            var bg = this.$editor.find('ul[name="carousel-background"] li:not([data-value="'+ $active.css("background-image").replace(/.*:\/\/[^\/]+|\)$/g, '') +'"]):first').data("value");
+            $clone.css("background-image", "url('"+ bg +"')");
+            $clone.removeClass('active').insertAfter($active);
             this.$target.carousel().carousel(++index);
+            this.rebind_event();
         },
         on_remove: function (e) {
             e.preventDefault();
@@ -1068,7 +1140,8 @@
                 });
                 setTimeout(function () {
                     new_index = index % cycle;
-                    self.$target.carousel( new_index + 1 );
+                    self.$target.carousel().carousel( new_index + 1 );
+                    self.rebind_event();
                 }, 500);
             } else {
                 this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");

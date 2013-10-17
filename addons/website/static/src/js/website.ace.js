@@ -66,6 +66,9 @@
     });
 
     website.ace.ViewEditor = openerp.Widget.extend({
+        resizing: false,
+        refX: 0,
+        minWidth: 40,
         template: 'website.ace_view_editor',
         events: {
             'change #ace-view-list': 'displaySelectedView',
@@ -89,6 +92,32 @@
                 self.loadViews.call(self, views);
                 self.open.call(self);
             });
+
+            var $editor = self.$('.ace_editor');
+            function resizeEditor (target) {
+                var width = Math.min(document.body.clientWidth, Math.max(parseInt(target, 10), self.minWidth));
+                $editor.width(width);
+                self.aceEditor.resize();
+                self.$el.width(width);
+            }
+            function startResizing (e) {
+                self.refX = e.pageX;
+                self.resizing = true;
+            }
+            function stopResizing () {
+                self.resizing = false;
+            }
+            function updateWidth (e) {
+                if (self.resizing) {
+                    var offset = e.pageX - self.refX;
+                    var width = self.$el.width() - offset;
+                    self.refX = e.pageX;
+                    resizeEditor(width);
+                }
+            }
+            document.body.addEventListener('mouseup', stopResizing, true);
+            self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
+            $(document).mousemove(updateWidth);
         },
         loadViews: function (views) {
             var self = this;
@@ -205,11 +234,7 @@
         },
         close: function () {
             window.location.hash = "";
-            var self = this;
-            this.$el.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
-                globalEditor = null;
-                self.destroy.call(self);
-            }).removeClass('oe_ace_open').addClass('oe_ace_closed');
+            this.$el.removeClass('oe_ace_open').addClass('oe_ace_closed');
         },
     });
 

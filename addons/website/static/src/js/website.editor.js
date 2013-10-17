@@ -307,7 +307,7 @@
             });
         },
         cancel: function () {
-            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?|#.*/g, '');
+            website.reload();
         },
     });
 
@@ -927,7 +927,7 @@
     }
 
 
-    var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
+    website.Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var OBSERVER_CONFIG = {
         childList: true,
         attributes: true,
@@ -935,7 +935,7 @@
         subtree: true,
         attributeOldValue: true,
     };
-    var observer = new Observer(function (mutations) {
+    var observer = new website.Observer(function (mutations) {
         // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
         //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
         //       will not mark dirty on attribute changes (@class, img/@src,

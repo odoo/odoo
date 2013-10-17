@@ -29,8 +29,10 @@
                         </t>
                         <title><t t-esc="title"/></title>
                         <meta name="openerp.company" t-att-value="res_company.name"/>
-                        <meta name="description" t-att-value="main_object and main_object.website_meta_description or website_meta_description"/>
-                        <meta name="keywords" t-att-value="main_object and main_object.website_meta_keywords or website_meta_keywords"/>
+                        <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
+                            and main_object.website_meta_description or website_meta_description"/>
+                        <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
+                            and main_object.website_meta_keywords or website_meta_keywords"/>
 
                         <!-- Load stylesheets before scripts to avoid blocking -->
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
@@ -93,8 +95,8 @@
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
                                                 <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
-                                                <li t-if="user_id.id == website.public_user.id"><a href="/admin">Sign in</a></li>
-                                                <li t-if="user_id.id != website.public_user.id"><a href="/admin"><span t-field="user_id.name"/></a></li>
+                                                <li t-if="user_id.id == website.public_user.id"><a href="/web">Sign in</a></li>
+                                                <li t-if="user_id.id != website.public_user.id"><a href="/web"><span t-field="user_id.name"/></a></li>
                                                 <li t-if="request.multilang and
                                                             (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
@@ -235,7 +237,7 @@
                 </ul>
               </div>
               <t t-if="publish_edit">
-                <a class="btn btn-xs btn-default" title="Edit in backend" t-att-href="'/admin/#model=%s&amp;id=%s' % (object._name, object.id)"><span t-attf-class="glyphicon glyphicon-wrench"></span></a>
+                <a class="btn btn-xs btn-default" title="Edit in backend" t-att-href="'/web#model=%s&amp;id=%s' % (object._name, object.id)"><span t-attf-class="glyphicon glyphicon-wrench"></span></a>
               </t>
             </div>
             </t>

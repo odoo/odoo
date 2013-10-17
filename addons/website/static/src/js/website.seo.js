@@ -241,7 +241,8 @@
             return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
         },
         title: function () {
-            return ($('title').length > 0) && $('title').text() && $('title').text().trim();
+            var $title = $('title');
+            return ($title.length > 0) && $title.text() && $title.text().trim();
         },
         changeTitle: function (title) {
             // TODO create tag if missing
@@ -250,7 +251,7 @@
         },
         description: function () {
             var $description = $('meta[name=description]');
-            return ($description.length > 0) && $description.attr('value') && $description.attr('value').trim();
+            return ($description.length > 0) && ($description.attr('value') && $description.attr('value').trim());
         },
         changeDescription: function (description) {
             // TODO create tag if missing
@@ -322,6 +323,9 @@
             'click button[data-action=update]': 'update',
             'hidden.bs.modal': 'destroy',
         },
+        canEditTitle: false,
+        canEditDescription: false,
+        canEditKeywords: false,
         maxTitleSize: 65,
         maxDescriptionSize: 155,
         start: function () {
@@ -331,13 +335,13 @@
             $modal.find('.js_seo_page_url').text(htmlPage.url());
             $modal.find('input[name=seo_page_title]').val(htmlPage.title());
             $modal.find('textarea[name=seo_page_description]').val(htmlPage.description());
-            self.suggestImprovements();
-            self.imageList = new website.seo.ImageList(self, { page: htmlPage });
-            if (htmlPage.images().length === 0) {
-                $modal.find('.js_image_section').remove();
-            } else {
-                self.imageList.appendTo($modal.find('.js_seo_image_list'));
-            }
+            // self.suggestImprovements();
+            // self.imageList = new website.seo.ImageList(self, { page: htmlPage });
+            // if (htmlPage.images().length === 0) {
+            //     $modal.find('.js_image_section').remove();
+            // } else {
+            //     self.imageList.appendTo($modal.find('.js_seo_image_list'));
+            // }
             self.keywordList = new website.seo.KeywordList(self, { page: htmlPage });
             self.keywordList.on('list-full', self, function () {
                 $modal.find('input[name=seo_page_keywords]')
@@ -356,7 +360,26 @@
                 self.keywordList.add(word);
             });
             self.keywordList.appendTo($modal.find('.js_seo_keywords_list'));
+            self.disableUnsavableFields();
             $modal.modal();
+        },
+        disableUnsavableFields: function () {
+            var self = this;
+            var $modal = self.$el;
+            self.loadMetaData().then(function (data) {
+                self.canEditTitle = data && ('website_meta_title' in data);
+                self.canEditDescription = data && ('website_meta_description' in data);
+                self.canEditKeywords = data && ('website_meta_keywords' in data);
+                if (!self.canEditTitle) {
+                    $modal.find('input[name=seo_page_title]').attr('disabled', true);
+                }
+                if (!self.canEditDescription) {
+                    $modal.find('textarea[name=seo_page_description]').attr('disabled', true);
+                }
+                if (!self.canEditTitle && !canEditDescription && !canEditKeywords) {
+                    $modal.find('button[data-action=update]').attr('disabled', true);
+                }
+            });
         },
         suggestImprovements: function () {
             var tips = [];
@@ -397,11 +420,16 @@
         },
         update: function () {
             var self = this;
-            var data = {
-                website_meta_title: self.htmlPage.title(),
-                website_meta_description: self.htmlPage.description(),
-                website_meta_keywords: self.keywordList.keywords().join(", "),
-            };
+            var data = {};
+            if (self.canEditTitle) {
+                data.website_meta_title = self.htmlPage.title();
+            }
+            if (self.canEditDescription) {
+                data.website_meta_description = self.htmlPage.description();
+            }
+            if (self.canEditKeywords) {
+                data.website_meta_keywords = self.keywordList.keywords().join(", ");
+            }
             self.saveMetaData(data).then(function () {
                self.$el.modal('hide');
             });
