@@ -29,6 +29,8 @@
         <record id="act_confirm_wait" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">confirm_wait</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'exception'})</field>
         </record>
         <record id="act_confirm_mts" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
@@ -119,7 +121,7 @@
         </record>
         <record id="trans_confirm_mts_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mts"/>
-            <field name="act_to" ref="act_confirm_wait"/>
+            <field name="act_to" ref="act_confirm"/>
             <field name="signal">button_restart</field>
         </record>
         <record id="trans_confirm_mto_cancel" model="workflow.transition">
@@ -129,7 +131,7 @@
         </record>
         <record id="trans_confirm_mto_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
-            <field name="act_to" ref="act_confirm_wait"/>
+            <field name="act_to" ref="act_confirm"/>
             <field name="signal">button_restart</field>
         </record>
         <record id="trans_draft_cancel" model="workflow.transition">
