@@ -802,9 +802,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     /**
      * Calculate the active domain of the list view. This should be done only
-     * if the header checkbox has been checked.
+     * if the header checkbox has been checked. This is done by evaluating the
+     * search results, and then adding the dataset domain (i.e. action domain).
      */
     get_active_domain: function () {
+        var self = this;
         if (this.$('.oe_list_record_selector').prop('checked')) {
             var search_view = this.getParent().searchview;
             var search_data = search_view.build_search_data();
@@ -813,7 +815,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 contexts: search_data.contexts,
                 group_by_seq: search_data.groupbys || []
             }).then(function (results) {
-                return results.domain;
+                var domain = self.dataset.domain.concat(results.domain || []);
+                return domain
             });
         }
         else {
