@@ -117,6 +117,15 @@ class config(osv.Model):
             attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
             res['id'] = attach_pool.create(cr, uid, attach_vals)
             res['url'] = content['alternateLink']
+            key = self._get_key_from_url(res['url'])
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
+            data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
+            try:
+                req = urllib2.Request(request_url, json.dumps(data), headers)
+                content = urllib2.urlopen(req).read()
+                content = json.loads(content)
+            except urllib2.HTTPError:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission could not be written on the file"), context=context)
         return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
@@ -151,12 +160,18 @@ class config(osv.Model):
                 configs.append({'id': config.id, 'name': config.name})
         return configs
 
+    def _get_key_from_url(self, url):
+        mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", url)
+        if mo:
+            return mo.group(2)
+        return None
+
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for data in self.browse(cr, uid, ids, context):
-            mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", data.google_drive_template_url)
+            mo = self._get_key_from_url(data.google_drive_template_url)
             if mo:
-                result[data.id] = mo.group(2)
+                result[data.id] = mo
             else:
                 raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid Google Document URL."))
         return result
@@ -205,7 +220,7 @@ class config(osv.Model):
     ]
 
     def get_google_scope(self):
-        return 'https://www.googleapis.com/auth/drive'
+        return 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file'
 
 
 class base_config_settings(osv.TransientModel):
