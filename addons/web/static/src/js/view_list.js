@@ -593,7 +593,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
-            self.configure_pager(self.dataset);
+            if (self.records.length == 0 && self.page > 0) {
+                //Trigger previous manually to navigate to previous page, 
+                //If all records are deleted on current page.
+                self.$pager.find('ul li:first a').trigger('click');
+            } else {
+                self.configure_pager(self.dataset);
+            }
             self.compute_aggregates();
         });
     },
