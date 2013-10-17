@@ -2,6 +2,28 @@
 <openerp>
 <data>
 
+    <!-- Events Banner for Homepage  -->
+
+    <template id="homepage_event_banner" inherit_id="website.layout" name="Homepage Event Banner">
+        <xpath expr="//div[@id='wrap']" position="before">
+            <div class="carousel-inner">
+                <div style="background-image: url('/website/static/src/img/banner/color_splash.jpg')" class="item text_only">
+                    <div contenteditable="true" class="container">
+                        <div class="carousel-caption content">
+                            <h2>Promote Your Events</h2>
+                            <h3>Sell Tickets Online</h3>
+                            <p><a href="/page/website.contactus" class="btn btn-success btn-large">Sample Of Events</a></p>
+                        </div>
+                        <div class="carousel-image hidden-xs">
+                            <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
