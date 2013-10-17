@@ -119,7 +119,7 @@
         </record>
         <record id="trans_confirm_mts_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mts"/>
-            <field name="act_to" ref="act_confirm"/>
+            <field name="act_to" ref="act_confirm_wait"/>
             <field name="signal">button_restart</field>
         </record>
         <record id="trans_confirm_mto_cancel" model="workflow.transition">
@@ -129,7 +129,7 @@
         </record>
         <record id="trans_confirm_mto_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
-            <field name="act_to" ref="act_confirm"/>
+            <field name="act_to" ref="act_confirm_wait"/>
             <field name="signal">button_restart</field>
         </record>
         <record id="trans_draft_cancel" model="workflow.transition">
