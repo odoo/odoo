@@ -1022,14 +1022,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     'attendee_ids': [(4, att_id)]
                 }, context=context)
                 new_attendees.append(att_id)
-
             if mail_to and current_user.email:
                 is_sent_mail = att_obj._send_mail(cr, uid, new_attendees, mail_to,
                     email_from = current_user.email, context=context)
                 if is_sent_mail:
-                    meeting_obj =  self.pool.get('crm.meeting')
-                    meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','in',new_attendees)],context = context)
-                    meeting_obj.message_post(cr, uid, meeting_id, body=_("An invitation email has been sent to attendee(s)"), context=context)
+                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
         return True
 
     def default_organizer(self, cr, uid, context=None):
