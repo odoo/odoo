@@ -43,10 +43,10 @@ class TestSaleCrmCase(TestSaleCrm):
         crm_lead_obj = self.registry('crm.lead')
 
         # Find Direct Sales
-        direct_sales_ref = ir_model_obj.get_object_reference(cr, uid, 'crm' , 'section_sales_department')
+        direct_sales_ref = ir_model_obj.get_object_reference(cr, uid, 'crm', 'section_sales_department')
 
         # for Opportunities
-        usd_ref = ir_model_obj.get_object_reference(cr, uid, 'base' , 'USD')
+        usd_ref = ir_model_obj.get_object_reference(cr, uid, 'base', 'USD')
         your_company_ref = ir_model_obj.get_object_reference(cr, uid, 'base', 'main_company')
 
         # Before opportunities
@@ -78,7 +78,7 @@ class TestSaleCrmCase(TestSaleCrm):
             'type': 'opportunity',
             'planned_revenue': 10000,
             'user_id' : res_users_id,
-            'section_id': direct_sales_ref and  direct_sales_ref[1] or False
+            'section_id': direct_sales_ref and direct_sales_ref[1] or False
           })
 
         user_rate = res_company_obj.browse(cr, uid ,[res_company_id])[0].currency_id.rate_silent
@@ -97,9 +97,9 @@ class TestSaleCrmCase(TestSaleCrm):
 
         #I Write company .
         company_id = res_users_obj._get_company(cr, uid, context=False, uid2=False)
-        in_ref = ir_model_obj.get_object_reference(cr, uid, 'base' , 'INR')
-        res_company_obj.write(cr, uid,[company_id], {
-            'currency_id': in_ref and  in_ref[1] or False
+        inr_ref = ir_model_obj.get_object_reference(cr, uid, 'base', 'INR')
+        res_company_obj.write(cr, uid, [company_id], {
+            'currency_id': inr_ref and inr_ref[1] or False
           })
 
         # After Sale or Quotations
@@ -108,14 +108,13 @@ class TestSaleCrmCase(TestSaleCrm):
         # After Invoice
         invoice_after = crm_case_section_obj._get_invoices_data(cr, uid, [direct_sales_ref[1]], field_name=False, arg=False, context=False)
 
-        new_rate = res_company_obj.browse(cr, uid , [company_id])[0].currency_id.rate_silent
+        new_rate = res_company_obj.browse(cr, uid, [company_id])[0].currency_id.rate_silent
 
         #Assertion Error
-        for i in range(0,5):
+        for month in range(0,5):
             # for Quotations
-            self.assertTrue(round(sale_order_before[1]['monthly_quoted'][i]['value'] * new_rate) == round(sale_order_after[1]['monthly_quoted'][i]['value']), "Currency Conversion For Quotations Is Wrong")
+            self.assertTrue(round(sale_order_before[1]['monthly_quoted'][month]['value'] * new_rate) == round(sale_order_after[1]['monthly_quoted'][month]['value']), "Currency Conversion For Quotations Is Wrong")
             # for sale order
-            self.assertTrue(round(sale_order_before[1]['monthly_confirmed'][i]['value'] * new_rate) == round(sale_order_after[1]['monthly_confirmed'][i]['value']), "Currency Conversion For Sale Order Is Wrong")
+            self.assertTrue(round(sale_order_before[1]['monthly_confirmed'][month]['value'] * new_rate) == round(sale_order_after[1]['monthly_confirmed'][month]['value']), "Currency Conversion For Sale Order Is Wrong")
             # for Invoice
-            self.assertTrue(round(invoice_before[1][i]['value'] * new_rate) == round(invoice_after[1][i]['value']), "Currency Conversion For Invoice Is Wrong")
-
+            self.assertTrue(round(invoice_before[1][month]['value'] * new_rate) == round(invoice_after[1][month]['value']), "Currency Conversion For Invoice Is Wrong")
