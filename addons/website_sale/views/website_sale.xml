@@ -789,7 +789,7 @@
                 </ul>
                 <h1 class="mb32">Validate Order</h1>
                 <div class="row">
-                <div class="col-md-8 oe_mycart">
+                  <div class="col-md-8 oe_mycart">
                     <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
                         <colgroup>
                             <col width="80"/>
@@ -869,7 +869,7 @@
                   </div>
                 </div>
 
-                <div class="js_payment mb64">
+                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments">
                     <p>Select your payment method:</p>
                     <div>
                         <t t-foreach="payments" t-as="payment">
@@ -881,8 +881,114 @@
                     <t t-foreach="payments" t-as="payment">
                         <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden"/>
                     </t>
-                    <a t-href="/shop/payment_validate/" class="btn btn-primary mt16">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>
                 </div>
+
+                <div class="js_payment_validation mb64" t-if="payment_acquirer_id">
+                    Please wait, we validate your payment.
+                    <div>
+                      <t t-esc="validation"/>
+                    </div>
+                </div>
+
+              </div>
+              <div class="oe_structure"/>
+            </div>
+
+        </t>
+    </template>
+
+    <template id="confirmation">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+                <t t-raw="head or ''"/>
+            </t>
+            <t t-set="additional_title">Shop - Confirmed</t>
+            <div id="wrap">
+              <div class="container oe_website_sale">
+
+                <ul class="wizard pull-right">
+                    <li class="text-muted">Review Order<span class="chevron"></span></li>
+                    <li class="text-muted">Shipping &amp; Billing<span class="chevron"></span></li>
+                    <li class="text-muted">Payment<span class="chevron"></span></li>
+                    <li class="text-primary">Confirmation<span class="chevron"></span></li>
+                </ul>
+                <h1 class="mb32">Validate Order</h1>
+                <div class="row">
+                  <div class="col-md-8 oe_mycart">
+                    <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
+                        <colgroup>
+                            <col width="80"/>
+                            <col/>
+                            <col width="100"/>
+                            <col width="120"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="website_sale_order.order_line" t-as="line">
+                                <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
+                                <td t-if="line.product_id.product_tmpl_id">
+                                    <a t-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/">
+                                        <span t-field="line.product_id.image_small"
+                                              t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                                    </a>
+                                </td>
+                                <td t-if="line.product_id.product_tmpl_id">
+                                   <strong t-field="line.product_id.name"/>
+                                </td>
+                                <td class="text-center">
+                                   <span t-field="line.price_unit" t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/>
+                                </td>
+                                <td>
+                                   <div t-esc="line.product_uom_qty"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class='pull-right mb16' id="mycart_total">
+                        <colgroup>
+                            <col width="100"/>
+                            <col width="120"/>
+                        </colgroup>
+                        <thead>
+                            <tr style="border-top: 1px solid #000">
+                                <th><h3>Total:</h3></th>
+                                <th class="text-right"><h3><span t-field="website_sale_order.amount_total" t-field-options='{
+                                    "widget": "monetary",
+                                    "display_currency": "website.pricelist_id.currency_id"
+                                }'/></h3></th>
+                            </tr>
+                            <tr class="text-muted">
+                                <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
+                                <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
+                                    "widget": "monetary",
+                                    "display_currency": "website.pricelist_id.currency_id"
+                                }'/></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="clearfix"/>
+                    <div class="oe_structure"/>
+                  </div>
+                  <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
+                      <h4>Bill To:</h4>
+                      <div t-field="website_sale_order.partner_invoice_id"/>
+
+                      <h4 class="mt32">Ship To:</h4>
+                      <div t-field="website_sale_order.partner_shipping_id"/>
+                  </div>
+                </div>
+
+                <h2>Tanks you for your order.</h2>
 
               </div>
               <div class="oe_structure"/>

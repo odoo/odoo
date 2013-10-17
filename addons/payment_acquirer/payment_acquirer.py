@@ -22,13 +22,66 @@
 import openerp
 from openerp.osv import osv, fields
 from openerp.tools import float_repr
+import urlparse
+import requests
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class type(osv.osv):
     _name = 'payment.acquirer.type'
     _columns = {
         'name': fields.char('Name', required=True),
     }
+    def validate_payement(self, cr, uid, id, object, reference, currency, amount, context=None):
+        """
+        return (payment, retry_time)
+            payment: "validated" or "refused" or "pending"
+            retry_time = False (don't retry validation) or int (seconds for retry validation)
+        """
+        if isinstance(id, list):
+            id = id[0]
+        pay_type = self.browse(cr, uid, id, context=context)
+        method = getattr(self, '_validate_payement_%s' % pay_type.name)
+        return method(object, reference, currency, amount, context=context)
+
+    def _validate_payement_virement(self, object, reference, currency, amount, context=None):
+        return ("pending", False)
+
+
+class type_paypal(osv.osv):
+    _inherit = "payment.acquirer.type"
+
+    def _validate_payement_paypal(self, object, reference, currency, amount, context=None):
+        parameters = {}
+        parameters.update(
+            cmd='_notify-validate',
+            business=object.company_id.paypal_account,
+            item_name="%s %s" % (object.company_id.name, reference),
+            item_number=reference,
+            amount=amount,
+            currency_code=currency.name
+        )
+        paypal_url = "https://www.paypal.com/cgi-bin/webscr"
+        paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        response = urlparse.parse_qsl(requests.post(paypal_url, data=parameters))
+
+        # transaction's unique id
+        # response["txn_id"]
+
+        if response["payment_status"] == "Voided":
+            raise "Paypal authorization has been voided."
+        elif response["payment_status"] in ("Completed", "Processed") and response["item_number"] == reference and response["mc_gross"] == amount:
+            return ("validated", False)
+        elif response["payment_status"] == "Expired":
+            _logger.warn("Paypal Validate Payement status: Expired")
+            return ("pending", 5)
+        elif response["payment_status"] == "Pending":
+            _logger.warn("Paypal Validate Payement status: Pending, reason: %s" % response["pending_reason"])
+            return ("pending", 5)
+
+        # Canceled_Reversal, Denied, Failed, Refunded, Reversed
+        return ("refused", False)
 
 
 class acquirer(osv.osv):
@@ -46,10 +99,10 @@ class acquirer(osv.osv):
         'visible': True,
     }
 
-    def render(self, cr, uid, ids, object, reference, currency, amount, context=None):
+    def render(self, cr, uid, id, object, reference, currency, amount, cancel_url=None, return_url=None, context=None):
         """ Renders the form template of the given acquirer as a qWeb template  """
         user = self.pool.get("res.users")
-        precision = self.pool.get("decimal.precision").precision_get(cr, uid, 'Account')
+        precision = self.pool.get("decimal.precision").precision_get(cr, openerp.SUPERUSER_ID, 'Account')
 
         if not context:
             context = {}
@@ -62,31 +115,22 @@ class acquirer(osv.osv):
             amount=amount,
             amount_str=float_repr(amount, precision),
             user_id=user.browse(cr, uid, uid),
-            context=context
+            context=context,
+            cancel_url=cancel_url,
+            return_url=return_url
         )
 
-        pays = self.browse(cr, uid, ids, context=context)
+        return self.browse(cr, uid, id, context=context) \
+            .form_template_id.render(qweb_context, engine='ir.qweb', context=context) \
+            .strip()
 
-        if isinstance(ids, list):
-            res = []
-            for pay in pays:
-                res[pay.id] = pay.form_template_id.render(qweb_context.copy(), engine='ir.qweb', context=context)
-            return res
-        else:
-            return pays.form_template_id.render(qweb_context, engine='ir.qweb', context=context)
-
-    def validate_payement(self, cr, uid, ids, object, reference, currency, amount, context=None):
-        res = []
-        for pay in self.browse(cr, uid, ids, context=context):
-            method = getattr(self, '_validate_payement_%s' % pay.type_id.name)
-            res[pay.id] = method(cr, uid, ids, object, reference, currency, amount, context=context)
-        return res
-
-    def _validate_payement_paypal(self, cr, uid, ids, object, reference, currency, amount, context=None):
-        payment = "pending" # "validated" or "refused" or "pending"
-        retry_time = False
-
+    def validate_payement(self, cr, uid, id, object, reference, currency, amount, context=None):
+        """
         return (payment, retry_time)
-
-    def _validate_payement_virement(self, cr, uid, ids, object, reference, currency, amount, context=None):
-        return ("pending", False)
+            payment: "validated" or "refused" or "pending"
+            retry_time = False (don't retry validation) or int (seconds for retry validation)
+        """
+        if isinstance(id, list):
+            id = id[0]
+        type_id = self.browse(cr, uid, id, context=context).type_id
+        return type_id.validate_payement(object, reference, currency, amount, context=context)

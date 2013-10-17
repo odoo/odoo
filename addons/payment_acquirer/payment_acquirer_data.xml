@@ -8,12 +8,15 @@
         <!-- Paypal -->
 
         <template id="paypal_acquirer_view">
-            <form t-if="object.company_id.paypal_account" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+            <form t-if="object.company_id.paypal_account" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_self">
                 <input type="hidden" name="cmd" value="_xclick"/>
                 <input type="hidden" name="business" t-att-value="object.company_id.paypal_account"/>
                 <input type="hidden" name="item_name" t-attf-value="#{object.company_id.name} #{reference}"/>
+                <input type="hidden" name="item_number" t-att-value="reference"/>
                 <input type="hidden" name="amount" t-att-value="amount"/>
                 <input type="hidden" name="currency_code" t-att-value="currency.name"/>
+                <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+                <input t-if="cancel_url" type="hidden" name="cancel_url" t-att-value="cancel_url"/>
                 <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
             </form>
         </template>
@@ -36,6 +39,7 @@
                     <tr><td>Numero de compte: </td><td></td></tr>
                     <tr><td>Communication: </td><td><t t-esc="reference"/></td></tr>
                 </table>
+                <a t-att-href="return_url" class="btn btn-primary">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>
             </div>
         </template>
 

@@ -35,8 +35,8 @@ class attributes(osv.Model):
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
         'product_ids': fields.one2many('product.attribute.product', 'attribute_id', 'Products'),
 
-        'float_max': fields.function(_get_float_max, type='float', string="Max", relation='product.attribute.product',store=True),
-        'float_min': fields.function(_get_float_min, type='float', string="Min", relation='product.attribute.product',store=True),
+        'float_max': fields.function(_get_float_max, type='float', string="Max", relation='product.attribute.product'),
+        'float_min': fields.function(_get_float_min, type='float', string="Min", relation='product.attribute.product'),
     }
     _defaults = {
         'type': 'distinct'

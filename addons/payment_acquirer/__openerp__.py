@@ -30,6 +30,8 @@
     'data': [
         'views/acquirer_view.xml',
         'payment_acquirer_data.xml',
+        'security/ir.model.access.csv',
+        'security/ir.rule.xml',
     ],
     'installable': True,
 }
