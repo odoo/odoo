@@ -25,7 +25,7 @@ import openerp.addons.decimal_precision as dp
 
 class product_product(osv.osv):
     _inherit = "product.product"
-
+        
     def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
         move_pool=self.pool.get('stock.move')

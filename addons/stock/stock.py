@@ -562,6 +562,7 @@ class stock_picking(osv.osv):
             ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
             vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
+                
         return super(stock_picking, self).create(cr, user, vals, context)
 
     # The state of a picking depends on the state of its related stock.move
@@ -615,16 +616,10 @@ class stock_picking(osv.osv):
                     continue      
         return res
 
-    def _get_group_id(self, cr, uid, ids, field_name, args, context=None):
-        res = {}
-        for pick in self.browse(cr, uid, ids, context=context):
-            if pick.move_lines and pick.move_lines[0].group_id:
-                res[pick.id] = pick.move_lines[0].group_id.id
-            else:
-                res[pick.id] = False
-        return res
-
-
+    def action_assign_owner(self, cr, uid, ids, context=None):
+        for picking in self.browse(cr, uid, ids, context=context):
+            packop_ids = [op.id for op in picking.pack_operation_ids] 
+            self.pool.get('stock.pack.operation').write(cr, uid, packop_ids, {'owner_id': picking.owner_id.id}, context=context)
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -664,13 +659,14 @@ class stock_picking(osv.osv):
         'pack_operation_exist': fields.function(_get_pack_operation_exist, type='boolean', string='Pack Operation Exists?', help='technical field for attrs in view'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
 
+        'owner_id': fields.many2one('res.partner', 'Owner', help="Default Owner"),
         # Used to search on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),#?
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
-#         'group_id': fields.function(_get_group_id, type='many2one', store={'stock.move': (_get_pickings, ['picking_id', 'group_id'], 10)}), 
     }
+
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
@@ -1431,10 +1427,12 @@ class stock_move(osv.osv):
         for move in moves:
             if not move.move_dest_id:
                 routes = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
-                rules = push_obj.search(cr, uid, [('route_id', 'in', routes), ('location_from_id', '=', move.location_dest_id.id)], context=context)
-                if rules:
-                    rule = push_obj.browse(cr, uid, rules[0], context=context)
-                    push_obj._apply(cr, uid, rule, move, context=context)
+                routes = routes or [x.id for x in move.route_ids]  
+                if routes:
+                    rules = push_obj.search(cr, uid, [('route_id', 'in', routes), ('location_from_id', '=', move.location_dest_id.id)], context=context)
+                    if rules:
+                        rule = push_obj.browse(cr, uid, rules[0], context=context)
+                        push_obj._apply(cr, uid, rule, move, context=context)
         return True
 
     # Create the stock.move.putaway records
@@ -2756,6 +2754,33 @@ class stock_warehouse(osv.osv):
         #TODO try to delete location and route and if not possible, put them in inactive
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
 
+    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
+        all_routes = []        
+        all_routes += [warehouse.crossdock_route_id.id]
+        all_routes += [warehouse.reception_route_id.id]
+        all_routes += [warehouse.delivery_route_id.id]
+        all_routes += [warehouse.mto_pull_id.route_id.id]
+        all_routes += [route.id for route in warehouse.resupply_route_ids]
+        all_routes += [route.id for route in warehouse.route_ids]
+        return all_routes
+
+    def view_all_routes_for_wh(self, cr, uid, ids, context=None):
+        all_routes = []
+        for wh in self.browse(cr, uid, ids, context=context):
+            all_routes += self.get_all_routes_for_wh(cr, uid, wh, context=context)
+                        
+        res_id = ids and ids[0] or False
+        domain = [('id', 'in', all_routes)]
+        return {
+            'name': _('Warehouse\'s Routes'),
+            'domain': domain,
+            'res_model': 'stock.location.route',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 20
+        }
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
@@ -2814,7 +2839,7 @@ class stock_location_path(osv.osv):
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
-        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
+        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta.relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
         if rule.auto=='transparent':
             move_obj.write(cr, uid, [move.id], {
                 'date': newdate,
@@ -3015,7 +3040,7 @@ class stock_package(osv.osv):
 class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
-    
+
     def _get_remaining_qty(self, cr, uid, ids, context=None):
         res = {}
         for ops in self.browse(cr, uid, ids, context=context):
@@ -3024,8 +3049,7 @@ class stock_pack_operation(osv.osv):
                 qty -= quant.qty
             res[ops.id] = qty
         return res
-        
-    
+
     _columns = {
         'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made', required=True),
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
@@ -3045,7 +3069,7 @@ class stock_pack_operation(osv.osv):
     }
 
     _defaults = {
-        'date': fields.date.context_today,
+        'date': fields.date.context_today,        
     }
 
 

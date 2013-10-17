@@ -648,6 +648,9 @@
             <field name="arch" type="xml">
                 <form string="Warehouse" version="7.0">
                     <sheet>
+                        <div class="oe_right oe_button_box">                        
+                            <button name="view_all_routes_for_wh" string="View Warehouse Routes" type="object"/> 
+                        </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                         <group>
@@ -668,9 +671,21 @@
                                         <field name="default_resupply_wh_id"/> <!-- TODO should be filtered on resupply_wh_ids only... -->
                                     </group>
                                 </page>
-                                <page string="Routes Information" colspan="4">
-                                    <group colspan="4">
-                                        <field name="route_ids" nolabel="1" readonly="1"/>
+                                <page string="Technical Information" groups='base.group_no_one'>
+                                    <group>
+                                        <group string="Locations">
+                                            <field name="wh_input_stock_loc_id" readonly="1"/>
+                                            <field name="wh_qc_stock_loc_id" readonly="1"/>
+                                            <field name="wh_pack_stock_loc_id" readonly="1"/>
+                                            <field name="wh_output_stock_loc_id" readonly="1"/>
+                                        </group>
+                                        <group string="Picking Types">
+                                            <field name="in_type_id" readonly="1"/>
+                                            <field name="int_type_id" readonly="1"/>
+                                            <field name="pick_type_id" readonly="1"/>
+                                            <field name="pack_type_id" readonly="1"/>
+                                            <field name="out_type_id" readonly="1"/>
+                                        </group>
                                     </group>
                                 </page>
                             </notebook>
@@ -771,6 +786,12 @@
                             <field name="date"/>
                             <field name="min_date"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
+                            <label for="owner_id" groups="stock.group_tracking_owner"/>
+                            <div groups="stock.group_tracking_owner">
+                                <field name="owner_id"/>
+                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
+                                    class="oe_link oe_edit_only"/>
+                            </div>
                         </group>
                     </group>
                     <notebook>
@@ -781,8 +802,8 @@
                             <field name="pack_operation_exist" invisible="1"/>
                             <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"/>
                             <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
-                            <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}">
-                                <tree editable="top">
+                            <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
+                                <tree editable="top">   
                                     <field name="product_id"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
