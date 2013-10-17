@@ -154,6 +154,14 @@ class hr_job(osv.osv):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0,'no_of_hired_employee': 0})
         return True
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        job = self.browse(cr, uid, id, context=context)
+        if not default.get('name', False):
+            default.update(name=_("%s (copy)") % (job.name))
+        return super(hr_job, self).copy(cr, uid, id, default=default, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('state') == 'recruit':
             self.message_post(cr, uid, ids, body=_('Job <b>In Recruitment</b> stage'), context=context)
