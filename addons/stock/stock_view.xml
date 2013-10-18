@@ -129,9 +129,9 @@
                         </group>
                         <group>
                             <field name="product_id" domain="[('type','=','product')]" attrs="{'invisible': [('filter', 'not in', ('product', 'product_owner'))]}"/>
-                            <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')]}"/>
-                            <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))]}"/>
-                            <field name="package_id" attrs="{'invisible': [('filter', '!=', 'pack')]}"/>
+                            <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')]}" groups="stock.group_production_lot" />
+                            <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))]}" groups="stock.group_tracking_owner"/>
+                            <field name="package_id" attrs="{'invisible': [('filter', '!=', 'pack')]}" groups="stock.group_tracking_lot"/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
@@ -142,9 +142,9 @@
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
                                     <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
                                     <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_lot"/>
+                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_owner"/>
                                     <field name="th_qty" readonly="1"/>
                                     <field name="product_qty" string="Checked Quantity"/>
                                     <field name="state" invisible="True"/>
@@ -1762,20 +1762,19 @@
                 <search string="Quants">
                     <field name="product_id"/>
                     <field name="location_id"/>
-                    <field name="package_id"/>
-                    <field name="lot_id"/>
-                    <field name="owner_id"/>
+                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner"/>
                     <group expand='0' string='Filters'>
                         <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                        <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>
-                       <filter string='Owner' context="{'group_by' : 'owner_id'}"/>
-                       <filter string='Lot' context="{'group_by' : 'lot_id'}"/>
+                       <filter string='Owner' context="{'group_by' : 'owner_id'}" groups="stock.group_tracking_owner"/>
+                       <filter string='Lot' context="{'group_by' : 'lot_id'}" groups="stock.group_production_lot"/>
                        <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}"/>
-                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}"/>
-                       <filter name="partnergroup" string='Partner' domain="[]" context="{'group_by': 'partner_id'}"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
@@ -1796,14 +1795,14 @@
                 <form string="Quants">
                     <field name="product_id"/>
                     <field name="qty"/>
-                    <field name="lot_id"/>
-                    <field name="package_id"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="package_id" groups="stock.group_tracking_lot"/>
                     <field name="location_id"/>
                     <field name="in_date"/>
                     <field name="reservation_id"/>
                     <field name="propagated_from_id"/>
                     <field name="history_ids"/>
-                    <field name="owner_id"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner"/>
                 </form>
             </field>
         </record>
@@ -1818,9 +1817,9 @@
                     <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>
-                    <field name="owner_id"/>
-                    <field name="lot_id"/>
-                    <field name="package_id"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="package_id" groups="stock.group_tracking_lot"/>
                     <field name="packaging_type_id" invisible="1"/>
                     <field name="in_date"/>
                     <field name="reservation_id" invisible='1'/>
