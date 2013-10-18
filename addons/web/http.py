@@ -972,7 +972,7 @@ class Root(object):
 
     def _build_router(self, db):
         _logger.info("Generating routing configuration for database %s" % db)
-        routing_map = routing.Map()
+        routing_map = routing.Map(strict_slashes=False)
 
         def gen(modules, nodb_only):
             for module in modules:
@@ -1008,11 +1008,11 @@ class Root(object):
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
             ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
-            installed = set([x['name'] for x in m.read(cr, 1, ids, ['name'])])
-            modules_set = modules_set.intersection(set(installed))
-        modules = ["web"] + sorted(modules_set)
+            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
+            modules_set = modules_set & installed
+
         # building all other methods
-        gen(modules, False)
+        gen(["web"] + sorted(modules_set), False)
 
         return routing_map
 
