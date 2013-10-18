@@ -14,6 +14,7 @@ import traceback
 from openerp.tools.safe_eval import safe_eval
 from openerp.exceptions import AccessError, AccessDenied
 import werkzeug
+from openerp.addons.base.ir.ir_qweb import QWebException
 
 import logging
 logger = logging.getLogger(__name__)
@@ -197,6 +198,16 @@ class website(osv.osv):
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
             return self.render(cr, uid, ids, 'website.401', qweb_context)
+        except (QWebException,), err:
+            qweb_context['traceback'] = traceback.format_exc()
+            qweb_context['template'] = err.template
+            qweb_context['message'] = err.message
+            qweb_context['node'] = err.node and err.node.toxml()
+            logger.error("Website Rendering Error.\n%(message)s\n%(node)s\n\n%(traceback)s" % qweb_context)
+            return view.render(
+                cr, uid,
+                'website.500' if qweb_context['editable'] else 'website.404',
+                qweb_context, context=context)
         except Exception:
             logger.exception("Website Rendering Error.")
             qweb_context['traceback'] = traceback.format_exc()
