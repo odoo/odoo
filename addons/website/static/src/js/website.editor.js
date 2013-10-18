@@ -311,6 +311,7 @@
         },
     });
 
+    var blocks_selector = _.keys(CKEDITOR.dtd.$block).join(',');
     /* ----- RICH TEXT EDITOR ---- */
     website.RTE = openerp.Widget.extend({
         tagName: 'li',
@@ -324,6 +325,103 @@
             this._super.apply(this, arguments);
         },
 
+        /**
+         * In Webkit-based browsers, triple-click will select a paragraph up to
+         * the start of the next "paragraph" including any empty space
+         * inbetween. When said paragraph is removed or altered, it nukes
+         * the empty space and brings part of the content of the next
+         * "paragraph" (which may well be e.g. an image) into the current one,
+         * completely fucking up layouts and breaking snippets.
+         *
+         * Try to fuck around with selections on triple-click to attempt to
+         * fix this garbage behavior.
+         *
+         * Note: for consistent behavior we may actually want to take over
+         * triple-clicks, in all browsers in order to ensure consistent cross-
+         * platform behavior instead of being at the mercy of rendering engines
+         * & platform selection quirks?
+         */
+        webkitSelectionFixer: function (root) {
+            root.addEventListener('click', function (e) {
+                // only webkit seems to have a fucked up behavior, ignore others
+                // FIXME: $.browser goes away in jquery 1.9...
+                if (!$.browser.webkit) { return; }
+                // http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mouseevents
+                // The detail attribute indicates the number of times a mouse button has been pressed
+                // we just want the triple click
+                if (e.detail !== 3) { return; }
+
+                // Get closest block-level element to the triple-clicked
+                // element (using ckeditor's block list because why not)
+                var $closest_block = $(e.target).closest(blocks_selector);
+
+                // manually set selection range to the content of the
+                // triple-clicked block-level element, to avoid crossing over
+                // between block-level elements
+                document.getSelection().selectAllChildren($closest_block[0]);
+            });
+        },
+        tableNavigation: function (root) {
+            var self = this;
+            $(root).on('keydown', function (e) {
+                // ignore non-TAB
+                if (e.which !== 9) { return; }
+
+                if (self.handleTab(e)) {
+                    e.preventDefault();
+                }
+            });
+        },
+        /**
+         * Performs whatever operation is necessary on a [TAB] hit, returns
+         * ``true`` if the event's default should be cancelled (if the TAB was
+         * handled by the function)
+         */
+        handleTab: function (event) {
+            var forward = !event.shiftKey;
+
+            var root = window.getSelection().getRangeAt(0).commonAncestorContainer;
+            var $cell = $(root).closest('td,th');
+
+            if (!$cell.length) { return false; }
+
+            var cell = $cell[0];
+
+            // find cell in same row
+            var row = cell.parentNode;
+            var sibling = row.cells[cell.cellIndex + (forward ? 1 : -1)];
+            if (sibling) {
+                document.getSelection().selectAllChildren(sibling);
+                return true;
+            }
+
+            // find cell in previous/next row
+            var table = row.parentNode;
+            var sibling_row = table.rows[row.rowIndex + (forward ? 1 : -1)];
+            if (sibling_row) {
+                var new_cell = sibling_row.cells[forward ? 0 : sibling_row.cells.length - 1];
+                document.getSelection().selectAllChildren(new_cell);
+                return true;
+            }
+
+            // at edge cells, copy word/openoffice behavior: if going backwards
+            // from first cell do nothing, if going forwards from last cell add
+            // a row
+            if (forward) {
+                var row_size = row.cells.length;
+                var new_row = document.createElement('tr');
+                while(row_size--) {
+                    var newcell = document.createElement('td');
+                    // zero-width space
+                    newcell.textContent = '\u200B';
+                    new_row.appendChild(newcell);
+                }
+                table.appendChild(new_row);
+                document.getSelection().selectAllChildren(new_row.cells[0]);
+            }
+
+            return true;
+        },
         start_edition: function ($elements) {
             var self = this;
             // create a single editor for the whole page
@@ -331,6 +429,8 @@
             $(root).on('dragstart', 'img', function (e) {
                 e.preventDefault();
             });
+            this.webkitSelectionFixer(root);
+            this.tableNavigation(root);
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
                 editor.setReadOnly(false);
@@ -340,6 +440,10 @@
                 editor.editable().setReadOnly(true);
 
                 self.setup_editables(root);
+
+                // disable firefox's broken table resizing thing
+                document.execCommand("enableObjectResizing", false, "false");
+                document.execCommand("enableInlineTableEditing", false, "false");
 
                 self.trigger('rte:ready');
             });
@@ -394,14 +498,14 @@
             // - contextmenu & tabletools (disable contextual menu)
             // - bunch of unused plugins
             var plugins = [
-                'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+                'a11yhelp', 'basicstyles', 'blockquote',
                 'clipboard', 'colorbutton', 'colordialog', 'dialogadvtab',
                 'elementspath', 'enterkey', 'entities', 'filebrowser',
                 'find', 'floatingspace','format', 'htmlwriter', 'iframe',
                 'indentblock', 'indentlist', 'justify',
                 'list', 'pastefromword', 'pastetext', 'preview',
                 'removeformat', 'resize', 'save', 'selectall', 'stylescombo',
-                'tab', 'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
+                'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
             ];
             return {
                 // FIXME
@@ -927,7 +1031,7 @@
     }
 
 
-    var Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
+    website.Observer = window.MutationObserver || window.WebkitMutationObserver || window.JsMutationObserver;
     var OBSERVER_CONFIG = {
         childList: true,
         attributes: true,
@@ -935,7 +1039,7 @@
         subtree: true,
         attributeOldValue: true,
     };
-    var observer = new Observer(function (mutations) {
+    var observer = new website.Observer(function (mutations) {
         // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
         //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
         //       will not mark dirty on attribute changes (@class, img/@src,

@@ -154,9 +154,10 @@ class website_event(http.Controller):
     @website.route(['/event/<int:event_id>'], type='http', auth="public", multilang=True)
     def event(self, event_id=None, **post):
         event_obj = request.registry['event.event']
+        event = event_obj.browse(request.cr, request.uid, event_id, dict(request.context, show_address_only=1))
         values = {
-            'event_id': event_obj.browse(request.cr, request.uid, event_id,
-                                         dict(request.context, show_address_only=1)),
+            'event_id': event,
+            'main_object': event,
             'range': range,
             'float': float,
         }

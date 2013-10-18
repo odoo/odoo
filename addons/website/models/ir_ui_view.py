@@ -11,8 +11,8 @@ class view(osv.osv):
         'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
         'page': fields.boolean("Whether this view is a web page template (complete)"),
         'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
     _defaults = {
         'page': False,

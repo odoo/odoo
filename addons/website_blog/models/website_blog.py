@@ -31,7 +31,7 @@ import difflib
 class BlogCategory(osv.Model):
     _name = 'blog.category'
     _description = 'Blog Category'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
 
     _columns = {
@@ -47,6 +47,7 @@ class BlogCategory(osv.Model):
 class BlogTag(osv.Model):
     _name = 'blog.tag'
     _description = 'Blog Tag'
+    _inherit = ['website.seo.metadata']
     _order = 'name'
 
     _columns = {
@@ -60,7 +61,7 @@ class BlogTag(osv.Model):
 class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'write_date DESC'
     # maximum number of characters to display in summary
     _shorten_max_char = 250

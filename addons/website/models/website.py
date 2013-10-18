@@ -14,6 +14,7 @@ import traceback
 from openerp.tools.safe_eval import safe_eval
 from openerp.exceptions import AccessError, AccessDenied
 import werkzeug
+from openerp.addons.base.ir.ir_qweb import QWebException
 
 import logging
 logger = logging.getLogger(__name__)
@@ -181,11 +182,12 @@ class website(osv.osv):
                 logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
                 return self.render(cr, uid, ids, 'website.404', qweb_context)
 
-        try:
-            main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
-            qweb_context['main_object'] = main_object
-        except Exception:
-            pass
+        if 'main_object' not in qweb_context:
+            try:
+                main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
+                qweb_context['main_object'] = main_object
+            except Exception:
+                pass
 
         try:
             return view.render(
@@ -196,6 +198,16 @@ class website(osv.osv):
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
             return self.render(cr, uid, ids, 'website.401', qweb_context)
+        except (QWebException,), err:
+            qweb_context['traceback'] = traceback.format_exc()
+            qweb_context['template'] = err.template
+            qweb_context['message'] = err.message
+            qweb_context['node'] = err.node and err.node.toxml()
+            logger.error("Website Rendering Error.\n%(message)s\n%(node)s\n\n%(traceback)s" % qweb_context)
+            return view.render(
+                cr, uid,
+                'website.500' if qweb_context['editable'] else 'website.404',
+                qweb_context, context=context)
         except Exception:
             logger.exception("Website Rendering Error.")
             qweb_context['traceback'] = traceback.format_exc()
@@ -392,3 +404,13 @@ class base_language_install(osv.osv):
                 'target': 'self'
             }
         return action
+
+class SeoMetadata(osv.Model):
+    _name = 'website.seo.metadata'
+    _description = 'SEO metadata'
+
+    _columns = {
+        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
+        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
+        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
+    }
