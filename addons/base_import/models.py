@@ -224,12 +224,13 @@ class ir_import(orm.TransientModel):
             headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
             # the ``count`` next rows for preview
-            preview = itertools.islice(rows, count)
+            preview = list(itertools.islice(rows, count))
+            assert preview, "CSV file seems to have no content"
             return {
                 'fields': fields,
                 'matches': matches or False,
                 'headers': headers or False,
-                'preview': list(preview),
+                'preview': preview,
             }
         except Exception, e:
             # Due to lazy generators, UnicodeDecodeError (for
