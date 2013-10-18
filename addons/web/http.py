@@ -189,6 +189,8 @@ class WebRequest(object):
 
 def auth_method_user():
     request.uid = request.session.uid
+    if not request.uid:
+        raise SessionExpiredException("Session expired")
 
 def auth_method_admin():
     if not request.db:
