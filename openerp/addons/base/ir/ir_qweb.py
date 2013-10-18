@@ -426,7 +426,7 @@ class QWeb(orm.AbstractModel):
         d = v if 'import' in t_att else v.copy()
         d[0] = self.render_element(e, t_att, g_att, d)
 
-        return self.render(self.eval_format(t_att["call"], d), d)
+        return self.render(None, None, self.eval_format(t_att["call"], d), d)
 
     def render_tag_set(self, e, t_att, g_att, v):
         if "value" in t_att:
