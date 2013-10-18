@@ -1228,9 +1228,9 @@
         </li>
     </t>
     <t t-if="widget.selection.folded.length">
-        <li t-att-class="value_folded ? 'oe_active oe_folded' : 'oe_folded'">
-            <span class="label"> ... </span>
-            <ul>
+        <li>
+            <span class="label oe_dropdown_toggle oe_dropdown_arrow">More</span>
+            <ul class="oe_dropdown_menu">
                 <t t-foreach="widget.selection.folded" t-as="i">
                     <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
                         <span class="label"><t t-esc="i[1]"/></span>
@@ -1775,6 +1775,14 @@
         </td>
     </tr>
 </table>
+<t t-name="ExportTreeView-Domain">
+    <t t-if="! record.ids_to_export">
+        <p><strong>Please pay attention that all records matching your search filter will be exported. Not only the selected ids.</strong></p>
+    </t>
+    <t t-if="record.ids_to_export">
+        <p><strong>Please note that only the selected ids will be exported.</strong></p>
+    </t>
+</t>
 <table t-name="ExportTreeView-Secondary"
        id="field-tree-structure" class="oe_export_fields_selector_export"
        cellspacing="0" cellpadding="0">

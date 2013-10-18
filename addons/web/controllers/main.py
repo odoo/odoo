@@ -1685,8 +1685,6 @@ class Reports(http.Controller):
             if 'ids' in action['datas']:
                 report_ids = action['datas'].pop('ids')
             report_data.update(action['datas'])
-        if not report_ids:
-            raise ValueError("action['datas']['ids'] and context['active_ids'] are undefined")
 
         report_id = report_srv.report(
             request.session.db, request.session.uid, request.session.password,

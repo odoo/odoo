@@ -21,6 +21,7 @@ import urlparse
 import uuid
 import errno
 import re
+import warnings
 
 import babel.core
 import simplejson
@@ -35,7 +36,7 @@ import urllib
 import urllib2
 
 import openerp
-import openerp.service.security as security
+from openerp.service import security, model as service_model
 from openerp.tools import config
 
 import inspect
@@ -181,6 +182,10 @@ class WebRequest(object):
     def debug(self):
         return 'debug' in self.httprequest.args
 
+    @contextlib.contextmanager
+    def registry_cr(self):
+        warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
+        yield (self.registry, self.cr)
 
 def auth_method_user():
     request.uid = request.session.uid
@@ -390,7 +395,7 @@ def jsonrequest(f):
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="json", auth="none")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -402,7 +407,6 @@ class HttpRequest(WebRequest):
         params = dict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
-
         params.pop('session_id', None)
         self.params = params
 
@@ -460,7 +464,7 @@ def httprequest(f):
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="http", auth="none")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
@@ -1034,10 +1038,17 @@ class Root(object):
         func, arguments = urls.match(path)
         arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
 
+        @service_model.check
+        def checked_call(dbname, *a, **kw):
+            return func(*a, **kw)
+
         def nfunc(*args, **kwargs):
             kwargs.update(arguments)
             if getattr(func, '_first_arg_is_req', False):
                 args = (request,) + args
+
+            if request.db:
+                return checked_call(request.db, *args, **kwargs)
             return func(*args, **kwargs)
 
         request.func = nfunc
