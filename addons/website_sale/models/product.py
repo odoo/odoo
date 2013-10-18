@@ -30,8 +30,9 @@ class product_pricelist(osv.Model):
 
 
 class product_template(osv.Model):
-    _inherit = "product.template"
+    _inherit = ["product.template", "website.seo.metadata"]
     _order = 'website_sequence desc, website_published, name'
+    _name = 'product.template'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -50,9 +51,6 @@ class product_template(osv.Model):
         'website_style_ids' : fields.many2many('website.product.style','product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url"),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
     _defaults = {
         'website_size_x': 1,
