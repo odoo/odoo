@@ -28,7 +28,7 @@ class TestConvertBack(common.TransactionCase):
         e.setAttribute('t-field', field_value)
 
         rendered = self.registry('website.qweb').render_tag_field(
-            e, {'field': field_value}, '', ir_qweb.QWebContext({
+            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
                 'record': record,
             }))
         element = html.fromstring(
