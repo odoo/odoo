@@ -41,14 +41,21 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'fold': fields.boolean('Folded by Default',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'fold': fields.boolean('Folded in Kanban View',
+                               help='This stage is folded in the kanban view when'
+                               'there are no records in that stage to display.'),
+        'bar_fold': fields.boolean('Folded in Status Bar',
+                                   help='This stage is folded in the form view when'
+                                   'using the statusbar widget.'),
+        'bar_color': fields.integer('Status Bar Color'),
+        'closed': fields.boolean('Closing Stage',
+                                 help='Indicates whether this field is the end of'
+                                 'the maangement process. This is for example a'
+                                 'stage considering the record as done or canceled.'),
     }
 
     _defaults = {
         'sequence': 1,
-        'fold': False,
-        'case_default': False,
         'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
     }
     _order = 'sequence'
@@ -189,6 +196,8 @@ class project(osv.osv):
         return res
 
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        """ :deprecated: this method will be removed with OpenERP v8. Use task_ids
+                         fields instead. """
         if context is None:
             context = {}
         res = dict.fromkeys(ids, 0)
@@ -263,7 +272,10 @@ class project(osv.osv):
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
+        'task_count': fields.function(_task_count, type='integer', string="Open Tasks",
+                                      deprecated="This field will be removed in OpenERP v8. Use task_ids one2many field instead."),
+        'task_ids': fields.one2many('project.task', 'project_id',
+                                    domain=[('stage_id.closed', '=', False)]),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
@@ -804,7 +816,7 @@ class task(osv.osv):
     _defaults = {
         'stage_id': _get_default_stage_id,
         'project_id': _get_default_project_id,
-        'date_last_stage_update': lambda *a: fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
