@@ -24,9 +24,10 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, ir_qweb.QWebContext({
-            'company': root_company,
-        }))
+        result = self.engine.render_node(field, ir_qweb.QWebContext(
+            self.cr, self.uid, {
+                'company': root_company,
+            }))
 
         self.assertEqual(
             result,
@@ -47,9 +48,10 @@ class TestQWebTField(common.TransactionCase):
         })
         root_company = Companies.browse(self.cr, self.uid, company_id)
 
-        result = self.engine.render_node(field, ir_qweb.QWebContext({
-            'company': root_company,
-        }))
+        result = self.engine.render_node(field, ir_qweb.QWebContext(
+            self.cr, self.uid, {
+                'company': root_company,
+            }))
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -65,7 +67,8 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^RTE widgets do not work correctly'):
-            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))
+            self.engine.render_node(field, ir_qweb.QWebContext(
+                self.cr, self.uid, {'company': None}))
 
     def test_reject_t_tag(self):
         field = document.createElement('t')
@@ -74,4 +77,5 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^t-field can not be used on a t element'):
-            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))
+            self.engine.render_node(field, ir_qweb.QWebContext(
+                self.cr, self.uid, {'company': None}))

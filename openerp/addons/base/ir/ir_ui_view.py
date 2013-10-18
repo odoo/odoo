@@ -786,8 +786,9 @@ class view(osv.osv):
             return self.read_template(cr, uid, name, context=context)
 
         return self.pool[engine].render(
-            id_or_xml_id, values,
-            loader=loader, undefined_handler=lambda key, v: None)
+            cr, uid, id_or_xml_id, values,
+            loader=loader, undefined_handler=lambda key, v: None,
+            context=context)
 
     # maybe used to print the workflow ?
 

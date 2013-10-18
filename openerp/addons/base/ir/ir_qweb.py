@@ -58,10 +58,14 @@ class QWebException(Exception):
 #SAFE = ["_name"]
 
 class QWebContext(dict):
-    def __init__(self, data, undefined_handler=None, loader=None, templates=None):
+    def __init__(self, cr, uid, data, undefined_handler=None, loader=None,
+                 templates=None, context=None):
+        self.cr = cr
+        self.uid = uid
         self.loader = loader
         self.undefined_handler = undefined_handler
         self.templates = templates or {}
+        self.context = context
         dic = BUILTINS.copy()
         dic.update(data)
         super(QWebContext, self).__init__(dic)
@@ -97,10 +101,11 @@ class QWebContext(dict):
         return eval(expr, None, self)
 
     def copy(self):
-        return QWebContext(dict.copy(self),
+        return QWebContext(self.cr, self.uid, dict.copy(self),
                            undefined_handler=self.undefined_handler,
                            loader=self.loader,
-                           templates=self.templates)
+                           templates=self.templates,
+                           context=self.context)
 
     def __copy__(self):
         return self.copy()
@@ -235,11 +240,13 @@ class QWeb(orm.AbstractModel):
         else:
             return 0
 
-    def render(self, tname, v=None, out=None, loader=None, undefined_handler=None):
+    def render(self, cr, uid, tname, v=None, loader=None,
+               undefined_handler=None, context=None):
         if v is None:
             v = {}
         if not isinstance(v, QWebContext):
-            v = QWebContext(v, undefined_handler=undefined_handler, loader=loader)
+            v = QWebContext(cr, uid, v, undefined_handler=undefined_handler,
+                            loader=loader, context=context)
         v['__template__'] = tname
         stack = v.get('__stack__', [])
         if stack:
@@ -448,8 +455,8 @@ class QWeb(orm.AbstractModel):
 
         converter = self.get_converter_for(field_type)
 
-        return converter.to_html(record._cr, record._uid, field_name, record, options,
-                                 e, t_att, g_att, v)
+        return converter.to_html(v.cr, v.uid, field_name, record, options,
+                                 e, t_att, g_att, v, context=v.context)
 
     def get_converter_for(self, field_type):
         return self.pool.get('ir.qweb.field.' + field_type,
@@ -511,7 +518,7 @@ class FieldConverter(osv.AbstractModel):
             cr, uid, record[field_name], column, options=None)
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         """ Converts a ``t-field`` to its HTML output. A ``t-field`` may be
         extended by a ``t-field-options``, which is a JSON-serialized mapping
         of configuration values.

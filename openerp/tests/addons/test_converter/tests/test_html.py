@@ -98,7 +98,7 @@ class TestCurrencyExport(TestExport):
             self.cr, self.uid, 'value', obj, options,
             doc.createElement('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', ir_qweb.QWebContext({'obj': obj, 'c2': dest, }))
+            '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }))
         return converted
 
     def test_currency_post(self):
