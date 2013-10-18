@@ -2,7 +2,7 @@
 import cStringIO
 import json
 import datetime
-import dateutil
+import dateutil.relativedelta
 import logging
 import re
 import urllib
