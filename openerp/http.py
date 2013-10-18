@@ -513,9 +513,10 @@ class ControllerType(type):
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
         class_path = name_class[0].split(".")
         if not class_path[:2] == ["openerp", "addons"]:
-            return
-        # we want to know all modules that have controllers
-        module = class_path[2]
+            module = ""
+        else:
+            # we want to know all modules that have controllers
+            module = class_path[2]
         # but we only store controllers directly inheriting from Controller
         if not "Controller" in globals() or not Controller in bases:
             return
@@ -1000,9 +1001,9 @@ class Root(object):
                                         url = url[: -1]
                                 routing_map.add(routing.Rule(url, endpoint=mv))
 
-        modules_set = set(controllers_per_module.keys()) - set(['web'])
+        modules_set = set(controllers_per_module.keys()) - set(['', 'web'])
         # building all none methods
-        gen(["web"] + sorted(modules_set), True)
+        gen(['', "web"] + sorted(modules_set), True)
         if not db:
             return routing_map
 
@@ -1014,7 +1015,7 @@ class Root(object):
             modules_set = modules_set & installed
 
         # building all other methods
-        gen(["web"] + sorted(modules_set), False)
+        gen(['', "web"] + sorted(modules_set), False)
 
         return routing_map
 
