@@ -394,7 +394,7 @@
             // - contextmenu & tabletools (disable contextual menu)
             // - bunch of unused plugins
             var plugins = [
-                'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+                'a11yhelp', 'basicstyles', 'blockquote',
                 'clipboard', 'colorbutton', 'colordialog', 'dialogadvtab',
                 'elementspath', 'enterkey', 'entities', 'filebrowser',
                 'find', 'floatingspace','format', 'htmlwriter', 'iframe',

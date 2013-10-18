@@ -29,14 +29,25 @@ class attributes(osv.Model):
             result.update(dict(cr.fetchall()))
         return result
 
+    def _get_min_max(self, cr, uid, ids, context=None):
+        result = {}
+        for value in self.pool.get('product.attribute.product').browse(cr, uid, ids, context=context):
+            if value.type == 'float':
+                result[value.attribute_id.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Name', size=64, translate=True, required=True),
         'type': fields.selection([('distinct', 'Distinct'), ('float', 'Float')], "Type", required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
         'product_ids': fields.one2many('product.attribute.product', 'attribute_id', 'Products'),
 
-        'float_max': fields.function(_get_float_max, type='float', string="Max", relation='product.attribute.product',store=True),
-        'float_min': fields.function(_get_float_min, type='float', string="Min", relation='product.attribute.product',store=True),
+        'float_max': fields.function(_get_float_max, type='float', string="Max", store={
+                'product.attribute.product': (_get_min_max, ['value','attribute_id'], 20),
+            }),
+        'float_min': fields.function(_get_float_min, type='float', string="Min", store={
+                'product.attribute.product': (_get_min_max, ['value','attribute_id'], 20),
+            }),
     }
     _defaults = {
         'type': 'distinct'
