@@ -2717,6 +2717,7 @@
   width: 24px;
   height: 24px;
   display: inline-block;
+  z-index: 1;
   margin-left: -12px;
   margin-top: 3px;
   box-shadow: -1px 1px 2px rgba(255, 255, 255, 0.2), inset -1px 1px 1px rgba(0, 0, 0, 0.2);
@@ -2750,24 +2751,54 @@
   padding-left: 14px;
 }
 .openerp ul.oe_form_status li.oe_active, .openerp ul.oe_form_status_clickable li.oe_active {
-  background-color: #5382b9;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#729fcf), to(#3465a4));
-  background-image: -webkit-linear-gradient(top, #729fcf, #3465a4);
-  background-image: -moz-linear-gradient(top, #729fcf, #3465a4);
-  background-image: -ms-linear-gradient(top, #729fcf, #3465a4);
-  background-image: -o-linear-gradient(top, #729fcf, #3465a4);
-  background-image: linear-gradient(to bottom, #729fcf, #3465a4);
+  background-color: #868686;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#9c9c9c), to(#707070));
+  background-image: -webkit-linear-gradient(top, #9c9c9c, #707070);
+  background-image: -moz-linear-gradient(top, #9c9c9c, #707070);
+  background-image: -ms-linear-gradient(top, #9c9c9c, #707070);
+  background-image: -o-linear-gradient(top, #9c9c9c, #707070);
+  background-image: linear-gradient(to bottom, #9c9c9c, #707070);
 }
 .openerp ul.oe_form_status li.oe_active > .arrow span, .openerp ul.oe_form_status_clickable li.oe_active > .arrow span {
-  background-color: #3465a4;
-  background: -moz-linear-gradient(135deg, #3465a4, #729fcf);
-  background: -o-linear-gradient(135deg, #729fcf, #3465a4);
-  background: -webkit-gradient(linear, left top, right bottom, from(#729fcf), to(#3465a4));
-  background: -ms-linear-gradient(top, #729fcf, #3465a4);
+  background-color: #707070;
+  background: -moz-linear-gradient(135deg, #707070, #9c9c9c);
+  background: -o-linear-gradient(135deg, #9c9c9c, #707070);
+  background: -webkit-gradient(linear, left top, right bottom, from(#9c9c9c), to(#707070));
+  background: -ms-linear-gradient(top, #9c9c9c, #707070);
 }
 .openerp ul.oe_form_status li.oe_active > .label, .openerp ul.oe_form_status_clickable li.oe_active > .label {
   color: white;
-  text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4;
+  text-shadow: 0 1px 1px #9c9c9c, 0 -1px 1px #707070;
+}
+.openerp ul.oe_form_status li.oe_bar_1:not(.oe_active), .openerp ul.oe_form_status_clickable li.oe_bar_1:not(.oe_active) {
+  background: #dc5f59;
+  background-color: #c02c2c;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#df3f3f), to(#a21a1a));
+  background-image: -webkit-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: -moz-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: -ms-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: -o-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: linear-gradient(to bottom, #df3f3f, #a21a1a);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+}
+.openerp ul.oe_form_status li.oe_bar_1:not(.oe_active) > .arrow span, .openerp ul.oe_form_status_clickable li.oe_bar_1:not(.oe_active) > .arrow span {
+  background: #dc5f59;
+  background-color: #c02c2c;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#df3f3f), to(#a21a1a));
+  background-image: -webkit-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: -moz-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: -ms-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: -o-linear-gradient(top, #df3f3f, #a21a1a);
+  background-image: linear-gradient(to bottom, #df3f3f, #a21a1a);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+}
+.openerp ul.oe_form_status li.oe_bar_1:not(.oe_active) > .label, .openerp ul.oe_form_status_clickable li.oe_bar_1:not(.oe_active) > .label {
+  color: white;
+  text-shadow: none;
 }
 .openerp ul.oe_form_status_clickable li {
   cursor: pointer;
@@ -2797,23 +2828,23 @@
   color: #7c7bad;
 }
 .openerp ul.oe_form_status_clickable li.oe_active:hover {
-  background-color: #3a699f;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#4c85c2), to(#284d7d));
-  background-image: -webkit-linear-gradient(top, #4c85c2, #284d7d);
-  background-image: -moz-linear-gradient(top, #4c85c2, #284d7d);
-  background-image: -ms-linear-gradient(top, #4c85c2, #284d7d);
-  background-image: -o-linear-gradient(top, #4c85c2, #284d7d);
-  background-image: linear-gradient(to bottom, #4c85c2, #284d7d);
+  background-color: #6d6d6d;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#838383), to(#575757));
+  background-image: -webkit-linear-gradient(top, #838383, #575757);
+  background-image: -moz-linear-gradient(top, #838383, #575757);
+  background-image: -ms-linear-gradient(top, #838383, #575757);
+  background-image: -o-linear-gradient(top, #838383, #575757);
+  background-image: linear-gradient(to bottom, #838383, #575757);
 }
 .openerp ul.oe_form_status_clickable li.oe_active:hover > .label {
-  text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4;
+  text-shadow: 0 -1px 1px #9c9c9c, 0 1px 1px #707070;
 }
 .openerp ul.oe_form_status_clickable li.oe_active:hover > .arrow span {
-  background-color: #284d7d;
-  background: -moz-linear-gradient(135deg, #284d7d, #4c85c2);
-  background: -o-linear-gradient(135deg, #4c85c2, #284d7d);
-  background: -webkit-gradient(linear, left top, right bottom, from(#4c85c2), to(#284d7d));
-  background: -ms-linear-gradient(top, #4c85c2, #284d7d);
+  background-color: #575757;
+  background: -moz-linear-gradient(135deg, #575757, #838383);
+  background: -o-linear-gradient(135deg, #838383, #575757);
+  background: -webkit-gradient(linear, left top, right bottom, from(#838383), to(#575757));
+  background: -ms-linear-gradient(top, #838383, #575757);
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;

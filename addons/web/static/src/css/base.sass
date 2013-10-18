@@ -2166,6 +2166,7 @@ $sheet-padding: 16px
                     width: 24px
                     height: 24px
                     display: inline-block
+                    z-index: 1
                     margin-left: -12px
                     margin-top: 3px
                     box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
@@ -2185,12 +2186,26 @@ $sheet-padding: 16px
                     padding-left: 14px
 
         li.oe_active
-            @include vertical-gradient(#729fcf, #3465a4)
+            @include vertical-gradient(#9c9c9c, #707070)
             > .arrow span
-                @include skew-gradient(#729fcf, #3465a4)
+                @include skew-gradient(#9c9c9c, #707070)
             > .label
                 color: white
-                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
+                text-shadow: 0 1px 1px #9c9c9c, 0 -1px 1px #707070
+
+        li.oe_bar_1:not(.oe_active)
+            background: #DC5F59
+            @include vertical-gradient(#df3f3f, #a21a1a)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
+            > .arrow 
+                span
+                    background: #DC5F59
+                    @include vertical-gradient(#df3f3f, #a21a1a)
+                    @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
+            > .label
+                color: white
+                text-shadow: none
+
     ul.oe_form_status_clickable
         li
             cursor: pointer
@@ -2204,11 +2219,11 @@ $sheet-padding: 16px
                 color: $link-color
         li.oe_active
             &:hover
-                @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                @include vertical-gradient(darken(#9c9c9c, 10%), darken(#707070, 10%))
                 > .label
-                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
+                    text-shadow: 0 -1px 1px #9c9c9c, 0 1px 1px #707070
                 > .arrow span
-                    @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    @include skew-gradient(darken(#9c9c9c, 10%), darken(#707070, 10%))
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager

@@ -5522,16 +5522,24 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             if (this.field.type == "many2one") {
                 return self.get_distant_fields().then(function(fields) {
                     return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
-                        .read_slice(fields.fold ? ['fold'] : ['id'], {}).then(function (records) {
+                        .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
+                            console.log(records);
+                            var ids = _.pluck(records, 'id');
 
-                            var ids = _.map(records, function (val) {return val.id;});
+                            // var ids = _.map(records, function (val) {return val.id;});
                             return self.dataset.name_get(ids).then(function (records_name) {
                                 _.each(records, function (record) {
                                     var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
-                                    if (record.fold && record.id != self.get('value')) {
-                                        selection_folded.push([record.id, name]);
+                                    var widget_item = {
+                                        'id': record.id,
+                                        'name': name,
+                                        'bar_color': record.bar_color || 0,
+                                        'bar_fold': record.bar_fold || false,
+                                    }
+                                    if (record.bar_fold && record.id != self.get('value')) {
+                                        selection_folded.push(widget_item);
                                     } else {
-                                        selection_unfolded.push([record.id, name]);
+                                        selection_unfolded.push(widget_item);
                                     }
                                 });
                             });
@@ -5563,7 +5571,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.distant_fields) {
             return $.when(this.distant_fields);
         }
-        return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
+        return new instance.web.Model(self.field.relation).call("fields_get", [["bar_fold", "bar_color"]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
         });
