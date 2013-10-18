@@ -67,8 +67,15 @@ class WebsiteMembership(http.Controller):
 
         # request pager for lines
         pager = request.website.pager(url="/members/", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
-
+        membershipcount = {}
+        total = 0
+        for memeberid in membership_ids:
+            count = membership_line_obj.search(cr, uid, [('membership_id', '=', memeberid)], context=context)
+            membershipcount[memeberid] = len(count)
+            total += len(count)
+        membershipcount['total'] = total
         values = {
+            'membership_count': membershipcount,
             'membership_lines': membership_lines,
             'memberships': memberships,
             'membership': membership,

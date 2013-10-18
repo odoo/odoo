@@ -35,10 +35,14 @@
                 <div class="col-md-4" id="left_column">
                     <ul class="nav nav-pills nav-stacked mt16">
                         <li class="nav-header"><h3>Associations</h3></li>
-                        <li t-att-class="'membership' if membership else 'active' "><a t-href="/members/">All</a></li>
+                        <li t-att-class="'membership' if membership else 'active' "><a t-href="/members/">All
+                            <span class="badge pull-right"><t t-esc="membership_count['total']"/></span>
+                        </a></li>
                         <t t-foreach="memberships" t-as="membership_id">
                             <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                                <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
+                                <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/>
+                                    <span class="badge pull-right"><t t-esc="membership_count[membership_id.id]"/></span>
+                                </a>
                             </li>
                         </t>
                     </ul>
