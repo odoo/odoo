@@ -230,7 +230,7 @@ class TestCleaner(unittest2.TestCase):
         for ext in test_mail_examples.BUG_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
 
-        new_html = html_email_clean(test_mail_examples.BUG2, remove=True, shorten=True, max_length=100)
+        new_html = html_email_clean(test_mail_examples.BUG2, remove=True, shorten=True, max_length=4000)
         for ext in test_mail_examples.BUG_2_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
         for ext in test_mail_examples.BUG_2_OUT:

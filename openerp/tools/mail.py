@@ -279,8 +279,8 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
         # 3/ add the truncated text in a new node, next to 'read more' node
         if shorten and not overlength and cur_char_nbr + len(node.text or '') > max_length:
             node_to_truncate = node
-            while node.get('in_quote') and node.getparent():
-                node_to_truncate = node.getparent()
+            while node_to_truncate.get('in_quote') and node_to_truncate.getparent() is not None:
+                node_to_truncate = node_to_truncate.getparent()
             overlength = True
             node_to_truncate.set('truncate', '1')
             node_to_truncate.set('truncate_position', str(max_length - cur_char_nbr))
