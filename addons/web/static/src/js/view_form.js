@@ -5475,7 +5475,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         });
         this.get_selection();
         if (this.options.clickable) {
-            this.$el.on('click','li:not(.oe_folded)',this.on_click_stage);
+            this.$el.on('click','li[data-id]',this.on_click_stage);
         }
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');

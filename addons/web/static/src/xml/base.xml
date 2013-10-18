@@ -1228,9 +1228,9 @@
         </li>
     </t>
     <t t-if="widget.selection.folded.length">
-        <li t-att-class="value_folded ? 'oe_active oe_folded' : 'oe_folded'">
-            <span class="label"> ... </span>
-            <ul>
+        <li>
+            <span class="label oe_dropdown_toggle oe_dropdown_arrow">More</span>
+            <ul class="oe_dropdown_menu">
                 <t t-foreach="widget.selection.folded" t-as="i">
                     <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
                         <span class="label"><t t-esc="i[1]"/></span>
