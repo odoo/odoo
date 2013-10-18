@@ -361,6 +361,67 @@
                 document.getSelection().selectAllChildren($closest_block[0]);
             });
         },
+        tableNavigation: function (root) {
+            var self = this;
+            $(root).on('keydown', function (e) {
+                // ignore non-TAB
+                if (e.which !== 9) { return; }
+
+                if (self.handleTab(e)) {
+                    e.preventDefault();
+                }
+            });
+        },
+        /**
+         * Performs whatever operation is necessary on a [TAB] hit, returns
+         * ``true`` if the event's default should be cancelled (if the TAB was
+         * handled by the function)
+         */
+        handleTab: function (event) {
+            var forward = !event.shiftKey;
+
+            var root = window.getSelection().getRangeAt(0).commonAncestorContainer;
+            var $cell = $(root).closest('td,th');
+
+            if (!$cell.length) { return false; }
+
+            var cell = $cell[0];
+
+            // find cell in same row
+            var row = cell.parentNode;
+            var sibling = row.cells[cell.cellIndex + (forward ? 1 : -1)];
+            if (sibling) {
+                document.getSelection().selectAllChildren(sibling);
+                return true;
+            }
+
+            // find cell in previous/next row
+            var table = row.parentNode;
+            var sibling_row = table.rows[row.rowIndex + (forward ? 1 : -1)];
+            if (sibling_row) {
+                var new_cell = sibling_row.cells[forward ? 0 : sibling_row.cells.length - 1];
+                document.getSelection().selectAllChildren(new_cell);
+                return true;
+            }
+
+            // at edge cells, copy word/openoffice behavior: if going backwards
+            // from first cell do nothing, if going forwards from last cell add
+            // a row
+            if (forward) {
+                var row_size = row.cells.length;
+                var new_row = document.createElement('tr');
+                while(row_size--) {
+                    var newcell = document.createElement('td');
+                    // zero-width space
+                    newcell.textContent = '\u200B';
+                    new_row.appendChild(newcell);
+                }
+                table.appendChild(new_row);
+                document.getSelection().selectAllChildren(new_row.cells[0]);
+            }
+
+            return true;
+        },
         start_edition: function ($elements) {
             var self = this;
             // create a single editor for the whole page
@@ -369,6 +430,7 @@
                 e.preventDefault();
             });
             this.webkitSelectionFixer(root);
+            this.tableNavigation(root);
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
                 editor.setReadOnly(false);
@@ -378,6 +440,10 @@
                 editor.editable().setReadOnly(true);
 
                 self.setup_editables(root);
+
+                // disable firefox's broken table resizing thing
+                document.execCommand("enableObjectResizing", false, "false");
+                document.execCommand("enableInlineTableEditing", false, "false");
 
                 self.trigger('rte:ready');
             });
@@ -439,7 +505,7 @@
                 'indentblock', 'indentlist', 'justify',
                 'list', 'pastefromword', 'pastetext', 'preview',
                 'removeformat', 'resize', 'save', 'selectall', 'stylescombo',
-                'tab', 'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
+                'table', 'templates', 'toolbar', 'undo', 'wysiwygarea'
             ];
             return {
                 // FIXME
