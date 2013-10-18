@@ -44,6 +44,9 @@ BUILTINS = {
     'relativedelta': lambda *a, **kw : dateutil.relativedelta.relativedelta(*a, **kw),
 }
 
+class QWebException(Exception):
+    pass
+
 ## We use a jinja2 sandboxed environment to render qWeb templates.
 #from openerp.tools.safe_eval import safe_eval as eval
 #from jinja2.sandbox import SandboxedEnvironment
@@ -290,7 +293,12 @@ class QWeb(orm.AbstractModel):
         else:
             g_inner = []
             for n in e.childNodes:
-                g_inner.append(self.render_node(n, v))
+                try:
+                    g_inner.append(self.render_node(n, v))
+                except QWebException, err:
+                    raise err
+                except Exception, err:
+                    raise QWebException("%s\n\nNode:\n%s" % (err, e.toxml()))
         name = str(e.nodeName)
         inner = "".join(g_inner)
         trim = t_att.get("trim", 0)
