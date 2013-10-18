@@ -113,7 +113,8 @@ class res_partner(osv.osv):
                       LEFT JOIN account_account a ON (l.account_id=a.id)
                       WHERE a.type IN ('receivable','payable')
                       AND l.partner_id IN %s
-                      AND l.reconcile_id IS NULL
+                      AND (l.reconcile_id IS NULL OR 
+                           reconcile_id in (SELECT id FROM account_move_reconcile WHERE opening_reconciliation is TRUE))
                       AND """ + query + """
                       GROUP BY l.partner_id, a.type
                       """,
