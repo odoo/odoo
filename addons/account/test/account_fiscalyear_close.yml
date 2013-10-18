@@ -78,5 +78,5 @@
 -
   I check that the past accounts are taken into account in partner credit
 -
-  !assert {model: res.partner, id: base.res_partner_2}:
-    - credit == 15.0, "Total Receivable does not takes unreconciled previous moves"
+  !assert {model: res.partner, id: base.res_partner_2, string: Total Receivable does not takes unreconciled previous moves}:
+    - credit == 15.0
