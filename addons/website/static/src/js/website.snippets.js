@@ -1198,7 +1198,36 @@
         start : function () {
             this._super();
             this.change_background(this.$target, 'ul[name="parallax-background"]');
+            this.change_size();
         },
+        change_size: function () {
+            var self = this;
+            var $el = this.$target;
+
+            var size = 'oe_big';
+            if (this.$target.hasClass('oe_small'))
+                size = 'oe_small';
+            else if (this.$target.hasClass('oe_medium'))
+                size = 'oe_medium';
+
+            var $ul = this.$editor.find('ul[name="parallax-size"]');
+            var $li = $ul.find("li");
+
+            $ul.find('[data-value="' + size + '"]').addClass('active');
+
+            $li.on('click', function (event) {
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                })
+                .on('mouseover', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($(event.currentTarget).data("value"));
+                })
+                .on('mouseout', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($ul.find('li.active').data("value"));
+                });
+        }
     });
 
     /*

@@ -1,4 +1,3 @@
-@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -361,10 +360,18 @@ footer {
 }
 
 .parallax_full {
-  background: #eeeeee bottom center repeat fixed;
-  min-height: 650px;
+  background: #eeeeee no-repeat top center;
   width: 100%;
   background-size: 100%;
+}
+.parallax_full.oe_small .container {
+  height: 200px;
+}
+.parallax_full.oe_medium .container {
+  height: 300px;
+}
+.parallax_full.oe_big .container {
+  height: 450px;
 }
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
