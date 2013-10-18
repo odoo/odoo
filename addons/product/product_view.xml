@@ -655,7 +655,7 @@
         <record id="product_variant_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="type">ir.actions.act_window</field>
-            <!--<field name="domain">[('variants','&lt;&gt;', False)]</field>-->
+            <field name="domain">[('variants','&lt;&gt;', False)]</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
@@ -824,7 +824,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                                <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
