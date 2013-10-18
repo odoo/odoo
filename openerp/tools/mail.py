@@ -175,6 +175,32 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
             iteration += 1
         new_node = _insert_new_node(node, -1, new_node_tag, text[idx:] + (cur_node.tail or ''), None, {})
 
+    def _truncate_node(node, position, find_first_blank=True):
+        if node.text is None:
+            node.text = ''
+        # truncate text
+        end_position = position if len(node.text) >= position else len(node.text)
+        innertext = node.text[0:end_position]
+        outertext = node.text[end_position:]
+        if find_first_blank:
+            stop_idx = outertext.find(' ')
+            if stop_idx == -1:
+                stop_idx = len(outertext)
+        else:
+            stop_idx = 0
+        node.text = innertext + outertext[0:stop_idx]
+        # create <span> ... <a href="#">read more</a></span> node
+        read_more_node = _create_node('span', ' ... ', None, {'class': 'oe_mail_expand'})
+        read_more_link_node = _create_node('a', 'read more', None, {'href': '#', 'class': 'oe_mail_expand'})
+        read_more_node.append(read_more_link_node)
+        # create outertext node
+        overtext_node = _create_node('span', outertext[stop_idx:])
+        # tag node
+        overtext_node.set('in_overlength', '1')
+        # add newly created nodes in dom
+        node.append(read_more_node)
+        node.append(overtext_node)
+
     if not html or not isinstance(html, basestring):
         return html
     html = ustr(html)
@@ -206,7 +232,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
 
     # form node and tag text-based quotes and signature
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[^.]+)')
+    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
     for node in root.getiterator():
         _tag_matching_regex_in_text(quote_tags, node, 'span', {'text_quote': '1'})
         _tag_matching_regex_in_text(signature, node, 'span', {'text_signature': '1'})
@@ -226,14 +252,16 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
         if 'SkyDrivePlaceholder' in node.get('class', '') or 'SkyDrivePlaceholder' in node.get('id', ''):
             root.set('hotmail', '1')
 
-        # state of the parsing
+        # state of the parsing: flag quotes and tails to remove
         if quote_begin:
             node.set('in_quote', '1')
             node.set('tail_remove', '1')
+        # state of the parsing: flag when being in over-length content
         if overlength:
             node.set('in_overlength', '1')
             node.set('tail_remove', '1')
 
+        # find quote in msoffice / hotmail / blockquote / text quote and signatures
         if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
             quote_begin = True
             node.set('in_quote', '1')
@@ -242,36 +270,28 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
             quote_begin = True
             node.set('in_quote', '1')
             node.set('tail_remove', '1')
+        if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
+            node.set('in_quote', '1')
 
         # shorten:
         # 1/ truncate the text at the next available space
         # 2/ create a 'read more' node, next to current node
         # 3/ add the truncated text in a new node, next to 'read more' node
         if shorten and not overlength and cur_char_nbr + len(node.text or '') > max_length:
+            node_to_truncate = node
+            while node_to_truncate.get('in_quote') and node_to_truncate.getparent() is not None:
+                node_to_truncate = node_to_truncate.getparent()
             overlength = True
-            # truncate text
-            innertext = node.text[0:(max_length - cur_char_nbr)]
-            outertext = node.text[(max_length - cur_char_nbr):]
-            stop_idx = outertext.find(' ')
-            if stop_idx == -1:
-                stop_idx = len(outertext)
-            node.text = innertext + outertext[0:stop_idx]
-            # create <span> ... <a href="#">read more</a></span> node
-            read_more_node = _create_node('span', ' ... ', None, {'class': 'oe_mail_expand'})
-            read_more_link_node = _create_node('a', 'read more', None, {'href': '#', 'class': 'oe_mail_expand'})
-            read_more_node.append(read_more_link_node)
-            # create outertext node
-            new_node = _create_node('span', outertext[stop_idx:])
-            # add newly created nodes in dom
-            node.addnext(new_node)
-            node.addnext(read_more_node)
-            # tag node
-            new_node.set('in_overlength', '1')
+            node_to_truncate.set('truncate', '1')
+            node_to_truncate.set('truncate_position', str(max_length - cur_char_nbr))
+        cur_char_nbr += len(node.text or '')
 
-            cur_char_nbr += len(node.text or '')
+    # Tree modification
+    # ------------------------------------------------------------
 
-        if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
-            node.set('in_quote', '1')
+    for node in root.iter():
+        if node.get('truncate'):
+            _truncate_node(node, int(node.get('truncate_position', '0')))
 
     # Post processing
     # ------------------------------------------------------------
