@@ -47,7 +47,8 @@ class website_project(http.Controller):
         project = project_obj.browse(request.cr, request.uid, project_id, request.context)
 
         render_values = {
-            'project': project
+            'project': project,
+            'main_object': project,
         }
         return request.website.render("website_project.index", render_values)
 
@@ -59,6 +60,7 @@ class website_project(http.Controller):
         task = task_obj.browse(cr, uid, task_id, context=context)
 
         render_values = {
-            'task': task
+            'task': task,
+            'main_object': task,
         }
         return request.website.render("website_project.task", render_values)
