@@ -2,6 +2,40 @@
 <openerp>
     <data>
 
+        <!-- Events banner for homepage -->
+
+        <template id="default_website_event_homepage" inherit_id="website_sale.default_website_sale_homepage" name="Event banner for Homepage">
+            <xpath expr="//*[@id='myCarousel1']/div" position="before">
+                <ol class="carousel-indicators">
+                    <li data-slide-to="0" data-target="#myCarousel1" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+                </ol>
+            </xpath>
+
+            <xpath expr="//*[@id='myCarousel1']/div" position="inside">
+                <div style="background-image: url(http://localhost:8069/website/static/src/img/banner/aqua.jpg);" class="item text_only">
+                    <div class="container">
+                        <div contenteditable="false" class="carousel-caption content">
+                            <h2>Promote Your Events</h2>
+
+                            <h3>Sell Tickets Online</h3>
+
+                            <p><a href="/event" class="btn btn-success btn-large">Sample of Events</a></p>
+                        </div>
+
+                        <div class="carousel-image hidden-xs">
+                            <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image" contenteditable="true"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//*[@id='myCarousel1']/div" position="after">
+                <a data-slide="prev" href="#myCarousel1" style="width: 10%" class="carousel-control left"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
+                <a data-slide="next" href="#myCarousel1" style="width: 10%" class="carousel-control right"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
+            </xpath>
+        </template>
+
         <record id="event.event_0" model="event.event">
             <field name="website_published">True</field>
             <field name="twitter_hashtag">openerp</field>
