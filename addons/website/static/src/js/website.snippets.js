@@ -1198,7 +1198,24 @@
         start : function () {
             this._super();
             this.change_background(this.$target, 'ul[name="parallax-background"]');
+            this.scroll();
             this.change_size();
+        },
+        scroll: function(){
+            var self = this;
+            var $ul = this.$editor.find('ul[name="parallax-scroll"]');
+            var $li = $ul.find("li");
+            var $parallax = this.$el.find('.parallax_full');
+            var speed = $parallax.data('speed') || 1 ;
+            
+            $ul.find('[data-value="' + speed + '"]').addClass('active');
+            $li.on('click', function (event) {
+                $li.removeClass("active");
+                $(this).addClass("active");
+                var speed =  $(this).data('value')
+                $parallax.data('speed', speed);
+            });
+
         },
         change_size: function () {
             var self = this;

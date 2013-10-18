@@ -150,6 +150,20 @@
                     $data.attr("data-publish", +result ? 'on' : 'off');
                 });
         });
+        
+        $('[data-snippet-id="parallax"]').each(function(){
+            var $el = $(this);
+            var $window = $(window);
+            $window.scroll(function() {
+                var yPos = -( ($window.scrollTop() - $el.offset().top) /  $el.data('speed'));
+
+                var yPos = -($window.scrollTop() / 2); 
+                // Put together our final background position
+                var coords = '50% '+ yPos + 'px';
+                // Move the background
+                $el.css({ backgroundPosition: coords });
+            })
+        }); 
 
         $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
             var $data = $(this).parents(".js_publish_management:first");
