@@ -86,7 +86,7 @@
                                 </a>
                                 <div class="media-body" style="min-height: 64px;">
                                     <a class="media-heading" t-href="/partners/#{ partner_id.id }/"><span t-field="partner_id.parent_id"/> <span t-field="partner_id.name"/></a> - <span t-field="partner_id.grade_id"/>
-                                    <div t-field="partner_id.website_short_description"/>
+                                    <t t-if="partner_id.website_short_description"><div t-field="partner_id.website_short_description"/></t>
                                 </div>
                             </div>
                         </t>
