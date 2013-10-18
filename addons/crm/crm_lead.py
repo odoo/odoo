@@ -387,7 +387,9 @@ class crm_lead(format_address, osv.osv):
         return False
 
     def case_mark_lost(self, cr, uid, ids, context=None):
-        """ Mark the case as lost: state=cancel and probability=0 """
+        """ Mark the case as lost: state=cancel and probability=0
+            :deprecated: this method will be removed in OpenERP v8.
+        """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
             if stage_id:
@@ -399,7 +401,9 @@ class crm_lead(format_address, osv.osv):
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
 
     def case_mark_won(self, cr, uid, ids, context=None):
-        """ Mark the case as won: state=done and probability=100 """
+        """ Mark the case as won: state=done and probability=100
+            :deprecated: this method will be removed in OpenERP v8.
+        """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
             if stage_id:
