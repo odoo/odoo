@@ -5,7 +5,6 @@ import datetime
 import dateutil
 import logging
 import re
-import traceback
 import urllib
 import xml # FIXME use lxml and etree
 
@@ -45,7 +44,11 @@ BUILTINS = {
 }
 
 class QWebException(Exception):
-    pass
+    def __init__(self, message, template=None, node=None, attribute=None):
+        self.message = message
+        self.template = template
+        self.node = node
+        self.attribute = attribute
 
 ## We use a jinja2 sandboxed environment to render qWeb templates.
 #from openerp.tools.safe_eval import safe_eval as eval
@@ -198,7 +201,8 @@ class QWeb(orm.AbstractModel):
         except (osv.except_osv, orm.except_orm), err:
             raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
         except Exception:
-            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), traceback.format_exc()))
+            raise QWebException("QWeb: invalid expression %r while rendering template '%s'." % (expr, v.get('__template__')),
+                template=v.get('__template__'))
 
     def eval_object(self, expr, v):
         return self.eval(expr, v)
@@ -295,10 +299,14 @@ class QWeb(orm.AbstractModel):
             for n in e.childNodes:
                 try:
                     g_inner.append(self.render_node(n, v))
+                except (osv.except_osv, orm.except_orm), err:
+                    raise err
                 except QWebException, err:
+                    if not err.node:
+                        err.node = e
                     raise err
                 except Exception, err:
-                    raise QWebException("%s\n\nNode:\n%s" % (err, e.toxml()))
+                    raise QWebException("%s" % err, template=v.get('__template__'), node=e)
         name = str(e.nodeName)
         inner = "".join(g_inner)
         trim = t_att.get("trim", 0)
