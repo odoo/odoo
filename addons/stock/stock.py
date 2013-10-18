@@ -73,6 +73,8 @@ class stock_location(osv.osv):
     _parent_order = 'posz,name'
     _order = 'parent_left'
 
+    # TODO: implement name_search() in a way that matches the results of name_get!
+
     def name_get(self, cr, uid, ids, context=None):
         # always return the full hierarchical name
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)

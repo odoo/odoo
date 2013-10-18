@@ -23,6 +23,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from openerp.exceptions import Warning
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -203,5 +204,5 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_to': (datetime.today() + relativedelta(days=7)),
             'number_of_days_temp': 4,
         })
-        with self.assertRaises(except_orm):
+        with self.assertRaises(Warning):
             self.hr_holidays.signal_confirm(cr, self.user_hrmanager_id, [hol2_id])

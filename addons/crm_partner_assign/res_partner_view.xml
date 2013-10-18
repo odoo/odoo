@@ -138,6 +138,7 @@
                              <field name="create_date"/>
                              <field name="name"/>
                              <field name="type"/>
+                             <field name="probability" invisible="1"/>
                              <field name="stage_id"/>
                              <field name="section_id"
                                     invisible="context.get('invisible_section', True)"
@@ -146,7 +147,8 @@
                              <button string="Convert to Opportunity"
                                     name="convert_opportunity"
                                     type="object" 
-                                    attrs="{'invisible':[('type','=','opportunity'),('probability', '=', 100)]}" />
+                                    icon="gtk-convert"
+                                    attrs="{'invisible':[('type','=','opportunity')]}" />
                              <button name="case_escalate" string="Escalate"
                                     type="object"
                                     icon="gtk-go-up" 
