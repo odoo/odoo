@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="0">
-        <record id="paypal" model="payment.acquirer.type">
-            <field name="name">paypal</field>
-        </record>
 
         <!-- Paypal -->
 
@@ -22,16 +19,12 @@
         </template>
 
         <record id="paypal_acquirer" model="payment.acquirer">
-            <field name="name">Paypal</field>
+            <field name="acquirer">paypal</field>
             <field name="form_template_id" ref="paypal_acquirer_view"/>
             <field name="type_id" ref="paypal"/>
         </record>
 
         <!-- Virement -->
-
-        <record id="virement" model="payment.acquirer.type">
-            <field name="name">virement</field>
-        </record>
 
         <template id="virement_acquirer_view">
             <div>
@@ -44,7 +37,7 @@
         </template>
 
         <record id="virement_acquirer" model="payment.acquirer">
-            <field name="name">Virement</field>
+            <field name="acquirer">virement</field>
             <field name="form_template_id" ref="virement_acquirer_view"/>
             <field name="type_id" ref="virement"/>
         </record>
