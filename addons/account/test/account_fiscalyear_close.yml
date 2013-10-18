@@ -30,10 +30,7 @@
 -
   I validate it the invoice
 -
-  !python {model: account.invoice}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.invoice', ref('account.account_invoice_current1'), 'invoice_open', cr)
+  !workflow {model: account.invoice, action: invoice_open, ref: account.account_invoice_current1}
 -
   I made modification in journal so it can move entries
 -
