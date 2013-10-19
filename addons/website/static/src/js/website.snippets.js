@@ -24,6 +24,9 @@
         },
         save: function () {
             this.snippets.make_active(false);
+
+	    // TODO TOFIX: call clean_for_save on all snippets of the page, not only modified ones
+	    // important for banner of parallax that changes data automatically.
             this.snippets.clean_for_save();
             remove_added_snippet_id();
             this._super();
@@ -1197,7 +1200,62 @@
     website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
         start : function () {
             this._super();
-            this.change_background(this.$target, 'ul[name="parallax-background"]');
+            this.change_background($('.parallax', this.$target), 'ul[name="parallax-background"]');
+            this.scroll();
+            this.change_size();
+        },
+        scroll: function(){
+            var self = this;
+            var $ul = this.$editor.find('ul[name="parallax-scroll"]');
+            var $li = $ul.find("li");
+            var $parallax = this.$target.find('.parallax');
+            var speed = $parallax.data('stellar-background-ratio') || 0.5 ;
+            
+            $ul.find('[data-value="' + speed + '"]').addClass('active');
+            $li.on('click', function (event) {
+                $li.removeClass("active");
+                $(this).addClass("active");
+                var speed =  $(this).data('value')
+                $parallax.attr('data-stellar-background-ratio', speed);
+            });
+
+        },
+        clean_for_save: function () {
+            this._super();
+            this.$target.find(".parallax").css("background-position", '');
+        },
+        change_size: function () {
+            var self = this;
+            var $el = $('.oe_big,.oe_medium,.oe_small', this.$target);
+
+            var size = 'oe_big';
+            if ($el.hasClass('oe_small'))
+                size = 'oe_small';
+            else if ($el.hasClass('oe_medium'))
+                size = 'oe_medium';
+
+            var $ul = this.$editor.find('ul[name="parallax-size"]');
+            var $li = $ul.find("li");
+
+            $ul.find('[data-value="' + size + '"]').addClass('active');
+
+            $li.on('click', function (event) {
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                })
+                .on('mouseover', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($(event.currentTarget).data("value"));
+                })
+                .on('mouseout', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($ul.find('li.active').data("value"));
+                });
+        }
+    });
+    website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
+        start: function () {
+            $.stellar({ horizontalScrolling: false, verticalOffset: 0 });
         },
     });
 

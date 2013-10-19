@@ -678,40 +678,38 @@
             <span class="oe_snippet_thumbnail_title">Parallax</span>        
         </div>
         <li class="oe_snippet_options dropdown-submenu">
+            <a tabindex="-1" href="#">Size</a>
+            <ul class="dropdown-menu" name="parallax-size">
+                <li data-value="oe_small"><a>Small</a></li>
+                <li data-value="oe_medium"><a>Medium</a></li>
+                <li data-value="oe_big"><a>Big</a></li>
+            </ul>
+        </li>
+        <li class="oe_snippet_options dropdown-submenu">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu" name="parallax-background">
-                <li data-value="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
-                <li data-value="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
-                <li data-value="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
-                <li data-value="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
-                <li data-value="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
-                <li data-value="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
                 <li data-value="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
                 <li data-value="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
                 <li data-value="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
                 <li data-value="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
-                <li data-value="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
-                <li data-value="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
-                <li data-value="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
-                <li data-value="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
-                <li data-value="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
                 <li class="oe_custom_bg"><a><b>Chose your picture</b></a></li>
             </ul>
         </li>
-        <section class="oe_snippet_body parallax_full oe_structure" style="background-image: url('/website/static/src/img/banner/greenfields.jpg')">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 mt128 mb32">
-                        <h1 class="text-center">
-                            <b>A Great Title</b>
-                        </h1>
-                        <h3 class="text-center">
-                            And a motivating subtitle
-                        </h3>
-                    </div>
-                </div>
+        <li class="oe_snippet_options dropdown-submenu">
+            <a tabindex="-1" href="#">Scroll Speed</a>
+            <ul class="dropdown-menu" name="parallax-scroll">
+                <li data-value="0.25"><a>Very Slow</a></li>
+                <li data-value="0.5"><a>Slow</a></li>
+                <li data-value="1"><a>Fixed</a></li>
+                <li data-value="1.5"><a>Fast</a></li>
+                <li data-value="2"><a>Very Fast</a></li>
+            </ul>
+        </li>
+        <div class="oe_snippet_body" style="position:relative">
+            <div class="parallax oe_structure oe_medium" style="background-image: url('/website/static/src/img/banner/greenfields.jpg')" data-stellar-background-ratio="0.5">
+
             </div>
-        </section>
+        </div>
     </div>
 
     <div data-snippet-id="parallax_quote" data-selector-children=".oe_structure, [data-oe-type=html]">
