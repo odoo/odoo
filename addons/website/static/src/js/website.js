@@ -151,8 +151,6 @@
                 });
         });
 
-        // $.stellar();
-
         $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
             var $data = $(this).parents(".js_publish_management:first");
             var $btn = $data.find('.btn:first');

@@ -1021,7 +1021,7 @@
 
     website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
         start: function () {
-            this.$target.carousel();
+            this.$target.carousel({interval: false});
         },
     });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
