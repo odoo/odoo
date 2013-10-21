@@ -21,5 +21,6 @@ OpenERP Website CMS
     ],
     'demo': [
         'data/website_demo.xml',
+        'demo/website_homepage_demo.xml',
     ]
 }
