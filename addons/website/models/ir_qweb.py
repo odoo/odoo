@@ -39,12 +39,12 @@ class Field(orm.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context):
+                   source_element, g_att, t_att, qweb_context, context=None):
         column = record._model._all_columns[field_name].column
         return itertools.chain(
             super(Field, self).attributes(cr, uid, field_name, record, options,
                                           source_element, g_att, t_att,
-                                          qweb_context),
+                                          qweb_context, context=context),
             [('data-oe-translate', 1 if column.translate else 0)]
         )
 
@@ -127,7 +127,7 @@ class Image(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.image']
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         assert source_element.nodeName != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \
@@ -135,9 +135,9 @@ class Image(orm.AbstractModel):
 
         return super(Image, self).to_html(
             cr, uid, field_name, record, options,
-            source_element, t_att, g_att, qweb_context)
+            source_element, t_att, g_att, qweb_context, context=context)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         cls = ''
         if 'class' in options:
             cls = ' class="%s"' % werkzeug.utils.escape(options['class'])
