@@ -142,7 +142,7 @@ class hr_evaluation(osv.osv):
             ('3','Exceeds expectations'),
             ('4','Significantly exceeds expectations'),
         ], "Appreciation", help="This is the appreciation on which the evaluation is summarized."),
-        'survey_response_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
+        'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
             ('draft','New'),
@@ -229,7 +229,7 @@ class hr_evaluation(osv.osv):
         for evaluation in self.browse(cr, uid, ids, context=context):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
-            if len(evaluation.survey_response_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
+            if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
                 raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
@@ -240,7 +240,7 @@ class hr_evaluation(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         interview_obj=self.pool.get('hr.evaluation.interview')
         evaluation = self.browse(cr, uid, ids[0], context)
-        interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_response_ids])
+        interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_request_ids])
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
 
@@ -254,7 +254,7 @@ class hr_evaluation(osv.osv):
         if context is None:
             context = {}
         default = default.copy()
-        default['survey_response_ids'] = []
+        default['survey_request_ids'] = []
         return super(hr_evaluation, self).copy(cr, uid, id, default, context=context)
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -266,13 +266,13 @@ class hr_evaluation(osv.osv):
             new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
             for evalutation in self.browse(cr, uid, ids, context=context):
-                for survey_req in evalutation.survey_response_ids:
+                for survey_req in evalutation.survey_request_ids:
                     obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
 
 
-class survey_response(osv.osv):
-    _inherit = "survey.response"
+class survey_request(osv.osv):
+    _inherit = "survey.request"
     _columns = {
         'is_evaluation': fields.boolean('Is Appraisal?'),
     }
@@ -280,12 +280,12 @@ class survey_response(osv.osv):
 
 class hr_evaluation_interview(osv.osv):
     _name = 'hr.evaluation.interview'
-    _inherits = {'survey.response': 'response_id'}
+    _inherits = {'survey.request': 'request_id'}
     _inherit =  'mail.thread'
-    _rec_name = 'response_id'
+    _rec_name = 'request_id'
     _description = 'Appraisal Interview'
     _columns = {
-        'response_id': fields.many2one('survey.response','response_id', ondelete='cascade', required=True),
+        'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Form'),
     }
@@ -299,12 +299,12 @@ class hr_evaluation_interview(osv.osv):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            name = record.response_id.survey_id.title
+            name = record.request_id.survey_id.title
             res.append((record['id'], name))
         return res
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'wait'}, context=context)
+        self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
@@ -314,7 +314,7 @@ class hr_evaluation_interview(osv.osv):
             wating_id = 0
             if not id.evaluation_id.id:
                 raise osv.except_osv(_('Warning!'),_("You cannot start evaluation without Appraisal."))
-            records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_response_ids
+            records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
             for child in records:
                 if child.state == "draft":
                     wating_id = child.id
