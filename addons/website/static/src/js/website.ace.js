@@ -133,8 +133,10 @@
         },
         loadViews: function (views) {
             var self = this;
-            var activeViews = _.filter(views, function (view) {
+            var activeViews = _.uniq(_.filter(views, function (view) {
                return view.active;
+            }), false, function (view) {
+                return view.id;
             });
             var $viewList = self.$('#ace-view-list');
             _.each(activeViews, function (view) {
