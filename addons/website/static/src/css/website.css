@@ -234,10 +234,7 @@ footer {
 }
 
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  position: relative;
-}
-.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child div, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child div {
-  display: none;
+  position: static;
 }
 
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
@@ -361,21 +358,17 @@ footer {
 .parallax_quote .carousel-indicators .active {
   background-color: grey;
 }
-
-.parallax_full {
-  min-height: 650px;
-  background: #eee top center no-repeat fixed;
-  width: 100%;
+.parallax {
+  background-attachment: fixed;
   background-size: 100%;
-  padding: 0px;
 }
-.parallax_full.oe_small .container {
+.parallax.oe_small {
   height: 200px;
 }
-.parallax_full.oe_medium .container {
+.parallax.oe_medium {
   height: 300px;
 }
-.parallax_full.oe_big .container {
+.parallax.oe_big {
   height: 450px;
 }
 

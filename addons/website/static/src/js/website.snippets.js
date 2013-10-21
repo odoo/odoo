@@ -24,6 +24,9 @@
         },
         save: function () {
             this.snippets.make_active(false);
+
+	    // TODO TOFIX: call clean_for_save on all snippets of the page, not only modified ones
+	    // important for banner of parallax that changes data automatically.
             this.snippets.clean_for_save();
             remove_added_snippet_id();
             this._super();
@@ -319,32 +322,17 @@
 
                     }
 
-                    var $dark = $(openerp.qweb.render('website.snippet_dark_for_dropzone'))
-                        .css('height', $("body")[0].scrollHeight + 'px');
-                    $("body").append($dark);
-
                     $('.oe_drop_zone').droppable({
                         over:   function(){
                             if( action === 'insert'){
                                 dropped = true;
-                                $(this).first().addClass("oe_drop_active").after($toInsert);
-                                $dark.find("td:first")
-                                    .css('height', $toInsert.offset().top+'px');
-                                $dark.find("tr:eq(1) td:first")
-                                    .css('width', $toInsert.offset().left+'px');
-                                $dark.find("td.center")
-                                    .addClass("active")
-                                    .css('height', $toInsert.outerHeight()+'px')
-                                    .css('width', $toInsert.outerWidth()+'px');
+                                $(this).first().after($toInsert);
                             }
                         },
                         out:    function(){
                             if( action === 'insert'){
-                                $(this).removeClass("oe_drop_active");
                                 dropped = false;
                                 $toInsert.detach();
-                                $dark.find("td.center").removeClass("active");
-                                $("body").scroll(); // trigger a scroll to reset position for jquery api
                             }
                         },
                         drop:   function(){
@@ -353,8 +341,15 @@
                     });
                 },
                 stop: function(ev, ui){
+		    if (action === 'insert' && ! dropped) {
+		        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first()
+			if (el) {
+			    el.after($toInsert)
+			    dropped = true;
+			}
+		    }
+
                     $('.oe_drop_zone').droppable('destroy').remove();
-                    $("#dark_for_dropzone").remove();
                     if (dropped) {
                         var $target = false;
                         if(action === 'insert'){
@@ -405,7 +400,7 @@
             var sibling_selector = selector.siblings;
             var vertical_child_selector   =  selector.vertical_children;
 
-            var zone_template = openerp.qweb.render('website.snippet_drop_zone');
+            var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
 
             if(child_selector){
                 self.dom_filter(child_selector).each(function (){
@@ -425,7 +420,7 @@
                     var temp_left = 0;
                     $zone.find('> *:not(.oe_drop_zone):visible').each(function () {
                         var $col = $(this);
-                        $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")) - 8)+'px');
+                        $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")))+'px');
                         $lastinsert = $template.clone();
                         $(this).after($lastinsert);
 
@@ -594,8 +589,7 @@
         *       Displayed into the overlay options on focus
         */
         _readXMLData: function() {
-            var self = this;
-            this.$el = this.parent.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
+            this.$el = this.parent.$snippets.siblings("[data-snippet-id='"+this.snippet_id+"']").clone();
             this.$editor = this.$el.find(".oe_snippet_options");
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
@@ -630,28 +624,18 @@
             });
         },
         _drag_and_drop_after_insert_dropzone: function (){},
-        _drag_and_drop_active_drop_zone: function (){
+        _drag_and_drop_active_drop_zone: function ($zones){
             var self = this;
-            var $dark = $("#dark_for_dropzone");
-            $('.oe_drop_zone').droppable({
+            $zones.droppable({
                 over:   function(){
-                    $(this).first().addClass("oe_drop_active").after(self.$target);
-                    $dark.find("td:first")
-                        .css('height', self.$target.offset().top+'px');
-                    $dark.find("tr:eq(1) td:first")
-                        .css('width', self.$target.offset().left+'px');
-                    $dark.find("td.center")
-                        .addClass("active")
-                        .css('height', self.$target.outerHeight()+'px')
-                        .css('width', self.$target.outerWidth()+'px');
+                    $(".oe_drop_zone.hide").removeClass("hide");
+                    $(this).addClass("hide").first().after(self.$target);
                     self.dropped = true;
                 },
                 out:    function(){
-                    $(this).removeClass("oe_drop_active");
-                    $dark.find("td.center").removeClass("active");
+                    $(this).removeClass("hide");
                     self.$target.detach();
                     self.dropped = false;
-                    $("body").scroll(); // trigger a scroll to reset position for jquery api
                 },
             });
         },
@@ -675,12 +659,8 @@
 
             $("body").addClass('move-important');
             
-            var $dark = $(openerp.qweb.render('website.snippet_dark_for_dropzone'))
-                .css('height', $("body")[0].scrollHeight + 'px');
-            $("body").append($dark);
-
             self._drag_and_drop_after_insert_dropzone();
-            self._drag_and_drop_active_drop_zone();
+            self._drag_and_drop_active_drop_zone($('.oe_drop_zone'));
         },
         _drag_and_drop_stop: function (){
             var self = this;
@@ -690,7 +670,6 @@
             self.$overlay.removeClass("hidden");
             $("body").removeClass('move-important');
             $('.oe_drop_zone').droppable('destroy').remove();
-            $('#dark_for_dropzone').remove();
             $(".oe_drop_clone, .oe_drop_to_remove").remove();
             self.parent.editor_busy = false;
             self.get_parent_block();
@@ -988,25 +967,23 @@
 
         _drag_and_drop_after_insert_dropzone: function(){
             var self = this;
-            // commented for perf
-
-            // var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
-            //     var $row = $(this);
-            //     var width = $row.innerWidth();
-            //     var pos = 0;
-            //     while (width > pos + self.size.width) {
-            //         var $last = $row.find("> .oe_drop_zone:last");
-            //         $last.each(function () {
-            //             pos = $(this).position().left;
-            //         });
-            //         if (width > pos + self.size.width) {
-            //             $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-            //             var $add_drop = $last.clone();
-            //             $row.append($add_drop);
-            //             self._drag_and_drop_active_drop_zone($add_drop);
-            //         }
-            //     }
-            // });
+            var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
+                var $row = $(this);
+                var width = $row.innerWidth();
+                var pos = 0;
+                while (width > pos + self.size.width) {
+                    var $last = $row.find("> .oe_drop_zone:last");
+                    $last.each(function () {
+                        pos = $(this).position().left;
+                    });
+                    if (width > pos + self.size.width) {
+                        $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
+                        var $add_drop = $last.clone();
+                        $row.append($add_drop);
+                        self._drag_and_drop_active_drop_zone($add_drop);
+                    }
+                }
+            });
         },
         _drag_and_drop_start: function () {
             this._super();
@@ -1044,7 +1021,7 @@
 
     website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
         start: function () {
-            this.$target.carousel();
+            this.$target.carousel({interval: false});
         },
     });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
@@ -1098,6 +1075,14 @@
                 self.set_options_style();
                 self.set_options_background(".item.active", 'ul[name="carousel-background"]');
                 self.$target.carousel();
+            });
+
+            this.$target.on('dblclick', '.item.active .carousel-image img', function (event) {
+                var $img = $(event.currentTarget);
+                var editor = new website.editor.ImageDialog();
+                editor.on('start', self, function (o) {o.url = $img.attr("src");});
+                editor.on('save', self, function (o) {$img.attr("src", o.url);});
+                editor.appendTo($('body'));
             });
 
             this.rebind_event();
@@ -1215,7 +1200,62 @@
     website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
         start : function () {
             this._super();
-            this.change_background(this.$target, 'ul[name="parallax-background"]');
+            this.change_background($('.parallax', this.$target), 'ul[name="parallax-background"]');
+            this.scroll();
+            this.change_size();
+        },
+        scroll: function(){
+            var self = this;
+            var $ul = this.$editor.find('ul[name="parallax-scroll"]');
+            var $li = $ul.find("li");
+            var $parallax = this.$target.find('.parallax');
+            var speed = $parallax.data('stellar-background-ratio') || 0.5 ;
+            
+            $ul.find('[data-value="' + speed + '"]').addClass('active');
+            $li.on('click', function (event) {
+                $li.removeClass("active");
+                $(this).addClass("active");
+                var speed =  $(this).data('value')
+                $parallax.attr('data-stellar-background-ratio', speed);
+            });
+
+        },
+        clean_for_save: function () {
+            this._super();
+            this.$target.find(".parallax").css("background-position", '');
+        },
+        change_size: function () {
+            var self = this;
+            var $el = $('.oe_big,.oe_medium,.oe_small', this.$target);
+
+            var size = 'oe_big';
+            if ($el.hasClass('oe_small'))
+                size = 'oe_small';
+            else if ($el.hasClass('oe_medium'))
+                size = 'oe_medium';
+
+            var $ul = this.$editor.find('ul[name="parallax-size"]');
+            var $li = $ul.find("li");
+
+            $ul.find('[data-value="' + size + '"]').addClass('active');
+
+            $li.on('click', function (event) {
+                    $li.removeClass("active");
+                    $(this).addClass("active");
+                })
+                .on('mouseover', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($(event.currentTarget).data("value"));
+                })
+                .on('mouseout', function (event) {
+                    $el.removeClass('oe_big oe_small oe_medium');
+                    $el.addClass($ul.find('li.active').data("value"));
+                });
+        }
+    });
+    website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
+        start: function () {
+            $.stellar({ horizontalScrolling: false, verticalOffset: 0 });
         },
     });
 

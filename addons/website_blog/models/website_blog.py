@@ -31,7 +31,7 @@ import difflib
 class BlogCategory(osv.Model):
     _name = 'blog.category'
     _description = 'Blog Category'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
 
     _columns = {
@@ -41,15 +41,13 @@ class BlogCategory(osv.Model):
             'blog.post', 'category_id',
             'Blogs',
         ),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
 
 class BlogTag(osv.Model):
     _name = 'blog.tag'
     _description = 'Blog Tag'
+    _inherit = ['website.seo.metadata']
     _order = 'name'
 
     _columns = {
@@ -57,16 +55,13 @@ class BlogTag(osv.Model):
         'blog_post_ids': fields.many2many(
             'blog.post', string='Posts',
         ),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
 
 class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'write_date DESC'
     # maximum number of characters to display in summary
     _shorten_max_char = 250
@@ -150,9 +145,6 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
     def create_history(self, cr, uid, ids, vals, context=None):
