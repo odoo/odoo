@@ -139,7 +139,7 @@ class procurement_order(osv.osv):
             if not proc.note or '_first_pass_done_' not in proc.note or proc.state not in ('confirmed', 'exception'):
                 super(procurement_order, self).message_track(cr, uid, [proc.id], tracked_fields, initial_values, context=context)
                 if proc.state == 'exception':
-                    cr.execute("""UPDATE procurement_order set note = CONCAT(note, %s) WHERE id = %s""", ('_first_pass_done_',proc.id))
+                    cr.execute("""UPDATE procurement_order set note = TRIM(both E'\n' FROM COALESCE(note, '') || %s) WHERE id = %s""", ('\n\n_first_pass_done_',proc.id))
 
         return True
 
