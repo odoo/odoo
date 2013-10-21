@@ -967,25 +967,23 @@
 
         _drag_and_drop_after_insert_dropzone: function(){
             var self = this;
-            // commented for perf
-
-            // var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
-            //     var $row = $(this);
-            //     var width = $row.innerWidth();
-            //     var pos = 0;
-            //     while (width > pos + self.size.width) {
-            //         var $last = $row.find("> .oe_drop_zone:last");
-            //         $last.each(function () {
-            //             pos = $(this).position().left;
-            //         });
-            //         if (width > pos + self.size.width) {
-            //             $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-            //             var $add_drop = $last.clone();
-            //             $row.append($add_drop);
-            //             self._drag_and_drop_active_drop_zone($add_drop);
-            //         }
-            //     }
-            // });
+            var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
+                var $row = $(this);
+                var width = $row.innerWidth();
+                var pos = 0;
+                while (width > pos + self.size.width) {
+                    var $last = $row.find("> .oe_drop_zone:last");
+                    $last.each(function () {
+                        pos = $(this).position().left;
+                    });
+                    if (width > pos + self.size.width) {
+                        $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
+                        var $add_drop = $last.clone();
+                        $row.append($add_drop);
+                        self._drag_and_drop_active_drop_zone($add_drop);
+                    }
+                }
+            });
         },
         _drag_and_drop_start: function () {
             this._super();
