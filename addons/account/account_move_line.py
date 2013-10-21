@@ -1283,7 +1283,7 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and ((not context.get('no_store_function')) or journal.entry_posted):
+        if check and not context.get('novalidate') and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)

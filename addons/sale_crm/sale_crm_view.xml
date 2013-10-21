@@ -249,8 +249,8 @@
                     </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_salesteams_opportunities']" position="after">
-                    <div class="oe_salesteams_invoices">
-                        <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice">Invoices</a>
+                    <div class="oe_salesteams_invoices" groups="account.group_account_invoice">
+                        <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
                         <a name="%(account.action_account_invoice_report_all)d" type="action" class="oe_sparkline_bar_link">
                             <field name="monthly_invoiced" widget="sparkline_bar">
                                 Revenue of sent invoices per month.<br/>Click to see a detailed analysis of invoices.
@@ -268,8 +268,8 @@
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center" t-if="record.invoiced_target.raw_value">
-                        <field name="monthly_invoiced" widget="gage" style="width:160px; height: 120px;" options="{'max_field': 'invoiced_target'}">Invoiced</field>
-                        <field name="invoiced_forecast" widget="gage" style="width:160px; height: 120px;" options="{'max_field': 'invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
+                        <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'invoiced_target'}">Invoiced</field>
+                        <field name="invoiced_forecast" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
                     </div>
                     <div class="oe_center" style="color:#bbbbbb;" t-if="!record.invoiced_target.raw_value">
                         <br/>Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.
